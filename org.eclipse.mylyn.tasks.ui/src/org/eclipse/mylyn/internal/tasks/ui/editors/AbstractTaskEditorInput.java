@@ -11,12 +11,9 @@
 
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.net.Proxy;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -29,16 +26,13 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
-	protected Proxy proxySettings;
-
 	protected TaskRepository repository;
 
 	protected RepositoryTaskData repositoryTaskData;
 	
 	protected AbstractTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		this.repositoryTaskData = taskData;		
-		this.repository = repository;
-		this.proxySettings = TasksUiPlugin.getDefault().getProxySettings();		
+		this.repository = repository;		
 	}
 	
 	/**
@@ -83,10 +77,6 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	 */
 	@Override
 	public abstract boolean equals(Object o);
-
-	public Proxy getProxySettings() {
-		return proxySettings;
-	}
 
 	public TaskRepository getRepository() {
 		return repository;

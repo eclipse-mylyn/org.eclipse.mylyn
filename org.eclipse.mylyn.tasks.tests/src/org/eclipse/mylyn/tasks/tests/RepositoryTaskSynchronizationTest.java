@@ -9,7 +9,6 @@
 package org.eclipse.mylar.tasks.tests;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -328,12 +327,12 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		}
 
 		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-				Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException,
+				Set<AbstractRepositoryTask> tasks) throws CoreException,
 				UnsupportedEncodingException {
 			return null;
 		}
 
-		public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings)
+		public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
 				throws CoreException {
 			return null;
 		}

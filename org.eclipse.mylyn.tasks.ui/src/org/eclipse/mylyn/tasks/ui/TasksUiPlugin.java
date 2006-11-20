@@ -11,9 +11,6 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.io.File;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.Proxy.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -85,7 +82,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.update.internal.core.UpdateCore;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -575,18 +571,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 18);
 
 		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
-	}
-
-	public Proxy getProxySettings() {
-		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
-			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
-			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
-
-			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			proxy = new Proxy(Type.HTTP, sockAddr);
-		}
-		return proxy;
 	}
 
 	public static TaskListManager getTaskListManager() {

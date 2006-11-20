@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.net.Proxy;
 
 import junit.framework.TestCase;
 
@@ -44,7 +43,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	private RepositoryTaskData init(String taskId) throws CoreException {
 		IOfflineTaskHandler handler = connector.getOfflineTaskHandler();
-		RepositoryTaskData taskData = handler.downloadTaskData(repository, taskId, Proxy.NO_PROXY);
+		RepositoryTaskData taskData = handler.downloadTaskData(repository, taskId);
 		return taskData;
 	}
 

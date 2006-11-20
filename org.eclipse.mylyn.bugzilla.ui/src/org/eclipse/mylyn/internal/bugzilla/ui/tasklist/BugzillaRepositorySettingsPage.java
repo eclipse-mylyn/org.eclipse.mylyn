@@ -61,6 +61,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		setNeedsEncoding(true);
 		setNeedsTimeZone(false);
 		setNeedsHttpAuth(true);
+		setNeedsProxy(true);
 	}
 
 	protected void createAdditionalControls(Composite parent) {

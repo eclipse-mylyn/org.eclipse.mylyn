@@ -99,7 +99,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		
 		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 		
-		connector.performQuery(repositoryQuery, repository, TasksUiPlugin.getDefault().getProxySettings(), new NullProgressMonitor(), collector);
+		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector);
 		
 		//results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
 		return collector.getHits();			

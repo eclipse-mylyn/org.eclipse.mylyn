@@ -61,7 +61,7 @@ public class ContextAttachWizard extends Wizard {
 				this.repository.getKind());
 
 		try {
-			if (!connector.attachContext(repository, task, wizardPage.getComment(), TasksUiPlugin.getDefault().getProxySettings())) {
+			if (!connector.attachContext(repository, task, wizardPage.getComment())) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {

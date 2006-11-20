@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.tests.headless;
 
-import java.net.Proxy;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -44,7 +42,6 @@ public class BugzillaQueryTest extends TestCase {
 	private TaskRepository repository;
 	private BugzillaRepositoryConnector connector;
 	private IOfflineTaskHandler handler;
-	private Proxy proxy = Proxy.NO_PROXY;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -97,7 +94,7 @@ public class BugzillaQueryTest extends TestCase {
 //	}
 
 	public void testGetBug() throws Exception {
-		RepositoryTaskData taskData = handler.downloadTaskData(repository, "1", proxy);
+		RepositoryTaskData taskData = handler.downloadTaskData(repository, "1");
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
 
@@ -119,7 +116,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector.init(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "description",
 				"-1", taskList);
-		connector.performQuery(query, repository, null, new NullProgressMonitor(), collector);
+		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 		assertEquals(2, collector.getHits().size());
 		for (AbstractQueryHit hit : collector.getHits()) {
 			assertTrue(hit.getDescription().contains("search-match-test"));

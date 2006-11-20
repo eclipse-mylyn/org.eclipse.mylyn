@@ -13,8 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
-
 /**
  * @author Steffen Pingel
  * @author Robert Elves (adaption for Bugzilla)
@@ -26,7 +24,7 @@ public class BugzillaClientFactory {
 		URL url = new URL(hostUrl);
 
 		BugzillaClient client =  new BugzillaClient(url, username, password, htAuthUser, htAuthPass, encoding);// pass authenticator?
-		client.setProxy(WebClientUtil.getProxySettings());
+//		client.setProxy(WebClientUtil.getProxySettings());
 		return client;
 	}
 

@@ -65,6 +65,12 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, abstractRepositorySettingsPage.getHttpAuthUserId());
 			repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, abstractRepositorySettingsPage.getHttpAuthPassword());
 			
+			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
+			repository.setProperty(TaskRepository.PROXY_HOSTNAME, abstractRepositorySettingsPage.getProxyHostname());
+			repository.setProperty(TaskRepository.PROXY_PORT, abstractRepositorySettingsPage.getProxyPort());
+			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUsername(), abstractRepositorySettingsPage.getProxyPassword());
+			
+			
 			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChagned(repository);
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());

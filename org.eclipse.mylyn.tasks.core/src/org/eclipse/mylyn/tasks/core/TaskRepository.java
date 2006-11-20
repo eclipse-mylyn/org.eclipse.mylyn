@@ -11,8 +11,11 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.Proxy.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -20,6 +23,8 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.AuthenticatedProxy;
+import org.eclipse.update.internal.core.UpdateCore;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -58,6 +63,16 @@ public class TaskRepository {
 	private static final String AUTH_REALM = "";
 
 	private static final URL DEFAULT_URL;
+
+	public static final String PROXY_USEDEFAULT = "org.eclipse.mylar.tasklist.repositories.proxy.usedefault";
+
+	public static final String PROXY_HOSTNAME = "org.eclipse.mylar.tasklist.repositories.proxy.hostname";
+
+	public static final String PROXY_PORT = "org.eclipse.mylar.tasklist.repositories.proxy.port";
+
+	public static final String PROXY_USERNAME = "org.eclipse.mylar.tasklist.repositories.proxy.username";
+
+	public static final String PROXY_PASSWORD = "org.eclipse.mylar.tasklist.repositories.proxy.password";
 
 	static {
 		URL url = null;
@@ -103,6 +118,10 @@ public class TaskRepository {
 	public String getUrl() {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
+	
+	private String getProxyHostname() {
+		return properties.get(PROXY_HOSTNAME);
+	}
 
 	public void setUrl(String newUrl) {
 		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
@@ -135,6 +154,36 @@ public class TaskRepository {
 	}
 
 	@SuppressWarnings("unchecked")
+	public String getProxyUsername() {
+		Map<String, String> map;
+		try {
+			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+		} catch (MalformedURLException e) {
+			return null;
+		}
+		if (map != null && map.containsKey(PROXY_USERNAME)) {
+			return map.get(PROXY_USERNAME);
+		} else {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getProxyPassword() {
+		Map<String, String> map;
+		try {
+			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+		} catch (MalformedURLException e) {
+			return null;
+		}
+		if (map != null && map.containsKey(PROXY_PASSWORD)) {
+			return map.get(PROXY_PASSWORD);
+		} else {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public void setAuthenticationCredentials(String username, String password) {
 		Map<String, String> map = getAuthInfo();
 
@@ -160,9 +209,44 @@ public class TaskRepository {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public void setProxyAuthenticationCredentials(String username, String password) {
+		Map<String, String> map;
+		try {
+			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+		} catch (MalformedURLException e1) {
+			return;
+		}
+
+		if (map == null) {
+			map = new java.util.HashMap<String, String>();
+		}
+
+		if (username != null) {
+			map.put(PROXY_USERNAME, username);
+		}
+		if (password != null) {
+			map.put(PROXY_PASSWORD, password);
+		}
+		try {
+			// write the map to the keyring
+			try {
+				Platform.addAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME, map);
+			} catch (MalformedURLException ex) {
+				Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+			}
+		} catch (CoreException e) {
+			MylarStatusHandler.fail(e, "could not set authorization", true);
+		}
+	}
+
 	public void flushAuthenticationCredentials() {
 		try {
 			try {
+				String proxyHostname = getProperty(PROXY_HOSTNAME);
+				if (proxyHostname != null && proxyHostname.length() > 0) {
+					Platform.flushAuthorizationInfo(new URL(proxyHostname), AUTH_REALM, AUTH_SCHEME);
+				}
 				Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
 			} catch (MalformedURLException ex) {
 				Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
@@ -278,5 +362,43 @@ public class TaskRepository {
 
 	public void removeProperty(String key) {
 		this.properties.remove(key);
+	}
+
+	public Proxy getProxy() {
+		Proxy proxy = Proxy.NO_PROXY;
+		if (useDefaultProxy()) {
+			if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+				String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
+				int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
+
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				proxy = new Proxy(Type.HTTP, sockAddr);
+			}
+		} else {
+			String proxyHost = getProperty(PROXY_HOSTNAME);
+			String proxyPortStr = getProperty(PROXY_PORT);
+			String proxyUsername = "";
+			String proxyPassword = "";
+			if (proxyHost != null && proxyHost.length() > 0) {
+				proxyUsername = getProxyUsername();
+				proxyPassword = getProxyPassword();
+			}
+			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
+					.length() > 0);
+			if (proxyHost != null && proxyHost.length() > 0 && proxyPortStr != null && proxyPortStr.length() > 0) {
+				int proxyPort = Integer.parseInt(proxyPortStr);
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				if (authenticated) {
+					proxy = new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+				} else {
+					proxy = new Proxy(Type.HTTP, sockAddr);
+				}
+			}
+		}
+		return proxy;
+	}
+
+	public boolean useDefaultProxy() {
+		return "true".equals(getProperty(PROXY_USEDEFAULT)) || (getProperty(PROXY_HOSTNAME) == null);
 	}
 }

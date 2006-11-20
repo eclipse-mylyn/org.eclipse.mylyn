@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Proxy;
 
 import junit.framework.TestCase;
 
@@ -51,8 +50,6 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	private IAttachmentHandler attachmentHandler;
 
-	private Proxy proxySettings;
-
 	private TestData data;
 
 	protected void setUp() throws Exception {
@@ -60,9 +57,6 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-
 		data = TestFixture.init010();
 	}
 
@@ -120,7 +114,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		} finally {
 			out.close();
 		}
-		attachmentHandler.uploadAttachment(repository, task, "comment", "description", file, "", false, proxySettings);
+		attachmentHandler.uploadAttachment(repository, task, "comment", "description", file, "", false);
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
 		byte[] result = client.getAttachmentData(data.attachmentTicketId, file.getName());

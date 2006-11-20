@@ -97,7 +97,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings, IProgressMonitor monitor, QueryHitCollector resultCollector) {
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor, QueryHitCollector resultCollector) {
 		return null;
 	}
 

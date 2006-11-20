@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Proxy;
 
 import javax.security.auth.login.LoginException;
 
@@ -127,7 +126,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch, Proxy proxySettings)
+			String description, File file, String contentType, boolean isPatch)
 			throws CoreException {
 		try {
 			String bugId = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());

@@ -67,7 +67,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class BugzillaClient {
 
-	private static final int MAX_RETRY = 4;
+	private static final int MAX_RETRY = 3;
 
 	private static final int CONNECT_TIMEOUT = 30000;
 

@@ -104,7 +104,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (task == null) {
 			RepositoryTaskData taskData = null;
 			// try {
-			taskData = offlineHandler.downloadTaskData(repository, id, proxySettings);
+			taskData = offlineHandler.downloadTaskData(repository, id);
 			// BugzillaClient client = getClientManager().getClient(repository);
 			// taskData = client.getTaskData(Integer.parseInt(id));
 			if (taskData != null) {
@@ -154,8 +154,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings,
-			IProgressMonitor monitor, QueryHitCollector resultCollector) {
+	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+			QueryHitCollector resultCollector) {
 
 		IStatus queryStatus = Status.OK_STATUS;
 		try {

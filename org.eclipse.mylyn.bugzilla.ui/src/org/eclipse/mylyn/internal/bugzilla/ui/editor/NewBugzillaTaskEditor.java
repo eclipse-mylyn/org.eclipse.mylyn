@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.net.URLEncoder;
 
 import org.eclipse.core.runtime.Status;
@@ -60,12 +59,11 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			return;
 		}
 		updateTask();
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 
 		try {
 			final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(
-					repository.getUrl(), repository.getUserName(), repository.getPassword(), proxySettings, repository
+					repository.getUrl(), repository.getUserName(), repository.getPassword(), repository
 							.getCharacterEncoding(), taskData, wrap);
 
 			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, getCategory());
@@ -114,9 +112,9 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
 				"100", TasksUiPlugin.getTaskListManager().getTaskList());
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery, proxySettings);
+				repository, bugzillaQuery);
 		return collector;
 	}
 

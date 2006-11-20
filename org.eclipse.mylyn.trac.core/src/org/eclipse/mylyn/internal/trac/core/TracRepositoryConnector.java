@@ -122,7 +122,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			Proxy proxySettings, IProgressMonitor monitor, QueryHitCollector resultCollector) {
+			IProgressMonitor monitor, QueryHitCollector resultCollector) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 

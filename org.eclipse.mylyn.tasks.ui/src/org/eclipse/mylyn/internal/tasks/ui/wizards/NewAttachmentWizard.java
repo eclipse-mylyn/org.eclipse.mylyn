@@ -147,7 +147,7 @@ public class NewAttachmentWizard extends Wizard {
 				try {
 					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
 							.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(),
-							attachment.isPatch(), TasksUiPlugin.getDefault().getProxySettings());
+							attachment.isPatch());
 
 					if (attachment.getDeleteAfterUpload()) {
 						File file = new File(attachment.getFilePath());
@@ -157,7 +157,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 
 					if (attachContext) {
-						connector.attachContext(repository, (AbstractRepositoryTask) task, "", TasksUiPlugin.getDefault().getProxySettings());
+						connector.attachContext(repository, (AbstractRepositoryTask) task, "");
 						// attachContext sets outgoing state but we want to recieve incoming
 						// on synchronization. This could result in lost edits so need to 
 						// review the whole attachment interaction.

@@ -199,8 +199,7 @@ public class RepositorySynchronizationManager {
 
 			Set<AbstractRepositoryTask> changedTasks = null;
 			try {
-				changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks,
-						TasksUiPlugin.getDefault().getProxySettings());
+				changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
 
 				if (changedTasks != null) {
 					for (AbstractRepositoryTask task : changedTasks) {

@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.internal.trac.ui.editor;
 
-import java.net.Proxy;
 import java.util.Collections;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -114,9 +113,8 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), sb.toString(), "<Duplicate Search>",
 				TasksUiPlugin.getTaskListManager().getTaskList());
 
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, query, proxySettings);
+				repository, query);
 		return collector;
 	}
 

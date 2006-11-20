@@ -71,8 +71,7 @@ class SynchronizeQueryJob extends Job {
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, TasksUiPlugin
-						.getDefault().getProxySettings(), monitor, collector);
+				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 
 				if (resultingStatus.getException() == null) {
 					repositoryQuery.updateHits(collector.getHits(), taskList);

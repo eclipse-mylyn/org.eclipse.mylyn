@@ -144,8 +144,7 @@ class SynchronizeTaskJob extends Job {
 			IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
 			if (offlineHandler != null) {
 				String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-				RepositoryTaskData downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId,
-						TasksUiPlugin.getDefault().getProxySettings());
+				RepositoryTaskData downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
 
 				if (downloadedTaskData != null) {
 					TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask, downloadedTaskData,

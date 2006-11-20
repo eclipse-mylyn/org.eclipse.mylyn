@@ -86,7 +86,7 @@ public class OpenRemoteTaskJob extends Job {
 					// the following code was copied from SynchronizeTaskJob
 					RepositoryTaskData downloadedTaskData = null;
 					try {
-						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId, TasksUiPlugin.getDefault().getProxySettings());
+						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
 						openEditor(repository, downloadedTaskData);										
 					} catch (final CoreException e) {
 						// TODO generalize exception handling

@@ -178,12 +178,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			if (taskData.isLocallyCreated()) {
 				boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
 				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(repository.getUrl(), repository
-						.getUserName(), repository.getPassword(), editorInput.getProxySettings(), repository
-						.getCharacterEncoding(), taskData, wrap);
+						.getUserName(), repository.getPassword(), repository.getCharacterEncoding(), taskData, wrap);
 			} else {
 				bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeExistingBugPost(taskData, repository.getUrl(),
-						repository.getUserName(), repository.getPassword(), editorInput.getProxySettings(), repository
-						.getCharacterEncoding());
+						repository.getUserName(), repository.getPassword(), repository.getCharacterEncoding());
 			}
 		} catch (UnsupportedEncodingException e) {
 			// should never get here but just in case...
@@ -214,8 +212,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 									ps.busyCursorWhile(new IRunnableWithProgress() {
 										public void run(IProgressMonitor pm) {
 											try {
-												bugzillaRepositoryConnector.attachContext(repository, modifiedTask, "",
-														TasksUiPlugin.getDefault().getProxySettings());
+												bugzillaRepositoryConnector.attachContext(repository, modifiedTask, "");
 											} catch (Exception e) {
 												MylarStatusHandler.fail(e, "Failed to attach task context.\n\n"
 														+ e.getMessage(), true);
@@ -236,7 +233,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								// to bypass
 								// ui override check with user
 								// Need to change how this is achieved.
-								//modifiedTask.setTaskData(null);
+								// modifiedTask.setTaskData(null);
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 										new JobChangeAdapter() {
 
@@ -256,9 +253,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 								// Sync any tasks that might have changed as a
 								// result of this action
-								// TODO: removed since we don't have a way to exclude currently submitted task
-								// and others will be synched later by background sync anyway (or manual sync)
-								//TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
+								// TODO: removed since we don't have a way to
+								// exclude currently submitted task
+								// and others will be synched later by
+								// background sync anyway (or manual sync)
+								// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
+								// repository);
 							} else {
 								TaskUiUtil.openRepositoryTask(repository.getUrl(), BugzillaTaskEditor.this
 										.getRepositoryTaskData().getId(), repository.getUrl()

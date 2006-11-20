@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -98,7 +97,7 @@ public class BugzillaReportSubmitForm {
 	public static final String FORM_PREFIX_BUG_220 = "Issue ";
 
 	/** The fields that are to be changed/maintained */
-//	private List<NameValuePair> fields = new ArrayList<NameValuePair>();
+	// private List<NameValuePair> fields = new ArrayList<NameValuePair>();
 	private Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
 
 	/** The prefix for how to find the bug number from the return */
@@ -123,7 +122,7 @@ public class BugzillaReportSubmitForm {
 	}
 
 	public static BugzillaReportSubmitForm makeNewBugPost(String repositoryUrl, String userName, String password,
-			Proxy proxySettings, String characterEncoding, RepositoryTaskData model, boolean wrapDescription)
+			String characterEncoding, RepositoryTaskData model, boolean wrapDescription)
 			throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
@@ -185,14 +184,14 @@ public class BugzillaReportSubmitForm {
 
 	/**
 	 * TODO: refactor common stuff with new bug post
+	 * 
 	 * @param characterEncoding
 	 *            TODO
 	 * 
 	 * @throws UnsupportedEncodingException
 	 */
 	public static BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData model, String repositoryUrl,
-			String userName, String password, Proxy proxySettings, String characterEncoding)
-			throws UnsupportedEncodingException {
+			String userName, String password, String characterEncoding) throws UnsupportedEncodingException {
 
 		BugzillaReportSubmitForm form = new BugzillaReportSubmitForm();
 
@@ -264,7 +263,7 @@ public class BugzillaReportSubmitForm {
 		if (model.getNewComment().length() != 0) {
 			form.add(KEY_COMMENT, model.getNewComment());
 		}
-		
+
 		List<String> removeCC = model.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
 		if (removeCC != null && removeCC.size() > 0) {
 			String[] s = new String[removeCC.size()];

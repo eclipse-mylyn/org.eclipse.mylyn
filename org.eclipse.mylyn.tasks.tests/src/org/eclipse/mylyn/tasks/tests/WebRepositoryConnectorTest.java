@@ -69,7 +69,7 @@ public class WebRepositoryConnectorTest extends TestCase {
         repository.setAuthenticationCredentials("user", "pwd");
 
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
-        String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, null, null);
+        String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, null, null, null);
 
         String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
         IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector, repository);

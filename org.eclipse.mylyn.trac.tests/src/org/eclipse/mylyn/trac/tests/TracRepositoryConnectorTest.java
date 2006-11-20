@@ -198,7 +198,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 			public void addMatch(AbstractQueryHit hit) {
 				result.add(hit);
 			}};
-		IStatus queryStatus = connector.performQuery(query, repository, TasksUiPlugin.getDefault().getProxySettings(), new NullProgressMonitor(), hitCollector);
+		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector);
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
@@ -283,7 +283,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-		assertTrue(connector.attachContext(repository, task, "", TasksUiPlugin.getDefault().getProxySettings()));
+		assertTrue(connector.attachContext(repository, task, ""));
 		
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
@@ -302,7 +302,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.deleteOnExit();
 
 		try {
-			connector.attachContext(repository, task, "", TasksUiPlugin.getDefault().getProxySettings());
+			connector.attachContext(repository, task, "");
 			fail("expected CoreException"); // operation should not be supported
 		} catch (CoreException e) {
 		}

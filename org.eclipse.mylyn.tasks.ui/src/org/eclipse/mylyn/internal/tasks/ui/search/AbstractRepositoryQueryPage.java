@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.search;
 
-import java.net.Proxy;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -131,10 +129,9 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			return false;
 		}
 
-		NewSearchUI.activateSearchResultView();
-		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+		NewSearchUI.activateSearchResultView();		
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, getQuery(), proxySettings);
+				repository, getQuery());
 		NewSearchUI.runQueryInBackground(collector);
 		return true;
 	}

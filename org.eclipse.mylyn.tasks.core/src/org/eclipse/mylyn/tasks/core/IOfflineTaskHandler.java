@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,11 +31,11 @@ public interface IOfflineTaskHandler {
 	public AbstractAttributeFactory getAttributeFactory();
 	
 	// TODO: remove proxy parameter
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings) throws CoreException;
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId) throws CoreException;
 		
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException;
+			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException;
  }

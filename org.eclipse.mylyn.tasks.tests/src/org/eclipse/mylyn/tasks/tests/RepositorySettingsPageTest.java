@@ -154,7 +154,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		StringFieldEditor getUserNameEditor() {
-			return userNameEditor;
+			return repositoryUserNameEditor;
 		}
 
 		StringFieldEditor getPasswordEditor() {

@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.trac.core;
 
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,7 +57,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings)
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
 			throws CoreException {
 		int id = Integer.parseInt(taskId);
 		return downloadTaskData(repository, id);
@@ -264,7 +263,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException {
+			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException {
 		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}

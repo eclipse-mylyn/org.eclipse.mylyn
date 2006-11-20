@@ -77,7 +77,7 @@ public class RepositorySearchQueryTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", null);
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
-				.getTaskList(), repository, query, null) {
+				.getTaskList(), repository, query) {
 			@Override
 			public void addMatch(AbstractQueryHit hit) {
 				super.addMatch(hit);

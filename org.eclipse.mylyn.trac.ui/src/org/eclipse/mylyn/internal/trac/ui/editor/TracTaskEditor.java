@@ -156,8 +156,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 			ps.busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor pm) {
 					try {
-						connector.attachContext(repository, modifiedTask, "", TasksUiPlugin.getDefault()
-								.getProxySettings());
+						connector.attachContext(repository, modifiedTask, "");
 					} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
 					}

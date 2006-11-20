@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.search;
 
-import java.net.Proxy;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,20 +39,16 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
 
-	private Proxy proxySettings;
-
 	private TaskRepository repository;
 
 	private AbstractRepositoryQuery repositoryQuery;
 
 	private RepositorySearchResult searchResult;
 
-	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery,
-			Proxy proxySettings) {
+	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery) {
 		super(tasklist);
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
-		this.proxySettings = proxySettings;
 		this.searchResult = new RepositorySearchResult(this);
 	}
 
@@ -102,7 +97,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repositoryQuery.getRepositoryKind());
 			if (connector != null) {
-				status = connector.performQuery(repositoryQuery, repository, proxySettings, monitor, this);
+				status = connector.performQuery(repositoryQuery, repository, monitor, this);
 			} else {
 				return new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
 						"repository connector could not be found", null);

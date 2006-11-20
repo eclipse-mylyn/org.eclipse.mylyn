@@ -82,14 +82,12 @@ public abstract class AbstractRepositoryConnector {
 	 * @param query
 	 * @param repository
 	 *            TODO
-	 * @param proxySettings
-	 *            TODO
 	 * @param monitor
 	 * @param resultCollector
 	 *            IQueryHitCollector that collects the hits found
 	 */
-	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, Proxy proxySettings,
-			IProgressMonitor monitor, QueryHitCollector resultCollector);
+	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+			QueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 
@@ -104,7 +102,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on
 	 * task synchronization if {@link #getOfflineTaskHandler()} returns
 	 * <code>null</code> or
-	 * {@link IOfflineTaskHandler#downloadTaskData(TaskRepository, String, Proxy)}
+	 * {@link IOfflineTaskHandler#downloadTaskData(TaskRepository, String)}
 	 * returns <code>null</code>.
 	 * 
 	 * <p>
@@ -160,8 +158,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment,
-			Proxy proxySettings) throws CoreException {
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment) throws CoreException {
 		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
@@ -175,7 +172,7 @@ public abstract class AbstractRepositoryConnector {
 				// TODO: 'faking' outgoing state
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
-						APPLICATION_OCTET_STREAM, false, proxySettings);
+						APPLICATION_OCTET_STREAM, false);
 			} catch (CoreException e) {
 				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				throw e;
@@ -192,7 +189,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			RepositoryAttachment attachment, Proxy proxySettings, String destinationPath) throws CoreException {
+			RepositoryAttachment attachment, String destinationPath) throws CoreException {
 		IAttachmentHandler attachmentHandler = getAttachmentHandler();
 		if (attachmentHandler == null) {
 			return false;

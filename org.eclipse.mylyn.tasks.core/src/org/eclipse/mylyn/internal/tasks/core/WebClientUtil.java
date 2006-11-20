@@ -13,13 +13,12 @@ package org.eclipse.mylar.internal.tasks.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.eclipse.update.internal.core.UpdateCore;
 
 /**
  * @author Mik Kersten
@@ -188,9 +187,17 @@ public class WebClientUtil {
 
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
+				
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
-			client.getHostConfiguration().setProxy(address.getHostName(), address.getPort());
+			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
+			if(proxySettings instanceof AuthenticatedProxy) {
+				AuthenticatedProxy authProxy = (AuthenticatedProxy)proxySettings;
+				Credentials credentials = new	UsernamePasswordCredentials(authProxy.getUserName(),
+						authProxy.getPassword());
+				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
+				client.getState().setProxyCredentials(proxyAuthScope, credentials);
+			}
 		}
 
 		if (user != null && password != null) {
@@ -208,17 +215,5 @@ public class WebClientUtil {
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl));
 		}
-	}
-
-	public static Proxy getProxySettings() {
-		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
-			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
-			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
-
-			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			proxy = new Proxy(Type.HTTP, sockAddr);
-		}
-		return proxy;
 	}
 }

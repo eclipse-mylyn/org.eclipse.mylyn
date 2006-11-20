@@ -69,7 +69,7 @@ public class ContextRetrieveWizard extends Wizard {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 			}
 			try {
-				if (!connector.retrieveContext(repository, task, delegate, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory())) {
+				if (!connector.retrieveContext(repository, task, delegate, TasksUiPlugin.getDefault().getDataDirectory())) {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
 									+ connector.getLabel());

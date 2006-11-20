@@ -102,7 +102,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				"-1", taskList);
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery, null);
+				repository, bugzillaQuery);
 
 		// operation.run(new NullProgressMonitor());
 		// BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(collector);
@@ -131,7 +131,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		sourceContextFile.deleteOnExit();
 		repository.setAuthenticationCredentials("wrong", "wrong");
 		try {
-			connector.attachContext(repository, task, "", TasksUiPlugin.getDefault().getProxySettings());
+			connector.attachContext(repository, task, "");
 		} catch (CoreException e) {
 			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 			assertNotNull(task.getTaskData());
@@ -378,7 +378,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		Set<AbstractRepositoryTask> changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(
-				repository, tasks, null);
+				repository, tasks);
 		assertEquals(0, changedTasks.size());
 
 		String priority4 = null;
@@ -409,7 +409,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		bugzillaReportSubmitForm = makeExistingBugPost(task5.getTaskData());
 		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
 
-		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks, null);
+		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
 		assertEquals("Changed reports expected ", 2, changedTasks.size());
 		assertTrue(tasks.containsAll(changedTasks));
 		for (AbstractRepositoryTask task : changedTasks) {

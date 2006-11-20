@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.net.Proxy;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -102,12 +101,11 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId, Proxy proxySettings)
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
 			throws CoreException {
 		try {
 
-			BugzillaClient client = connector.getClientManager().getClient(repository);
-			client.setProxy(proxySettings);
+			BugzillaClient client = connector.getClientManager().getClient(repository);			
 			int bugId = Integer.parseInt(taskId);
 			RepositoryTaskData taskData = client.getTaskData(repository, bugId);
 			if (taskData != null) {
@@ -159,7 +157,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, Proxy proxySettings) throws CoreException, UnsupportedEncodingException {
+			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException {
 
 		Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 
@@ -193,13 +191,13 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
 					+ ",", repository.getCharacterEncoding());
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
-				queryForChanged(repository, changedTasks, urlQueryString, proxySettings);
+				queryForChanged(repository, changedTasks, urlQueryString);
 				queryCounter = 0;
 				urlQueryString = new String(urlQueryBase + BUG_ID);
 				urlQueryString += newurlQueryString;
 			} else if (!itr.hasNext()) {
 				urlQueryString += newurlQueryString;				
-				queryForChanged(repository, changedTasks, urlQueryString, proxySettings);
+				queryForChanged(repository, changedTasks, urlQueryString);
 			} else {
 				urlQueryString += newurlQueryString;
 			}
@@ -208,7 +206,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
-			String urlQueryString, Proxy proxySettings) throws UnsupportedEncodingException, CoreException {
+			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 
 		QueryHitCollector collector = new QueryHitCollector(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", "-1",
@@ -251,7 +249,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				if (repositoryTask.getTaskData() != null
 						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
 					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData taskData = downloadTaskData(repository, taskId, proxySettings);
+					RepositoryTaskData taskData = downloadTaskData(repository, taskId);
 					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}
