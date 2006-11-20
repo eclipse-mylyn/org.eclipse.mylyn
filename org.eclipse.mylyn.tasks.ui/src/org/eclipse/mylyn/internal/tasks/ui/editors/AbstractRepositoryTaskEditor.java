@@ -873,9 +873,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final Menu menu = popupMenu.createContextMenu(attachmentsTable);
 			attachmentsTable.setMenu(menu);
 
-			final RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
-					.getSelection()).getFirstElement());
-
 			popupMenu.addMenuListener(new IMenuListener() {
 				public void menuAboutToShow(IMenuManager manager) {
 					// TODO: use workbench mechanism for this?
@@ -887,10 +884,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final MenuManager openMenu = new MenuManager("Open With");
 
 			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
-				public void run() {					
+				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					if(attachment != null) {
+					if (attachment != null) {
 						TaskUiUtil.openUrl(attachment.getUrl());
 					}
 				}
@@ -899,6 +896,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final Action openWithDefaultAction = new Action(LABEL_DEFAULT_EDITOR) {
 				public void run() {
 					// browser shortcut
+					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+							.getSelection()).getFirstElement());
+					if(attachment == null) return;
+					
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
 						TaskUiUtil.openUrl(attachment.getUrl());
 						return;
