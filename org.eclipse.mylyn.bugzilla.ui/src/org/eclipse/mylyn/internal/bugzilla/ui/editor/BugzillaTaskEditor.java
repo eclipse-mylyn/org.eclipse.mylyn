@@ -274,8 +274,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							submitButton.setEnabled(true);
 							BugzillaTaskEditor.this.showBusy(false);
 						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-							MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult()
-									.getMessage());
+							MylarStatusHandler.fail(event.getJob().getResult().getException(), IBugzillaConstants.REPORT_SUBMIT_ERROR+"\n"+event.getJob().getResult().getMessage(), true);
+//							MessageDialog.openError(null, IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult()
+//									.getMessage());
 							submitButton.setEnabled(true);
 							BugzillaTaskEditor.this.showBusy(false);
 						}
