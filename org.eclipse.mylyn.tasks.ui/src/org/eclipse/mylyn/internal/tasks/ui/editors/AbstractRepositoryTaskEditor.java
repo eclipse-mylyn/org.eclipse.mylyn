@@ -1307,7 +1307,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);
 
 		addSelfToCC(peopleComposite);
-		
+
 		addCCList(peopleComposite);
 		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
 		peopleSection.setClient(peopleComposite);
@@ -1318,7 +1318,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		Label label = toolkit.createLabel(attributesComposite, "Add CC:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		ccText = toolkit.createText(attributesComposite, getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.NEW_CC));
+		ccText = toolkit.createText(attributesComposite, getRepositoryTaskData().getAttributeValue(
+				RepositoryTaskAttribute.NEW_CC));
 		ccText.setFont(TEXT_FONT);
 		ccText.setEditable(true);
 		// ccText.setForeground(foreground);
@@ -1356,7 +1357,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				ccList.add(cc);
 			}
 		}
-		java.util.List<String> removedCCs = getRepositoryTaskData().getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+		java.util.List<String> removedCCs = getRepositoryTaskData().getAttributeValues(
+				RepositoryTaskAttribute.REMOVE_CC);
 		if (removedCCs != null) {
 			for (String item : removedCCs) {
 				int i = ccList.indexOf(item);
@@ -1403,7 +1405,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createCommentLayout(Composite composite) {
-		Section section = createSection(composite, LABEL_SECTION_COMMENTS);
+
+		Section section = createSection(composite, LABEL_SECTION_COMMENTS + " ("
+				+ getRepositoryTaskData().getComments().size() + ")");
 
 		ImageHyperlink hyperlink = toolkit.createImageHyperlink(section, SWT.NONE);
 		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
@@ -2198,7 +2202,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * Creates a check box for adding the repository user to the cc list. Does
 	 * nothing if the repository does not have a valid username, the repository
-	 * user is the assignee, reporter or already on the the cc list. 
+	 * user is the assignee, reporter or already on the the cc list.
 	 */
 	protected void addSelfToCC(Composite composite) {
 		if (repository.getUserName() == null) {
@@ -2220,11 +2224,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (ccAttribute != null && ccAttribute.getValues().contains(repository.getUserName())) {
 			return;
 		}
-		
+
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		toolkit.createLabel(composite, "");
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
-		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
+		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData
+				.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
 		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 			@Override
