@@ -96,6 +96,7 @@
 	</extension>
 	
 	<extension point = "org.eclipse.ui.popupMenus">
+		<!--
 	    <objectContribution
 	           adaptable="false"
 	           id="org.eclipse.mylar.team.ui.contribution.commit.query"
@@ -124,6 +125,8 @@
 	              tooltip="Commit Context...">
 	        </action>
 		</objectContribution>
+	  -->
+	  
 	  <!--
       <objectContribution
             adaptable="false"
