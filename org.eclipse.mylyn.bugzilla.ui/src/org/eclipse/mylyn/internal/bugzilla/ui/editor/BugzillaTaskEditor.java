@@ -275,10 +275,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							BugzillaTaskEditor.this.showBusy(false);
 						} else if (event.getJob().getResult().getCode() == Status.ERROR) {
 							MylarStatusHandler.fail(event.getJob().getResult().getException(),
-									IBugzillaConstants.REPORT_SUBMIT_ERROR + "\n"
+									IBugzillaConstants.REPORT_SUBMIT_ERROR
+											+ ": Changes may not have successfully committed.\n"
 											+ event.getJob().getResult().getMessage(), true);
-							submitButton.setEnabled(true);
-							BugzillaTaskEditor.this.showBusy(false);
+							if (!BugzillaTaskEditor.this.isDisposed() && !submitButton.isDisposed()) {
+								submitButton.setEnabled(true);
+								BugzillaTaskEditor.this.showBusy(false);
+							}
 						}
 					}
 				});
