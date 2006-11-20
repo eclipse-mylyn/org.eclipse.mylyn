@@ -126,6 +126,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -264,6 +265,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected RetargetAction pasteAction;
 
 	protected Composite editorComposite;
+
+	protected TextViewer newCommentTextViewer;
 
 	protected org.eclipse.swt.widgets.List ccList;
 
@@ -1446,6 +1449,27 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 
+			Hyperlink replyLink = new Hyperlink(expandableComposite, SWT.NONE);
+			replyLink.setText("[reply]");
+			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					String oldText = newCommentTextViewer.getDocument().get();
+					StringBuilder strBuilder = new StringBuilder();
+					strBuilder.append(oldText);
+					strBuilder.append("\n (In reply to comment #" + taskComment.getNumber() + ")\n");
+					String[] lines = taskComment.getText().split("\n");
+					for (String line : lines) {
+						strBuilder.append("> " + line + "\n");
+					}
+					newCommentTextViewer.getDocument().set(strBuilder.toString());
+
+				}
+			});
+
+			expandableComposite.setTextClient(replyLink);
+
 			// Expand new comments
 			if (repositoryTask != null && offlineHandler != null) {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
@@ -1513,8 +1537,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Composite newCommentsComposite = toolkit.createComposite(section);
 		newCommentsComposite.setLayout(new GridLayout());
 
-		final TextViewer newCommentTextViewer = addTextEditor(repository, newCommentsComposite, getRepositoryTaskData()
-				.getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		newCommentTextViewer = addTextEditor(repository, newCommentsComposite, getRepositoryTaskData().getNewComment(),
+				true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		newCommentTextViewer.setEditable(true);
 
 		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
