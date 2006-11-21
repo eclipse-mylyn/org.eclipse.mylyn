@@ -954,7 +954,10 @@ public class TaskListView extends ViewPart {
 		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler(getViewer().getControl().getShell());
 		taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
 
-		getViewer().getTree().setToolTipText(null);
+		// Set to empty string to disable native tooltips (windows only?)
+		// bug#160897
+		// ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
+		getViewer().getTree().setToolTipText("");
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();
