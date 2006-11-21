@@ -75,9 +75,9 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 					ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
 				}
 			}
-		} else {
+		} else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()){
 			MylarStatusHandler.log("Possible task list initialization failure, not saving list.", this);
-			if (PlatformUI.getWorkbench() != null && !initializationWarningDialogShow) {
+			if (!initializationWarningDialogShow) {
 				initializationWarningDialogShow = true;
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {

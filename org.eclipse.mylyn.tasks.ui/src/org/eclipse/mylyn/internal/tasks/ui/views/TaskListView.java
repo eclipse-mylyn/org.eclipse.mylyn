@@ -148,6 +148,8 @@ public class TaskListView extends ViewPart {
 
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
+	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
+	
 	private static final String ID_SEPARATOR_FILTERS = "filters";
 
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
@@ -1022,11 +1024,10 @@ public class TaskListView extends ViewPart {
 		// manager.add(newCategoryAction);
 		manager.add(new Separator());
 		manager.add(filterOnPriority);
-		manager.add(new Separator("navigation"));
-		// manager.add(new Separator(ID_SEPARATOR_CONTEXT));
+		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(previousTaskAction);
-		// manager.add(nextTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
+		// manager.add(nextTaskAction);
 		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1473,31 +1474,11 @@ public class TaskListView extends ViewPart {
 		if (isPaused) {
 			statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
 					"Mylar context capture paused");
+			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");
+			setPartName(PART_NAME);
 		}
-	}
-
-	/**
-	 * Show the shared data folder currently in use. Call with "" to turn off
-	 * the indication. TODO: Need a better way to indicate paused and/or the
-	 * shared folder
-	 */
-	public void indicateSharedFolder(String folderName) {
-		if (folderName.equals("")) {
-			if (isPaused) {
-				setPartName("(paused) " + PART_NAME);
-			} else {
-				setPartName(PART_NAME);
-			}
-		} else {
-			if (isPaused) {
-				setPartName("(paused) " + folderName + " " + PART_NAME);
-			} else {
-				setPartName(folderName + " " + PART_NAME);
-			}
-		}
-
 	}
 
 	public AbstractTaskContainer getDrilledIntoCategory() {
@@ -1621,5 +1602,12 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;
+		
+		IActionBars bars = getViewSite().getActionBars();
+		fillLocalToolBar(bars.getToolBarManager());
+//		if (focusedMode) {
+//			IActionBars bars = getViewSite().getActionBars();
+//			bars.updateActionBars();
+//		}
 	}
 }

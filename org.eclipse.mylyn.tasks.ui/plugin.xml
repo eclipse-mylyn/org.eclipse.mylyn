@@ -269,13 +269,13 @@
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
   		
   		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
-               enablesFor="*"
-               icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.tasklist.synchronize"
-               label="Synchronize All"
-               menubarPath="additions"
-               tooltip="Synchronize All Tasks and Queries">
+          class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
+          enablesFor="*"
+          icon="icons/etool16/repository-synchronize.gif"
+          id="org.eclipse.mylar.tasklist.synchronize"
+          label="Synchronize All"
+          toolbarPath="new"
+          tooltip="Synchronize All Tasks and Queries">
          </action>
   		
   		<action
