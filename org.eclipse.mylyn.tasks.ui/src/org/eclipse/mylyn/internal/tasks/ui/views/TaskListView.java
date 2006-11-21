@@ -1610,12 +1610,5 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;
-
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalToolBar(bars.getToolBarManager());
-		// if (focusedMode) {
-		// IActionBars bars = getViewSite().getActionBars();
-		// bars.updateActionBars();
-		// }
 	}
 }
