@@ -67,9 +67,9 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class BugzillaClient {
 
-	private static final int MAX_RETRY = 3;
+	private static final int MAX_RETRY = 2;
 
-	private static final int CONNECT_TIMEOUT = 30000;
+	private static final int CONNECT_TIMEOUT = 60000;
 
 	private static final String CHANGES_SUBMITTED = "Changes Submitted";
 
@@ -614,7 +614,8 @@ public class BugzillaClient {
 			authenticate();
 		}
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
-
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		// DEBUG
 		// for (NameValuePair nameValuePair : formData) {
 		// System.err.println(nameValuePair.getName()+",
