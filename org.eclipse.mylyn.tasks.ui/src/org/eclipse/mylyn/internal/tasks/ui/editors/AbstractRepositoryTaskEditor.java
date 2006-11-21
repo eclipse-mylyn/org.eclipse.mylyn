@@ -271,6 +271,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected org.eclipse.swt.widgets.List ccList;
 
 	protected Text ccText;
+	
+	private TableViewer attachmentsTableViewer;
+
+	private Section commentsSection;
 
 	private List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -334,8 +338,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		}
 	};
-
-	private TableViewer attachmentsTableViewer;
 
 	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
 
@@ -1412,12 +1414,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void createCommentLayout(Composite composite) {
 
-		Section section = createSection(composite, LABEL_SECTION_COMMENTS + " ("
+		commentsSection = createSection(composite, LABEL_SECTION_COMMENTS + " ("
 				+ getRepositoryTaskData().getComments().size() + ")");
 
-		ImageHyperlink hyperlink = toolkit.createImageHyperlink(section, SWT.NONE);
+		ImageHyperlink hyperlink = toolkit.createImageHyperlink(commentsSection, SWT.NONE);
 		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
-		hyperlink.setBackground(section.getTitleBarBackground());
+		hyperlink.setBackground(commentsSection.getTitleBarBackground());
 		hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
@@ -1425,11 +1427,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 
-		section.setTextClient(hyperlink);
+		commentsSection.setTextClient(hyperlink);
 
 		// Additional (read-only) Comments Area
-		Composite addCommentsComposite = toolkit.createComposite(section);
-		section.setClient(addCommentsComposite);
+		Composite addCommentsComposite = toolkit.createComposite(commentsSection);
+		commentsSection.setClient(addCommentsComposite);
 		GridLayout addCommentsLayout = new GridLayout();
 		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
@@ -1529,8 +1531,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			commentStyleText.add(styledText);
 			textHash.put(taskComment, styledText);
 		}
-		if (getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() <= 1) {
-			section.setExpanded(false);
+		if (getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() == 0) {
+			commentsSection.setExpanded(false);
 		}
 	}
 
@@ -1920,6 +1922,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void revealAllComments() {
+		if(commentsSection != null) {
+			commentsSection.setExpanded(true);
+		}
 		for (StyledText text : commentStyleText) {
 			Composite comp = text.getParent();
 			while (comp != null) {
