@@ -126,7 +126,6 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -1458,8 +1457,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE);
 
-			Hyperlink replyLink = new Hyperlink(expandableComposite, SWT.NONE);
-			replyLink.setText("[reply]");
+			
+			ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);
+			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
 			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
