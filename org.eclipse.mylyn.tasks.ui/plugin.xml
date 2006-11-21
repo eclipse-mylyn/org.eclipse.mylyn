@@ -267,6 +267,13 @@
 		<viewContribution 
 			id="org.eclipse.mylar.tasklist.actions.view" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+    <action
+          class="org.eclipse.mylar.internal.tasks.ui.actions.RestoreTaskListAction"
+          id="org.eclipse.mylar.tasks.ui.action.restore"
+          label="Restore Tasks from History..."
+          menubarPath="tasks"
+          style="push">
+    </action>
   		
   		<action
           class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
@@ -274,6 +281,7 @@
           icon="icons/etool16/repository-synchronize.gif"
           id="org.eclipse.mylar.tasklist.synchronize"
           label="Synchronize All"
+          menubarPath="tasks"
           toolbarPath="new"
           tooltip="Synchronize All Tasks and Queries">
          </action>

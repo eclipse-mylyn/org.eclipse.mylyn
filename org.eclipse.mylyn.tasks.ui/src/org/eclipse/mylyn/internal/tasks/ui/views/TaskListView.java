@@ -148,8 +148,10 @@ public class TaskListView extends ViewPart {
 
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
-	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
+	private static final String ID_SEPARATOR_TASKS = "tasks";
 	
+	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
+
 	private static final String ID_SEPARATOR_FILTERS = "filters";
 
 	private static final String ID_SEPARATOR_REPOSITORY = "repository";
@@ -364,12 +366,15 @@ public class TaskListView extends ViewPart {
 	};
 
 	private final class PriorityDropDownAction extends Action implements IMenuCreator {
+
+		private static final String FILTER_PRIORITY_LABEL = "Filter Priority Lower Than";
+
 		private Menu dropDownMenu = null;
 
 		public PriorityDropDownAction() {
 			super();
-			setText("Priority Filter");
-			setToolTipText("Filter Priority Lower Than");
+			setText(FILTER_PRIORITY_LABEL);
+			setToolTipText(FILTER_PRIORITY_LABEL);
 			setImageDescriptor(TaskListImages.FILTER_PRIORITY);
 			setMenuCreator(this);
 		}
@@ -949,7 +954,8 @@ public class TaskListView extends ViewPart {
 
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
-		// ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
+		// ref:
+		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText("");
 
 		initDragAndDrop(parent);
@@ -1012,8 +1018,12 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
+		// manager.add(new Separator());
+		manager.add(filterOnPriority);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
+		manager.add(new Separator(ID_SEPARATOR_TASKS));
+		
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1022,8 +1032,6 @@ public class TaskListView extends ViewPart {
 
 		// manager.add(newLocalTaskAction);
 		// manager.add(newCategoryAction);
-		manager.add(new Separator());
-		manager.add(filterOnPriority);
 		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
@@ -1202,13 +1210,13 @@ public class TaskListView extends ViewPart {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
 				if (element instanceof AbstractTaskContainer) {
-					AbstractTaskContainer container = (AbstractTaskContainer)element;
+					AbstractTaskContainer container = (AbstractTaskContainer) element;
 					action.setEnabled(container.canRename());
 				}
-//				if (element instanceof TaskArchive) 
-//					action.setEnabled(false);
-//				else
-//					action.setEnabled(true);
+				// if (element instanceof TaskArchive)
+				// action.setEnabled(false);
+				// else
+				// action.setEnabled(true);
 			}
 		} else {
 			action.setEnabled(true);
@@ -1311,7 +1319,7 @@ public class TaskListView extends ViewPart {
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.ACTIVATE_ON_OPEN)) {
 					ITask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
-					if (selectedTask != null) { 
+					if (selectedTask != null) {
 						// TODO: move history stuff
 						activateAction.run(selectedTask);
 						addTaskToHistory(selectedTask);
@@ -1602,12 +1610,12 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;
-		
+
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalToolBar(bars.getToolBarManager());
-//		if (focusedMode) {
-//			IActionBars bars = getViewSite().getActionBars();
-//			bars.updateActionBars();
-//		}
+		// if (focusedMode) {
+		// IActionBars bars = getViewSite().getActionBars();
+		// bars.updateActionBars();
+		// }
 	}
 }
