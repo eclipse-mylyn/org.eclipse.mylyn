@@ -30,7 +30,7 @@ public class NewWebTaskPage extends WizardPage {
 
 		setTitle("Create via Web Browser");
 		setDescription("This will open a web browser that can be used to create a new task.\n"
-				+ "Note: you may need to log in via the web UI.");
+				+ "NOTE: you may need to log in via the web UI.");
 	}
 
 	public void createControl(Composite parent) {
