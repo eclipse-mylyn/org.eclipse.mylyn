@@ -449,7 +449,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayout(compLayout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label l = toolkit.createLabel(container, "Description:");
+		Label l = toolkit.createLabel(container, "Summary: ");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		description = toolkit.createText(container, task.getDescription(), SWT.NONE);
 		description.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);

@@ -57,7 +57,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 	public void run(IAction action) {
 		run();
 	}
-	
+
 	@Override
 	public void run() {
 		Task newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
@@ -96,25 +96,25 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		}
 
 		TaskUiUtil.openEditor(newTask, true);
-
-		if (view != null) {
-			view.getViewer().refresh();
-			view.setInRenameAction(true);
-			view.getViewer().editElement(newTask, 4);
-			view.setInRenameAction(false);
-		}
+		
+		// if (view != null) {
+		// view.getViewer().refresh();
+		// view.setInRenameAction(true);
+		// view.getViewer().editElement(newTask, 4);
+		// view.setInRenameAction(false);
+		// }
 	}
 
-	public static void scheduleNewTask(ITask newTask) {		
+	public static void scheduleNewTask(ITask newTask) {
 		Calendar newTaskSchedule = Calendar.getInstance();
 		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 				TaskListPreferenceConstants.PLANNING_ENDHOUR);
 		// If past scheduledEndHour set for following day
-		if(newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {	
+		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
 		} else {
 			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
-		}		
+		}
 		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
 	}
 
