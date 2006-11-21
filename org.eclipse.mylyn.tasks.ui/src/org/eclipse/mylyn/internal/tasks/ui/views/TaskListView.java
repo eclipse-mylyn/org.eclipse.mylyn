@@ -671,7 +671,6 @@ public class TaskListView extends ViewPart {
 					case 4:
 						TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(container,
 								((String) value).trim());
-						// container.setDescription(((String) value).trim());
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
@@ -686,7 +685,6 @@ public class TaskListView extends ViewPart {
 					case 4:
 						TasksUiPlugin.getTaskListManager().getTaskList()
 								.renameContainer(query, ((String) value).trim());
-						// cat.setDescription(((String) value).trim());
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
@@ -708,8 +706,6 @@ public class TaskListView extends ViewPart {
 						if (task != null) {
 							if (task.isActive()) {
 								new TaskDeactivateAction().run(task);
-								// nextTaskAction.setEnabled(taskHistory.hasNext());
-								// previousTaskAction.setEnabled(TasksUiPlugin.getTaskListManager().getTaskActivationHistory().hasPrevious());
 								previousTaskAction.setButtonStatus();
 							} else {
 								new TaskActivateAction().run(task);
@@ -749,11 +745,6 @@ public class TaskListView extends ViewPart {
 			// previousTaskAction.setEnabled(TasksUiPlugin.getTaskListManager().getTaskActivationHistory().hasPrevious());
 		}
 	}
-
-	//
-	// public void clearTaskHistory() {
-	// TasksUiPlugin.getTaskListManager().getTaskActivationHistory().clear();
-	// }
 
 	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
@@ -1209,10 +1200,14 @@ public class TaskListView extends ViewPart {
 			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (element instanceof TaskArchive)
-					action.setEnabled(false);
-				else
-					action.setEnabled(true);
+				if (element instanceof AbstractTaskContainer) {
+					AbstractTaskContainer container = (AbstractTaskContainer)element;
+					action.setEnabled(container.canRename());
+				}
+//				if (element instanceof TaskArchive) 
+//					action.setEnabled(false);
+//				else
+//					action.setEnabled(true);
 			}
 		} else {
 			action.setEnabled(true);
