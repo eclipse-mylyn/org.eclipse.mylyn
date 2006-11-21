@@ -271,7 +271,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected org.eclipse.swt.widgets.List ccList;
 
 	protected Text ccText;
-	
+
 	private TableViewer attachmentsTableViewer;
 
 	private Section commentsSection;
@@ -529,6 +529,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		getSite().setSelectionProvider(selectionProvider);
 		if (this.addCommentsTextBox != null) {
 			registerDropListener(this.addCommentsTextBox);
+		}
+		if (summaryText != null) {
+			summaryText.setFocus();
 		}
 	}
 
@@ -900,8 +903,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// browser shortcut
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					if(attachment == null) return;
-					
+					if (attachment == null)
+						return;
+
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
 						TaskUiUtil.openUrl(attachment.getUrl());
 						return;
@@ -1922,7 +1926,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void revealAllComments() {
-		if(commentsSection != null) {
+		if (commentsSection != null) {
 			commentsSection.setExpanded(true);
 		}
 		for (StyledText text : commentStyleText) {
