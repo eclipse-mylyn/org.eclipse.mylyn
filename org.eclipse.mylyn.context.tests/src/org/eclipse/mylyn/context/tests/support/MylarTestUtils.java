@@ -42,8 +42,8 @@ public class MylarTestUtils {
 		}
 
 		public Credentials(Properties properties, String prefix) {
-			this.username = properties.getProperty(prefix + "username");
-			this.password = properties.getProperty(prefix + "password");
+			this.username = properties.getProperty(prefix + "user");
+			this.password = properties.getProperty(prefix + "pass");
 
 			if (username == null || password == null) {
 				throw new AssertionFailedError(
