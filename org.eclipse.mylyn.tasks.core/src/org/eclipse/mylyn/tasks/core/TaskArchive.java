@@ -43,4 +43,8 @@ public class TaskArchive extends AbstractTaskContainer {
 	public boolean isLocal() {
 		return true;
 	}
+
+	public boolean canRename() {
+		return false;
+	}
 }

@@ -106,4 +106,10 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 	public String toString() {
 		return "container: " + handle;
 	}
+
+
+	public boolean canRename() {
+		return true;
+	}
 }
+
