@@ -327,7 +327,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 
 		// createContextMenu();
-		summary.setFocus();
+//		summary.setFocus();
+//		summary.setSelection(0, summary.getText().length());
 	}
 
 	// protected void createContextMenu() {
@@ -383,7 +384,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	@Override
 	public void setFocus() {
-		form.setFocus();
+		//form.setFocus();
+		if(summary != null && !summary.isDisposed()) {
+			summary.setFocus();
+		}
 	}
 
 	public Control getControl() {

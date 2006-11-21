@@ -97,7 +97,7 @@ public class MylarTaskEditor extends FormEditor {
 	public Object getAdapter(Class adapter) {
 		return getAdapterDelgate(adapter);
 	}
-	
+
 	public Object getAdapterDelgate(Class<?> adapter) {
 		// TODO: consider adding: IContentOutlinePage.class.equals(adapter) &&
 		if (contentOutlineProvider != null) {
@@ -175,7 +175,7 @@ public class MylarTaskEditor extends FormEditor {
 		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 			url = ((RepositoryTaskEditorInput) getEditorInput()).getUrl();
 			if (url == null) {
-				url = task.getUrl(); 
+				url = task.getUrl();
 			}
 		} else if (task != null && task.getUrl().length() > 9) {
 			url = task.getUrl();
@@ -286,7 +286,8 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	public void setFocus() {
-		// taskInfoEditor.setFocus();
+		if (taskPlanningEditor != null)
+			taskPlanningEditor.setFocus();
 	}
 
 	public Browser getWebBrowser() {
@@ -304,11 +305,12 @@ public class MylarTaskEditor extends FormEditor {
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-//		for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-//			for (IEditorPart editor : editors) {
-//				factory.notifyEditorActivationChange(editor);
-//			}
-//		}
+		// for (ITaskEditorFactory factory :
+		// TasksUiPlugin.getDefault().getTaskEditorFactories()) {
+		// for (IEditorPart editor : editors) {
+		// factory.notifyEditorActivationChange(editor);
+		// }
+		// }
 		super.pageChange(newPageIndex);
 	}
 
@@ -374,17 +376,17 @@ public class MylarTaskEditor extends FormEditor {
 								repositoryTaskEditor.createPartControl(getContainer());
 								index = addPage(repositoryTaskEditor);
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
-									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();									
-									setPartName(existingInput.getName());									
-								} else if(getEditorInput() instanceof NewTaskEditorInput) {									
-									String label = ((NewTaskEditorInput)getEditorInput()).getName();
+									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
+									setPartName(existingInput.getName());
+								} else if (getEditorInput() instanceof NewTaskEditorInput) {
+									String label = ((NewTaskEditorInput) getEditorInput()).getName();
 									setPartName(label);
 								}
 							} else {
-								index = addPage(editor, input);								
+								index = addPage(editor, input);
 							}
 							selectedIndex = index;
-							setPageText(index++, factory.getTitle());							
+							setPageText(index++, factory.getTitle());
 						}
 
 						// HACK: overwrites if multiple present
@@ -397,7 +399,7 @@ public class MylarTaskEditor extends FormEditor {
 				}
 			}
 			String urlToOpen = getUrl();
-//			System.err.println(">>> " + urlToOpen);
+			// System.err.println(">>> " + urlToOpen);
 			if (urlToOpen != null && !urlToOpen.equals("")) {
 				browserPageIndex = createBrowserPage(urlToOpen);
 				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
