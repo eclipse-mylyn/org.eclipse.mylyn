@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
@@ -164,7 +163,7 @@ public class TaskUiUtil {
 					task = ((AbstractQueryHit) element).getCorrespondingTask();
 				} else {
 					task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-					NewLocalTaskAction.scheduleNewTask(task);
+//					NewLocalTaskAction.scheduleNewTask(task);
 				}
 			} else if (element instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
