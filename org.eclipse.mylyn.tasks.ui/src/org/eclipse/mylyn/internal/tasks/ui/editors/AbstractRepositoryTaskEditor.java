@@ -1454,11 +1454,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		for (Iterator<TaskComment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
 			final TaskComment taskComment = it.next();
 
-			ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
-					ExpandableComposite.TREE_NODE);
+			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
+					ExpandableComposite.TREE_NODE);			
 
-			
-			ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);
+			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);			
 			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
 			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -1476,6 +1475,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				}
 			});
+			
+			expandableComposite.addExpansionListener(new ExpansionAdapter() {
+
+				@Override
+				public void expansionStateChanged(ExpansionEvent e) {
+					replyLink.setVisible(expandableComposite.isExpanded());
+				}});
+			
+		
 
 			expandableComposite.setTextClient(replyLink);
 
@@ -1511,6 +1519,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			});
 
+			replyLink.setVisible(expandableComposite.isExpanded());
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -1533,11 +1542,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// code for outline
 			commentStyleText.add(styledText);
-			textHash.put(taskComment, styledText);
+			textHash.put(taskComment, styledText);			
 		}
 		if (getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() == 0) {
 			commentsSection.setExpanded(false);
 		}
+		
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
