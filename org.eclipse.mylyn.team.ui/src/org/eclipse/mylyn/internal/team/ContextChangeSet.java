@@ -51,7 +51,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	private ITask task;
 
 	public ContextChangeSet(ITask task, ActiveChangeSetManager manager) {
-		super(manager, task.getDescription());
+		super(manager, task.getSummary());
 		this.task = task;
 		initTitle();
 	}
@@ -62,8 +62,8 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	}
 
 	public void initTitle() {
-		super.setName(task.getDescription());
-		super.setTitle(task.getDescription());
+		super.setName(task.getSummary());
+		super.setTitle(task.getSummary());
 	}
 
 	/**

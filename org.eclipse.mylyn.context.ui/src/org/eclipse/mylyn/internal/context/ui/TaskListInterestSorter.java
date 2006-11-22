@@ -42,7 +42,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 		if (o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((ITaskListElement) o1).getDescription().compareTo(((ITaskListElement) o2).getDescription());
+				return ((ITaskListElement) o1).getSummary().compareToIgnoreCase(((ITaskListElement) o2).getSummary());
 			} else {
 				return -1;
 			}
@@ -189,7 +189,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareKeys(ITaskListElement element1, ITaskListElement element2) {
-		return taskKeyComparator.compare(element1.getDescription(), element2.getDescription());
+		return taskKeyComparator.compare(element1.getSummary(), element2.getSummary());
 	}
 
 	private int comparePriorities(ITaskListElement element1, ITaskListElement element2) {

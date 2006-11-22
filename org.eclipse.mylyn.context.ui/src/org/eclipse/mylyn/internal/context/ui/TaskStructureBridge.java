@@ -59,7 +59,7 @@ public class TaskStructureBridge implements IMylarStructureBridge {
 
 	public String getName(Object object) {
 		if (object instanceof ITask) {
-			return ((ITask)object).getDescription();
+			return ((ITask)object).getSummary();
 		} else {
 			return null;
 		}

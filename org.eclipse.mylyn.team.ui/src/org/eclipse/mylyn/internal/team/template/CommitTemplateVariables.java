@@ -164,13 +164,13 @@ public class CommitTemplateVariables {
 				return ((AbstractRepositoryTask) task).getTaskData().getSummary();
 			}
 
-			return task.getDescription();
+			return task.getSummary();
 		}
 	}
 
 	public static class TaskDescription extends AbstractCommitTemplateVariable {
 		public String getValue(ITask task) {
-			return task.getDescription();
+			return task.getSummary();
 		}
 	}
 
