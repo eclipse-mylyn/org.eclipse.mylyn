@@ -159,5 +159,4 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getOwner();
 		}
 	}
-
 }

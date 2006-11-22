@@ -174,7 +174,11 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	public String getOwner() {
-		return "<unknown>";
+		if (taskData != null && taskData.getAssignedTo() != null) {
+			return taskData.getAssignedTo();
+		} else {
+			return "<unknown>";
+		}
 	}
 	
 	public IStatus getStatus() {

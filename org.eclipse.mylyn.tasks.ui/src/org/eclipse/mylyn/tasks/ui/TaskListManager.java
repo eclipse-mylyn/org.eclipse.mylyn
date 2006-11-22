@@ -688,11 +688,12 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
-
+			
 			if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+							
 				if (repository != null && repositoryTask.getOwner() != null
 						&& !repositoryTask.getOwner().equals(repository.getUserName()))
 					return false;
