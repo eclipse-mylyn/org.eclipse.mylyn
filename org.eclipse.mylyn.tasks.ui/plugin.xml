@@ -438,7 +438,7 @@
    -->
   <extension point="org.eclipse.ui.bindings">
       <key
-            sequence="M2+M3+Q M"
+            sequence="M2+M3+Q K"
             contextId="org.eclipse.ui.contexts.window"
             commandId="org.eclipse.ui.views.showView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
