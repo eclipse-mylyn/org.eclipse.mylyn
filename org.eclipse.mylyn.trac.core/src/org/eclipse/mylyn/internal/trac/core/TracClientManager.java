@@ -48,7 +48,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 		ITracClient repository = clientByUrl.get(taskRepository.getUrl());
 		if (repository == null) {
 			repository = TracClientFactory.createClient(taskRepository.getUrl(), Version.fromVersion(taskRepository
-					.getVersion()), taskRepository.getUserName(), taskRepository.getPassword());
+					.getVersion()), taskRepository.getUserName(), taskRepository.getPassword(), taskRepository
+					.getProxy());
 			clientByUrl.put(taskRepository.getUrl(), repository);
 
 			TracClientData data = clientDataByUrl.get(taskRepository.getUrl());
@@ -78,7 +79,8 @@ public class TracClientManager implements ITaskRepositoryListener {
 
 	public synchronized void repositorySettingsChanged(TaskRepository repository) {
 		clientByUrl.remove(repository.getUrl());
-		// if url is changed a stale data object will be left in clientDataByUrl, bug #149939
+		// if url is changed a stale data object will be left in
+		// clientDataByUrl, bug #149939
 	}
 
 	@SuppressWarnings("unchecked")

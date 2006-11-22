@@ -54,9 +54,11 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 		private Proxy proxy;
 
-		public TracHttpClientTransport(XmlRpcClient client) {
+		public TracHttpClientTransport(XmlRpcClient client, Proxy proxy) {
 			super(client);
 
+			this.proxy = proxy;
+			
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) client.getConfig();
 			// this needs to be set to avoid exceptions
 			getHttpClient().getParams().setAuthenticationPreemptive(config.getBasicUserName() != null);
@@ -137,14 +139,6 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			method.getParams().setVersion(HttpVersion.HTTP_1_1);
 		}
 
-		public void setProxy(Proxy proxy) {
-			this.proxy = proxy;
-		}
-		
-		public Proxy getProxy() {
-			return this.proxy;
-		}
-
 	}
 
 	private XmlRpcClient client;
@@ -155,7 +149,7 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	}
 
 	public XmlRpcTransport getTransport() {
-		return new TracHttpClientTransport(client);
+		return new TracHttpClientTransport(client, proxy);
 	}
 	
 	public Proxy getProxy() {

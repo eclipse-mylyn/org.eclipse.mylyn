@@ -1,6 +1,7 @@
 package org.eclipse.mylar.internal.trac.core;
 
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,8 +49,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	private XmlRpcClient xmlrpc;
 
-	public TracXmlRpcClient(URL url, Version version, String username, String password) {
-		super(url, version, username, password);
+	private TracHttpClientTransportFactory factory;
+
+	public TracXmlRpcClient(URL url, Version version, String username, String password, Proxy proxy) {
+		super(url, version, username, password, proxy);
 	}
 
 	public synchronized XmlRpcClient getClient() throws TracException {
@@ -64,11 +67,12 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setServerURL(getXmlRpcUrl());
 		config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 		config.setContentLengthOptional(false);
-		
+
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
 
-		TracHttpClientTransportFactory factory = new TracHttpClientTransportFactory(xmlrpc);
+		factory = new TracHttpClientTransportFactory(xmlrpc);
+		factory.setProxy(proxy);
 		xmlrpc.setTransportFactory(factory);
 
 		return xmlrpc;
@@ -448,4 +452,14 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return result;
 	}
 
+	@Override
+	public void setProxy(Proxy proxy) {
+		super.setProxy(proxy);
+
+		synchronized (this) {
+			if (factory != null) {
+				factory.setProxy(proxy);
+			}
+		}
+	}
 }

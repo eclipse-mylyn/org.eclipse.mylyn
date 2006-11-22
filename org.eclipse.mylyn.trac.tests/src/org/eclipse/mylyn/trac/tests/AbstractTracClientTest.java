@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.net.Proxy;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
@@ -59,10 +61,14 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 
 	public ITracClient connect(String url, String username, String password) throws Exception {
+		return connect(url, username, password, Proxy.NO_PROXY);
+	}
+
+	public ITracClient connect(String url, String username, String password, Proxy proxy) throws Exception {
 		this.repositoryUrl = url;
 		this.username = username;
 		this.password = password;
-		this.repository = TracClientFactory.createClient(url, version, username, password);
+		this.repository = TracClientFactory.createClient(url, version, username, password, proxy);
 
 		return this.repository;
 	}

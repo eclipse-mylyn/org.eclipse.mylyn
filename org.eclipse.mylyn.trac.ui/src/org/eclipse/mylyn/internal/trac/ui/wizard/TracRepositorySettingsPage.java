@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -169,6 +170,9 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			final Version version = getTracVersion();
 			final String username = getUserName();
 			final String password = getPassword();
+			// TODO is there a way to get the proxy without duplicating code and
+			// creating a task repository?
+			final Proxy proxy = createTaskRepository().getProxy();
 
 			final Version[] result = new Version[1];
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
@@ -176,10 +180,10 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 					try {
 						if (version != null) {
-							ITracClient client = TracClientFactory.createClient(serverUrl, version, username, password);
+							ITracClient client = TracClientFactory.createClient(serverUrl, version, username, password, proxy);
 							client.validate();
 						} else {
-							result[0] = TracClientFactory.probeClient(serverUrl, username, password);
+							result[0] = TracClientFactory.probeClient(serverUrl, username, password, proxy);
 						}
 
 					} catch (Exception e) {

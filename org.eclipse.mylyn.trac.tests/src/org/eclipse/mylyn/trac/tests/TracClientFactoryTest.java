@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.net.Proxy;
+
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
@@ -31,20 +33,20 @@ public class TracClientFactoryTest extends TestCase {
 
 	public void testCreateClient() throws Exception {
 		ITracClient client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9, "user",
-				"password");
+				"password", Proxy.NO_PROXY);
 		assertTrue(client instanceof Trac09Client);
-		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user", "password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user", "password", Proxy.NO_PROXY);
 		assertTrue(client instanceof Trac09Client);
 
-		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.XML_RPC, "user", "password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.XML_RPC, "user", "password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracXmlRpcClient);
-		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user", "password");
+		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.XML_RPC, "user", "password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracXmlRpcClient);
 	}
 
 	public void testCreateClientNull() throws Exception {
 		try {
-			TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, null, "user", "password");
+			TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, null, "user", "password", Proxy.NO_PROXY);
 			fail("Expected Exception");
 		} catch (Exception e) {
 		}
@@ -64,24 +66,24 @@ public class TracClientFactoryTest extends TestCase {
 
 	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
-		Version version = TracClientFactory.probeClient(url, credentials.username, credentials.password);
+		Version version = TracClientFactory.probeClient(url, credentials.username, credentials.password, Proxy.NO_PROXY);
 		if (xmlrpcInstalled) {
 			assertEquals(Version.XML_RPC, version);
 		} else {
 			assertEquals(Version.TRAC_0_9, version);
 		}
 
-		version = TracClientFactory.probeClient(url, "", "");
+		version = TracClientFactory.probeClient(url, "", "", Proxy.NO_PROXY);
 		assertEquals(Version.TRAC_0_9, version);
 
 		try {
-			version = TracClientFactory.probeClient(url, "invaliduser", "password");
+			version = TracClientFactory.probeClient(url, "invaliduser", "password", Proxy.NO_PROXY);
 			fail("Expected TracLoginException, got " + version);
 		} catch (TracLoginException e) {
 		}
 
 		try {
-			version = TracClientFactory.probeClient(url + "/nonexistant", "", "");
+			version = TracClientFactory.probeClient(url + "/nonexistant", "", "", Proxy.NO_PROXY);
 			fail("Expected TracException, got " + version);
 		} catch (TracException e) {
 		}

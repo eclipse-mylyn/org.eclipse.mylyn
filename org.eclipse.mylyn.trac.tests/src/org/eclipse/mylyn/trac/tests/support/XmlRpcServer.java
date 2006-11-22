@@ -125,16 +125,16 @@ public class XmlRpcServer {
 
 		// all created items
 		List<AbstractTracItem> items = new ArrayList<AbstractTracItem>();
-		
+
 		// all created tickets
 		public List<Ticket> tickets = new ArrayList<Ticket>();
-		
+
 		public int attachmentTicketId = 5;
-		
+
 		public int htmlEntitiesTicketId = 6;
-		
+
 		public int offlineHandlerTicketId = 7;
-		
+
 		/**
 		 * Undo all changes.
 		 */
@@ -200,13 +200,13 @@ public class XmlRpcServer {
 			super.itemCreated();
 			data.tickets.add(this);
 		}
-		
+
 		@Override
 		protected void itemDeleted() {
 			super.itemDeleted();
 			data.tickets.remove(this);
 		}
-		
+
 		public Ticket update(String comment, String key, String value) throws Exception {
 			Hashtable<String, Object> attrs = new Hashtable<String, Object>();
 			attrs.put(key, value);
@@ -291,7 +291,7 @@ public class XmlRpcServer {
 
 		this.data = new TestData();
 
-		this.repository = new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password);
+		this.repository = new TracXmlRpcClient(new URL(url), Version.XML_RPC, username, password, null);
 		this.client = repository.getClient();
 	}
 

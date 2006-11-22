@@ -41,11 +41,12 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	protected Proxy proxy;
 	
-	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password) {
+	public AbstractTracClient(URL repositoryUrl, Version version, String username, String password, Proxy proxy) {
 		this.repositoryUrl = repositoryUrl;
 		this.version = version;
 		this.username = username;
 		this.password = password;
+		this.proxy = proxy;
 		
 		this.data = new TracClientData();
 	}

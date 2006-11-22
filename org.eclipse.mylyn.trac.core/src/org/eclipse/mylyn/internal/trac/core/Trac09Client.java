@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -67,8 +68,8 @@ public class Trac09Client extends AbstractTracClient {
 
 	private boolean authenticated;
 
-	public Trac09Client(URL url, Version version, String username, String password) {
-		super(url, version, username, password);
+	public Trac09Client(URL url, Version version, String username, String password, Proxy proxy) {
+		super(url, version, username, password, proxy);
 	}
 
 	private GetMethod connect(String serverURL) throws TracException {

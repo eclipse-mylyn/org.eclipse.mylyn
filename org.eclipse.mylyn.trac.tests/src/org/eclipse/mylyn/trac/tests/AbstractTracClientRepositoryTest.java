@@ -11,9 +11,14 @@
 
 package org.eclipse.mylar.trac.tests;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -69,4 +74,31 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		}
 	}
 
+	public void testProxy() throws Exception {
+		connect(Constants.TEST_TRAC_010_URL, "", "", new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
+		try {
+			repository.validate();
+			fail("Expected IOException");
+		} catch (TracException e) {
+		}
+		
+		connect(Constants.TEST_TRAC_010_URL, "", "", null);
+		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
+		try {
+			repository.validate();
+			fail("Expected IOException");
+		} catch (TracException e) {
+		}
+
+		connect(Constants.TEST_TRAC_010_URL);
+		repository.validate();
+		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
+		try {
+			repository.validate();
+			fail("Expected IOException");
+		} catch (TracException e) {
+		}
+
+	}
+	
 }
