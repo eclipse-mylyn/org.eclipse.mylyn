@@ -1455,7 +1455,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final TaskComment taskComment = it.next();
 
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
-					ExpandableComposite.TREE_NODE);			
+					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);			
 
 			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);			
 			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
