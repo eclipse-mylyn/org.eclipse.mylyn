@@ -163,6 +163,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setNeedsAnonymousLogin(false);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
+		setNeedsProxy(true);
 	}
 
 	public void createControl(Composite parent) {
@@ -197,7 +198,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		});
 
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(serverUrlCombo);
+		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED,
 				container) {
@@ -450,6 +451,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			setHttpAuth(oldHttpAuthPassword != null && oldHttpAuthUserId != null && !oldHttpAuthPassword.equals("")
 					&& !oldHttpAuthUserId.equals(""));
 
+			httpAuthExpComposite.setExpanded(httpAuthButton.getSelection());
 		}
 
 		if (needsProxy()) {
@@ -582,7 +584,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				&& !oldProxyPassword.equals(""));
 
 		setUseDefaultProxy(repository.useDefaultProxy());
-
+		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
 	}
 
 	protected void setEncoding(String encoding) {
@@ -917,8 +919,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// getHttpAuthUserId());
 		// repository.setProperty(TaskRepository.PROXY_PASSWORD,
 		// getHttpAuthPassword());
-
-		updateProperties(repository);
 		return repository;
 	}
 

@@ -32,6 +32,7 @@ public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 	public boolean performFinish() {
 		if (canFinish()) {
 			TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
+			abstractRepositorySettingsPage.updateProperties(repository);
 			TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			return true;
 		}
