@@ -174,12 +174,6 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 		urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
 				+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
-		// } catch (UnsupportedEncodingException e1) {
-		// MylarStatusHandler.log(e1, "Mylar: Check encoding settings in " +
-		// TaskRepositoriesView.NAME + ".");
-		// urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY +
-		// dateString + CHANGED_BUGS_CGI_ENDDATE;
-		// }
 
 		urlQueryString = new String(urlQueryBase + BUG_ID);
 
