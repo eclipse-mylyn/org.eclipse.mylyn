@@ -184,7 +184,6 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 			return false;
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
-			ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			return false;
 		}
 

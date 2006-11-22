@@ -30,11 +30,10 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * other subclasses
  * 
  * @author Shawn Minto
+ * @author Mik Kersten
  */
 public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAction implements
 		IWorkbenchWindowActionDelegate {
-
-//	public static ApplyMylarToBrowsingPerspectiveAction INSTANCE;
 
 	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
 
@@ -50,6 +49,12 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 		super(new InterestFilter());
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
+	
+	public void init(IWorkbenchWindow window) {
+		initWindow = window;
+		IWorkbenchPage activePage = initWindow.getActivePage();
+		super.viewPart = activePage.findView(viewNames[0]);
+	}
 
 	@Override
 	public List<StructuredViewer> getViewers() {
@@ -62,6 +67,9 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 		return viewers;
 	}
 
+	/**
+	 * HACK: using reflection
+	 */
 	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
 		IWorkbenchPage activePage = initWindow.getActivePage();
 		if (activePage == null)
@@ -109,16 +117,8 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 		return null;
 	}
 
-	public void init(IWorkbenchWindow window) {
-		initWindow = window;
-	}
-
 	public void propertyChange(PropertyChangeEvent event) {
 		// TODO Auto-generated method stub
 	}
 
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
 }

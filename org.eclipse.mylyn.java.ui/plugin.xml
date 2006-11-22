@@ -389,7 +389,7 @@
            style="toggle"
 	       label="Apply Mylar" 
 	       icon="icons/elcl16/interest-filtering-browsing.gif"
-	       tooltip="Filter Packages, Types, and Members views"
+	       tooltip="Focus Java Browsing Views on Active Task"
 	       toolbarPath="mylar"
 	       enablesFor="*">
 	    </action>
