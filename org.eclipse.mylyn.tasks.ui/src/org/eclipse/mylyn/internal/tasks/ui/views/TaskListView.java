@@ -165,7 +165,7 @@ public class TaskListView extends ViewPart {
 			Task.PriorityLevel.P2.getDescription(), Task.PriorityLevel.P3.getDescription(),
 			Task.PriorityLevel.P4.getDescription(), Task.PriorityLevel.P5.getDescription() };
 
-	private static final String PART_NAME = "Mylar Tasks";
+	private static final String PART_NAME = "Task List";
 
 	private boolean focusedMode = false;
 
