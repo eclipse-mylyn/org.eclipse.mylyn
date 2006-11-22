@@ -99,7 +99,7 @@ public class TracQueryWizardPage extends WizardPage {
 		createAddFilterGroup(composite);
 
 		if (query != null) {
-			titleText.setText(query.getDescription());
+			titleText.setText(query.getSummary());
 			restoreSearchFilterFromQuery(query);
 		}
 

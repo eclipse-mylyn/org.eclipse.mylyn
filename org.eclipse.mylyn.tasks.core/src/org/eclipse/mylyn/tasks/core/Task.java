@@ -178,7 +178,7 @@ public class Task implements ITask {
 	}
 
 	public String getToolTipText() {
-		return getDescription();
+		return getSummary();
 	}
 
 	@Override
@@ -252,7 +252,7 @@ public class Task implements ITask {
 		if (elapsedTime >= 0) {
 			this.timeActive = elapsedTime;
 		} else {
-			MylarStatusHandler.log("Attempt to set negative time on task: " + getDescription(), this);
+			MylarStatusHandler.log("Attempt to set negative time on task: " + getSummary(), this);
 		}
 	}
 
@@ -284,7 +284,7 @@ public class Task implements ITask {
 		return parentCategory;
 	}
 
-	public String getDescription() {
+	public String getSummary() {
 		return description;
 	}
 

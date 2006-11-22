@@ -110,7 +110,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(2, collector.getHits().size());
 
 		for (AbstractQueryHit hit : collector.getHits()) {
-			assertTrue(hit.getDescription().contains("search-match-test"));
+			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 
 		// test anonymous update of configuration
@@ -219,7 +219,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaQueryHit hit1Twin = new BugzillaQueryHit(taskList, "description", "P1", repositoryURL, "1", null,
 				"status");
 		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
-		assertEquals(task1.getDescription(), task2.getDescription());
+		assertEquals(task1.getSummary(), task2.getSummary());
 
 	}
 

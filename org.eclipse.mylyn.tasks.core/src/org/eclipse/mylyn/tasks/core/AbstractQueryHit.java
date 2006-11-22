@@ -57,9 +57,9 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	public String getDescription() {
+	public String getSummary() {
 		if (task != null) {
-			return task.getDescription();
+			return task.getSummary();
 		} else {
 			return description;
 		}

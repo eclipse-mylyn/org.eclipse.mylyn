@@ -44,7 +44,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	private BugzillaRepositoryQuery query;
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository, BugzillaRepositoryQuery query) {
-		super(TITLE, query.getDescription());
+		super(TITLE, query.getSummary());
 		this.query = query;
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);

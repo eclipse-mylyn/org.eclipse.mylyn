@@ -123,7 +123,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
-			node.setAttribute(KEY_NAME, category.getDescription());
+			node.setAttribute(KEY_NAME, category.getSummary());
 			parent.appendChild(node);
 			return node;
 		}
@@ -138,7 +138,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
-		node.setAttribute(KEY_LABEL, task.getDescription());
+		node.setAttribute(KEY_LABEL, task.getSummary());
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
 		if (task.getContainer() != null) {
@@ -461,7 +461,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
-		node.setAttribute(KEY_NAME, query.getDescription());
+		node.setAttribute(KEY_NAME, query.getSummary());
 		node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
@@ -508,7 +508,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent) {
 		Element node = doc.createElement(getQueryHitTagName());
-		node.setAttribute(KEY_NAME, queryHit.getDescription());
+		node.setAttribute(KEY_NAME, queryHit.getSummary());
 		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
 		node.setAttribute(KEY_PRIORITY, queryHit.getPriority());
 		if (queryHit.isCompleted()) {

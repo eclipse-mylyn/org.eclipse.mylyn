@@ -35,7 +35,7 @@ public class TaskArchive extends AbstractTaskContainer {
 		return HANDLE;
 	}
 	
-	public String getDescription() {
+	public String getSummary() {
 		return LABEL_ARCHIVE;
 	}
 

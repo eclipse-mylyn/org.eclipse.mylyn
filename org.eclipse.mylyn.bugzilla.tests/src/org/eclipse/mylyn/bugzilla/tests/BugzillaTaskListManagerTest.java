@@ -103,7 +103,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 				.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
-		assertEquals(repositoryTask.getDescription(), readTask.getDescription());
+		assertEquals(repositoryTask.getSummary(), readTask.getSummary());
 		assertEquals(repositoryTask.getTaskType(), readTask.getTaskType());
 	}
 	

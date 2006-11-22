@@ -153,7 +153,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	}
 
 	public BugzillaSearchPage(TaskRepository repository, BugzillaRepositoryQuery origQuery) {
-		super(TITLE_BUGZILLA_QUERY, origQuery.getDescription());
+		super(TITLE_BUGZILLA_QUERY, origQuery.getSummary());
 		originalQuery = origQuery;
 		this.repository = repository;
 		setDescription("Select the Bugzilla query parameters.  Use the Update Attributes button to retrieve "

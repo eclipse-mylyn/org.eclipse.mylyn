@@ -63,7 +63,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		BugzillaTask readReport = (BugzillaTask) manager.getTaskList().getRootTasks().iterator().next();
-		assertEquals(readReport.getDescription(), readReport.getDescription());
+		assertEquals(readReport.getSummary(), readReport.getSummary());
 		assertEquals(readReport.getRepositoryUrl(), readReport.getRepositoryUrl());
 	}
 }

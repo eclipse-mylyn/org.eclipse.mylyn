@@ -535,7 +535,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 						AbstractRepositoryTask.getHandle(repository.getUrl(), bugId));
 				if (task != null) {
-					hyperlink.setToolTipText(task.getDescription());
+					hyperlink.setToolTipText(task.getSummary());
 				}
 				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 					public void linkActivated(HyperlinkEvent e) {

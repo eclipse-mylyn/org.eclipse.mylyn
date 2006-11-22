@@ -133,7 +133,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
 
-		node.setAttribute(KEY_LABEL, query.getDescription());
+		node.setAttribute(KEY_LABEL, query.getSummary());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		node.setAttribute(KEY_QUERY, query.getUrl());
 

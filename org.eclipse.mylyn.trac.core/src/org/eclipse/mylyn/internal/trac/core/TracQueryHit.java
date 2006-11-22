@@ -29,7 +29,7 @@ public class TracQueryHit extends AbstractQueryHit {
 	} 
 
 	protected AbstractRepositoryTask createTask() {
-		TracTask newTask = new TracTask(getHandleIdentifier(), getDescription(), true);
+		TracTask newTask = new TracTask(getHandleIdentifier(), getSummary(), true);
 		newTask.setPriority(priority);
 		return newTask;
 	}

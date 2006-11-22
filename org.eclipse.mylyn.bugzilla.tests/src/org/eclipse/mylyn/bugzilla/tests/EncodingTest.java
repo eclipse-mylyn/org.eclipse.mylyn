@@ -59,7 +59,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		assertTrue(task.getDescription().equals("\u05D0"));
+		assertTrue(task.getSummary().equals("\u05D0"));
 		taskList.deleteTask(task);
 		connector.getClientManager().repositoryRemoved(repository);
 		repository.setCharacterEncoding("ISO-8859-1");
@@ -67,7 +67,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);		
 		// iso-8859-1 'incorrect' interpretation
-		assertFalse(task.getDescription().equals("\u05D0"));
+		assertFalse(task.getSummary().equals("\u05D0"));
 	}
 	
 	public void testProperEncodingUponPost() throws MalformedURLException, IOException, BugzillaException, PossibleBugzillaFailureException, GeneralSecurityException, CoreException {
@@ -75,7 +75,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		repository.setCharacterEncoding("UTF-8");
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
 		assertNotNull(task);
-		assertTrue(task.getDescription().equals("\u05D0"));
+		assertTrue(task.getSummary().equals("\u05D0"));
 		String priority = null;
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
@@ -91,7 +91,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		taskList.deleteTask(task);
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57", null);
 		assertNotNull(task);
-		assertTrue(task.getDescription().equals("\u05D0"));
+		assertTrue(task.getSummary().equals("\u05D0"));
 	}
 
 }

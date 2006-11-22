@@ -18,18 +18,11 @@ public interface ITaskListElement {
 
 	public abstract String getPriority();
 
-	public abstract String getDescription();
-
-//	public abstract void setDescription(String description);
+	public abstract String getSummary();
 
 	public abstract String getHandleIdentifier();
 
 	public abstract void setHandleIdentifier(String id);
-
-	/**
-	 * TODO: refactor to use repository kinds?
-	 */
-//	public abstract boolean isLocal();
 
 }
 

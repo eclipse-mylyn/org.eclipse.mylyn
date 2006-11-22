@@ -147,7 +147,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		createOptionsGroup(control);
 
 		if (query != null) {
-			titleText.setText(query.getDescription());
+			titleText.setText(query.getSummary());
 			restoreSearchFilterFromQuery(query);
 		}
 

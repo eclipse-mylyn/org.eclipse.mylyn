@@ -321,7 +321,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().renameContainer(category, newDesc);
 		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle(newDesc);
 		assertNotNull(container);
-		assertEquals(newDesc, container.getDescription());
+		assertEquals(newDesc, container.getSummary());
 		manager.getTaskList().deleteCategory(container);
 		assertEquals(1, manager.getTaskList().getCategories().size());
 	}
@@ -396,9 +396,9 @@ public class TaskListManagerTest extends TestCase {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		taskList.moveToRoot(task);
 		MockRepositoryQuery query = new MockRepositoryQuery("query", taskList);
-		MockQueryHit hit = new MockQueryHit(taskList, repositoryUrl, task.getDescription(), "1");
+		MockQueryHit hit = new MockQueryHit(taskList, repositoryUrl, task.getSummary(), "1");
 		hit.setCorrespondingTask(task);
-		query.addHit(new MockQueryHit(taskList, repositoryUrl, task.getDescription(), "1"));
+		query.addHit(new MockQueryHit(taskList, repositoryUrl, task.getSummary(), "1"));
 		taskList.addQuery(query);
 		assertEquals(1, taskList.getAllTasks().size());
 		assertEquals(1, taskList.getRootTasks().size());
@@ -514,11 +514,11 @@ public class TaskListManagerTest extends TestCase {
 		Set<ITask> readList = manager.getTaskList().getRootTasks();
 		for (ITask task : readList) {
 			if (task.equals(task1)) {
-				assertEquals(task1.getDescription(), task.getDescription());
+				assertEquals(task1.getSummary(), task.getSummary());
 				assertEquals(1, task.getChildren().size());
 			}
 			if (task.equals(reportInRoot)) {
-				assertEquals(reportInRoot.getDescription(), task.getDescription());
+				assertEquals(reportInRoot.getSummary(), task.getSummary());
 			}
 		}
 

@@ -129,8 +129,8 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getCreationDate();
 	}
 
-	public String getDescription() {
-		return task.getDescription();
+	public String getSummary() {
+		return task.getSummary();
 	}
 
 	public int getEstimateTimeHours() {

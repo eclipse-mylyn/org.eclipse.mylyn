@@ -68,7 +68,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		editor.setDescription(NEW_DESCRIPTION);
 		assertTrue(editor.isDirty());
 		editor.doSave(new NullProgressMonitor());
-		assertEquals(NEW_DESCRIPTION, task.getDescription());
+		assertEquals(NEW_DESCRIPTION, task.getSummary());
 		assertFalse(editor.isDirty());
 	}
 
@@ -85,7 +85,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		assertFalse(editor.isDirty());
 		assertEquals(DESCRIPTION, editor.getDescription());
 		TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, NEW_DESCRIPTION);
-		assertEquals(NEW_DESCRIPTION, task.getDescription());
+		assertEquals(NEW_DESCRIPTION, task.getSummary());
 		editor.updateTaskData(task);
 		assertEquals(NEW_DESCRIPTION, editor.getFormTitle());
 		assertEquals(NEW_DESCRIPTION, editor.getDescription());
@@ -110,7 +110,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		editor.setDescription(NEW_DESCRIPTION);
 		assertTrue(editor.isDirty());
 		TasksUiPlugin.getTaskListManager().getTaskList().renameTask(task, NEW_DESCRIPTION+"2");
-		assertEquals(NEW_DESCRIPTION+"2", task.getDescription());
+		assertEquals(NEW_DESCRIPTION+"2", task.getSummary());
 		editor.updateTaskData(task);
 		assertEquals(NEW_DESCRIPTION+"2", editor.getFormTitle());
 		assertEquals(NEW_DESCRIPTION+"2", editor.getDescription());

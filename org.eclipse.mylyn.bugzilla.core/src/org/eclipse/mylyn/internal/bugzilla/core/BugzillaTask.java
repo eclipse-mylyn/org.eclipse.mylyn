@@ -40,7 +40,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-		this(hit.getHandleIdentifier(), hit.getDescription(), newTask);
+		this(hit.getHandleIdentifier(), hit.getSummary(), newTask);
 		setPriority(hit.getPriority());
 		initFromHandle();
 	}
@@ -60,9 +60,9 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	@Override
-	public String getDescription() {
-		if (this.isDownloaded() || !super.getDescription().startsWith("<")) {
-			return super.getDescription();
+	public String getSummary() {
+		if (this.isDownloaded() || !super.getSummary().startsWith("<")) {
+			return super.getSummary();
 		} else {
 			if (isSynchronizing()) {
 				//return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <synchronizing>";

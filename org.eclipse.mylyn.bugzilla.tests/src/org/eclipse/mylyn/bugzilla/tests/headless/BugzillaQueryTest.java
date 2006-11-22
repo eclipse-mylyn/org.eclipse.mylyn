@@ -119,7 +119,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 		assertEquals(2, collector.getHits().size());
 		for (AbstractQueryHit hit : collector.getHits()) {
-			assertTrue(hit.getDescription().contains("search-match-test"));
+			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 	}
 }

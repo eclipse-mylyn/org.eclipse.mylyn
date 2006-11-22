@@ -50,7 +50,7 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		return children;
 	}
 
-	public String getDescription() {
+	public String getSummary() {
 		return handle;
 	}
 	
