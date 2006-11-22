@@ -1463,10 +1463,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					String oldText = newCommentTextViewer.getDocument().get();
+					String oldText = newCommentTextViewer.getDocument().get();					
 					StringBuilder strBuilder = new StringBuilder();
 					strBuilder.append(oldText);
-					strBuilder.append("\n (In reply to comment #" + taskComment.getNumber() + ")\n");
+					if(strBuilder.length() != 0) {
+						strBuilder.append("\n");
+					}					
+					strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
 					String[] lines = taskComment.getText().split("\n");
 					for (String line : lines) {
 						strBuilder.append("> " + line + "\n");
