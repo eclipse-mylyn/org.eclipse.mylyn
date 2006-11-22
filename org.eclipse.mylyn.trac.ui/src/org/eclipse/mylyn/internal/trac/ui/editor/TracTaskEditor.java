@@ -30,9 +30,7 @@ import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -50,15 +48,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	public TracTaskEditor(FormEditor editor) {
 		super(editor);
-	}
-
-	@Override
-	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
-		// disabled, see bug 155151
-	}
-
-	@Override
-	protected void createCustomAttributeLayout(Composite composite) {
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {

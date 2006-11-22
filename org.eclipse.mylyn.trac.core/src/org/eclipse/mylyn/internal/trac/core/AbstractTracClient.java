@@ -58,7 +58,6 @@ public abstract class AbstractTracClient implements ITracClient {
 		return username != null && username.length() > 0;
 	}
 
-
 	public TracComponent[] getComponents() {
 		return (data.components != null) ? data.components.toArray(new TracComponent[0]) : null;
 	}

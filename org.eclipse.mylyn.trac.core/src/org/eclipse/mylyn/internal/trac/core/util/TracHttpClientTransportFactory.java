@@ -26,7 +26,7 @@ import org.apache.xmlrpc.client.XmlRpcClientException;
 import org.apache.xmlrpc.client.XmlRpcCommonsTransport;
 import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
-import org.apache.xmlrpc.client.XmlRpcTransportFactoryImpl;
+import org.apache.xmlrpc.client.XmlRpcTransportFactory;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 
 /**
@@ -35,7 +35,7 @@ import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
  * 
  * @author Steffen Pingel
  */
-public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
+public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	public static class TracHttpException extends XmlRpcException {
 
@@ -58,23 +58,12 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 			super(client);
 
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) client.getConfig();
-			
 			// this needs to be set to avoid exceptions
 			getHttpClient().getParams().setAuthenticationPreemptive(config.getBasicUserName() != null);
 		}
 
 		public HttpClient getHttpClient() {
 			return (HttpClient) getValue("client");
-		}
-
-		@Override
-		protected InputStream getInputStream() throws XmlRpcException {
-			int responseCode = getMethod().getStatusCode();
-			if (responseCode != HttpURLConnection.HTTP_OK) {
-				throw new TracHttpException(responseCode);
-			}
-
-			return super.getInputStream();
 		}
 
 		public PostMethod getMethod() {
@@ -91,7 +80,7 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 				field.setAccessible(true);
 				return field.get(this);
 			} catch (Throwable t) {
-				throw new RuntimeException("Internal error accessing HttpClient", t);
+				throw new RuntimeException("Internal error accessing field: " + name, t);
 			}
 		}
 
@@ -101,10 +90,20 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 				field.setAccessible(true);
 				field.set(this, value);
 			} catch (Throwable t) {
-				throw new RuntimeException("Internal error accessing HttpClient", t);
+				throw new RuntimeException("Internal error accessing field: " + name, t);
 			}
 		}
+		
+		@Override
+		protected InputStream getInputStream() throws XmlRpcException {
+			int responseCode = getMethod().getStatusCode();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				throw new TracHttpException(responseCode);
+			}
 
+			return super.getInputStream();
+		}
+		
 		@Override
 		protected void initHttpHeaders(XmlRpcRequest request) throws XmlRpcClientException {
 			// super call needed to initialize private fields of XmlRpcCommonsTransport
@@ -148,24 +147,23 @@ public class TracHttpClientTransportFactory extends XmlRpcTransportFactoryImpl {
 
 	}
 
-	private final TracHttpClientTransport transport;
+	private XmlRpcClient client;
+	private Proxy proxy;
 
 	public TracHttpClientTransportFactory(XmlRpcClient client) {
-		super(client);
-
-		transport = new TracHttpClientTransport(client);
+		this.client = client;
 	}
 
 	public XmlRpcTransport getTransport() {
-		return transport;
-	}
-	
-	public void setProxy(Proxy proxy) {
-		transport.setProxy(proxy);
+		return new TracHttpClientTransport(client);
 	}
 	
 	public Proxy getProxy() {
-		return transport.getProxy();
+		return proxy;
 	}
-
+	
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
+	}
+	
 }
