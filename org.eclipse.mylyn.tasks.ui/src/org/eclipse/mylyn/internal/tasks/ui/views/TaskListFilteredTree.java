@@ -177,10 +177,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
     public void indicateActiveTask(ITask task) {
-    	String text = task.getDescription();
+    	String text = task.getSummary();
     	activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
-		activeTaskLabel.setToolTipText(task.getDescription());
+		activeTaskLabel.setToolTipText(task.getSummary());
 		filterComposite.layout();
     }
     

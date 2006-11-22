@@ -41,7 +41,7 @@ public class TaskPlanLabelProvider extends TaskElementLabelProvider implements I
 			case 1:
 				return task.getPriority();
 			case 2:
-				return task.getDescription();
+				return task.getSummary();
 			case 3:
 				return DateUtil.getFormattedDurationShort(TasksUiPlugin.getTaskListManager().getElapsedTime(task));
 			case 4:

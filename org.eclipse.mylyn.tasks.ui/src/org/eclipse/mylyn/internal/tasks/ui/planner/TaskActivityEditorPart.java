@@ -745,9 +745,9 @@ public class TaskActivityEditorPart extends EditorPart {
 				writer.write("<td width=\"59\">ICON</td><td width=\"55\">" + currentTask.getPriority()
 						+ "</td><td width=\"495\">");
 				if (currentTask.hasValidUrl()) {
-					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getDescription() + "</a>");
+					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getSummary() + "</a>");
 				} else {
-					writer.write(currentTask.getDescription());
+					writer.write(currentTask.getSummary());
 				}
 				writer.write("</td><td>" + elapsedTimeString + "</td><td>" + estimatedTimeString + "</td><td>"
 						+ reminderDateString + "</td>");
@@ -802,9 +802,9 @@ public class TaskActivityEditorPart extends EditorPart {
 						+ "</td><td width=\"495\">");
 
 				if (currentTask.hasValidUrl()) {
-					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getDescription() + "</a>");
+					writer.write("<a href='" + currentTask.getUrl() + "'>" + currentTask.getSummary() + "</a>");
 				} else {
-					writer.write(currentTask.getDescription());
+					writer.write(currentTask.getSummary());
 				}
 
 				writer.write("</td><td>" + creationDateString + "</td>");

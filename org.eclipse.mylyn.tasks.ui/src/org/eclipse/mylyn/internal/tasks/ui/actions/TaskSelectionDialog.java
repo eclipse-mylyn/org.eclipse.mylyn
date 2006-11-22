@@ -85,11 +85,11 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
 				String taskString = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": "
-						+ task.getDescription();
+						+ task.getSummary();
 				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String taskString = hit.getIdLabel() + ": " + hit.getDescription();
+				String taskString = hit.getIdLabel() + ": " + hit.getSummary();
 				return pattern.matcher(taskString).find();
 			}
 			return false;

@@ -190,16 +190,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (summary == null)
 			return;
 		if (!summary.isDisposed()) {
-			if (!summary.getText().equals(updateTask.getDescription())) {
+			if (!summary.getText().equals(updateTask.getSummary())) {
 				boolean wasDirty = TaskPlanningEditor.this.isDirty;
-				summary.setText(updateTask.getDescription());
+				summary.setText(updateTask.getSummary());
 				TaskPlanningEditor.this.markDirty(wasDirty);
 			}
 			if (parentEditor != null) {
 				parentEditor.changeTitle();
 			}
 			if (form != null && updateTask != null) {
-				form.setText(updateTask.getDescription());
+				form.setText(updateTask.getSummary());
 			}
 		}
 
@@ -306,7 +306,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		form.setText(task.getDescription());
+		form.setText(task.getSummary());
 
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
@@ -457,7 +457,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		Label l = toolkit.createLabel(container, "Summary: ");
 		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		summary = toolkit.createText(container, task.getDescription(), SWT.NONE);
+		summary = toolkit.createText(container, task.getSummary(), SWT.NONE);
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		summary.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		toolkit.paintBordersFor(container);

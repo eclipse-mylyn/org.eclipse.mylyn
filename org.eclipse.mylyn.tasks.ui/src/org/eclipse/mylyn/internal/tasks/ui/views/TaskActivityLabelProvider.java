@@ -76,9 +76,9 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			switch (columnIndex) {			
 			case 2:
 				if(task instanceof AbstractRepositoryTask) {
-					return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())+": "+task.getDescription();
+					return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())+": "+task.getSummary();
 				} else {
-					return task.getDescription();
+					return task.getSummary();
 				}
 			case 3:
 				return DateUtil.getFormattedDurationShort(activityDelegate.getDateRangeContainer().getElapsed(activityDelegate));
@@ -101,7 +101,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			DateRangeContainer taskCategory = (DateRangeContainer) element;
 			switch (columnIndex) {
 			case 2:
-				return taskCategory.getDescription();
+				return taskCategory.getSummary();
 			case 3:
 				String elapsedTimeString = NO_MINUTES;
 				try {

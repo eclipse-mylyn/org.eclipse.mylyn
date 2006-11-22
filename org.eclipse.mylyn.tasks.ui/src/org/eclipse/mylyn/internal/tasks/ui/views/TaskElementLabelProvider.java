@@ -108,26 +108,26 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 		if (object instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
-			if (!pattern.matcher(hit.getDescription()).matches() && hit.getIdLabel() != null && !hit.getIdLabel().equals("")) {
-				return hit.getIdLabel() + ": " + hit.getDescription();
+			if (!pattern.matcher(hit.getSummary()).matches() && hit.getIdLabel() != null && !hit.getIdLabel().equals("")) {
+				return hit.getIdLabel() + ": " + hit.getSummary();
 			} else {
-				return hit.getDescription();
+				return hit.getSummary();
 			}
 		} else if (object instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) object;
-			if (!pattern.matcher(task.getDescription()).matches()) {
+			if (!pattern.matcher(task.getSummary()).matches()) {
 				if (task.getIdLabel() != null) {
-					return task.getIdLabel() + ": " + task.getDescription();
+					return task.getIdLabel() + ": " + task.getSummary();
 				} else {
-					return task.getDescription();
+					return task.getSummary();
 				}
 //				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + ": " + task.getDescription();
 			} else {
-				return task.getDescription();
+				return task.getSummary();
 			}
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
-			return element.getDescription();
+			return element.getSummary();
 		} else {
 			return super.getText(object);
 		}

@@ -95,6 +95,6 @@ public class DeleteAction extends Action {
 	}
 
 	public static String genDeleteConfirmationMessage(ITask task) {
-		return "Delete the selected task and discard task context?\n\n" + task.getDescription();
+		return "Delete the selected task and discard task context?\n\n" + task.getSummary();
 	}
 }

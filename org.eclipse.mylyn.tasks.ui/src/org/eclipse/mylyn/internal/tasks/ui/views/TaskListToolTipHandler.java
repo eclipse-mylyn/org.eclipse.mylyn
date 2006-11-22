@@ -205,7 +205,7 @@ public class TaskListToolTipHandler {
 			} else {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
-			tooltip += ((ITaskListElement) element).getDescription();
+			tooltip += ((ITaskListElement) element).getSummary();
 			if (repositoryTask != null) {
 				tooltip += "\n" + repositoryTask.getRepositoryUrl() + formatScheduledFor(repositoryTask);
 
@@ -215,7 +215,7 @@ public class TaskListToolTipHandler {
 			}
 			return tooltip;
 		} else if (element != null) {
-			tooltip += ((ITaskListElement) element).getDescription() + formatScheduledFor(element);
+			tooltip += ((ITaskListElement) element).getSummary() + formatScheduledFor(element);
 			return tooltip + priority;
 		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");

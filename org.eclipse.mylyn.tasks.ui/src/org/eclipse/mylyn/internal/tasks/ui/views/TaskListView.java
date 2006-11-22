@@ -564,9 +564,9 @@ public class TaskListView extends ViewPart {
 		}
 
 		if (task != null) {
-			setTitleToolTip(PART_NAME + " (" + task.getDescription() + ")");
+			setTitleToolTip(PART_NAME + " (" + task.getSummary() + ")");
 			if (shouldSetDescription) {
-				setContentDescription(task.getDescription());
+				setContentDescription(task.getSummary());
 			} else {
 				setContentDescription("");
 			}
@@ -629,7 +629,7 @@ public class TaskListView extends ViewPart {
 					case 3:
 						return "";
 					case 4:
-						return taskListElement.getDescription();
+						return taskListElement.getSummary();
 					}
 				} else if (element instanceof AbstractTaskContainer) {
 					AbstractTaskContainer cat = (AbstractTaskContainer) element;
@@ -641,7 +641,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						return "";
 					case 3:
-						return cat.getDescription();
+						return cat.getSummary();
 					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery cat = (AbstractRepositoryQuery) element;
@@ -653,7 +653,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						return "";
 					case 3:
-						return cat.getDescription();
+						return cat.getSummary();
 					}
 				}
 			} catch (Exception e) {

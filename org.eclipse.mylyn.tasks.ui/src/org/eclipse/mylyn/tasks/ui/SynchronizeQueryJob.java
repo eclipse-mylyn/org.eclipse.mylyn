@@ -60,7 +60,7 @@ class SynchronizeQueryJob extends Job {
 
 			repositoryQuery.setStatus(null);
 
-			monitor.setTaskName("Synchronizing: " + repositoryQuery.getDescription());
+			monitor.setTaskName("Synchronizing: " + repositoryQuery.getSummary());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
 			// repositoryQuery.setCurrentlySynchronizing(true);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(

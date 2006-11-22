@@ -36,7 +36,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 	}
 
 	public String getDescription() {
-		return hit.getDescription();
+		return hit.getSummary();
 	}
 
 	public String getLabel() {
@@ -66,11 +66,11 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 			return false;
 		}
 		TaskListNotificationQueryIncoming notification = (TaskListNotificationQueryIncoming) o;
-		return notification.getDescription().equals(hit.getDescription());
+		return notification.getDescription().equals(hit.getSummary());
 	}
 
 	public int hashCode() {
-		return hit.getDescription().hashCode();
+		return hit.getSummary().hashCode();
 	}
 
 	public Image getOverlayIcon() {

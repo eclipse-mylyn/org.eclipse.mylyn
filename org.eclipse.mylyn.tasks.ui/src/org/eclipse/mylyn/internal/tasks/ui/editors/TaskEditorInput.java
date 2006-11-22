@@ -45,7 +45,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	private void init(ITask task) {
 		this.task = task;
 		id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
-		label = truncateDescription(task.getDescription());
+		label = truncateDescription(task.getSummary());
 	}
 
 	private String truncateDescription(String description) {
@@ -135,9 +135,9 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 			if (idLabel != null) {
 				label += idLabel + ": ";
 			}
-			label += truncateDescription(task.getDescription());
+			label += truncateDescription(task.getSummary());
 		} else if (task != null){
-			label = truncateDescription(task.getDescription());
+			label = truncateDescription(task.getSummary());
 		} 
 		return label;
 	}

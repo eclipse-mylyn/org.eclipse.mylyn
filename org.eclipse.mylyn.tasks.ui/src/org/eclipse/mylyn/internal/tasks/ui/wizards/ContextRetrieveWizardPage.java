@@ -67,7 +67,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		new Label(composite, SWT.NONE).setText("Task: " + task.getDescription());
+		new Label(composite, SWT.NONE).setText("Task: " + task.getSummary());
 		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
 		new Label(composite, SWT.NONE).setText("Select context below:");
 

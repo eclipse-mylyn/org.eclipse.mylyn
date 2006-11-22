@@ -100,8 +100,8 @@ public class TaskActivityViewSorter extends ViewerSorter {
 			return result * directions[sortColumn];
 		}
 		case DESCRIPTION: {
-			String description1 = task1.getDescription();
-			String description2 = task2.getDescription();
+			String description1 = task1.getSummary();
+			String description2 = task2.getSummary();
 			int result = getComparator().compare(description1, description2);
 			return result * directions[sortColumn];
 		}

@@ -197,7 +197,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		for (AbstractTaskContainer category : manager.getTaskList().getTaskContainers()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(labelProvider.getImage(category));
-			item.setText(category.getDescription());
+			item.setText(category.getSummary());
 			item.setData(category);
 		}
 
@@ -205,7 +205,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		for (AbstractRepositoryQuery query : manager.getTaskList().getQueries()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(labelProvider.getImage(query));
-			item.setText(query.getDescription());
+			item.setText(query.getSummary());
 			item.setData(query);
 		}
 		for (int i = 0; i < columnNames.length; i++) {

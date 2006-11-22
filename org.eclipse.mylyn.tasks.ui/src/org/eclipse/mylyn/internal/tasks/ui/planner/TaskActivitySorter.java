@@ -67,7 +67,7 @@ public class TaskActivitySorter extends ViewerSorter {
 	}
 
 	protected int compareDescription(ITask task1, ITask task2) {
-		return task1.getDescription().compareTo(task2.getDescription());
+		return task1.getSummary().compareToIgnoreCase(task2.getSummary());
 	}
 
 	protected int comparePriority(ITask task1, ITask task2) {

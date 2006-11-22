@@ -81,7 +81,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 			if (idLabel != null) {
 				label += idLabel + ": ";
 			}
-			label += repositoryTask.getDescription();
+			label += repositoryTask.getSummary();
 			return label;
 			//return repositoryTask.getIdLabel();//getDescription();
 		} else if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {

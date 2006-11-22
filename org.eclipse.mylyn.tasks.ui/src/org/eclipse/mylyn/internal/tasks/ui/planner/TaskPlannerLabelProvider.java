@@ -46,12 +46,12 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 				case 1:
 					return task.getPriority();
 				case 2:
-					return task.getDescription();
+					return task.getSummary();
 				case 3:
 					if (task.getCreationDate() != null) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else {
-						MylarStatusHandler.log("Task has no creation date: " + task.getDescription(), this);
+						MylarStatusHandler.log("Task has no creation date: " + task.getSummary(), this);
 						return "[unknown]";
 					}
 				case 4:

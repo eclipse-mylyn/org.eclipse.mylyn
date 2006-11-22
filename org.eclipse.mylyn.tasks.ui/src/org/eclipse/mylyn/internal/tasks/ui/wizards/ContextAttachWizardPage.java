@@ -50,7 +50,7 @@ public class ContextAttachWizardPage extends WizardPage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		
-		new Label(composite, SWT.NONE).setText("Task: " + task.getDescription());
+		new Label(composite, SWT.NONE).setText("Task: " + task.getSummary());
 		new Label(composite, SWT.NONE).setText("Repository: " + repository.getUrl());
 		new Label(composite, SWT.NONE).setText("Comment: ");
 		commentText = new Text(composite, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.WRAP);

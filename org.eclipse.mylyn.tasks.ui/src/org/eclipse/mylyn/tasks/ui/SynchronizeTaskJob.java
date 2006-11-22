@@ -130,7 +130,7 @@ class SynchronizeTaskJob extends Job {
 		boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
 		if (forceSync || (!canNotSynch && !hasLocalChanges) || !repositoryTask.isDownloaded()) {
-			monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getDescription());
+			monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getSummary());
 
 			final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());

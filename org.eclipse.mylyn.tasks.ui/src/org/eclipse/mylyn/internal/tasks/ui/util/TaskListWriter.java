@@ -118,7 +118,7 @@ public class TaskListWriter {
 					delagatingExternalizer.createQueryElement(query, doc, root);
 				}
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "Did not externalize: " + query.getDescription(), true);
+				MylarStatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
 			}
 			if (element == null) {
 				MylarStatusHandler.log("Did not externalize: " + query, this);

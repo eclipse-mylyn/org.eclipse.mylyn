@@ -436,13 +436,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
 			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
-				return c1.getDescription().compareTo(c2.getDescription());
+				return c1.getSummary().compareToIgnoreCase(c2.getSummary());
 			}
 
 		});
 		categoryCombo.add("<root>");
 		for (AbstractTaskContainer category : categories) {
-			categoryCombo.add(category.getDescription());
+			categoryCombo.add(category.getSummary());
 		}
 		categoryCombo.select(0);
 		categoryCombo.setEnabled(false);

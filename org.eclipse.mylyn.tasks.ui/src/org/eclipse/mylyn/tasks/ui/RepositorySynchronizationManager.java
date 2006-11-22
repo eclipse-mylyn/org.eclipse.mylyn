@@ -279,7 +279,7 @@ public class RepositorySynchronizationManager {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
 		if (newTaskData == null) {
-			MylarStatusHandler.log("Download of " + repositoryTask.getDescription() + " from "
+			MylarStatusHandler.log("Download of " + repositoryTask.getSummary() + " from "
 					+ repositoryTask.getRepositoryUrl() + " failed.", this);
 			return false;
 		}
@@ -309,7 +309,7 @@ public class RepositorySynchronizationManager {
 												null,
 												"Local Task Conflicts with Repository",
 												"Local copy of: "
-														+ repositoryTask.getDescription()
+														+ repositoryTask.getSummary()
 														+ "\n\n on: "
 														+ repositoryTask.getRepositoryUrl()
 														+ "\n\n has changes, override local? \n\nNOTE: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");

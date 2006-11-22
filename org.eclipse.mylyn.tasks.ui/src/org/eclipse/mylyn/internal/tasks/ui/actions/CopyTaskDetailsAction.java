@@ -71,20 +71,20 @@ public class CopyTaskDetailsAction extends Action {
 					text += ((AbstractRepositoryTask)task).getIdLabel() + ": ";
 				}
 				
-				text += task.getDescription();
+				text += task.getSummary();
 				if (task.hasValidUrl()) {
 					text += "\n" + task.getUrl();
 				} 
 			} else {
-				text += ((AbstractQueryHit)object).getDescription();
+				text += ((AbstractQueryHit)object).getSummary();
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery)object;
-			text += query.getDescription();
+			text += query.getSummary();
 			text += "\n" + query.getUrl();
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
-			text = element.getDescription();
+			text = element.getSummary();
 		}
 		return text;
 	}

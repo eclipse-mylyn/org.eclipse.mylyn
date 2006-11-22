@@ -23,7 +23,7 @@ public class TaskKeyComparator implements Comparator<String> {
 			return 1;
 
 		if (s1 != null && s2 != null) {
-			int n = s1.compareTo(s2);
+			int n = s1.compareToIgnoreCase(s2);
 			if (n != 0)
 				return n;
 
@@ -38,7 +38,7 @@ public class TaskKeyComparator implements Comparator<String> {
 				return n;
 		}
 
-		return a1[2].compareTo(a2[2]);
+		return a1[2].compareToIgnoreCase(a2[2]);
 	}
 
 	public String[] split(String s) {

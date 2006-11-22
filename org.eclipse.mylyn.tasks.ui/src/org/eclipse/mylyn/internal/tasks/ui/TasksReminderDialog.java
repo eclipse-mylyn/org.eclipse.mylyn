@@ -208,7 +208,7 @@ public class TasksReminderDialog extends Dialog {
 				ITask task = (ITask) element;
 				switch (columnIndex) {
 				case 0:
-					return task.getDescription();
+					return task.getSummary();
 				case 1:
 					return task.getPriority();
 				case 2:
@@ -253,7 +253,7 @@ public class TasksReminderDialog extends Dialog {
 		}
 
 		private int compareDescription(ITask task1, ITask task2) {
-			return task1.getDescription().compareTo(task2.getDescription());
+			return task1.getSummary().compareToIgnoreCase(task2.getSummary());
 		}
 
 		private int comparePriority(ITask task1, ITask task2) {

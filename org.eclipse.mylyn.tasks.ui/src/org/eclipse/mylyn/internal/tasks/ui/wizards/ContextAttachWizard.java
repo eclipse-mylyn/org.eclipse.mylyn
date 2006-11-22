@@ -69,7 +69,7 @@ public class ContextAttachWizard extends Wizard {
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
 					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
-							"Context attached to task: " + task.getDescription());
+							"Context attached to task: " + task.getSummary());
 					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				}
 			}

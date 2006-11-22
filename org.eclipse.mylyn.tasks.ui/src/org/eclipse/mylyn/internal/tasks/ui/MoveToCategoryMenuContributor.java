@@ -43,7 +43,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 						moveToCategory(selectedElements, category);
 					}
 				};
-				String text = handleAcceleratorKeys(category.getDescription());
+				String text = handleAcceleratorKeys(category.getSummary());
 				action.setText(text);
 				action.setImageDescriptor(TaskListImages.CATEGORY);
 //				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
