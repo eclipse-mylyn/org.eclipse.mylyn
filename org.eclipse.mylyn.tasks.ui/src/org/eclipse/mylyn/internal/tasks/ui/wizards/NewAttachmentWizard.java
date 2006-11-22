@@ -228,7 +228,9 @@ public class NewAttachmentWizard extends Wizard {
 	}
 
 	public IWizardPage getNextPage(IWizardPage page) {
-		attachPage.setFilePath(inputPage.getAttachmentName());
+		if (page == inputPage) {
+			attachPage.setFilePath(inputPage.getAttachmentName());
+		}
 		return super.getNextPage(page);
 	}
 
