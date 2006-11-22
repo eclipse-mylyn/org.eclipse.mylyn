@@ -11,11 +11,9 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.Proxy.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -23,8 +21,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.AuthenticatedProxy;
-import org.eclipse.update.internal.core.UpdateCore;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -118,7 +115,7 @@ public class TaskRepository {
 	public String getUrl() {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
-	
+
 	private String getProxyHostname() {
 		return properties.get(PROXY_HOSTNAME);
 	}
@@ -367,33 +364,18 @@ public class TaskRepository {
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (useDefaultProxy()) {
-			if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
-				String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
-				int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
-
-				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-				proxy = new Proxy(Type.HTTP, sockAddr);
-			}
+			proxy = WebClientUtil.getSystemProxy();
 		} else {
+
 			String proxyHost = getProperty(PROXY_HOSTNAME);
-			String proxyPortStr = getProperty(PROXY_PORT);
+			String proxyPort = getProperty(PROXY_PORT);
 			String proxyUsername = "";
 			String proxyPassword = "";
 			if (proxyHost != null && proxyHost.length() > 0) {
 				proxyUsername = getProxyUsername();
 				proxyPassword = getProxyPassword();
 			}
-			boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
-					.length() > 0);
-			if (proxyHost != null && proxyHost.length() > 0 && proxyPortStr != null && proxyPortStr.length() > 0) {
-				int proxyPort = Integer.parseInt(proxyPortStr);
-				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-				if (authenticated) {
-					proxy = new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
-				} else {
-					proxy = new Proxy(Type.HTTP, sockAddr);
-				}
-			}
+			proxy = WebClientUtil.getProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
 		}
 		return proxy;
 	}

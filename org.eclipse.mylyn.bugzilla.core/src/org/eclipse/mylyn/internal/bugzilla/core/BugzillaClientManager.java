@@ -31,15 +31,16 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 
 	public synchronized BugzillaClient getClient(TaskRepository taskRepository) throws MalformedURLException {
 		BugzillaClient client = clientByUrl.get(taskRepository.getUrl());
-		if (client == null) {	
-			
-			String htUser = taskRepository.getProperty(TaskRepository.AUTH_HTTP_USERNAME) != null ? taskRepository.getProperty(TaskRepository.AUTH_HTTP_USERNAME): "";
-			String htPass = taskRepository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD) != null ? taskRepository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD): "";
-			
-			
+		if (client == null) {
+
+			String htUser = taskRepository.getProperty(TaskRepository.AUTH_HTTP_USERNAME) != null ? taskRepository
+					.getProperty(TaskRepository.AUTH_HTTP_USERNAME) : "";
+			String htPass = taskRepository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD) != null ? taskRepository
+					.getProperty(TaskRepository.AUTH_HTTP_PASSWORD) : "";
+
 			client = BugzillaClientFactory.createClient(taskRepository.getUrl(), taskRepository.getUserName(),
-					taskRepository.getPassword(), htUser, htPass, taskRepository.getCharacterEncoding());
-			client.setProxy(taskRepository.getProxy());
+					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(), taskRepository
+							.getCharacterEncoding());
 			clientByUrl.put(taskRepository.getUrl(), client);
 		}
 		return client;

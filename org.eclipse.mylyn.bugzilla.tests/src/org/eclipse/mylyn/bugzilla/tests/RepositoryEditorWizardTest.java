@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
+import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -66,7 +67,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setPassword("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (LoginException e) {
 			return;
@@ -82,7 +83,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUserId("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (LoginException e) {
 			return;
@@ -98,7 +99,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUrl("http://invalid");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (UnknownHostException e) {
 			return;
@@ -128,7 +129,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 		client.validate();
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
@@ -147,7 +148,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 		client.validate();
 		page.setUserId("bogus");
 		wizard.performFinish();
@@ -161,7 +162,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
 			client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
-					page.getHttpAuthUserId(), page.getHttpAuthPassword(), page.getCharacterEncoding());
+					page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (LoginException e) {
 			return;

@@ -13,12 +13,14 @@ package org.eclipse.mylar.internal.tasks.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.eclipse.update.internal.core.UpdateCore;
 
 /**
  * @author Mik Kersten
@@ -40,95 +42,6 @@ public class WebClientUtil {
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "off");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 	}
-
-	// /**
-	// * Returns an opened HttpURLConnection. If the proxy fails a direct
-	// * connection is attempted.
-	// */
-	// public static HttpURLConnection openUrlConnection(URL url, Proxy proxy,
-	// boolean useTls, String htAuthUser,
-	// String htAuthPass) throws IOException, KeyManagementException,
-	// GeneralSecurityException {
-	//
-	// if (proxy == null) {
-	// proxy = Proxy.NO_PROXY;
-	// }
-	//
-	// HttpURLConnection remoteConnection = getUrlConnection(url, proxy, useTls,
-	// htAuthUser, htAuthPass);
-	// try {
-	// remoteConnection = openConnection(url, proxy);
-	// } catch (ConnectException e) {
-	// remoteConnection = openConnection(url, Proxy.NO_PROXY);
-	// }
-	//
-	// return remoteConnection;
-	// }
-
-	// /**
-	// * Returns connection that has yet to be opened (can still set connection
-	// * parameters). Catch ConnectException and retry with Proxy.NO_PROXY if
-	// * necessary.
-	// */
-	// public static HttpURLConnection getUrlConnection(URL url, Proxy proxy,
-	// boolean useTls, String htAuthUser,
-	// String htAuthPass) throws IOException, KeyManagementException,
-	// GeneralSecurityException {
-	// SSLContext ctx;
-	// if (useTls) {
-	// ctx = SSLContext.getInstance("TLS");
-	// } else {
-	// ctx = SSLContext.getInstance("SSL");
-	// }
-	//
-	// javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new
-	// RepositoryTrustManager() };
-	// ctx.init(null, tm, null);
-	// HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-	//
-	// if (proxy == null) {
-	// proxy = Proxy.NO_PROXY;
-	// }
-	//
-	// URLConnection connection = url.openConnection(proxy);
-	//
-	// // Add http basic authentication credentials if supplied
-	// // Ref: http://www.javaworld.com/javaworld/javatips/jw-javatip47.html
-	// if (htAuthUser != null && htAuthPass != null && !htAuthUser.equals("")) {
-	// String authenticationString = htAuthUser + ":" + htAuthPass;
-	// String encodedAuthenticationString = null;
-	// try {
-	// sun.misc.BASE64Encoder encoder = (sun.misc.BASE64Encoder)
-	// Class.forName("sun.misc.BASE64Encoder")
-	// .newInstance();
-	// encodedAuthenticationString =
-	// encoder.encode(authenticationString.getBytes());
-	// connection.setRequestProperty("Authorization", "Basic " +
-	// encodedAuthenticationString);
-	// } catch (Exception ex) {
-	// // ignore, encoder not available
-	// }
-	// }
-	//
-	// if (connection == null || !(connection instanceof HttpURLConnection)) {
-	// throw new MalformedURLException();
-	// }
-	// return (HttpURLConnection) connection;
-	// }
-
-	// private static HttpURLConnection openConnection(URL url, Proxy proxy)
-	// throws IOException {
-	// URLConnection connection = url.openConnection(proxy);
-	// if (connection == null || !(connection instanceof HttpURLConnection)) {
-	// throw new MalformedURLException();
-	// }
-	// HttpURLConnection remoteConnection = (HttpURLConnection) connection;
-	// remoteConnection.addRequestProperty("Accept-Encoding", ENCODING_GZIP);
-	// remoteConnection.setConnectTimeout(COM_TIME_OUT);
-	// remoteConnection.setReadTimeout(COM_TIME_OUT);
-	// remoteConnection.connect();
-	// return remoteConnection;
-	// }
 
 	/**
 	 * public for testing
@@ -187,14 +100,14 @@ public class WebClientUtil {
 
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
-				
+
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
-			if(proxySettings instanceof AuthenticatedProxy) {
-				AuthenticatedProxy authProxy = (AuthenticatedProxy)proxySettings;
-				Credentials credentials = new	UsernamePasswordCredentials(authProxy.getUserName(),
-						authProxy.getPassword());
+			if (proxySettings instanceof AuthenticatedProxy) {
+				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
+				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
+						.getPassword());
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 			}
@@ -216,4 +129,121 @@ public class WebClientUtil {
 					WebClientUtil.getPort(repositoryUrl));
 		}
 	}
+
+	public static Proxy getSystemProxy() {
+		Proxy proxy = Proxy.NO_PROXY;
+		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
+			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
+
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+			proxy = new Proxy(Type.HTTP, sockAddr);
+		}
+		return proxy;
+	}
+
+	public static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
+		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
+				.length() > 0);
+		if (proxyHost != null && proxyHost.length() > 0 && proxyPort != null && proxyPort.length() > 0) {
+			int proxyPortNum = Integer.parseInt(proxyPort);
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPortNum);
+			if (authenticated) {
+				return new AuthenticatedProxy(Type.HTTP, sockAddr, proxyUsername, proxyPassword);
+			} else {
+				return new Proxy(Type.HTTP, sockAddr);
+			}
+		}
+		return Proxy.NO_PROXY;
+	}
+
 }
+
+// /**
+// * Returns an opened HttpURLConnection. If the proxy fails a direct
+// * connection is attempted.
+// */
+// public static HttpURLConnection openUrlConnection(URL url, Proxy proxy,
+// boolean useTls, String htAuthUser,
+// String htAuthPass) throws IOException, KeyManagementException,
+// GeneralSecurityException {
+//
+// if (proxy == null) {
+// proxy = Proxy.NO_PROXY;
+// }
+//
+// HttpURLConnection remoteConnection = getUrlConnection(url, proxy, useTls,
+// htAuthUser, htAuthPass);
+// try {
+// remoteConnection = openConnection(url, proxy);
+// } catch (ConnectException e) {
+// remoteConnection = openConnection(url, Proxy.NO_PROXY);
+// }
+//
+// return remoteConnection;
+// }
+
+// /**
+// * Returns connection that has yet to be opened (can still set connection
+// * parameters). Catch ConnectException and retry with Proxy.NO_PROXY if
+// * necessary.
+// */
+// public static HttpURLConnection getUrlConnection(URL url, Proxy proxy,
+// boolean useTls, String htAuthUser,
+// String htAuthPass) throws IOException, KeyManagementException,
+// GeneralSecurityException {
+// SSLContext ctx;
+// if (useTls) {
+// ctx = SSLContext.getInstance("TLS");
+// } else {
+// ctx = SSLContext.getInstance("SSL");
+// }
+//
+// javax.net.ssl.TrustManager[] tm = new javax.net.ssl.TrustManager[] { new
+// RepositoryTrustManager() };
+// ctx.init(null, tm, null);
+// HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+//
+// if (proxy == null) {
+// proxy = Proxy.NO_PROXY;
+// }
+//
+// URLConnection connection = url.openConnection(proxy);
+//
+// // Add http basic authentication credentials if supplied
+// // Ref: http://www.javaworld.com/javaworld/javatips/jw-javatip47.html
+// if (htAuthUser != null && htAuthPass != null && !htAuthUser.equals("")) {
+// String authenticationString = htAuthUser + ":" + htAuthPass;
+// String encodedAuthenticationString = null;
+// try {
+// sun.misc.BASE64Encoder encoder = (sun.misc.BASE64Encoder)
+// Class.forName("sun.misc.BASE64Encoder")
+// .newInstance();
+// encodedAuthenticationString =
+// encoder.encode(authenticationString.getBytes());
+// connection.setRequestProperty("Authorization", "Basic " +
+// encodedAuthenticationString);
+// } catch (Exception ex) {
+// // ignore, encoder not available
+// }
+// }
+//
+// if (connection == null || !(connection instanceof HttpURLConnection)) {
+// throw new MalformedURLException();
+// }
+// return (HttpURLConnection) connection;
+// }
+
+// private static HttpURLConnection openConnection(URL url, Proxy proxy)
+// throws IOException {
+// URLConnection connection = url.openConnection(proxy);
+// if (connection == null || !(connection instanceof HttpURLConnection)) {
+// throw new MalformedURLException();
+// }
+// HttpURLConnection remoteConnection = (HttpURLConnection) connection;
+// remoteConnection.addRequestProperty("Accept-Encoding", ENCODING_GZIP);
+// remoteConnection.setConnectTimeout(COM_TIME_OUT);
+// remoteConnection.setReadTimeout(COM_TIME_OUT);
+// remoteConnection.connect();
+// return remoteConnection;
+// }
