@@ -130,6 +130,8 @@ public class WebClientUtil {
 		}
 	}
 
+	
+	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getSystemProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
@@ -142,6 +144,7 @@ public class WebClientUtil {
 		return proxy;
 	}
 
+	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
 		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
 				.length() > 0);
