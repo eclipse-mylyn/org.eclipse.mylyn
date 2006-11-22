@@ -322,7 +322,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// MylarStatusHandler.log(e, "content failed");
 		// }
 		if (summary != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
-			summary.setSelection(0);
+			summary.setSelection(0, summary.getText().length());
+			summary.setFocus();
+		} else if (summary != null) {			
 			summary.setFocus();
 		}
 
