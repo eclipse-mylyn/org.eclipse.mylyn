@@ -37,11 +37,6 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 			KeyManagementException, NoSuchAlgorithmException, IOException, BugzillaException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport, repository);
-
-//		String xmlBugReportUrl = repositoryUrl + IBugzillaConstants.SHOW_BUG_CGI_XML + bugReport.getId();
-//		xmlBugReportUrl = BugzillaClient.addCredentials(xmlBugReportUrl, characterEncoding, userName, password);
-//		URL serverURL = new URL(xmlBugReportUrl);		
-		
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {

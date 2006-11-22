@@ -11,11 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -88,8 +83,7 @@ public class OpenRemoteTaskJob extends Job {
 					try {
 						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
 						openEditor(repository, downloadedTaskData);										
-					} catch (final CoreException e) {
-						// TODO generalize exception handling
+					} catch (final CoreException e) {	
 						if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 								public void run() {
@@ -98,17 +92,16 @@ public class OpenRemoteTaskJob extends Job {
 									MylarStatusHandler.log(e.getStatus());
 								}
 							});
-						} else if (e.getStatus().getException() instanceof LoginException) {
-							MylarStatusHandler.log(e.getStatus().getException(), "Login credentials are invalid for " + repository.getUrl());
-						} else if (!(e.getStatus().getException() instanceof IOException)) {
-							MylarStatusHandler.log(e.getStatus());
-						} else if (e.getStatus().getException() instanceof FileNotFoundException) {
-							// can be caused by empty urlbase parameter on bugzilla server
-							MylarStatusHandler.log(e.getStatus());
 						} else {
-							// bug 154729
-							// MylarStatusHandler.log(e.getStatus());
-						}
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+											TasksUiPlugin.TITLE_DIALOG, 
+											"Could not open repository task.  Verify that a task with this ID exists and is accessible."
+											+ "\n\nException: " + e.getStatus().getException());
+								}
+							});
+						} 
 					}
 				} else {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
