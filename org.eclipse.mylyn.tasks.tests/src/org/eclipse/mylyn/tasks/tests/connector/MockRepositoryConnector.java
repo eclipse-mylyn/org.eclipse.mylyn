@@ -33,6 +33,8 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_KIND = "mock";
+	
+	public static final String REPOSITORY_URL = "http://mockrepository.com";
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {

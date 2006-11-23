@@ -33,8 +33,8 @@ public class AttributeContainer implements Serializable {
 
 	/** report attributes (status, resolution, etc.) */
 	private HashMap<String, RepositoryTaskAttribute> attributes;
-
-	transient private AbstractAttributeFactory attributeFactory;
+	
+	private transient AbstractAttributeFactory attributeFactory;
 
 	public AttributeContainer(AbstractAttributeFactory attributeFactory) {
 		this.attributeFactory = attributeFactory;

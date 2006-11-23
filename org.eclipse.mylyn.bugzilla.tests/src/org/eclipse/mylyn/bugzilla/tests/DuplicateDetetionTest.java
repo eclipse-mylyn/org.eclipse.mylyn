@@ -45,7 +45,7 @@ public class DuplicateDetetionTest extends TestCase {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -63,7 +63,7 @@ public class DuplicateDetetionTest extends TestCase {
 	public void testNoStackTrace() throws Exception {
 		String fakeStackTrace = "this is not really a stacktrace";
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(fakeStackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -84,7 +84,7 @@ public class DuplicateDetetionTest extends TestCase {
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
 
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(extraText + "\n" + stackTrace + "\n");
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -113,7 +113,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
 
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -141,7 +141,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
 
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -165,7 +165,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
 		
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -188,7 +188,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at java.lang.reflect.Method.Invoke (Method.java)";
 		
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -213,7 +213,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at java/util/logging/LogManager.readConfiguration(L:555)";
 	    
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -237,7 +237,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
 		
 		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
-				.getOfflineReportsFile().getNextOfflineBugId());
+				.getTaskDataManager().getNextLocalTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

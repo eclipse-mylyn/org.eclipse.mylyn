@@ -438,7 +438,7 @@ public class BugzillaClient {
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
 				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
 				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
-				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS }; // BugzillaReportElement.VOTES,
+				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC}; // BugzillaReportElement.VOTES,
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);

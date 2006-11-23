@@ -14,12 +14,11 @@ package org.eclipse.mylar.internal.tasks.ui.editors;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 /**
- * Abstract base implementation of an <code>IEditorInput</code> for a subclass
- * of <code>AbstractRepositoryTaskEditor</code>.
  * @author Rob Elves (modifications)
  */
 public abstract class AbstractTaskEditorInput implements IEditorInput {
@@ -28,11 +27,14 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	protected TaskRepository repository;
 
-	protected RepositoryTaskData repositoryTaskData;
+	protected RepositoryTaskData newTaskData;
 	
-	protected AbstractTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
-		this.repositoryTaskData = taskData;		
-		this.repository = repository;		
+	protected RepositoryTaskData oldTaskData;
+	
+	protected AbstractTaskEditorInput(TaskRepository repository, String handle) {
+		this.repository = repository;
+		this.newTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(handle);		
+		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);				
 	}
 	
 	/**
@@ -50,9 +52,20 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 		return true;
 	}
 
-	public RepositoryTaskData getRepositoryTaskData() {
-		return repositoryTaskData;
+	/**
+	 * returns the new task data
+	 */
+	public RepositoryTaskData getTaskData() {
+		return newTaskData;
 	}
+	
+	/**
+	 * returns the old task data
+	 */
+	public RepositoryTaskData getOldTaskData() {
+		return oldTaskData;
+	}
+	
 
 	public ImageDescriptor getImageDescriptor() {
 		return null;
@@ -80,5 +93,13 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	public TaskRepository getRepository() {
 		return repository;
+	}
+
+	protected void setNewTaskData(RepositoryTaskData newTaskData) {
+		this.newTaskData = newTaskData;
+	}
+
+	protected void setOldTaskData(RepositoryTaskData oldTaskData) {
+		this.oldTaskData = oldTaskData;
 	}
 }

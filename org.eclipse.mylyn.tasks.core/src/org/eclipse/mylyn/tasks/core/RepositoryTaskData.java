@@ -23,14 +23,14 @@ import java.util.StringTokenizer;
  * @author Rob Elves
  */
 public class RepositoryTaskData extends AttributeContainer implements Serializable {
-
+	
+	private boolean hasLocalChanges = false;
+	
 	private static final long serialVersionUID = 2746931358107812373L;
 
 	public static final String VAL_STATUS_NEW = "NEW";
 
 	private String reportID;
-
-	private boolean hasChanges = false;
 
 	private String repositoryURL;
 
@@ -42,24 +42,9 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	/** The operation that was selected to do to the bug */
 	protected RepositoryOperation selectedOperation = null;
-
-	/** Whether or not this bug report is saved offline. */
-	protected boolean savedOffline = false;
-
-	protected String charset = null;
-
+	
 	/** The repositoryOperations that can be done on the report */
 	protected List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
-
-	// private static final RepositoryTaskAttributeFactory attributeFactory =
-	// new BugzillaAttributeFactory();
-
-	// /** Parser for dates in the report */
-	// private static SimpleDateFormat delta_ts_format = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	//
-	// private static SimpleDateFormat creation_ts_format = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	/** The bugs valid keywords */
 	protected List<String> validKeywords;
@@ -311,11 +296,11 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public boolean hasLocalChanges() {
-		return hasChanges;
+		return hasLocalChanges;
 	}
 
 	public void setHasLocalChanges(boolean b) {
-		hasChanges = b;
+		hasLocalChanges = b;
 	}
 
 	public List<String> getAttributeValues(String key) {

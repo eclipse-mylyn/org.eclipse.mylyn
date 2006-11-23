@@ -10,12 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -31,20 +27,17 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
 	protected AbstractRepositoryTask repositoryTask = null;
 
-	// Called for existing report without a local task
-	public RepositoryTaskEditorInput(String url, TaskRepository repository, RepositoryTaskData taskData) {
-		super(repository, taskData);
-		this.id = taskData.getId();
-		this.url = url;
-	}
+//	// Called for existing report without a local task
+//	public RepositoryTaskEditorInput(String url, TaskRepository repository, RepositoryTaskData newData, RepositoryTaskData oldData) {
+//		super(repository, newData, oldData);
+//		this.id = newData.getId();
+//		this.url = url;
+//	}
 
-	public RepositoryTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData, String taskId, String taskUrl)
-			throws IOException, GeneralSecurityException {
-		super(repository, taskData);
-		this.id = taskId;
-		this.url = taskUrl;
-		
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), taskId);
+	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl) {
+		super(repository, handle);
+		this.id = AbstractRepositoryTask.getTaskId(handle);
+		this.url = taskUrl;		
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof AbstractRepositoryTask) {
 			this.repositoryTask = (AbstractRepositoryTask) task;
@@ -84,8 +77,8 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 			label += repositoryTask.getSummary();
 			return label;
 			//return repositoryTask.getIdLabel();//getDescription();
-		} else if (repositoryTaskData != null && repositoryTaskData.getLabel() != null) {
-			return repositoryTaskData.getId()+": "+repositoryTaskData.getLabel();
+		} else if (getTaskData() != null && getTaskData().getLabel() != null) {
+			return getTaskData().getId()+": "+getTaskData().getLabel();
 		} else if (id != null) {
 			return id;
 		} else {

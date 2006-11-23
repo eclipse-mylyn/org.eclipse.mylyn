@@ -162,7 +162,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// BugEditor)
 		task.getTaskData().setHasLocalChanges(true);
 		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-		TasksUiPlugin.getSynchronizationManager().saveOffline(task.getTaskData());
+		TasksUiPlugin.getDefault().getTaskDataManager().put(task.getTaskData());		
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
@@ -441,13 +441,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task7.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		assertFalse(TasksUiPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"7") == -1);
+		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"7"));
 		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();
 		taskDataList.add(task7.getTaskData());
-		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(taskDataList);
-		assertTrue(TasksUiPlugin.getDefault().getOfflineReportsFile().find(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"7") == -1);
+		TasksUiPlugin.getDefault().getTaskDataManager().remove(taskDataList);
+		assertNull(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"7"));
 
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
 		assertNotNull(task7.getLastSyncDateStamp());

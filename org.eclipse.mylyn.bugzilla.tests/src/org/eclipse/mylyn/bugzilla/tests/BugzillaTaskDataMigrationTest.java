@@ -11,24 +11,21 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditorInput;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
 /**
  * @author Rob Elves
  */
 public class BugzillaTaskDataMigrationTest extends AbstractBugzillaTest {
 	
-	public void testMigrateDescriptionToReadOnly() throws Exception {
-		init222();
-		BugzillaTask task = generateLocalTaskAndDownload("1");
-		assertNotNull(task);
-		assertNotNull(task.getTaskData());
-		RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
-		assertNotNull(attrib);
-		attrib.setReadOnly(false);
-		BugzillaTaskEditorInput editorInput = new BugzillaTaskEditorInput(repository, task, false);
-		assertTrue(editorInput.getBugTask().getTaskData().getDescriptionAttribute().isReadOnly());
-	}
+//	public void testMigrateDescriptionToReadOnly() throws Exception {
+//		init222();
+//		BugzillaTask task = generateLocalTaskAndDownload("1");
+//		assertNotNull(task);
+//		assertNotNull(task.getTaskData());
+//		RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
+//		assertNotNull(attrib);
+//		attrib.setReadOnly(false);
+//		BugzillaTaskEditorInput editorInput = new BugzillaTaskEditorInput(repository, task, false);
+//		assertTrue(editorInput.getBugTask().getTaskData().getDescriptionAttribute().isReadOnly());
+//	}
 }

@@ -118,7 +118,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		setSite(site);
 		setInput(input);
 		editorInput = ei;
-		taskData = ei.getRepositoryTaskData();
+		taskData = ei.getTaskData();
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData, false);
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();

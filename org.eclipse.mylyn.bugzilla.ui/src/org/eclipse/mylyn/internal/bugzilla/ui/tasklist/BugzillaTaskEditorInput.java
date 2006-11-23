@@ -20,8 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.IPersistableElement;
@@ -29,21 +27,21 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Eric Booth
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 
-	private String bugTitle;
+	private String bugTitle = "";
 
 	private BugzillaTask bugTask;
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline)
 			throws IOException, GeneralSecurityException {
-		super(repository, bugTask.getTaskData(), AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier()), bugTask.getUrl());
+		super(repository, bugTask.getHandleIdentifier(), bugTask.getUrl());
 		this.bugTask = bugTask;
-		migrateDescToReadOnly(bugTask);
-		updateOptions(bugTask.getTaskData());
-		id = AbstractRepositoryTask.getTaskId(bugTask.getHandleIdentifier());
-		bugTitle = "";
+//		migrateDescToReadOnly(bugTask);
+		updateOptions(getTaskData());
+		updateOptions(getOldTaskData());
 	}
 
 	protected void setBugTitle(String str) {
@@ -89,15 +87,15 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return bugTask;
 	}
 
-	// TODO: migration code 0.6.1 -> 0.6.2
-	private void migrateDescToReadOnly(BugzillaTask task) {
-		if (task != null && task.getTaskData() != null) {
-			RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
-			if (attrib != null) {
-				attrib.setReadOnly(true);
-			}
-		}
-	}
+//	// TODO: migration code 0.6.1 -> 0.6.2
+//	private void migrateDescToReadOnly(BugzillaTask task) {
+//		if (task != null && task.getTaskData() != null) {
+//			RepositoryTaskAttribute attrib = task.getTaskData().getDescriptionAttribute();
+//			if (attrib != null) {
+//				attrib.setReadOnly(true);
+//			}
+//		}
+//	}
 
 	// TODO: repository configuration update (remove at some point)
 	private void updateOptions(RepositoryTaskData taskData) {

@@ -27,6 +27,8 @@ public class TaskListColorsAndFonts {
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
 	public static final Color COLOR_GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
+	
+	public static final Color COLOR_ATTRIBUTE_CHANGED  = new Color(Display.getDefault(), 225, 236, 255);
 
 	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170);
 

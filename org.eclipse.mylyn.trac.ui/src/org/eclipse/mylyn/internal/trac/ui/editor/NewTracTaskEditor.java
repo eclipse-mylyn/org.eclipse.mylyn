@@ -65,6 +65,8 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			return;
 		}
 
+		final AbstractTaskContainer category = getCategory();
+		
 		Job submitJob = new Job(SUBMIT_JOB_LABEL) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -74,8 +76,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 					TracTask newTask = new TracTask(AbstractRepositoryTask.getHandle(repository.getUrl(), id),
 							TracRepositoryConnector.getTicketDescription(ticket), true);
-
-					AbstractTaskContainer category = getCategory();
+					
 					if (category != null) {
 						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, category);
 					} else {

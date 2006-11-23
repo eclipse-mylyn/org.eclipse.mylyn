@@ -38,6 +38,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
@@ -149,7 +150,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// RepositoryTaskEditorInput", this);
 
 		editorInput = (AbstractTaskEditorInput) input;
-		taskData = editorInput.getRepositoryTaskData();
+		taskData = editorInput.getTaskData();
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		submissionHandler = new BugSubmissionHandler(connector);
@@ -157,7 +158,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		setSite(site);
 		setInput(input);
 
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
 
 		// restoreBug();
 		isDirty = false;
@@ -203,7 +204,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (event.getJob().getResult().getCode() == Status.OK
-								&& event.getJob().getResult().getMessage() != null) {//
+								&& event.getJob().getResult().getMessage() != null) {
+							//modifiedTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+							
 							// Attach context
 							if (getAttachContext()) {
 								IWorkbench wb = PlatformUI.getWorkbench();
@@ -307,7 +310,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		RepositoryTaskAttribute attribute = this.getRepositoryTaskData().getAttribute(
 				BugzillaReportElement.DEPENDSON.getKeyString());
 		if (!attribute.isReadOnly()) {
-			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+			final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT);
 			text.setLayoutData(textData);
 			toolkit.paintBordersFor(textFieldComposite);
 			text.setData(attribute);
@@ -337,6 +340,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
 		if (!attribute.isReadOnly()) {
 			final Text text = toolkit.createText(textFieldComposite, attribute.getValue(), SWT.FLAT);
+//			if(attribute.hasChanged()) {
+//				text.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+//			}
 			text.setLayoutData(textData);
 			toolkit.paintBordersFor(textFieldComposite);
 			text.setData(attribute);
@@ -397,7 +403,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		try {
-			addKeywordsList(getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.KEYWORDS), composite);
+			addKeywordsList(composite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, "Attribute Display Error",
 					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
@@ -652,14 +658,18 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		timeSection.setClient(timeComposite);
 	}
 
-	protected void addKeywordsList(String keywords, Composite attributesComposite) throws IOException {
+	protected void addKeywordsList(Composite attributesComposite) throws IOException {
 		// newLayout(attributesComposite, 1, "Keywords:", PROPERTY);
+		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.KEYWORDS);
+		if(attribute == null) return;		
+		String keywords = attribute.getValue(); 
 		FormToolkit toolkit = getManagedForm().getToolkit();
 		Label label = toolkit.createLabel(attributesComposite, "Keywords:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
-		keywordsText = toolkit.createText(attributesComposite, keywords);
-		keywordsText.setFont(TEXT_FONT);
+		//toolkit.createText(attributesComposite, keywords)
+		keywordsText = createTextField(attributesComposite, attribute, SWT.NONE);
+		keywordsText.setFont(TEXT_FONT);		
 		keywordsText.setEditable(false);
 		// keywordsText.setForeground(foreground);
 		// keywordsText.setBackground(JFaceColors.getErrorBackground(display));
@@ -730,6 +740,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		String voteValue = votesAttribute != null ? votesAttribute.getValue() : "0";
 		votesText = toolkit.createText(votingComposite, voteValue);
 		votesText.setFont(TEXT_FONT);
+		if(votesAttribute != null && hasChanged(votesAttribute)) {
+			keywordsText.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+		}
 		votesText.setEditable(false);
 
 		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes for this bug", SWT.NONE);

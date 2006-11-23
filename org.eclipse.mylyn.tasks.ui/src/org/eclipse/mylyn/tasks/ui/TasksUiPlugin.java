@@ -46,7 +46,7 @@ import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotificationProvider;
-import org.eclipse.mylar.internal.tasks.ui.OfflineTaskManager;
+import org.eclipse.mylar.internal.tasks.ui.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationIncoming;
@@ -140,7 +140,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListBackupManager taskListBackupManager;
 
-	private OfflineTaskManager offlineTaskManager;
+	private TaskDataManager offlineTaskManager;
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -693,7 +693,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), true);
+			offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), true);
 		} catch (Exception e) {
 			MylarStatusHandler
 					.log(e,
@@ -703,7 +703,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				MylarStatusHandler.log(e, "could not delete offline repository tasks file");
 			}
 			try {
-				offlineTaskManager = new OfflineTaskManager(offlineReportsPath.toFile(), false);
+				offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.log(e, "could not reset offline repository tasks file");
 			}
@@ -719,7 +719,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return configFile;
 	}
 
-	public OfflineTaskManager getOfflineReportsFile() {
+	public TaskDataManager getTaskDataManager() {
 		if (offlineTaskManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
 		}

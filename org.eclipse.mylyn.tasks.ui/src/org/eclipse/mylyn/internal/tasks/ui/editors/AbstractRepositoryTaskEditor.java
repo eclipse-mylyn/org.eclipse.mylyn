@@ -450,7 +450,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected RepositoryTaskData getRepositoryTaskData() {
-		return editorInput.getRepositoryTaskData();
+		return editorInput.getTaskData();
 	}
 
 	protected void updateTask() {
@@ -545,11 +545,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		headerInfoComposite.setLayout(headerLayout);
 
 		toolkit.createLabel(headerInfoComposite, " Status: ").setFont(TITLE_FONT);
-		String statusValue = this.getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.STATUS);
-		toolkit.createText(headerInfoComposite, statusValue, SWT.FLAT | SWT.READ_ONLY);
+		RepositoryTaskAttribute attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.STATUS);
+		createTextField(headerInfoComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
+
 		toolkit.createLabel(headerInfoComposite, " Priority: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, getRepositoryTaskData().getAttributeValue(
-				RepositoryTaskAttribute.PRIORITY), SWT.FLAT | SWT.READ_ONLY);
+		attribute = getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
+		createTextField(headerInfoComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
 		// RepositoryTaskAttribute attribute =
 		// getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.PRIORITY);
 		// if (attribute != null) {
@@ -599,6 +600,29 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
+	 * Utility method to create text field sets backgournd to
+	 * TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED if attribute has changed.
+	 * 
+	 * @param composite
+	 * @param attribute
+	 * @param style
+	 */
+	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style) {
+		Text text;
+		String value;
+		if(attribute == null) {
+			value = "";
+		} else {
+			value = attribute.getValue();
+		}
+		text = toolkit.createText(composite, value, style);
+		if (hasChanged(attribute)) {
+			text.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+		}
+		return text;
+	}
+
+	/**
 	 * Creates the attribute layout, which contains most of the basic attributes
 	 * of the bug (some of which are editable).
 	 */
@@ -606,7 +630,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String title = getTitleString();
 
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
-		section.setExpanded(expandedStateAttributes);
+		section.setExpanded(expandedStateAttributes || hasAttributeChanges());
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
 		GridLayout attributesLayout = new GridLayout();
@@ -645,6 +669,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
 				attributeCombo.setFont(TEXT_FONT);
+
+				if (hasChanged(attribute)) {
+					attributeCombo.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+				}
 				attributeCombo.setLayoutData(data);
 				Set<String> s = values.keySet();
 				String[] a = s.toArray(new String[s.size()]);
@@ -671,10 +699,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				textData.widthHint = 135;
 
 				if (attribute.isReadOnly()) {
-					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT | SWT.READ_ONLY);
+					final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
 					text.setLayoutData(textData);
 				} else {
-					final Text text = toolkit.createText(textFieldComposite, value, SWT.FLAT);
+					final Text text =  createTextField(textFieldComposite, attribute, SWT.FLAT);
 					// text.setFont(COMMENT_FONT);
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
@@ -742,6 +770,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// // getSite().getSelectionProvider());
 	// }
 
+	private boolean hasAttributeChanges() {
+		// TODO: implement
+		return false;
+	}
+
 	/**
 	 * Adds a text field to display and edit the bug's summary.
 	 * 
@@ -758,7 +791,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
 		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
-		summaryText = toolkit.createText(summaryComposite, getRepositoryTaskData().getSummary(), SWT.FLAT);
+		summaryText = createTextField(summaryComposite, getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.SUMMARY), SWT.FLAT);
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry()
 				.get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
@@ -1245,7 +1278,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (attribute != null && !attribute.isReadOnly()) {
 			descriptionTextViewer = addTextEditor(repository, sectionComposite, getRepositoryTaskData()
 					.getDescription(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-			descriptionTextViewer.setEditable(true);
+			descriptionTextViewer.setEditable(true);			
 			StyledText styledText = descriptionTextViewer.getTextWidget();
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.widthHint = DESCRIPTION_WIDTH;
@@ -1273,7 +1306,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			textHash.put(text, styledText);
 		}
-
+		
+		if (hasChanged(getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
+			descriptionTextViewer.getTextWidget().setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
 		toolkit.paintBordersFor(sectionComposite);
@@ -1303,8 +1339,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		textLayout.marginHeight = 0;
 		textLayout.marginRight = 5;
 		textFieldComposite.setLayout(textLayout);
-		String assignedToString = getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED);
-		toolkit.createText(textFieldComposite, assignedToString, SWT.FLAT | SWT.READ_ONLY);
+		createTextField(textFieldComposite, getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT | SWT.READ_ONLY);
 
 		label = toolkit.createLabel(peopleComposite, "Reporter:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
@@ -1314,8 +1349,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		textLayout.verticalSpacing = 0;
 		textLayout.marginHeight = 0;
 		textFieldComposite.setLayout(textLayout);
-		String reporterString = getRepositoryTaskData().getAttributeValue(RepositoryTaskAttribute.USER_REPORTER);
-		toolkit.createText(textFieldComposite, reporterString, SWT.FLAT | SWT.READ_ONLY);
+		createTextField(textFieldComposite, getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_REPORTER), SWT.FLAT | SWT.READ_ONLY);
 
 		addSelfToCC(peopleComposite);
 
@@ -1360,7 +1394,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		ccListData.widthHint = 150;
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
-
+		if (hasChanged(getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_CC))) {
+			ccList.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+		}
 		java.util.List<String> ccs = getRepositoryTaskData().getCC();
 		if (ccs != null) {
 			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
@@ -1455,20 +1491,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final TaskComment taskComment = it.next();
 
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
-					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);			
+					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);			
+			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);
 			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
 			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
-					String oldText = newCommentTextViewer.getDocument().get();					
+					String oldText = newCommentTextViewer.getDocument().get();
 					StringBuilder strBuilder = new StringBuilder();
 					strBuilder.append(oldText);
-					if(strBuilder.length() != 0) {
+					if (strBuilder.length() != 0) {
 						strBuilder.append("\n");
-					}					
+					}
 					strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
 					String[] lines = taskComment.getText().split("\n");
 					for (String line : lines) {
@@ -1478,15 +1514,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				}
 			});
-			
+
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 
 				@Override
 				public void expansionStateChanged(ExpansionEvent e) {
 					replyLink.setVisible(expandableComposite.isExpanded());
-				}});
-			
-		
+				}
+			});
 
 			expandableComposite.setTextClient(replyLink);
 
@@ -1545,12 +1580,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// code for outline
 			commentStyleText.add(styledText);
-			textHash.put(taskComment, styledText);			
+			textHash.put(taskComment, styledText);
 		}
 		if (getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() == 0) {
 			commentsSection.setExpanded(false);
 		}
-		
+
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
@@ -1742,6 +1777,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (getRepositoryTaskData().hasLocalChanges() == true) {
 						TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask,
 								getRepositoryTaskData(), false);
+						TasksUiPlugin.getDefault().getTaskDataManager().save();
 					}
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
@@ -2231,6 +2267,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			i++;
 		}
 		toolkit.paintBordersFor(buttonComposite);
+	}
+
+	protected boolean hasChanged(RepositoryTaskAttribute newAttribute) {
+		if(newAttribute == null) return false;
+		RepositoryTaskData oldTaskData = editorInput.getOldTaskData();
+		if(oldTaskData == null) return false;
+		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
+		if(oldAttribute == null) return false;
+		if (!oldAttribute.getValue().equals(newAttribute.getValue())) {
+			return true;
+		} else if (!oldAttribute.getValues().equals(newAttribute.getValues())) {
+			return true;
+		}
+		return false;
 	}
 
 	protected void addAttachContextButton(Composite buttonComposite, ITask task) {

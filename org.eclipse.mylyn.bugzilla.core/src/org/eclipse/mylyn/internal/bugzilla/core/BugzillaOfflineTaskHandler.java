@@ -23,6 +23,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
@@ -101,11 +102,10 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
-			throws CoreException {
+	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId) throws CoreException {
 		try {
 
-			BugzillaClient client = connector.getClientManager().getClient(repository);			
+			BugzillaClient client = connector.getClientManager().getClient(repository);
 			int bugId = Integer.parseInt(taskId);
 			RepositoryTaskData taskData = client.getTaskData(repository, bugId);
 			if (taskData != null) {
@@ -123,7 +123,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 					+ repository.getUrl() + " failed. File not found: " + e.getMessage(), e));
 		} catch (final Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
-					+ repository.getUrl() + " failed: "+e.getMessage(), e));
+					+ repository.getUrl() + " failed: " + e.getMessage(), e));
 		}
 	}
 
@@ -190,12 +190,12 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				urlQueryString = new String(urlQueryBase + BUG_ID);
 				urlQueryString += newurlQueryString;
 			} else if (!itr.hasNext()) {
-				urlQueryString += newurlQueryString;				
+				urlQueryString += newurlQueryString;
 				queryForChanged(repository, changedTasks, urlQueryString);
 			} else {
 				urlQueryString += newurlQueryString;
 			}
-		}		
+		}
 		return changedTasks;
 	}
 
@@ -254,7 +254,13 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 	}
 
 	public static void addValidOperations(RepositoryTaskData bugReport, String userName) {
-		BUGZILLA_REPORT_STATUS status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
+		BUGZILLA_REPORT_STATUS status;
+		try {
+			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
+		} catch (IllegalArgumentException e) {
+			MylarStatusHandler.log(e, "Unable to get status object for: " + bugReport.getStatus());
+			return;
+		}
 		switch (status) {
 		case UNCONFIRMED:
 		case REOPENED:
@@ -341,44 +347,53 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 	}
 
-	
-//	// TODO: getAttributeOptions()
-//	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)
-//			throws IOException, KeyManagementException, GeneralSecurityException, BugzillaException, CoreException {
-//
-//		RepositoryConfiguration configuration = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(taskRepository, false);
-//		if (configuration == null)
-//			return;
-//		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-//		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-//			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
-//			attribute.clearOptions();
-//			String key = attribute.getID();
-//			if (!product.equals("")) {
-//				switch (element) {
-//				case TARGET_MILESTONE:
-//				case VERSION:
-//				case COMPONENT:
-//					key = product + "." + key;
-//				}
-//			}
-//
-//			List<String> optionValues = configuration.getAttributeValues(key);
-//			if(optionValues.size() == 0) {
-//				optionValues = configuration.getAttributeValues(attribute.getID());
-//			}
-//
-//			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
-//					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
-//				Collections.sort(optionValues);
-//			}
-//			if (element == BugzillaReportElement.TARGET_MILESTONE && optionValues.isEmpty()) {
-//				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-//				continue;
-//			}
-//			for (String option : optionValues) {
-//				attribute.addOptionValue(option, option);
-//			}
-//		}
-//	}
+	// // TODO: getAttributeOptions()
+	// public void updateAttributeOptions(TaskRepository taskRepository,
+	// RepositoryTaskData existingReport)
+	// throws IOException, KeyManagementException, GeneralSecurityException,
+	// BugzillaException, CoreException {
+	//
+	// RepositoryConfiguration configuration =
+	// BugzillaCorePlugin.getDefault().getRepositoryConfiguration(taskRepository,
+	// false);
+	// if (configuration == null)
+	// return;
+	// String product =
+	// existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
+	// for (RepositoryTaskAttribute attribute : existingReport.getAttributes())
+	// {
+	// BugzillaReportElement element =
+	// BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
+	// attribute.clearOptions();
+	// String key = attribute.getID();
+	// if (!product.equals("")) {
+	// switch (element) {
+	// case TARGET_MILESTONE:
+	// case VERSION:
+	// case COMPONENT:
+	// key = product + "." + key;
+	// }
+	// }
+	//
+	// List<String> optionValues = configuration.getAttributeValues(key);
+	// if(optionValues.size() == 0) {
+	// optionValues = configuration.getAttributeValues(attribute.getID());
+	// }
+	//
+	// if (element != BugzillaReportElement.OP_SYS && element !=
+	// BugzillaReportElement.BUG_SEVERITY
+	// && element != BugzillaReportElement.PRIORITY && element !=
+	// BugzillaReportElement.BUG_STATUS) {
+	// Collections.sort(optionValues);
+	// }
+	// if (element == BugzillaReportElement.TARGET_MILESTONE &&
+	// optionValues.isEmpty()) {
+	// existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
+	// continue;
+	// }
+	// for (String option : optionValues) {
+	// attribute.addOptionValue(option, option);
+	// }
+	// }
+	// }
 }

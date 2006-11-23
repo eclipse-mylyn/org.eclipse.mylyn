@@ -57,17 +57,6 @@ public class RepositorySynchronizationManager {
 	protected boolean forceSyncExecForTesting = false;
 
 	/**
-	 * non-final for testing purposes
-	 */
-	public void saveOffline(RepositoryTaskData taskData) {
-		try {
-			TasksUiPlugin.getDefault().getOfflineReportsFile().add(taskData);
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, e.getMessage(), false);
-		}
-	}
-
-	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to
 	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractRepositoryTask>
 	 * repositoryTasks, ...)
@@ -296,7 +285,7 @@ public class RepositorySynchronizationManager {
 				if (!forceSync) {
 					// Never overwrite local task data unless forced
 					return false;
-				} 
+				}
 			case CONFLICT:
 				// use a parameter rather than this null check
 				if (offlineTaskData != null) {
@@ -358,14 +347,37 @@ public class RepositorySynchronizationManager {
 			}
 		}
 
-		repositoryTask.setTaskData(newTaskData);
-		repositoryTask.setSyncState(status);
-		saveOffline(newTaskData);
 		if (status == RepositoryTaskSyncState.INCOMING) {
+//			if(offlineTaskData != null) {
+//				markChanged(offlineTaskData, newTaskData);
+//			}
 			repositoryTask.setNotified(false);
 		}
+		
+		repositoryTask.setTaskData(newTaskData);
+		repositoryTask.setSyncState(status);		
+		TasksUiPlugin.getDefault().getTaskDataManager().put(newTaskData);
 		return startState != repositoryTask.getSyncState();
 	}
+
+//	private void markChanged(RepositoryTaskData oldData, RepositoryTaskData newData) {
+//		for (RepositoryTaskAttribute attribute : newData.getAttributes()) {
+//			RepositoryTaskAttribute oldAttribute = oldData.getAttribute(attribute.getID());
+//			if (!oldAttribute.getValue().equals(attribute.getValue())) {
+//				attribute.setHasChanged(true);
+//				continue;
+//			} else if (!oldAttribute.getValues().equals(attribute.getValues())) {
+//				attribute.setHasChanged(true);
+//				continue;
+//			}
+//		}
+//	}
+	
+//	private void clearChanged(RepositoryTaskData newData) {
+//		for (RepositoryTaskAttribute attribute : newData.getAttributes()) {
+//			attribute.setHasChanged(false);
+//		}
+//	}
 
 	/** public for testing purposes */
 	public boolean checkHasIncoming(AbstractRepositoryTask repositoryTask, RepositoryTaskData newData) {
@@ -431,7 +443,7 @@ public class RepositorySynchronizationManager {
 
 		ArrayList<RepositoryTaskData> bugList = new ArrayList<RepositoryTaskData>();
 		bugList.add(bug);
-		TasksUiPlugin.getDefault().getOfflineReportsFile().remove(bugList);
+		TasksUiPlugin.getDefault().getTaskDataManager().remove(bugList);
 	}
 
 	/**
@@ -444,8 +456,9 @@ public class RepositorySynchronizationManager {
 		if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
 			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
+				//clearChanged(repositoryTask.getTaskData());
 			}
-			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);			
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);

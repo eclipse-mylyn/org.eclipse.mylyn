@@ -15,13 +15,13 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
- * The <code>IEditorInput</code> implementation for <code>NewBugEditor</code>.
- * @author Rob Elves (modifications)
+ * @author Rob Elves
  */
 public class NewTaskEditorInput extends AbstractTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
-		super(repository, taskData);		
+		super(repository, null);
+		super.setNewTaskData(taskData);
 	}
 
 	public String getName() {
@@ -32,7 +32,7 @@ public class NewTaskEditorInput extends AbstractTaskEditorInput {
 	public boolean equals(Object o) {
 		if (o instanceof NewTaskEditorInput) {
 			NewTaskEditorInput input = (NewTaskEditorInput) o;
-			return input.getRepositoryTaskData().equals(this.getRepositoryTaskData());
+			return input.getTaskData().equals(this.getTaskData());
 		}
 		return false;
 	}

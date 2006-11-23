@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 
 /**
@@ -158,5 +159,10 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		} else {
 			return super.getOwner();
 		}
+	}
+
+	public RepositoryTaskData getOldTaskData() {
+		// ignore
+		return null;
 	}
 }

@@ -62,7 +62,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		setSite(site);
 		setInput(input);
 
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getRepositoryTaskData());
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
 
 		isDirty = false;
 		updateEditorTitle();

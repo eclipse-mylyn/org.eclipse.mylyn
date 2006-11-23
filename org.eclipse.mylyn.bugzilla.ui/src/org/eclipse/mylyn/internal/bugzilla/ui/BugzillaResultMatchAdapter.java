@@ -42,7 +42,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 		IEditorInput ei = editor.getEditorInput();
 		if (ei instanceof RepositoryTaskEditorInput) {
 			AbstractTaskEditorInput bi = (AbstractTaskEditorInput) ei;
-			return match.getElement().equals(bi.getRepositoryTaskData());
+			return match.getElement().equals(bi.getTaskData());
 		}
 		return false;
 	}
@@ -59,7 +59,7 @@ public class BugzillaResultMatchAdapter implements IBugzillaResultEditorMatchAda
 		IEditorInput ei = editor.getEditorInput();
 		if (ei instanceof RepositoryTaskEditorInput) {
 			AbstractTaskEditorInput bi = (AbstractTaskEditorInput) ei;
-			return result.getMatches(bi.getRepositoryTaskData());
+			return result.getMatches(bi.getTaskData());
 		}
 		return EMPTY_ARR;
 	}

@@ -59,6 +59,7 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			try {
 				BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
+				
 				// input.setOfflineBug(bugzillaTask.getTaskData());
 				return input;
 			} catch (final LoginException e) {

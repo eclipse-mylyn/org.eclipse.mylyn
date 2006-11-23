@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -82,7 +83,8 @@ public class OpenRemoteTaskJob extends Job {
 					RepositoryTaskData downloadedTaskData = null;
 					try {
 						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
-						openEditor(repository, downloadedTaskData);										
+						TasksUiPlugin.getDefault().getTaskDataManager().put(downloadedTaskData);						
+						openEditor(repository, AbstractRepositoryTask.getHandle(repository.getUrl(), taskId), downloadedTaskData);										
 					} catch (final CoreException e) {	
 						if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -116,13 +118,14 @@ public class OpenRemoteTaskJob extends Job {
 		return new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 	
-	private void openEditor(final TaskRepository repository, final RepositoryTaskData taskData) {
+	private void openEditor(final TaskRepository repository, final String handle, final RepositoryTaskData taskData) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (taskData == null) {
 					TaskUiUtil.openUrl(taskUrl);
 				} else {
-					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(taskUrl, repository, taskData);
+					//AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(taskUrl, repository, taskData, null);
+					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, handle, taskUrl);
 					TaskUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 				}
 			}
