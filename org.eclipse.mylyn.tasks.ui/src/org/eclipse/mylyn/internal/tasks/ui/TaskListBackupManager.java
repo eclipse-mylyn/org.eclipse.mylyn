@@ -155,6 +155,37 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			}
 		}
 	}
+	
+//	public File getMostRecentBackup() {
+//		String destination = TasksUiPlugin.getDefault().getBackupFolderPath();
+//
+//		File backupFolder = new File(destination);
+//		ArrayList<File> backupFiles = new ArrayList<File>();
+//		if (backupFolder.exists()) {
+//			File[] files = backupFolder.listFiles();
+//			for (File file : files) {
+//				if (file.getName().startsWith(TaskDataExportWizard.ZIP_FILE_PREFIX)) {
+//					backupFiles.add(file);
+//				}
+//			}
+//		}
+//
+//		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
+//
+//		if (backupFileArray != null && backupFileArray.length > 0) {
+//			Arrays.sort(backupFileArray, new Comparator<File>() {
+//				public int compare(File file1, File file2) {
+//					return (new Long((file1).lastModified()).compareTo(new Long((file2).lastModified()))) * -1;
+//				}
+//
+//			});
+//		}
+//		if (backupFileArray != null && backupFileArray.length > 0) {
+//			return backupFileArray[0];
+//		}
+//		
+//		return null;
+//	}
 
 	class CheckBackupRequired extends TimerTask {
 

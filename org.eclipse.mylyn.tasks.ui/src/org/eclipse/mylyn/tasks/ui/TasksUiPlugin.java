@@ -148,9 +148,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListWriter taskListWriter;
 
-	private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
-
-	private static Date lastBackup = new Date();
+	// private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
+	//
+	// private static Date lastBackup = new Date();
 
 	private ITaskHighlighter highlighter;
 
@@ -250,7 +250,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowActivated(IWorkbenchWindow window) {
-			getDefault().checkTaskListBackup();
+			// getDefault().checkTaskListBackup();
 			shellActive = true;
 		}
 
@@ -588,14 +588,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return INSTANCE;
 	}
 
-	private void checkTaskListBackup() {
-		Date currentTime = new Date();
-		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
-			// {
-			TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
-			lastBackup = new Date();
-		}
-	}
+//	private void checkTaskListBackup() {
+//		Date currentTime = new Date();
+//		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
+//			// {
+//			TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
+//			lastBackup = new Date();
+//		}
+//	}
 
 	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 

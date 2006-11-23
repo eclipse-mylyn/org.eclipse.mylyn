@@ -96,7 +96,7 @@ public class TaskListWriter {
 			MylarStatusHandler.log(e, "could not create document");
 		}
 
-		Element root = doc.createElement(ELEMENT_TASK_LIST);		
+		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 		root.setAttribute(ATTRIBUTE_LAST_NUM, "" + taskList.getLastTaskNum());
 
@@ -152,7 +152,9 @@ public class TaskListWriter {
 					break;
 				}
 			}
-			if (element == null) {// && delagatingExternalizer.canCreateElementFor(task)) {
+			if (element == null) {// &&
+									// delagatingExternalizer.canCreateElementFor(task))
+									// {
 				delagatingExternalizer.createTaskElement(task, doc, root);
 			} else if (element == null) {
 				MylarStatusHandler.log("Did not externalize: " + task, this);
@@ -372,20 +374,28 @@ public class TaskListWriter {
 			document = builder.parse(inputStream);
 			// document = builder.parse(inputFile);
 		} catch (SAXException se) {
-			File backup = new File(TasksUiPlugin.getDefault().getTaskListSaveManager().getBackupFilePath());
-			String message = "Restoring the tasklist failed.  Would you like to attempt to restore from the backup?\n\nTasklist XML File location: "
-					+ inputFile.getAbsolutePath()
-					+ "\n\nBackup tasklist XML file location: "
-					+ backup.getAbsolutePath();
-			if (backup.exists() && MessageDialog.openQuestion(null, "Restore From Backup", message)) {
-				try {
-					document = builder.parse(backup);
-					TasksUiPlugin.getDefault().getTaskListSaveManager().reverseBackup();
-				} catch (SAXException s) {
-					inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
-					MylarStatusHandler.log(s, "Failed to recover from backup restore");
-				}
-			}
+			// TODO: Use TaskListBackupManager to attempt restore from backup
+			MessageDialog
+					.openWarning(null, "Mylar task list corrupt",
+							"Unable to read the Mylar task list. Please restore from backup via File > Import > Mylar Task Data");
+			// String message = "Restoring the tasklist failed. Would you like
+			// to attempt to restore from the backup?\n\nTasklist XML File
+			// location: "
+			// + inputFile.getAbsolutePath()
+			// + "\n\nBackup tasklist XML file location: "
+			// + backup.getAbsolutePath();
+			// if (backup.exists() && MessageDialog.openQuestion(null, "Unable
+			// to read Restore From Backup", message)) {
+			// try {
+			// document = builder.parse(backup);
+			// TasksUiPlugin.getDefault().getTaskListSaveManager().reverseBackup();
+			// } catch (SAXException s) {
+			// inputFile.renameTo(new File(inputFile.getName() +
+			// FILE_SUFFIX_SAVE));
+			// MylarStatusHandler.log(s, "Failed to recover from backup
+			// restore");
+			// }
+			// }
 		}
 		return document;
 	}
@@ -393,13 +403,13 @@ public class TaskListWriter {
 	private void handleException(File inFile, Node child, Exception e) {
 		hasCaughtException = true;
 		String name = inFile.getAbsolutePath();
-		name = name.substring(0, name.lastIndexOf('.')) + "-save1.xml";
+		name = name.substring(0, name.lastIndexOf('.')) + "-save.zip";
 		File save = new File(name);
-		int i = 2;
-		while (save.exists()) {
-			name = name.substring(0, name.lastIndexOf('.') - 1) + i + ".xml";
-			save = new File(name);
-			i++;
+		if (save.exists()) {
+			if (!save.delete()) {
+				MylarStatusHandler.log("Unable to delete old backup tasklist file", this);
+				return;
+			}
 		}
 		if (!copy(inFile, save)) {
 			inFile.renameTo(new File(name));

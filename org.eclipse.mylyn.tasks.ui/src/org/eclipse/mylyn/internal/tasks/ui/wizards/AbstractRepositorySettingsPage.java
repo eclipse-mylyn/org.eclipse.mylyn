@@ -671,7 +671,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthButton.setEnabled(!selected);
 
 		setProxyAuth(proxyAuthButton.getSelection());
-		getWizard().getContainer().updateButtons();
+		if(getWizard() != null && getWizard().getContainer() != null) {
+			getWizard().getContainer().updateButtons();
+		}
 	}
 
 	public void setProxyAuth(boolean selected) {

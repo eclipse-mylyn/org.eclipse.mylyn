@@ -657,8 +657,7 @@ public class TaskListView extends ViewPart {
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
 		// TODO: move to task list save policy
-		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().getTaskListSaveManager() != null) {
-			TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
+		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().getTaskListSaveManager() != null) {			
 			TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		}
 	}
