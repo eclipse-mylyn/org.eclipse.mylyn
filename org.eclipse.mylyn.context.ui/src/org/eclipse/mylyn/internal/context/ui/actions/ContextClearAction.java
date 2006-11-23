@@ -48,10 +48,6 @@ public class ContextClearAction implements IViewActionDelegate {
 			} else {
 				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
 			}
-//			ContextCorePlugin.getContextManager().contextDeleted((task).getHandleIdentifier());																					// ((Task)selectedObject).getContextPath());
-//			ContextCorePlugin.getContextManager().contextActivated((task).getHandleIdentifier());
-																												// ((Task)selectedObject).getContextPath());
-			TaskListView.getFromActivePerspective().getViewer().refresh();
 		}
 	}
 
