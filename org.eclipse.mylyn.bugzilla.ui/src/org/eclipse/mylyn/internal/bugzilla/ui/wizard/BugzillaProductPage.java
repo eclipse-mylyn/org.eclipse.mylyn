@@ -76,6 +76,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * @author Shawn Minto
@@ -83,7 +84,7 @@ import org.eclipse.ui.dialogs.PatternFilter;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Willian Mitsuda
- * 
+ *
  * Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
@@ -131,7 +132,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Constructor for BugzillaProductPage
-	 * 
+	 *
 	 * @param workbench
 	 *            The instance of the workbench
 	 * @param bugWiz
@@ -224,8 +225,20 @@ public class BugzillaProductPage extends WizardPage {
 			}
 
 		});
-		productViewer.setSelection(new StructuredSelection(getSelectedProducts()));
-		productList.setFocus();
+
+		// HACK: waiting on delayed refresh of filtered tree
+		final String[] selectedProducts = getSelectedProducts();
+		if(selectedProducts.length>0) {
+			new UIJob("") {
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					productViewer.setSelection(new StructuredSelection(selectedProducts), true);
+					productViewer.getControl().setFocus();
+					return Status.OK_STATUS;
+				}
+			}.schedule(300L);
+		} else {
+			productList.setFocus();
+		}
 
 		Button updateButton = new Button(composite, SWT.LEFT | SWT.PUSH);
 		updateButton.setText(LABEL_UPDATE);
@@ -386,7 +399,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Applies the status to the status line of a dialog page.
-	 * 
+	 *
 	 * @param status
 	 *            The status to apply to the status line
 	 */
@@ -416,7 +429,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	/**
 	 * Save the currently selected product to the model when next is clicked
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
 	 * @throws LoginException
@@ -533,7 +546,7 @@ public class BugzillaProductPage extends WizardPage {
 	// // // will createControl again with new attributes in model
 	// // bugWizard.getAttributePage().setControl(null);
 	// // }
-	//			
+	//
 	// } catch (final Exception e) {
 	// e.printStackTrace();
 	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
