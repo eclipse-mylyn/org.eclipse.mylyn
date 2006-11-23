@@ -583,7 +583,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setProxyAuth(oldProxyUsername != null && oldProxyPassword != null && !oldProxyUsername.equals("")
 				&& !oldProxyPassword.equals(""));
 
-		setUseDefaultProxy(repository.useDefaultProxy());
+		setUseDefaultProxy(repository!= null ? repository.useDefaultProxy() : false);
 		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
 	}
 
