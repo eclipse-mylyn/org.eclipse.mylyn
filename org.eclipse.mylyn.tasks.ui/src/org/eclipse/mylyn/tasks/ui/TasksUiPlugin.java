@@ -392,12 +392,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
-
+			
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
-			readOfflineReportsFile();
+			
+			readOfflineReports();
+			
 			taskListManager.init();
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
@@ -689,7 +691,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	// TODO: clean-up
-	private void readOfflineReportsFile() {
+	private void readOfflineReports() {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {

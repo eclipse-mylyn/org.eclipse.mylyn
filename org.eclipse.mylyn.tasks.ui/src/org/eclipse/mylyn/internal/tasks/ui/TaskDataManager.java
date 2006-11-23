@@ -160,7 +160,6 @@ public class TaskDataManager {
 	private void readFile() throws IOException, ClassNotFoundException {
 
 		synchronized (file) {
-
 			ObjectInputStream in = null;
 			try {
 				in = new ObjectInputStream(new FileInputStream(file));

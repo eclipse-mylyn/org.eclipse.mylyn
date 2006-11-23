@@ -21,7 +21,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
  * 
  * @author Rob Elves
  */
-public class OfflineDataStore implements Serializable {
+class OfflineDataStore implements Serializable {
 
 	private static final long serialVersionUID = 7629760132110781338L;
 
