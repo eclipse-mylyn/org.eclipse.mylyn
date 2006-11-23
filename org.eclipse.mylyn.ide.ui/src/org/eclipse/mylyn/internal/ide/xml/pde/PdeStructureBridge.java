@@ -33,6 +33,7 @@ import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.ide.xml.XmlReferencesProvider;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
+import org.eclipse.pde.internal.core.text.plugin.PluginNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.PDEFormPage;
 import org.eclipse.pde.internal.ui.editor.plugin.ManifestEditor;
@@ -77,14 +78,10 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 	public String getParentHandle(String handle) {
 		// we can only get the parent if we have a PluginObjectNode
 
-		Object o = getObjectForHandle(handle);
-		if (o instanceof PluginObjectNode) {
-
-			// try to get the parent
-			PluginObjectNode parent = (PluginObjectNode) ((PluginObjectNode) o).getParentNode();
-
+		Object object = getObjectForHandle(handle);
+		if (object instanceof PluginObjectNode) {
+			PluginObjectNode parent = (PluginObjectNode) ((PluginObjectNode) object).getParentNode();
 			if (parent != null) {
-				// get the handle for the parent
 				return getHandleIdentifier(parent);
 			} else {
 				// the parent is the plugin.xml file, so return that handle
@@ -96,7 +93,21 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 					return null;
 				}
 			}
-		} else if (o instanceof IFile) {
+		} else if (object instanceof PluginNode) {
+			PluginNode parent = (PluginNode) ((PluginNode) object).getParentNode();
+			if (parent != null) {
+				return getHandleIdentifier(parent);
+			} else {
+				// the parent is the plugin.xml file, so return that handle
+				int delimeterIndex = handle.indexOf(";");
+				if (delimeterIndex != -1) {
+					String parentHandle = handle.substring(0, delimeterIndex);
+					return parentHandle;
+				} else {
+					return null;
+				}
+			}
+		} else if (object instanceof IFile) {
 			// String fileHandle = parentBridge.getParentHandle(handle);
 			return parentBridge.getParentHandle(handle);
 		} else {
@@ -114,13 +125,6 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 		String filename = "";
 		if (first == -1) {
 			return parentBridge.getObjectForHandle(handle);
-			// the handle is for the plugin.xml file, so just return the File
-			// filename = handle;
-			// IPath path = new Path(filename);
-			// IFile f =
-			// (IFile)((Workspace)ResourcesPlugin.getWorkspace()).newResource(path,
-			// IResource.FILE);
-			// return f;
 		} else {
 			// extract the filename from the handle since it represents a node
 			filename = handle.substring(0, first);
@@ -196,6 +200,23 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "pde handle failed");
 			}
+		} else if (object instanceof PluginNode) {
+			PluginNode node = (PluginNode) object;
+			try {
+				if (node.getModel() == null || node.getModel().getUnderlyingResource() == null
+						|| node.getModel().getUnderlyingResource().getFullPath() == null) {
+					// ContextCorePlugin.log("PDE xml node's resource or model is
+					// null: " + node.getName(), this);
+					return null;
+				}
+				IPath path = new Path(node.getModel().getUnderlyingResource().getFullPath().toString());
+				IFile file = (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
+				String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor
+						.getStringOfNode(node).hashCode()).getHandle();
+				return handle;
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "pde handle failed");
+			}
 
 		} else if (object instanceof File) {
 			// get the handle for the file if it is plugin.xml
@@ -235,7 +256,7 @@ public class PdeStructureBridge implements IMylarStructureBridge {
 
 	public boolean acceptsObject(Object object) {
 		// we only accept PluginObjectNodes and plugin.xml Files
-		if (object instanceof PluginObjectNode || object instanceof BuildEntry || object instanceof PDEFormPage) {
+		if (object instanceof PluginNode || object instanceof PluginObjectNode || object instanceof BuildEntry || object instanceof PDEFormPage) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
 			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml"))
