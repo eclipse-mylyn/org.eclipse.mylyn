@@ -8,6 +8,9 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,16 +29,16 @@ class OfflineDataStore implements Serializable {
 	private static final long serialVersionUID = 7629760132110781338L;
 
 	/** The bug id of the most recently created offline report. */
-	private Integer lastLocalTaskNumber = new Integer(0);
-	
+	private transient int lastLocalTaskNumber = 0;
+
 	/** The bug id of the most recently created offline report. */
-	private Integer lastUnsubmittedLocalTaskNumber = new Integer(0);
+	private transient int lastUnsubmittedTaskNumber = 0;
 
-	private Map<String, RepositoryTaskData> backingUnsubmittedTaskData = new HashMap<String, RepositoryTaskData>();
+	private transient Map<String, RepositoryTaskData> backingUnsubmittedTaskData;
 
-	private Map<String, RepositoryTaskData> backingOldTaskData = new HashMap<String, RepositoryTaskData>();
+	private transient Map<String, RepositoryTaskData> backingOldTaskData;
 
-	private Map<String, RepositoryTaskData> backingNewTaskData = new HashMap<String, RepositoryTaskData>();
+	private transient Map<String, RepositoryTaskData> backingNewTaskData;
 
 	/** Older version of Task Data */
 	private transient Map<String, RepositoryTaskData> oldTaskDataMap;
@@ -43,7 +46,7 @@ class OfflineDataStore implements Serializable {
 	/** Newest version of the task data */
 	private transient Map<String, RepositoryTaskData> newTaskDataMap;
 
-	/** Unsubmitted tasks data*/
+	/** Unsubmitted tasks data */
 	private transient Map<String, RepositoryTaskData> unsubmittedTaskData;
 
 	public void setNextTaskNumber(int lastNumber) {
@@ -51,17 +54,20 @@ class OfflineDataStore implements Serializable {
 	}
 
 	public int getNextTaskNumber() {
-		lastLocalTaskNumber = new Integer(lastLocalTaskNumber.intValue() + 1);
-		return lastLocalTaskNumber.intValue();
+		lastLocalTaskNumber++;
+		return lastLocalTaskNumber;
 	}
-	
+
 	public int getNextUnsubmittedTaskNumber() {
-		lastUnsubmittedLocalTaskNumber = new Integer(lastUnsubmittedLocalTaskNumber.intValue() + 1);
-		return lastUnsubmittedLocalTaskNumber.intValue();
+		lastUnsubmittedTaskNumber++;
+		return lastUnsubmittedTaskNumber;
 	}
 
 	public synchronized Map<String, RepositoryTaskData> getOldDataMap() {
 		if (oldTaskDataMap == null) {
+			if (backingOldTaskData == null) {
+				backingOldTaskData = new HashMap<String, RepositoryTaskData>();
+			}
 			oldTaskDataMap = Collections.synchronizedMap(backingOldTaskData);
 		}
 		return oldTaskDataMap;
@@ -69,6 +75,9 @@ class OfflineDataStore implements Serializable {
 
 	public synchronized Map<String, RepositoryTaskData> getNewDataMap() {
 		if (newTaskDataMap == null) {
+			if (backingNewTaskData == null) {
+				backingNewTaskData = new HashMap<String, RepositoryTaskData>();
+			}
 			newTaskDataMap = Collections.synchronizedMap(backingNewTaskData);
 		}
 		return newTaskDataMap;
@@ -76,9 +85,47 @@ class OfflineDataStore implements Serializable {
 
 	public synchronized Map<String, RepositoryTaskData> getUnsubmittedTaskData() {
 		if (unsubmittedTaskData == null) {
+			if (backingUnsubmittedTaskData == null) {
+				backingUnsubmittedTaskData = new HashMap<String, RepositoryTaskData>();
+			}
 			unsubmittedTaskData = Collections.synchronizedMap(backingUnsubmittedTaskData);
 		}
 		return unsubmittedTaskData;
 	}
 
+	private void writeObject(ObjectOutputStream s) throws IOException {
+		s.defaultWriteObject();
+		s.writeInt(lastLocalTaskNumber);
+		s.writeInt(lastUnsubmittedTaskNumber);
+		writeMap(s, getNewDataMap());
+		writeMap(s, getOldDataMap());
+		writeMap(s, getUnsubmittedTaskData());
+	}
+
+	private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+		s.defaultReadObject();
+		lastLocalTaskNumber = s.readInt();
+		lastUnsubmittedTaskNumber = s.readInt();
+		readMap(s, getNewDataMap());
+		readMap(s, getOldDataMap());
+		readMap(s, getUnsubmittedTaskData());
+	}
+
+	private void writeMap(ObjectOutputStream s, Map<String, RepositoryTaskData> map) throws IOException {
+		s.writeInt(map.size());
+		for (String key : map.keySet()) {
+			s.writeObject(key);
+			s.writeObject(map.get(key));
+		}
+	}
+
+	private void readMap(ObjectInputStream s, Map<String, RepositoryTaskData> map) throws IOException,
+			ClassNotFoundException {
+		int size = s.readInt();
+		for (int x = 0; x < size; x++) {
+			String handle = (String) s.readObject();
+			RepositoryTaskData data = (RepositoryTaskData) s.readObject();
+			map.put(handle, data);
+		}
+	}
 }

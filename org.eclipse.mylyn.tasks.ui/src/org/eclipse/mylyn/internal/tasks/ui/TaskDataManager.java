@@ -52,22 +52,26 @@ public class TaskDataManager {
 	 * taskData is held and can be retrieved via getOldTaskData()
 	 */
 	public void put(RepositoryTaskData newEntry) {
-		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
-		RepositoryTaskData moveToOld = dataStore.getNewDataMap().get(handle);
-		if (moveToOld != null) {
-			dataStore.getOldDataMap().put(handle, moveToOld);
+		synchronized (file) {
+			String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
+			RepositoryTaskData moveToOld = dataStore.getNewDataMap().get(handle);
+			if (moveToOld != null) {
+				dataStore.getOldDataMap().put(handle, moveToOld);
+			}
+			dataStore.getNewDataMap().put(handle, newEntry);
 		}
-		dataStore.getNewDataMap().put(handle, newEntry);
 	}
-	
+
 	/**
 	 * Add a unsubmitted RepositoryTaskData to the offline reports file.
 	 */
 	public void putUnsubmitted(RepositoryTaskData newEntry) {
-		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());		
-		dataStore.getUnsubmittedTaskData().put(handle, newEntry);
+		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
+		synchronized (file) {
+			dataStore.getUnsubmittedTaskData().put(handle, newEntry);
+		}
 	}
-	
+
 	public Map<String, RepositoryTaskData> getUnsubmitted() {
 		return dataStore.getUnsubmittedTaskData();
 	}
