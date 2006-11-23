@@ -8,7 +8,6 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.List;
@@ -87,7 +86,6 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 			public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			}
-			
 		});
 		
 		TasksUiPlugin.getTaskListManager().addActivityListener(new ITaskActivityListener() {
@@ -182,6 +180,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(task.getSummary());
 		filterComposite.layout();
+    }
+    
+    public String getActiveTaskLabelText() {
+    	return activeTaskLabel.getText();
     }
     
     public void indicateNoActiveTask() {

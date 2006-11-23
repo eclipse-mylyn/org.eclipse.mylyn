@@ -507,7 +507,7 @@ public class TaskList {
 			}
 		}
 	}
-
+	
 	public int getNextTaskNum() {
 		return ++lastTaskNum;
 	}

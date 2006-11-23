@@ -55,19 +55,16 @@ class SynchronizeQueryJob extends Job {
 		monitor.beginTask(JOB_LABEL, queries.size());
 
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			// if (repositoryQuery.isSynchronizing())
-			// continue;
-
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 			repositoryQuery.setStatus(null);
 
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getSummary());
 			setProperty(IProgressConstants.ICON_PROPERTY, TaskListImages.REPOSITORY_SYNCHRONIZE);
-			// repositoryQuery.setCurrentlySynchronizing(true);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
 				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
-						"No task repository found: " + repositoryQuery.getRepositoryUrl()));			
+						"No task repository found: " + repositoryQuery.getRepositoryUrl()));
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
@@ -79,10 +76,9 @@ class SynchronizeQueryJob extends Job {
 						// TODO: Should sync changed per repository not per
 						// query
 						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
-					}				
+					}
 				} else {
-					// MylarStatusHandler.log(resultingStatus);
-					repositoryQuery.setStatus(resultingStatus);					
+					repositoryQuery.setStatus(resultingStatus);
 				}
 			}
 
@@ -94,10 +90,13 @@ class SynchronizeQueryJob extends Job {
 			monitor.worked(1);
 		}
 
+		// HACK: force entire Task List to refresh in case containers need to
+		// appear or disappear
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(null);
+
 		if (queries != null && queries.size() > 0) {
 			taskList.removeOrphanedHits();
 		}
-
 		return Status.OK_STATUS;
 	}
 

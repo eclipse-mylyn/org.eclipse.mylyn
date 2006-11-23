@@ -270,7 +270,7 @@ public class TaskListView extends ViewPart {
 		public void taskDeactivated(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refreshTask(task);
+					refresh(task);
 					updateDescription(null);
 					filteredTree.indicateNoActiveTask();
 				}
@@ -282,35 +282,39 @@ public class TaskListView extends ViewPart {
 		}
 
 		public void taskListRead() {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 
 		public void calendarChanged() {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 	};
 
 	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
 
 		public void localInfoChanged(final ITask task) {
-			refreshTask(task);
-			if (task.getContainer() != null) {
-				refresh(task.getContainer());
-			}
-			if (task instanceof AbstractRepositoryTask) {
-				Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
-						.getQueriesForHandle(task.getHandleIdentifier());
-				for (AbstractRepositoryQuery query : queries) {
-					refresh(query);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(task);
 				}
-			}
+			});
 			if (task.isActive()) {
-				// TODO: only do this if description changes
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						filteredTree.indicateActiveTask(task);
-					}
-				});
+				String activeTaskLabel = filteredTree.getActiveTaskLabelText();
+				if (activeTaskLabel != null && !activeTaskLabel.equals(task.getSummary())) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							filteredTree.indicateActiveTask(task);
+						}
+					});
+				}
 			}
 		}
 
@@ -318,39 +322,70 @@ public class TaskListView extends ViewPart {
 			localInfoChanged(task);
 		}
 
-		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
-			if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
-				refresh(null);
-			} else {
-				refresh(toContainer);
-				refresh(task);
-				refresh(fromContainer);
-			}
+		public void taskMoved(final ITask task, final AbstractTaskContainer fromContainer,
+				final AbstractTaskContainer toContainer) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					// category might appear or disappear
+					refresh(null);
+					AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
+							.getRootCategory();
+					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
+						refresh(null);
+					} else {
+						refresh(toContainer);
+						refresh(task);
+						refresh(fromContainer);
+					}
+				}
+			});
 		}
 
 		public void taskDeleted(ITask task) {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 
 		public void containerAdded(AbstractTaskContainer container) {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 
 		public void containerDeleted(AbstractTaskContainer container) {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 
 		public void taskAdded(ITask task) {
-			refresh(null);
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					refresh(null);
+				}
+			});
 		}
 
-		public void containerInfoChanged(AbstractTaskContainer container) {
-			if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory())) {
-				refresh(null);
-			} else {
-				refresh(container);
-			}
+		public void containerInfoChanged(final AbstractTaskContainer container) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (container == null) {
+						// HACK: should be part of policy
+						getViewer().refresh(false);
+					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory())) {
+						refresh(null);
+					} else {
+						refresh(container);
+					} 
+				}
+			});
 		}
 	};
 
@@ -1353,13 +1388,14 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void refreshAndFocus(boolean expand) {
-		getViewer().getControl().setRedraw(false);
-		getViewer().refresh();
+		// getViewer().getControl().setRedraw(false);
+		// getViewer().refresh();
+		refresh(null);
 		if (expand) {
 			getViewer().expandAll();
 		}
 		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
-		getViewer().getControl().setRedraw(true);
+		// getViewer().getControl().setRedraw(true);
 	}
 
 	public TreeViewer getViewer() {
@@ -1517,61 +1553,76 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	protected void refreshTask(ITask task) {
-		System.err.println(">>> refreshing: " + task);
-		refresh(task);
-		AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
-		if (task.getContainer() == null || task.getContainer().equals(rootCategory)) {
-			refresh(null);
-		} else {
-			refresh(task.getContainer());
-		}
-
-		AbstractQueryHit hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier());
-		if (hit != null) {
-			refresh(hit);
-		}
-	}
-
+	/**
+	 * Encapsulates refresh policy.
+	 */
 	private void refresh(final ITaskListElement element) {
-		System.err.println(">>>>>> refreshing: " + element);
-		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
-						if (element == null) {
-							try {
-								getViewer().getControl().setRedraw(false);
-								getViewer().refresh();
-							} finally {
-								getViewer().getControl().setRedraw(true);
-							}
-							// filteredTree.textChanged();
-						} else {
-							try {
-								if (element instanceof ITask && ((ITask) element).getContainer() instanceof TaskArchive) {
-									refresh(null);
-								} else {
-									getViewer().refresh(
-											TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-									getViewer().refresh(element, true);
-									if (element instanceof AbstractTaskContainer
-											&& !((AbstractTaskContainer) element).equals(TasksUiPlugin
-													.getTaskListManager().getTaskList().getArchiveContainer())) {
-										List<?> visibleElements = Arrays.asList(getViewer()
-												.getVisibleExpandedElements());
-										if (!visibleElements.contains(element)) {
-											getViewer().refresh();
-										}
-									}
-								}
-							} catch (SWTException e) {
-								MylarStatusHandler.log(e, "Failed to refresh Task List");
-							}
-						}
-					}
+		if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
+			if (element == null) {
+				try {
+					// getViewer().getControl().setRedraw(false);
+					getViewer().refresh(true);
+				} finally {
+					// getViewer().getControl().setRedraw(true);
 				}
-			});
+			} else {
+				try {
+					if (element instanceof ITask) {
+						ITask task = (ITask) element;
+						AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
+								.getRootCategory();
+						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
+								.getQueriesForHandle(task.getHandleIdentifier());
+						if (task.getContainer() == null || task.getContainer().equals(rootCategory)
+								|| (task instanceof AbstractRepositoryTask && queries.isEmpty())) {
+							// || task.getContainer() instanceof TaskArchive) {
+							refresh(null);
+						} else {
+							getViewer().refresh(task.getContainer(), true);
+							// refresh(task.getContainer());
+						}
+
+						AbstractQueryHit hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(
+								task.getHandleIdentifier());
+						if (hit != null) {
+							refresh(hit);
+						}
+					} else if (element instanceof AbstractQueryHit) {
+						AbstractQueryHit hit = (AbstractQueryHit) element;
+						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
+								.getQueriesForHandle(hit.getHandleIdentifier());
+						for (AbstractRepositoryQuery query : queries) {
+							refresh(query);
+						}
+					} else if (element instanceof AbstractTaskContainer) {
+						// check if the container should appear or disappear
+//						List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
+//						boolean containerVisible = visibleElements.contains(element);
+//						AbstractTaskContainer container = (AbstractTaskContainer) element;
+//						boolean refreshRoot = false;
+//						if (refreshRoot) {
+//							getViewer().refresh();
+//						} else {
+//						refresh(element);
+						getViewer().refresh(element, true);
+//						}
+					} else {
+//						getViewer().refresh(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+						getViewer().refresh(element, true);
+//						if (element instanceof AbstractTaskContainer
+//								&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
+//										.getTaskList().getArchiveContainer())) {
+//							List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
+//							if (!visibleElements.contains(element)) {
+//								getViewer().refresh();
+//								// refresh(null);
+//							}
+//						}
+					}
+				} catch (SWTException e) {
+					MylarStatusHandler.log(e, "Failed to refresh Task List");
+				}
+			}
 		}
 	}
 

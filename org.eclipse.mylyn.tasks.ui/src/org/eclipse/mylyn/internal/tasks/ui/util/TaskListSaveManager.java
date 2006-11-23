@@ -229,4 +229,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	public void containerInfoChanged(AbstractTaskContainer container) {
 		saveTaskList(false);
 	}
+
+	public void synchronizationCompleted() {
+		// ignore
+	}
 }
