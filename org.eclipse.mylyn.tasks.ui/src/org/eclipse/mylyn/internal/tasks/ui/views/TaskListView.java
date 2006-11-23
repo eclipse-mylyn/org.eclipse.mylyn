@@ -149,7 +149,7 @@ public class TaskListView extends ViewPart {
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	private static final String ID_SEPARATOR_TASKS = "tasks";
-	
+
 	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
 
 	private static final String ID_SEPARATOR_FILTERS = "filters";
@@ -1023,7 +1023,7 @@ public class TaskListView extends ViewPart {
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
-		
+
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -1518,11 +1518,10 @@ public class TaskListView extends ViewPart {
 	}
 
 	protected void refreshTask(ITask task) {
+		System.err.println(">>> refreshing: " + task);
 		refresh(task);
 		AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
-		if (task.getContainer() == null
-		// || task.getContainer() instanceof TaskArchive
-				|| task.getContainer().equals(rootCategory)) {
+		if (task.getContainer() == null || task.getContainer().equals(rootCategory)) {
 			refresh(null);
 		} else {
 			refresh(task.getContainer());
@@ -1535,6 +1534,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void refresh(final ITaskListElement element) {
+		System.err.println(">>>>>> refreshing: " + element);
 		if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
