@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -107,7 +105,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -213,7 +210,7 @@ public class TaskListView extends ViewPart {
 
 	private PreviousTaskDropDownAction previousTaskAction;
 
-	private static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
+	static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
 
 	private static TaskCompletionFilter FILTER_COMPLETE = new TaskCompletionFilter();
 
@@ -399,155 +396,6 @@ public class TaskListView extends ViewPart {
 			}
 		}
 	};
-
-	private final class PriorityDropDownAction extends Action implements IMenuCreator {
-
-		private static final String FILTER_PRIORITY_LABEL = "Filter Priority Lower Than";
-
-		private Menu dropDownMenu = null;
-
-		public PriorityDropDownAction() {
-			super();
-			setText(FILTER_PRIORITY_LABEL);
-			setToolTipText(FILTER_PRIORITY_LABEL);
-			setImageDescriptor(TaskListImages.FILTER_PRIORITY);
-			setMenuCreator(this);
-		}
-
-		public void dispose() {
-			if (dropDownMenu != null) {
-				dropDownMenu.dispose();
-				dropDownMenu = null;
-			}
-		}
-
-		public Menu getMenu(Control parent) {
-			if (dropDownMenu != null) {
-				dropDownMenu.dispose();
-			}
-			dropDownMenu = new Menu(parent);
-			addActionsToMenu();
-			return dropDownMenu;
-		}
-
-		public Menu getMenu(Menu parent) {
-			if (dropDownMenu != null) {
-				dropDownMenu.dispose();
-			}
-			dropDownMenu = new Menu(parent);
-			addActionsToMenu();
-			return dropDownMenu;
-		}
-
-		public void addActionsToMenu() {
-			Action P1 = new Action("", AS_CHECK_BOX) {
-				@Override
-				public void run() {
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-							TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
-					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
-					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[0]);
-					getViewer().refresh();
-				}
-			};
-			P1.setEnabled(true);
-			P1.setText(Task.PriorityLevel.P1.getDescription());
-			P1.setImageDescriptor(TaskListImages.PRIORITY_1);
-			ActionContributionItem item = new ActionContributionItem(P1);
-			item.fill(dropDownMenu, -1);
-
-			Action P2 = new Action("", AS_CHECK_BOX) {
-				@Override
-				public void run() {
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-							TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
-					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
-					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[1]);
-					getViewer().refresh();
-				}
-			};
-			P2.setEnabled(true);
-			P2.setText(Task.PriorityLevel.P2.getDescription());
-			P2.setImageDescriptor(TaskListImages.PRIORITY_2);
-			item = new ActionContributionItem(P2);
-			item.fill(dropDownMenu, -1);
-
-			Action P3 = new Action("", AS_CHECK_BOX) {
-				@Override
-				public void run() {
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-							TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
-					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
-					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[2]);
-					getViewer().refresh();
-				}
-			};
-			P3.setEnabled(true);
-			P3.setText(Task.PriorityLevel.P3.getDescription());
-			P3.setImageDescriptor(TaskListImages.PRIORITY_3);
-			item = new ActionContributionItem(P3);
-			item.fill(dropDownMenu, -1);
-
-			Action P4 = new Action("", AS_CHECK_BOX) {
-				@Override
-				public void run() {
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-							TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
-					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
-					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[3]);
-					getViewer().refresh();
-				}
-			};
-			P4.setEnabled(true);
-			P4.setText(Task.PriorityLevel.P4.getDescription());
-			P4.setImageDescriptor(TaskListImages.PRIORITY_4);
-			item = new ActionContributionItem(P4);
-			item.fill(dropDownMenu, -1);
-
-			Action P5 = new Action("", AS_CHECK_BOX) {
-				@Override
-				public void run() {
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-							TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
-					// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
-					FILTER_PRIORITY.displayPrioritiesAbove(PRIORITY_LEVELS[4]);
-					getViewer().refresh();
-				}
-			};
-			P5.setEnabled(true);
-			P5.setImageDescriptor(TaskListImages.PRIORITY_5);
-			P5.setText(Task.PriorityLevel.P5.getDescription());
-			item = new ActionContributionItem(P5);
-			item.fill(dropDownMenu, -1);
-
-			String priority = getCurrentPriorityLevel();
-			if (priority.equals(PRIORITY_LEVELS[0])) {
-				P1.setChecked(true);
-			} else if (priority.equals(PRIORITY_LEVELS[1])) {
-				P1.setChecked(true);
-				P2.setChecked(true);
-			} else if (priority.equals(PRIORITY_LEVELS[2])) {
-				P1.setChecked(true);
-				P2.setChecked(true);
-				P3.setChecked(true);
-			} else if (priority.equals(PRIORITY_LEVELS[3])) {
-				P1.setChecked(true);
-				P2.setChecked(true);
-				P3.setChecked(true);
-				P4.setChecked(true);
-			} else if (priority.equals(PRIORITY_LEVELS[4])) {
-				P1.setChecked(true);
-				P2.setChecked(true);
-				P3.setChecked(true);
-				P4.setChecked(true);
-				P5.setChecked(true);
-			}
-		}
-
-		public void run() {
-			this.setChecked(isChecked());
-		}
-	}
 
 	public static TaskListView getFromActivePerspective() {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -1053,25 +901,26 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
-		// manager.add(new Separator());
 		manager.add(filterOnPriority);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		
+		manager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				filterOnPriority.updateCheckedState();
+			}
+		});
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-
-		// manager.add(newLocalTaskAction);
-		// manager.add(newCategoryAction);
 		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
-		// manager.add(nextTaskAction);
-		// manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	/*
@@ -1285,7 +1134,7 @@ public class TaskListView extends ViewPart {
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
-		filterOnPriority = new PriorityDropDownAction();
+		filterOnPriority = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
 		// nextTaskAction = new NextTaskDropDownAction(this,
