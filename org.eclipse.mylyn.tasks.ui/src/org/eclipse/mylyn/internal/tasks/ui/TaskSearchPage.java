@@ -94,7 +94,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		gd.horizontalSpan = 1;
 		group.setLayoutData(gd);
 
-		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
+		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY); 
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
