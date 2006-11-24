@@ -71,6 +71,8 @@ public class TaskRepository {
 
 	public static final String PROXY_PASSWORD = "org.eclipse.mylar.tasklist.repositories.proxy.password";
 
+	private String cachedUserName = null;
+	
 	static {
 		URL url = null;
 		try {
@@ -130,14 +132,27 @@ public class TaskRepository {
 		return username != null && username.length() > 0 && password != null && password.length() > 0;
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
+	 * @return
+	 */
 	public String getUserName() {
+		if (cachedUserName != null) {
+			return cachedUserName;
+		} else {
+			return getUserNameFromKeyRing();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private String getUserNameFromKeyRing() {
 		Map<String, String> map = getAuthInfo();
 		if (map != null && map.containsKey(AUTH_USERNAME)) {
-			return map.get(AUTH_USERNAME);
+			cachedUserName = map.get(AUTH_USERNAME);
+			return cachedUserName;
 		} else {
 			return null;
-		}
+		}		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -190,6 +205,7 @@ public class TaskRepository {
 
 		if (username != null) {
 			map.put(AUTH_USERNAME, username);
+			cachedUserName = username;
 		}
 		if (password != null) {
 			map.put(AUTH_PASSWORD, password);
