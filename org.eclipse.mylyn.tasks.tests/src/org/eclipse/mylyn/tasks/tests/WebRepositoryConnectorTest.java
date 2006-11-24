@@ -45,7 +45,7 @@ public class WebRepositoryConnectorTest extends TestCase {
 		this.template = template;
 	}
 
-	public void testRepositoryTemplate() throws Exception {
+	public void testRepositoryTemplate() throws Throwable {
   	    IProgressMonitor monitor = new NullProgressMonitor();
   	    MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
   	    final List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
@@ -72,21 +72,22 @@ public class WebRepositoryConnectorTest extends TestCase {
 //        } else {
 //        	repository.setAuthenticationCredentials("user", "pwd");
         }
-
+ 
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
         String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
         assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
-
+        
         String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
         IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector, repository);
 
         assertTrue("Query failed\n"+taskQueryUrl+"\n"+regexp+"\n"+resultingStatus.toString(), queryStatus.isOK());
         try {
 			assertTrue("Expected non-empty query result\n" + taskQueryUrl + "\n" + regexp, hits.size() > 0);
-		} catch (Exception e) {
+		} catch (Throwable t) {
 			System.err.println(taskQueryUrl);
 			System.err.println(buffer);
 			System.err.println("--------------------------------------------------------");
+			throw t;
 		}
 	}
 
