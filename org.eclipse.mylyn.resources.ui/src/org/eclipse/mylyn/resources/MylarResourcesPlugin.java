@@ -31,7 +31,7 @@ import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInterestUpdater;
 import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
-import org.eclipse.mylar.internal.resources.ui.MylarEditorManager;
+import org.eclipse.mylar.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -46,7 +46,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
-	private MylarEditorManager editorManager = new MylarEditorManager();
+	private ContextEditorManager editorManager = new ContextEditorManager();
 
 	private ResourceInteractionMonitor resourceInteractionMonitor;
 
@@ -192,7 +192,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		resourceChangeMonitor.setEnabled(enabled);
 	}
 	
-	public MylarEditorManager getEditorManager() {
+	public ContextEditorManager getEditorManager() {
 		return editorManager;
 	}
 	

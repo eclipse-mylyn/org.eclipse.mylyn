@@ -39,7 +39,7 @@ import org.eclipse.ui.internal.Workbench;
 /**
  * @author Mik Kersten
  */
-public class MylarEditorManager implements IMylarContextListener {
+public class ContextEditorManager implements IMylarContextListener {
 
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 	

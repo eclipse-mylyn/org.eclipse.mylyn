@@ -63,8 +63,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 							adapter);
 					element = ContextCorePlugin.getContextManager().getElement(handle);
 				}
-				if (element != null && !element.getInterest().isInteresting()
-						&& !isSameEditor(editorPartOpened, editorToClose)) {
+				if (!ContextCorePlugin.getContextManager().isContextCapturePaused() && element != null
+						&& !element.getInterest().isInteresting() && !isSameEditor(editorPartOpened, editorToClose)) {
 					page.closeEditor(editorToClose, true);
 				}
 			}
