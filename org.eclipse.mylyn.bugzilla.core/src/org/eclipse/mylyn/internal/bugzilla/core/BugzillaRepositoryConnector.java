@@ -295,7 +295,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				continue;
 			}
 			for (String option : optionValues) {
-				attribute.addOptionValue(option, option);
+				attribute.addOption(option, option);
 			}
 			
 			// TODO: bug#162428, bug#150680 - something along the lines of...
@@ -347,7 +347,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
 		optionValues = repositoryConfiguration.getStatusValues();
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
@@ -358,7 +358,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		optionValues = repositoryConfiguration.getVersions(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		if (optionValues != null && optionValues.size() > 0) {
 			a.setValue(optionValues.get(optionValues.size() - 1));
@@ -371,7 +371,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		optionValues = repositoryConfiguration.getComponents(newReport.getProduct());
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		if (optionValues != null && optionValues.size() > 0) {
 			a.setValue(optionValues.get(0));
@@ -383,7 +383,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		optionValues = repositoryConfiguration.getPlatforms();
 		Collections.sort(optionValues);
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		if (optionValues != null && optionValues.size() > 0) {
 			a.setValue(optionValues.get(0));
@@ -395,7 +395,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.OP_SYS);
 		optionValues = repositoryConfiguration.getOSs();
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		if (optionValues != null && optionValues.size() > 0) {
 			a.setValue(optionValues.get(optionValues.size() - 1));
@@ -407,7 +407,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRIORITY);
 		optionValues = repositoryConfiguration.getPriorities();
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		a.setValue(optionValues.get((optionValues.size() / 2)));
 
@@ -417,7 +417,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
 		optionValues = repositoryConfiguration.getSeverities();
 		for (String option : optionValues) {
-			a.addOptionValue(option, option);
+			a.addOption(option, option);
 		}
 		a.setValue(optionValues.get((optionValues.size() / 2)));
 

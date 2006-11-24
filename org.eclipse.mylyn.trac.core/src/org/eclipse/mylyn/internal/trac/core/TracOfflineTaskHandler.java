@@ -237,10 +237,10 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		RepositoryTaskAttribute attr = factory.createAttribute(attribute.getTracKey());
 		if (values != null && values.length > 0) {
 			if (allowEmtpy) {
-				attr.addOptionValue("", "");
+				attr.addOption("", "");
 			}
 			for (int i = 0; i < values.length; i++) {
-				attr.addOptionValue(values[i].toString(), values[i].toString());
+				attr.addOption(values[i].toString(), values[i].toString());
 			}
 		} else {
 			// attr.setHidden(true);

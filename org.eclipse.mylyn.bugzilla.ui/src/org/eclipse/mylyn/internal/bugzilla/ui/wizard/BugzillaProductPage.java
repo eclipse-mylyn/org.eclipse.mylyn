@@ -472,9 +472,9 @@ public class BugzillaProductPage extends WizardPage {
 			String bugzillaPlatform = null; // Bugzilla String for Platform
 
 			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null
-					&& opSysAttribute.getOptionValues() != null) {
+					&& opSysAttribute.getOptions() != null) {
 				bugzillaOS = java2buzillaOSMap.get(OS);
-				if (opSysAttribute != null && !opSysAttribute.getOptionValues().values().contains(bugzillaOS)) {
+				if (opSysAttribute != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
 					// If the OS we found is not in the list of available
 					// options, set bugzillaOS
 					// to null, and just use "other"
@@ -489,7 +489,7 @@ public class BugzillaProductPage extends WizardPage {
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
 				if (platformAttribute != null
-						&& !platformAttribute.getOptionValues().values().contains(bugzillaPlatform)) {
+						&& platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
 					// Bugzilla Platform to null, and juse use "other"
@@ -504,13 +504,13 @@ public class BugzillaProductPage extends WizardPage {
 			// Set the OS and the Platform in the model
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);
-			} else if (opSysAttribute != null && opSysAttribute.getOptionValues().values().contains(OPTION_ALL)) {
+			} else if (opSysAttribute != null && opSysAttribute.getOptionParameter(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 
 			if (bugzillaPlatform != null && platformAttribute != null) {
 				platformAttribute.setValue(bugzillaPlatform);
-			} else if (platformAttribute != null && platformAttribute.getOptionValues().values().contains(OPTION_ALL)) {
+			} else if (platformAttribute != null && platformAttribute.getOptionParameter(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 

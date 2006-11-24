@@ -19,8 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -654,10 +652,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (attribute.isHidden())
 				continue;
 
-			Map<String, String> values = attribute.getOptionValues();
+			List<String> values = attribute.getOptions();
 
 			if (values == null)
-				values = new HashMap<String, String>();
+				values = new ArrayList<String>();
 
 			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			data.horizontalSpan = 1;
@@ -673,12 +671,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (hasChanged(attribute)) {
 					attributeCombo.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
 				}
-				attributeCombo.setLayoutData(data);
-				Set<String> s = values.keySet();
-				String[] a = s.toArray(new String[s.size()]);
-				for (int i = 0; i < a.length; i++) {
-					attributeCombo.add(a[i]);
+				attributeCombo.setLayoutData(data);				
+				for (String val : values) {
+					attributeCombo.add(val);
 				}
+					
 				if (attributeCombo.indexOf(value) != -1) {
 					attributeCombo.select(attributeCombo.indexOf(value));
 				}

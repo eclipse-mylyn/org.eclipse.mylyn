@@ -8,22 +8,27 @@
 
 package org.eclipse.mylar.tasks.tests;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.tasks.ui.TaskDataManager;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
-import junit.framework.TestCase;
-
 /**
  * @author Rob Elves
  */
-public class OfflineTaskManagerTest extends TestCase {
+public class TaskDataManagerTest extends TestCase {
 
 	TaskDataManager offlineTaskDataManager;
 
@@ -135,6 +140,44 @@ public class OfflineTaskManagerTest extends TestCase {
 		offlineTaskDataManager.reloadFromFile();
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1"));
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
+	}
+	
+	public void testLargeDataSet() throws Exception {
+		RepositoryTaskData taskData;
+		for(int x = 1; x < 1000; x++) {
+			taskData = new RepositoryTaskData(new MockAttributeFactory(),
+					MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, ""+x);
+			
+			
+			for(int y = 1; y < 60; y++) {
+				RepositoryTaskAttribute attribute = new RepositoryTaskAttribute(""+y, ""+y, false);
+				for(int z = 1; z < 10; z++) {
+					attribute.addOption(""+z, ""+z);
+					attribute.addValue(""+z);
+				}				
+				taskData.addAttribute(""+y, attribute);
+			}			
+			
+			for(int y = 1; y < 5; y++) {
+				RepositoryOperation op = new RepositoryOperation(""+y, ""+y);
+				taskData.addOperation(op);
+			}
+			
+			for(int y = 1; y < 30; y++) {
+				TaskComment comment = new TaskComment(new MockAttributeFactory(), taskData, y);
+				taskData.addComment(comment);
+			}
+			
+			offlineTaskDataManager.put(taskData);
+			offlineTaskDataManager.put(taskData);
+		}
+		offlineTaskDataManager.save();
+		System.err.println("Saved");
+		File file = TasksUiPlugin.getDefault().getOfflineReportsFilePath().toFile();
+		System.err.println(file.length());
+		offlineTaskDataManager.clear();
+		offlineTaskDataManager.reloadFromFile();
+		assertNotNull(offlineTaskDataManager.getOldTaskData(AbstractRepositoryTask.getHandle(MockRepositoryConnector.REPOSITORY_URL, 400)));
 	}
 
 }

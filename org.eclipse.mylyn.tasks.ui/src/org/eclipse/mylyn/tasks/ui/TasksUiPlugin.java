@@ -714,8 +714,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	/**
 	 * Returns the path to the file caching the offline bug reports.
+	 * PUBLIC FOR TESTING
 	 */
-	private IPath getOfflineReportsFilePath() {
+	public IPath getOfflineReportsFilePath() {
 		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
 		IPath configFile = stateLocation.append("offlineReports");
 		return configFile;
