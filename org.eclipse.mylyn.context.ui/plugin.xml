@@ -112,6 +112,14 @@
               menubarPath="context"
               tooltip="Clear Context">
         </action>
+  <action
+        class="org.eclipse.mylar.internal.context.ui.actions.CopyContextToAction"
+        icon="icons/elcl16/context-transfer.gif"
+        id="org.eclipse.mylar.context.ui.action.copy.context.to"
+        label="Copy Context to..."
+        menubarPath="context"
+        tooltip="Copy Context to...">
+  </action>
 	 </objectContribution>
      <objectContribution
            adaptable="false"
@@ -164,6 +172,14 @@
               menubarPath="context"
               tooltip="Clear Context">
         </action>
+          <action
+        class="org.eclipse.mylar.internal.context.ui.actions.CopyContextToAction"
+        icon="icons/elcl16/context-transfer.gif"
+        id="org.eclipse.mylar.context.ui.action.copy.context.to"
+        label="Copy Context to..."
+        menubarPath="context"
+        tooltip="Copy Context to...">
+  </action>
 	 </objectContribution>
    </extension>
     
