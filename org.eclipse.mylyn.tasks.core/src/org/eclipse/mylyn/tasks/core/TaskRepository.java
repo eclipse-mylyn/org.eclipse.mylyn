@@ -199,6 +199,7 @@ public class TaskRepository {
 	public void setAuthenticationCredentials(String username, String password) {
 		Map<String, String> map = getAuthInfo();
 
+
 		if (map == null) {
 			map = new java.util.HashMap<String, String>();
 		}
@@ -275,6 +276,9 @@ public class TaskRepository {
 			return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
 		} catch (MalformedURLException ex) {
 			return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+			return null;
 		}
 	}
 
