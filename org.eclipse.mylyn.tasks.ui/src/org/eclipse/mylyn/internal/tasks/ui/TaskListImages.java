@@ -191,6 +191,12 @@ public class TaskListImages {
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 	
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");
+
+	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TaskListImages.STATUS_NORMAL,
+								TaskListImages.OVERLAY_WARNING, false, true);
+
+	public static final ImageDescriptor TASK_STATUS_WARNING = TaskListImages.createWithOverlay(TASK_REPOSITORY,
+							TaskListImages.OVERLAY_WARNING, false, true);
 	
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
@@ -204,7 +210,7 @@ public class TaskListImages {
 		return new TaskListImageDescriptor(base, size);
 	}
 
-	public static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
+	private static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
 			boolean left) {
 		return new TaskListImageDescriptor(base, overlay, top, left);
 	}

@@ -9,13 +9,13 @@
 
       <connectorCore
             class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector"
-            id="org.eclipse.mylar.tasklist.tests.repositories"
+            id="org.eclipse.mylar.tasks.tests.repositories"
             name="Mock Repository Client"
             type="mock"/>
       
       <externalizer 
             class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryExternalizer"
-            id="org.eclipse.mylar.tasklist.tests.externalizer"/>
+            id="org.eclipse.mylar.tasks.tests.externalizer"/>
    </extension>  
    
 </plugin>

@@ -131,8 +131,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 					if (image == null) {
 						image = TaskListImages.STATUS_NORMAL;
 					}
-					return TaskListImages.getImage(TaskListImages.createWithOverlay(image,
-							TaskListImages.OVERLAY_WARNING, false, true));
+					return TaskListImages.getImage(TaskListImages.TASK_STATUS_WARNING);
 				} else if (image != null) {
 					return TaskListImages.getImage(image);
 				}
@@ -143,8 +142,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				if (container instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
 					if (query.getStatus() != null) {
-						return TaskListImages.getImage(TaskListImages.createWithOverlay(TaskListImages.STATUS_NORMAL,
-								TaskListImages.OVERLAY_WARNING, false, true));
+						return TaskListImages.getImage(TaskListImages.STATUS_WARNING);
 					}
 				}
 				if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
