@@ -195,9 +195,6 @@ public class TaskListImages {
 	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TaskListImages.STATUS_NORMAL,
 								TaskListImages.OVERLAY_WARNING, false, true);
 
-	public static final ImageDescriptor TASK_STATUS_WARNING = TaskListImages.createWithOverlay(TASK_REPOSITORY,
-							TaskListImages.OVERLAY_WARNING, false, true);
-	
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));

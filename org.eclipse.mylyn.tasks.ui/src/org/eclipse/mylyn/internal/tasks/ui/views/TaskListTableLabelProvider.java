@@ -131,7 +131,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 					if (image == null) {
 						image = TaskListImages.STATUS_NORMAL;
 					}
-					return TaskListImages.getImage(TaskListImages.TASK_STATUS_WARNING);
+					return TaskListImages.getImage(TaskListImages.STATUS_WARNING);
 				} else if (image != null) {
 					return TaskListImages.getImage(image);
 				}

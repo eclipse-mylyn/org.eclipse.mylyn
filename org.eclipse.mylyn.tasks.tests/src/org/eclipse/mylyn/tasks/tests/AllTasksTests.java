@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllTasksTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasklist.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasks.tests");
 
 		// $JUnit-BEGIN$		
 		suite.addTest(WebRepositoryConnectorTest.suite());
