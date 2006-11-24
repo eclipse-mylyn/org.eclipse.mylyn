@@ -212,7 +212,7 @@ public class TaskDataManager {
 			}
 		} catch (Exception ex) {
 			dataStore = new OfflineDataStore();
-			MylarStatusHandler.fail(ex, "Migration of offline task data failed.", false);
+			MylarStatusHandler.log(ex, "Could not migrate old offline data file, created new.");
 		} finally {
 			in.close();
 		}
