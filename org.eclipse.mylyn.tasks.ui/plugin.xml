@@ -452,7 +452,7 @@
          point="org.eclipse.ui.themes">
       <themeElementCategory
            id="org.eclipse.mylar.tasklist.ui.presentation"
-           label="Mylar"/>
+           label="Mylar"/>         
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
@@ -503,7 +503,16 @@
             Background color of Task List categories and queries.
          </description>
      </colorDefinition>
-         
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasks.ui.colors.background.category"
+           isEditable="true"
+           label="Task Editor - Incoming Changes"
+           value="225,236,255"> 
+         <description>
+            Background color of attributes with incoming changes.
+         </description>
+     </colorDefinition>  
 	<fontDefinition
        categoryId="org.eclipse.mylar.tasklist.ui.presentation"
        id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
@@ -516,8 +525,6 @@
       </fontDefinition>
    </extension>
    <!-- defaultsTo="org.eclipse.jface.dialogfont"-->
-   
-    
 
    <extension
          point="org.eclipse.ui.perspectives">

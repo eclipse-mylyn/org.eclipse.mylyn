@@ -27,8 +27,6 @@ public class TaskListColorsAndFonts {
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
 	public static final Color COLOR_GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
-	
-	public static final Color COLOR_ATTRIBUTE_CHANGED  = new Color(Display.getDefault(), 225, 236, 255);
 
 	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170);
 
@@ -46,6 +44,8 @@ public class TaskListColorsAndFonts {
 
 	public static Font STRIKETHROUGH;
 
+	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.background.category";
+	
 	public static final String THEME_COLOR_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
 
 	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue";

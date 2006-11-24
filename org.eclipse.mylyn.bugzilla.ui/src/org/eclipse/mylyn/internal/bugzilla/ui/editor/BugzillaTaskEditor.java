@@ -62,6 +62,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -83,6 +84,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.progress.IProgressService;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a bug report that exists on a server. It uses a
@@ -740,8 +742,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		String voteValue = votesAttribute != null ? votesAttribute.getValue() : "0";
 		votesText = toolkit.createText(votingComposite, voteValue);
 		votesText.setFont(TEXT_FONT);
+		
 		if(votesAttribute != null && hasChanged(votesAttribute)) {
-			keywordsText.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+			Color backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+					TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
+			keywordsText.setBackground(backgroundIncoming);
 		}
 		votesText.setEditable(false);
 

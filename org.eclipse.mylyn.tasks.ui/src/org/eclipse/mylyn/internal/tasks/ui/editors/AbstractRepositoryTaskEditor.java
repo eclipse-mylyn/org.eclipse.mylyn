@@ -464,6 +464,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected abstract void submitToRepository();
 
+	private Color backgroundIncoming;
+	
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
 	 * default fonts and cut/copy/paste actions.
@@ -477,11 +479,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		scrollIncrement = fd[0].getHeight() + cushion;
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
+		initColors();
 	}
 
 	public AbstractRepositoryTaskEditor(FormEditor editor, boolean htmlComments) {
 		this(editor);
 		this.htmlComments = htmlComments;
+		initColors();
+	}
+
+	private void initColors() {
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 	}
 
 	public String getNewCommentText() {
@@ -615,7 +625,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		text = toolkit.createText(composite, value, style);
 		if (hasChanged(attribute)) {
-			text.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+			text.setBackground(backgroundIncoming);
 		}
 		return text;
 	}
@@ -669,7 +679,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attributeCombo.setFont(TEXT_FONT);
 
 				if (hasChanged(attribute)) {
-					attributeCombo.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+					attributeCombo.setBackground(backgroundIncoming);
 				}
 				attributeCombo.setLayoutData(data);				
 				for (String val : values) {
@@ -1305,7 +1315,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		
 		if (hasChanged(getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
-			descriptionTextViewer.getTextWidget().setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+			descriptionTextViewer.getTextWidget().setBackground(backgroundIncoming);
 		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
@@ -1392,7 +1402,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 		if (hasChanged(getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_CC))) {
-			ccList.setBackground(TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED);
+			ccList.setBackground(backgroundIncoming);
 		}
 		java.util.List<String> ccs = getRepositoryTaskData().getCC();
 		if (ccs != null) {
