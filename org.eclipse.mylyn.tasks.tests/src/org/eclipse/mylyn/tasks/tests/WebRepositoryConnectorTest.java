@@ -60,22 +60,34 @@ public class WebRepositoryConnectorTest extends TestCase {
 	    Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
 	    for(Map.Entry<String, String> e : attributes.entrySet()) {
 	        String key = e.getKey();
-	        if(key.startsWith(WebRepositoryConnector.PARAM_PREFIX)) {
+//	        if(key.startsWith(WebRepositoryConnector.PARAM_PREFIX)) {
 	            params.put(key, e.getValue());
-	        }
+//	        }
 	    }
 
         TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
-        repository.setAuthenticationCredentials("user", "pwd");
+        if(repository.getUrl().equals("http://demo.otrs.org")) {
+        	// HACK: OTRS repository require auth 
+        	repository.setAuthenticationCredentials("skywalker", "skywalker");
+//        } else {
+//        	repository.setAuthenticationCredentials("user", "pwd");
+        }
 
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
-        String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, null, null, null);
+        String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
+        assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
 
         String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
         IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector, repository);
 
         assertTrue("Query failed\n"+taskQueryUrl+"\n"+regexp+"\n"+resultingStatus.toString(), queryStatus.isOK());
-        assertTrue("Expected non-empty query result\n"+taskQueryUrl+"\n"+regexp, hits.size()>0);
+        try {
+			assertTrue("Expected non-empty query result\n" + taskQueryUrl + "\n" + regexp, hits.size() > 0);
+		} catch (Exception e) {
+			System.err.println(taskQueryUrl);
+			System.err.println(buffer);
+			System.err.println("--------------------------------------------------------");
+		}
 	}
 
 	public String getName() {
