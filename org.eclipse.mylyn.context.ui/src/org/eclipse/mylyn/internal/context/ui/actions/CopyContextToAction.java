@@ -36,9 +36,9 @@ import org.eclipse.ui.PlatformUI;
 public class CopyContextToAction implements IViewActionDelegate {
 
 	private static final String OPEN_TASK_ACTION_DIALOG_SETTINGS = "open.task.action.dialog.settings";
-	
+
 	private ISelection selection;
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -46,20 +46,20 @@ public class CopyContextToAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		ITask sourceTask = null;
 		if (selection instanceof StructuredSelection) {
-			Object selectedObject = ((StructuredSelection)selection).getFirstElement();
+			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof ITask) {
-				sourceTask = (ITask)selectedObject;
+				sourceTask = (ITask) selectedObject;
 			} else if (selectedObject instanceof AbstractQueryHit) {
-				sourceTask = ((AbstractQueryHit)selectedObject).getCorrespondingTask();
+				sourceTask = ((AbstractQueryHit) selectedObject).getCorrespondingTask();
 			}
 		}
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, 
-					"No source task selected");
+					TasksUiPlugin.TITLE_DIALOG, "No source task selected.");
 		}
-		
-		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+
+		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell());
 		dialog.setTitle("Select Target Task");
 
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
@@ -75,28 +75,34 @@ public class CopyContextToAction implements IViewActionDelegate {
 		}
 
 		Object result = dialog.getFirstResult();
-		
+
 		ITask targetTask = null;
 		if (result instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) result;
 			targetTask = hit.getOrCreateCorrespondingTask();
 		} else if (result instanceof ITask) {
-			targetTask = (ITask)result;
+			targetTask = (ITask) result;
 		}
-		
+
 		if (targetTask != null) {
 			TasksUiPlugin.getTaskListManager().deactivateAllTasks();
-			File contextFile = ContextCorePlugin.getContextManager().getFileForContext(sourceTask.getHandleIdentifier());
-			ContextCorePlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(), contextFile);
-			TasksUiPlugin.getTaskListManager().activateTask(targetTask);
-			TaskListView view = TaskListView.getFromActivePerspective();
-			if (view != null) {
-				view.refreshAndFocus(false);
+			File contextFile = ContextCorePlugin.getContextManager()
+					.getFileForContext(sourceTask.getHandleIdentifier());
+			if (!contextFile.exists()) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						TasksUiPlugin.TITLE_DIALOG, "Source task does not hava a context.");
+			} else {
+				ContextCorePlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(),
+						contextFile);
+				TasksUiPlugin.getTaskListManager().activateTask(targetTask);
+				TaskListView view = TaskListView.getFromActivePerspective();
+				if (view != null) {
+					view.refreshAndFocus(false);
+				}
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, 
-					"No target task selected");
+					TasksUiPlugin.TITLE_DIALOG, "No target task selected.");
 		}
 	}
 
