@@ -1237,7 +1237,7 @@ public class TaskListView extends ViewPart {
 
 	public void refreshAndFocus(boolean expand) {
 		// getViewer().getControl().setRedraw(false);
-		// getViewer().refresh();
+//		 getViewer().refresh();
 		refresh(null);
 		if (expand) {
 			getViewer().expandAll();
