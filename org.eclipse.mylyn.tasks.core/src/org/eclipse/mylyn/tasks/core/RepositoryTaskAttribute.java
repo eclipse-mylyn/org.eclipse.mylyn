@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,7 +109,7 @@ public class RepositoryTaskAttribute implements Serializable {
 	private String key;
 
 	/** Legal values of the attribute */
-	private LinkedHashMap<String, String> optionValues;
+	private Map<String, String> optionValues;
 
 	/**
 	 * Attribute's values (selected or added) 
@@ -126,7 +126,7 @@ public class RepositoryTaskAttribute implements Serializable {
 		this.key = key;
 		this.name = name;
 		this.hidden = hidden;
-		optionValues = new LinkedHashMap<String, String>();
+		optionValues = new HashMap<String, String>();
 	}
 
 	public String getName() {

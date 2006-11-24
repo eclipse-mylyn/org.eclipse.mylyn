@@ -26,7 +26,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
  */
 class OfflineDataStore implements Serializable {
 
-	private static final long serialVersionUID = 7629760132110781338L;
+	private static final long serialVersionUID = -3478629317688395883L;
 
 	/** The bug id of the most recently created offline report. */
 	private transient int lastLocalTaskNumber = 0;

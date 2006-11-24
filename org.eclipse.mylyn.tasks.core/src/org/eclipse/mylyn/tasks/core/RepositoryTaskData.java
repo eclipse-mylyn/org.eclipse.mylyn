@@ -24,10 +24,10 @@ import java.util.StringTokenizer;
  */
 public class RepositoryTaskData extends AttributeContainer implements Serializable {
 	
+	private static final long serialVersionUID = 2402511248225227689L;
+
 	private boolean hasLocalChanges = false;
 	
-	private static final long serialVersionUID = 2746931358107812373L;
-
 	public static final String VAL_STATUS_NEW = "NEW";
 
 	private String reportID;
