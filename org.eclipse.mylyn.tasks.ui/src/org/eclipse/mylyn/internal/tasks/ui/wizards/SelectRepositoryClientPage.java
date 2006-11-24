@@ -11,9 +11,11 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -87,6 +89,13 @@ public class SelectRepositoryClientPage extends WizardPage {
 			}
 
 		});
+		
+		viewer.addOpenListener(new IOpenListener() {
+			public void open(OpenEvent event) {
+				getContainer().showPage(getNextPage());
+			}
+		});
+		
 		setControl(container);
 	}
 
