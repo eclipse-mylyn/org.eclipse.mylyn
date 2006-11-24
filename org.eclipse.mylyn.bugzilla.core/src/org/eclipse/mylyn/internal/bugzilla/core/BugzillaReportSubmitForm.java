@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.httpclient.NameValuePair;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.HtmlTag;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
@@ -324,13 +323,18 @@ public class BugzillaReportSubmitForm {
 		NameValuePair[] formData = fields.values().toArray(new NameValuePair[fields.size()]);
 		InputStream inputStream = null;
 		String result = null;
+		PostMethod method = null;
 		try {
 			if (isNewBugPost()) {
-				inputStream = client.postFormData(POST_BUG_CGI, formData);
+				method = client.postFormData(POST_BUG_CGI, formData);
 			} else {
-				inputStream = client.postFormData(PROCESS_BUG_CGI, formData);
+				method = client.postFormData(PROCESS_BUG_CGI, formData);
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
+
+			if (method == null)
+				throw new BugzillaException("Could not post form");
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream()));
 			in.mark(10);
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
@@ -389,14 +393,11 @@ public class BugzillaReportSubmitForm {
 		} catch (ParseException e) {
 			throw new IOException("Could not parse response from server.");
 		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-
-			} catch (IOException e) {
-				BugzillaCorePlugin.log(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
-						"Problem posting the bug", e));
+			if (inputStream != null) {
+				inputStream.close();
+			}
+			if (method != null) {
+				method.releaseConnection();
 			}
 		}
 		// return the bug number

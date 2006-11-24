@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -66,6 +65,8 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Steffen Pingel
  */
 public class BugzillaClient {
+
+	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 
 	private static final int MAX_RETRY = 2;
 
@@ -131,8 +132,15 @@ public class BugzillaClient {
 	}
 
 	public void validate() throws IOException, LoginException, BugzillaException {
-		logout();
-		getConnect(repositoryUrl + "/");
+		GetMethod method = null;
+		try {
+			logout();
+			method = getConnect(repositoryUrl + "/");
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
 	}
 
 	protected boolean hasAuthenticationCredentials() {
@@ -154,12 +162,12 @@ public class BugzillaClient {
 			}
 
 			GetMethod getMethod = new GetMethod(WebClientUtil.getRequestPath(serverURL));
-			//getMethod.getParams().setSoTimeout(CONNECT_TIMEOUT);
+			// getMethod.getParams().setSoTimeout(CONNECT_TIMEOUT);
 			httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
-			
+
 			// WARNING! Setting browser compatability breaks Bugzilla
 			// authentication
 			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
@@ -178,7 +186,7 @@ public class BugzillaClient {
 						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
 						return true;
 					}
-					if (exception instanceof SocketTimeoutException) {						
+					if (exception instanceof SocketTimeoutException) {
 						httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
 						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
 						return true;
@@ -245,7 +253,7 @@ public class BugzillaClient {
 					if (tag.getTagType() == HtmlTag.Type.A) {
 						if (tag.hasAttribute("href")) {
 							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase().contains("goaheadandlogin=1")) {
+							if (id != null && id.toLowerCase().contains(LOGIN_REQUIRED)) {
 								authenticated = false;
 								return;
 							}
@@ -261,8 +269,9 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			throw new BugzillaException(e);
 		} finally {
-			method.releaseConnection();
-			// httpClient.getParams().setAuthenticationPreemptive(false);
+			if (method != null) {
+				method.releaseConnection();
+			}
 		}
 	}
 
@@ -321,7 +330,7 @@ public class BugzillaClient {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == HtmlTag.Type.A) {
 							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase().contains("goaheadandlogin=1")) {
+							if (id != null && id.toLowerCase().contains(LOGIN_REQUIRED)) {
 								throw new LoginException("Invalid credentials.");
 							}
 						}
@@ -381,6 +390,7 @@ public class BugzillaClient {
 			}
 		}
 	}
+	
 
 	// public static String addCredentials(String url, String encoding, String
 	// userName, String password)
@@ -400,31 +410,37 @@ public class BugzillaClient {
 
 	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
 			throws IOException, BugzillaException, GeneralSecurityException {
-		String queryUrl = query.getUrl();
-		// Test that we don't specify content type twice.
-		// Should only be specified here (not in passed in url if possible)
-		if (!queryUrl.contains("ctype=rdf")) {
-			queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
-		}
-		GetMethod method = getConnect(queryUrl);
+		GetMethod method = null;
+		try {
+			String queryUrl = query.getUrl();
+			// Test that we don't specify content type twice.
+			// Should only be specified here (not in passed in url if possible)
+			if (!queryUrl.contains("ctype=rdf")) {
+				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
+			}
+			method = getConnect(queryUrl);
 
-		if (method.getResponseHeader("Content-Type") != null) {
-			Header responseTypeHeader = method.getResponseHeader("Content-Type");
-			for (String type : VALID_CONFIG_CONTENT_TYPES) {
-				if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
-					RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
-							.getResponseBodyAsStream(), characterEncoding);
-					queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, query.getMaxHits());
-					return;
+			if (method.getResponseHeader("Content-Type") != null) {
+				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+				for (String type : VALID_CONFIG_CONTENT_TYPES) {
+					if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
+						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
+								.getResponseBodyAsStream(), characterEncoding);
+						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, query.getMaxHits());
+						return;
+					}
 				}
 			}
-		}
-		try {
 			parseHtmlError(new BufferedReader(
 					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
 		} catch (LoginException e) {
 			authenticated = false;
 			throw e;
+
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
 		}
 	}
 
@@ -438,7 +454,7 @@ public class BugzillaClient {
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
 				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
 				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
-				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC}; // BugzillaReportElement.VOTES,
+				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC }; // BugzillaReportElement.VOTES,
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);
@@ -509,20 +525,6 @@ public class BugzillaClient {
 			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + id;
 			method = getConnect(url);
 			return method.getResponseBody();
-
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
-		}
-	}
-
-	public InputStream getAttachmentInputStream(String id) throws LoginException, IOException, BugzillaException {
-		GetMethod method = null;
-		try {
-			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + id;
-			method = getConnect(url);
-			return method.getResponseBodyAsStream();
 
 		} finally {
 			if (method != null) {
@@ -607,7 +609,12 @@ public class BugzillaClient {
 
 	}
 
-	public InputStream postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException,
+	/**
+	 * calling method must release the connection on the 
+	 * returned PostMethod once finished.
+	 * TODO: refactor
+	 */
+	public PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException,
 			BugzillaException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
@@ -628,7 +635,7 @@ public class BugzillaClient {
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		int status = httpClient.executeMethod(postMethod);
 		if (status == HttpStatus.SC_OK) {
-			return postMethod.getResponseBodyAsStream();
+			return postMethod;
 		} else {
 			MylarStatusHandler.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
