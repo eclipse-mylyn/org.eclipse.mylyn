@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.trac_feature"
       label="Mylar Connector: Trac"
-      version="0.9.0.v20061117-1800"
+      version="0.9.0.v20061123-2030"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -230,14 +230,14 @@ litigation.
          id="org.eclipse.mylar.trac.ui"
          download-size="0"
          install-size="0"
-         version="0.9.0.v20061117-1800"
+         version="0.9.0.v20061123-2030"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.trac.core"
          download-size="0"
          install-size="0"
-         version="0.9.0.v20061117-1800"
+         version="0.9.0.v20061123-2030"
          unpack="false"/>
 
 </feature>
