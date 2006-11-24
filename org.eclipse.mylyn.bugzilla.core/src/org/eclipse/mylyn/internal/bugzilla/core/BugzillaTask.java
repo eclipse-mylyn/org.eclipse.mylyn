@@ -94,7 +94,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		// show the login info in the query string
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
-					.parseInt(AbstractRepositoryTask.getTaskId(handle)));
+					.parseInt(AbstractRepositoryTask.getTaskId(handleIdentifier)));
 		} catch (NumberFormatException nfe) {
 			return super.getUrl();
 		}

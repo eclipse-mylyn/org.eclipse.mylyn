@@ -109,7 +109,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	 * null if no such label exists.
 	 */
 	public String getIdLabel() {
-		return getTaskId(handle);
+		return getTaskId(handleIdentifier);
 	}
 	
 	public static String getTaskId(String taskHandle) {

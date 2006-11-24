@@ -100,7 +100,7 @@ public class Task implements ITask {
 
 	private boolean active = false;
 
-	protected String handle = "-1";
+	protected String handleIdentifier = "-1";
 
 	private boolean category = false;
 
@@ -143,7 +143,7 @@ public class Task implements ITask {
 	}
 
 	public Task(String handle, String label, boolean newTask) {
-		this.handle = handle;
+		this.handleIdentifier = handle;
 		this.description = label;
 		if (newTask) {
 			creationDate = new Date();
@@ -151,11 +151,11 @@ public class Task implements ITask {
 	}
 
 	public String getHandleIdentifier() {
-		return handle;
+		return handleIdentifier;
 	}
 
 	public void setHandleIdentifier(String id) {
-		this.handle = id;
+		this.handleIdentifier = id;
 	}
 
 	public ITask getParent() {
