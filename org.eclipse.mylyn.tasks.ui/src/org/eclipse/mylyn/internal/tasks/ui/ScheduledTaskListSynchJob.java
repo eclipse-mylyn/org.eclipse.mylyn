@@ -98,7 +98,9 @@ public class ScheduledTaskListSynchJob extends Job {
 					try {
 						connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));						
 					} catch (CoreException e) {
-						MylarStatusHandler.fail(e, "Unable to update attributes for "+repository.getUrl()+"  "+e.getMessage(), false);
+						MylarStatusHandler.log(e, "Unable to update attributes for "+repository.getUrl()+"  " + e.getMessage());
+					} catch (Throwable t) {
+						MylarStatusHandler.log(t, "Unable to update attributes for "+repository.getUrl()+"  " + t.getMessage());
 					}
 				}
 				
