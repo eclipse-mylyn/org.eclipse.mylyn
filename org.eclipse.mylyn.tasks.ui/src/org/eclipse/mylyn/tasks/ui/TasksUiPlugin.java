@@ -696,18 +696,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 		try {
 			offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), true);
-		} catch (Exception e) {
-			MylarStatusHandler
-					.log(e,
-							"Could not restore offline repository tasks file, creating new one (possible version incompatibility)");
+		} catch (Throwable t) {
+			MylarStatusHandler.log(t,
+							"Could not restore offline repository tasks file, creating new one, likely cause is format update.");
 			boolean deleted = offlineReportsPath.toFile().delete();
 			if (!deleted) {
-				MylarStatusHandler.log(e, "could not delete offline repository tasks file");
+				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
 			}
 			try {
 				offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
-				MylarStatusHandler.log(e, "could not reset offline repository tasks file");
+				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
 			}
 		}
 	}
