@@ -203,6 +203,15 @@ public class RepositoryTaskAttribute implements Serializable {
 		optionParameters.put(readableValue, parameterValue);
 	}
 
+	public boolean hasOptions() {
+		return options.size() > 0;
+	}
+
+	public void clearOptions() {
+		options.clear();
+		optionParameters.clear();
+	}
+
 	/**
 	 * Determine if the field was hidden or not
 	 * 
@@ -226,11 +235,4 @@ public class RepositoryTaskAttribute implements Serializable {
 		return getValue();
 	}
 
-	public boolean hasOptions() {
-		return optionParameters.size() > 0;
-	}
-
-	public void clearOptions() {
-		optionParameters.clear();
-	}
 }

@@ -294,6 +294,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
 				continue;
 			}
+			attribute.clearOptions();
 			for (String option : optionValues) {
 				attribute.addOption(option, option);
 			}

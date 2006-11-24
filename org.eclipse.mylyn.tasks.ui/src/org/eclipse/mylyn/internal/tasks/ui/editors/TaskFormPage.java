@@ -9,10 +9,8 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.text.DefaultInformationControl;
@@ -69,14 +67,13 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskFormPage extends FormPage {
 
-	// public static final Image ERROR_IMAGE = new Image(Display.getDefault(),
-	// "location");
-
 	protected boolean isDirty;
 
 	protected TaskEditorActionContributor actionContributor;
 
 	protected List<TextViewer> textViewers = new ArrayList<TextViewer>();
+
+	private static final ISharedTextColors sharedTextColors = new SharedTextColors();
 
 	private void addTextViewer(TextViewer viewer) {
 		textViewers.add(viewer);
@@ -355,7 +352,7 @@ public class TaskFormPage extends FormPage {
 			fAnnotationAccess = new AnnotationMarkerAccess();
 
 			fCompositeRuler = new CompositeRuler();
-			fOverviewRuler = new OverviewRuler(fAnnotationAccess, 12, new SharedTextColors());
+			fOverviewRuler = new OverviewRuler(fAnnotationAccess, 12, sharedTextColors);
 			annotationRuler = new AnnotationRulerColumn(fAnnotationModel, 16, fAnnotationAccess);
 			fCompositeRuler.setModel(fAnnotationModel);
 			fOverviewRuler.setModel(fAnnotationModel);
@@ -616,60 +613,78 @@ public class TaskFormPage extends FormPage {
 		}
 	}
 
-	// From org.eclipse.ui.internal.editors.text.SharedTextColors
+	// NOTE: See commented code below for example implementation
 	static class SharedTextColors implements ISharedTextColors {
-		/** The display table. */
-		@SuppressWarnings("unchecked")
-		private Map fDisplayTable;
 
 		/** Creates an returns a shared color manager. */
 		public SharedTextColors() {
 			super();
 		}
 
-		/*
-		 * @see ISharedTextColors#getColor(RGB)
-		 */
-		@SuppressWarnings("unchecked")
 		public Color getColor(RGB rgb) {
-			if (rgb == null)
-				return null;
-
-			if (fDisplayTable == null)
-				fDisplayTable = new HashMap(2);
-
-			Display display = Display.getCurrent();
-
-			Map colorTable = (Map) fDisplayTable.get(display);
-			if (colorTable == null) {
-				colorTable = new HashMap(10);
-				fDisplayTable.put(display, colorTable);
-			}
-
-			Color color = (Color) colorTable.get(rgb);
-			if (color == null) {
-				color = new Color(display, rgb);
-				colorTable.put(rgb, color);
-			}
-
-			return color;
+			return TaskListColorsAndFonts.COLOR_SPELLING_ERROR;
 		}
 
-		/*
-		 * @see ISharedTextColors#dispose()
-		 */
-		@SuppressWarnings("unchecked")
 		public void dispose() {
-			if (fDisplayTable != null) {
-				Iterator j = fDisplayTable.values().iterator();
-				while (j.hasNext()) {
-					Iterator i = ((Map) j.next()).values().iterator();
-					while (i.hasNext())
-						((Color) i.next()).dispose();
-				}
-			}
+			return;
 		}
 	}
+
+	// DND relves
+	//// From org.eclipse.ui.internal.editors.text.SharedTextColors
+	// static class SharedTextColors implements ISharedTextColors {
+	// /** The display table. */
+	// @SuppressWarnings("unchecked")
+	// private Map fDisplayTable;
+	//
+	// /** Creates an returns a shared color manager. */
+	// public SharedTextColors() {
+	// super();
+	// }
+	//
+	// /*
+	// * @see ISharedTextColors#getColor(RGB)
+	// */
+	// @SuppressWarnings("unchecked")
+	// public Color getColor(RGB rgb) {
+	// if (rgb == null)
+	// return null;
+	//
+	// if (fDisplayTable == null)
+	// fDisplayTable = new HashMap(2);
+	//
+	// Display display = Display.getCurrent();
+	//
+	// Map colorTable = (Map) fDisplayTable.get(display);
+	// if (colorTable == null) {
+	// colorTable = new HashMap(10);
+	// fDisplayTable.put(display, colorTable);
+	// }
+	//
+	// Color color = (Color) colorTable.get(rgb);
+	// if (color == null) {
+	// color = new Color(display, rgb);
+	// colorTable.put(rgb, color);
+	// }
+	//
+	// return color;
+	// }
+	//
+	// /*
+	// * @see ISharedTextColors#dispose()
+	// */
+	// @SuppressWarnings("unchecked")
+	// public void dispose() {
+	// if (fDisplayTable != null) {
+	// Iterator j = fDisplayTable.values().iterator();
+	// while (j.hasNext()) {
+	// Iterator i = ((Map) j.next()).values().iterator();
+	// while (i.hasNext())
+	// ((Color) i.next()).dispose();
+	// }
+	// }
+	// }
+	// }
 
 	static class AnnotationConfiguration implements IInformationControlCreator {
 		public IInformationControl createInformationControl(Shell shell) {

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +39,43 @@ public class TaskDataManager {
 
 	private OfflineDataStore dataStore;
 
+	/** Older version of Task Data */
+	private Map<String, RepositoryTaskData> oldTaskDataMap;
+
+	/** Newest version of the task data */
+	private Map<String, RepositoryTaskData> newTaskDataMap;
+
+	/** Unsubmitted tasks data */
+	private Map<String, RepositoryTaskData> unsubmittedTaskData;
+
 	public TaskDataManager(File file, boolean read) throws IOException, ClassNotFoundException {
 		this.file = file;
 		if (file.exists() && read) {
-			readFile();
+			readOfflineData();
 		} else {
 			dataStore = new OfflineDataStore();
 		}
+	}
+
+	private Map<String, RepositoryTaskData> getOldDataMap() {
+		if (oldTaskDataMap == null) {
+			oldTaskDataMap = Collections.synchronizedMap(dataStore.getOldDataMap());
+		}
+		return oldTaskDataMap;
+	}
+
+	private synchronized Map<String, RepositoryTaskData> getNewDataMap() {
+		if (newTaskDataMap == null) {
+			newTaskDataMap = Collections.synchronizedMap(dataStore.getNewDataMap());
+		}
+		return newTaskDataMap;
+	}
+
+	private synchronized Map<String, RepositoryTaskData> getUnsubmittedTaskData() {
+		if (unsubmittedTaskData == null) {
+			unsubmittedTaskData = Collections.synchronizedMap(dataStore.getUnsubmittedTaskData());
+		}
+		return unsubmittedTaskData;
 	}
 
 	/**
@@ -54,76 +85,59 @@ public class TaskDataManager {
 	public void put(RepositoryTaskData newEntry) {
 		synchronized (file) {
 			String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
-			RepositoryTaskData moveToOld = dataStore.getNewDataMap().get(handle);
+			RepositoryTaskData moveToOld = getNewDataMap().get(handle);
 			if (moveToOld != null) {
-				dataStore.getOldDataMap().put(handle, moveToOld);
+				getOldDataMap().put(handle, moveToOld);
 			}
-			dataStore.getNewDataMap().put(handle, newEntry);
+			getNewDataMap().put(handle, newEntry);
 		}
 	}
 
 	/**
-	 * Add a unsubmitted RepositoryTaskData to the offline reports file.
+	 * Add an unsubmitted RepositoryTaskData to the offline reports file.
 	 */
 	public void putUnsubmitted(RepositoryTaskData newEntry) {
 		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
 		synchronized (file) {
-			dataStore.getUnsubmittedTaskData().put(handle, newEntry);
+			getUnsubmittedTaskData().put(handle, newEntry);
 		}
 	}
 
 	public Map<String, RepositoryTaskData> getUnsubmitted() {
-		return dataStore.getUnsubmittedTaskData();
+		return Collections.unmodifiableMap(getUnsubmittedTaskData());
 	}
 
-	/** save task data to offline file */
-	public void save() {
+	public void removeUnsubmitted(String handle) {
 		synchronized (file) {
+			getUnsubmittedTaskData().remove(handle);
+		}
+	}
 
-			ObjectOutputStream out = null;
-			try {
-				out = new ObjectOutputStream(new FileOutputStream(file));
-				out.writeObject(dataStore);
-				out.close();
-			} catch (IOException e) {
-				MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
-			} finally {
-				if (out != null) {
-					try {
-						out.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			}
+	public void clearUnsubmitted() {
+		synchronized (file) {
+			getUnsubmittedTaskData().clear();
 		}
 	}
 
 	/**
-	 * @return The id that the next new local task should use. Incremented each
-	 *         time this method is called.
+	 * @return Get the next available temporary id. This id is given to new
+	 *         unsubmitted repository tasks. Incremented each time this method
+	 *         is called.
 	 */
-	public String getNextLocalTaskId() {
-		return "" + dataStore.getNextTaskNumber();
-	}
+	public String getNewRepositoryTaskId() {
 
-	/**
-	 * @return The id of the next new unsubmitted task. Incremented each time
-	 *         this method is called.
-	 */
-	public String getNextUnsubmittedTaskId() {
-		return "" + dataStore.getNextUnsubmittedTaskNumber();
+		return "" + dataStore.getNextTaskId();
 	}
 
 	/**
 	 * Returns the most recent copy of the task data.
 	 */
 	public RepositoryTaskData getTaskData(String handle) {
-		RepositoryTaskData data = dataStore.getNewDataMap().get(handle);
+		RepositoryTaskData data = getNewDataMap().get(handle);
 		if (data == null) {
 			data = getOldTaskData(handle);
 			if (data != null) {
-				dataStore.getNewDataMap().put(handle, data);
+				getNewDataMap().put(handle, data);
 			}
 		}
 		return data;
@@ -141,7 +155,7 @@ public class TaskDataManager {
 	 * Returns the old copy if exists, null otherwise.
 	 */
 	public RepositoryTaskData getOldTaskData(String handle) {
-		return dataStore.getOldDataMap().get(handle);
+		return getOldDataMap().get(handle);
 	}
 
 	/**
@@ -153,25 +167,53 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Read the offline reports in from the file on disk
+	 * Remove some bugs from the offline reports list
 	 * 
-	 * @throws IOException
-	 *             Error opening or closing the offline reports file
-	 * @throws ClassNotFoundException
-	 * @throws ClassNotFoundException
-	 *             Error deserializing objects from the offline reports file
+	 * @param indicesToRemove
+	 *            An array of the indicies of the bugs to be removed
 	 */
-	private void readFile() throws IOException, ClassNotFoundException {
+	public void remove(List<RepositoryTaskData> dataToRemove) {
+		synchronized (file) {
+			for (RepositoryTaskData repositoryTaskData : dataToRemove) {
+				remove(repositoryTaskData);
+			}
+		}
+	}
 
+	public void remove(RepositoryTaskData taskData) {
+		synchronized (file) {
+			String handle = AbstractRepositoryTask.getHandle(taskData.getRepositoryUrl(), taskData.getId());
+			getNewDataMap().remove(handle);
+			getOldDataMap().remove(handle);
+		}
+	}
+
+	/**
+	 * Public for testing
+	 */
+	public void clear() {
+		synchronized (file) {
+			dataStore = new OfflineDataStore();
+			oldTaskDataMap = null;
+			newTaskDataMap = null;
+			unsubmittedTaskData = null;
+		}
+	}
+
+	/**
+	 * Public for testing
+	 */
+	public void readOfflineData() throws IOException, ClassNotFoundException {
+		clear();
 		synchronized (file) {
 			ObjectInputStream in = null;
 			try {
 				in = new ObjectInputStream(new FileInputStream(file));
 				dataStore = (OfflineDataStore) in.readObject();
-				for (RepositoryTaskData taskData : dataStore.getNewDataMap().values()) {
+				for (RepositoryTaskData taskData : getNewDataMap().values()) {
 					updateAttributeFactory(taskData);
 				}
-				for (RepositoryTaskData taskData : dataStore.getOldDataMap().values()) {
+				for (RepositoryTaskData taskData : getOldDataMap().values()) {
 					updateAttributeFactory(taskData);
 				}
 			} catch (OptionalDataException e) {
@@ -199,7 +241,7 @@ public class TaskDataManager {
 
 			// get the number of offline reports in the file
 			int size = in.readInt();
-			dataStore.setNextTaskNumber(in.readInt());
+			dataStore.setLastNewTaskId(in.readInt());
 			for (int nX = 0; nX < size; nX++) {
 				RepositoryTaskData taskData = null;
 
@@ -218,6 +260,29 @@ public class TaskDataManager {
 		}
 	}
 
+	/** save task data to offline file */
+	public void save() {
+		synchronized (file) {
+
+			ObjectOutputStream out = null;
+			try {
+				out = new ObjectOutputStream(new FileOutputStream(file));
+				out.writeObject(dataStore);
+				out.close();
+			} catch (IOException e) {
+				MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
+			} finally {
+				if (out != null) {
+					try {
+						out.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			}
+		}
+	}
+
 	private void updateAttributeFactory(RepositoryTaskData taskData) {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				taskData.getRepositoryKind());
@@ -227,38 +292,6 @@ public class TaskDataManager {
 				taskData.setAttributeFactory(factory);
 			}
 		}
-	}
-
-	/**
-	 * Remove some bugs from the offline reports list
-	 * 
-	 * @param indicesToRemove
-	 *            An array of the indicies of the bugs to be removed
-	 */
-	public void remove(List<RepositoryTaskData> dataToRemove) {
-		for (RepositoryTaskData repositoryTaskData : dataToRemove) {
-			remove(repositoryTaskData);
-		}
-	}
-
-	public void remove(RepositoryTaskData taskData) {
-		String handle = AbstractRepositoryTask.getHandle(taskData.getRepositoryUrl(), taskData.getId());
-		dataStore.getNewDataMap().remove(handle);
-		dataStore.getOldDataMap().remove(handle);
-	}
-
-	/**
-	 * FOR TESTING ONLY.
-	 */
-	public void clear() {
-		dataStore = new OfflineDataStore();
-	}
-
-	/**
-	 * FOR TESTING ONLY.
-	 */
-	public void reloadFromFile() throws IOException, ClassNotFoundException {
-		readFile();
 	}
 
 }

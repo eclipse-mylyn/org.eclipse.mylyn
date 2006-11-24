@@ -61,18 +61,18 @@ public class TaskDataManagerTest extends TestCase {
 		offlineTaskDataManager.clear();
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1"));
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
-		offlineTaskDataManager.reloadFromFile();
+		offlineTaskDataManager.readOfflineData();
 		assertNotNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1"));
 		assertNotNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
 	}
 
 	public void testGetNextOfflineBugId() throws IOException, ClassNotFoundException {
-		assertEquals("1", offlineTaskDataManager.getNextLocalTaskId());
-		assertEquals("2", offlineTaskDataManager.getNextLocalTaskId());
+		assertEquals("1", offlineTaskDataManager.getNewRepositoryTaskId());
+		assertEquals("2", offlineTaskDataManager.getNewRepositoryTaskId());
 		offlineTaskDataManager.save();
 		offlineTaskDataManager.clear();
-		offlineTaskDataManager.reloadFromFile();
-		assertEquals("3", offlineTaskDataManager.getNextLocalTaskId());
+		offlineTaskDataManager.readOfflineData();
+		assertEquals("3", offlineTaskDataManager.getNewRepositoryTaskId());
 	}
 
 	public void testGetTaskData() throws CoreException, IOException, ClassNotFoundException {
@@ -87,7 +87,7 @@ public class TaskDataManagerTest extends TestCase {
 		offlineTaskDataManager.put(taskData);
 		offlineTaskDataManager.save();
 		offlineTaskDataManager.clear();
-		offlineTaskDataManager.reloadFromFile();
+		offlineTaskDataManager.readOfflineData();
 		assertEquals("version 2", offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1")
 				.getNewComment());
 		assertEquals("version 1", offlineTaskDataManager.getOldTaskData(MockRepositoryConnector.REPOSITORY_URL, "1")
@@ -109,7 +109,7 @@ public class TaskDataManagerTest extends TestCase {
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
 		offlineTaskDataManager.save();
 		offlineTaskDataManager.clear();
-		offlineTaskDataManager.reloadFromFile();
+		offlineTaskDataManager.readOfflineData();
 		assertNotNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1"));
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
 	}
@@ -132,68 +132,63 @@ public class TaskDataManagerTest extends TestCase {
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
 		offlineTaskDataManager.save();
 		offlineTaskDataManager.clear();
-		offlineTaskDataManager.reloadFromFile();
+		offlineTaskDataManager.readOfflineData();
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "1"));
 		assertNull(offlineTaskDataManager.getTaskData(MockRepositoryConnector.REPOSITORY_URL, "2"));
 	}
 
-	// /**
-	// * As is will write 81481345 bytes.
-	// *
-	// * @throws Exception
-	// */
-	// public void testLargeDataSet() throws Exception {
-	// RepositoryTaskData taskData;
-	// for (int x = 1; x < 500; x++) {
-	// taskData = new RepositoryTaskData(new MockAttributeFactory(),
-	// MockRepositoryConnector.REPOSITORY_KIND,
-	// MockRepositoryConnector.REPOSITORY_URL, "" + x);
-	//
-	// for (int y = 1; y < 60; y++) {
-	// RepositoryTaskAttribute attribute = new RepositoryTaskAttribute("" + y,
-	// "" + y, false);
-	// for (int z = 1; z < 10; z++) {
-	// attribute.addOption("" + z, "" + z);
-	// attribute.addValue("" + z);
-	// }
-	// taskData.addAttribute("" + y, attribute);
-	// }
-	//
-	// for (int y = 1; y < 5; y++) {
-	// RepositoryOperation op = new RepositoryOperation("" + y, "" + y);
-	// taskData.addOperation(op);
-	// }
-	//
-	// try {
-	// for (int y = 1; y < 1000; y++) {
-	// TaskComment comment = new TaskComment(new MockAttributeFactory(), y);
-	// comment.setAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT, "Testing
-	// \u05D0");
-	// taskData.addComment(comment);
-	// }
-	// } catch (StackOverflowError e) {
-	// e.printStackTrace();
-	// }
-	//
-	// // for(int y = 1; y < 1000; y++) {
-	// // RepositoryAttachment attachment = new
-	// // RepositoryAttachment(repository, new MockAttributeFactory());
-	// // taskData.addAttachment(attachment);
-	// // }
-	//
-	// offlineTaskDataManager.put(taskData);
-	// offlineTaskDataManager.put(taskData);
-	// }
-	// System.err.println("done Building");
-	// offlineTaskDataManager.save();
-	// System.err.println("Saved");
-	// File file =
-	// TasksUiPlugin.getDefault().getOfflineReportsFilePath().toFile();
-	// System.err.println(file.length());
-	// offlineTaskDataManager.clear();
-	// offlineTaskDataManager.reloadFromFile();
-	// assertNotNull(offlineTaskDataManager.getOldTaskData(AbstractRepositoryTask.getHandle(
-	// MockRepositoryConnector.REPOSITORY_URL, 400)));
-	// }
-
+//	/**
+//	 * As is will write 81481326 bytes.
+//	 * 
+//	 * @throws Exception
+//	 */
+//	public void testLargeDataSet() throws Exception {
+//		RepositoryTaskData taskData;
+//		for (int x = 1; x < 500; x++) {
+//			taskData = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND,
+//					MockRepositoryConnector.REPOSITORY_URL, "" + x);
+//
+//			for (int y = 1; y < 60; y++) {
+//				RepositoryTaskAttribute attribute = new RepositoryTaskAttribute("" + y, "" + y, false);
+//				for (int z = 1; z < 10; z++) {
+//					attribute.addOption("" + z, "" + z);
+//					attribute.addValue("" + z);
+//				}
+//				taskData.addAttribute("" + y, attribute);
+//			}
+//
+//			for (int y = 1; y < 5; y++) {
+//				RepositoryOperation op = new RepositoryOperation("" + y, "" + y);
+//				taskData.addOperation(op);
+//			}
+//
+//			try {
+//				for (int y = 1; y < 1000; y++) {
+//					TaskComment comment = new TaskComment(new MockAttributeFactory(), y);
+//					comment.setAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT, "Testing \u05D0");
+//					taskData.addComment(comment);
+//				}
+//			} catch (StackOverflowError e) {
+//				e.printStackTrace();
+//			}
+//
+//			// for(int y = 1; y < 1000; y++) {
+//			// RepositoryAttachment attachment = new
+//			// RepositoryAttachment(repository, new MockAttributeFactory());
+//			// taskData.addAttachment(attachment);
+//			// }
+//
+//			offlineTaskDataManager.put(taskData);
+//			offlineTaskDataManager.put(taskData);
+//		}
+//		System.err.println("done Building");
+//		offlineTaskDataManager.save();
+//		System.err.println("Saved");
+//		File file = TasksUiPlugin.getDefault().getOfflineReportsFilePath().toFile();
+//		System.err.println(file.length());
+//		offlineTaskDataManager.clear();
+//		offlineTaskDataManager.readOfflineData();
+//		assertNotNull(offlineTaskDataManager.getOldTaskData(AbstractRepositoryTask.getHandle(
+//				MockRepositoryConnector.REPOSITORY_URL, 400)));
+//	}
 }
