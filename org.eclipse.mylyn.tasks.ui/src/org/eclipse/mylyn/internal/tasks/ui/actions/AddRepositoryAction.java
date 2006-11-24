@@ -12,16 +12,11 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryWizard;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.mylar.tasks.ui.TaskCommandIds;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Mik Kersten
@@ -29,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 public class AddRepositoryAction extends Action {
 
 	public static final String TITLE = "Add Task Repository";
-	
+
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
@@ -38,31 +33,13 @@ public class AddRepositoryAction extends Action {
 		setId(ID);
 	}
 
-	public void init(IViewPart view) {
-		// ignore
-	}
-
 	public void run() {
+		IHandlerService handlerSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 		try {
-			NewRepositoryWizard wizard = new NewRepositoryWizard();
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			if (wizard != null && shell != null && !shell.isDisposed()) {
-				WizardDialog dialog = new WizardDialog(shell, wizard);
-				dialog.create();
-				dialog.getShell().setText(TITLE);
-				// dialog.getShell().setText("Mylar Tasks");
-				dialog.setBlockOnOpen(true);
-				if (dialog.open() == Dialog.CANCEL) {
-					dialog.close();
-					return;
-				}
-			}
+			handlerSvc.executeCommand(TaskCommandIds.ADD_TASK_REPOSITORY, null);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-	}
 }

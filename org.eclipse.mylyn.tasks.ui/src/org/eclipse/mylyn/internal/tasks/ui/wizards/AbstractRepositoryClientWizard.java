@@ -25,17 +25,27 @@ import org.eclipse.ui.INewWizard;
  */
 public abstract class AbstractRepositoryClientWizard extends Wizard implements INewWizard {
 
+	/**
+	 * If not null, indicates that the wizard will initially jump to a specific
+	 * connector page
+	 */
+	private String repositoryType;
+
 	private SelectRepositoryClientPage selectRepositoryClientPage = new SelectRepositoryClientPage(this);
 
 	protected AbstractRepositorySettingsPage abstractRepositorySettingsPage;
 
 	protected AbstractRepositoryConnector repositoryConnector;
 
-	public AbstractRepositoryClientWizard() {
-		super();
+	protected AbstractRepositoryClientWizard() {
+		this(null);
+	}
+
+	protected AbstractRepositoryClientWizard(String repositoryType) {
+		this.repositoryType = repositoryType;
 		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
-	} 
-	
+	}
+
 	public void setRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		this.repositoryConnector = repositoryConnector;
 	}
@@ -46,19 +56,24 @@ public abstract class AbstractRepositoryClientWizard extends Wizard implements I
 
 	@Override
 	public void addPages() {
-		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
-		if (connectors.size() == 1) {
-			AbstractRepositoryConnector connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
+		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
+				.getRepositoryConnectors();
+		if (repositoryType != null || connectors.size() == 1) {
+			AbstractRepositoryConnector connector = null;
+			if (repositoryType != null) {
+				connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryType);
+			} else {
+				connector = connectors.toArray(new AbstractRepositoryConnector[1])[0];
+			}
 			setRepositoryConnector(connector);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-					connector.getRepositoryType());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();
 			setRepositorySettingsPage(nextPage);
 			nextPage.setWizard(this);
 			addPage(nextPage);
 		} else {
-			addPage(selectRepositoryClientPage);			
-		}		
+			addPage(selectRepositoryClientPage);
+		}
 	}
 
 	@Override

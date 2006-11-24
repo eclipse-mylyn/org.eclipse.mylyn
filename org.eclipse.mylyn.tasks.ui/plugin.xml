@@ -592,6 +592,11 @@
             name="Open Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
+            defaultHandler="org.eclipse.mylar.internal.tasks.ui.commands.OpenRemoteTaskHandler"
+            id="org.eclipse.mylar.tasks.command.openRemoteTask"
+            name="Open Remote Task"/>
+      <command
+            categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.mylar.tasks.command.activateTask"
             name="Activate Task"/>
       <command
@@ -605,6 +610,10 @@
             commandId="org.eclipse.mylar.tasks.command.openTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+F11"/>
+      <key
+            commandId="org.eclipse.mylar.tasks.command.openRemoteTask"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+F12"/>
       <key
             commandId="org.eclipse.mylar.tasks.command.activateTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -643,6 +652,25 @@
              id="org.eclipse.mylar.tasks.ui.project.repository"
              name="Task Repository"
              objectClass="org.eclipse.core.resources.IProject"/>
+    </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <category
+             id="org.eclipse.mylar.tasks.category.taskRepository"
+             name="Task Repositories">
+       </category>
+       <command
+             categoryId="org.eclipse.mylar.tasks.category.taskRepository"
+             defaultHandler="org.eclipse.mylar.internal.tasks.ui.commands.AddTaskRepositoryHandler"
+             id="org.eclipse.mylar.tasks.command.addTaskRepository"
+             name="Add Task Repository">
+          <commandParameter
+                id="org.eclipse.mylar.tasks.command.taskRepositoryId"
+                name="Repository Type"
+                optional="true"
+                values="org.eclipse.mylar.internal.tasks.ui.commands.TaskRepositoryParameterValues">
+          </commandParameter>
+       </command>
     </extension>
   
 </plugin>

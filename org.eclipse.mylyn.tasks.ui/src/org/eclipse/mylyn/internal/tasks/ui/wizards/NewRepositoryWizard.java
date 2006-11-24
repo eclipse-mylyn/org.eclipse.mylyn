@@ -23,8 +23,12 @@ import org.eclipse.ui.IWorkbench;
 public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 
 	public NewRepositoryWizard() {
-		super();
-		super.setForcePreviousAndNextButtons(true);
+		this(null);
+	}
+
+	public NewRepositoryWizard(String repositoryType) {
+		super(repositoryType);
+		setForcePreviousAndNextButtons(true);
 		setWindowTitle(AddRepositoryAction.TITLE);
 	}
 
@@ -33,18 +37,14 @@ public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 		if (canFinish()) {
 			TaskRepository repository = abstractRepositorySettingsPage.createTaskRepository();
 			abstractRepositorySettingsPage.updateProperties(repository);
-			TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+			TasksUiPlugin.getRepositoryManager().addRepository(repository,
+					TasksUiPlugin.getDefault().getRepositoriesFilePath());
 			return true;
 		}
 		return false;
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-	}
-
-	@Override
-	public void addPages() {
-		super.addPages();
 	}
 
 	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {
