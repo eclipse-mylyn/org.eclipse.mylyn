@@ -42,15 +42,11 @@ public abstract class AbstractEditQueryWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		AbstractRepositoryQuery queryToRun = null;
-		if (page != null) {
-			// TODO: get rid of this?
-			queryToRun = page.getQuery();
-		} else {
-			queryToRun = this.query;
+		if (query != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(query);
 		}
+		AbstractRepositoryQuery queryToRun = page != null ? page.getQuery() : this.query;
 		if (queryToRun != null) {
-			TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery(queryToRun);
 			TasksUiPlugin.getTaskListManager().getTaskList().addQuery(queryToRun);
 
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
