@@ -72,7 +72,7 @@ public class BugzillaTestUtil {
 				.getKeyString());
 		if (completed) {
 			resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
-			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), report, 1);
+			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
 			attribute.setValue(BugzillaOfflineTaskHandler.comment_creation_ts_format.format(new Date()));

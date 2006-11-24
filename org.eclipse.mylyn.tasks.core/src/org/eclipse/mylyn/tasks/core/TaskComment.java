@@ -20,44 +20,18 @@ import java.io.Serializable;
  */
 public class TaskComment extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = -1760372869047050979L;
-
-	// /** Parser for dates in the report */
-	// public static SimpleDateFormat creation_ts_date_format = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-	/** Comment's bug */
-	private final RepositoryTaskData bug;
+	private static final long serialVersionUID = 1076016406335550308L;
 
 	/** Comment's number */
 	private final int number;
-
-	// /** Comment's creation timestamp */
-	// private Date created;
-
-	/** Preceding comment */
-	private TaskComment previous;
-
-	/** Following comment */
-	private TaskComment next;
 
 	private boolean hasAttachment;
 
 	private int attachmentId;
 
-	public TaskComment(AbstractAttributeFactory attributeFactory, RepositoryTaskData report, int num) {
+	public TaskComment(AbstractAttributeFactory attributeFactory, int num) {
 		super(attributeFactory);
-		this.bug = report;
 		this.number = num;
-	}
-
-	/**
-	 * Get the bug that this comment is associated with
-	 * 
-	 * @return The bug that this comment is associated with
-	 */
-	public RepositoryTaskData getBug() {
-		return bug;
 	}
 
 	/**
@@ -76,26 +50,6 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	 */
 	public String getCreated() {
 		return getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE);
-		// TaskRepository repository =
-		// MylarTaskListPlugin.getRepositoryManager().getRepository(bug.getRepositoryKind(),
-		// bug.getRepositoryUrl());
-		// TimeZone timeZone = TimeZone.getDefault();
-		// if(repository != null) {
-		// timeZone = TimeZone.getTimeZone(repository.getTimeZoneId());
-		// }
-		// if (created == null) {
-		// created = Calendar.getInstance().getTime();
-		// try {
-		// creation_ts_date_format.setTimeZone(timeZone);
-		// created =
-		// creation_ts_date_format.parse(getAttributeValue(RepositoryTaskAttribute.COMMENT_DATE));
-		// } catch (Exception e) {
-		// // ignore
-		// // MylarStatusHandler.log("Comment creation date parse error,
-		// // setting to NOW.", Comment.class);
-		// }
-		// }
-		// return created;
 	}
 
 	/**
@@ -125,46 +79,6 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	 */
 	public String getText() {
 		return getAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT);
-	}
-
-	/**
-	 * Get the next comment for the bug
-	 * 
-	 * @return Returns the following comment, or <code>null</code> if the last
-	 *         one.
-	 */
-	public TaskComment getNext() {
-		return next;
-	}
-
-	/**
-	 * Set the next comment for the bug
-	 * 
-	 * @param next
-	 *            The comment that is after this one
-	 */
-	protected void setNext(TaskComment next) {
-		this.next = next;
-	}
-
-	/**
-	 * Get the previous comment
-	 * 
-	 * @return Returns preceding comment, or <code>null</code> if the first
-	 *         one
-	 */
-	public TaskComment getPrevious() {
-		return previous;
-	}
-
-	/**
-	 * Seth the previous comment for the bug
-	 * 
-	 * @param previous
-	 *            The comment that is before this one
-	 */
-	protected void setPrevious(TaskComment previous) {
-		this.previous = previous;
 	}
 
 	public void setHasAttachment(boolean b) {

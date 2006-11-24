@@ -131,7 +131,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 					continue;
 				}
 
-				TaskComment taskComment = new TaskComment(factory, data, data.getComments().size() + 1);
+				TaskComment taskComment = new TaskComment(factory, data.getComments().size() + 1);
 				taskComment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, comments[i].getAuthor());
 				taskComment
 						.setAttributeValue(RepositoryTaskAttribute.COMMENT_DATE, comments[i].getCreated().toString());

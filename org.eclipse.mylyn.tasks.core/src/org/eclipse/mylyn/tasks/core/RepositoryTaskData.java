@@ -21,13 +21,14 @@ import java.util.StringTokenizer;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * 
  */
 public class RepositoryTaskData extends AttributeContainer implements Serializable {
-	
-	private static final long serialVersionUID = 2402511248225227689L;
+
+	private static final long serialVersionUID = 2302511248225227689L;
 
 	private boolean hasLocalChanges = false;
-	
+
 	public static final String VAL_STATUS_NEW = "NEW";
 
 	private String reportID;
@@ -42,7 +43,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 
 	/** The operation that was selected to do to the bug */
 	protected RepositoryOperation selectedOperation = null;
-	
+
 	/** The repositoryOperations that can be done on the report */
 	protected List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
@@ -237,14 +238,6 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public void addComment(TaskComment taskComment) {
-		TaskComment preceding = null;
-		if (taskComments.size() > 0) {
-			// if there are some comments, get the last comment and set the next
-			// value to be the new comment
-			preceding = taskComments.get(taskComments.size() - 1);
-			preceding.setNext(taskComment);
-		}
-		taskComment.setPrevious(preceding);
 		taskComments.add(taskComment);
 	}
 
@@ -265,8 +258,9 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public RepositoryTaskAttribute getDescriptionAttribute() {
-		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);		
-		// TODO: Remove the following after 1.0 release as we now just have a description attribute
+		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);
+		// TODO: Remove the following after 1.0 release as we now just have a
+		// description attribute
 		if (attribute == null) {
 			List<TaskComment> coms = this.getComments();
 			if (coms != null && coms.size() > 0) {

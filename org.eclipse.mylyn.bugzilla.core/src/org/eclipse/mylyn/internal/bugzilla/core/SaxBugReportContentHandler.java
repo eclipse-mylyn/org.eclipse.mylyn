@@ -101,7 +101,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			}
 			break;
 		case LONG_DESC:
-			taskComment = new TaskComment(attributeFactory, report, commentNum++);
+			taskComment = new TaskComment(attributeFactory, commentNum++);
 			break;
 		case ATTACHMENT:
 			attachment = new RepositoryAttachment(repository, attributeFactory);

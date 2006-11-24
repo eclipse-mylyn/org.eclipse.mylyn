@@ -58,7 +58,7 @@ public class BugzillaTaskTest extends TestCase {
 		Date now = new Date();
 		String nowTimeStamp = BugzillaOfflineTaskHandler.comment_creation_ts_format.format(now);
 
-		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), report, 1);
+		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 				.getKeyString());
 		attribute.setValue(nowTimeStamp);
