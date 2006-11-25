@@ -505,7 +505,7 @@
      </colorDefinition>
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasks.ui.colors.background.category"
+           id="org.eclipse.mylar.tasks.ui.colors.incoming.background"
            isEditable="true"
            label="Task Editor - Incoming Changes"
            value="225,236,255"> 

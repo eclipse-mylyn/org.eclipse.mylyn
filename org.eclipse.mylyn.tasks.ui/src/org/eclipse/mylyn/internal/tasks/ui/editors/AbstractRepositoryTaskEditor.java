@@ -495,13 +495,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		initColors();
-	}
-
-	private void initColors() {
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 	}
 
 	public String getNewCommentText() {
@@ -509,6 +502,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createFormContent(final IManagedForm managedForm) {
+		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+		
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
@@ -786,11 +783,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// // getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
 	// // getSite().getSelectionProvider());
 	// }
-
-	private boolean hasAttributeChanges() {
-		// TODO: implement
-		return false;
-	}
 
 	/**
 	 * Adds a text field to display and edit the bug's summary.
@@ -2287,6 +2279,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			i++;
 		}
 		toolkit.paintBordersFor(buttonComposite);
+	}
+
+	protected boolean hasAttributeChanges() {
+		RepositoryTaskData newTaskData = editorInput.getTaskData();
+		if (newTaskData == null)
+			return false;
+		for (RepositoryTaskAttribute attribute : newTaskData.getAttributes()) {
+			if (!attribute.isHidden()) {
+				if (hasChanged(attribute)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	protected boolean hasChanged(RepositoryTaskAttribute newAttribute) {

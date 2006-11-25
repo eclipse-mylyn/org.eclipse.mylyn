@@ -35,7 +35,7 @@ public class TaskListColorsAndFonts {
 	public static final Color COLOR_LABEL_CAUTION = new Color(Display.getDefault(), 200, 10, 30);
 
 	public static final Color COLOR_HYPERLINK = new Color(Display.getDefault(), 0, 0, 255);
-	
+
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
@@ -44,8 +44,8 @@ public class TaskListColorsAndFonts {
 
 	public static Font STRIKETHROUGH;
 
-	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.background.category";
-	
+	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.incoming.background";
+
 	public static final String THEME_COLOR_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
 
 	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue";
@@ -96,7 +96,6 @@ public class TaskListColorsAndFonts {
 		COLOR_SPELLING_ERROR.dispose();
 	}
 
-	
 	public static boolean isTaskListTheme(String property) {
 		if (property == null) {
 			return false;
@@ -105,10 +104,11 @@ public class TaskListColorsAndFonts {
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE)
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED)
 					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)
-					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
+					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_SCHEDULED)
+					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED)
+					|| property.equals(TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 		}
 	}
-
 
 	public static final String TASK_EDITOR_FONT = "org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment";
 
