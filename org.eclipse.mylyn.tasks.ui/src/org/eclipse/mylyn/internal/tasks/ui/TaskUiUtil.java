@@ -19,12 +19,15 @@ import java.util.List;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -40,6 +43,7 @@ import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -135,18 +139,18 @@ public class TaskUiUtil {
 				}
 			}
 		}
-		
+
 		if (task != null) {
 			TaskUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getConnectorForRepositoryTaskUrl(
-					fullUrl);
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+					.getConnectorForRepositoryTaskUrl(fullUrl);
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 
 			if (connector != null) {
 				opened = connectorUi.openRemoteTask(repositoryUrl, taskId);
-			} 
+			}
 		}
 		if (!opened) {
 			TaskUiUtil.openUrl(fullUrl);
@@ -164,7 +168,7 @@ public class TaskUiUtil {
 					task = ((AbstractQueryHit) element).getCorrespondingTask();
 				} else {
 					task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-//					NewLocalTaskAction.scheduleNewTask(task);
+					// NewLocalTaskAction.scheduleNewTask(task);
 				}
 			} else if (element instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
@@ -181,7 +185,8 @@ public class TaskUiUtil {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
 				if (repository == null) {
-					MylarStatusHandler.fail(null, "No repository found for task. Please create repository in "+TaskRepositoriesView.NAME+".", true);
+					MylarStatusHandler.fail(null, "No repository found for task. Please create repository in "
+							+ TaskRepositoriesView.NAME + ".", true);
 					return;
 				}
 
@@ -194,9 +199,11 @@ public class TaskUiUtil {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
 									public void done(IJobChangeEvent event) {
-										// Mark read here too so that hits get marked as read upon opening
-										// TODO: if synch job failed, don't mark read
-										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);										
+										// Mark read here too so that hits get
+										// marked as read upon opening
+										// TODO: if synch job failed, don't mark
+										// read
+										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 										TaskUiUtil.openEditor(task, false);
 									}
 								});
@@ -290,6 +297,29 @@ public class TaskUiUtil {
 		} catch (MalformedURLException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
 		}
+	}
+
+	public static int openEditRepositoryWizard(TaskRepository repository) {
+		try {
+			EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			if (wizard != null && shell != null && !shell.isDisposed()) {
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+				dialog.setBlockOnOpen(true);
+				if (dialog.open() == Dialog.CANCEL) {
+					dialog.close();
+					return Dialog.CANCEL;
+				}
+			}
+
+			if (TaskRepositoriesView.getFromActivePerspective() != null) {
+				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
+			}			
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, e.getMessage(), true);
+		}
+		return Dialog.OK;
 	}
 
 	public static List<MylarTaskEditor> getActiveRepositoryTaskEditors() {
