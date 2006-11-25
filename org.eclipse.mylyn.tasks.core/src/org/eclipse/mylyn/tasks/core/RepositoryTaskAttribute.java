@@ -144,7 +144,7 @@ public class RepositoryTaskAttribute implements Serializable {
 	}
 
 	public String getOptionParameter(String option) {
-		return optionParameters.get(options);
+		return optionParameters.get(option);
 	}
 
 	public List<String> getOptions() {
