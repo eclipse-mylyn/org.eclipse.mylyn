@@ -26,14 +26,17 @@ public class WebQueryHit extends AbstractQueryHit {
 		this.taskPrefix = taskPrefix;
 	}
  
+	@Override
 	public String getPriority() {
 		return "?";
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return false;
 	}
 
+	@Override
 	protected AbstractRepositoryTask createTask() {
 		return new WebTask(id, description, taskPrefix, repositoryUrl, WebTask.REPOSITORY_TYPE);
 	}

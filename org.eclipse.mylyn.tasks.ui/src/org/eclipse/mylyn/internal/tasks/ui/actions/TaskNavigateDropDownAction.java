@@ -72,6 +72,7 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 			setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
 
+		@Override
 		public void run() {
 			if (targetTask.isActive()) {
 				return;

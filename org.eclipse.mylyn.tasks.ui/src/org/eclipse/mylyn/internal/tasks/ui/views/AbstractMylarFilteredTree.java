@@ -112,6 +112,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	protected abstract Composite createStatusComposite(Composite container);
 
+	@Override
 	protected void textChanged() {
 		if (refreshPolicy != null) {
 			refreshPolicy.textChanged(filterText.getText());

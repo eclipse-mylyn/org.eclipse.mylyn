@@ -90,6 +90,7 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 			this.listener = listener;
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			listener.saveRequested();
 			return Status.OK_STATUS;

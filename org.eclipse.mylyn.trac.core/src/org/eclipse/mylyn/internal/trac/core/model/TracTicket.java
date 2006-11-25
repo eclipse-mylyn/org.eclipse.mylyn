@@ -53,6 +53,7 @@ public class TracTicket {
 			this.key = key;
 		}
 
+		@Override
 		public String toString() {
 			return key;
 		}
@@ -164,7 +165,7 @@ public class TracTicket {
 			}
 			putBuiltinValue(key, value);
 		} else if (value instanceof String) {
-			putCustomValue(keyName, (String) value);
+			putCustomValue(keyName, value);
 		} else {
 			throw new InvalidTicketException("Expected string value for custom key '" + keyName + "', got '" + value
 					+ "'");

@@ -37,12 +37,14 @@ public class BugzillaSearchEngineTest extends TestCase {
 	private static final int NUM_EXPECTED_HITS = 2;
 	private static final int NUM_REPOSITORIES = 0;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		assertEquals(NUM_REPOSITORIES, TasksUiPlugin.getRepositoryManager().getRepositories(BugzillaCorePlugin.REPOSITORY_KIND).size());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		super.tearDown();
@@ -95,7 +97,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 				QUERY_NAME, 
 				MAX_HITS, TasksUiPlugin.getTaskListManager().getTaskList());
 		
-		AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 		
 		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 		

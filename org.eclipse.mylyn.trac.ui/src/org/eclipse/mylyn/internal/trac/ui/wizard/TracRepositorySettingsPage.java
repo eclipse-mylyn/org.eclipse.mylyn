@@ -68,6 +68,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		setNeedsTimeZone(false);
 	}
 
+	@Override
 	protected void createAdditionalControls(final Composite parent) {
 		
 		for (RepositoryTemplate template : connector.getTemplates()) {
@@ -163,6 +164,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		}
 	}
 
+	@Override
 	protected void validateSettings() {
 
 		try {

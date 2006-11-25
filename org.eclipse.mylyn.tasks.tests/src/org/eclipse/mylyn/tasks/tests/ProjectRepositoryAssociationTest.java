@@ -28,11 +28,13 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 
 	private TestProject projectWrapper;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		projectWrapper = new TestProject(this.getClass().getName());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ResourceTestUtil.deleteProject(projectWrapper.getProject());

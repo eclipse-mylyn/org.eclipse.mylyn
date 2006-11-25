@@ -32,6 +32,7 @@ public class BackgroundSaveTest extends TestCase {
 
 	private TaskListSaveManager policy;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		policy = TasksUiPlugin.getDefault().getTaskListSaveManager();
@@ -42,6 +43,7 @@ public class BackgroundSaveTest extends TestCase {
 		TasksUiPlugin.getDefault().getTaskListSaveManager().setForceBackgroundSave(true);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		saveTimer.stop();
 		super.tearDown();

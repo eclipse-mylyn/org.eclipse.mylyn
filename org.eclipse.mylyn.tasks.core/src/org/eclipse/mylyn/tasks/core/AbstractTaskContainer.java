@@ -78,6 +78,7 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return handle.hashCode();
 	}

@@ -72,6 +72,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 //		return task.isNotified();
 //	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof TaskListNotificationIncoming)) {
 			return false;
@@ -84,6 +85,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		return task;
 	}
 
+	@Override
 	public int hashCode() {
 		return task.hashCode();
 	}
@@ -103,7 +105,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
 	    if (!(anotherNotification instanceof ITaskListNotification))
 	      throw new ClassCastException("A ITaskListNotification object expected.");
-	    Date anotherDate = ((ITaskListNotification) anotherNotification).getDate();
+	    Date anotherDate = (anotherNotification).getDate();
 	    if(date != null && anotherDate != null) {
 	    	return date.compareTo(anotherDate);
 	    } else if(date == null) {

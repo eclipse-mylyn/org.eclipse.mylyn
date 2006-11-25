@@ -57,6 +57,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		// Do nothing on creation
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 
 		Font font = parent.getFont();
@@ -124,6 +125,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				action.run();
 				listViewer.setInput(project.getWorkspace());
@@ -157,6 +159,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 	/**
 	 * @see PreferencePage#performOk
 	 */
+	@Override
 	public boolean performOk() {
 		if (!modified) {
 			return true;

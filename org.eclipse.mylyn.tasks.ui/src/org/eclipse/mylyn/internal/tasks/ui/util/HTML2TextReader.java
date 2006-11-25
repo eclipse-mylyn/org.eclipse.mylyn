@@ -89,6 +89,7 @@ public class HTML2TextReader extends SubstitutionTextReader {
 		fTextPresentation= presentation;
 	}
 
+	@Override
 	public int read() throws IOException {
 		int c= super.read();
 		if (c != -1)
@@ -125,6 +126,7 @@ public class HTML2TextReader extends SubstitutionTextReader {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.text.SubstitutionTextReader#computeSubstitution(int)
 	 */
+	@Override
 	protected String computeSubstitution(int c) throws IOException {
 
 		if (c == '<')

@@ -27,6 +27,7 @@ public class BugzillaAuthenticator extends Authenticator {
 	/*
 	 * @see Authenticator#getPasswordAuthentication()
 	 */
+	@Override
 	protected PasswordAuthentication getPasswordAuthentication() {
 		// String protocol = getRequestingProtocol();
 		String host = getRequestingHost(); // can be null;

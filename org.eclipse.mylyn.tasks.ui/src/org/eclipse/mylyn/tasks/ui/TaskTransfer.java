@@ -36,15 +36,18 @@ public class TaskTransfer extends ByteArrayTransfer {
         return INSTANCE;
     }
 
-    protected int[] getTypeIds() {
+    @Override
+	protected int[] getTypeIds() {
         return new int[] { TYPEID };
     }
 
-    protected String[] getTypeNames() {
+    @Override
+	protected String[] getTypeNames() {
         return new String[] { TYPE_NAME };
     }
 
-    protected void javaToNative(Object data, TransferData transferData) {
+    @Override
+	protected void javaToNative(Object data, TransferData transferData) {
         if (!(data instanceof ITask[])) {
             return;
         }
@@ -74,7 +77,8 @@ public class TaskTransfer extends ByteArrayTransfer {
         }
     }
 
-    protected Object nativeToJava(TransferData transferData) {
+    @Override
+	protected Object nativeToJava(TransferData transferData) {
         byte[] bytes = (byte[]) super.nativeToJava(transferData);
         if (bytes == null) {
 			return null;

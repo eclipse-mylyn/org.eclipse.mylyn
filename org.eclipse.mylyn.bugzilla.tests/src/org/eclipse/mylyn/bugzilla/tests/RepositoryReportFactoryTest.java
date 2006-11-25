@@ -431,7 +431,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 		RepositoryTaskData report = init(bugid);
 		assertNotNull(report);
 		assertTrue(report instanceof RepositoryTaskData);
-		RepositoryTaskData bugReport = (RepositoryTaskData) report;
+		RepositoryTaskData bugReport = report;
 		assertEquals("search-match-test 2", bugReport.getSummary());
 		assertEquals("search-match-test 2", bugReport.getDescription());
 		assertEquals("TestProduct", bugReport.getProduct());

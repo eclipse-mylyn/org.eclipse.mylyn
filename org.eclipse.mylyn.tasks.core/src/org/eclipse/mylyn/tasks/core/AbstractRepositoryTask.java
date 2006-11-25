@@ -57,6 +57,7 @@ public abstract class AbstractRepositoryTask extends Task {
 		super(handle, label, newTask);
 	}
 
+	@Override
 	public abstract String getRepositoryKind();
 
 	public boolean isDownloaded() {

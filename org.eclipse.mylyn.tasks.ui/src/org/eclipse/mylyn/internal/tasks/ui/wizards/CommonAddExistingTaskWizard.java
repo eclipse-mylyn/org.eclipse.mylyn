@@ -58,6 +58,7 @@ public class CommonAddExistingTaskWizard extends Wizard {
 		super.setForcePreviousAndNextButtons(true);
 	}
 
+	@Override
 	public void addPages() {
 		super.addPages();
 		this.page = new ExistingTaskWizardPage();

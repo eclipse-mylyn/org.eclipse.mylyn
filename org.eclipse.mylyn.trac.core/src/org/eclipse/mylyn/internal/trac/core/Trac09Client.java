@@ -326,6 +326,7 @@ public class Trac09Client extends AbstractTracClient {
 		}
 	}
 
+	@Override
 	public void updateAttributes(IProgressMonitor monitor) throws TracException {
 		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
 

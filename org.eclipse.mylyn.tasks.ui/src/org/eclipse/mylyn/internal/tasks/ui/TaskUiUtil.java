@@ -198,6 +198,7 @@ public class TaskUiUtil {
 					} else {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
+									@Override
 									public void done(IJobChangeEvent event) {
 										// Mark read here too so that hits get
 										// marked as read upon opening

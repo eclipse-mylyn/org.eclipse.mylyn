@@ -230,6 +230,7 @@ public class BugzillaProductPage extends WizardPage {
 		final String[] selectedProducts = getSelectedProducts();
 		if(selectedProducts.length>0) {
 			new UIJob("") {
+				@Override
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					productViewer.setSelection(new StructuredSelection(selectedProducts), true);
 					productViewer.getControl().setFocus();

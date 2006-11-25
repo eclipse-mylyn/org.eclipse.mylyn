@@ -52,6 +52,7 @@ public class TracSearchFilter {
 			return queryValue;
 		}
 
+		@Override
 		public String toString() {
 			switch (this) {
 			case CONTAINS:

@@ -27,12 +27,14 @@ public class TaskDataManagerTest extends TestCase {
 
 	TaskDataManager offlineTaskDataManager;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		offlineTaskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		offlineTaskDataManager.clear();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (offlineTaskDataManager != null) {

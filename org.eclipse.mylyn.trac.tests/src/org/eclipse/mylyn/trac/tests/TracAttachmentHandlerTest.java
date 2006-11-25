@@ -52,6 +52,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	private TestData data;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -60,6 +61,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		data = TestFixture.init010();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

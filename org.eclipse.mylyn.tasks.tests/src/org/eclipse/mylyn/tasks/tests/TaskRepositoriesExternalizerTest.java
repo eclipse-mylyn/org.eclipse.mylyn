@@ -42,6 +42,7 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 	private TaskRepository repository1;
 	private TaskRepository repository2;
 	
+	@Override
 	protected void setUp() throws Exception {
 		repository1 = new TaskRepository(REP_TYPE, REPURL1);
 		repository2 = new TaskRepository("bugzilla", REPURL2);

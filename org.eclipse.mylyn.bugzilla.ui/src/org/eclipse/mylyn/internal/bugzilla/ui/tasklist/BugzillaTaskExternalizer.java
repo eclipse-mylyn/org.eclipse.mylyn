@@ -50,6 +50,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String TAG_BUGZILLA_REPORT = "BugzillaReport";
 
+	@Override
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
 			if (((BugzillaRepositoryQuery) query).isCustomQuery()) {
@@ -61,10 +62,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		return "";
 	}
 
+	@Override
 	public boolean canReadQuery(Node node) {
 		return node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY) || node.getNodeName().equals(TAG_BUGZILLA_QUERY);
 	}
 
+	@Override
 	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
@@ -94,10 +97,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 	}
 
+	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
 	}
 
+	@Override
 	public boolean canCreateElementFor(ITask task) {
 		return task instanceof BugzillaTask;
 	}
@@ -165,10 +170,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 	}
 
+	@Override
 	public boolean canReadQueryHit(Node node) {
 		return node.getNodeName().equals(getQueryHitTagName());
 	}
 
+	@Override
 	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
 		Element element = (Element) node;

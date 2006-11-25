@@ -49,7 +49,7 @@ public class ReminderCellEditor extends DialogCellEditor {
 
 		if (value != null) {
 			try {
-				Date tempDate = format.parse((String) value);
+				Date tempDate = format.parse(value);
 				if (tempDate != null) {
 					initialCalendar = GregorianCalendar.getInstance();
 					initialCalendar.setTime(tempDate);
@@ -87,7 +87,8 @@ public class ReminderCellEditor extends DialogCellEditor {
 		return reminderDate;
 	}
 
-	 protected void doSetFocus() { 
+	 @Override
+	protected void doSetFocus() { 
 		 reminderDate = null;
 		 super.doSetFocus();
 	 }

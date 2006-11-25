@@ -39,6 +39,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 
 	}
 
+	@Override
 	public void run() {
 		run(TaskListView.getFromActivePerspective().getSelectedTask());
 	}

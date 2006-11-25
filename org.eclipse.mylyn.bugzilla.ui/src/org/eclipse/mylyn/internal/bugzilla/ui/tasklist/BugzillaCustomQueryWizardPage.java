@@ -60,6 +60,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
@@ -104,6 +105,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 
 	}
 
+	@Override
 	public boolean canFlipToNextPage() {
 		return false;
 	}

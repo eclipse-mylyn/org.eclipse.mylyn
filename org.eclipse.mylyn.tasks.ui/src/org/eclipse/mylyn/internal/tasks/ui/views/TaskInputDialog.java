@@ -65,6 +65,7 @@ public class TaskInputDialog extends Dialog {
 		super(parentShell);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		GridLayout gl = new GridLayout(5, false);
@@ -274,6 +275,7 @@ public class TaskInputDialog extends Dialog {
 		return taskURL;
 	}
 
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
 			taskName = taskNameTextWidget.getText();
@@ -284,6 +286,7 @@ public class TaskInputDialog extends Dialog {
 		super.buttonPressed(buttonId);
 	}
 
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(LABEL_SHELL);

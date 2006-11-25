@@ -68,6 +68,7 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 		}
 	}
 
+	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -86,20 +87,24 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 		return scanner;
 	}
 
+	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
 		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
+	@Override
 	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 		return new DefaultHyperlinkPresenter(new RGB(0, 0, 200));
 	}
 
+	@Override
 	public int getHyperlinkStateMask(ISourceViewer sourceViewer) {
 		return SWT.NONE;
 	}
 
+	@Override
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 		if (spellcheck) {
 			MonoReconciler reconciler = new MonoReconciler(strategy, false);

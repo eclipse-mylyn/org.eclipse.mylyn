@@ -122,6 +122,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		this(repository, null);
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 
 		Composite control = new Composite(parent, SWT.NONE);
@@ -154,6 +155,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		setControl(control);
 	}
 
+	@Override
 	public boolean canFlipToNextPage() {
 		return false;
 	}
@@ -295,6 +297,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		updateButton.setText("Update Attributes from Repository");
 		updateButton.setLayoutData(new GridData());
 		updateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (repository != null) {
 					updateAttributesFromRepository(true);
@@ -433,6 +436,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return sb.toString();
 	}
 
+	@Override
 	public TracRepositoryQuery getQuery() {
 		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), getTitleText(),
 				TasksUiPlugin.getTaskListManager().getTaskList());

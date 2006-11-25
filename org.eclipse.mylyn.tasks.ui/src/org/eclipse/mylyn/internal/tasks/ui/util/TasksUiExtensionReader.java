@@ -313,7 +313,7 @@ public class TasksUiExtensionReader {
 			Object externalizerObject = element.createExecutableExtension(ATTR_CLASS);
 			if (externalizerObject instanceof ITaskListExternalizer) {
 				ITaskListExternalizer externalizer = (ITaskListExternalizer) externalizerObject;
-				externalizers.add((ITaskListExternalizer) externalizer);
+				externalizers.add(externalizer);
 			} else {
 				MylarStatusHandler.log("Could not load externalizer: "
 						+ externalizerObject.getClass().getCanonicalName() + " must implement "

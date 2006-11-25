@@ -33,6 +33,7 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 		}
 	}
 
+	@Override
 	public String getRepositoryKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}

@@ -47,6 +47,7 @@ public class NewRepositoryWizard extends AbstractRepositoryClientWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 	}
 
+	@Override
 	public void setRepositorySettingsPage(AbstractRepositorySettingsPage abstractRepositorySettingsPage) {
 		this.abstractRepositorySettingsPage = abstractRepositorySettingsPage;
 	}

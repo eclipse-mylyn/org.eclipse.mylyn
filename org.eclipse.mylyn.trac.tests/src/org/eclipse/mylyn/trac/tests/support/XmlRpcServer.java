@@ -68,6 +68,7 @@ public class XmlRpcServer {
 			return this;
 		}
 
+		@Override
 		public void delete() throws Exception {
 			call(module + ".delete", id);
 			itemDeleted();
@@ -106,7 +107,7 @@ public class XmlRpcServer {
 		private Hashtable<String, Object> toMap(Object... params) {
 			Hashtable<String, Object> attrs = new Hashtable<String, Object>();
 			for (int i = 0; i < attributes.length && i < params.length; i++) {
-				attrs.put((String) attributes[i], params[i]);
+				attrs.put(attributes[i], params[i]);
 			}
 			return attrs;
 		}
@@ -166,6 +167,7 @@ public class XmlRpcServer {
 			return this;
 		}
 
+		@Override
 		public void delete() throws Exception {
 			call("ticket.delete", id);
 			itemDeleted();
@@ -236,6 +238,7 @@ public class XmlRpcServer {
 			return this;
 		}
 
+		@Override
 		public void delete() throws Exception {
 			call(module + ".delete", id);
 			itemDeleted();

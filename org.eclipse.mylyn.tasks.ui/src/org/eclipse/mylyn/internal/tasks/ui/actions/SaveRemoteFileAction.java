@@ -34,6 +34,7 @@ public class SaveRemoteFileAction extends Action {
 		super(TITLE);
 	}
 
+	@Override
 	public void run() {
 		if (destinationFilePath == null || inStream == null) {
 			return;

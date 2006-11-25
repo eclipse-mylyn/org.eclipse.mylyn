@@ -149,6 +149,7 @@ public class TaskActivityWizardPage extends WizardPage {
 
 		SelectionListener radioListener = new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				numDays.setEnabled(daysRadioButton.getSelection());
 				datePicker.setEnabled(dateRadioButton.getSelection());
@@ -243,6 +244,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		selectButton.setText("Select All");
 
 		selectButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setChecked(true);
 			}
@@ -255,6 +257,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		deselectButton.setText("Deselect All");
 
 		deselectButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setChecked(false);
 			}

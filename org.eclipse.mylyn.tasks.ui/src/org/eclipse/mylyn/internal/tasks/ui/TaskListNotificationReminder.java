@@ -65,6 +65,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		return TaskListImages.getImage(TaskListImages.CALENDAR);
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof TaskListNotificationReminder)) {
 			return false;
@@ -77,6 +78,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 		return task;
 	}
 
+	@Override
 	public int hashCode() {
 		return task.hashCode();
 	}
@@ -92,7 +94,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
 	    if (!(anotherNotification instanceof ITaskListNotification))
 	      throw new ClassCastException("A ITaskListNotification object expected.");
-	    Date anotherDate = ((ITaskListNotification) anotherNotification).getDate();
+	    Date anotherDate = (anotherNotification).getDate();
 	    if(date != null && anotherDate != null) {
 	    	return date.compareTo(anotherDate);
 	    } else if(date == null) {

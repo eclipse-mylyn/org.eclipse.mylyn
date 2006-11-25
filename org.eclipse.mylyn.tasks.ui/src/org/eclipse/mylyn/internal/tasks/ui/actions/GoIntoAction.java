@@ -42,6 +42,7 @@ public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	}
 
+	@Override
 	public void run() {
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().getFilteredTree().setFilterText("");

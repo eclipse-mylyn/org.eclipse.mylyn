@@ -103,7 +103,7 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 				fAnnotationModel.removeAnnotation((Annotation) iter.next());
 			for (Iterator iter = fAddAnnotations.keySet().iterator(); iter.hasNext();) {
 				Annotation annotation = (Annotation) iter.next();
-				fAnnotationModel.addAnnotation(annotation, (Position) fAddAnnotations.get(annotation));
+				fAnnotationModel.addAnnotation(annotation, fAddAnnotations.get(annotation));
 			}
 
 			fAddAnnotations = null;

@@ -81,6 +81,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		return settings;
 	}
 
+	@Override
 	public void addPages() {
 		exportPage = new TaskDataExportWizardPage();
 		exportPage.setWizard(this);
@@ -91,6 +92,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		// no initialization needed
 	}
 
+	@Override
 	public boolean canFinish() {
 		return exportPage.isPageComplete();
 	}
@@ -101,6 +103,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 	 * overwrite is canceled, no files are saved and the user must adjust the
 	 * dialog.
 	 */
+	@Override
 	public boolean performFinish() {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();

@@ -144,6 +144,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				+ "\n(" + completeTasks + " tasks of " + totalTasks + " scheduled)");
 	}
 	
+	@Override
 	protected Composite createStatusComposite(Composite container) {
 
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
@@ -193,6 +194,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		filterComposite.layout();
     }
     
+	@Override
 	public void setFilterText(String string) {
 		if (filterText != null){
 			filterText.setText(string);

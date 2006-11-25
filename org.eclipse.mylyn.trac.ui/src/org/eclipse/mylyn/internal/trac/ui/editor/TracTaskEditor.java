@@ -50,6 +50,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		super(editor);
 	}
 
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		if (!(input instanceof RepositoryTaskEditorInput))
 			return;
@@ -90,6 +91,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		final boolean attachContext = getAttachContext();
 
 		JobChangeAdapter listener = new JobChangeAdapter() {
+			@Override
 			public void done(final IJobChangeEvent event) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {

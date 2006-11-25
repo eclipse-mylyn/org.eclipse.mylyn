@@ -191,6 +191,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		return true;
 	}
 
+	@Override
 	public void performDefaults() {
 		super.performDefaults();
 		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();				

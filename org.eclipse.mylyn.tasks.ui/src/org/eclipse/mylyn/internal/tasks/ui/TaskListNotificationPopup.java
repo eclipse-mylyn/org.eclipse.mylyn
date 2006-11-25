@@ -64,11 +64,13 @@ public class TaskListNotificationPopup extends PopupDialog {
 		this.notifications = notifications;
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
 		return createDialogArea(parent);
 	}
 
+	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
 		getShell().setText(MYLAR_NOTIFICATION_LABEL);
@@ -93,6 +95,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 				link.setText(notification.getLabel());
 				link.setImage(notification.getNotificationIcon());
 				link.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						notification.openTask();
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -151,6 +154,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 		closeHyperlink.setBackground(section.getTitleBarBackground());
 		closeHyperlink.setImage(TaskListImages.getImage(TaskListImages.NOTIFICATION_CLOSE));
 		closeHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 			}
@@ -163,6 +167,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 	/**
 	 * Initialize the shell's bounds.
 	 */
+	@Override
 	public void initializeBounds() {
 		getShell().setBounds(restoreBounds());
 	}

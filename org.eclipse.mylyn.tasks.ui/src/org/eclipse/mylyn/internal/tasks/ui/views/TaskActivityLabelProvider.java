@@ -128,6 +128,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		}
 	}
 
+	@Override
 	public Font getFont(Object element) {
 		if (element instanceof DateRangeContainer) {
 			DateRangeContainer container = (DateRangeContainer) element;

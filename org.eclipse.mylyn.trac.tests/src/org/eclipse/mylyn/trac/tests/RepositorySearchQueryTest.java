@@ -46,6 +46,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	public RepositorySearchQueryTest() {
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 

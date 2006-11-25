@@ -31,15 +31,18 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		this.status = status;
 	}
 
+	@Override
 	protected AbstractRepositoryTask createTask() {
 		return new BugzillaTask(this, true);
 	}
 
+	@Override
 	public String getUrl() {
 		Integer idInt = new Integer(id);
 		return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, idInt);
 	}
 
+	@Override
 	public boolean isCompleted() {
 		if (status != null
 				&& (status.startsWith("RESO") || status.startsWith("CLO") || status.startsWith("VERI") || status

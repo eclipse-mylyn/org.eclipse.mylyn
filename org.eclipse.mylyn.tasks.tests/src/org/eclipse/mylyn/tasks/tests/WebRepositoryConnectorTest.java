@@ -91,6 +91,7 @@ public class WebRepositoryConnectorTest extends TestCase {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return template.label;
 	}

@@ -66,6 +66,7 @@ public class NewBugzillaQueryWizard extends Wizard {
 //		boolean offline = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(TaskListPreferenceConstants.WORK_OFFLINE);
 //		if (!offline) {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
+				@Override
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					monitor.beginTask("Executing query", 50);
 					try {

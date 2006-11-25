@@ -129,6 +129,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				action.run();
 				SelectRepositoryPage.this.repositories = getTaskRepositories();

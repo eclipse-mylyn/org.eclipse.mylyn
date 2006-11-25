@@ -71,6 +71,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 		setControl(container);
 	}
 
+	@Override
 	public boolean isPageComplete() {
 		return getTaskId() != null && !getTaskId().trim().equals("");
 	}

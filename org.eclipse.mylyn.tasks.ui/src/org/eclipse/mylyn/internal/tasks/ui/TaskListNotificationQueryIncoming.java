@@ -61,6 +61,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 		return labelProvider.getImage(hit);
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof TaskListNotificationQueryIncoming)) {
 			return false;
@@ -69,6 +70,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 		return notification.getDescription().equals(hit.getSummary());
 	}
 
+	@Override
 	public int hashCode() {
 		return hit.getSummary().hashCode();
 	}
@@ -88,7 +90,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 	public int compareTo(ITaskListNotification anotherNotification) throws ClassCastException {
 	    if (!(anotherNotification instanceof ITaskListNotification))
 	      throw new ClassCastException("A ITaskListNotification object expected.");
-	    Date anotherDate = ((ITaskListNotification) anotherNotification).getDate();
+	    Date anotherDate = (anotherNotification).getDate();
 	    if(date != null && anotherDate != null) {
 	    	return date.compareTo(anotherDate);
 	    } else if(date == null) {

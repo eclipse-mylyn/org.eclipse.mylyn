@@ -197,6 +197,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		Button addRepositoryButton = new Button(repositoriesComposite, SWT.NONE);
 		addRepositoryButton.setText("&Add...");
 		addRepositoryButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IHandlerService hndSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
@@ -246,6 +247,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		idText.addKeyListener(new KeyAdapter() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.ARROW_DOWN) {
 					tasksViewer.getControl().setFocus();

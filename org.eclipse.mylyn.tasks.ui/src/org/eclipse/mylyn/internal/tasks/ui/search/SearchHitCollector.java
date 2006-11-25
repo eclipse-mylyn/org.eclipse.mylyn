@@ -52,12 +52,14 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 		this.searchResult = new RepositorySearchResult(this);
 	}
 
+	@Override
 	public void aboutToStart(int startMatchCount) throws CoreException {
 		super.aboutToStart(startMatchCount);
 		searchResult.removeAll();
 		NewSearchUI.activateSearchResultView();
 	}
 
+	@Override
 	public void done() {
 		super.done();
 	}

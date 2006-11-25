@@ -235,7 +235,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 			// Set the creator name on all attachments
 			for (RepositoryAttachment attachment : report.getAttachments()) {
-				TaskComment taskComment = (TaskComment) attachIdToComment.get(attachment.getId());
+				TaskComment taskComment = attachIdToComment.get(attachment.getId());
 				if (taskComment != null) {
 					attachment.setCreator(taskComment.getAuthor());
 				}

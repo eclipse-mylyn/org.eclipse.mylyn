@@ -34,6 +34,7 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 		priorityLevel = level;
 	}
 
+	@Override
 	public boolean select(Object element) {
 		if (element instanceof ITaskListElement) {
 			if (element instanceof AbstractQueryHit && ((AbstractQueryHit) element).getCorrespondingTask() != null) {

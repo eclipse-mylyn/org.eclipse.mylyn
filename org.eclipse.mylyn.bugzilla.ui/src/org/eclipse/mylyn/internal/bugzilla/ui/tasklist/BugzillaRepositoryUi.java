@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 
+	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage(this);
 	}
@@ -46,6 +47,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		return new NewBugzillaTaskWizard(taskRepository);
 	}
 
+	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof BugzillaRepositoryQuery) {
 			return new EditBugzillaQueryWizard(repository, (BugzillaRepositoryQuery) query);

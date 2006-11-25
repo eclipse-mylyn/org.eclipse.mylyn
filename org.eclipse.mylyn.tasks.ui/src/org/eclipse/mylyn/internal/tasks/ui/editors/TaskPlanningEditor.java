@@ -298,6 +298,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return false;
 	}
 
+	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 		TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();

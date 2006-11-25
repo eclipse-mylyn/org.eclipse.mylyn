@@ -35,6 +35,7 @@ public class TaskArchive extends AbstractTaskContainer {
 		return HANDLE;
 	}
 	
+	@Override
 	public String getSummary() {
 		return LABEL_ARCHIVE;
 	}
@@ -44,6 +45,7 @@ public class TaskArchive extends AbstractTaskContainer {
 		return true;
 	}
 
+	@Override
 	public boolean canRename() {
 		return false;
 	}

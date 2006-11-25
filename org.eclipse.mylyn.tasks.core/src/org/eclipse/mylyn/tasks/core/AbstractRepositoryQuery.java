@@ -47,6 +47,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	// TODO: this overriding is a bit weird
+	@Override
 	public Set<ITask> getChildren() {
 		Set<ITask> tasks = new HashSet<ITask>();
 		for (AbstractQueryHit hit : getHits()) {
@@ -122,10 +123,12 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return highestPriority;
 	}
 
+	@Override
 	public boolean isLocal() {
 		return false;
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return false;
 	}

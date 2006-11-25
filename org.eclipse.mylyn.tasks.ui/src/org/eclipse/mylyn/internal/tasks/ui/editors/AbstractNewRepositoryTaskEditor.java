@@ -93,6 +93,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected CCombo categoryCombo;
 
 	protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
+		@Override
 		public void done(final IJobChangeEvent event) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -412,6 +413,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 * Creates the button layout. This displays options and buttons at the
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
+	@Override
 	protected void createActionsLayout(Composite formComposite) {
 		FormToolkit toolkit = new FormToolkit(formComposite.getDisplay());
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
@@ -478,6 +480,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return null;
 	}
 
+	@Override
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 

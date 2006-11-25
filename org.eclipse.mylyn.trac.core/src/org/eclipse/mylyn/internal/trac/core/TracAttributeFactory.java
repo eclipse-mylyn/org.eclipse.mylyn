@@ -97,6 +97,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 			return isReadOnly;
 		}
 		
+		@Override
 		public String toString() {
 			return prettyName;
 		}

@@ -74,17 +74,17 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		} else if (selectedObject instanceof ITask) {
 			ITask task = (ITask) selectedObject;
 			if (task.getContainer() instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, (TaskCategory) task.getContainer());
+				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, task.getContainer());
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-						(TaskCategory) view.getDrilledIntoCategory());
+						view.getDrilledIntoCategory());
 			} else {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 						TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-					(TaskCategory) view.getDrilledIntoCategory());
+					view.getDrilledIntoCategory());
 		} else {
 			if (view != null && view.getDrilledIntoCategory() != null) {
 				MessageDialog

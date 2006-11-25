@@ -75,6 +75,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
+	@Override
 	public String getTaskType() {
 		if (taskData != null && taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()) != null) {
 			return taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
@@ -139,6 +140,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return super.getCompletionDate();
 	}
 
+	@Override
 	public String getRepositoryKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}

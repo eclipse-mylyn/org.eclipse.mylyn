@@ -38,6 +38,7 @@ public class RepositoryTextViewer extends SourceViewer {
 		this.repository = repository;
 	}
 
+	@Override
 	public void setDocument(IDocument doc) {
 		if (doc != null && this.getAnnotationModel() != null) {
 			this.getAnnotationModel().connect(doc);

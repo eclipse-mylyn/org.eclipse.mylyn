@@ -150,6 +150,7 @@ public class TasksReminderDialog extends Dialog {
 		tableViewer.setInput(tasks);
 	}
 
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == DISMISS_ALL_ID) {
 			for (ITask t : tasks) {

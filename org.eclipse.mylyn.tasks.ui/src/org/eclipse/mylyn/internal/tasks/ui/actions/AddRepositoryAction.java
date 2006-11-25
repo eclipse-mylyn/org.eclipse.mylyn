@@ -33,6 +33,7 @@ public class AddRepositoryAction extends Action {
 		setId(ID);
 	}
 
+	@Override
 	public void run() {
 		IHandlerService handlerSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 		try {

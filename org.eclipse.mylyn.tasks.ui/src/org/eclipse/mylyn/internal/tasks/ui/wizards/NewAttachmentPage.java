@@ -230,6 +230,7 @@ public class NewAttachmentPage extends WizardPage {
 		});
 	}
 
+	@Override
 	public boolean isPageComplete() {
 		return !"".equals(filePath.getText().trim()) && !"".equals(attachmentDesc.getText().trim());
 	}
@@ -243,6 +244,7 @@ public class NewAttachmentPage extends WizardPage {
 		return attachment;
 	}
 
+	@Override
 	public boolean canFlipToNextPage() {
 		return isPageComplete();
 	}
@@ -257,6 +259,7 @@ public class NewAttachmentPage extends WizardPage {
 		}
 	}
 
+	@Override
 	public IWizardPage getNextPage() {
 		populateAttachment();
 		PreviewAttachmentPage page = new PreviewAttachmentPage(getAttachment());

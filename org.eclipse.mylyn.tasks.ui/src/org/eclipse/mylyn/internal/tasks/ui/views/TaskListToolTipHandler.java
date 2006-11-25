@@ -205,7 +205,7 @@ public class TaskListToolTipHandler {
 			} else {
 				repositoryTask = (AbstractRepositoryTask) element;
 			}
-			tooltip += ((ITaskListElement) element).getSummary();
+			tooltip += (element).getSummary();
 			if (repositoryTask != null) {
 				tooltip += "\n" + repositoryTask.getRepositoryUrl() + formatScheduledFor(repositoryTask);
 
@@ -215,7 +215,7 @@ public class TaskListToolTipHandler {
 			}
 			return tooltip;
 		} else if (element != null) {
-			tooltip += ((ITaskListElement) element).getSummary() + formatScheduledFor(element);
+			tooltip += (element).getSummary() + formatScheduledFor(element);
 			return tooltip + priority;
 		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");
@@ -287,7 +287,7 @@ public class TaskListToolTipHandler {
 
 	protected Object getToolTipHelp(Object object) {
 		if (object instanceof Control) {
-			return (String) ((Control) object).getData("TIP_HELPTEXT");
+			return ((Control) object).getData("TIP_HELPTEXT");
 		}
 		return null;
 	}

@@ -88,6 +88,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		getPreferenceStore().setDefault(IBugzillaConstants.MAX_RESULTS, 100);
@@ -127,6 +128,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		TasksUiPlugin.getRepositoryManager().removeListener(BugzillaCorePlugin.getDefault().getConnector().getClientManager());
 		super.stop(context);

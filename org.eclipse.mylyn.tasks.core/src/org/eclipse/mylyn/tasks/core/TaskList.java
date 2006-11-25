@@ -124,7 +124,7 @@ public class TaskList {
 
 		AbstractTaskContainer fromContainer = task.getContainer();
 		if (fromContainer instanceof AbstractTaskContainer) {
-			((AbstractTaskContainer) fromContainer).remove(task);
+			(fromContainer).remove(task);
 		}
 		if (toContainer != null) {
 			internalAddTask(task, toContainer);
@@ -339,7 +339,7 @@ public class TaskList {
 		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 		for (AbstractTaskContainer container : categories) {
 			if (container instanceof TaskCategory || container instanceof TaskArchive) {
-				containers.add((AbstractTaskContainer) container);
+				containers.add(container);
 			}
 		}
 		return containers;
@@ -372,7 +372,7 @@ public class TaskList {
 		for (AbstractTaskContainer cat : categories) {
 			if (cat instanceof AbstractTaskContainer) {
 				if (cat.getHandleIdentifier().equals(categoryHandle)) {
-					return (AbstractTaskContainer) cat;
+					return cat;
 				}
 			}
 		}

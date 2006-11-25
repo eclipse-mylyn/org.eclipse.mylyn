@@ -33,6 +33,7 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 		this.ownerId = ownerId;
 	}
 	
+	@Override
 	public String getOwner() {
 		if(ownerId == null) {
 			return super.getOwner();

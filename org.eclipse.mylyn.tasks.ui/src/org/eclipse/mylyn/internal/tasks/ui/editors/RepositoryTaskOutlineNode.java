@@ -172,7 +172,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		// return parseNewBugReport((NewBugzillaReport) bug);
 		// } else
 		if (bug instanceof RepositoryTaskData) {
-			return parseExistingBugReport((RepositoryTaskData) bug, hasNewComment);
+			return parseExistingBugReport(bug, hasNewComment);
 		} else {
 			return null;
 		}

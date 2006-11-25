@@ -29,6 +29,7 @@ public class TaskListBackupManagerTest extends TestCase {
 
 	private Task task1;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		task1 = new Task("handle", "label", true);
@@ -38,6 +39,7 @@ public class TaskListBackupManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		// MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,

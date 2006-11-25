@@ -350,6 +350,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 			otherEncoding.addSelectionListener(new SelectionAdapter() {
 
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (otherEncoding.getSelection()) {
 						defaultEncoding.setSelection(false);
@@ -395,6 +396,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite.setBackground(container.getBackground());
 			httpAuthExpComposite.setText("Http Authentication");
 			httpAuthExpComposite.addExpansionListener(new ExpansionAdapter() {
+				@Override
 				public void expansionStateChanged(ExpansionEvent e) {													
 					getControl().getShell().pack();					
 				}
@@ -484,6 +486,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyExpComposite.setBackground(container.getBackground());
 		proxyExpComposite.setText("Proxy Server Configuration");
 		proxyExpComposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {													
 				getControl().getShell().pack();					
 			}
@@ -620,16 +623,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		if (selected) {
 			oldUsername = repositoryUserNameEditor.getStringValue();
-			oldPassword = ((StringFieldEditor) repositoryPasswordEditor).getStringValue();
+			oldPassword = (repositoryPasswordEditor).getStringValue();
 			repositoryUserNameEditor.setStringValue(null);
-			((StringFieldEditor) repositoryPasswordEditor).setStringValue(null);
+			(repositoryPasswordEditor).setStringValue(null);
 		} else {
 			repositoryUserNameEditor.setStringValue(oldUsername);
-			((StringFieldEditor) repositoryPasswordEditor).setStringValue(oldPassword);
+			(repositoryPasswordEditor).setStringValue(oldPassword);
 		}
 
 		repositoryUserNameEditor.setEnabled(!selected, container);
-		((StringFieldEditor) repositoryPasswordEditor).setEnabled(!selected, container);
+		(repositoryPasswordEditor).setEnabled(!selected, container);
 	}
 
 	public void setHttpAuth(boolean selected) {
@@ -639,15 +642,15 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		httpAuthButton.setSelection(selected);
 		if (!selected) {
 			oldHttpAuthUserId = httpAuthUserNameEditor.getStringValue();
-			oldHttpAuthPassword = ((StringFieldEditor) httpAuthPasswordEditor).getStringValue();
+			oldHttpAuthPassword = (httpAuthPasswordEditor).getStringValue();
 			httpAuthUserNameEditor.setStringValue(null);
-			((StringFieldEditor) httpAuthPasswordEditor).setStringValue(null);
+			(httpAuthPasswordEditor).setStringValue(null);
 		} else {
 			httpAuthUserNameEditor.setStringValue(oldHttpAuthUserId);
-			((StringFieldEditor) httpAuthPasswordEditor).setStringValue(oldHttpAuthPassword);
+			(httpAuthPasswordEditor).setStringValue(oldHttpAuthPassword);
 		}
 		httpAuthUserNameEditor.setEnabled(selected, httpAuthComp);
-		((StringFieldEditor) httpAuthPasswordEditor).setEnabled(selected, httpAuthComp);
+		(httpAuthPasswordEditor).setEnabled(selected, httpAuthComp);
 	}
 
 	public void setUseDefaultProxy(boolean selected) {
@@ -682,9 +685,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthButton.setEnabled(!systemProxyButton.getSelection());
 		if (!selected) {
 			oldProxyUsername = proxyUserNameEditor.getStringValue();
-			oldProxyPassword = ((StringFieldEditor) proxyPasswordEditor).getStringValue();
+			oldProxyPassword = (proxyPasswordEditor).getStringValue();
 			proxyUserNameEditor.setStringValue(null);
-			((StringFieldEditor) proxyPasswordEditor).setStringValue(null);
+			(proxyPasswordEditor).setStringValue(null);
 		} else {
 			proxyUserNameEditor.setStringValue(oldProxyUsername);
 			proxyPasswordEditor.setStringValue(oldProxyPassword);

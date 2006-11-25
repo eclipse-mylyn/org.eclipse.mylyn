@@ -221,7 +221,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.fillContextMenu(mgr);
 
 		// Create the submenu for sorting
-		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); //$NON-NLS-1$
+		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); 
 		sortMenu.add(sortByPriorityAction);
 		sortMenu.add(sortByDescriptionAction);
 

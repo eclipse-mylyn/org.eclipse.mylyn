@@ -50,11 +50,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	private RepositoryTaskData newData;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

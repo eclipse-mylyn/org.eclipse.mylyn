@@ -35,6 +35,7 @@ public class CollapseAllAction extends Action {
 		setImageDescriptor(TaskListImages.COLLAPSE_ALL);
 	}
 
+	@Override
 	public void run() {
 		if (taskListView.getViewer() != null)
 			taskListView.getViewer().collapseAll();

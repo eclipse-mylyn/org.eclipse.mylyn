@@ -140,6 +140,7 @@ public class TaskActivityViewSorter extends ViewerSorter {
 		return 0;
 	}
 
+	@Override
 	public int compare(Viewer viewer, Object o1, Object o2) {
 		if (o1 instanceof DateRangeContainer) {
 			if (o2 instanceof DateRangeContainer) {

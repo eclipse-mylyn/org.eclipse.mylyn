@@ -104,7 +104,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				if (targetTask.getContainer() == null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 				} else {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) targetTask.getContainer(),
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getContainer(),
 							task);
 				}
 			} else if (currentTarget == null) {

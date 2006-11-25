@@ -199,7 +199,7 @@ public class TaskRepositoryManager {
 			Collection<Set<TaskRepository>> values = repositoryMap.values();
 			if (!values.isEmpty()) {
 				Set<TaskRepository> repoistorySet = values.iterator().next();
-				return (TaskRepository) repoistorySet.iterator().next();
+				return repoistorySet.iterator().next();
 			}
 		}
 		return null;

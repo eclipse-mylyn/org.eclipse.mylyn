@@ -539,7 +539,7 @@ public class TaskFormPage extends FormPage {
 
 			StringBuffer total = new StringBuffer();
 			for (int x = 0; x < all.size(); x++) {
-				String str = (String) all.get(x);
+				String str = all.get(x);
 				total.append(" " + str + (x == (all.size() - 1) ? "" : "\n"));
 			}
 
@@ -588,6 +588,7 @@ public class TaskFormPage extends FormPage {
 			return line;
 		}
 
+		@Override
 		public String getText() {
 			return text;
 		}
@@ -600,6 +601,7 @@ public class TaskFormPage extends FormPage {
 			return 3;
 		}
 
+		@Override
 		public String getType() {
 			return ERROR_TYPE;
 		}

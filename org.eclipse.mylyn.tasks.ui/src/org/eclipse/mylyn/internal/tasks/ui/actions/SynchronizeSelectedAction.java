@@ -48,6 +48,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 	private Map<AbstractRepositoryConnector, List<AbstractRepositoryTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryTask>>();
 
+	@Override
 	public void run(IAction action) {
 
 		if (TaskListView.getFromActivePerspective() != null) {

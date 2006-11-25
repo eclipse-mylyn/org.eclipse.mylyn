@@ -46,6 +46,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -69,6 +70,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().reset();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().resetActivityHistory();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());

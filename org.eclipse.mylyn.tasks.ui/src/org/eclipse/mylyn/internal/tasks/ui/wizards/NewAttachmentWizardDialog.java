@@ -30,6 +30,7 @@ public class NewAttachmentWizardDialog extends WizardDialog {
 		setPageSize(600, 300);
 	}
 
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(ATTACHMENT_WIZARD_SETTINGS_SECTION);

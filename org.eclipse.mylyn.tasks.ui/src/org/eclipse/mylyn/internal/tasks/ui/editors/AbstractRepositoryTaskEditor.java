@@ -382,21 +382,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return "unrecognized column";
 		}
 
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 			// ignore
 
 		}
 
+		@Override
 		public void dispose() {
 			// ignore
 
 		}
 
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			// ignore
 			return false;
 		}
 
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 			// ignore
 

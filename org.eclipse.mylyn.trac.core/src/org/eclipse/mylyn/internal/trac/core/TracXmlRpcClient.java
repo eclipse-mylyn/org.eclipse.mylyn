@@ -258,6 +258,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return ticket;
 	}
 
+	@Override
 	public synchronized void updateAttributes(IProgressMonitor monitor) throws TracException {
 		monitor.beginTask("Updating attributes", 8);
 

@@ -58,6 +58,7 @@ public class OpenRemoteTaskJob extends Job {
 		this.page = page;
 	}
 
+	@Override
 	public IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("Opening Remote Task", 10);
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(

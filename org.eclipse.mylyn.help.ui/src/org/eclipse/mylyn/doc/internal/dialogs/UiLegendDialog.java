@@ -49,11 +49,13 @@ public class UiLegendDialog extends PopupDialog {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, null, null);
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		getShell().setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_GRAY));
 		return createDialogArea(parent);
 	}
 
+	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
 		getShell().setText("Mylar UI Legend");
@@ -85,6 +87,7 @@ public class UiLegendDialog extends PopupDialog {
 		closeHyperlink.setBackground(section.getTitleBarBackground());
 		closeHyperlink.setImage(TaskListImages.getImage(TaskListImages.NOTIFICATION_CLOSE));
 		closeHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				close();
 			}
@@ -97,6 +100,7 @@ public class UiLegendDialog extends PopupDialog {
 	/**
 	 * Initialize the shell's bounds.
 	 */
+	@Override
 	public void initializeBounds() {
 		getShell().setBounds(restoreBounds());
 	}

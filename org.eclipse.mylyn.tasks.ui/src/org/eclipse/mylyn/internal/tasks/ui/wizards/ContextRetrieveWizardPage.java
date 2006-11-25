@@ -75,6 +75,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		contextTable.setHeaderVisible(true);
 		contextTable.setLinesVisible(true);
 		contextTable.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				if (contextTable.getSelectionIndex() > -1) {
 					selectedContextAttachment = (RepositoryAttachment) contextTable.getItem(

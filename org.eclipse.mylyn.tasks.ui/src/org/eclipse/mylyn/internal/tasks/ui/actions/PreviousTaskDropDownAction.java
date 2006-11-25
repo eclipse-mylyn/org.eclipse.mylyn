@@ -36,6 +36,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 		setImageDescriptor(TaskListImages.NAVIGATE_PREVIOUS);
 	}
 
+	@Override
 	protected void addActionsToMenu() {
 		List<ITask> tasks = taskHistory.getPreviousTasks();
 
@@ -54,6 +55,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 		}
 	}
 
+	@Override
 	public void run() {
 		if (taskHistory.hasPrevious()) {
 			ITask previousTask = taskHistory.getPreviousTask();

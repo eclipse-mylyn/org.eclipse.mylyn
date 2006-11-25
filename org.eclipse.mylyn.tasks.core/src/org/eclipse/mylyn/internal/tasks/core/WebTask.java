@@ -48,6 +48,7 @@ public class WebTask extends AbstractRepositoryTask {
 		return this.taskPrefix;
 	}
 
+	@Override
 	public String getRepositoryKind() {
 		return repsitoryType;
 	}

@@ -53,6 +53,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private BugzillaClientManager clientManager;
 
+	@Override
 	public void init(TaskList taskList) {
 		super.init(taskList);
 		this.offlineHandler = new BugzillaOfflineTaskHandler(this, taskList);
@@ -60,6 +61,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		attachmentHandler = new BugzillaAttachmentHandler(this);
 	}
 
+	@Override
 	public String getLabel() {
 		return CLIENT_LABEL;
 	}
@@ -74,10 +76,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return offlineHandler;
 	}
 
+	@Override
 	public String getRepositoryType() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
+	@Override
 	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings)
 			throws CoreException {
 		int bugId = -1;
@@ -143,6 +147,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return true;
 	}
 
+	@Override
 	public List<String> getSupportedVersions() {
 		if (supportedVersions == null) {
 			supportedVersions = new ArrayList<String>();
@@ -184,6 +189,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	}
 
+	@Override
 	public String getRepositoryUrlFromTaskUrl(String url) {
 		if (url == null) {
 			return null;

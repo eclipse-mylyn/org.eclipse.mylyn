@@ -30,6 +30,7 @@ public class RetrieveTitleFromUrlTest extends TestCase {
 
 		RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 
+			@Override
 			public void setTitle(String title) {
 				assertEquals(knownTitle, title);
 			}

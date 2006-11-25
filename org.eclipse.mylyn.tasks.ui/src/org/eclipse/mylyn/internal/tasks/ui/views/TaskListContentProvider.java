@@ -27,7 +27,6 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: move to viewer filter architecture?
@@ -102,7 +101,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private List<ITaskListElement> applyFilter(Set<ITaskListElement> roots) {
-		String filterText = ((Text) this.view.getFilteredTree().getFilterControl()).getText();
+		String filterText = (this.view.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
 			List<ITaskListElement> filteredRoots = new ArrayList<ITaskListElement>();
 			for (ITaskListElement element : roots) {
@@ -190,7 +189,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private List<Object> getFilteredChildrenFor(Object parent) {
-		if (containsNoFilterText(((Text) this.view.getFilteredTree().getFilterControl()).getText())) {
+		if (containsNoFilterText((this.view.getFilteredTree().getFilterControl()).getText())) {
 			List<Object> children = new ArrayList<Object>();
 			if (parent instanceof AbstractTaskContainer && ((AbstractTaskContainer)parent).isLocal()) { 
 				if (filter(parent)) {

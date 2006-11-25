@@ -297,6 +297,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		hasLocalChanges = b;
 	}
 
+	@Override
 	public List<String> getAttributeValues(String key) {
 		RepositoryTaskAttribute attribute = getAttribute(key);
 		if (attribute != null) {

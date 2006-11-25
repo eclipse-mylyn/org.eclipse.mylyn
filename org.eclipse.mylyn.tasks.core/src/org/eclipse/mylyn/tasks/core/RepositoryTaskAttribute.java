@@ -231,6 +231,7 @@ public class RepositoryTaskAttribute implements Serializable {
 		hidden = b;
 	}
 
+	@Override
 	public String toString() {
 		return getValue();
 	}

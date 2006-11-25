@@ -73,10 +73,12 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 		return null;
 	}
 
+	@Override
 	public Color getForeground(Object element) {
 		return taskListLabelProvider.getForeground(element);
 	}
 
+	@Override
 	public Color getBackground(Object element) {
 		return taskListLabelProvider.getBackground(element);
 	}

@@ -69,6 +69,7 @@ public class ScheduledTaskListSynchJob extends Job {
 		this.scheduleDelay = -1;
 	}
 
+	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
 			if (monitor == null) {

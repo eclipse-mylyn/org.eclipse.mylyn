@@ -48,6 +48,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private MylarContext mockContext;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -84,6 +85,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(taskFile.exists());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {		
 		removeFiles(destinationDir);
 		destinationDir.delete();

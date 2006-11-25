@@ -32,6 +32,7 @@ public class CopyToClipboardAction extends Action {
 		super(TITLE);
 	}
 
+	@Override
 	public void run() {
 		if (contents == null) {
 			return;

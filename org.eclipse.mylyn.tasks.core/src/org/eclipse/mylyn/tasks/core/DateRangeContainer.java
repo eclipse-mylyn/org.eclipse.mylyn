@@ -143,10 +143,12 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return "";
 	}
 
+	@Override
 	public void setHandleIdentifier(String id) {
 		// ignore
 	}
 
+	@Override
 	public Set<ITask> getChildren() {
 		return children;
 	}

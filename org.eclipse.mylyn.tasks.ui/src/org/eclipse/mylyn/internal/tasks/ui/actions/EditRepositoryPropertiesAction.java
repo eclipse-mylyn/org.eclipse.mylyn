@@ -39,6 +39,7 @@ public class EditRepositoryPropertiesAction extends Action {
 		// ignore
 	}
 
+	@Override
 	public void run() {
 		IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
 		if (selection.getFirstElement() instanceof TaskRepository) {

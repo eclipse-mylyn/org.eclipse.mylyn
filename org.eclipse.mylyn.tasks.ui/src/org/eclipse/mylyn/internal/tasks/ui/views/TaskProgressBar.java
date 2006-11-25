@@ -47,6 +47,7 @@ public class TaskProgressBar extends Canvas {
 		this.parent = parent;
 
 		parent.addControlListener(new ControlAdapter() {
+			@Override
 			public void controlResized(ControlEvent e) {
 				colorBarWidth = scale(currentTickCount);
 				redraw();
@@ -138,6 +139,7 @@ public class TaskProgressBar extends Canvas {
 		gc.fillRectangle(1, 1, colorBarWidth, rect.height - 2);
 	}
 
+	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
 		Point size = new Point(parent.getSize().x, DEFAULT_HEIGHT);//parent.getSize().y);

@@ -78,6 +78,7 @@ public class DateSelectionDialog extends Dialog {
 		super.createButtonsForButtonBar(parent);
 	}
 	
+	@Override
 	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
 		if(buttonId == IDialogConstants.CLIENT_ID + 1) {

@@ -200,6 +200,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 		}
 	}
 
+	@Override
 	public void run() {
 		this.setChecked(isChecked());
 	}

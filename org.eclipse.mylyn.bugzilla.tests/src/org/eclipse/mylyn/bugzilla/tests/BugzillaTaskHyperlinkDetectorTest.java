@@ -57,10 +57,12 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 
 	private String[] formats = { TASK_FORMAT_1, TASK_FORMAT_2, TASK_FORMAT_3, TASK_FORMAT_4, BUG_FORMAT_1, BUG_FORMAT_2, BUG_FORMAT_3,  BUG_FORMAT_4 };
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

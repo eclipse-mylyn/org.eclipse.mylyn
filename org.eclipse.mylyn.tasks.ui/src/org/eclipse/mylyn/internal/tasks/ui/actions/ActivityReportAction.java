@@ -35,6 +35,7 @@ public class ActivityReportAction extends Action {
 		setImageDescriptor(TaskListImages.TASKLIST);
 	}
 
+	@Override
 	public void run() {
 		TaskActivityWizard wizard = new TaskActivityWizard();
 

@@ -147,7 +147,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			// FIXME AbstractRepositoryQuery is a subclass of
 			// AbstractTaskContainer so this is probably a dead branch!
 			for (AbstractQueryHit child : ((AbstractRepositoryQuery) object).getHits()) {
-				ITask task = ((AbstractQueryHit) child).getCorrespondingTask();
+				ITask task = (child).getCorrespondingTask();
 				if (task != null && task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				}

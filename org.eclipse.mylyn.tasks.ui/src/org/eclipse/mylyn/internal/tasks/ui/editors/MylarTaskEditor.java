@@ -107,6 +107,7 @@ public class MylarTaskEditor extends FormEditor {
 		}
 	}
 
+	@Override
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
 	}
@@ -314,6 +315,7 @@ public class MylarTaskEditor extends FormEditor {
 		super.pageChange(newPageIndex);
 	}
 
+	@Override
 	public void dispose() {
 		for (IEditorPart part : editors) {
 			part.dispose();
@@ -423,6 +425,7 @@ public class MylarTaskEditor extends FormEditor {
 		}
 	}
 
+	@Override
 	protected FormToolkit createToolkit(Display display) {
 		// Create a toolkit that shares colors between editors.
 		return new FormToolkit(PlatformUI.getWorkbench().getDisplay());

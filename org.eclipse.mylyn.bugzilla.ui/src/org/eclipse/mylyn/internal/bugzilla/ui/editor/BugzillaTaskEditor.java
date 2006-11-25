@@ -201,6 +201,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
 
+			@Override
 			public void done(final IJobChangeEvent event) {
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -416,6 +417,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
 		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
@@ -546,6 +548,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					hyperlink.setToolTipText(task.getSummary());
 				}
 				hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						if (task != null) {
 							TaskUiUtil.refreshAndOpenTaskListElement(task);
@@ -753,6 +756,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes for this bug", SWT.NONE);
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
@@ -764,6 +768,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote for this bug", SWT.NONE);
 		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
 					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();

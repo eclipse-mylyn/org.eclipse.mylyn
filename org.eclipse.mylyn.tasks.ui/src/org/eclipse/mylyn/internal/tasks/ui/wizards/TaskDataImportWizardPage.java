@@ -112,6 +112,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		setDescription(DESCRIPTION);
 	}
 
+	@Override
 	public String getName() {
 		return PAGE_NAME;
 	}
@@ -198,6 +199,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		browseButtonFolder = new Button(parent, SWT.PUSH);
 		browseButtonFolder.setText("Browse...");
 		browseButtonFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
 				dialog.setText("Folder Selection");
@@ -232,6 +234,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 		browseButtonZip = new Button(parent, SWT.PUSH);
 		browseButtonZip.setText("Browse...");
 		browseButtonZip.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setText("Zip File Selection");

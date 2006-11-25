@@ -76,6 +76,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		return settings;
 	}
 
+	@Override
 	public void addPages() {
 		importPage = new TaskDataImportWizardPage();
 		importPage.setWizard(this);
@@ -86,6 +87,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		// no initialization needed
 	}
 
+	@Override
 	public boolean canFinish() {
 		return importPage.isPageComplete();
 	}
@@ -96,6 +98,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	 * overwrite is canceled, no files are saved and the user must adjust the
 	 * dialog.
 	 */
+	@Override
 	public boolean performFinish() {
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(
@@ -129,7 +132,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
 				entries = zipFile.entries();
 				while (entries.hasMoreElements()) {
-					ZipEntry entry = (ZipEntry) entries.nextElement();
+					ZipEntry entry = entries.nextElement();
 
 					if (entry.isDirectory()) {
 						// ignore directories (shouldn't be any)

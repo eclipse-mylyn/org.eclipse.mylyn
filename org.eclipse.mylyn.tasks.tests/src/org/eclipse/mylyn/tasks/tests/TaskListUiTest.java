@@ -82,6 +82,7 @@ public class TaskListUiTest extends TestCase {
 
 	private final static int CHECK_PRIORITY_FILTER = 3;
 
+	@Override
 	public void setUp() throws PartInitException {
 		try {
 			TaskListView.openInActivePerspective();
@@ -166,6 +167,7 @@ public class TaskListUiTest extends TestCase {
 		}
 	}
 
+	@Override
 	public void tearDown() {
 		// clear everything
 	}
@@ -198,7 +200,7 @@ public class TaskListUiTest extends TestCase {
 			TaskListView.getFromActivePerspective().removeFilter(
 					TaskListView.getFromActivePerspective().getCompleteFilter());
 
-			TaskPriorityFilter filter = (TaskPriorityFilter) TaskListView.getFromActivePerspective()
+			TaskPriorityFilter filter = TaskListView.getFromActivePerspective()
 					.getPriorityFilter();
 			filter.displayPrioritiesAbove("P2");
 			TaskListView.getFromActivePerspective().addFilter(filter);

@@ -41,6 +41,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		super(version);
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -50,6 +51,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		connect010();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 

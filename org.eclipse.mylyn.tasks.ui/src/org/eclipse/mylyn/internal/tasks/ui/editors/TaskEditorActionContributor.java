@@ -222,28 +222,35 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		}
 	}
 
+	@Override
 	public void contributeToMenu(IMenuManager mm) {
 	}
 
+	@Override
 	public void contributeToStatusLine(IStatusLineManager slm) {
 	}
 
+	@Override
 	public void contributeToToolBar(IToolBarManager tbm) {
 	}
 
+	@Override
 	public void contributeToCoolBar(ICoolBarManager cbm) {
 	}
 
+	@Override
 	public void dispose() {
 		sourceActionBars.dispose();
 		super.dispose();
 	}
 
+	@Override
 	public void init(IActionBars bars) {
 		super.init(bars);
 		sourceActionBars = new SubActionBars(bars);
 	}
 
+	@Override
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 		registerGlobalHandlers(bars);
@@ -258,6 +265,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		return getActionBars().getStatusLineManager();
 	}
 
+	@Override
 	public void setActiveEditor(IEditorPart targetEditor) {
 		if (targetEditor instanceof MylarTaskEditor) {
 			editor = (MylarTaskEditor) targetEditor;
@@ -265,6 +273,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		}
 	}
 
+	@Override
 	public void setActivePage(IEditorPart newEditor) {
 		if (getEditor() != null) {
 			updateSelectableActions(getEditor().getSelection());

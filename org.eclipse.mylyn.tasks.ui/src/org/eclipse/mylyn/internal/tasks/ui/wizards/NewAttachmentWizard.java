@@ -157,7 +157,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 
 					if (attachContext) {
-						connector.attachContext(repository, (AbstractRepositoryTask) task, "");
+						connector.attachContext(repository, task, "");
 						// attachContext sets outgoing state but we want to recieve incoming
 						// on synchronization. This could result in lost edits so need to 
 						// review the whole attachment interaction.
@@ -182,6 +182,7 @@ public class NewAttachmentWizard extends Wizard {
 				}
 				
 				TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, new JobChangeAdapter() {
+					@Override
 					public void done(final IJobChangeEvent event) {
 						if (event.getResult().getException() != null) {
 							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -227,6 +228,7 @@ public class NewAttachmentWizard extends Wizard {
 		return inputPage.getAttachmentName();
 	}
 
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == inputPage) {
 			attachPage.setFilePath(inputPage.getAttachmentName());
@@ -246,6 +248,7 @@ public class NewAttachmentWizard extends Wizard {
 		return inputPage.getClipboardContents();
 	}
 
+	@Override
 	public boolean needsPreviousAndNextButtons() {
 		return true;
 	}

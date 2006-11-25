@@ -52,6 +52,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 	public TracOfflineTaskHandlerTest() {
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 

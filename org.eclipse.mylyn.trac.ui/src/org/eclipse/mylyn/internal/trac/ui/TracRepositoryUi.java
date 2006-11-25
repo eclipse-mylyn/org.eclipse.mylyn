@@ -64,6 +64,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 		}
 	}
 	
+	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof TracRepositoryQuery) {
 			return new EditTracQueryWizard(repository, query);

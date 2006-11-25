@@ -44,6 +44,7 @@ public class TaskDeactivateAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		run(TaskListView.getFromActivePerspective().getSelectedTask());
 	}

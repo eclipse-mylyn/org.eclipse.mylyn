@@ -113,6 +113,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 	private boolean initUseClipboard = false;
 
 	class ActivationListener extends ShellAdapter {
+		@Override
 		public void shellActivated(ShellEvent e) {
 			// allow error messages if the selected input actually has something
 			// selected in it
@@ -180,6 +181,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 	}
 
+	@Override
 	public IWizardPage getNextPage() {
 		return wizard.getNextPage(this);
 	}
@@ -187,6 +189,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 	/*
 	 * (non-JavaDoc) Method declared in IWizardPage.
 	 */
+	@Override
 	public boolean canFlipToNextPage() {
 		return isPageComplete();
 	}
@@ -248,6 +251,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 
 		// Add listeners
 		useClipboardButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!useClipboardButton.getSelection())
 					return;
@@ -263,6 +267,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 		});
 
 		useFileButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!useFileButton.getSelection())
 					return;
@@ -276,6 +281,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 		});
 		fileNameField.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setSourceName(fileNameField.getText());
 				updateWidgetEnablements();
@@ -289,6 +295,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 		});
 		fileBrowseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				clearErrorMessage();
 				showError = true;
@@ -306,6 +313,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 		});
 		useWorkspaceButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!useWorkspaceButton.getSelection())
 					return;
@@ -569,7 +577,7 @@ public class InputAttachmentSourcePage extends WizardPage {
 			}
 		}
 
-		return (IResource[]) tmp.toArray(new IResource[tmp.size()]);
+		return tmp.toArray(new IResource[tmp.size()]);
 	}
 
 	private void storeClipboardContents() {

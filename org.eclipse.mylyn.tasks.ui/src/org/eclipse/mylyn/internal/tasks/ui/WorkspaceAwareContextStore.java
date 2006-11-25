@@ -21,6 +21,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class WorkspaceAwareContextStore extends AbstractContextStore {
 
+	@Override
 	public File getRootDirectory() {
 		return new File(TasksUiPlugin.getDefault().getDataDirectory());
 	}

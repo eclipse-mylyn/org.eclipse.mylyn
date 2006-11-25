@@ -59,22 +59,27 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 		super(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL, offlineId);
 	}
 
+	@Override
 	public String getLabel() {
 		return "<unsubmitted> "+ this.getRepositoryUrl();
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public void setDescription(String newDescription) {
 		description = newDescription;
 	}
 
+	@Override
 	public String getSummary() {
 		return summary;
 	}
 
+	@Override
 	public void setSummary(String newSummary) {
 		summary = newSummary;
 	}
@@ -82,6 +87,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	/**
 	 * @return The product that the bug is for.
 	 */
+	@Override
 	public String getProduct() {
 		return product;
 	}
@@ -153,6 +159,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 		return savedOffline;
 	}
 
+	@Override
 	public boolean isLocallyCreated() {
 		return true;
 	}
@@ -161,15 +168,18 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 //		savedOffline = newOfflineState;
 //	}
 
+	@Override
 	public boolean hasLocalChanges() {
 		return true;
 	}
 
 	/** returns null */
+	@Override
 	public String getCreated() {
 		return null;
 	}
 
+	@Override
 	public String getLastModified() {
 		return null;
 	}

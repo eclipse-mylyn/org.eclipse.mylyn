@@ -35,6 +35,7 @@ public class ExpandAllAction extends Action {
 		setImageDescriptor(TaskListImages.EXPAND_ALL);
 	}
 
+	@Override
 	public void run() {
 		if (taskListView.getViewer() != null)
 			taskListView.getViewer().expandAll();

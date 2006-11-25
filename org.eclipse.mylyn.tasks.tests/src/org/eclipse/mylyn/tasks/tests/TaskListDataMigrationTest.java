@@ -28,6 +28,7 @@ public class TaskListDataMigrationTest extends TestCase {
 
 	private TaskListDataMigration migrator;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
@@ -37,6 +38,7 @@ public class TaskListDataMigrationTest extends TestCase {
 		assertTrue(sourceDirFile.exists());
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		deleteAllFiles(sourceDirFile);

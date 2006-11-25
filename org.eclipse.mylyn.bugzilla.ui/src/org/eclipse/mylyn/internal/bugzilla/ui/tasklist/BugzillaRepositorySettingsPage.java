@@ -67,6 +67,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		setNeedsHttpAuth(true);		
 	}
 
+	@Override
 	protected void createAdditionalControls(Composite parent) {
 
 		for (RepositoryTemplate template : connector.getTemplates()) {
@@ -155,6 +156,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		return super.isPageComplete();
 	}
 
+	@Override
 	protected boolean isValidUrl(String name) {
 		if (name.startsWith(URL_PREFIX_HTTPS) || name.startsWith(URL_PREFIX_HTTP)) {
 			try {
@@ -167,6 +169,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	}
 
 	/* public for testing */
+	@Override
 	public void validateSettings() {
 
 		try {

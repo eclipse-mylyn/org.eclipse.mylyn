@@ -102,6 +102,7 @@ public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 			super(region, urlString);
 		}
 
+		@Override
 		public void open() {
 			// TODO: if url is to a repository task, open task instead of url
 			TaskUiUtil.openUrl(getURLString());

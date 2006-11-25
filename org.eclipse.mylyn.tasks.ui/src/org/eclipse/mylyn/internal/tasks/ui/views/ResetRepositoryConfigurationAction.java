@@ -44,6 +44,7 @@ public class ResetRepositoryConfigurationAction extends Action {
 		// ignore
 	}
 
+	@Override
 	public void run() {
 		try {
 			IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();

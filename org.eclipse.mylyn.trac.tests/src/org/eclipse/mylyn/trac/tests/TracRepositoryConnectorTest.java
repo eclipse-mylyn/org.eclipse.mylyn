@@ -70,6 +70,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	private TaskList tasklist;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -81,6 +82,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		data = TestFixture.init010();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 
