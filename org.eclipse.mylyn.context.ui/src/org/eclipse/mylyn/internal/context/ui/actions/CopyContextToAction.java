@@ -90,7 +90,7 @@ public class CopyContextToAction implements IViewActionDelegate {
 					.getFileForContext(sourceTask.getHandleIdentifier());
 			if (!contextFile.exists()) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TasksUiPlugin.TITLE_DIALOG, "Source task does not hava a context.");
+						TasksUiPlugin.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
 				ContextCorePlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(),
 						contextFile);
