@@ -26,13 +26,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,7 +62,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		setNeedsAnonymousLogin(true);
 		setNeedsEncoding(true);
 		setNeedsTimeZone(false);
-		setNeedsHttpAuth(true);		
+		setNeedsHttpAuth(true);
 	}
 
 	@Override
@@ -181,10 +179,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			final String httpAuthUser = getHttpAuthUserId();
 			final String httpAuthPass = getHttpAuthPassword();
 			final Proxy tempProxy;
-			if(getUseDefaultProxy()) {
+			if (getUseDefaultProxy()) {
 				tempProxy = WebClientUtil.getSystemProxy();
 			} else {
-				tempProxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(), getProxyPassword());
+				tempProxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
+						getProxyPassword());
 			}
 			final boolean checkVersion = repositoryVersionCombo.getSelectionIndex() == 0;
 			final String[] version = new String[1];
@@ -195,14 +194,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 					try {
 						monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
-						TaskRepository temporaryRepository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, serverUrl);
-						temporaryRepository.setAuthenticationCredentials(newUserId, newPassword);
-						
 						BugzillaClient client = null;
 						if (!isAnonymous && version != null) {
 							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
 									httpAuthUser, httpAuthPass, tempProxy, newEncoding);
-							client.validate();							
+							client.validate();
 						}
 						if (checkVersion && client != null) {
 							RepositoryConfiguration config = client.getRepositoryConfiguration();
