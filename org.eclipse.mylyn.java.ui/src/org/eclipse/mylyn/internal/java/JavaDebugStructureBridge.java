@@ -22,9 +22,9 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.debug.core.JavaDebugUtils;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 
 /**
  * @author Mik Kersten
@@ -32,17 +32,17 @@ import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "java/debug";
-	
+
 	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
-	
+
 	/**
-	 * Needed due to slowness in resolving type names.  We expect the stack frame elements
-	 * to disappear, they are never explicitly removed.
+	 * Needed due to slowness in resolving type names. We expect the stack frame
+	 * elements to disappear, they are never explicitly removed.
 	 * 
 	 * TODO: consider clearing on each re-launch
 	 */
 	private Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
-	
+
 	@Override
 	public boolean acceptsObject(Object object) {
 		return object instanceof ILaunch || object instanceof JDIDebugElement || object instanceof RuntimeProcess;
@@ -55,7 +55,18 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean canFilter(Object element) {
-		return element instanceof JDIStackFrame;
+		return false;
+//		if (element instanceof JDIStackFrame) {
+//			JDIStackFrame stackFrame = (JDIStackFrame) element;
+//			try {
+//				System.err.println(">>>>> " + stackFrame.getMethodName());
+//			} catch (DebugException e) {
+//				return false;
+//			}
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 
 	@Override
@@ -86,10 +97,10 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof JDIStackFrame) {
-			JDIStackFrame stackFrame = (JDIStackFrame)object;
+			JDIStackFrame stackFrame = (JDIStackFrame) object;
 			IType type = null;
 			if (stackFrameMap.containsKey(stackFrame)) {
-				type = stackFrameMap.get(stackFrame); 
+				type = stackFrameMap.get(stackFrame);
 			} else {
 				try {
 					type = JavaDebugUtils.resolveDeclaringType(stackFrame);
@@ -112,7 +123,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public Object getObjectForHandle(String handle) {
-		return javaStructureBridge.getObjectForHandle(handle);	
+		return javaStructureBridge.getObjectForHandle(handle);
 	}
 
 	@Override
