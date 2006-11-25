@@ -42,6 +42,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
@@ -55,6 +56,7 @@ public class ChangeDataDirTest extends TestCase {
 		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
