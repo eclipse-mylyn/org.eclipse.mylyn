@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.core;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -59,8 +60,6 @@ public class TaskRepository {
 
 	private static final String AUTH_REALM = "";
 
-	private static final String AUTH_REALM_PROXY = "proxy";
-	
 	private static final URL DEFAULT_URL;
 
 	public static final String PROXY_USEDEFAULT = "org.eclipse.mylar.tasklist.repositories.proxy.usedefault";
@@ -73,6 +72,10 @@ public class TaskRepository {
 
 	public static final String PROXY_PASSWORD = "org.eclipse.mylar.tasklist.repositories.proxy.password";
 
+	// HACK: Lock used to work around race condition in Platform.add/get/flushAuthorizationInfo()  
+	private static final Object LOCK = new Object();
+	
+	
 	private String cachedUserName = null;
 	
 	static {
@@ -136,74 +139,35 @@ public class TaskRepository {
 
 	/**
 	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
-	 * @return
 	 */
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
-		if (cachedUserName != null) {
-			return cachedUserName;
-		} else {
-			return getUserNameFromKeyRing();
+		if (cachedUserName == null) {
+			cachedUserName = getUserNameFromKeyRing();
 		}
+		return cachedUserName;
 	}
 
-	@SuppressWarnings("unchecked")
 	private String getUserNameFromKeyRing() {
-		Map<String, String> map = getAuthInfo();
-		if (map != null && map.containsKey(AUTH_USERNAME)) {
-			cachedUserName = map.get(AUTH_USERNAME);
-			return cachedUserName;
-		} else {
-			return null;
-		}		
+		return getAuthInfo(AUTH_USERNAME);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPassword() {
-		Map<String, String> map = getAuthInfo();
-		if (map != null && map.containsKey(AUTH_PASSWORD)) {
-			return map.get(AUTH_PASSWORD);
-		} else {
-			return null;
-		}
+		return getAuthInfo(AUTH_PASSWORD);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getProxyUsername() {
-		Map<String, String> map;
-		try {
-			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
-		} catch (MalformedURLException e) {
-			return null;
-		}
-		if (map != null && map.containsKey(PROXY_USERNAME)) {
-			return map.get(PROXY_USERNAME);
-		} else {
-			return null;
-		}
+		return getAuthInfo(PROXY_USERNAME);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getProxyPassword() {
-		Map<String, String> map;
-		try {
-			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
-		} catch (MalformedURLException e) {
-			return null;
-		}
-		if (map != null && map.containsKey(PROXY_PASSWORD)) {
-			return map.get(PROXY_PASSWORD);
-		} else {
-			return null;
-		}
+		return getAuthInfo(PROXY_PASSWORD);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setAuthenticationCredentials(String username, String password) {
 		Map<String, String> map = getAuthInfo();
-
 		if (map == null) {
-			map = new java.util.HashMap<String, String>();
+			map = new HashMap<String, String>();
 		}
 
 		if (username != null) {
@@ -213,75 +177,68 @@ public class TaskRepository {
 		if (password != null) {
 			map.put(AUTH_PASSWORD, password);
 		}
-		try {
-			// write the map to the keyring
-			try {
-				Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
-			} catch (MalformedURLException ex) {
-				Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
-			}
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, "could not set authorization", true);
-		}
+		addAuthInfo(map);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setProxyAuthenticationCredentials(String username, String password) {
-		Map<String, String> map;
-		try {
-			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
-		} catch (MalformedURLException e1) {
-			return;
-		}
-
+		Map<String, String> map = getAuthInfo();
 		if (map == null) {
-			map = new java.util.HashMap<String, String>();
+			map = new HashMap<String, String>();
 		}
-
+		
 		if (username != null) {
 			map.put(PROXY_USERNAME, username);
 		}
 		if (password != null) {
 			map.put(PROXY_PASSWORD, password);
 		}
-		try {
-			// write the map to the keyring
-			try {
-				Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME, map);
-			} catch (MalformedURLException ex) {
-				Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
-			}
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, "could not set authorization", true);
-		}
+		addAuthInfo(map);
 	}
-
+	
 	public void flushAuthenticationCredentials() {
 		try {
 			try {
-				String proxyHostname = getProperty(PROXY_HOSTNAME);
-				if (proxyHostname != null && proxyHostname.length() > 0) {
-					Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
-				}
 				Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
 			} catch (MalformedURLException ex) {
 				Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
 			}
 		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, "could not set authorization", true);
+			MylarStatusHandler.fail(e, "could not flush authorization credentials", true);
+		}
+	}
+
+	private void addAuthInfo(Map<String, String> map) {
+		synchronized (LOCK) {
+			try {
+				// write the map to the keyring
+				try {
+					Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
+				} catch (MalformedURLException ex) {
+					Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+				}
+			} catch (CoreException e) {
+				MylarStatusHandler.fail(e, "Could not set authorization credentials", true);
+			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private Map<String, String> getAuthInfo() {
-		try {
-			return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
-		} catch (MalformedURLException ex) {
-			return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+		synchronized (LOCK) {
+			try {
+				return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+			} catch (MalformedURLException ex) {
+				return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+			}
 			return null;
 		}
+	}
+
+	private String getAuthInfo(String property) {
+		Map<String, String> map = getAuthInfo();
+		return map == null ? null : map.get(property);
 	}
 	
 	public void clearCredentials() {
