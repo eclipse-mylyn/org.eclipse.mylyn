@@ -624,8 +624,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (selected) {
 			oldUsername = repositoryUserNameEditor.getStringValue();
 			oldPassword = (repositoryPasswordEditor).getStringValue();
-			repositoryUserNameEditor.setStringValue(null);
-			(repositoryPasswordEditor).setStringValue(null);
+			repositoryUserNameEditor.setStringValue("");
+			(repositoryPasswordEditor).setStringValue("");
 		} else {
 			repositoryUserNameEditor.setStringValue(oldUsername);
 			(repositoryPasswordEditor).setStringValue(oldPassword);

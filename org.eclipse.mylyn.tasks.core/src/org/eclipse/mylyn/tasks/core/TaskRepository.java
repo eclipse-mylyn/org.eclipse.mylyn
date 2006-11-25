@@ -59,6 +59,8 @@ public class TaskRepository {
 
 	private static final String AUTH_REALM = "";
 
+	private static final String AUTH_REALM_PROXY = "proxy";
+	
 	private static final URL DEFAULT_URL;
 
 	public static final String PROXY_USEDEFAULT = "org.eclipse.mylar.tasklist.repositories.proxy.usedefault";
@@ -118,9 +120,9 @@ public class TaskRepository {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
 
-	private String getProxyHostname() {
-		return properties.get(PROXY_HOSTNAME);
-	}
+//	private String getProxyHostname() {
+//		return properties.get(PROXY_HOSTNAME);
+//	}
 
 	public void setUrl(String newUrl) {
 		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
@@ -137,6 +139,7 @@ public class TaskRepository {
 	 * @return
 	 */
 	public String getUserName() {
+		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (cachedUserName != null) {
 			return cachedUserName;
 		} else {
@@ -169,7 +172,7 @@ public class TaskRepository {
 	public String getProxyUsername() {
 		Map<String, String> map;
 		try {
-			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -184,7 +187,7 @@ public class TaskRepository {
 	public String getProxyPassword() {
 		Map<String, String> map;
 		try {
-			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -198,7 +201,6 @@ public class TaskRepository {
 	@SuppressWarnings("unchecked")
 	public void setAuthenticationCredentials(String username, String password) {
 		Map<String, String> map = getAuthInfo();
-
 
 		if (map == null) {
 			map = new java.util.HashMap<String, String>();
@@ -227,7 +229,7 @@ public class TaskRepository {
 	public void setProxyAuthenticationCredentials(String username, String password) {
 		Map<String, String> map;
 		try {
-			map = Platform.getAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME);
+			map = Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
 		} catch (MalformedURLException e1) {
 			return;
 		}
@@ -245,7 +247,7 @@ public class TaskRepository {
 		try {
 			// write the map to the keyring
 			try {
-				Platform.addAuthorizationInfo(new URL(getProxyHostname()), AUTH_REALM, AUTH_SCHEME, map);
+				Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME, map);
 			} catch (MalformedURLException ex) {
 				Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
 			}
@@ -259,7 +261,7 @@ public class TaskRepository {
 			try {
 				String proxyHostname = getProperty(PROXY_HOSTNAME);
 				if (proxyHostname != null && proxyHostname.length() > 0) {
-					Platform.flushAuthorizationInfo(new URL(proxyHostname), AUTH_REALM, AUTH_SCHEME);
+					Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM_PROXY, AUTH_SCHEME);
 				}
 				Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
 			} catch (MalformedURLException ex) {
@@ -280,6 +282,10 @@ public class TaskRepository {
 			MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
 			return null;
 		}
+	}
+	
+	public void clearCredentials() {
+		
 	}
 
 	@Override
