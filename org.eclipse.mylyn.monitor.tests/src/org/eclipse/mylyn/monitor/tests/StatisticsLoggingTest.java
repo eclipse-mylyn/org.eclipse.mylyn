@@ -60,7 +60,7 @@ public class StatisticsLoggingTest extends ContextTest {
 		List<InteractionEventSummary> summary = report.getStatisticsFromInteractionHistory(logFile)
 				.getSingleSummaries();
 		assertEquals(1, summary.size());
-		InteractionEventSummary first = (InteractionEventSummary) summary.get(0);
+		InteractionEventSummary first = summary.get(0);
 		assertEquals(2, first.getUsageCount());
 	}
 

@@ -45,6 +45,7 @@ public class MultiWindowMonitorTest extends TestCase {
 	
 	private boolean monitoringWasEnabled;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		monitoringWasEnabled = MylarUsageMonitorPlugin.getDefault().isMonitoringEnabled();

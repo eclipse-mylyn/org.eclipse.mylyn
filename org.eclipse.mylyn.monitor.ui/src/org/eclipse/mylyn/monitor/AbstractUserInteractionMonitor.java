@@ -12,7 +12,7 @@
 package org.eclipse.mylar.monitor;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -67,7 +67,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
 			return null;
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		InteractionEvent selectionEvent;
 		if (bridge.getContentType() != null) {
 			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
@@ -89,7 +89,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	protected void handleElementEdit(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
 		if (selectedElement == null)
 			return;
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
 		if (contributeToContext) {
@@ -102,7 +102,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 * Intended to be called back by subclasses.
 	 */
 	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
-		IMylarStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
+		AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
 			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
 					.getContentType(), adapter.getHandleIdentifier(targetElement), part.getSite().getId(), kind);

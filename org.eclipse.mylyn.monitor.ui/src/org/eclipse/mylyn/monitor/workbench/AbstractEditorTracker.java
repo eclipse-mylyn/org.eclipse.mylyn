@@ -19,12 +19,14 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public abstract class AbstractEditorTracker extends AbstractPartTracker {
 
+	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof IEditorPart) {
 			editorClosed((IEditorPart) part);
 		}
 	}
 
+	@Override
 	public void partOpened(IWorkbenchPart part) {
 		if (part instanceof IEditorPart) {
 			editorOpened((IEditorPart) part);
@@ -49,6 +51,7 @@ public abstract class AbstractEditorTracker extends AbstractPartTracker {
 		// ignore
 	}
 
+	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 	}
 
