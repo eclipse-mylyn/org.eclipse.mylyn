@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
 
@@ -39,7 +39,7 @@ public class MarkerViewerInterestSorter extends ViewerSorter {
 				return 1;
 			} else {
 				if (ContextCorePlugin.getContextManager().isContextActive()) {
-					IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 							marker1.getResource().getFileExtension());
 					IMylarElement node1 = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker1, 0));

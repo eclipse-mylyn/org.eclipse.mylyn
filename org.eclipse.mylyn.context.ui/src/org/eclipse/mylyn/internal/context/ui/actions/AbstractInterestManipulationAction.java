@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -72,7 +72,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				if (object instanceof IMylarElement) {
 					node = (IMylarElement) object;
 				} else {
-					IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 					String handle = bridge.getHandleIdentifier(object);
 					node = ContextCorePlugin.getContextManager().getElement(handle);
 				}

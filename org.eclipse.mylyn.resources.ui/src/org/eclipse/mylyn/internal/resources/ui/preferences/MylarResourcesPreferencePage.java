@@ -51,6 +51,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 		// ignore
 	}
 	
+	@Override
 	protected Control createContents(Composite parent) {
 //		createNewResourceSection(parent);
 		createExcludesTable(parent);
@@ -141,6 +142,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 	 * 
 	 * @return whether it is okay to close the preference page
 	 */
+	@Override
 	public boolean performOk() {
 		Set<String> patterns = new HashSet<String>();
 		TableItem[] items = ignoreTable.getItems();
@@ -152,6 +154,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 		return true;
 	}
 
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		ignoreTable.removeAll();

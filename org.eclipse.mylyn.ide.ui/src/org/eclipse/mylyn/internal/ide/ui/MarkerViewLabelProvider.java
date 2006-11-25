@@ -35,7 +35,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ConcreteMarker) element), 0);
+					(element), 0);
 			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
@@ -58,7 +58,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ConcreteMarker) element), 0);
+					(element), 0);
 			return UiUtil.getForegroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;
@@ -69,7 +69,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					((ConcreteMarker) element), 0);
+					(element), 0);
 			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
@@ -166,7 +166,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	public IResource getResourceForElement(IMylarElement element, boolean findContainingResource) {
 		if (element == null)
 			return null;
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {
 			return (IResource) object;

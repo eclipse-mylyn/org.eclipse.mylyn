@@ -16,28 +16,30 @@ import java.util.List;
 /**
  * @author Mik Kersten
  */
-public interface IMylarStructureBridge {
+public abstract class AbstractContextStructureBridge {
 
-	public static final String DOS_0_LABEL = "disabled";
+	protected final String DOS_0_LABEL = "disabled";
 
-	public static final String DOS_1_LABEL = "landmark resources";
+	protected final String DOS_1_LABEL = "landmark resources";
 
-	public static final String DOS_2_LABEL = "interesting resources";
+	protected final String DOS_2_LABEL = "interesting resources";
 
-	public static final String DOS_3_LABEL = "interesting projects";
+	protected final String DOS_3_LABEL = "interesting projects";
 
-	public static final String DOS_4_LABEL = "project dependencies";
+	protected final String DOS_4_LABEL = "project dependencies";
 
-	public static final String DOS_5_LABEL = "entire workspace (slow)";
+	protected final String DOS_5_LABEL = "entire workspace (slow)";
 
+	protected String parentContentType = null;
+	
 	/**
 	 * Used for delagating to when the parent of an element is known by another
 	 * bridge.
 	 */
-	public abstract void setParentBridge(IMylarStructureBridge bridge);
-
-	// public abstract void addChildBridge(IMylarStructureBridge bridge);
-
+	public void setParentContentType(String contentType) {
+		this.parentContentType = contentType;
+	} 
+	
 	public abstract String getContentType();
 
 	public abstract String getHandleIdentifier(Object object);
@@ -92,4 +94,12 @@ public interface IMylarStructureBridge {
 	public abstract List<AbstractRelationProvider> getRelationshipProviders();
 
 	public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
+
+	public String getParentContentType() {
+		return parentContentType;
+	}
+
+	public Object getAdaptedParent(Object object) {
+		return null;
+	}
 }

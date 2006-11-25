@@ -67,6 +67,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		// ignore
 	}
 
+	@Override
 	public void run() {
 		if (selection instanceof StructuredSelection) {
 			run((StructuredSelection) selection);

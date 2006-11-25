@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -39,7 +39,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		if (element instanceof IMylarElement) {
 			node = (IMylarElement) element;
 		} else {
-			IMylarStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
+			AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
 			node = ContextCorePlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
 		}
 		return node;

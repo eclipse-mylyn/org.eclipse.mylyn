@@ -28,6 +28,7 @@ public class MylarJavaNoTypeProposalComputer extends JavaNoTypeCompletionProposa
 		MylarJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 	
+	@Override
 	protected CompletionProposalCollector createCollector(JavaContentAssistInvocationContext context) {
 		return super.createCollector(context);
 	}

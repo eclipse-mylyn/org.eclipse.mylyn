@@ -16,10 +16,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.monitor.workbench.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
@@ -41,7 +41,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		Object object = part.getEditorInput().getAdapter(IResource.class);
 		if (object instanceof IResource) {
 			IResource resource = (IResource) object;
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
 					.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
 			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
@@ -90,10 +90,10 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextIgnoringEditor)) {
 			IMylarElement element = null;
-			IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
 			if (object != null) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 				element = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(object));
 			}
 			// TODO: probably should be refactored into delegation
@@ -101,7 +101,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
-					IMylarStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+					AbstractContextStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 					element = ContextCorePlugin.getContextManager().getElement(
 							resourceBridge.getHandleIdentifier(resource));
 				}

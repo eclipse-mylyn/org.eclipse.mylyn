@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarObject;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Image;
@@ -45,7 +45,7 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 					((IMylarObject) element).getContentType());
 			return provider.getImage(element);
 		} else {
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null)
 				return provider.getImage(element);
@@ -64,7 +64,7 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 				return provider.getText(element);
 			}
 		} else {
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null) {
 				if (ContextUiPlugin.getDefault().isDecorateInterestMode()) {

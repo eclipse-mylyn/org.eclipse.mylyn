@@ -29,7 +29,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -47,11 +47,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * @author Mik Kersten
  */
-public class AntUiBridge implements IMylarUiBridge {
+public class AntUiBridge extends AbstractContextUiBridge {
 
 	/**
-	 * @see org.eclipse.mylar.context.ui.IMylarUiBridge#open(org.eclipse.mylar.context.core.IMylarElement)
+	 * @see org.eclipse.mylar.context.ui.AbstractContextUiBridge#open(org.eclipse.mylar.context.core.IMylarElement)
 	 */
+	@Override
 	public void open(IMylarElement node) {
 		// get the handle of the node
 		String handle = node.getHandleIdentifier();
@@ -129,6 +130,7 @@ public class AntUiBridge implements IMylarUiBridge {
 		return null;
 	}
 
+	@Override
 	public void close(IMylarElement node) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
@@ -151,6 +153,7 @@ public class AntUiBridge implements IMylarUiBridge {
 		}
 	}
 
+	@Override
 	public boolean acceptsEditor(IEditorPart editorPart) {
 		return editorPart instanceof AntEditor;
 	}
@@ -158,6 +161,7 @@ public class AntUiBridge implements IMylarUiBridge {
 	/**
 	 * HACK: use reflection to get the TreeViewer
 	 */
+	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
 		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
 		if (editor instanceof AntEditor) {
@@ -176,18 +180,22 @@ public class AntUiBridge implements IMylarUiBridge {
 		return viewers;
 	}
 
+	@Override
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
 
+	@Override
 	public void restoreEditor(IMylarElement document) {
 		open(document);
 	}
 	
+	@Override
 	public IMylarElement getElement(IEditorInput input) {
 		return null;
 	}
 
+	@Override
 	public String getContentType() {
 		return AntStructureBridge.CONTENT_TYPE;
 	}

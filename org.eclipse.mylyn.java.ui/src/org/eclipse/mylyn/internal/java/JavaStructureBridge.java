@@ -43,7 +43,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -58,13 +58,11 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 /**
  * @author Mik Kersten
  */
-public class JavaStructureBridge implements IMylarStructureBridge {
+public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "java";
 
 	public List<AbstractRelationProvider> providers;
-
-	private IMylarStructureBridge parentBridge;
 
 	public JavaStructureBridge() {
 		providers = new ArrayList<AbstractRelationProvider>();
@@ -75,10 +73,21 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		providers.add(new JUnitReferencesProvider());
 	}
 
+	@Override
 	public String getContentType() {
 		return CONTENT_TYPE;
 	}
 
+	public Object getAdaptedParent(Object object) {
+		if (object instanceof IFile) {
+			IFile file = (IFile)object;
+			return JavaCore.create(file.getParent());
+		} else {
+			return super.getAdaptedParent(object);
+		}
+	}
+	
+	@Override
 	public String getParentHandle(String handle) {
 		IJavaElement javaElement = (IJavaElement) getObjectForHandle(handle);
 		if (javaElement != null && javaElement.getParent() != null) {
@@ -88,6 +97,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
 		if (object instanceof IJavaElement) {
@@ -103,6 +113,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 						if (childHandle != null)
 							childHandles.add(childHandle);
 					}
+					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
 					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
 						if (element.getElementType() < IJavaElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
@@ -122,6 +133,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public Object getObjectForHandle(String handle) {
 		try {
 			return JavaCore.create(handle);
@@ -134,6 +146,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Uses resource-compatible path for projects
 	 */
+	@Override
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getHandleIdentifier();
@@ -172,6 +185,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject");
 	}
 
+	@Override
 	public String getName(Object object) {
 		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getElementName();
@@ -180,6 +194,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public boolean canBeLandmark(String handle) {
 		IJavaElement element = (IJavaElement) getObjectForHandle(handle);
 		if ((element instanceof IMember || element instanceof IType) && element.exists()) {
@@ -192,6 +207,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	/**
 	 * TODO: figure out if the non IJavaElement stuff is needed
 	 */
+	@Override
 	public boolean acceptsObject(Object object) {
 		if (object instanceof IResource) {
 			Object adapter = ((IResource) object).getAdapter(IJavaElement.class);
@@ -210,6 +226,7 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	 * Uses special rules for classpath containers since these do not have an
 	 * associated interest, i.e. they're not IJavaElement(s).
 	 */
+	@Override
 	public boolean canFilter(Object object) {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
@@ -244,11 +261,13 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		return true;
 	}
 
+	@Override
 	public boolean isDocument(String handle) {
 		IJavaElement element = (IJavaElement) getObjectForHandle(handle);
 		return element instanceof ICompilationUnit || element instanceof IClassFile;
 	}
 
+	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null || !(resource instanceof ConcreteMarker))
 			return null;
@@ -287,14 +306,17 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}
 
+	@Override
 	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return providers;
 	}
 
+	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
 		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
@@ -304,10 +326,6 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
 		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
 		return separations;
-	}
-
-	public void setParentBridge(IMylarStructureBridge bridge) {
-		parentBridge = bridge;
 	}
 
 	/**
@@ -364,25 +382,3 @@ public class JavaStructureBridge implements IMylarStructureBridge {
 	}
 }
 
-// if (object instanceof IJavaElement) {
-// try {
-// IJavaElement element = (IJavaElement)object;
-// IResource resource = element.getCorrespondingResource();
-// boolean hasError = false;
-// if (resource != null) {
-// IMarker[] markers =
-// resource.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, 2);
-// for (int j = 0; j < markers.length; j++) {
-// if (markers[j] != null
-// && markers[j].getAttribute(IMarker.SEVERITY) != null
-// && markers[j].getAttribute(IMarker.SEVERITY).equals(IMarker.SEVERITY_ERROR))
-// {
-// hasError = true;
-// }
-// }
-// if (hasError) return false;
-// }
-// } catch (CoreException e) {
-// // ignore
-// }
-// }

@@ -23,7 +23,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.workbench.AbstractPartTracker;
 import org.eclipse.ui.IViewPart;
@@ -199,7 +199,7 @@ public class ContextViewerManager implements IMylarContextListener { //, IProper
 				} else { // don't need to worry about content changes 
 					viewer.getControl().setRedraw(false);
 					for (IMylarElement node : nodesToRefresh) {
-						IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
+						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
 								node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 						if (objectToRefresh != null) {
@@ -225,7 +225,7 @@ public class ContextViewerManager implements IMylarContextListener { //, IProper
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
 		ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();

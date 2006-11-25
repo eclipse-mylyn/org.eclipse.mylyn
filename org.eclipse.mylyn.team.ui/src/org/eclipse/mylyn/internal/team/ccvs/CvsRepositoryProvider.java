@@ -19,7 +19,6 @@ import org.eclipse.mylar.internal.team.ui.wizards.CommitContextWizard;
 import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.internal.ccvs.core.CVSException;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSetCollector;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.ui.PlatformUI;
@@ -32,7 +31,7 @@ public class CvsRepositoryProvider extends AbstractTeamRepositoryProvider {
 
 	@Override
 	public ActiveChangeSetManager getActiveChangeSetManager() {
-		return (CVSActiveChangeSetCollector) CVSUIPlugin.getPlugin().getChangeSetManager();
+		return CVSUIPlugin.getPlugin().getChangeSetManager();
 	}
 
 	@Override

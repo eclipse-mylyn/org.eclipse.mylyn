@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
 import org.eclipse.swt.widgets.Shell;
@@ -80,7 +80,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			}
 			List<Object> resolvedNodes = new ArrayList<Object>();
 			for (IMylarElement node : nodes) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 				if (object != null)
 					resolvedNodes.add(object);
@@ -118,7 +118,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 			if (parent instanceof IMylarElement) {
 				node = (IMylarElement) parent;
 			} else {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(parent);
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(parent);
 				node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(parent));
 			}
 			if (node != null) {
@@ -146,7 +146,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		for (MylarContextRelation edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
 				IMylarElement target = edge.getTarget();
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(target.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(target.getContentType());
 				Object object = bridge.getObjectForHandle(target.getHandleIdentifier());
 				if (object != null)
 					targets.add(object);
@@ -180,7 +180,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		} else {
 			return isRootItem(parent);
 			// note: code below is too slow since edges change
-			// IMylarStructureBridge bridge =
+			// AbstractContextStructureBridge bridge =
 			// ContextCorePlugin.getDefault().getStructureBridge(parent);
 			// IMylarElement node =
 			// ContextCorePlugin.getContextManager().getNode(bridge.getHandleIdentifier(parent));

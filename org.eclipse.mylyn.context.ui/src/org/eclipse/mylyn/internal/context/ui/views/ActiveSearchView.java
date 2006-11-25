@@ -31,10 +31,10 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylar.internal.context.ui.DoiOrderSorter;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
@@ -180,7 +180,7 @@ public class ActiveSearchView extends ViewPart {
 	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
 		Object toRefresh = null;
 		if (node != null) {
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
@@ -295,11 +295,11 @@ public class ActiveSearchView extends ViewPart {
 	}
 
 	private void fillActions(IContributionManager manager) {
-		List<IMylarUiBridge> bridges = ContextUiPlugin.getDefault().getUiBridges();
-		for (IMylarUiBridge uiBridge : bridges) {
-			IMylarStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(uiBridge.getContentType());
+		List<AbstractContextUiBridge> bridges = ContextUiPlugin.getDefault().getUiBridges();
+		for (AbstractContextUiBridge uiBridge : bridges) {
+			AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(uiBridge.getContentType());
 			
-//			IMylarStructureBridge bridge = entry.getValue(); // bridges.get(extension);
+//			AbstractContextStructureBridge bridge = entry.getValue(); // bridges.get(extension);
 			List<AbstractRelationProvider> providers = structureBridge.getRelationshipProviders();
 			if (providers != null && providers.size() > 0) {
 				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(structureBridge, uiBridge);

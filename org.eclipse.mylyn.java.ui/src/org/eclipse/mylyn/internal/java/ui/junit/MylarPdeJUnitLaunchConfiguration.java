@@ -23,6 +23,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
  */
 public class MylarPdeJUnitLaunchConfiguration extends JUnitLaunchConfigurationDelegateCOPY {
 
+	@Override
 	protected TestSearchResult customFindTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm)
 			throws CoreException {
 		TestSearchResult testSearchResult = MylarContextTestUtil.findTestTypes(configuration, pm);

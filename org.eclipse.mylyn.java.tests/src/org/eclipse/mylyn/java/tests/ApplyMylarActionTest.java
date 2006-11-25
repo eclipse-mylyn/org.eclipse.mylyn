@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.UiTestUtil;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -80,7 +80,7 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 		for (int i = 0; i < parts.length; i++) {
 			if (parts[i].getTitle().equals("Type1.java")) {
-				IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+				AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 				List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
 				for (TreeViewer viewer : outlineViewers) {
 					if (viewer != null && !viewers.contains(viewer))

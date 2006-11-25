@@ -33,9 +33,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
@@ -46,36 +47,38 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 /**
  * @author Mik Kersten
  */
-public class AntStructureBridge implements IMylarStructureBridge {
+public class AntStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "build.xml";
 
 	private static final char HANDLE_PATH_SEPARATOR = ';';
 
-	private IMylarStructureBridge parentBridge;
-
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getContentType()
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getContentType()
 	 */
+	@Override
 	public String getContentType() {
 		return CONTENT_TYPE;
 	}
 
+	@Override
 	public String getContentType(String elementHandle) {
 		if (elementHandle.endsWith(".xml")) {
-			return parentBridge.getContentType();
+			return parentContentType;
 		} else {
 			return CONTENT_TYPE;
 		}
 	}
 
+	@Override
 	public List<String> getChildHandles(String handle) {
 		return Collections.emptyList();
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getParentHandle(java.lang.String)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getParentHandle(java.lang.String)
 	 */
+	@Override
 	public String getParentHandle(String handle) {
 		Object o = getObjectForHandle(handle);
 
@@ -100,6 +103,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 				}
 			}
 		} else if (o instanceof IFile) {
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
 			// return null if we can't get a parents
@@ -110,6 +114,7 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * TODO: performance issue?
 	 */
+	@Override
 	public Object getObjectForHandle(String handle) {
 		try {
 			if (handle == null)
@@ -167,8 +172,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Handle is filename;XPath
 	 * 
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
+	@Override
 	public String getHandleIdentifier(Object object) {
 		// we can only create handles for AntElementNodes and build.xml Files
 		if (object instanceof XmlNodeHelper) {
@@ -193,8 +199,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getName(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getName(java.lang.Object)
 	 */
+	@Override
 	public String getName(Object object) {
 		if (object instanceof AntElementNode) {
 			AntElementNode n = (AntElementNode) object;
@@ -209,10 +216,11 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#canBeLandmark(Object)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#canBeLandmark(Object)
 	 * 
 	 * TODO: make a non-handle based test
 	 */
+	@Override
 	public boolean canBeLandmark(String handle) {
 		if (handle != null) {
 			return handle.indexOf(';') == -1;
@@ -222,8 +230,9 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#acceptsObject(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#acceptsObject(java.lang.Object)
 	 */
+	@Override
 	public boolean acceptsObject(Object object) {
 		// we accept AntElementNode and build.xml File objects
 		if (object instanceof AntElementNode) {
@@ -240,23 +249,26 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#canFilter(java.lang.Object)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#canFilter(java.lang.Object)
 	 */
+	@Override
 	public boolean canFilter(Object element) {
 		return true;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#isDocument(java.lang.String)
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#isDocument(java.lang.String)
 	 */
+	@Override
 	public boolean isDocument(String handle) {
 		return handle.indexOf(';') == -1;
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.IMylarStructureBridge#getHandleForOffsetInObject(Object,
+	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object,
 	 *      int)
 	 */
+	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null)
 			return null;
@@ -326,16 +338,14 @@ public class AntStructureBridge implements IMylarStructureBridge {
 	/**
 	 * TODO: weird that there is none
 	 */
+	@Override
 	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return Collections.emptyList();
-	}
-
-	public void setParentBridge(IMylarStructureBridge bridge) {
-		parentBridge = bridge;
 	}
 
 	public boolean containsProblem(IMylarElement node) {

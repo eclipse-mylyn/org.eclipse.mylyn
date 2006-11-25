@@ -62,7 +62,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 			return;
 		}
 
-		ContextAttachWizard wizard = new ContextAttachWizard((AbstractRepositoryTask) task);
+		ContextAttachWizard wizard = new ContextAttachWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);
@@ -86,7 +86,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 			IAttachmentHandler handler = connector.getAttachmentHandler();
 			action
 					.setEnabled(handler != null
-							&& handler.canUploadAttachment(repository, (AbstractRepositoryTask) task)
+							&& handler.canUploadAttachment(repository, task)
 							&& (task.isActive() || ContextCorePlugin.getContextManager().hasContext(
 									task.getHandleIdentifier())));
 		} else {

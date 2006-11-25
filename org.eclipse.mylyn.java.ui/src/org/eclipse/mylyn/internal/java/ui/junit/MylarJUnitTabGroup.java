@@ -40,6 +40,7 @@ public class MylarJUnitTabGroup extends AbstractLaunchConfigurationTabGroup {
 		setTabs(tabs);
 	}
 
+	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
 		super.setDefaults(config);
 	}

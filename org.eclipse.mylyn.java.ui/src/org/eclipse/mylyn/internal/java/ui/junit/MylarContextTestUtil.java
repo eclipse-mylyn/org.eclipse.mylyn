@@ -33,7 +33,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -61,7 +61,7 @@ public class MylarContextTestUtil {
 
 		ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
 		if (javaProject != null) {
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProject.getElementName()); //$NON-NLS-1$
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProject.getElementName()); 
 		}
 //		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
 //		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TEST_KIND_ATTR, TestKindRegistry.JUNIT3_TEST_KIND_ID);
@@ -77,7 +77,7 @@ public class MylarContextTestUtil {
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
 		List<IMylarElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 				JavaStructureBridge.CONTENT_TYPE);
 		try {
 			for (IMylarElement element : interesting) {

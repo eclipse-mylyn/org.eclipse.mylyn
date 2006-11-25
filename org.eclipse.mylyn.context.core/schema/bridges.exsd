@@ -68,18 +68,15 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.mylar.core.IMylarStructureBridge"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.context.core.AbstractContextStructureBridge"/>
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="parent" type="string">
+         <attribute name="parentContentType" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.core.IMylarStructureBridge"/>
-               </appInfo>
             </annotation>
          </attribute>
       </complexType>

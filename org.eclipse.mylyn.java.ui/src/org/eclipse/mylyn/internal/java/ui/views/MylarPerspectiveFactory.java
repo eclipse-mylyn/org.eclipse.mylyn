@@ -31,6 +31,7 @@ public class MylarPerspectiveFactory extends JavaPerspectiveFactory {
 		super();
 	}
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		super.createInitialLayout(layout);
 

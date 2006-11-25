@@ -14,7 +14,7 @@ package org.eclipse.mylar.context.ui;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 
@@ -40,7 +40,7 @@ public class InterestSorter extends ViewerSorter {
 		if (object instanceof IMylarElement) {
 			return(IMylarElement) object;
 		} else {
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
 			return ContextCorePlugin.getContextManager().getElement(handle);
 		}

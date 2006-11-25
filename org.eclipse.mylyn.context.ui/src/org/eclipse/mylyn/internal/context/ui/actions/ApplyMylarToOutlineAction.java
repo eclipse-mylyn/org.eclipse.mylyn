@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -50,7 +50,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 		}
 		boolean on = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId()) ;
 
-		IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
+		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);
 		for (TreeViewer viewer : outlineViewers) {
 			if (viewPart != null) {
@@ -85,7 +85,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 			if (page != null) {
 				IEditorPart[] parts = page.getEditors();
 				for (int i = 0; i < parts.length; i++) {
-					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
+					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(parts[i]);
 					List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(parts[i]);
 					for (TreeViewer viewer : outlineViewers) {
 						if (viewer != null && !viewers.contains(viewer))

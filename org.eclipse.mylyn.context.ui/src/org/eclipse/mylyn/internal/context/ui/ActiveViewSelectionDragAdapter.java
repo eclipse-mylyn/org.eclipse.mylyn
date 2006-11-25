@@ -36,6 +36,7 @@ public class ActiveViewSelectionDragAdapter extends DragSourceAdapter implements
 		return LocalSelectionTransfer.getTransfer();
 	}
 
+	@Override
 	public void dragStart(DragSourceEvent event) {
 		ISelection selection = fProvider.getSelection();
 		LocalSelectionTransfer.getTransfer().setSelection(selection);
@@ -47,10 +48,12 @@ public class ActiveViewSelectionDragAdapter extends DragSourceAdapter implements
 		return true;
 	}
 
+	@Override
 	public void dragSetData(DragSourceEvent event) {
 		event.data = LocalSelectionTransfer.getTransfer().getSelection();
 	}
 
+	@Override
 	public void dragFinished(DragSourceEvent event) {
 		assert event.detail != DND.DROP_MOVE;
 		LocalSelectionTransfer.getTransfer().setSelection(null);

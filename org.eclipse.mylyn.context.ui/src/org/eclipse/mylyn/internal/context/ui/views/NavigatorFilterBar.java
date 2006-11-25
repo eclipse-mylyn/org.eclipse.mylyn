@@ -182,6 +182,7 @@ public class NavigatorFilterBar extends Composite {
 			 * 
 			 * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
 			 */
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				if (treeViewer.getControl().isDisposed()) {
 					return Status.CANCEL_STATUS;
@@ -262,6 +263,7 @@ public class NavigatorFilterBar extends Composite {
 			 * 
 			 * @see org.eclipse.swt.accessibility.AccessibleListener#getName(org.eclipse.swt.accessibility.AccessibleEvent)
 			 */
+			@Override
 			public void getName(AccessibleEvent e) {
 				String filterTextString = filterText.getText();
 				if (filterTextString.length() == 0) {
@@ -278,6 +280,7 @@ public class NavigatorFilterBar extends Composite {
 			 * 
 			 * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
 			 */
+			@Override
 			public void focusGained(FocusEvent e) {
 				/*
 				 * Running in an asyncExec because the selectAll() does not
@@ -297,6 +300,7 @@ public class NavigatorFilterBar extends Composite {
 		});
 
 		filterText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				// on a CR we want to transfer focus to the list
 				boolean hasItems = getViewer().getTree().getItemCount() > 0;
@@ -354,6 +358,7 @@ public class NavigatorFilterBar extends Composite {
 		filterText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 	}
 
+	@Override
 	public void setBackground(Color background) {
 		super.setBackground(background);
 		if (filterComposite != null) {
@@ -374,6 +379,7 @@ public class NavigatorFilterBar extends Composite {
 			 * 
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
+			@Override
 			public void run() {
 				clearText();
 			}

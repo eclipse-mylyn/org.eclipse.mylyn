@@ -20,9 +20,9 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.ui.IEditorDescriptor;
@@ -37,10 +37,11 @@ import org.eclipse.ui.ide.IDE;
 /**
  * @author Mik Kersten
  */
-public class ResourceUiBridge implements IMylarUiBridge {
+public class ResourceUiBridge extends AbstractContextUiBridge {
 
+	@Override
 	public void open(IMylarElement element) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge == null) {
 			return;
 		} else {
@@ -51,6 +52,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		}
 	}
 
+	@Override
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(document, false);
 		if (resource instanceof IFile && resource.exists()) {
@@ -63,7 +65,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
 			if (editorDescriptor != null && editorDescriptor.isInternal() && !editorDescriptor.isOpenInPlace() && !isContextIgnoring(editorDescriptor)) {
-				IDE.openEditor(activePage, (IFile) file, activate);
+				IDE.openEditor(activePage, file, activate);
 			}
 		} catch (PartInitException e) {
 			MylarStatusHandler.fail(e, "failed to open editor for: " + file, false);
@@ -79,8 +81,9 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		}
 	}
 
+	@Override
 	public void close(IMylarElement element) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -102,18 +105,22 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		}
 	}
 
+	@Override
 	public boolean acceptsEditor(IEditorPart editorPart) {
 		return false;
 	}
 
+	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
 
+	@Override
 	public IMylarElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
@@ -125,6 +132,7 @@ public class ResourceUiBridge implements IMylarUiBridge {
 		}
 	}
 
+	@Override
 	public String getContentType() {
 		return ResourceStructureBridge.CONTENT_TYPE;
 	}

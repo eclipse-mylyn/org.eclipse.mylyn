@@ -42,6 +42,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		INSTANCE = this;
 	} 
 
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		initPreferenceDefaults();
@@ -65,6 +66,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		// all done in start
 	}
 
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		INSTANCE = null;
 		super.stop(context);

@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -25,36 +25,44 @@ import org.eclipse.ui.IEditorPart;
 /**
  * @author Mik Kersten
  */
-public class TaskUiBridge implements IMylarUiBridge {
+public class TaskUiBridge extends AbstractContextUiBridge {
 
+	@Override
 	public void open(IMylarElement node) {
 		// ignore
 	}
 
+	@Override
 	public void restoreEditor(IMylarElement document) {
 		// ignore
 	}
 
+	@Override
 	public void close(IMylarElement node) {
 		// ignore
 	}
 
+	@Override
 	public boolean acceptsEditor(IEditorPart editorPart) {
 		return editorPart instanceof MylarTaskEditor;
 	}
 
+	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
 
+	@Override
 	public IMylarElement getElement(IEditorInput input) {
 		return null;
 	}
 
+	@Override
 	public String getContentType() {
 		return TaskStructureBridge.CONTENT_TYPE;
 	}

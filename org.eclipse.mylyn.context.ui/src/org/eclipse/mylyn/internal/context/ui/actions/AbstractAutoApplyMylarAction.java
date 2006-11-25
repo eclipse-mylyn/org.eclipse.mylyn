@@ -37,10 +37,12 @@ public abstract class AbstractAutoApplyMylarAction extends AbstractApplyMylarAct
 		ContextCorePlugin.getContextManager().addListener(this);
 	}
 
+	@Override
 	public void dispose() {
 		ContextCorePlugin.getContextManager().removeListener(this);
 	}
 
+	@Override
 	public void init(IAction action) {
 		super.init(action);
 		configureAction();

@@ -24,12 +24,12 @@ import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 
 /**
  * @author Mik Kersten
  */
-public class JavaDebugStructureBridge implements IMylarStructureBridge {
+public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "java/debug";
 	
@@ -43,38 +43,47 @@ public class JavaDebugStructureBridge implements IMylarStructureBridge {
 	 */
 	private Map<JDIStackFrame, IType> stackFrameMap = new WeakHashMap<JDIStackFrame, IType>();
 	
+	@Override
 	public boolean acceptsObject(Object object) {
 		return object instanceof ILaunch || object instanceof JDIDebugElement || object instanceof RuntimeProcess;
 	}
 
+	@Override
 	public boolean canBeLandmark(String handle) {
 		return false;
 	}
 
+	@Override
 	public boolean canFilter(Object element) {
 		return element instanceof JDIStackFrame;
 	}
 
+	@Override
 	public List<String> getChildHandles(String handle) {
 		return null;
 	}
 
+	@Override
 	public String getContentType() {
 		return CONTENT_TYPE;
 	}
 
+	@Override
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}
 
+	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return null;
 	}
 
+	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		return null;
 	}
 
+	@Override
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof JDIStackFrame) {
 			JDIStackFrame stackFrame = (JDIStackFrame)object;
@@ -96,28 +105,29 @@ public class JavaDebugStructureBridge implements IMylarStructureBridge {
 		return null;
 	}
 
+	@Override
 	public String getName(Object object) {
 		return "" + object;
 	}
 
+	@Override
 	public Object getObjectForHandle(String handle) {
 		return javaStructureBridge.getObjectForHandle(handle);	
 	}
 
+	@Override
 	public String getParentHandle(String handle) {
 		return null;
 	}
 
+	@Override
 	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return null;
 	}
 
+	@Override
 	public boolean isDocument(String handle) {
 		return false;
-	}
-
-	public void setParentBridge(IMylarStructureBridge bridge) {
-		// ignore
 	}
 
 }

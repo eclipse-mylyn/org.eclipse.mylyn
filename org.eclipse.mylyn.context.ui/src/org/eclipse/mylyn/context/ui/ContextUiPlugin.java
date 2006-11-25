@@ -37,7 +37,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
@@ -71,7 +71,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
 
-	private Map<String, IMylarUiBridge> bridges = new HashMap<String, IMylarUiBridge>();
+	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
 	private Map<String, ILabelProvider> contextLabelProviders = new HashMap<String, ILabelProvider>();
 
@@ -97,9 +97,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
-	private Map<IMylarUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<IMylarUiBridge, ImageDescriptor>();
+	private Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
 
-	private Map<IMylarUiBridge, String> activeSearchLabels = new HashMap<IMylarUiBridge, String>();
+	private Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
 
 	private Map<String, Set<Class<?>>> preservedFilters = new HashMap<String, Set<Class<?>>>();
 
@@ -148,36 +148,44 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	};
 
-	private static final IMylarUiBridge DEFAULT_UI_BRIDGE = new IMylarUiBridge() {
+	private static final AbstractContextUiBridge DEFAULT_UI_BRIDGE = new AbstractContextUiBridge() {
 
+		@Override
 		public void open(IMylarElement node) {
 			// ignore
 		}
 
+		@Override
 		public void close(IMylarElement node) {
 			// ignore
 		}
 
+		@Override
 		public boolean acceptsEditor(IEditorPart editorPart) {
 			return false;
 		}
 
+		@Override
 		public List<TreeViewer> getContentOutlineViewers(IEditorPart editor) {
 			return Collections.emptyList();
 		}
 
+		@Override
 		public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 			return null;
 		}
 
+		@Override
 		public void restoreEditor(IMylarElement document) {
 			// ignore
 		}
 
+		@Override
 		public IMylarElement getElement(IEditorInput input) {
 			return null;
 		}
 
+		@Override
 		public String getContentType() {
 			return null;
 		}
@@ -345,18 +353,18 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		this.decorateInterestMode = decorateInterestLevel;
 	}
 
-	public List<IMylarUiBridge> getUiBridges() {
+	public List<AbstractContextUiBridge> getUiBridges() {
 		UiExtensionPointReader.initExtensions();
-		return new ArrayList<IMylarUiBridge>(bridges.values());
+		return new ArrayList<AbstractContextUiBridge>(bridges.values());
 	}
 
 	/**
 	 * @return the corresponding adapter if found, or an adapter with no
 	 *         behavior otherwise (so null is never returned)
 	 */
-	public IMylarUiBridge getUiBridge(String contentType) {
+	public AbstractContextUiBridge getUiBridge(String contentType) {
 		UiExtensionPointReader.initExtensions();
-		IMylarUiBridge bridge = bridges.get(contentType);
+		AbstractContextUiBridge bridge = bridges.get(contentType);
 		if (bridge != null) {
 			return bridge;
 		} else {
@@ -367,10 +375,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	/**
 	 * TODO: cache this to improve performance?
 	 */
-	public IMylarUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
+	public AbstractContextUiBridge getUiBridgeForEditor(IEditorPart editorPart) {
 		UiExtensionPointReader.initExtensions();
-		IMylarUiBridge foundBridge = null;
-		for (IMylarUiBridge bridge : bridges.values()) {
+		AbstractContextUiBridge foundBridge = null;
+		for (AbstractContextUiBridge bridge : bridges.values()) {
 			if (bridge.acceptsEditor(editorPart)) {
 				foundBridge = bridge;
 				break;
@@ -383,7 +391,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	private void internalAddBridge(String extension, IMylarUiBridge bridge) {
+	private void internalAddBridge(String extension, AbstractContextUiBridge bridge) {
 		this.bridges.put(extension, bridge);
 	}
 
@@ -556,25 +564,25 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			try {
 				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
-				if (bridge instanceof IMylarUiBridge && contentType != null) {
-					ContextUiPlugin.getDefault().internalAddBridge((String) contentType, (IMylarUiBridge) bridge);
+				if (bridge instanceof AbstractContextUiBridge && contentType != null) {
+					ContextUiPlugin.getDefault().internalAddBridge((String) contentType, (AbstractContextUiBridge) bridge);
 
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element
 								.getDeclaringExtension().getNamespace(), iconPath);
 						if (descriptor != null) {
-							ContextUiPlugin.getDefault().setActiveSearchIcon((IMylarUiBridge) bridge, descriptor);
+							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge, descriptor);
 						}
 					}
 					String label = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
 					if (label != null) {
-						ContextUiPlugin.getDefault().setActiveSearchLabel((IMylarUiBridge) bridge, label);
+						ContextUiPlugin.getDefault().setActiveSearchLabel((AbstractContextUiBridge) bridge, label);
 					}
 
 				} else {
 					MylarStatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
-							+ " must implement " + IMylarUiBridge.class.getCanonicalName(), thisReader);
+							+ " must implement " + AbstractContextUiBridge.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
@@ -607,20 +615,20 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			return workingSetUpdaters.get(0);
 	}
 
-	private void setActiveSearchIcon(IMylarUiBridge bridge, ImageDescriptor descriptor) {
+	private void setActiveSearchIcon(AbstractContextUiBridge bridge, ImageDescriptor descriptor) {
 		activeSearchIcons.put(bridge, descriptor);
 	}
 
-	public ImageDescriptor getActiveSearchIcon(IMylarUiBridge bridge) {
+	public ImageDescriptor getActiveSearchIcon(AbstractContextUiBridge bridge) {
 		UiExtensionPointReader.initExtensions();
 		return activeSearchIcons.get(bridge);
 	}
 
-	private void setActiveSearchLabel(IMylarUiBridge bridge, String label) {
+	private void setActiveSearchLabel(AbstractContextUiBridge bridge, String label) {
 		activeSearchLabels.put(bridge, label);
 	}
 
-	public String getActiveSearchLabel(IMylarUiBridge bridge) {
+	public String getActiveSearchLabel(AbstractContextUiBridge bridge) {
 		UiExtensionPointReader.initExtensions();
 		return activeSearchLabels.get(bridge);
 	}
@@ -644,7 +652,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public void refreshRelatedElements() {
 		try {
-			for (IMylarStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
+			for (AbstractContextStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
 				if (bridge.getRelationshipProviders() != null) {
 					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
 						List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();

@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
@@ -35,27 +35,39 @@ import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 /**
  * @author Mik Kersten
  */
-public class ResourceStructureBridge implements IMylarStructureBridge {
+public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = ContextCorePlugin.CONTENT_TYPE_ANY;
 
-	public ResourceStructureBridge() {
-		// nothing to do
-	}
-
+	@Override
 	public String getContentType() {
 		return CONTENT_TYPE;
 	}
 
+	@Override
 	public String getParentHandle(String handle) {
+		
 		IResource resource = (IResource) getObjectForHandle(handle);
 		if (resource != null) {
-			return getHandleIdentifier(resource.getParent());
+			IContainer parent = resource.getParent();
+			// try to adapt to the corresponding content type's parent
+			if (resource instanceof IFile) {
+				for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(CONTENT_TYPE)) {
+					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(contentType);
+					Object adaptedParent = parentBridge.getAdaptedParent(resource);
+					// HACK: only returns first
+					if (adaptedParent != null) {
+						return parentBridge.getHandleIdentifier(adaptedParent);
+					}
+				} 
+			}
+			return getHandleIdentifier(parent);
 		} else {
 			return null;
 		}
 	}
 
+	@Override
 	public List<String> getChildHandles(String handle) {
 		Object object = getObjectForHandle(handle);
 		if (object instanceof IResource) {
@@ -85,6 +97,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 	/**
 	 * Uses java-style path for projects.
 	 */
+	@Override
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof IProject) {
 			String path = ((IResource) object).getFullPath().toPortableString();
@@ -98,6 +111,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public Object getObjectForHandle(String handle) {
 		if (handle == null)
 			return null;
@@ -108,8 +122,9 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 			try {
 				return workspace.getRoot().getProject(projectName);
 			} catch (IllegalArgumentException e) {
-				// not a file 
-//				MylarStatusHandler.fail(e, "bad path for handle: " + handle, false);
+				// not a file
+				// MylarStatusHandler.fail(e, "bad path for handle: " + handle,
+				// false);
 				return null;
 			}
 		} else if (path.segmentCount() > 1) {
@@ -119,6 +134,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public String getName(Object object) {
 		if (object instanceof IResource) {
 			return ((IResource) object).getName();
@@ -127,23 +143,28 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public boolean canBeLandmark(String handle) {
 		Object element = getObjectForHandle(handle);
 		return element instanceof IFile;
 	}
 
+	@Override
 	public boolean acceptsObject(Object object) {
 		return object instanceof IResource;
 	}
 
+	@Override
 	public boolean canFilter(Object element) {
 		return true;
 	}
 
+	@Override
 	public boolean isDocument(String handle) {
 		return getObjectForHandle(handle) instanceof IFile;
 	}
 
+	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		if (resource == null || !(resource instanceof ConcreteMarker))
 			return null;
@@ -163,6 +184,7 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 		}
 	}
 
+	@Override
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}
@@ -170,16 +192,14 @@ public class ResourceStructureBridge implements IMylarStructureBridge {
 	/**
 	 * These methods aren't needed since there is no generic active search
 	 */
+	@Override
 	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 		return Collections.emptyList();
-	}
-
-	public void setParentBridge(IMylarStructureBridge bridge) {
-		// TODO Auto-generated method stub
 	}
 
 }

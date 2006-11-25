@@ -51,7 +51,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 //		if (!connector.validate(repository)) {
 //			return;
 //		}
-		ContextRetrieveWizard wizard = new ContextRetrieveWizard((AbstractRepositoryTask)task);
+		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
 			WizardDialog dialog = new WizardDialog(shell, wizard);

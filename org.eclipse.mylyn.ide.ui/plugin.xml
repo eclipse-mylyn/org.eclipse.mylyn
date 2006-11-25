@@ -7,11 +7,11 @@
 		<structureBridge
 	        class="org.eclipse.mylar.internal.ide.xml.ant.AntStructureBridge"
 	        name="Ant Structure Bridge"
-	        parent="org.eclipse.mylar.internal.resources.ResourceStructureBridge"/>
+	        parentContentType="*"/>
 		<structureBridge
 	        class="org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge"
 	        name="PDE Structure Bridge"
-	        parent="org.eclipse.mylar.internal.resources.ResourceStructureBridge"/>
+	        parentContentType="*"/>
 	</extension>
 
    <extension point="org.eclipse.mylar.context.ui.bridges">

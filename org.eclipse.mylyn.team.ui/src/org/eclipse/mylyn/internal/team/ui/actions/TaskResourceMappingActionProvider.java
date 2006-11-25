@@ -23,6 +23,7 @@ public class TaskResourceMappingActionProvider extends CommonActionProvider {
 
 	private OpenCorrespondingTaskAction openCorrespondingAction = new OpenCorrespondingTaskAction();
 
+	@Override
 	public void fillContextMenu(IMenuManager menuManager) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 		openCorrespondingAction.selectionChanged(openCorrespondingAction, selection);

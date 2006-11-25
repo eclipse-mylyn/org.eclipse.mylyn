@@ -29,6 +29,7 @@ import org.eclipse.pde.ui.launcher.TracingTab;
  */
 public class MylarPdeJUnitTabGroup extends JUnitTabGroup {
 
+	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		
 		ILaunchConfigurationTab[] tabs = null;

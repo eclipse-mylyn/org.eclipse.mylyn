@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorPart;
 /**
  * @author Mik Kersten
  */
-public interface IMylarUiBridge {
+public abstract class AbstractContextUiBridge {
 
 	public abstract void open(IMylarElement element);
 

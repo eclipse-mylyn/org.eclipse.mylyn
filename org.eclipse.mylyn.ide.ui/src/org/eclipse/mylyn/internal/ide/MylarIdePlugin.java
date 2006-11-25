@@ -37,6 +37,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		INSTANCE = this;
 	}
 
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
@@ -62,6 +63,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 //		});
 	}
 
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);

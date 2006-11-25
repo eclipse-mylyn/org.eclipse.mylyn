@@ -145,8 +145,8 @@ public class CommitTemplateManager {
 				if (keyword.equals(foundKeyword)) {
 					AbstractCommitTemplateVariable handler = (AbstractCommitTemplateVariable) element.createExecutableExtension(ATTR_CLASS);
 					if (handler instanceof AbstractCommitTemplateVariable) {
-						((AbstractCommitTemplateVariable) handler).setDescription(description);
-						((AbstractCommitTemplateVariable) handler).setRecognizedKeyword(foundKeyword);
+						(handler).setDescription(description);
+						(handler).setRecognizedKeyword(foundKeyword);
 					} else {
 						String recognizedKeyword = handler.getRecognizedKeyword();
 						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {

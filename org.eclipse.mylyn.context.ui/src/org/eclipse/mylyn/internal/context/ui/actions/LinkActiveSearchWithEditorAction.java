@@ -18,7 +18,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.ActiveSearchView;
@@ -76,7 +76,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
 					if (view == null || !view.getViewer().getControl().isVisible())
 						return;
-					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart) part);
+					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart) part);
 					Object toSelect = bridge.getObjectForTextSelection((TextSelection) selection, (IEditorPart) part);
 					if (toSelect != null && view.getViewer().testFindItem(toSelect) != null) {
 						view.getViewer().setSelection(new StructuredSelection(toSelect), true);

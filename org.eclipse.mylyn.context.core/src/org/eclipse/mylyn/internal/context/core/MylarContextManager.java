@@ -32,7 +32,7 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.InterestComparator;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -307,7 +307,7 @@ public class MylarContextManager {
 
 	protected void checkForLandmarkDeltaAndNotify(float previousInterest, IMylarElement node) {
 		// TODO: don't call interestChanged if it's a landmark?
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 			if (previousInterest >= scalingFactors.getLandmark() && !node.getInterest().isLandmark()) {
 				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners))
@@ -321,6 +321,7 @@ public class MylarContextManager {
 
 	private void propegateInterestToParents(InteractionEvent.Kind kind, IMylarElement node, float previousInterest,
 			float decayOffset, int level, List<IMylarElement> interestDelta) {
+
 		if (level > MAX_PROPAGATION || node == null || node.getInterest().getValue() <= 0) {
 			return;
 		}
@@ -330,13 +331,30 @@ public class MylarContextManager {
 		level++; // original is 1st level
 		float propagatedIncrement = node.getInterest().getValue() - previousInterest + decayOffset;
 
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
-
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 		String parentHandle = bridge.getParentHandle(node.getHandleIdentifier());
+		
+		// check if should use child bridge
+		for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(bridge.getContentType())) {
+			AbstractContextStructureBridge childBridge = ContextCorePlugin.getDefault().getStructureBridge(contentType);
+			Object resolved = childBridge.getObjectForHandle(parentHandle);
+			if (resolved != null) {
+				AbstractContextStructureBridge canonicalBridge = ContextCorePlugin.getDefault().getStructureBridge(resolved);
+				// HACK: hard-coded resource content type
+				if (!canonicalBridge.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_ANY)) {
+					// NOTE: resetting bridge
+					bridge = canonicalBridge;
+				}
+			}
+		} 
+	
 		if (parentHandle != null) {
 			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
-					.getContentType(node.getHandleIdentifier()), bridge.getParentHandle(node.getHandleIdentifier()),
+					.getContentType(node.getHandleIdentifier()), parentHandle,
 					SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
+//			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
+//					.getContentType(node.getHandleIdentifier()), bridge.getParentHandle(node.getHandleIdentifier()),
+//					SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
 			IMylarElement previous = currentContext.get(propagationEvent.getStructureHandle());
 			if (previous != null && previous.getInterest() != null) {
 				previousInterest = previous.getInterest().getValue();
@@ -346,9 +364,6 @@ public class MylarContextManager {
 				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
 				currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION, parentNode
 						.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION, parentOffset));
-				// ensureIsInteresting(parentNode.getContentType(),
-				// parentNode.getHandleIdentifier(), parentNode,
-				// parentNode.getInterest().getEncodedValue());
 			}
 			if (isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
 					.isPropagated(), parentNode)) {
@@ -626,9 +641,9 @@ public class MylarContextManager {
 
 	public List<AbstractRelationProvider> getActiveRelationProviders() {
 		List<AbstractRelationProvider> providers = new ArrayList<AbstractRelationProvider>();
-		Map<String, IMylarStructureBridge> bridges = ContextCorePlugin.getDefault().getStructureBridges();
-		for (Entry<String, IMylarStructureBridge> entry : bridges.entrySet()) {
-			IMylarStructureBridge bridge = entry.getValue();// bridges.get(extension);
+		Map<String, AbstractContextStructureBridge> bridges = ContextCorePlugin.getDefault().getStructureBridges();
+		for (Entry<String, AbstractContextStructureBridge> entry : bridges.entrySet()) {
+			AbstractContextStructureBridge bridge = entry.getValue();// bridges.get(extension);
 			if (bridge.getRelationshipProviders() != null) {
 				providers.addAll(bridge.getRelationshipProviders());
 			}
@@ -648,7 +663,7 @@ public class MylarContextManager {
 		List<IMylarElement> allLandmarks = currentContext.getLandmarks();
 		List<IMylarElement> acceptedLandmarks = new ArrayList<IMylarElement>();
 		for (IMylarElement node : allLandmarks) {
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 
 			if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 				acceptedLandmarks.add(node);
@@ -701,7 +716,7 @@ public class MylarContextManager {
 		}
 		float originalValue = element.getInterest().getValue();
 		float changeValue = 0;
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		if (!increment) {
 			if (element.getInterest().isLandmark() && bridge.canBeLandmark(element.getHandleIdentifier())) {
 				// keep it interesting

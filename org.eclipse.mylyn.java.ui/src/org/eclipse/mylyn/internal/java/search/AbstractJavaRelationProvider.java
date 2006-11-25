@@ -44,7 +44,7 @@ import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -66,6 +66,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	private static final List<Job> runningJobs = new ArrayList<Job>();
 
+	@Override
 	public String getGenericId() {
 		return ID_GENERIC;
 	}
@@ -102,7 +103,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IMylarElement landmark : landmarks) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (o instanceof IJavaElement) {
@@ -119,7 +120,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IMylarElement interesting : interestingElements) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
@@ -137,7 +138,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IMylarElement interesting : interestingElements) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
@@ -178,7 +179,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	/**
 	 * Only include Java elements and files.
 	 */
-	private boolean includeNodeInScope(IMylarElement interesting, IMylarStructureBridge bridge) {
+	private boolean includeNodeInScope(IMylarElement interesting, AbstractContextStructureBridge bridge) {
 		if (interesting == null || bridge == null) {
 			return false;
 		} else {

@@ -40,7 +40,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -131,7 +131,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 			// create a search scope for the projects of landmarks
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IMylarElement landmark : landmarks) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
 				IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;
 				if (resource != null) {
@@ -208,7 +208,7 @@ public class XmlReferencesProvider extends AbstractRelationProvider {
 								for (int j = 0; j < mar.length; j++) {
 									Match m = mar[j];
 									try {
-										IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+										AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 												f.getName());
 										String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 										if (handle != null) {

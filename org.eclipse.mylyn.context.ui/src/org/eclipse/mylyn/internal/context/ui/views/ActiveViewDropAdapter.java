@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -37,7 +37,7 @@ public class ActiveViewDropAdapter extends ViewerDropAdapter {
 	public boolean performDrop(Object data) {
 		if (data instanceof StructuredSelection) {
 			Object firstElement = ((StructuredSelection) data).getFirstElement();
-			IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(firstElement);
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(firstElement);
 			String handle = bridge.getHandleIdentifier(firstElement);
 			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, true, true,

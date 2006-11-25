@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.context.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,14 +33,16 @@ import org.osgi.framework.BundleContext;
  * @author Mik Kersten
  */
 public class ContextCorePlugin extends Plugin {
-  
+
 	public static final String PLUGIN_ID = "org.eclipse.mylar.core";
 
 	public static final String CONTENT_TYPE_ANY = "*";
 
-	private Map<String, IMylarStructureBridge> bridges = new HashMap<String, IMylarStructureBridge>();
+	private Map<String, AbstractContextStructureBridge> bridges = new HashMap<String, AbstractContextStructureBridge>();
 
-	private IMylarStructureBridge defaultBridge = null;
+	private Map<String, List<String>> childContentTypeMap = new HashMap<String, List<String>>();
+	
+	private AbstractContextStructureBridge defaultBridge = null;
 
 	private static ContextCorePlugin INSTANCE;
 
@@ -48,70 +51,80 @@ public class ContextCorePlugin extends Plugin {
 	private static AbstractContextStore contextStore;
 
 	private boolean extensionsLoaded = false;
-	
-	private static final IMylarStructureBridge DEFAULT_BRIDGE = new IMylarStructureBridge() {
 
+	private static final AbstractContextStructureBridge DEFAULT_BRIDGE = new AbstractContextStructureBridge() {
+
+		@Override
 		public String getContentType() {
 			return null;
 		}
 
+		@Override
 		public String getHandleIdentifier(Object object) {
 			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
+		@Override
 		public Object getObjectForHandle(String handle) {
 			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
+		@Override
 		public String getParentHandle(String handle) {
 			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
+		@Override
 		public String getName(Object object) {
 			MylarStatusHandler.log("null bridge for object: " + object.getClass(), this);
 			return "";
 		}
 
+		@Override
 		public boolean canBeLandmark(String handle) {
 			return false;
 		}
 
+		@Override
 		public boolean acceptsObject(Object object) {
 			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
+		@Override
 		public boolean canFilter(Object element) {
 			return true;
 		}
 
+		@Override
 		public boolean isDocument(String handle) {
 			// return false;
 			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
+		@Override
 		public String getContentType(String elementHandle) {
 			return getContentType();
 		}
 
+		@Override
 		public List<AbstractRelationProvider> getRelationshipProviders() {
 			return Collections.emptyList();
 		}
 
+		@Override
 		public List<IDegreeOfSeparation> getDegreesOfSeparation() {
 			return Collections.emptyList();
 		}
 
+		@Override
 		public String getHandleForOffsetInObject(Object resource, int offset) {
 			MylarStatusHandler.log("null bridge for marker: " + resource.getClass(), this);
 			return null;
 		}
 
-		public void setParentBridge(IMylarStructureBridge bridge) {
-			// ignore
-		}
-
+		@Override
 		public List<String> getChildHandles(String handle) {
 			return Collections.emptyList();
 		}
@@ -136,9 +149,9 @@ public class ContextCorePlugin extends Plugin {
 			// resourceBundle = null;
 
 			// Stop all running jobs when we exit if the plugin didn't do it
-			Map<String, IMylarStructureBridge> bridges = getStructureBridges();
-			for (Entry<String, IMylarStructureBridge> entry : bridges.entrySet()) {
-				IMylarStructureBridge bridge = entry.getValue();// bridges.get(extension);
+			Map<String, AbstractContextStructureBridge> bridges = getStructureBridges();
+			for (Entry<String, AbstractContextStructureBridge> entry : bridges.entrySet()) {
+				AbstractContextStructureBridge bridge = entry.getValue();// bridges.get(extension);
 				List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
 				if (providers == null)
 					continue;
@@ -155,19 +168,19 @@ public class ContextCorePlugin extends Plugin {
 		if (!extensionsLoaded) {
 			ContextStoreExtensionReader.initExtensions();
 			HandlersExtensionPointReader.initExtensions();
-			
-			for (IMylarStructureBridge bridge : bridges.values()) {
+
+			for (AbstractContextStructureBridge bridge : bridges.values()) {
 				if (bridge.getRelationshipProviders() != null) {
 					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
 						getContextManager().addListener(provider);
 					}
 				}
 			}
-			
+
 			extensionsLoaded = true;
 		}
 	}
-	
+
 	public static ContextCorePlugin getDefault() {
 		return INSTANCE;
 	}
@@ -176,14 +189,14 @@ public class ContextCorePlugin extends Plugin {
 		return contextManager;
 	}
 
-	public Map<String, IMylarStructureBridge> getStructureBridges() {
+	public Map<String, AbstractContextStructureBridge> getStructureBridges() {
 		BridgesExtensionPointReader.initExtensions();
 		return bridges;
 	}
 
-	public IMylarStructureBridge getStructureBridge(String contentType) {
+	public AbstractContextStructureBridge getStructureBridge(String contentType) {
 		BridgesExtensionPointReader.initExtensions();
-		IMylarStructureBridge bridge = bridges.get(contentType);
+		AbstractContextStructureBridge bridge = bridges.get(contentType);
 		if (bridge != null) {
 			return bridge;
 		}
@@ -200,9 +213,9 @@ public class ContextCorePlugin extends Plugin {
 	 * 
 	 * @return null if there are no bridges loaded, null bridge otherwise
 	 */
-	public IMylarStructureBridge getStructureBridge(Object object) {
+	public AbstractContextStructureBridge getStructureBridge(Object object) {
 		BridgesExtensionPointReader.initExtensions();
-		for (IMylarStructureBridge structureBridge : bridges.values()) {
+		for (AbstractContextStructureBridge structureBridge : bridges.values()) {
 			if (structureBridge.acceptsObject(object)) {
 				return structureBridge;
 			}
@@ -212,11 +225,19 @@ public class ContextCorePlugin extends Plugin {
 		return (defaultBridge != null && defaultBridge.acceptsObject(object)) ? defaultBridge : DEFAULT_BRIDGE;
 	}
 
-	private void internalAddBridge(IMylarStructureBridge bridge) {
+	private void internalAddBridge(AbstractContextStructureBridge bridge) {
 		if (bridge.getContentType().equals(CONTENT_TYPE_ANY)) {
 			defaultBridge = bridge;
 		} else {
 			bridges.put(bridge.getContentType(), bridge);
+		}
+		if (bridge.getParentContentType() != null) {
+			List<String> childContentTypes = childContentTypeMap.get(bridge.getParentContentType());
+			if (childContentTypes == null) {
+				childContentTypes = new ArrayList<String>();
+			}
+			childContentTypes.add(bridge.getContentType());
+			childContentTypeMap.put(bridge.getParentContentType(), childContentTypes);
 		}
 	}
 
@@ -240,7 +261,7 @@ public class ContextCorePlugin extends Plugin {
 	/**
 	 * TODO: remove
 	 */
-	public void setDefaultBridge(IMylarStructureBridge defaultBridge) {
+	public void setDefaultBridge(AbstractContextStructureBridge defaultBridge) {
 		this.defaultBridge = defaultBridge;
 	}
 
@@ -274,7 +295,7 @@ public class ContextCorePlugin extends Plugin {
 
 				if (!(object instanceof AbstractContextStore)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				} else {
 					contextStore = (AbstractContextStore) object;
@@ -293,7 +314,7 @@ public class ContextCorePlugin extends Plugin {
 
 		private static final String ELEMENT_CLASS = "class";
 
-		private static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parent";
+		private static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parentContentType";
 
 		private static boolean extensionsRead = false;
 
@@ -319,29 +340,34 @@ public class ContextCorePlugin extends Plugin {
 		private static void readBridge(IConfigurationElement element) {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
-				if (!(object instanceof IMylarStructureBridge)) {
+				if (!(object instanceof AbstractContextStructureBridge)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				}
 
-				IMylarStructureBridge bridge = (IMylarStructureBridge) object;
-				ContextCorePlugin.getDefault().internalAddBridge(bridge);
-				try {
-					if (element.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
-						Object parent = element
-								.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
-						if (parent instanceof IMylarStructureBridge) {
-							((IMylarStructureBridge) bridge).setParentBridge(((IMylarStructureBridge) parent));
-						} else {
-							MylarStatusHandler.log("Could not load parent bridge: "
-									+ parent.getClass().getCanonicalName() + " must implement "
-									+ IMylarStructureBridge.class.getCanonicalName(), null);
-						}
+				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
+				if (element.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
+					String parentContentType = element
+							.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
+					if (parentContentType instanceof String) {
+						bridge.setParentContentType(parentContentType);
 					}
-				} catch (CoreException e) {
-					MylarStatusHandler.log(e, "Could not load parent bridge");
+					// Object parent = element
+					// .createExecutableExtension(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
+					// if (parent instanceof AbstractContextStructureBridge) {
+					// (bridge).setParentBridge(((AbstractContextStructureBridge)
+					// parent));
+					// } else {
+					// MylarStatusHandler.log("Could not load parent bridge: "
+					// + parent.getClass().getCanonicalName() + " must implement
+					// "
+					// +
+					// AbstractContextStructureBridge.class.getCanonicalName(),
+					// null);
+					// }
 				}
+				ContextCorePlugin.getDefault().internalAddBridge(bridge);
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
 			}
@@ -381,7 +407,7 @@ public class ContextCorePlugin extends Plugin {
 				Object object = element.createExecutableExtension(ELEMENT_CLASS);
 				if (!(object instanceof IStatusHandler)) {
 					MylarStatusHandler.log("Could not load handler: " + object.getClass().getCanonicalName()
-							+ " must implement " + IMylarStructureBridge.class.getCanonicalName(), null);
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				}
 
@@ -389,6 +415,15 @@ public class ContextCorePlugin extends Plugin {
 				MylarStatusHandler.addStatusHandler(handler);
 			} catch (CoreException e) {
 			}
+		}
+	}
+
+	public List<String> getChildContentTypes(String contentType) {
+		List<String> contentTypes = childContentTypeMap.get(contentType);
+		if (contentTypes != null) {
+			return contentTypes;
+		} else {
+			return Collections.emptyList();
 		}
 	}
 }

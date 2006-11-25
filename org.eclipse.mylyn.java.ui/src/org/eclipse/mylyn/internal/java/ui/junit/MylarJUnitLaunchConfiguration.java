@@ -47,6 +47,7 @@ public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfiguration {
 
 	/* --------- HACK: below copied from JUnitBaseLaunchConfiguration ----------- */
 	
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor pm) throws CoreException {		
 		if (mode.equals(RUN_QUIETLY_MODE)) {
 			launch.setAttribute(NO_DISPLAY_ATTR, "true"); //$NON-NLS-1$

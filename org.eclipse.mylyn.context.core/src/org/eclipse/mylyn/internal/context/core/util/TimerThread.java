@@ -57,6 +57,7 @@ public class TimerThread extends Thread implements Runnable {
 		return listeners.remove(listener);
 	}
 
+	@Override
 	public void run() {
 		try {
 			while (!killed) {

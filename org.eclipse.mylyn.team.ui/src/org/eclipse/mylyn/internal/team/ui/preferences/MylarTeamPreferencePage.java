@@ -78,6 +78,7 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		return true;
 	}
 
+	@Override
 	public void performDefaults() {
 		super.performDefaults();
 		commitTemplate.setText(getPreferenceStore()

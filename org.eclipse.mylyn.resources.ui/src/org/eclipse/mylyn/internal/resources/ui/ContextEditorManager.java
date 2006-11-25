@@ -19,10 +19,10 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -62,8 +62,8 @@ public class ContextEditorManager implements IMylarContextListener {
 				int opened = 0;
 				int threshold = ContextUiPlugin.getDefault().getPreferenceStore().getInt(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 				for (Iterator<IMylarElement> iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
-					IMylarElement document = (IMylarElement) iter.next();
-					IMylarUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(document.getContentType());
+					IMylarElement document = iter.next();
+					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);
 					opened++;
 				}
@@ -141,9 +141,9 @@ public class ContextEditorManager implements IMylarContextListener {
 		for (IMylarElement element : elements) {
 			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 				if (!element.getInterest().isInteresting()) {
-					IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 					if (bridge.isDocument(element.getHandleIdentifier())) {
-						IMylarUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(element.getContentType());
+						AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(element.getContentType());
 						uiBridge.close(element);
 					}
 				}

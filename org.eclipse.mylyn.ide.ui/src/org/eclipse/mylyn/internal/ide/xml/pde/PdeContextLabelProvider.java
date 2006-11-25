@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.ide.xml.pde;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -38,7 +38,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IMylarElement node) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
@@ -54,7 +54,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		return bridge.getName(object);
 	}
 }

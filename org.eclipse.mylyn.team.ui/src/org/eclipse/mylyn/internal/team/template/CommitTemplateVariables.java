@@ -40,6 +40,7 @@ public class CommitTemplateVariables {
 	
 	public static class ConnectorTaskPrefix extends AbstractCommitTemplateVariable {
 
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector((AbstractRepositoryTask)task);
@@ -53,6 +54,7 @@ public class CommitTemplateVariables {
 	}
 	
 	public static class RepositoryKind extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getRepositoryKind();
@@ -62,6 +64,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class RepositoryUrl extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getRepositoryUrl();
@@ -72,6 +75,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskProduct extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getProduct();
@@ -82,6 +86,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskAssignee extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getAssignedTo();
@@ -92,6 +97,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskReporter extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getReporter();
@@ -102,6 +108,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskResolution extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getResolution();
@@ -112,6 +119,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskStatus extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask)task).getTaskData() != null) {
 				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase();
@@ -127,6 +135,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskCc extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getCC();
@@ -138,6 +147,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskKeywords extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getKeywords();
@@ -149,6 +159,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskLastModified extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getLastModified();
@@ -159,6 +170,7 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskSummary extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask) task).getTaskData().getSummary();
@@ -169,18 +181,21 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskDescription extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getSummary();
 		}
 	}
 
 	public static class TaskHandle extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getHandleIdentifier();
 		}
 	}
 
 	public static class TaskId extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
 				return ((AbstractRepositoryTask)task).getIdLabel();
@@ -192,24 +207,28 @@ public class CommitTemplateVariables {
 	}
 
 	public static class TaskNotes extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getNotes();
 		}
 	}
 
 	public static class TaskPriority extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getPriority();
 		}
 	}
 
 	public static class TaskType extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getTaskType();
 		}
 	}
 
 	public static class TaskURL extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			return task.getUrl();
 		}
@@ -219,6 +238,7 @@ public class CommitTemplateVariables {
 	 * @author Eike Stepper
 	 */
 	protected static abstract class CommitTemplateDate extends AbstractCommitTemplateVariable {
+		@Override
 		public String getValue(ITask task) {
 			java.util.Date date = getDate(task);
 			return formatDate(date);

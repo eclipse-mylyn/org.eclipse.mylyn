@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -58,7 +58,7 @@ public class ResourceInterestUpdater {
 		List<InteractionEvent> interactionEvents = new ArrayList<InteractionEvent>();
 		for (IResource resource : resources) {
 			if (acceptResource(resource)) {
-				IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 				String handle = bridge.getHandleIdentifier(resource);
 				if (handle != null) {
 					IMylarElement element = ContextCorePlugin.getContextManager().getElement(handle);

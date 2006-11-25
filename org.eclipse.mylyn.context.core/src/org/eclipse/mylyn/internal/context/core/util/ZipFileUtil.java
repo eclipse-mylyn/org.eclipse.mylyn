@@ -52,7 +52,7 @@ public class ZipFileUtil {
 		List<File> outputFiles = new ArrayList<File>();
 
 		while (entries.hasMoreElements()) {
-			ZipEntry entry = (ZipEntry) entries.nextElement();
+			ZipEntry entry = entries.nextElement();
 			 if(entry.isDirectory()) {
 		          // Assume directories are stored parents first then children.		          
 		          (new File(entry.getName())).mkdir();

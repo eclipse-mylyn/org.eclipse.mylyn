@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
 
@@ -32,7 +32,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 	}
 
 	public void decorate(Object element, IDecoration decoration) {
-		IMylarStructureBridge bridge = null;
+		AbstractContextStructureBridge bridge = null;
 		try {
 			if (ContextCorePlugin.getDefault() == null)
 				return;

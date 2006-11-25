@@ -115,6 +115,7 @@ public class XmlNodeHelper {
 		return end;
 	}
 
+	@Override
 	public boolean equals(Object e) {
 		if (e instanceof XmlNodeHelper) {
 			XmlNodeHelper xnode = ((XmlNodeHelper) e);

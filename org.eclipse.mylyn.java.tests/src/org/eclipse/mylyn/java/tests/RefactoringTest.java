@@ -79,7 +79,7 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		project.build();
 		ICompilationUnit unit = (ICompilationUnit) p1.getChildren()[0];
 
-		IType newType = (IType) unit.getTypes()[0];
+		IType newType = unit.getTypes()[0];
 		IMylarElement newParentNode = ContextCorePlugin.getContextManager().getElement(
 				newType.getParent().getHandleIdentifier());
 		IMylarElement oldParentNode = ContextCorePlugin.getContextManager().getElement(parentNode.getHandleIdentifier());

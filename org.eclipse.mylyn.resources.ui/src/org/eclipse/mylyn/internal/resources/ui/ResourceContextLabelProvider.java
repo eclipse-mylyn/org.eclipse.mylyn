@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
@@ -27,8 +27,9 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
+	@Override
 	public Image getImage(IMylarElement node) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 		return getImageForObject(object);
@@ -46,15 +47,16 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 		return bridge.getName(object);
 	}
 
 	/**
 	 * TODO: slow?
 	 */
+	@Override
 	public String getText(IMylarElement node) {
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault()
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}

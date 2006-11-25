@@ -18,9 +18,9 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.context.ui.IMylarUiBridge;
+import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -36,11 +36,11 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
 
-	private IMylarStructureBridge structureBridge;
+	private AbstractContextStructureBridge structureBridge;
 
 	private Menu dropDownMenu = null;
 
-	public ToggleRelationshipProviderAction(IMylarStructureBridge structureBridge, IMylarUiBridge uiBridge) {
+	public ToggleRelationshipProviderAction(AbstractContextStructureBridge structureBridge, AbstractContextUiBridge uiBridge) {
 		super();
 		this.structureBridge = structureBridge;
 		setImageDescriptor(ContextUiPlugin.getDefault().getActiveSearchIcon(uiBridge));

@@ -176,6 +176,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	/**
 	 * TODO: unnessary check context?
 	 */
+	@Override
 	public boolean contains(IResource local) {
 		return getAllResourcesInChangeContext().contains(local);
 	}

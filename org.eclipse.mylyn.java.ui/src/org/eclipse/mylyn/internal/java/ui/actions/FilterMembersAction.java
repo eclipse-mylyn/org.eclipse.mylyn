@@ -44,7 +44,7 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 
 	private void valueChanged(final boolean on, boolean store) {
 		if (store) {
-			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); //$NON-NLS-1$
+			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); 
 		}
 			
 		setChecked(true);

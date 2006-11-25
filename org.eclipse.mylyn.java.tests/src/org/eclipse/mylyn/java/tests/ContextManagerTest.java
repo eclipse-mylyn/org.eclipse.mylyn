@@ -33,7 +33,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarStructureBridge;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContext;
@@ -266,7 +266,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
-		IMylarStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
 				bridge.getParentHandle(node.getHandleIdentifier()));
 		assertTrue(parent.getInterest().isInteresting());

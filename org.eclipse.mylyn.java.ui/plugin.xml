@@ -11,7 +11,7 @@
 	    <structureBridge
            class="org.eclipse.mylar.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
-           parent="org.eclipse.mylar.internal.resources.ResourceStructureBridge"/>
+           parentContentType="*"/>
      <structureBridge
            class="org.eclipse.mylar.internal.java.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>

@@ -106,6 +106,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 *      java.lang.String, org.eclipse.debug.core.ILaunch,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		try {
@@ -163,6 +164,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getVMRunner(org.eclipse.debug.core.ILaunchConfiguration,
 	 *      java.lang.String)
 	 */
+	@Override
 	public IVMRunner getVMRunner(ILaunchConfiguration configuration, String mode) throws CoreException {
 		IVMInstall launcher = VMHelper.createLauncher(configuration);
 		return launcher.getVMRunner(mode);
@@ -175,6 +177,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 *      org.eclipse.jdt.internal.junit.launcher.TestSearchResult, int,
 	 *      java.lang.String)
 	 */
+	@Override
 	protected VMRunnerConfiguration createVMRunner(ILaunchConfiguration configuration, TestSearchResult testTypes,
 			int port, String runMode) throws CoreException {
 
@@ -194,6 +197,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * @see org.eclipse.jdt.internal.junit.launcher.JUnitBaseLaunchConfiguration#abort(java.lang.String,
 	 *      java.lang.Throwable, int)
 	 */
+	@Override
 	protected void abort(String message, Throwable exception, int code) throws CoreException {
 		throw new CoreException(new Status(IStatus.ERROR, IPDEUIConstants.PLUGIN_ID, code, message, exception));
 	}
@@ -343,6 +347,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getProgramArguments(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 		return LaunchArgumentsHelper.getUserProgramArguments(configuration);
 	}
@@ -352,6 +357,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getVMArguments(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public String getVMArguments(ILaunchConfiguration configuration) throws CoreException {
 		return LaunchArgumentsHelper.getUserVMArguments(configuration);
 	}
@@ -361,6 +367,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getEnvironment(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public String[] getEnvironment(ILaunchConfiguration configuration) throws CoreException {
 		return DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 	}
@@ -370,6 +377,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getClasspath(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public String[] getClasspath(ILaunchConfiguration configuration) throws CoreException {
 		String[] classpath = LaunchArgumentsHelper.constructClasspath(configuration);
 		if (classpath == null) {
@@ -383,6 +391,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getWorkingDirectory(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public File getWorkingDirectory(ILaunchConfiguration configuration) throws CoreException {
 		return LaunchArgumentsHelper.getWorkingDirectory(configuration);
 	}
@@ -392,6 +401,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * 
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getVMSpecificAttributesMap(org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public Map getVMSpecificAttributesMap(ILaunchConfiguration configuration) throws CoreException {
 		return LaunchArgumentsHelper.getVMSpecificAttributesMap(configuration);
 	}
@@ -402,6 +412,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#setDefaultSourceLocator(org.eclipse.debug.core.ILaunch,
 	 *      org.eclipse.debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	protected void setDefaultSourceLocator(ILaunch launch, ILaunchConfiguration configuration) throws CoreException {
 		ILaunchConfigurationWorkingCopy wc = null;
 		if (configuration.isWorkingCopy()) {
@@ -436,6 +447,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getBuildOrder(org.eclipse.debug.core.ILaunchConfiguration,
 	 *      java.lang.String)
 	 */
+	@Override
 	protected IProject[] getBuildOrder(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return computeBuildOrder(LaunchPluginValidator.getAffectedProjects(configuration));
 	}
@@ -446,6 +458,7 @@ public abstract class JUnitLaunchConfigurationDelegateCOPY extends JUnitBaseLaun
 	 * @see org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate#getProjectsForProblemSearch(org.eclipse.debug.core.ILaunchConfiguration,
 	 *      java.lang.String)
 	 */
+	@Override
 	protected IProject[] getProjectsForProblemSearch(ILaunchConfiguration configuration, String mode)
 			throws CoreException {
 		return LaunchPluginValidator.getAffectedProjects(configuration);
