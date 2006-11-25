@@ -117,6 +117,39 @@ public class BugzillaClient {
 
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 
+	// Adapted from
+	// http://jakarta.apache.org/commons/httpclient/exception-handling.html
+	private HttpMethodRetryHandler retryHandler = new HttpMethodRetryHandler() {
+		public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
+			if (executionCount >= MAX_RETRY) {
+				// Do not retry if over max retry count
+				return false;
+			}
+			int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
+			if (exception instanceof ConnectTimeoutException) {
+				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+				return true;
+			}
+			if (exception instanceof SocketTimeoutException) {
+				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+				return true;
+			}
+			if (exception instanceof NoHttpResponseException) {
+				// Retry if the server dropped connection on us
+				return true;
+			}
+			if (!method.isRequestSent()) {
+				// Retry if the request has not been sent fully or
+				// if it's OK to retry methods that have been sent
+				return true;
+			}
+			// otherwise do not retry
+			return false;
+		}
+	};
+
 	private String htAuthUser;
 
 	private String htAuthPass;
@@ -171,39 +204,6 @@ public class BugzillaClient {
 			// WARNING! Setting browser compatability breaks Bugzilla
 			// authentication
 			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-
-			// Adapted from
-			// http://jakarta.apache.org/commons/httpclient/exception-handling.html
-			HttpMethodRetryHandler retryHandler = new HttpMethodRetryHandler() {
-				public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
-					if (executionCount >= MAX_RETRY) {
-						// Do not retry if over max retry count
-						return false;
-					}
-					int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
-					if (exception instanceof ConnectTimeoutException) {
-						httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
-						return true;
-					}
-					if (exception instanceof SocketTimeoutException) {
-						httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-						httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
-						return true;
-					}
-					if (exception instanceof NoHttpResponseException) {
-						// Retry if the server dropped connection on us
-						return true;
-					}
-					if (!method.isRequestSent()) {
-						// Retry if the request has not been sent fully or
-						// if it's OK to retry methods that have been sent
-						return true;
-					}
-					// otherwise do not retry
-					return false;
-				}
-			};
 
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 
@@ -291,6 +291,7 @@ public class BugzillaClient {
 		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		method.setFollowRedirects(false);
 
@@ -338,17 +339,12 @@ public class BugzillaClient {
 				}
 			}
 			authenticated = true;
-
-			// try {
-			// parseHtmlError(responseReader);
-			// authenticated = true;
-			// } catch (UnrecognizedReponseException e) {
-			//
-			// }
 		} catch (ParseException e) {
 			throw new LoginException("Unable to read response from server (ParseException).");
 		} finally {
-			method.releaseConnection();
+			if (method != null) {
+				method.releaseConnection();
+			}
 			httpClient.getParams().setAuthenticationPreemptive(false);
 		}
 	}
@@ -390,7 +386,6 @@ public class BugzillaClient {
 			}
 		}
 	}
-	
 
 	// public static String addCredentials(String url, String encoding, String
 	// userName, String password)
@@ -610,12 +605,10 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * calling method must release the connection on the 
-	 * returned PostMethod once finished.
-	 * TODO: refactor
+	 * calling method must release the connection on the returned PostMethod
+	 * once finished. TODO: refactor
 	 */
-	public PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException,
-			BugzillaException {
+	public PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
@@ -623,6 +616,7 @@ public class BugzillaClient {
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 		// DEBUG
 		// for (NameValuePair nameValuePair : formData) {
 		// System.err.println(nameValuePair.getName()+",
