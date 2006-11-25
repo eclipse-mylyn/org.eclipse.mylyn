@@ -16,7 +16,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.RuntimeProcess;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.debug.core.JavaDebugUtils;
@@ -24,7 +26,9 @@ import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
+import org.eclipse.mylar.context.core.IMylarElement;
 
 /**
  * @author Mik Kersten
@@ -55,18 +59,31 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean canFilter(Object element) {
-		return false;
-//		if (element instanceof JDIStackFrame) {
-//			JDIStackFrame stackFrame = (JDIStackFrame) element;
-//			try {
-//				System.err.println(">>>>> " + stackFrame.getMethodName());
-//			} catch (DebugException e) {
-//				return false;
-//			}
-//			return true;
-//		} else {
-//			return false;
-//		}
+//		return element instanceof JDIStackFrame;
+		if (element instanceof JDIStackFrame) {
+			JDIStackFrame stackFrame = (JDIStackFrame) element;
+			try {
+				IStackFrame[] frames = stackFrame.getThread().getStackFrames();
+				
+				int indexOfInterestingFrame = 0;
+				int indexOfCurrentFrame = 0;
+				for (int i = 0; i < frames.length; i++) {
+					IStackFrame frame = frames[i];
+					if (stackFrame.getName().equals(frame.getName())) {
+						indexOfCurrentFrame = i;
+					}
+					
+					IMylarElement correspondingElement = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(frame));
+					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
+						indexOfInterestingFrame = i;
+					}
+				} 
+				return indexOfCurrentFrame > indexOfInterestingFrame;
+			} catch (DebugException e) {
+				return false;
+			}
+		} 
+		return element instanceof JDIStackFrame;
 	}
 
 	@Override
