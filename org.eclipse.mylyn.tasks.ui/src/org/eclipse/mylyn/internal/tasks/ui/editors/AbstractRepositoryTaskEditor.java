@@ -505,7 +505,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
-		
+
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
@@ -1507,6 +1507,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);
 			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
+			replyLink.setToolTipText("Reply");
 			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
 
 				@Override
@@ -1523,7 +1524,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						strBuilder.append("> " + line + "\n");
 					}
 					newCommentTextViewer.getDocument().set(strBuilder.toString());
-
+					selectNewComment();
+					newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
 				}
 			});
 
@@ -1553,6 +1555,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (commentDate != null
 							&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 						expandableComposite.setExpanded(true);
+						expandableComposite.setBackground(backgroundIncoming);
+						if (expandableComposite.getTextClient() != null) {
+							expandableComposite.getTextClient().setBackground(backgroundIncoming);
+						}
 					}
 				}
 			} else if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
@@ -1596,6 +1602,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		if (getRepositoryTaskData().getComments() == null || getRepositoryTaskData().getComments().size() == 0) {
 			commentsSection.setExpanded(false);
+		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
+			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
+			List<TaskComment> oldTaskComments = editorInput.getOldTaskData().getComments();
+			if (newTaskComments == null || oldTaskComments == null) {
+				commentsSection.setExpanded(true);
+			} else {
+				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
+			}
 		}
 
 	}

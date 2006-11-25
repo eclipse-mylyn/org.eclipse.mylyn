@@ -25,11 +25,11 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
-	protected TaskRepository repository;
+	final protected TaskRepository repository;
 
-	protected RepositoryTaskData newTaskData;
+	private RepositoryTaskData newTaskData;
 	
-	protected RepositoryTaskData oldTaskData;
+	private RepositoryTaskData oldTaskData;
 	
 	protected AbstractTaskEditorInput(TaskRepository repository, String handle) {
 		this.repository = repository;
