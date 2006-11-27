@@ -102,7 +102,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 				taskListView.addFilter(taskListInterestFilter);
 			}
 			taskListView.setFocusedMode(true);
-			taskListView.setPriorityButtonEnabled(false);
+			taskListView.setManualFiltersEnabled(false);
 			taskListView.refreshAndFocus(true);
 			return true;
 		} else {
@@ -117,7 +117,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 			TaskListView taskListView = (TaskListView) part;
 			taskListView.getViewer().setSorter(previousSorter);
 			taskListView.removeFilter(taskListInterestFilter);
-			taskListView.setPriorityButtonEnabled(true);
+			taskListView.setManualFiltersEnabled(true);
 			for (AbstractTaskListFilter filter : previousFilters) {
 				TaskListView.getFromActivePerspective().addFilter(filter);
 			}
