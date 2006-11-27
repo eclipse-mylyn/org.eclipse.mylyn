@@ -64,7 +64,7 @@ class SynchronizeQueryJob extends Job {
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
 				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
-						"No task repository found: " + repositoryQuery.getRepositoryUrl()));
+						IStatus.OK, "No task repository found: " + repositoryQuery.getRepositoryUrl(), null));
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
