@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -118,7 +119,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		});
 
 		Label matchingTasksLabel = new Label(area, SWT.NONE);
-		matchingTasksLabel.setText("&Matching tasks:");
+		matchingTasksLabel.setText("&Matching tasks in " + TaskListView.LABEL_VIEW + ":");
 		tasksViewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
 		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(), PlatformUI
