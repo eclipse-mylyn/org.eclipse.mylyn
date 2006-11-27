@@ -11,14 +11,8 @@ package org.eclipse.mylar.internal.team.ui.actions;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.*;
 
-import org.eclipse.compare.patch.ApplyPatchOperation;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,8 +21,6 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;
-import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -70,33 +62,33 @@ public class ApplyPatchAction implements IViewActionDelegate {
 							MylarStatusHandler.fail(e, "could not write patch file", true);
 						}
 
-						IStorage storage = new IStorage() {
-
-							@SuppressWarnings("deprecation")
-							public InputStream getContents() throws CoreException {
-								return new StringBufferInputStream(contents);
-							}
-
-							public IPath getFullPath() {
-								return new Path(tempFile.getAbsolutePath());
-							}
-
-							public String getName() {
-								return null;
-							}
-
-							public boolean isReadOnly() {
-								return true;
-							}
-
-							public Object getAdapter(Class adapter) {
-								return null;
-							}
-
-						};
-						ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow().getActivePage().getActivePart(), storage, null, null);
-						BusyIndicator.showWhile(Display.getDefault(), op);
+//						IStorage storage = new IStorage() {
+//
+//							@SuppressWarnings("deprecation")
+//							public InputStream getContents() throws CoreException {
+//								return new StringBufferInputStream(contents);
+//							}
+//
+//							public IPath getFullPath() {
+//								return new Path(tempFile.getAbsolutePath());
+//							}
+//
+//							public String getName() {
+//								return null;
+//							}
+//
+//							public boolean isReadOnly() {
+//								return true;
+//							}
+//
+//							public Object getAdapter(Class adapter) {
+//								return null;
+//							}
+//
+//						};
+//						ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
+//								.getActiveWorkbenchWindow().getActivePage().getActivePart(), storage, null, null);
+//						BusyIndicator.showWhile(Display.getDefault(), op);
 					}
 				}
 			}
