@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
@@ -167,7 +167,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 			InterruptedException {
 		assertEquals(0, page.getEditorReferences().length);
 		ITask task = new Task(contextId, contextId, true);
-		TaskUiUtil.openEditor(task, false, false);
+		TasksUiUtil.openEditor(task, false, false);
 		assertEquals(1, page.getEditorReferences().length);
 		manager.activateContext(contextId);
 		assertEquals(1, page.getEditorReferences().length);

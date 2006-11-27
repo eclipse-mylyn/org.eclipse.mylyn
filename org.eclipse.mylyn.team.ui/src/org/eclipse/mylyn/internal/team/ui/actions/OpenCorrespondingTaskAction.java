@@ -23,7 +23,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -92,13 +92,13 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			ChangeSetDiffNode diffNode = (ChangeSetDiffNode) element;
 			if (diffNode.getSet() instanceof ContextChangeSet) {
 				ITask task = ((ContextChangeSet) diffNode.getSet()).getTask();
-				TaskUiUtil.openEditor(task, false);
+				TasksUiUtil.openEditor(task, false);
 				opened = true;
 			} 
 		} else if (element instanceof ContextChangeSet) {
 			ITask task = ((ContextChangeSet) element).getTask();
 			if (task != null) {
-				TaskUiUtil.openEditor(task, false);
+				TasksUiUtil.openEditor(task, false);
 				opened = true;
 			}
 		}
@@ -119,7 +119,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					if (repository != null) {
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 						if (connectorUi != null && id != null) {
-							opened = TaskUiUtil.openRepositoryTask(repository, id);
+							opened = TasksUiUtil.openRepositoryTask(repository, id);
 						}
 					}
 				}
@@ -144,9 +144,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 						}
 					}
 
-					opened = TaskUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
+					opened = TasksUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
 					if (!opened) {
-						TaskUiUtil.openUrl(fullUrl);
+						TasksUiUtil.openUrl(fullUrl);
 					}
 				}
 			}
