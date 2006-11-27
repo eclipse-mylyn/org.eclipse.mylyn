@@ -15,20 +15,23 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Text;
 
@@ -125,73 +128,47 @@ public class PreviewAttachmentPage extends WizardPage {
 
 	private void createImagePreview(Composite composite, LocalAttachment attachment) {
 		final Image image = new Image(composite.getDisplay(), attachment.getFilePath());
-		final Canvas canvas = new Canvas(composite, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.V_SCROLL
-				| SWT.H_SCROLL | SWT.BORDER);
-		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
+		final ScrolledComposite scrolledComposite = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.BORDER);
+		scrolledComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
 
-		// Adapted from snippit 48
-		// http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet48.java?rev=HEAD
-		final Point origin = new Point(0, 0);
-		final ScrollBar hBar = canvas.getHorizontalBar();
-		hBar.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				int hSelection = hBar.getSelection();
-				int destX = -hSelection - origin.x;
-				Rectangle rect = image.getBounds();
-				canvas.scroll(destX, 0, 0, 0, rect.width, rect.height, false);
-				origin.x = -hSelection;
+		Composite canvasComposite = new Composite(scrolledComposite, SWT.NONE);
+		canvasComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+		Canvas canvas = new Canvas(canvasComposite, SWT.NONE);
+		final Rectangle imgSize = image.getBounds();
+		canvas.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).hint(
+				imgSize.width, imgSize.height).create());
+		canvas.addPaintListener(new PaintListener() {
+
+			public void paintControl(PaintEvent e) {
+				e.gc.drawImage(image, 0, 0);
 			}
+
 		});
-		final ScrollBar vBar = canvas.getVerticalBar();
-		vBar.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				int vSelection = vBar.getSelection();
-				int destY = -vSelection - origin.y;
-				Rectangle rect = image.getBounds();
-				canvas.scroll(0, destY, 0, 0, rect.width, rect.height, false);
-				origin.y = -vSelection;
+		canvas.setSize(imgSize.width, imgSize.height);
+		scrolledComposite.setMinSize(imgSize.width, imgSize.height);
+		scrolledComposite.setContent(canvasComposite);
+		scrolledComposite.addControlListener(new ControlAdapter() {
+
+			@Override
+			public void controlResized(ControlEvent e) {
+				Rectangle clientArea = scrolledComposite.getClientArea();
+
+				ScrollBar hBar = scrolledComposite.getHorizontalBar();
+				hBar.setMinimum(1);
+				hBar.setMaximum(clientArea.width - imgSize.width);
+				hBar.setPageIncrement(hBar.getThumb());
+				hBar.setIncrement(10);
+
+				ScrollBar vBar = scrolledComposite.getVerticalBar();
+				vBar.setMinimum(0);
+				vBar.setMaximum(clientArea.height - imgSize.height);
+				vBar.setPageIncrement(vBar.getThumb());
+				vBar.setIncrement(10);
 			}
-		});
-		canvas.addListener(SWT.Resize, new Listener() {
-			public void handleEvent(Event e) {
-				Rectangle rect = image.getBounds();
-				Rectangle client = canvas.getClientArea();
-				hBar.setMaximum(rect.width);
-				vBar.setMaximum(rect.height);
-				hBar.setThumb(Math.min(rect.width, client.width));
-				vBar.setThumb(Math.min(rect.height, client.height));
-				int hPage = rect.width - client.width;
-				int vPage = rect.height - client.height;
-				int hSelection = hBar.getSelection();
-				int vSelection = vBar.getSelection();
-				if (hSelection >= hPage) {
-					if (hPage <= 0)
-						hSelection = 0;
-					origin.x = -hSelection;
-				}
-				if (vSelection >= vPage) {
-					if (vPage <= 0)
-						vSelection = 0;
-					origin.y = -vSelection;
-				}
-				canvas.redraw();
-			}
-		});
-		canvas.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(Event e) {
-				GC gc = e.gc;
-				gc.drawImage(image, origin.x, origin.y);
-				Rectangle rect = image.getBounds();
-				Rectangle client = canvas.getClientArea();
-				int marginWidth = client.width - rect.width;
-				if (marginWidth > 0) {
-					gc.fillRectangle(rect.width, 0, marginWidth, client.height);
-				}
-				int marginHeight = client.height - rect.height;
-				if (marginHeight > 0) {
-					gc.fillRectangle(0, rect.height, client.width, marginHeight);
-				}
-			}
+
 		});
 	}
 
