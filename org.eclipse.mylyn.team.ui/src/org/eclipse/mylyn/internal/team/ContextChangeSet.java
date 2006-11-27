@@ -204,6 +204,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 		return task;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		if (adapter == ResourceMapping.class) {
 			return new ChangeSetResourceMapping(this);

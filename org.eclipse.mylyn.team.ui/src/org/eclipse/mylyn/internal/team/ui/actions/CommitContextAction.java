@@ -11,13 +11,13 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.team.TeamRespositoriesManager;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -45,13 +45,14 @@ public class CommitContextAction implements IViewActionDelegate {
 		}
 
 		List<AbstractTeamRepositoryProvider> providers = TeamRespositoriesManager.getInstance().getProviders();
-		for (Iterator iter = providers.iterator(); iter.hasNext();) {
+		for (Object element : providers) {
 			try {
-				AbstractTeamRepositoryProvider provider = (AbstractTeamRepositoryProvider) iter.next();
+				AbstractTeamRepositoryProvider provider = (AbstractTeamRepositoryProvider) element;
 				if (provider.hasOutgoingChanges(resources)) {
 					provider.commit(resources);
 				}
 			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Could not commit context.", false);
 			}
 		}
 

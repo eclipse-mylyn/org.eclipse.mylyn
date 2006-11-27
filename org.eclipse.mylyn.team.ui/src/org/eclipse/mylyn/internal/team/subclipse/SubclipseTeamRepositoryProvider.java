@@ -26,6 +26,7 @@ import org.osgi.framework.Bundle;
  */
 public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvider {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ActiveChangeSetManager getActiveChangeSetManager() {
 		// collectors.add((CVSActiveChangeSetCollector)CVSUIPlugin.getPlugin().getChangeSetManager());
@@ -48,6 +49,7 @@ public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvi
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		if (Platform.getBundle("org.tigris.subversion.subclipse.core") == null)
@@ -72,6 +74,7 @@ public class SubclipseTeamRepositoryProvider extends AbstractTeamRepositoryProvi
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void commit(IResource[] resources) {
 		if (Platform.getBundle("org.tigris.subversion.subclipse.core") == null)
