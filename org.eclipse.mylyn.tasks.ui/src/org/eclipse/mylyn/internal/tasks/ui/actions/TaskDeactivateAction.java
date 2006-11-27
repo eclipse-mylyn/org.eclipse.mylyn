@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -37,7 +37,7 @@ public class TaskDeactivateAction extends Action {
 			if (task != null) {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 //				TaskListView.getFromActivePerspective().refreshAndFocus();
-				TaskUiUtil.closeEditorInActivePage(task);
+				TasksUiUtil.closeEditorInActivePage(task);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, " Closing task editor on task deactivation failed");

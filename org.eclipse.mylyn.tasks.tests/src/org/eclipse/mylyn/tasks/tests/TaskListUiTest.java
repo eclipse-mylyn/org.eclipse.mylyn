@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -230,11 +230,11 @@ public class TaskListUiTest extends TestCase {
 
 		// open a task in editor
 		// cat1task1.setForceSyncOpen(true);
-		TaskUiUtil.openEditor(cat1task1, false, true);
+		TasksUiUtil.openEditor(cat1task1, false, true);
 		// cat1task1.openTaskInEditor(false);
 		// cat1task2.setForceSyncOpen(true);
 		// cat1task2.openTaskInEditor(false);
-		TaskUiUtil.openEditor(cat1task2, false, true);
+		TasksUiUtil.openEditor(cat1task2, false, true);
 
 		listeners = manager.getTaskList().getChangeListeners();
 		numListenersDuring = listeners.size();

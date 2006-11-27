@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -54,7 +54,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 
 	@Override
 	public boolean performFinish() {
-		TaskUiUtil.openUrl(newTaskUrl);
+		TasksUiUtil.openUrl(newTaskUrl);
 		return true;
 	}
 

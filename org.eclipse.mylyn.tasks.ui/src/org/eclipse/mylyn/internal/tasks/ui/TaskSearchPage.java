@@ -136,7 +136,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 									@Override
 									public void linkActivated(HyperlinkEvent e) {
 										TaskSearchPage.this.getControl().getShell().close();
-										TaskUiUtil.openEditRepositoryWizard(getRepository());
+										TasksUiUtil.openEditRepositoryWizard(getRepository());
 										// TODO: Re-construct this page with new
 										// repository data
 									}

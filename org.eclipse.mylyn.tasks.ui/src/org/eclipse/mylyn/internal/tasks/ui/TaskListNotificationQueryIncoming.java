@@ -51,7 +51,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
-				TaskUiUtil.refreshAndOpenTaskListElement(hit);
+				TasksUiUtil.refreshAndOpenTaskListElement(hit);
 			}
 		});
 

@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -181,7 +181,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		// NOTE: setting boolean param as false so that we go directly to the
 		// browser tab as with a previously-created task
-		TaskUiUtil.openEditor(newTask, false);
+		TasksUiUtil.openEditor(newTask, false);
 		return true;
 	}
 
@@ -193,7 +193,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			return false;
 		} else {
 			newTask.setPriority(Task.PriorityLevel.P3.toString());
-			TaskUiUtil.openEditor(newTask, false);
+			TasksUiUtil.openEditor(newTask, false);
 			return true;
 		}
 	}

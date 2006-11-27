@@ -16,11 +16,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
@@ -59,7 +64,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 /**
  * @author Mik Kersten
  */
-public class TaskUiUtil {
+public class TasksUiUtil {
 
 	/**
 	 * TODO: move
@@ -105,7 +110,7 @@ public class TaskUiUtil {
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskId));
 		if (task != null) {
-			TaskUiUtil.refreshAndOpenTaskListElement(task);
+			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
@@ -141,7 +146,7 @@ public class TaskUiUtil {
 		}
 
 		if (task != null) {
-			TaskUiUtil.refreshAndOpenTaskListElement(task);
+			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -153,7 +158,7 @@ public class TaskUiUtil {
 			}
 		}
 		if (!opened) {
-			TaskUiUtil.openUrl(fullUrl);
+			TasksUiUtil.openUrl(fullUrl);
 			opened = true;
 		}
 		return opened;
@@ -192,7 +197,7 @@ public class TaskUiUtil {
 
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null) {
-						TaskUiUtil.openEditor(task, false, false);
+						TasksUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
@@ -205,18 +210,18 @@ public class TaskUiUtil {
 										// TODO: if synch job failed, don't mark
 										// read
 										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
-										TaskUiUtil.openEditor(task, false);
+										TasksUiUtil.openEditor(task, false);
 									}
 								});
 						if (refreshJob == null) {
-							TaskUiUtil.openEditor(task, false);
+							TasksUiUtil.openEditor(task, false);
 						}
 					}
 			} else {
-				TaskUiUtil.openEditor(task, false);
+				TasksUiUtil.openEditor(task, false);
 			}
 		} else if (element instanceof TaskCategory) {
-			TaskUiUtil.openEditor((AbstractTaskContainer) element);
+			TasksUiUtil.openEditor((AbstractTaskContainer) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(query.getRepositoryKind());
@@ -342,5 +347,56 @@ public class TaskUiUtil {
 			}
 		}
 		return repositoryTaskEditors;
+	}
+	
+	/**
+	 * Will use the workbench window's selection if viewer's selection is null
+	 */
+	public static TaskRepository getSelectedRepository(StructuredViewer viewer) {
+		IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
+		if (selection == null) {
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			ISelection windowSelection = window.getSelectionService().getSelection();
+			if (windowSelection instanceof IStructuredSelection) {
+				selection = (IStructuredSelection)windowSelection;
+			}
+		}
+
+		Object element = selection.getFirstElement();
+		if (element instanceof TaskRepository) {
+			return (TaskRepository)selection.getFirstElement();
+		} else if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			return TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
+		} else if (element instanceof AbstractQueryHit) {
+			AbstractQueryHit queryHit = (AbstractQueryHit) element;
+			if (queryHit.getParent() != null) {
+				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl(), queryHit.getParent().getRepositoryKind());
+			} else {
+				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
+			}
+		} else if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+			return TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
+		} else if (element instanceof IResource) {
+			IResource resource = (IResource) element;
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+		} else if( element instanceof IAdaptable) {
+			IAdaptable adaptable = (IAdaptable) element;
+			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+			if(resource!=null) {
+				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+			} else {
+				ITask task = (ITask) adaptable.getAdapter(ITask.class);
+				if(task instanceof AbstractRepositoryTask) {
+					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
+					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
+				}
+			}
+		}
+		
+		// TODO mapping between LogEntry.pliginId and repositories
+		// TODO handle other selection types
+		return null;
 	}
 }

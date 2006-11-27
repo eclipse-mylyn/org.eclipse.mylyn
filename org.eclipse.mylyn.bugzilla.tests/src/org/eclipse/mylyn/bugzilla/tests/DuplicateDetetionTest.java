@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -50,7 +50,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -68,7 +68,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -89,7 +89,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -118,7 +118,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -146,7 +146,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -170,7 +170,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -193,7 +193,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -218,7 +218,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -242,7 +242,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setHasLocalChanges(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TaskUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();

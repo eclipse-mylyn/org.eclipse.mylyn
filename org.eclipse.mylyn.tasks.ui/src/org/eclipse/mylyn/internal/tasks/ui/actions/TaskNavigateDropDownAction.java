@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -82,7 +82,7 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 			taskHistory.addTask(targetTask);
 			setButtonStatus();
 			view.refreshAndFocus(false);
-			TaskUiUtil.refreshAndOpenTaskListElement(targetTask);
+			TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
 		}
 	}
 

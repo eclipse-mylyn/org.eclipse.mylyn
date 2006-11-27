@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -581,7 +581,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
 						newTask);
 			}
-			TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+			TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 		}
 	}
 

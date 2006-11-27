@@ -23,7 +23,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
@@ -63,7 +63,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		} else if (columnIndex == 1) {
 			if (element instanceof DateRangeActivityDelegate) {
 				DateRangeActivityDelegate taskElement = (DateRangeActivityDelegate) element;
-				return TaskUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		}
 		return null;

@@ -55,7 +55,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.DeleteAction;
@@ -1210,7 +1210,7 @@ public class TaskListView extends ViewPart {
 					}
 				}
 				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
-					TaskUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
+					TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
 				}
 			}
 		});
@@ -1467,7 +1467,7 @@ public class TaskListView extends ViewPart {
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[Task.PriorityLevel.values().length];
 		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
-			images[i] = TaskUiUtil.getImageForPriority(Task.PriorityLevel.values()[i]);
+			images[i] = TasksUiUtil.getImageForPriority(Task.PriorityLevel.values()[i]);
 		}
 		return images;
 	}

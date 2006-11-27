@@ -18,7 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
-import org.eclipse.mylar.internal.tasks.ui.OpenRemoteTaskJob;
+import org.eclipse.mylar.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -81,7 +81,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		}
 		String bugUrl = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		OpenRemoteTaskJob job = new OpenRemoteTaskJob(BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, idString,
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, idString,
 				bugUrl, page);
 		job.schedule();
 		return true;

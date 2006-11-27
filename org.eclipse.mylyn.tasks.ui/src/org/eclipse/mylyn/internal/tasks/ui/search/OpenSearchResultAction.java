@@ -15,7 +15,7 @@ import java.util.Iterator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
@@ -55,13 +55,13 @@ public class OpenSearchResultAction extends Action {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<AbstractQueryHit> it = selection.iterator(); it.hasNext();) {
 				AbstractQueryHit repositoryHit = it.next();
-				TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
+				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
 				// try {
 				// int id = Integer.parseInt(repositoryHit.getId());
 				// String bugUrl =
 				// BugzillaServerFacade.getBugUrlWithoutLogin(repositoryHit.getRepositoryUrl(),
 				// id);
-				// TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
+				// TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(),
 				// "" + repositoryHit.getId(), bugUrl);
 				// } catch (NumberFormatException e) {
 				// MylarStatusHandler.fail(e, "Could not open, malformed id: " +

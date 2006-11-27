@@ -6,32 +6,34 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.commands;
+package org.eclipse.mylar.internal.tasks.ui.actions;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * @author Willian Mitsuda
+ * @author Mik Kersten
  */
-public class OpenRemoteTaskHandler extends AbstractHandler {
+public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate {
 
-	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "open.remote.task.dialog.settings";
-
-	@Override
-	public Object execute(ExecutionEvent evt) throws ExecutionException {
+	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylar.tasks.ui.open.remote";
+	
+	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getShell());
-		dlg.setTitle("Open Remote Task");
+		dlg.setTitle("Open Repository Task");
 
 		IDialogSettings settings = TasksUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings dlgSettings = settings.getSection(OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS);
@@ -47,7 +49,6 @@ public class OpenRemoteTaskHandler extends AbstractHandler {
 				openRemoteTask(dlg);
 			}
 		}
-		return null;
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class OpenRemoteTaskHandler extends AbstractHandler {
 			TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(dlg.getSelectedCategory(),
 					dlg.getSelectedTask());
 		}
-		TaskUiUtil.refreshAndOpenTaskListElement(dlg.getSelectedTask());
+		TasksUiUtil.refreshAndOpenTaskListElement(dlg.getSelectedTask());
 	}
 
 	/**
@@ -78,7 +79,17 @@ public class OpenRemoteTaskHandler extends AbstractHandler {
 
 			});
 		} else {
-			TaskUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), dlg.getSelectedId());
+			TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), dlg.getSelectedId());
 		}
 	}
+	
+	public void dispose() {
+	}
+
+	public void init(IWorkbenchWindow window) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
+
 }

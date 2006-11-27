@@ -15,11 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,14 +28,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -52,7 +46,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -159,7 +152,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			}
 		});
 
-		viewer.setSelection(new StructuredSelection(new Object[] { getSelectedRepository() }));
+		viewer.setSelection(new StructuredSelection(new Object[] { TasksUiUtil.getSelectedRepository(viewer) }));
 
 		viewer.addOpenListener(new IOpenListener() {
 
@@ -171,64 +164,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		viewer.getTable().showSelection();
 		viewer.getTable().setFocus();
 		return viewer.getTable();
-	}
-
-	protected TaskRepository getSelectedRepository() {
-		IStructuredSelection selection = getSelection();
-		if (selection == null) {
-			return (TaskRepository) viewer.getElementAt(0);
-		}
-
-		Object element = selection.getFirstElement();
-		if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			return getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
-
-		} else if (element instanceof AbstractQueryHit) {
-			AbstractQueryHit queryHit = (AbstractQueryHit) element;
-			if (queryHit.getParent() != null) {
-				return getRepository(queryHit.getRepositoryUrl(), queryHit.getParent().getRepositoryKind());
-			} else {
-				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
-			}
-		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
-			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
-		} else if (element instanceof IResource) {
-			IResource resource = (IResource) element;
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-		} else if( element instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) element;
-			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
-			if(resource!=null) {
-				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-			} else {
-				ITask task = (ITask) adaptable.getAdapter(ITask.class);
-				if(task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
-					return getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
-				}
-			}
-		}
-		
-		// TODO mapping between LogEntry.pliginId and repositories
-
-		// TODO handle other selection types
-		
-		return null;
-	}
-
-	private IStructuredSelection getSelection() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		ISelection selection = window.getSelectionService().getSelection();
-		if(selection instanceof IStructuredSelection) {
-			return (IStructuredSelection) selection;
-		}		
-		return null;
-	}
-
-	private TaskRepository getRepository(String repositoryUrl, String repositoryKind) {
-		return TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 	}
 
 	protected abstract IWizard createWizard(TaskRepository taskRepository);

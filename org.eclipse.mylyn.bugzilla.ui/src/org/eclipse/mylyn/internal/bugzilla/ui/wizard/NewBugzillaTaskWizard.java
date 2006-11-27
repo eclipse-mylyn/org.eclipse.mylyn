@@ -17,7 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -89,7 +89,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			productPage.saveDataToModel();
 			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TaskUiUtil.openEditor(editorInput,  TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			TasksUiUtil.openEditor(editorInput,  TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 			return true;
 		} catch (Exception e) {
 			productPage.applyToStatusLine(new Status(IStatus.ERROR, "not_used", 0,
@@ -156,7 +156,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 // MylarTaskListPlugin.getTaskListManager().getTaskList().getRootCategory());
 // }
 //
-// TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+// TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 // MylarTaskListPlugin.getSynchronizationManager().synchNow(0);
 //
 // return true;

@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -213,7 +213,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			throws PartInitException {
 		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
 		
-		TaskUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
+		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.ITask;
 
 /**
@@ -44,7 +44,7 @@ public class OpenTaskEditorAction extends Action {
 		ISelection selection = viewer.getSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		if (object instanceof ITask) {
-			TaskUiUtil.openEditor((ITask)object, false);
+			TasksUiUtil.openEditor((ITask)object, false);
 		}
 //		if (obj instanceof Task) {
 //			((Task) obj).openTaskInEditor(false);

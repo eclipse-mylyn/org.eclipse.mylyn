@@ -16,7 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -67,7 +67,7 @@ public class DeleteAction extends Action {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
 				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-				TaskUiUtil.closeEditorInActivePage(task);
+				TasksUiUtil.closeEditorInActivePage(task);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
@@ -83,7 +83,7 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
 					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-					TaskUiUtil.closeEditorInActivePage(task);
+					TasksUiUtil.closeEditorInActivePage(task);
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else {

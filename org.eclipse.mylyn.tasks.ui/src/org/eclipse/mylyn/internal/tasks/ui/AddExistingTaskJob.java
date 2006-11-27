@@ -86,7 +86,7 @@ public class AddExistingTaskJob extends Job {
 						}
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category, newTask);
 						taskListView.getViewer().setSelection(new StructuredSelection(newTask));
-						TaskUiUtil.openEditor(newTask, false, false);
+						TasksUiUtil.openEditor(newTask, false, false);
 					}
 
 				});

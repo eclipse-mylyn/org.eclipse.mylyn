@@ -26,7 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
@@ -163,7 +163,7 @@ class SynchronizeTaskJob extends Job {
 		// TODO: move out of SynchronizeTaskJob (but beware of race conditions)
 		if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-			List<MylarTaskEditor> editors = TaskUiUtil.getActiveRepositoryTaskEditors();
+			List<MylarTaskEditor> editors = TasksUiUtil.getActiveRepositoryTaskEditors();
 			for (final MylarTaskEditor editor : editors) {
 				final TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
 				if (input.getTask().getHandleIdentifier().equals(repositoryTask.getHandleIdentifier())) {
@@ -174,8 +174,8 @@ class SynchronizeTaskJob extends Job {
 									.openConfirm(null, "Stale Editor",
 											"Remote copy of task has changes. Refresh and open report?"))
 									|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-								TaskUiUtil.closeEditorInActivePage(input.getTask());
-								TaskUiUtil.refreshAndOpenTaskListElement(input.getTask());
+								TasksUiUtil.closeEditorInActivePage(input.getTask());
+								TasksUiUtil.refreshAndOpenTaskListElement(input.getTask());
 							}
 						}
 					});

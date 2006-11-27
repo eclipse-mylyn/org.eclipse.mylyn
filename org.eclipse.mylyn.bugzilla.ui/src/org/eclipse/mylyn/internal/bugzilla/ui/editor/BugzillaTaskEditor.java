@@ -39,7 +39,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
@@ -246,7 +246,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 											@Override
 											public void done(IJobChangeEvent event) {
 												close();
-												TaskUiUtil.openEditor(modifiedTask, false);
+												TasksUiUtil.openEditor(modifiedTask, false);
 											}
 										});
 
@@ -266,7 +266,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 								// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
 								// repository);
 							} else {
-								TaskUiUtil.openRepositoryTask(repository.getUrl(), BugzillaTaskEditor.this
+								TasksUiUtil.openRepositoryTask(repository.getUrl(), BugzillaTaskEditor.this
 										.getRepositoryTaskData().getId(), repository.getUrl()
 										+ IBugzillaConstants.URL_GET_SHOW_BUG
 										+ BugzillaTaskEditor.this.getRepositoryTaskData().getId());
@@ -551,9 +551,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
 						if (task != null) {
-							TaskUiUtil.refreshAndOpenTaskListElement(task);
+							TasksUiUtil.refreshAndOpenTaskListElement(task);
 						} else {
-							TaskUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
+							TasksUiUtil.openRepositoryTask(repository.getUrl(), bugId, repository.getUrl()
 									+ IBugzillaConstants.URL_GET_SHOW_BUG + bugId);
 						}
 					}

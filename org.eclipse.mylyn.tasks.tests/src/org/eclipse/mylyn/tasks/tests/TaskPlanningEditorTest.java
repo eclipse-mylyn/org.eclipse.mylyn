@@ -12,7 +12,7 @@
 package org.eclipse.mylar.tasks.tests;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylar.tasks.core.Task;
@@ -54,7 +54,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
 		task.setDescription(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TaskUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
@@ -76,7 +76,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
 		task.setDescription(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TaskUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
@@ -100,7 +100,7 @@ public class TaskPlanningEditorTest extends TestCase {
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
 		task.setDescription(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TaskUiUtil.openEditor(task, false, true);
+		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();

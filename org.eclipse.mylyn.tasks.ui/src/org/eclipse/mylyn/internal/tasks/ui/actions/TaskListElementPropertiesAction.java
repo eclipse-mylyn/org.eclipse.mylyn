@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskCategory;
@@ -42,7 +42,7 @@ public class TaskListElementPropertiesAction extends Action {
 		ISelection selection = viewer.getSelection();
 		Object element = ((IStructuredSelection) selection).getFirstElement();
 		if (element instanceof TaskCategory || element instanceof AbstractRepositoryQuery) {
-			TaskUiUtil.refreshAndOpenTaskListElement((ITaskListElement)element);	
+			TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement)element);	
 		}
 	}
 }

@@ -15,7 +15,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
@@ -59,7 +59,7 @@ public class TaskEditorTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId());
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TaskUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
 		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);

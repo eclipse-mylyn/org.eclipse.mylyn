@@ -55,7 +55,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
@@ -909,7 +909,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
 						// address += attachment.getId() + "&amp;action=view";
-						TaskUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openUrl(attachment.getUrl());
 					}
 				}
 			});
@@ -935,7 +935,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					if (attachment != null) {
-						TaskUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openUrl(attachment.getUrl());
 					}
 				}
 			};
@@ -949,7 +949,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						return;
 
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
-						TaskUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openUrl(attachment.getUrl());
 						return;
 					}
 

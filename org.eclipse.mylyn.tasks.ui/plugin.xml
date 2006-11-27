@@ -339,6 +339,7 @@
             </enablement>
          </action>
          
+        <!--
 		<action
               class="org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"
@@ -349,6 +350,7 @@
               style="push"
               tooltip="Add Existing Task"> 
   		</action>
+  		-->
   		
   		<action
 	        class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
@@ -565,21 +567,32 @@
             id="org.eclipse.mylar.tasks.navigation"
             label="Task Navigation"
             visible="true">
-         <action
+		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
                definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+               icon="icons/etool16/task-inactive-centered.gif"
                id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
                label="&amp;Deactivate Task"
                menubarPath="navigate/open.ext3"
                style="push"/>
 		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskDialogAction"
-               definitionId="org.eclipse.mylar.tasks.command.activateTask"
-               id="org.eclipse.mylar.tasks.ui.switchTask"
-               label="&amp;Activate Task..."
+        	class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskDialogAction"
+        	definitionId="org.eclipse.mylar.tasks.command.activateTask"
+        	icon="icons/etool16/task-active-centered.gif"
+        	id="org.eclipse.mylar.tasks.ui.switchTask"
+        	label="&amp;Activate Task..."
+        	menubarPath="navigate/open.ext3"
+        	style="push"/>
+		<action
+               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenRepositoryTask"
+               definitionId="org.eclipse.mylar.tasks.command.openRemoteTask"
+               icon="icons/etool16/open-repository-task.gif"
+               id="org.eclipse.mylar.tasks.ui.open.task.remote"
+               label="Open &amp;Repository Task..."
                menubarPath="navigate/open.ext3"
-               style="push"/>
-         <action
+               style="push"
+               tooltip="Open Repository Task"/>
+        <action
                class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
                definitionId="org.eclipse.mylar.tasks.command.openTask"
                icon="icons/etool16/open-task.gif"
@@ -599,7 +612,6 @@
             name="Open Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            defaultHandler="org.eclipse.mylar.internal.tasks.ui.commands.OpenRemoteTaskHandler"
             id="org.eclipse.mylar.tasks.command.openRemoteTask"
             name="Open Remote Task"/>
       <command
@@ -616,15 +628,15 @@
       <key
             commandId="org.eclipse.mylar.tasks.command.openTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+M2+F11"/>
+            sequence="M1+F12"/>
       <key
             commandId="org.eclipse.mylar.tasks.command.openRemoteTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+F12"/>
+            sequence="M1+M2+F12"/>
       <key
             commandId="org.eclipse.mylar.tasks.command.activateTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+M2+F12"/>
+            sequence="M1+F9"/>
       <key
             commandId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"

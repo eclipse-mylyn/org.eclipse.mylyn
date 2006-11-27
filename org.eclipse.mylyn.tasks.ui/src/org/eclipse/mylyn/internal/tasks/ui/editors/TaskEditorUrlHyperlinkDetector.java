@@ -21,7 +21,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
-import org.eclipse.mylar.internal.tasks.ui.TaskUiUtil;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 
 /**
  * @author Rob Elves
@@ -105,7 +105,7 @@ public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 		@Override
 		public void open() {
 			// TODO: if url is to a repository task, open task instead of url
-			TaskUiUtil.openUrl(getURLString());
+			TasksUiUtil.openUrl(getURLString());
 		}
 
 	}

@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class OpenRemoteTaskJob extends Job {
+public class OpenRepositoryTaskJob extends Job {
 
 	private String serverUrl;
 
@@ -48,7 +48,7 @@ public class OpenRemoteTaskJob extends Job {
 
 	private String taskUrl;
 
-	public OpenRemoteTaskJob(String repositoryKind, String serverUrl, String taskId, String taskUrl, IWorkbenchPage page) {
+	public OpenRepositoryTaskJob(String repositoryKind, String serverUrl, String taskId, String taskUrl, IWorkbenchPage page) {
 		super("Opening remote task: " + taskId);
 		
 		this.repositoryKind = repositoryKind;
@@ -69,7 +69,7 @@ public class OpenRemoteTaskJob extends Job {
 						MessageDialog.openError(null, "Repository Not Found",
 								"Could not find repository configuration for " + serverUrl
 								+ ". \nPlease set up repository via " + TaskRepositoriesView.NAME + ".");
-						TaskUiUtil.openUrl(taskUrl);
+						TasksUiUtil.openUrl(taskUrl);
 					}
 
 				});
@@ -109,7 +109,7 @@ public class OpenRemoteTaskJob extends Job {
 				} else {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TaskUiUtil.openUrl(taskUrl);
+							TasksUiUtil.openUrl(taskUrl);
 						}
 					});
 				}
@@ -123,11 +123,11 @@ public class OpenRemoteTaskJob extends Job {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (taskData == null) {
-					TaskUiUtil.openUrl(taskUrl);
+					TasksUiUtil.openUrl(taskUrl);
 				} else {
 					//AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(taskUrl, repository, taskData, null);
 					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, handle, taskUrl);
-					TaskUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+					TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 				}
 			}
 		});
