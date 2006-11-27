@@ -121,7 +121,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaClient client = new BugzillaClient(new URL(IBugzillaConstants.ECLIPSE_BUGZILLA_URL), "","","","", "UTF-8");
 		RepositoryConfiguration config = client.getRepositoryConfiguration();
 		assertNotNull(config);
-		assertEquals("2.20.1", config.getInstallVersion());
+		assertEquals("2.22.1", config.getInstallVersion());
 		assertEquals(7, config.getStatusValues().size());
 		assertEquals(8, config.getResolutions().size());
 		assertEquals(6, config.getPlatforms().size());
