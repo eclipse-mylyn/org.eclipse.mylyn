@@ -1236,14 +1236,11 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void refreshAndFocus(boolean expand) {
-		// getViewer().getControl().setRedraw(false);
-//		 getViewer().refresh();
 		refresh(null);
 		if (expand) {
 			getViewer().expandAll();
 		}
 		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
-		// getViewer().getControl().setRedraw(true);
 	}
 
 	public TreeViewer getViewer() {
@@ -1295,13 +1292,6 @@ public class TaskListView extends ViewPart {
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;
 	}
-
-	// /**
-	// * This method is for testing only
-	// */
-	// public TaskActivationHistory getTaskActivationHistory() {
-	// return TasksUiPlugin.getTaskListManager().getTaskActivationHistory();
-	// }
 
 	public void goIntoCategory() {
 		ISelection selection = getViewer().getSelection();
@@ -1499,8 +1489,10 @@ public class TaskListView extends ViewPart {
 		return FILTER_ARCHIVE;
 	}
 
-	public void setPriorityButtonEnabled(boolean enabled) {
+	public void setManualFiltersEnabled(boolean enabled) {
 		filterOnPriority.setEnabled(enabled);
+		filterCompleteTask.setEnabled(enabled);
+		filterArchiveCategory.setEnabled(enabled);
 	}
 
 	public boolean isFocusedMode() {
@@ -1508,6 +1500,6 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
-		this.focusedMode = focusedMode;
+		this.focusedMode = focusedMode;	
 	}
 }
