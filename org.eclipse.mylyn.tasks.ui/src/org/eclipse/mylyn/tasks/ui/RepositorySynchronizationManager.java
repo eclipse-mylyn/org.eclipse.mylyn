@@ -151,7 +151,7 @@ public class RepositorySynchronizationManager {
 	 * TaskRepository.syncTime.
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
-		if (connector.getOfflineTaskHandler() != null) {
+		if (connector.getTaskDataHandler() != null) {
 			final GetChangedTasksJob getChangedTasksJob = new GetChangedTasksJob(connector, repository);
 			getChangedTasksJob.setSystem(true);
 			getChangedTasksJob.setRule(new RepositoryMutexRule(repository));
@@ -188,7 +188,7 @@ public class RepositorySynchronizationManager {
 
 			Set<AbstractRepositoryTask> changedTasks = null;
 			try {
-				changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, repositoryTasks);
+				changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(repository, repositoryTasks);
 
 				if (changedTasks != null) {
 					for (AbstractRepositoryTask task : changedTasks) {
@@ -215,9 +215,9 @@ public class RepositorySynchronizationManager {
 						for (AbstractRepositoryTask task : tasksToSync) {
 							Date taskModifiedDate;
 
-							if (connector.getOfflineTaskHandler() != null && task.getTaskData() != null
+							if (connector.getTaskDataHandler() != null && task.getTaskData() != null
 									&& task.getTaskData().getLastModified() != null) {
-								taskModifiedDate = connector.getOfflineTaskHandler().getDateForAttributeType(
+								taskModifiedDate = connector.getTaskDataHandler().getDateForAttributeType(
 										RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
 							} else {
 								continue;
@@ -286,6 +286,12 @@ public class RepositorySynchronizationManager {
 					// Never overwrite local task data unless forced
 					return false;
 				}
+				// else if(offlineTaskData != null &&
+				// !offlineTaskData.hasLocalChanges()) {
+				// // Case of successful task submission
+				// status = RepositoryTaskSyncState.SYNCHRONIZED;
+				// break;
+				//				}
 			case CONFLICT:
 				// use a parameter rather than this null check
 				if (offlineTaskData != null) {

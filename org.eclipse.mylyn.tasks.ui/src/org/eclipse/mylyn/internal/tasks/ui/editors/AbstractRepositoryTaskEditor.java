@@ -12,9 +12,11 @@ package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +24,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -29,6 +38,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
@@ -58,13 +68,15 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -129,6 +141,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -140,6 +153,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Steffen Pingel
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
+
+	public static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
 	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -191,8 +206,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Display display;
 
-	protected boolean htmlComments = false;
-
 	public static final Font TITLE_FONT = JFaceResources.getBannerFont();
 
 	public static final Font TEXT_FONT = JFaceResources.getDefaultFont();
@@ -212,6 +225,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected RepositoryTaskOutlineNode taskOutlineModel = null;
 
 	protected boolean expandedStateAttributes = false;
+
+	private AbstractRepositoryTask modifiedTask;
 
 	/**
 	 * Style option for function <code>newLayout</code>. This will create a
@@ -467,7 +482,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// checkText(summaryVal);
 	}
 
-	protected abstract void submitToRepository();
+	// protected abstract void submitToRepository();
 
 	private Color backgroundIncoming;
 
@@ -484,12 +499,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		scrollIncrement = fd[0].getHeight() + cushion;
 		scrollVertPageIncrement = 0;
 		scrollHorzPageIncrement = 0;
-	}
-
-	public AbstractRepositoryTaskEditor(FormEditor editor, boolean htmlComments) {
-		this(editor);
-		this.htmlComments = htmlComments;
-
 	}
 
 	@Override
@@ -597,13 +606,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		String openedDateString = "";
 		String modifiedDateString = "";
-		final IOfflineTaskHandler offlineHandler = getOfflineTaskHandler();
-		if (offlineHandler != null) {
-			Date created = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_CREATION,
+		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
+		if (taskDataManager != null) {
+			Date created = taskDataManager.getDateForAttributeType(RepositoryTaskAttribute.DATE_CREATION,
 					getRepositoryTaskData().getCreated());
 			openedDateString = created != null ? DateUtil.getFormattedDate(created, HEADER_DATE_FORMAT) : "";
 
-			Date modified = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+			Date modified = taskDataManager.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 					getRepositoryTaskData().getLastModified());
 			modifiedDateString = modified != null ? DateUtil.getFormattedDate(modified, HEADER_DATE_FORMAT) : "";
 		}
@@ -849,7 +858,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
-			final IOfflineTaskHandler offlineHandler = getOfflineTaskHandler();
+			final ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				attachmentsTableViewer.setSorter(new ViewerSorter() {
 					public int compare(Viewer viewer, Object e1, Object e2) {
@@ -876,14 +885,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				public Object[] getElements(Object inputElement) {
 					List<RepositoryAttachment> attachments = getRepositoryTaskData().getAttachments();
-					// TODO: should not need to do this, but attachments may not
-					// be persisted
-					for (RepositoryAttachment repositoryAttachment : attachments) {
-						if (repositoryAttachment.getRepository() == null) {
-							repositoryAttachment.setRepository(repository);
-						}
-					}
-
 					return attachments.toArray();
 				}
 
@@ -1024,8 +1025,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
 					try {
-						save.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository, ""
-								+ attachment.getId())));
+						save
+								.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository,
+										attachment)));
 						save.setDestinationFilePath(filePath);
 						save.run();
 					} catch (CoreException e) {
@@ -1131,14 +1133,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		registerDropListener(addAttachmentButton);
 	}
 
-	protected IOfflineTaskHandler getOfflineTaskHandler() {
-		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				getRepositoryTaskData().getRepositoryKind());
-		if (connector != null) {
-			return connector.getOfflineTaskHandler();
-		}
-		return null;
-	}
+	// protected ITaskDataHandler getOfflineTaskHandler() {
+	// final AbstractRepositoryConnector connector =
+	// TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+	// getRepositoryTaskData().getRepositoryKind());
+	// if (connector != null) {
+	// return connector.getTaskDataHandler();
+	// }
+	// return null;
+	// }
 
 	private void registerDropListener(final Control control) {
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
@@ -1488,7 +1491,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		addCommentsComposite.setLayout(addCommentsLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
 		AbstractRepositoryTask repositoryTask = null;
-		IOfflineTaskHandler offlineHandler = null;
+		ITaskDataHandler offlineHandler = null;
 		IEditorInput input = this.getEditorInput();
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
@@ -1496,7 +1499,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
 					.getRepositoryConnector(getRepositoryTaskData().getRepositoryKind());
-			offlineHandler = connector.getOfflineTaskHandler();
+			offlineHandler = connector.getTaskDataHandler();
 		}
 		StyledText styledText = null;
 		for (Iterator<TaskComment> it = getRepositoryTaskData().getComments().iterator(); it.hasNext();) {
@@ -2139,6 +2142,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Button attachContextButton;
 
+	public AbstractRepositoryConnector connector;
+
 	public boolean isDisposed() {
 		return isDisposed;
 	}
@@ -2411,6 +2416,166 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (attachContextButton != null && attachContextButton.isEnabled()) {
 			attachContextButton.setSelection(attachContext);
 		}
+	}
+
+	public void submitToRepository() {
+		submitButton.setEnabled(false);
+		showBusy(true);
+		if (isDirty()) {
+			doSave(new NullProgressMonitor());
+		}
+
+		final ITaskDataHandler dataHandler = connector.getTaskDataHandler();
+
+		Job submitJob = new Job(LABEL_JOB_SUBMIT) {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+
+				try {
+					String result = dataHandler.postTaskData(repository, getRepositoryTaskData());
+
+					getRepositoryTaskData().setHasLocalChanges(false);
+					return new Status(Status.OK, AbstractRepositoryTaskEditor.this.getPluginId(), Status.OK, result,
+							null);
+				} catch (CoreException e) {
+					return e.getStatus();
+				}
+			}
+
+		};
+		submitJob.addJobChangeListener(getSubmitJobListener());
+		submitJob.schedule();
+	}
+
+	protected abstract String getPluginId();
+
+	protected IJobChangeListener getSubmitJobListener() {
+		JobChangeAdapter submitJobListener = new JobChangeAdapter() {
+
+			@Override
+			public void done(final IJobChangeEvent event) {
+
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (event.getJob().getResult().getCode() != Status.ERROR) {
+							if (getRepositoryTaskData().isNew()) {
+								try {
+									modifiedTask = handleNewBugPost(event.getJob().getResult().getMessage());
+								} catch (CoreException e) {
+									MylarStatusHandler
+											.fail(e, "Failed to synchronize new task with repository"
+													+ ": Changes may not have successfully committed.\n"
+													+ e.getMessage(), true);
+									submitButton.setEnabled(true);
+									AbstractRepositoryTaskEditor.this.showBusy(false);
+									return;
+								}
+
+							} else {
+								modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+										.getTaskList().getTask(
+												AbstractRepositoryTask.getHandle(repository.getUrl(),
+														getRepositoryTaskData().getId()));
+							}
+
+							// Attach context
+							if (getAttachContext()) {
+								attachContext(modifiedTask);
+							}
+
+							if (modifiedTask != null) {
+								// Technically we now have new incoming
+								modifiedTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+
+								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
+										new JobChangeAdapter() {
+
+											@Override
+											public void done(IJobChangeEvent event) {
+												close();
+												TasksUiPlugin.getSynchronizationManager().setTaskRead(modifiedTask,
+														true);
+												TasksUiUtil.openEditor(modifiedTask, false);
+											}
+										});
+								TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
+										Collections.singletonList(repository));
+							} else {
+								
+								// TaskUiUtil.openRepositoryTask(repository.getUrl(),
+								// AbstractRepositoryTaskEditor.this
+								// .getRepositoryTaskData().getId(),
+								// repository.getUrl()
+								// + IBugzillaConstants.URL_GET_SHOW_BUG
+								// +
+								// BugzillaTaskEditor.this.getRepositoryTaskData().getId());
+								close();
+							}
+
+							return;
+						} else {
+							handleSubmitError(event);
+						}
+					}
+				});
+			}
+		};
+
+		return submitJobListener;
+	}
+
+	protected void attachContext(final AbstractRepositoryTask modifiedTask) {
+		IProgressService ps = PlatformUI.getWorkbench().getProgressService();
+		try {
+			ps.busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor pm) {
+					try {
+						connector.attachContext(repository, modifiedTask, "");
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
+		} catch (InterruptedException ignore) {
+		}
+	}
+
+	protected AbstractTaskContainer getCategory() {
+		return null;
+	}
+
+	protected void handleSubmitError(final IJobChangeEvent event) {
+		if (event.getJob().getResult().getCode() == Status.INFO) {
+			WebBrowserDialog.openAcceptAgreement(null, "Failed to submit to repository", event.getJob().getResult()
+					.getMessage(), event.getJob().getResult().getException().getMessage());
+		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
+			MylarStatusHandler.fail(event.getJob().getResult().getException(), "Failed to submit to repository"
+					+ ": Changes may not have successfully committed.\n" + event.getJob().getResult().getMessage(),
+					true);
+		}
+		if (!AbstractRepositoryTaskEditor.this.isDisposed() && !submitButton.isDisposed()) {
+			submitButton.setEnabled(true);
+			AbstractRepositoryTaskEditor.this.showBusy(false);
+		}
+	}
+
+	protected AbstractRepositoryTask handleNewBugPost(String postResult) throws CoreException {
+		AbstractRepositoryTask newTask = connector.createTaskFromExistingKey(repository, postResult);
+
+		if (newTask != null) {
+			// newTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			// TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
+			// Collections.singletonList(repository));
+			if (getCategory() != null) {
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(getCategory(), newTask);
+			}
+		}
+
+		return newTask;
+
 	}
 
 	/**

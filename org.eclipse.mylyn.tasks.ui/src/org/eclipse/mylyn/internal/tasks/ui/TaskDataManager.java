@@ -29,7 +29,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
- * Manager for persisting RepositoryTaskData
+ * Manager for persisting RepositoryTaskData offline
  * 
  * @author Rob Elves
  */
@@ -286,8 +286,8 @@ public class TaskDataManager {
 	private void updateAttributeFactory(RepositoryTaskData taskData) {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				taskData.getRepositoryKind());
-		if (connector != null && connector.getOfflineTaskHandler() != null) {
-			AbstractAttributeFactory factory = connector.getOfflineTaskHandler().getAttributeFactory();
+		if (connector != null && connector.getTaskDataHandler() != null) {
+			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory();
 			if (factory != null) {
 				taskData.setAttributeFactory(factory);
 			}

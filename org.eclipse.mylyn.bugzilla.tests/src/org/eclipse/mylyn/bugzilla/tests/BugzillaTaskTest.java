@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaOfflineTaskHandler;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
@@ -35,12 +35,12 @@ public class BugzillaTaskTest extends TestCase {
 
 	private BugzillaAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
-	private BugzillaOfflineTaskHandler offlineHandler;
+	private BugzillaTaskDataHandler offlineHandler;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		offlineHandler = new BugzillaOfflineTaskHandler((BugzillaRepositoryConnector)TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND), new TaskList());
+		offlineHandler = new BugzillaTaskDataHandler((BugzillaRepositoryConnector)TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND), new TaskList());
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class BugzillaTaskTest extends TestCase {
 		assertNull(task.getCompletionDate());
 
 		Date now = new Date();
-		String nowTimeStamp = BugzillaOfflineTaskHandler.comment_creation_ts_format.format(now);
+		String nowTimeStamp = BugzillaTaskDataHandler.comment_creation_ts_format.format(now);
 
 		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN

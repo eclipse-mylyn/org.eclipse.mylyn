@@ -45,7 +45,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void submitToRepository() {
+	public void submitToRepository() {
 		if (!prepareSubmit()) {
 			return;
 		}
@@ -92,7 +92,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			}
 		};
 
-		submitJob.addJobChangeListener(submitJobListener);
+		submitJob.addJobChangeListener(getSubmitJobListener());
 		submitJob.schedule();
 	}
 
@@ -120,9 +120,14 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void handleErrorStatus(final IJobChangeEvent event) {
-		super.handleErrorStatus(event);
+	protected void handleSubmitError(final IJobChangeEvent event) {
+		super.handleSubmitError(event);
 		TracUiPlugin.handleTracException(event.getJob().getResult());
+	}
+
+	@Override
+	protected String getPluginId() {
+		return TracUiPlugin.PLUGIN_ID;
 	}
 
 }

@@ -21,21 +21,27 @@ import org.eclipse.core.runtime.CoreException;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public interface IOfflineTaskHandler {
-	
+public interface ITaskDataHandler {
+
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException;
+
 	/**
-	 * @return null if date cannot be parsed
+	 * Return a reference to the newly created report in the case of new task submission,
+	 * null otherwise
 	 */
-	public Date getDateForAttributeType(String attributeKey, String dateString);
-	
-	public AbstractAttributeFactory getAttributeFactory();
-	
-	// TODO: remove proxy parameter
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId) throws CoreException;
-		
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException;
+
 	/**
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException;
- }
+
+	/**
+	 * @return null if date cannot be parsed
+	 */
+	public Date getDateForAttributeType(String attributeKey, String dateString);
+
+	public AbstractAttributeFactory getAttributeFactory();
+
+}

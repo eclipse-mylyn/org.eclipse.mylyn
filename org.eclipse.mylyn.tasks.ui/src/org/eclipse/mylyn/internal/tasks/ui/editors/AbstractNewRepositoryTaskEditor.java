@@ -17,22 +17,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -92,22 +88,22 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	protected CCombo categoryCombo;
 
-	protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
-		@Override
-		public void done(final IJobChangeEvent event) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (event.getJob().getResult().getCode() == Status.OK
-							&& event.getJob().getResult().getMessage() != null) {
-						handleOkayStatus(event);
-					} else {// if (event.getJob().getResult().getCode() ==
-						// Status.ERROR) {
-						handleErrorStatus(event);
-					}
-				}
-			});
-		}
-	};
+	// protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
+	// @Override
+	// public void done(final IJobChangeEvent event) {
+	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+	// public void run() {
+	// if (event.getJob().getResult().getCode() == Status.OK
+	// && event.getJob().getResult().getMessage() != null) {
+	// handleOkayStatus(event);
+	// } else {// if (event.getJob().getResult().getCode() ==
+	// // Status.ERROR) {
+	// handleSubmitError(event);
+	// }
+	// }
+	// });
+	// }
+	// };
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -123,6 +119,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData, false);
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		isDirty = false;
 	}
 
@@ -369,7 +366,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void updateTask() { 
+	protected void updateTask() {
 		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
 	}
@@ -426,8 +423,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		buttonComposite.setLayout(new GridLayout(4, false));
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		section.setClient(buttonComposite);
-		addActionButtons(buttonComposite);		
-		
+		addActionButtons(buttonComposite);
+
 		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
 		categoryCombo = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryCombo.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
@@ -558,11 +555,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// ignore, new editor doesn't have people section
 	}
 
-	protected void handleOkayStatus(final IJobChangeEvent event) {
-		close();
-		String newTaskHandle = AbstractRepositoryTask.getHandle(repository.getUrl(), event.getJob().getResult()
-				.getMessage());
-		ITask newTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
+	public AbstractRepositoryTask handleNewBugPost(String id) throws CoreException {
+		AbstractRepositoryTask newTask = super.handleNewBugPost(id);
+
 		if (newTask != null) {
 			Calendar selectedDate = datePicker.getDate();
 			if (selectedDate != null) {
@@ -581,14 +576,43 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
 						newTask);
 			}
-			TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 		}
+
+		return newTask;
 	}
 
-	protected void handleErrorStatus(final IJobChangeEvent event) {
-		submitButton.setEnabled(true);
-		showBusy(false);
-	}
+	// protected void handleOkayStatus(final IJobChangeEvent event) {
+	// close();
+	// String newTaskHandle =
+	// AbstractRepositoryTask.getHandle(repository.getUrl(),
+	// event.getJob().getResult()
+	// .getMessage());
+	// ITask newTask =
+	// TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
+	// if (newTask != null) {
+	// Calendar selectedDate = datePicker.getDate();
+	// if (selectedDate != null) {
+	// // NewLocalTaskAction.scheduleNewTask(newTask);
+	// TasksUiPlugin.getTaskListManager().setScheduledFor(newTask,
+	// selectedDate.getTime());
+	// }
+	//
+	// newTask.setEstimatedTimeHours(estimated.getSelection());
+	//
+	// Object selectedObject = null;
+	// if (TaskListView.getFromActivePerspective() != null)
+	// selectedObject = ((IStructuredSelection)
+	// TaskListView.getFromActivePerspective().getViewer()
+	// .getSelection()).getFirstElement();
+	//
+	// if (selectedObject instanceof TaskCategory) {
+	// TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory)
+	// selectedObject),
+	// newTask);
+	// }
+	// TaskUiUtil.refreshAndOpenTaskListElement(newTask);
+	// }
+	// }
 
 	protected abstract SearchHitCollector getDuplicateSearchCollector(String description);
 

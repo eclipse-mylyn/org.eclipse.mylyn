@@ -133,20 +133,20 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		ITask task = connector.createTaskFromExistingKey(repository, id, null);
+		ITask task = connector.createTaskFromExistingKey(repository, id);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
-			task = connector.createTaskFromExistingKey(repository, "does not exist", null);
+			task = connector.createTaskFromExistingKey(repository, "does not exist");
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
 
 		try {
-			task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "", null);
+			task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "");
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
@@ -276,7 +276,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContext010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "", null);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -297,7 +297,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContext096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "", null);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

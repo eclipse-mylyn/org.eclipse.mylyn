@@ -86,7 +86,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 				
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 				IAttachmentHandler handler = connector.getAttachmentHandler();
-				return new ByteArrayInputStream(handler.getAttachmentData(repository, ""+attachment.getId()));
+				return new ByteArrayInputStream(handler.getAttachmentData(repository, attachment));
 //				urlConnect = (new URL(attachment.getUrl())).openConnection();
 //				urlConnect.connect();
 //				stream = urlConnect.getInputStream();

@@ -533,36 +533,36 @@ public class HtmlStreamTokenizer {
 	 */
 	static {
 		entities = new HashMap<String, Character>();
-		entities.put("nbsp", new Character('\240')); // no-break
+		entities.put("nbsp",Character.valueOf('\240')); // no-break
 		// space =
 		// non-breaking
 		// space
-		entities.put("iexcl", new Character('\241')); // inverted
+		entities.put("iexcl",Character.valueOf('\241')); // inverted
 		// exclamation
 		// mark
-		entities.put("cent", new Character('\242')); // cent sign
-		entities.put("pound", new Character('\243')); // pound
+		entities.put("cent",Character.valueOf('\242')); // cent sign
+		entities.put("pound",Character.valueOf('\243')); // pound
 		// sign
-		entities.put("curren", new Character('\244')); // currency
+		entities.put("curren",Character.valueOf('\244')); // currency
 		// sign
-		entities.put("yen", new Character('\245')); // yen sign =
+		entities.put("yen",Character.valueOf('\245')); // yen sign =
 		// yuan sign
-		entities.put("brvbar", new Character('\246')); // broken
+		entities.put("brvbar",Character.valueOf('\246')); // broken
 		// bar =
 		// broken
 		// vertical
 		// bar
-		entities.put("sect", new Character('\247')); // section
+		entities.put("sect",Character.valueOf('\247')); // section
 		// sign
-		entities.put("uml", new Character('\250')); // diaeresis =
+		entities.put("uml",Character.valueOf('\250')); // diaeresis =
 		// spacing
 		// diaeresis
-		entities.put("copy", new Character('\251')); // copyright
+		entities.put("copy",Character.valueOf('\251')); // copyright
 		// sign
-		entities.put("ordf", new Character('\252')); // feminine
+		entities.put("ordf",Character.valueOf('\252')); // feminine
 		// ordinal
 		// indicator
-		entities.put("laquo", new Character('\253')); // left-pointing
+		entities.put("laquo",Character.valueOf('\253')); // left-pointing
 		// double
 		// angle
 		// quotation
@@ -570,65 +570,65 @@ public class HtmlStreamTokenizer {
 		// left
 		// pointing
 		// guillemet
-		entities.put("not", new Character('\254')); // not sign
-		entities.put("shy", new Character('\255')); // soft hyphen =
+		entities.put("not",Character.valueOf('\254')); // not sign
+		entities.put("shy",Character.valueOf('\255')); // soft hyphen =
 		// discretionary
 		// hyphen
-		entities.put("reg", new Character('\256')); // registered
+		entities.put("reg",Character.valueOf('\256')); // registered
 		// sign =
 		// registered
 		// trade mark
 		// sign
-		entities.put("macr", new Character('\257')); // macron =
+		entities.put("macr",Character.valueOf('\257')); // macron =
 		// spacing
 		// macron =
 		// overline
 		// = APL
 		// overbar
-		entities.put("deg", new Character('\260')); // degree sign
-		entities.put("plusmn", new Character('\261')); // plus-minus
+		entities.put("deg",Character.valueOf('\260')); // degree sign
+		entities.put("plusmn",Character.valueOf('\261')); // plus-minus
 		// sign =
 		// plus-or-minus
 		// sign
-		entities.put("sup2", new Character('\262')); // superscript
+		entities.put("sup2",Character.valueOf('\262')); // superscript
 		// two =
 		// superscript
 		// digit two
 		// = squared
-		entities.put("sup3", new Character('\263')); // superscript
+		entities.put("sup3",Character.valueOf('\263')); // superscript
 		// three =
 		// superscript
 		// digit
 		// three =
 		// cubed
-		entities.put("acute", new Character('\264')); // acute
+		entities.put("acute",Character.valueOf('\264')); // acute
 		// accent =
 		// spacing
 		// acute
-		entities.put("micro", new Character('\265')); // micro
+		entities.put("micro",Character.valueOf('\265')); // micro
 		// sign
-		entities.put("para", new Character('\266')); // pilcrow
+		entities.put("para",Character.valueOf('\266')); // pilcrow
 		// sign =
 		// paragraph
 		// sign
-		entities.put("middot", new Character('\267')); // middle
+		entities.put("middot",Character.valueOf('\267')); // middle
 		// dot =
 		// Georgian
 		// comma =
 		// Greek
 		// middle
 		// dot
-		entities.put("cedil", new Character('\270')); // cedilla =
+		entities.put("cedil",Character.valueOf('\270')); // cedilla =
 		// spacing
 		// cedilla
-		entities.put("sup1", new Character('\271')); // superscript
+		entities.put("sup1",Character.valueOf('\271')); // superscript
 		// one =
 		// superscript
 		// digit one
-		entities.put("ordm", new Character('\272')); // masculine
+		entities.put("ordm",Character.valueOf('\272')); // masculine
 		// ordinal
 		// indicator
-		entities.put("raquo", new Character('\273')); // right-pointing
+		entities.put("raquo",Character.valueOf('\273')); // right-pointing
 		// double
 		// angle
 		// quotation
@@ -636,20 +636,20 @@ public class HtmlStreamTokenizer {
 		// right
 		// pointing
 		// guillemet
-		entities.put("frac14", new Character('\274')); // vulgar
+		entities.put("frac14",Character.valueOf('\274')); // vulgar
 		// fraction
 		// one
 		// quarter =
 		// fraction
 		// one
 		// quarter
-		entities.put("frac12", new Character('\275')); // vulgar
+		entities.put("frac12",Character.valueOf('\275')); // vulgar
 		// fraction
 		// one half
 		// =
 		// fraction
 		// one half
-		entities.put("frac34", new Character('\276')); // vulgar
+		entities.put("frac34",Character.valueOf('\276')); // vulgar
 		// fraction
 		// three
 		// quarters
@@ -657,13 +657,13 @@ public class HtmlStreamTokenizer {
 		// fraction
 		// three
 		// quarters
-		entities.put("iquest", new Character('\277')); // inverted
+		entities.put("iquest",Character.valueOf('\277')); // inverted
 		// question
 		// mark =
 		// turned
 		// question
 		// mark
-		entities.put("Agrave", new Character('\300')); // latin
+		entities.put("Agrave",Character.valueOf('\300')); // latin
 		// capital
 		// letter A
 		// with
@@ -672,27 +672,27 @@ public class HtmlStreamTokenizer {
 		// capital
 		// letter A
 		// grave
-		entities.put("Aacute", new Character('\301')); // latin
+		entities.put("Aacute",Character.valueOf('\301')); // latin
 		// capital
 		// letter A
 		// with
 		// acute
-		entities.put("Acirc", new Character('\302')); // latin
+		entities.put("Acirc",Character.valueOf('\302')); // latin
 		// capital
 		// letter A
 		// with
 		// circumflex
-		entities.put("Atilde", new Character('\303')); // latin
+		entities.put("Atilde",Character.valueOf('\303')); // latin
 		// capital
 		// letter A
 		// with
 		// tilde
-		entities.put("Auml", new Character('\304')); // latin
+		entities.put("Auml",Character.valueOf('\304')); // latin
 		// capital
 		// letter A
 		// with
 		// diaeresis
-		entities.put("Aring", new Character('\305')); // latin
+		entities.put("Aring",Character.valueOf('\305')); // latin
 		// capital
 		// letter A
 		// with ring
@@ -701,93 +701,93 @@ public class HtmlStreamTokenizer {
 		// capital
 		// letter A
 		// ring
-		entities.put("AElig", new Character('\306')); // latin
+		entities.put("AElig",Character.valueOf('\306')); // latin
 		// capital
 		// letter AE
 		// = latin
 		// capital
 		// ligature
 		// AE
-		entities.put("Ccedil", new Character('\307')); // latin
+		entities.put("Ccedil",Character.valueOf('\307')); // latin
 		// capital
 		// letter C
 		// with
 		// cedilla
-		entities.put("Egrave", new Character('\310')); // latin
+		entities.put("Egrave",Character.valueOf('\310')); // latin
 		// capital
 		// letter E
 		// with
 		// grave
-		entities.put("Eacute", new Character('\311')); // latin
+		entities.put("Eacute",Character.valueOf('\311')); // latin
 		// capital
 		// letter E
 		// with
 		// acute
-		entities.put("Ecirc", new Character('\312')); // latin
+		entities.put("Ecirc",Character.valueOf('\312')); // latin
 		// capital
 		// letter E
 		// with
 		// circumflex
-		entities.put("Euml", new Character('\313')); // latin
+		entities.put("Euml",Character.valueOf('\313')); // latin
 		// capital
 		// letter E
 		// with
 		// diaeresis
-		entities.put("Igrave", new Character('\314')); // latin
+		entities.put("Igrave",Character.valueOf('\314')); // latin
 		// capital
 		// letter I
 		// with
 		// grave
-		entities.put("Iacute", new Character('\315')); // latin
+		entities.put("Iacute",Character.valueOf('\315')); // latin
 		// capital
 		// letter I
 		// with
 		// acute
-		entities.put("Icirc", new Character('\316')); // latin
+		entities.put("Icirc",Character.valueOf('\316')); // latin
 		// capital
 		// letter I
 		// with
 		// circumflex
-		entities.put("Iuml", new Character('\317')); // latin
+		entities.put("Iuml",Character.valueOf('\317')); // latin
 		// capital
 		// letter I
 		// with
 		// diaeresis
-		entities.put("ETH", new Character('\320')); // latin capital
+		entities.put("ETH",Character.valueOf('\320')); // latin capital
 		// letter ETH
-		entities.put("Ntilde", new Character('\321')); // latin
+		entities.put("Ntilde",Character.valueOf('\321')); // latin
 		// capital
 		// letter N
 		// with
 		// tilde
-		entities.put("Ograve", new Character('\322')); // latin
+		entities.put("Ograve",Character.valueOf('\322')); // latin
 		// capital
 		// letter O
 		// with
 		// grave
-		entities.put("Oacute", new Character('\323')); // latin
+		entities.put("Oacute",Character.valueOf('\323')); // latin
 		// capital
 		// letter O
 		// with
 		// acute
-		entities.put("Ocirc", new Character('\324')); // latin
+		entities.put("Ocirc",Character.valueOf('\324')); // latin
 		// capital
 		// letter O
 		// with
 		// circumflex
-		entities.put("Otilde", new Character('\325')); // latin
+		entities.put("Otilde",Character.valueOf('\325')); // latin
 		// capital
 		// letter O
 		// with
 		// tilde
-		entities.put("Ouml", new Character('\326')); // latin
+		entities.put("Ouml",Character.valueOf('\326')); // latin
 		// capital
 		// letter O
 		// with
 		// diaeresis
-		entities.put("times", new Character('\327')); // multiplication
+		entities.put("times",Character.valueOf('\327')); // multiplication
 		// sign
-		entities.put("Oslash", new Character('\330')); // latin
+		entities.put("Oslash",Character.valueOf('\330')); // latin
 		// capital
 		// letter O
 		// with
@@ -796,41 +796,41 @@ public class HtmlStreamTokenizer {
 		// capital
 		// letter O
 		// slash
-		entities.put("Ugrave", new Character('\331')); // latin
+		entities.put("Ugrave",Character.valueOf('\331')); // latin
 		// capital
 		// letter U
 		// with
 		// grave
-		entities.put("Uacute", new Character('\332')); // latin
+		entities.put("Uacute",Character.valueOf('\332')); // latin
 		// capital
 		// letter U
 		// with
 		// acute
-		entities.put("Ucirc", new Character('\333')); // latin
+		entities.put("Ucirc",Character.valueOf('\333')); // latin
 		// capital
 		// letter U
 		// with
 		// circumflex
-		entities.put("Uuml", new Character('\334')); // latin
+		entities.put("Uuml",Character.valueOf('\334')); // latin
 		// capital
 		// letter U
 		// with
 		// diaeresis
-		entities.put("Yacute", new Character('\335')); // latin
+		entities.put("Yacute",Character.valueOf('\335')); // latin
 		// capital
 		// letter Y
 		// with
 		// acute
-		entities.put("THORN", new Character('\336')); // latin
+		entities.put("THORN",Character.valueOf('\336')); // latin
 		// capital
 		// letter
 		// THORN
-		entities.put("szlig", new Character('\337')); // latin
+		entities.put("szlig",Character.valueOf('\337')); // latin
 		// small
 		// letter
 		// sharp s =
 		// ess-zed
-		entities.put("agrave", new Character('\340')); // latin
+		entities.put("agrave",Character.valueOf('\340')); // latin
 		// small
 		// letter a
 		// with
@@ -839,27 +839,27 @@ public class HtmlStreamTokenizer {
 		// small
 		// letter a
 		// grave
-		entities.put("aacute", new Character('\341')); // latin
+		entities.put("aacute",Character.valueOf('\341')); // latin
 		// small
 		// letter a
 		// with
 		// acute
-		entities.put("acirc", new Character('\342')); // latin
+		entities.put("acirc",Character.valueOf('\342')); // latin
 		// small
 		// letter a
 		// with
 		// circumflex
-		entities.put("atilde", new Character('\343')); // latin
+		entities.put("atilde",Character.valueOf('\343')); // latin
 		// small
 		// letter a
 		// with
 		// tilde
-		entities.put("auml", new Character('\344')); // latin
+		entities.put("auml",Character.valueOf('\344')); // latin
 		// small
 		// letter a
 		// with
 		// diaeresis
-		entities.put("aring", new Character('\345')); // latin
+		entities.put("aring",Character.valueOf('\345')); // latin
 		// small
 		// letter a
 		// with ring
@@ -868,93 +868,93 @@ public class HtmlStreamTokenizer {
 		// small
 		// letter a
 		// ring
-		entities.put("aelig", new Character('\346')); // latin
+		entities.put("aelig",Character.valueOf('\346')); // latin
 		// small
 		// letter ae
 		// = latin
 		// small
 		// ligature
 		// ae
-		entities.put("ccedil", new Character('\347')); // latin
+		entities.put("ccedil",Character.valueOf('\347')); // latin
 		// small
 		// letter c
 		// with
 		// cedilla
-		entities.put("egrave", new Character('\350')); // latin
+		entities.put("egrave",Character.valueOf('\350')); // latin
 		// small
 		// letter e
 		// with
 		// grave
-		entities.put("eacute", new Character('\351')); // latin
+		entities.put("eacute",Character.valueOf('\351')); // latin
 		// small
 		// letter e
 		// with
 		// acute
-		entities.put("ecirc", new Character('\352')); // latin
+		entities.put("ecirc",Character.valueOf('\352')); // latin
 		// small
 		// letter e
 		// with
 		// circumflex
-		entities.put("euml", new Character('\353')); // latin
+		entities.put("euml",Character.valueOf('\353')); // latin
 		// small
 		// letter e
 		// with
 		// diaeresis
-		entities.put("igrave", new Character('\354')); // latin
+		entities.put("igrave",Character.valueOf('\354')); // latin
 		// small
 		// letter i
 		// with
 		// grave
-		entities.put("iacute", new Character('\355')); // latin
+		entities.put("iacute",Character.valueOf('\355')); // latin
 		// small
 		// letter i
 		// with
 		// acute
-		entities.put("icirc", new Character('\356')); // latin
+		entities.put("icirc",Character.valueOf('\356')); // latin
 		// small
 		// letter i
 		// with
 		// circumflex
-		entities.put("iuml", new Character('\357')); // latin
+		entities.put("iuml",Character.valueOf('\357')); // latin
 		// small
 		// letter i
 		// with
 		// diaeresis
-		entities.put("eth", new Character('\360')); // latin small
+		entities.put("eth",Character.valueOf('\360')); // latin small
 		// letter eth
-		entities.put("ntilde", new Character('\361')); // latin
+		entities.put("ntilde",Character.valueOf('\361')); // latin
 		// small
 		// letter n
 		// with
 		// tilde
-		entities.put("ograve", new Character('\362')); // latin
+		entities.put("ograve",Character.valueOf('\362')); // latin
 		// small
 		// letter o
 		// with
 		// grave
-		entities.put("oacute", new Character('\363')); // latin
+		entities.put("oacute",Character.valueOf('\363')); // latin
 		// small
 		// letter o
 		// with
 		// acute
-		entities.put("ocirc", new Character('\364')); // latin
+		entities.put("ocirc",Character.valueOf('\364')); // latin
 		// small
 		// letter o
 		// with
 		// circumflex
-		entities.put("otilde", new Character('\365')); // latin
+		entities.put("otilde",Character.valueOf('\365')); // latin
 		// small
 		// letter o
 		// with
 		// tilde
-		entities.put("ouml", new Character('\366')); // latin
+		entities.put("ouml",Character.valueOf('\366')); // latin
 		// small
 		// letter o
 		// with
 		// diaeresis
-		entities.put("divide", new Character('\367')); // division
+		entities.put("divide",Character.valueOf('\367')); // division
 		// sign
-		entities.put("oslash", new Character('\370')); // latin
+		entities.put("oslash",Character.valueOf('\370')); // latin
 		// small
 		// letter o
 		// with
@@ -963,56 +963,56 @@ public class HtmlStreamTokenizer {
 		// small
 		// letter o
 		// slash
-		entities.put("ugrave", new Character('\371')); // latin
+		entities.put("ugrave",Character.valueOf('\371')); // latin
 		// small
 		// letter u
 		// with
 		// grave
-		entities.put("uacute", new Character('\372')); // latin
+		entities.put("uacute",Character.valueOf('\372')); // latin
 		// small
 		// letter u
 		// with
 		// acute
-		entities.put("ucirc", new Character('\373')); // latin
+		entities.put("ucirc",Character.valueOf('\373')); // latin
 		// small
 		// letter u
 		// with
 		// circumflex
-		entities.put("uuml", new Character('\374')); // latin
+		entities.put("uuml",Character.valueOf('\374')); // latin
 		// small
 		// letter u
 		// with
 		// diaeresis
-		entities.put("yacute", new Character('\375')); // latin
+		entities.put("yacute",Character.valueOf('\375')); // latin
 		// small
 		// letter y
 		// with
 		// acute
-		entities.put("thorn", new Character('\376')); // latin
+		entities.put("thorn",Character.valueOf('\376')); // latin
 		// small
 		// letter
 		// thorn
-		entities.put("yuml", new Character('\377')); // latin
+		entities.put("yuml",Character.valueOf('\377')); // latin
 		// small
 		// letter y
 		// with
 		// diaeresis
 
 		// Special characters
-		entities.put("quot", new Character('\42')); // quotation
+		entities.put("quot",Character.valueOf('\42')); // quotation
 		// mark = APL
 		// quote
-		entities.put("amp", new Character('\46')); // ampersand
-		entities.put("lt", new Character('\74')); // less-than
+		entities.put("amp",Character.valueOf('\46')); // ampersand
+		entities.put("lt",Character.valueOf('\74')); // less-than
 		// sign
-		entities.put("gt", new Character('\76')); // greater-than
+		entities.put("gt",Character.valueOf('\76')); // greater-than
 		// sign
 		// Latin Extended-A
-		entities.put("OElig", new Character('\u0152')); // latin
+		entities.put("OElig",Character.valueOf('\u0152')); // latin
 		// capital
 		// ligature
 		// OE
-		entities.put("oelig", new Character('\u0153')); // latin
+		entities.put("oelig",Character.valueOf('\u0153')); // latin
 		// small
 		// ligature
 		// oe,
@@ -1024,78 +1024,78 @@ public class HtmlStreamTokenizer {
 		// character
 		// in some
 		// languages
-		entities.put("Scaron", new Character('\u0160')); // latin
+		entities.put("Scaron",Character.valueOf('\u0160')); // latin
 		// capital
 		// letter
 		// S
 		// with
 		// caron
-		entities.put("scaron", new Character('\u0161')); // latin
+		entities.put("scaron",Character.valueOf('\u0161')); // latin
 		// small
 		// letter
 		// s
 		// with
 		// caron
-		entities.put("Yuml", new Character('\u0178')); // latin
+		entities.put("Yuml",Character.valueOf('\u0178')); // latin
 		// capital
 		// letter Y
 		// with
 		// diaeresis
 		// Spacing Modifier Letters
-		entities.put("circ", new Character('\u02c6')); // modifier
+		entities.put("circ",Character.valueOf('\u02c6')); // modifier
 		// letter
 		// circumflex
 		// accent
-		entities.put("tilde", new Character('\u02dc')); // small
+		entities.put("tilde",Character.valueOf('\u02dc')); // small
 		// tilde
 		// General punctuation
-		entities.put("ensp", new Character('\u2002')); // en space
-		entities.put("emsp", new Character('\u2003')); // em space
-		entities.put("thinsp", new Character('\u2009')); // thin
+		entities.put("ensp",Character.valueOf('\u2002')); // en space
+		entities.put("emsp",Character.valueOf('\u2003')); // em space
+		entities.put("thinsp",Character.valueOf('\u2009')); // thin
 		// space
-		entities.put("zwnj", new Character('\u200c')); // zero
+		entities.put("zwnj",Character.valueOf('\u200c')); // zero
 		// width
 		// non-joiner
-		entities.put("zwj", new Character('\u200d')); // zero
+		entities.put("zwj",Character.valueOf('\u200d')); // zero
 		// width
 		// joiner
-		entities.put("lrm", new Character('\u200e')); // left-to-right
+		entities.put("lrm",Character.valueOf('\u200e')); // left-to-right
 		// mark
-		entities.put("rlm", new Character('\u200f')); // right-to-left
+		entities.put("rlm",Character.valueOf('\u200f')); // right-to-left
 		// mark
-		entities.put("ndash", new Character('\u2013')); // en dash
-		entities.put("mdash", new Character('\u2014')); // em dash
-		entities.put("lsquo", new Character('\u2018')); // left
+		entities.put("ndash",Character.valueOf('\u2013')); // en dash
+		entities.put("mdash",Character.valueOf('\u2014')); // em dash
+		entities.put("lsquo",Character.valueOf('\u2018')); // left
 		// single
 		// quotation
 		// mark
-		entities.put("rsquo", new Character('\u2019')); // right
+		entities.put("rsquo",Character.valueOf('\u2019')); // right
 		// single
 		// quotation
 		// mark
-		entities.put("sbquo", new Character('\u201a')); // single
+		entities.put("sbquo",Character.valueOf('\u201a')); // single
 		// low-9
 		// quotation
 		// mark
-		entities.put("ldquo", new Character('\u201c')); // left
+		entities.put("ldquo",Character.valueOf('\u201c')); // left
 		// double
 		// quotation
 		// mark
-		entities.put("rdquo", new Character('\u201d')); // right
+		entities.put("rdquo",Character.valueOf('\u201d')); // right
 		// double
 		// quotation
 		// mark
-		entities.put("bdquo", new Character('\u201e')); // double
+		entities.put("bdquo",Character.valueOf('\u201e')); // double
 		// low-9
 		// quotation
 		// mark
-		entities.put("dagger", new Character('\u2020')); // dagger
-		entities.put("Dagger", new Character('\u2021')); // double
+		entities.put("dagger",Character.valueOf('\u2020')); // dagger
+		entities.put("Dagger",Character.valueOf('\u2021')); // double
 		// dagger
-		entities.put("permil", new Character('\u2030')); // per
+		entities.put("permil",Character.valueOf('\u2030')); // per
 		// mille
 		// sign
-		entities.put("lsaquo", new Character('\u2039')); // single
+		entities.put("lsaquo",Character.valueOf('\u2039')); // single
 		// left-pointing
 		// angle
 		// quotation
@@ -1103,7 +1103,7 @@ public class HtmlStreamTokenizer {
 		// not
 		// yet
 		// standardized
-		entities.put("rsaquo", new Character('\u203a')); // single
+		entities.put("rsaquo",Character.valueOf('\u203a')); // single
 		// right-pointing
 		// angle
 		// quotation
@@ -1111,6 +1111,6 @@ public class HtmlStreamTokenizer {
 		// not
 		// yet
 		// standardized
-		entities.put("euro", new Character('\u20ac')); // euro sign
+		entities.put("euro",Character.valueOf('\u20ac')); // euro sign
 	}
 }

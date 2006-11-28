@@ -332,12 +332,13 @@ public class TaskRepositoryManager {
 	public String getAttachmentContents(RepositoryAttachment attachment) {
 		StringBuffer contents = new StringBuffer();
 		try {
-			AbstractRepositoryConnector connector = getRepositoryConnector(
-					attachment.getRepository().getKind());
+			TaskRepository repository = getRepository(attachment.getRepositoryKind(), attachment.getRepositoryUrl());
+			AbstractRepositoryConnector connector = getRepositoryConnector(attachment.getRepositoryKind());
+			if (repository == null || connector == null) {
+				return "";
+			}
 			IAttachmentHandler handler = connector.getAttachmentHandler();
-			InputStream stream;
-
-			stream = new ByteArrayInputStream(handler.getAttachmentData(attachment.getRepository(), "" + attachment.getId()));
+			InputStream stream = new ByteArrayInputStream(handler.getAttachmentData(repository, attachment));
 
 			int c;
 			while ((c = stream.read()) != -1) {
@@ -353,5 +354,5 @@ public class TaskRepositoryManager {
 			return null;
 		}
 		return contents.toString();
-	}	
+	}
 }

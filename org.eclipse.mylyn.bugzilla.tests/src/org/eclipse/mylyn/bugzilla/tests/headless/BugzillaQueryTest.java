@@ -22,17 +22,16 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+
+// import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
- * 
- * Runs headless (can be run as regular junit test without platform plugin
- * support).
+ * Example use of headless API (no ui dependencies)
  * 
  * @author Rob Elves
  * @author Nathan Hapke
@@ -40,22 +39,27 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class BugzillaQueryTest extends TestCase {
 
 	private TaskRepository repository;
+
 	private BugzillaRepositoryConnector connector;
-	private IOfflineTaskHandler handler;
-	
+
+	private ITaskDataHandler handler;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		connector = (BugzillaRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				BugzillaCorePlugin.REPOSITORY_KIND);
-		handler = connector.getOfflineTaskHandler();
+		//		
+		// connector = (BugzillaRepositoryConnector)
+		// TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		// BugzillaCorePlugin.REPOSITORY_KIND);
+
+		connector = new BugzillaRepositoryConnector();
+		connector.init(new TaskList());
+		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = MylarTestUtils.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
-	
-	
+
 	/**
 	 * This is the first test so that the repository credentials are correctly
 	 * set for the other tests
@@ -69,41 +73,33 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 
-//	public void testValidateCredentials() throws IOException, BugzillaException, KeyManagementException,
-//			GeneralSecurityException {
-//		BugzillaClient.validateCredentials(null, repository.getUrl(), repository.getCharacterEncoding(),
-//				repository.getUserName(), repository.getPassword());
-//	}
-//
-//	public void testValidateCredentialsInvalidProxy() throws IOException, BugzillaException, KeyManagementException,
-//			GeneralSecurityException {
-//		BugzillaClient.validateCredentials(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 12356)),
-//				repository.getUrl(), repository.getCharacterEncoding(), repository.getUserName(), repository
-//						.getPassword());
-//	}
-
-//	public void testCredentialsEncoding() throws IOException, BugzillaException, KeyManagementException,
-//			GeneralSecurityException {
-//		String poundSignUTF8 = BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL, "UTF-8",
-//				"testUser", "\u00A3");
-//		assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
-//		String poundSignISO = BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-//				"ISO-8859-1", "testUser", "\u00A3");
-//		assertFalse(poundSignISO.contains("%C2%A3"));
-//		assertTrue(poundSignISO.endsWith("password=%A3"));
-//	}
-
 	public void testGetBug() throws Exception {
-		RepositoryTaskData taskData = handler.downloadTaskData(repository, "1");
+		RepositoryTaskData taskData = handler.getTaskData(repository, "1");
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
-
 		assertEquals("foo", taskData.getDescription());
 
 		// You can use the getAttributeValue to pull up the information on any
 		// part of the bug
 		assertEquals("P1", taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
 	}
+
+	// README
+	// public void testPostBug() throws Exception {
+	// RepositoryTaskData taskData = handler.getTaskData(repository, "1");
+	// assertNotNull(taskData);
+	// assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
+	// assertEquals("foo", taskData.getDescription());
+	// taskData.setSummary("New Summary");
+	// // post this modification back to the repository
+	// handler.postTaskData(repository, taskData);
+	//			
+	// // You can use the getAttributeValue to pull up the information on any
+	// // part of the bug
+	// // assertEquals("P1",
+	// //
+	// taskData.getAttributeValue(BugzillaReportElement.PRIORITY.getKeyString()));
+	// }
 
 	public void testQueryViaConnector() throws Exception {
 		String queryUrlString = repository.getUrl()
@@ -123,3 +119,36 @@ public class BugzillaQueryTest extends TestCase {
 		}
 	}
 }
+
+// public void testValidateCredentials() throws IOException,
+// BugzillaException, KeyManagementException,
+// GeneralSecurityException {
+// BugzillaClient.validateCredentials(null, repository.getUrl(),
+// repository.getCharacterEncoding(),
+// repository.getUserName(), repository.getPassword());
+// }
+//
+// public void testValidateCredentialsInvalidProxy() throws IOException,
+// BugzillaException, KeyManagementException,
+// GeneralSecurityException {
+// BugzillaClient.validateCredentials(new Proxy(Proxy.Type.HTTP, new
+// InetSocketAddress("localhost", 12356)),
+// repository.getUrl(), repository.getCharacterEncoding(),
+// repository.getUserName(), repository
+// .getPassword());
+// }
+
+// public void testCredentialsEncoding() throws IOException,
+// BugzillaException, KeyManagementException,
+// GeneralSecurityException {
+// String poundSignUTF8 =
+// BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+// "UTF-8",
+// "testUser", "\u00A3");
+// assertTrue(poundSignUTF8.endsWith("password=%C2%A3"));
+// String poundSignISO =
+// BugzillaClient.addCredentials(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+// "ISO-8859-1", "testUser", "\u00A3");
+// assertFalse(poundSignISO.contains("%C2%A3"));
+// assertTrue(poundSignISO.endsWith("password=%A3"));
+// }

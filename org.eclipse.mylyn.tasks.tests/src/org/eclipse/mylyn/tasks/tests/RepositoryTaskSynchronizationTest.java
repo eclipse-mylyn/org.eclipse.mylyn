@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -308,7 +308,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 	}
 
-	private class TestOfflineTaskHandler implements IOfflineTaskHandler {
+	private class TestOfflineTaskHandler implements ITaskDataHandler {
 
 		private final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 
@@ -334,8 +334,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return null;
 		}
 
-		public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
+		public RepositoryTaskData getTaskData(TaskRepository repository, String taskId)
 				throws CoreException {
+			return null;
+		}
+
+		public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+			// ignore
 			return null;
 		}
 
@@ -344,7 +349,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	private class TestRepositoryConnector extends MockRepositoryConnector {
 
 		@Override
-		public IOfflineTaskHandler getOfflineTaskHandler() {
+		public ITaskDataHandler getTaskDataHandler() {
 			return handler;
 		}
 
@@ -376,6 +381,9 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		task.setLastSyncDateStamp(DATE_STAMP_1);
 		task.setTaskData(taskData);
 		task.setSyncState(localState);
+		if(localState.equals(RepositoryTaskSyncState.OUTGOING)) {
+			taskData.setHasLocalChanges(true);
+		}
 
 		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
 

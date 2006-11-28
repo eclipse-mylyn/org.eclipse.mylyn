@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -23,7 +24,10 @@ import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -54,10 +58,10 @@ import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
 import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten
@@ -66,6 +70,36 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class BugzillaClient {
 
+	private static final String KEY_ID = "id";
+
+	private static final String VAL_TRUE = "true";
+
+	private static final String KEY_REMOVECC = "removecc";
+
+	private static final String KEY_CC = "cc";
+
+	private static final String POST_BUG_CGI = "/post_bug.cgi";
+
+	private static final String PROCESS_BUG_CGI = "/process_bug.cgi";
+
+	public static final int WRAP_LENGTH = 90;
+
+	private static final String VAL_PROCESS_BUG = "process_bug";
+
+	private static final String KEY_FORM_NAME = "form_name";
+
+	private static final String VAL_NONE = "none";
+
+	private static final String KEY_KNOB = "knob";
+
+	// TODO change to BugzillaReportElement.ADD_COMMENT
+	private static final String KEY_COMMENT = "comment";
+
+	private static final String KEY_SHORT_DESC = "short_desc";
+
+	// /////////////////////
+
+	// Pages with this string in the html occurr when login is required
 	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 
 	private static final int MAX_RETRY = 2;
@@ -234,10 +268,11 @@ public class BugzillaClient {
 	public void logout() throws LoginException, IOException, BugzillaException {
 		authenticated = true;
 		String loginUrl = repositoryUrl + "/relogin.cgi";
-		GetMethod method = getConnect(loginUrl);
-		method.setFollowRedirects(false);
+		GetMethod method = null;
 		try {
 			// httpClient.getParams().setAuthenticationPreemptive(true);
+			method = getConnect(loginUrl);
+			method.setFollowRedirects(false);
 			int code = httpClient.executeMethod(method);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				throw new LoginException();
@@ -264,8 +299,6 @@ public class BugzillaClient {
 
 			throw new LoginException("Logout procedure failed.");
 
-		} catch (IOException e) {
-			throw new BugzillaException(e);
 		} catch (ParseException e) {
 			throw new BugzillaException(e);
 		} finally {
@@ -292,7 +325,7 @@ public class BugzillaClient {
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
-		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		method.setFollowRedirects(false);
 
 		try {
@@ -349,8 +382,8 @@ public class BugzillaClient {
 		}
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, int id) throws IOException, MalformedURLException,
-			LoginException, GeneralSecurityException, BugzillaException {
+	public RepositoryTaskData getTaskData(int id) throws IOException, MalformedURLException, LoginException,
+			GeneralSecurityException, BugzillaException {
 		GetMethod method = null;
 		try {
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
@@ -367,7 +400,7 @@ public class BugzillaClient {
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
 						method.getResponseCharSet();
-						reportFactory.populateReport(taskData, repository);
+						reportFactory.populateReport(taskData);
 						return taskData;
 					}
 				}
@@ -514,10 +547,10 @@ public class BugzillaClient {
 		}
 	}
 
-	public byte[] getAttachmentData(String id) throws LoginException, IOException, BugzillaException {
+	public byte[] getAttachmentData(String attachmentId) throws LoginException, IOException, BugzillaException {
 		GetMethod method = null;
 		try {
-			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + id;
+			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
 			method = getConnect(url);
 			return method.getResponseBody();
 
@@ -614,18 +647,12 @@ public class BugzillaClient {
 			authenticate();
 		}
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
+		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
-		// DEBUG
-		// for (NameValuePair nameValuePair : formData) {
-		// System.err.println(nameValuePair.getName()+",
-		// "+nameValuePair.getValue());
-		// }
-
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
-		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		int status = httpClient.executeMethod(postMethod);
 		if (status == HttpStatus.SC_OK) {
@@ -634,6 +661,277 @@ public class BugzillaClient {
 			MylarStatusHandler.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
+	}
+
+	public String postTaskData(RepositoryTaskData taskData) throws LoginException, IOException, BugzillaException {
+		NameValuePair[] formData = null;
+		String prefix = null;
+		String prefix2 = null;
+		String postfix = null;
+		String postfix2 = null;
+
+		if (taskData == null) {
+			return null;
+		} else if (taskData.isNew()) {
+			formData = getPairsForNew(taskData);
+			prefix = IBugzillaConstants.FORM_PREFIX_BUG_218;
+			prefix2 = IBugzillaConstants.FORM_PREFIX_BUG_220;
+			postfix = IBugzillaConstants.FORM_POSTFIX_216;
+			postfix2 = IBugzillaConstants.FORM_POSTFIX_218;
+		} else {
+			formData = getPairsForExisting(taskData);
+		}
+
+		InputStream inputStream = null;
+		String result = null;
+		PostMethod method = null;
+		try {
+			if (taskData.isNew()) {
+				method = postFormData(POST_BUG_CGI, formData);
+			} else {
+				method = postFormData(PROCESS_BUG_CGI, formData);
+			}
+
+			if (method == null) {
+				throw new IOException("Could not post form, client returned null method.");
+			}
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream()));
+			in.mark(10);
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
+
+			boolean existingBugPosted = false;
+			boolean isTitle = false;
+			String title = "";
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+
+				if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
+						&& !((HtmlTag) (token.getValue())).isEndTag()) {
+					isTitle = true;
+					continue;
+				}
+
+				if (isTitle) {
+					// get all of the data in the title tag
+					if (token.getType() != Token.TAG) {
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						continue;
+					} else if (token.getType() == Token.TAG
+							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
+							&& ((HtmlTag) token.getValue()).isEndTag()) {
+						if (!taskData.isNew()
+								&& (title.toLowerCase().matches(".*bug\\s+processed.*") || title.toLowerCase().matches(
+										".*defect\\s+processed.*"))) {
+							existingBugPosted = true;
+						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
+								&& postfix2 != null && result == null) {
+							int startIndex = -1;
+							int startIndexPrefix = title.toLowerCase().indexOf(prefix.toLowerCase());
+							int startIndexPrefix2 = title.toLowerCase().indexOf(prefix2.toLowerCase());
+
+							if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
+								if (startIndexPrefix != -1) {
+									startIndex = startIndexPrefix + prefix.length();
+								} else {
+									startIndex = startIndexPrefix2 + prefix2.length();
+								}
+								int stopIndex = title.toLowerCase().indexOf(postfix.toLowerCase(), startIndex);
+								if (stopIndex == -1)
+									stopIndex = title.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
+								if (stopIndex > -1) {
+									result = (title.substring(startIndex, stopIndex)).trim();
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+
+			if ((!taskData.isNew() && existingBugPosted != true) || (taskData.isNew() && result == null)) {
+				in.reset();
+				BugzillaClient.parseHtmlError(in);
+			}
+
+			return result;
+		} catch (ParseException e) {
+			throw new IOException("Could not parse response from server.");
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+
+	}
+
+	private NameValuePair[] getPairsForNew(RepositoryTaskData taskData) {
+		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+
+		// go through all of the attributes and add them to
+		// the bug post
+		Iterator<RepositoryTaskAttribute> itr = taskData.getAttributes().iterator();
+		while (itr.hasNext()) {
+			RepositoryTaskAttribute a = itr.next();
+			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) {
+				String value = null;
+				value = a.getValue();
+				if (value == null)
+					continue;
+				fields.put(a.getID(), new NameValuePair(a.getID(), value));
+			}
+		}
+
+		// form.add(KEY_BUG_FILE_LOC, "");
+
+		// specify the product
+		fields.put(BugzillaReportElement.PRODUCT.getKeyString(), new NameValuePair(BugzillaReportElement.PRODUCT
+				.getKeyString(), taskData.getProduct()));
+
+		// add the summary to the bug post
+		fields.put(BugzillaReportElement.SHORT_DESC.getKeyString(), new NameValuePair(BugzillaReportElement.SHORT_DESC
+				.getKeyString(), taskData.getSummary()));
+
+		String formattedDescription = formatTextToLineWrap(taskData.getDescription(), true);
+		taskData.setDescription(formattedDescription);
+
+		if (taskData.getDescription().length() != 0) {
+			// add the new comment to the bug post if there
+			// is some text in
+			// it
+			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, taskData.getDescription()));
+		}
+
+		return fields.values().toArray(new NameValuePair[fields.size()]);
+
+	}
+
+	private NameValuePair[] getPairsForExisting(RepositoryTaskData model) {
+
+		Map<String, NameValuePair> fields = new HashMap<String, NameValuePair>();
+		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
+		// go through all of the attributes and add them to the bug post
+		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
+			RepositoryTaskAttribute a = it.next();
+			if (a == null) {
+				continue;
+			} else if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
+					|| a.getID().equals(RepositoryTaskAttribute.REMOVE_CC)
+					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+				continue;
+			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
+				String value = a.getValue();
+				if (value != null && value.equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+					value = stripTimeZone(value);
+				}
+				fields.put(a.getID(), new NameValuePair(a.getID(), value != null ? value : ""));
+			}
+		}
+
+		// when posting the bug id is encoded in a hidden field named 'id'
+		fields.put(KEY_ID, new NameValuePair(KEY_ID, model.getAttributeValue(BugzillaReportElement.BUG_ID
+				.getKeyString())));
+
+		// add the operation to the bug post
+		RepositoryOperation o = model.getSelectedOperation();
+		if (o == null)
+			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, VAL_NONE));
+		else {
+			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, o.getKnobName()));
+			if (o.hasOptions()) {
+				String sel = o.getOptionValue(o.getOptionSelection());
+				fields.put(o.getOptionName(), new NameValuePair(o.getOperationName(), sel));
+			} else if (o.isInput()) {
+				String sel = o.getInputValue();
+				fields.put(o.getInputName(), new NameValuePair(o.getInputName(), sel));
+			}
+		}
+
+		if (model.getAttribute(BugzillaReportElement.SHORT_DESC.getKeyString()) != null) {
+			fields.put(KEY_SHORT_DESC, new NameValuePair(KEY_SHORT_DESC, model.getAttribute(
+					BugzillaReportElement.SHORT_DESC.getKeyString()).getValue()));
+		}
+
+		if (model.getNewComment().length() != 0) {
+			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, model.getNewComment()));
+		}
+
+		List<String> removeCC = model.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+		if (removeCC != null && removeCC.size() > 0) {
+			String[] s = new String[removeCC.size()];
+			fields.put(KEY_CC, new NameValuePair(KEY_CC, toCommaSeparatedList(removeCC.toArray(s))));
+			fields.put(KEY_REMOVECC, new NameValuePair(KEY_REMOVECC, VAL_TRUE));
+		}
+
+		return fields.values().toArray(new NameValuePair[fields.size()]);
+
+	}
+
+	/**
+	 * Break text up into lines of about 80 characters so that it is displayed
+	 * properly in bugzilla
+	 */
+	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
+		// BugzillaServerVersion bugzillaServerVersion =
+		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
+		// .getVersion());
+		// if (bugzillaServerVersion != null &&
+		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
+		// 0) {
+		// return origText;
+		if (!hardWrap) {
+			return origText;
+		} else {
+			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
+			for (int i = 0; i < textArray.length; i++)
+				textArray[i] = null;
+			int j = 0;
+			while (true) {
+				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+				if (spaceIndex == origText.length() || spaceIndex == -1) {
+					textArray[j] = origText;
+					break;
+				}
+				textArray[j] = origText.substring(0, spaceIndex);
+				origText = origText.substring(spaceIndex + 1, origText.length());
+				j++;
+			}
+
+			String newText = "";
+
+			for (int i = 0; i < textArray.length; i++) {
+				if (textArray[i] == null)
+					break;
+				newText += textArray[i] + "\n";
+			}
+			return newText;
+		}
+	}
+
+	public static String stripTimeZone(String longTime) {
+		String result = longTime;
+		if (longTime != null) {
+			String[] values = longTime.split(" ");
+			if (values != null && values.length > 2) {
+				result = values[0] + " " + values[1];
+			}
+		}
+		return result;
+	}
+
+	private static String toCommaSeparatedList(String[] strings) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < strings.length; i++) {
+			buffer.append(strings[i]);
+			if (i != strings.length - 1) {
+				buffer.append(",");
+			}
+		}
+		return buffer.toString();
 	}
 
 	/**

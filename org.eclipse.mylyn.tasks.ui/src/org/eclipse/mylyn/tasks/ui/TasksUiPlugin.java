@@ -65,7 +65,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -309,7 +309,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 									repositoryTask.getRepositoryKind());
 							if (connector != null) {
-								IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+								ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 								if (offlineHandler != null && repositoryTask.getTaskData().getLastModified() != null) {
 									Date modified = offlineHandler.getDateForAttributeType(
 											RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getTaskData()

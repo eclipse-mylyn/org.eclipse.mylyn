@@ -13,18 +13,11 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
-import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -38,8 +31,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
  */
 public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
-	private BugSubmissionHandler submissionHandler;
-
 	public NewBugzillaTaskEditor(FormEditor editor) {
 		super(editor);
 	}
@@ -48,37 +39,63 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		expandedStateAttributes = true;
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
-		submissionHandler = new BugSubmissionHandler(connector);
 	}
 
-	@Override
-	protected void submitToRepository() {
-		if (!prepareSubmit()) {
-			return;
-		}
-		updateTask();
-		boolean wrap = IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-
-		try {
-			final BugzillaReportSubmitForm bugzillaReportSubmitForm = BugzillaReportSubmitForm.makeNewBugPost(
-					repository.getUrl(), repository.getUserName(), repository.getPassword(), repository
-							.getCharacterEncoding(), taskData, wrap);
-
-			submissionHandler.submitBugReport(bugzillaReportSubmitForm, submitJobListener, false, getCategory());
-
-		} catch (UnsupportedEncodingException e) {
-			MessageDialog.openError(null, "Posting Error", "Ensure proper encoding selected in "
-					+ TaskRepositoriesView.NAME + ".");
-			return;
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Posting Error. Ensure proper configuration in " + TaskRepositoriesView.NAME
-					+ ".", true);
-			return;
-		}
-
-	}
+	// @Override
+	// protected void submitToRepository() {
+	// if (!prepareSubmit()) {
+	// return;
+	// }
+	// updateTask();
+	// boolean wrap =
+	// IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
+	//
+	// try {
+	// final BugzillaReportSubmitForm bugzillaReportSubmitForm =
+	// BugzillaReportSubmitForm.makeNewBugPost(
+	// repository.getUrl(), repository.getUserName(), repository.getPassword(),
+	// repository
+	// .getCharacterEncoding(), taskData, wrap);
+	//
+	// submissionHandler.submitBugReport(bugzillaReportSubmitForm,
+	// submitJobListener, false, getCategory());
+	//
+	// } catch (UnsupportedEncodingException e) {
+	// MessageDialog.openError(null, "Posting Error", "Ensure proper encoding
+	// selected in "
+	// + TaskRepositoriesView.NAME + ".");
+	// return;
+	// } catch (Exception e) {
+	// MylarStatusHandler.fail(e, "Posting Error. Ensure proper configuration in
+	// " + TaskRepositoriesView.NAME
+	// + ".", true);
+	// return;
+	// }
+	//
+	// }
+	// protected void handleNewBugPost(String postResult) throws CoreException {
+	// int bugId = -1;
+	// try {
+	// bugId = Integer.parseInt(postResult);
+	// } catch (NumberFormatException e) {
+	// throw new CoreException(new Status(Status.ERROR,
+	// BugzillaUiPlugin.PLUGIN_ID,
+	// "Invalid id returned by repository: " + postResult));
+	// }
+	//
+	// BugzillaTask newTask = new
+	// BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
+	// bugId),
+	// "<bugzilla info>", true);
+	//
+	// if (getCategory() != null) {
+	// TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(getCategory(),
+	// newTask);
+	// }
+	// TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
+	// Collections.singletonList(repository));
+	//
+	//	}
 
 	// protected void addActionButtons(Composite buttonComposite) {
 	//
@@ -112,23 +129,28 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
 				"100", TasksUiPlugin.getTaskListManager().getTaskList());
-		
+
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				repository, bugzillaQuery);
 		return collector;
 	}
 
 	@Override
-	protected void handleErrorStatus(IJobChangeEvent event) {
-		if (event.getJob().getResult().getCode() == Status.INFO) {
-			WebBrowserDialog.openAcceptAgreement(NewBugzillaTaskEditor.this.getSite().getShell(),
-					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getJob().getResult().getMessage(), event.getJob()
-							.getResult().getException().getMessage());
-		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-			MessageDialog.openError(NewBugzillaTaskEditor.this.getSite().getShell(),
-					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
-		}
-		super.handleErrorStatus(event);
+	protected String getPluginId() {
+		return BugzillaUiPlugin.PLUGIN_ID;
 	}
+
+//	@Override
+//	protected void handleErrorStatus(IJobChangeEvent event) {
+//		if (event.getJob().getResult().getCode() == Status.INFO) {
+//			WebBrowserDialog.openAcceptAgreement(NewBugzillaTaskEditor.this.getSite().getShell(),
+//					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getJob().getResult().getMessage(), event.getJob()
+//							.getResult().getException().getMessage());
+//		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
+//			MessageDialog.openError(NewBugzillaTaskEditor.this.getSite().getShell(),
+//					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
+//		}
+//		super.handleErrorStatus(event);
+//	}
 
 }

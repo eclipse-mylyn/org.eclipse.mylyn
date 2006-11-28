@@ -33,13 +33,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.BugSubmissionHandler;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
 import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -62,10 +60,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
-		BugzillaTask badId = (BugzillaTask) connector.createTaskFromExistingKey(repository, "bad-id", null);
+		BugzillaTask badId = (BugzillaTask) connector.createTaskFromExistingKey(repository, "bad-id");
 		assertNull(badId);
 
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1", null);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertNotNull(task);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
@@ -121,7 +119,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testContextAttachFailure() throws Exception {
 		init218();
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3", null);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertNotNull(task.getTaskData());
@@ -145,7 +143,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 
 		// Get the task
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1", null);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
@@ -166,13 +164,27 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
-		MockBugzillaReportSubmitForm form = new MockBugzillaReportSubmitForm();
-		form.setTaskData(task.getTaskData());
-		new BugSubmissionHandler(connector).submitBugReport(form, null, true, true);
-		// submit casuses a synch which should result in
-		// a synchronized state (not incoming)
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		
+		submit(task.getTaskData());
+//		task.setTaskData(null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 
+		// Has no outgoing changes or conflicts yet needs synch
+		// because task doesn't have bug report (new query hit)
+		// Result: retrieved with no incoming status
+		//task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+		
+		RepositoryTaskData bugReport = task.getTaskData();
+		//repository.setSyncTimeStamp(bugReport.getLastModified());
+		// task.setTaskData(null);
+		TasksUiPlugin.getDefault().getTaskDataManager().remove(bugReport);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, null);
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		assertNotNull(task.getTaskData());
+		assertEquals(task.getTaskData().getId(), bugReport.getId());
+		
 		// TODO: Test that comment was appended
 		// ArrayList<Comment> comments = task.getTaskData().getComments();
 		// assertNotNull(comments);
@@ -195,16 +207,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		// CONFLICT with forcedSynch=true --> Update Local Copy dialog
 
-		// Has no outgoing changes or conflicts yet needs synch
-		// because task doesn't have bug report (new query hit)
-		// Result: retrieved with no incoming status
-		task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-		RepositoryTaskData bugReport = task.getTaskData();
-		task.setTaskData(null);
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, null);
-		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		assertNotNull(task.getTaskData());
-		assertEquals(task.getTaskData().getId(), bugReport.getId());
 	}
 
 	public void testUniqueTaskObjects() {
@@ -279,7 +281,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		int bugId = 31;
 		String taskNumber = "" + bugId;
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertNotNull(task);
@@ -316,7 +318,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 //		assertFalse(attachmentHandler.uploadAttachment(attachment, repository.getUserName(), repository.getPassword(),
 //				Proxy.NO_PROXY));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
@@ -332,7 +334,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			fail();
 		} catch (Exception e) {			
 		}
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertEquals(numAttached, task.getTaskData().getAttachments().size());
@@ -348,7 +350,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		} catch (Exception e) {
 			fail();
 		}
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
+		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertEquals(numAttached + 1, task.getTaskData().getAttachments().size());
 
@@ -371,13 +373,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(5, Integer.parseInt(task5.getTaskData().getId()));
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
-		tasks.add(task4);
-		tasks.add(task5);
+		tasks.add(task4);// 2006-11-28 14:32:59
+		tasks.add(task5);// 2006-11-28 14:33:06
 
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		Set<AbstractRepositoryTask> changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(
+		Set<AbstractRepositoryTask> changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(
 				repository, tasks);
 		assertEquals(0, changedTasks.size());
 
@@ -402,14 +404,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(repository.getUserName());
 		assertNotNull(repository.getPassword());
 
-		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+		submit(task4.getTaskData());
+		submit(task5.getTaskData());
+//		BugzillaReportSubmitForm bugzillaReportSubmitForm;
+//
+//		bugzillaReportSubmitForm = makeExistingBugPost(task4.getTaskData());
+//		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
+//		bugzillaReportSubmitForm = makeExistingBugPost(task5.getTaskData());
+//		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
 
-		bugzillaReportSubmitForm = makeExistingBugPost(task4.getTaskData());
-		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
-		bugzillaReportSubmitForm = makeExistingBugPost(task5.getTaskData());
-		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
-
-		changedTasks = connector.getOfflineTaskHandler().getChangedSinceLastSync(repository, tasks);
+		changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(repository, tasks);
 		assertEquals("Changed reports expected ", 2, changedTasks.size());
 		assertTrue(tasks.containsAll(changedTasks));
 		for (AbstractRepositoryTask task : changedTasks) {
@@ -465,9 +469,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
 
-		BugzillaReportSubmitForm bugzillaReportSubmitForm;
-		bugzillaReportSubmitForm = makeExistingBugPost(recentTaskData);
-		bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
+		submit(recentTaskData);
 		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());
 	}
@@ -545,13 +547,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (enableDeadline)
 			bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
 
-		BugzillaReportSubmitForm bugzillaReportSubmitForm;
-
 		for (AbstractRepositoryTask task : tasks) {
 			task.getTaskData().setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(),
 					"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
-			bugzillaReportSubmitForm = makeExistingBugPost(task.getTaskData());
-			bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
+			submit(task.getTaskData());
 		}
 
 		// assertEquals("Changed reports expected ", 1,
@@ -617,7 +616,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		int bugId = 19;
 		String taskNumber = "" + bugId;
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber, null);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertNotNull(task);

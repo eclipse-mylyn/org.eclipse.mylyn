@@ -228,4 +228,12 @@ public interface IBugzillaConstants {
 
 	public static final String ERROR_MSG_INVALID_BUG_ID = "Invalid Bug ID. The requested bug id does not exist.";
 
+	public static final String FORM_PREFIX_BUG_218 = "Bug ";
+
+	public static final String FORM_PREFIX_BUG_220 = "Issue ";
+
+	public static final String FORM_POSTFIX_216 = " posted";
+
+	public static final String FORM_POSTFIX_218 = " Submitted";
+
 }

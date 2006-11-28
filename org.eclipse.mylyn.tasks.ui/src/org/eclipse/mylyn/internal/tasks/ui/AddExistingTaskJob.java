@@ -63,7 +63,7 @@ public class AddExistingTaskJob extends Job {
 				repository.getKind());
 		try {
 			monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
-			final ITask newTask = connector.createTaskFromExistingKey(repository, taskId, null);
+			final ITask newTask = connector.createTaskFromExistingKey(repository, taskId);
 			if (newTask instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
 				TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, true, null);

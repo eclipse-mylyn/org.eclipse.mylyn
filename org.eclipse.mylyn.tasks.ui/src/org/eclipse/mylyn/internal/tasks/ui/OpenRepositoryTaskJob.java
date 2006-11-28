@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -78,12 +78,12 @@ public class OpenRepositoryTaskJob extends Job {
 			
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryKind);
 			try {
-				IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 				if (offlineHandler != null) {
 					// the following code was copied from SynchronizeTaskJob
 					RepositoryTaskData downloadedTaskData = null;
 					try {
-						downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
+						downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
 						TasksUiPlugin.getDefault().getTaskDataManager().put(downloadedTaskData);						
 						openEditor(repository, AbstractRepositoryTask.getHandle(repository.getUrl(), taskId), downloadedTaskData);										
 					} catch (final CoreException e) {	

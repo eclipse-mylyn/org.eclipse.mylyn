@@ -27,7 +27,7 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -41,7 +41,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
-	private IOfflineTaskHandler offlineHandler;
+	private ITaskDataHandler offlineHandler;
 
 	private TaskRepository repository;
 
@@ -64,7 +64,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		connector = (TracRepositoryConnector) manager.getRepositoryConnector(TracCorePlugin.REPOSITORY_KIND);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 
-		offlineHandler = connector.getOfflineTaskHandler();
+		offlineHandler = connector.getTaskDataHandler();
 	}
 
 	protected void init(String url, Version version) {
@@ -81,7 +81,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "", null);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);
@@ -98,7 +98,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "", null);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());
 		

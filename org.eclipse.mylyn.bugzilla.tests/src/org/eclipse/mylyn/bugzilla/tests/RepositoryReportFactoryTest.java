@@ -18,12 +18,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportSubmitForm;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -42,8 +42,8 @@ public class RepositoryReportFactoryTest extends TestCase {
 	BugzillaRepositoryConnector connector;
 
 	private RepositoryTaskData init(String taskId) throws CoreException {
-		IOfflineTaskHandler handler = connector.getOfflineTaskHandler();
-		RepositoryTaskData taskData = handler.downloadTaskData(repository, taskId);
+		ITaskDataHandler handler = connector.getTaskDataHandler();
+		RepositoryTaskData taskData = handler.getTaskData(repository, taskId);
 		return taskData;
 	}
 
@@ -441,15 +441,15 @@ public class RepositoryReportFactoryTest extends TestCase {
 	public void testDeltaTsTruncation() {
 		String ts1 = "2006-07-06 03:22:08 0900";
 		String ts1_truncated = "2006-07-06 03:22:08";
-		assertEquals(ts1_truncated, BugzillaReportSubmitForm.stripTimeZone(ts1));
+		assertEquals(ts1_truncated, BugzillaClient.stripTimeZone(ts1));
 
 		String ts2 = "2006-07-06 03:22:08";
 		String ts2_truncated = "2006-07-06 03:22:08";
-		assertEquals(ts2_truncated, BugzillaReportSubmitForm.stripTimeZone(ts2));
+		assertEquals(ts2_truncated, BugzillaClient.stripTimeZone(ts2));
 
 		String ts3 = "2006-07-06 03:22:08 PST";
 		String ts3_truncated = "2006-07-06 03:22:08";
-		assertEquals(ts3_truncated, BugzillaReportSubmitForm.stripTimeZone(ts3));
+		assertEquals(ts3_truncated, BugzillaClient.stripTimeZone(ts3));
 	}
 
 }

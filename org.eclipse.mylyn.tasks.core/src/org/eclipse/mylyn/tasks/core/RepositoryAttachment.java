@@ -13,32 +13,29 @@ package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
 
-
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
 
-	private transient TaskRepository repository;
+	private static final long serialVersionUID = 2663237137799050826L;
+
+	private boolean isPatch = false;
 	
-	public RepositoryAttachment(TaskRepository repository, AbstractAttributeFactory attributeFactory) {
-		super(attributeFactory);
-		this.repository = repository;
-	}
-
-	private static final long serialVersionUID = -9123545810321250785L;
-
-	// /** Parser for dates in the report */
-	// // TODO: this is repository specific so need to pull out
-	// private static SimpleDateFormat creation_ts_date_format = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm");
-
 	private boolean isObsolete = false;
 
 	private String creator = "";
 
-	private boolean isPatch = false;
+	private String repositoryUrl;
+
+	private String repositoryKind;
+
+	private String taskId;
+
+	public RepositoryAttachment(AbstractAttributeFactory attributeFactory) {
+		super(attributeFactory);
+	}
 
 	public boolean isObsolete() {
 		return isObsolete;
@@ -69,18 +66,14 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		return getAttributeValue(RepositoryTaskAttribute.DESCRIPTION);
 	}
 
-	public int getId() {
-		try {
-			return Integer.parseInt(getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_ID));
-		} catch (NumberFormatException e) {
-			return -1;
-		}
+	public String getId() {
+		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_ID);
 	}
 
- 	public String getUrl() {
- 		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL);
- 	}
-	
+	public String getUrl() {
+		return getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL);
+	}
+
 	public String getContentType() {
 		// I've seen both "ctype" and "type" occur for this, investigate
 		if (getAttribute(RepositoryTaskAttribute.ATTACHMENT_TYPE) != null) {
@@ -98,11 +91,27 @@ public class RepositoryAttachment extends AttributeContainer implements Serializ
 		isPatch = b;
 	}
 
-	public TaskRepository getRepository() {
-		return repository;
+	public String getRepositoryUrl() {
+		return repositoryUrl;
 	}
 
-	public void setRepository(TaskRepository repository) {
-		this.repository = repository;
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+
+	public String getRepositoryKind() {
+		return repositoryKind;
+	}
+
+	public void setRepositoryKind(String repositoryKind) {
+		this.repositoryKind = repositoryKind;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 }

@@ -130,7 +130,7 @@ public class BugzillaConfigurationTest extends TestCase {
 		assertEquals(7, config.getSeverities().size());
 		assertTrue(config.getProducts().size() > 50);
 		assertEquals(4, config.getOpenStatusValues().size());
-		assertEquals(11, config.getComponents("Mylar").size());
+		assertEquals(12, config.getComponents("Mylar").size());
 		assertEquals(22, config.getKeywords().size());
 		// assertEquals(10, config.getComponents("Hyades").size());
 		// assertEquals(1, config.getTargetMilestones("TestProduct").size());

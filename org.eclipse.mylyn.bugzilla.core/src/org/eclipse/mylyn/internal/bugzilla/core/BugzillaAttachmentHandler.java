@@ -21,6 +21,7 @@ import javax.security.auth.login.LoginException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
@@ -34,76 +35,48 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class BugzillaAttachmentHandler implements IAttachmentHandler {
 
-	// private static final String CHANGES_SUBMITTED = "Changes Submitted";
-
-	// public static final String POST_ARGS_ATTACHMENT_DOWNLOAD =
-	// "/attachment.cgi?id=";
-	//
-	// public static final String POST_ARGS_ATTACHMENT_UPLOAD =
-	// "/attachment.cgi";// ?action=insert";//&bugid=";
-
-	// private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
-	//
-	// private static final String VALUE_ISPATCH = "1";
-	//
-	// private static final String VALUE_ACTION_INSERT = "insert";
-	//
-	// private static final String ATTRIBUTE_CONTENTTYPEENTRY =
-	// "contenttypeentry";
-	//
-	// private static final String ATTRIBUTE_CONTENTTYPEMETHOD =
-	// "contenttypemethod";
-	//
-	// private static final String ATTRIBUTE_ISPATCH = "ispatch";
-	//
-	// private static final String ATTRIBUTE_DATA = "data";
-	//
-	// private static final String ATTRIBUTE_COMMENT = "comment";
-	//
-	// private static final String ATTRIBUTE_DESCRIPTION = "description";
-	//
-	// private static final String ATTRIBUTE_BUGID = "bugid";
-	//
-	// private static final String ATTRIBUTE_BUGZILLA_PASSWORD =
-	// "Bugzilla_password";
-	//
-	// private static final String ATTRIBUTE_BUGZILLA_LOGIN = "Bugzilla_login";
-	//
-	// private static final String ATTRIBUTE_ACTION = "action";
-
 	private BugzillaRepositoryConnector connector;
 
 	public BugzillaAttachmentHandler(BugzillaRepositoryConnector connector) {
 		this.connector = connector;
 	}
 
-	public byte[] getAttachmentData(TaskRepository repository, String taskId) throws CoreException {
+	public byte[] getAttachmentData(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
-			byte[] data = client.getAttachmentData(taskId);
+			byte[] data = client.getAttachmentData(attachment.getId());
 			return data;
 		} catch (Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-					"Download of attachment "+taskId+" from " + repository.getUrl() + " failed.", e));
+					"Download of attachment " + attachment.getId() + " from " + repository.getUrl() + " failed.", e));
 		}
 	}
-	
-//	public InputStream getAttachmentInputStream(TaskRepository repository, String taskId) throws CoreException {
-//		try {
-//			BugzillaClient client = connector.getClientManager().getClient(repository);
-//			return client.getAttachmentInputStream(taskId);
-//		} catch (Exception e) {
-//			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-//					"Download of attachment "+taskId+" from " + repository.getUrl() + " failed.", e));
-//		}
-//	}
-	
-	public void downloadAttachment(TaskRepository repository, String taskData, RepositoryAttachment attachment, File file) throws CoreException {
+
+	// public InputStream getAttachmentInputStream(TaskRepository repository,
+	// String taskId) throws CoreException {
+	// try {
+	// BugzillaClient client =
+	// connector.getClientManager().getClient(repository);
+	// return client.getAttachmentInputStream(taskId);
+	// } catch (Exception e) {
+	// throw new CoreException(new Status(IStatus.ERROR,
+	// BugzillaCorePlugin.PLUGIN_ID, 0,
+	// "Download of attachment "+taskId+" from " + repository.getUrl() + "
+	// failed.", e));
+	// }
+	// }
+
+	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file)
+			throws CoreException {
+		if (repository == null || attachment == null || file == null) {
+			MylarStatusHandler.log("Unable to download. Null argument.", this);
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
+					"Unable to download attachment", null));
+		}
 		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 		if (filename == null) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Attachment download from " + repository.getUrl() + " failed, missing attachment filename.",
-					null));
+			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR,
+					"Attachment download from " + repository.getUrl() + " failed, missing attachment filename.", null));
 		}
 
 		try {
@@ -126,8 +99,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch)
-			throws CoreException {
+			String description, File file, String contentType, boolean isPatch) throws CoreException {
 		try {
 			String bugId = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 			BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -135,7 +107,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		} catch (LoginException e) {
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Your login name or password is incorrect. Ensure proper repository configuration.", e));
-		} catch (UnrecognizedReponseException e) {			
+		} catch (UnrecognizedReponseException e) {
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Response from server", e));
 		} catch (IOException e) {
@@ -261,18 +233,21 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	// return uploadResult;
 	// }
 
-//	public boolean uploadAttachment(LocalAttachment attachment, String uname, String password, Proxy proxySettings)
-//			throws CoreException {
-//
-//		File file = new File(attachment.getFilePath());
-//		if (!file.exists() || file.length() <= 0) {
-//			return false;
-//		}
-//
-//		uploadAttachment(attachment.getReport().getRepositoryUrl(), uname, password, Integer.parseInt(attachment
-//				.getReport().getId()), attachment.getComment(), attachment.getDescription(), file, attachment
-//				.getContentType(), attachment.isPatch(), proxySettings);
-//	}
+	// public boolean uploadAttachment(LocalAttachment attachment, String uname,
+	// String password, Proxy proxySettings)
+	// throws CoreException {
+	//
+	// File file = new File(attachment.getFilePath());
+	// if (!file.exists() || file.length() <= 0) {
+	// return false;
+	// }
+	//
+	// uploadAttachment(attachment.getReport().getRepositoryUrl(), uname,
+	// password, Integer.parseInt(attachment
+	// .getReport().getId()), attachment.getComment(),
+	// attachment.getDescription(), file, attachment
+	// .getContentType(), attachment.isPatch(), proxySettings);
+	// }
 
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
 		return true;

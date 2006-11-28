@@ -12,12 +12,14 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.net.Proxy;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,8 +31,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -47,7 +49,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private BugzillaAttachmentHandler attachmentHandler;
 
-	private BugzillaOfflineTaskHandler offlineHandler;
+	private BugzillaTaskDataHandler taskDataHandler;
 
 	private boolean forceSynchExecForTesting = false;
 
@@ -56,7 +58,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void init(TaskList taskList) {
 		super.init(taskList);
-		this.offlineHandler = new BugzillaOfflineTaskHandler(this, taskList);
+		this.taskDataHandler = new BugzillaTaskDataHandler(this, taskList);
 		BugzillaCorePlugin.getDefault().setConnector(this);
 		attachmentHandler = new BugzillaAttachmentHandler(this);
 	}
@@ -72,8 +74,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IOfflineTaskHandler getOfflineTaskHandler() {
-		return offlineHandler;
+	public ITaskDataHandler getTaskDataHandler() {
+		return taskDataHandler;
 	}
 
 	@Override
@@ -82,8 +84,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings)
-			throws CoreException {
+	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
 		int bugId = -1;
 		try {
 			if (id != null) {
@@ -108,12 +109,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		if (task == null) {
 			RepositoryTaskData taskData = null;
 			// try {
-			taskData = offlineHandler.downloadTaskData(repository, id);
+			taskData = taskDataHandler.getTaskData(repository, id);
 			// BugzillaClient client = getClientManager().getClient(repository);
 			// taskData = client.getTaskData(Integer.parseInt(id));
 			if (taskData != null) {
 				task = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
 				((BugzillaTask) task).setTaskData(taskData);
+				// ((BugzillaTask) task).setLastSyncDateStamp(lastSyncDateStamp)
 				taskList.addTask(task);
 			}
 			// } catch (final UnrecognizedReponseException e) {
@@ -134,7 +136,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// see details.", e));
 			// }
 		}
-		return task;
+		return (AbstractRepositoryTask) task;
 	}
 
 	@Override
@@ -159,8 +161,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector) {
+	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository,
+			IProgressMonitor monitor, QueryHitCollector resultCollector) {
 
 		IStatus queryStatus = Status.OK_STATUS;
 		try {
@@ -168,7 +170,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			client.getSearchHits(query, resultCollector, taskList);
 			// XXX: HACK in case of ip change bugzilla can return 0 hits
 			// due to invalid authorization token, forcing relogin fixes
-			if(resultCollector.getHits().size() == 0) {
+			if (resultCollector.getHits().size() == 0) {
 				client.logout();
 				client.getSearchHits(query, resultCollector, taskList);
 			}
@@ -177,13 +179,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					"Unrecognized response from server", e);
 		} catch (IOException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Check repository configuration: "+e.getMessage(), e);
+					"Check repository configuration: " + e.getMessage(), e);
 		} catch (BugzillaException e) {
-			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Bugzilla error: "+e.getMessage(), e);
+			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "Bugzilla error: "
+					+ e.getMessage(), e);
 		} catch (GeneralSecurityException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Check repository configuration: "+e.getMessage(), e);
+					"Check repository configuration: " + e.getMessage(), e);
 		}
 		return queryStatus;
 
@@ -278,9 +280,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
-
-		BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, true);
-
+		if (repository != null) {
+			BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, true);
+		}
 	}
 
 	public void updateAttributeOptions(TaskRepository taskRepository, RepositoryTaskData existingReport)
@@ -304,7 +306,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			for (String option : optionValues) {
 				attribute.addOption(option, option);
 			}
-			
+
 			// TODO: bug#162428, bug#150680 - something along the lines of...
 			// but must think about the case of multiple values selected etc.
 			// if(attribute.hasOptions()) {
@@ -312,7 +314,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// {
 			// // updateAttributes()
 			// }
-			//}
+			// }
 		}
 
 	}
@@ -462,8 +464,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		// newReport.attributes = attributes;
 	}
-	
-	
+
 	// // TODO: change to getAttributeOptions() and use whereever attribute
 	// options are required.
 	// public void updateAttributeOptions(TaskRepository taskRepository,

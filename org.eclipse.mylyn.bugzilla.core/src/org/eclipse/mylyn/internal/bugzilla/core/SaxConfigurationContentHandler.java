@@ -299,7 +299,7 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (attributes != null) {
 				String compURI = attributes.getValue(ATTRIBUTE_RESOURCE);
 				if (compURI != null && currentProduct.length() > 0) {
-					List<String> compURIs = components.get(currentProduct.toString());
+					List<String> compURIs = components.get(currentProduct);
 					if (compURIs == null) {
 						compURIs = new ArrayList<String>();
 						components.put(currentProduct, compURIs);
@@ -312,10 +312,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (attributes != null) {
 				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
 				if (resourceURI != null && currentProduct.length() > 0) {
-					List<String> versionUris = versions.get(currentProduct.toString());
+					List<String> versionUris = versions.get(currentProduct);
 					if (versionUris == null) {
 						versionUris = new ArrayList<String>();
-						versions.put(currentProduct.toString(), versionUris);
+						versions.put(currentProduct, versionUris);
 					}
 					versionUris.add(resourceURI);
 				}
@@ -325,10 +325,10 @@ public class SaxConfigurationContentHandler extends DefaultHandler {
 			if (attributes != null) {
 				String resourceURI = attributes.getValue(ATTRIBUTE_RESOURCE);
 				if (resourceURI != null) {
-					List<String> milestoneUris = milestones.get(currentProduct.toString());
+					List<String> milestoneUris = milestones.get(currentProduct);
 					if (milestoneUris == null) {
 						milestoneUris = new ArrayList<String>();
-						milestones.put(currentProduct.toString(), milestoneUris);
+						milestones.put(currentProduct, milestoneUris);
 					}
 					milestoneUris.add(resourceURI);
 				}

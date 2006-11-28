@@ -44,8 +44,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String SUBMIT_JOB_LABEL = "Submitting to Trac repository";
 
-	private TracRepositoryConnector connector;
-
 	public TracTaskEditor(FormEditor editor) {
 		super(editor);
 	}
@@ -57,7 +55,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 		editorInput = (AbstractTaskEditorInput) input;
 		repository = editorInput.getRepository();
-		connector = (TracRepositoryConnector) TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 
 		setSite(site);
@@ -70,7 +68,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void submitToRepository() {
+	public void submitToRepository() {
 		if (isDirty()) {
 			this.doSave(new NullProgressMonitor());
 		}
@@ -115,7 +113,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					ITracClient server = connector.getClientManager().getRepository(repository);
+					ITracClient server = ((TracRepositoryConnector) connector).getClientManager().getRepository(repository);
 					server.updateTicket(ticket, comment);
 					if (task != null) {
 						// XXX: HACK TO AVOID OVERWRITE WARNING
@@ -159,6 +157,11 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 			MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
 		} catch (InterruptedException ignore) {
 		}
+	}
+
+	@Override
+	protected String getPluginId() {
+		return TracUiPlugin.PLUGIN_ID;
 	}
 
 }

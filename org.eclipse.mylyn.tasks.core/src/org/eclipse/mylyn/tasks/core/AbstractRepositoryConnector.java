@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.io.File;
-import java.net.Proxy;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -45,7 +44,7 @@ public abstract class AbstractRepositoryConnector {
 	protected TaskList taskList;
 
 	public void init(TaskList taskList) {
-		this.taskList = taskList;		
+		this.taskList = taskList;
 	}
 
 	/**
@@ -56,7 +55,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @return null if not supported
 	 */
-	public abstract IOfflineTaskHandler getOfflineTaskHandler();
+	public abstract ITaskDataHandler getTaskDataHandler();
 
 	public abstract String getRepositoryUrlFromTaskUrl(String url);
 
@@ -67,13 +66,11 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @param id
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
-	 * @param proxySettings
-	 *            TODO
 	 * @return null if task could not be created
 	 * @throws CoreException
 	 *             TODO
 	 */
-	public abstract ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings)
+	public abstract AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id)
 			throws CoreException;
 
 	/**
@@ -86,8 +83,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @param resultCollector
 	 *            IQueryHitCollector that collects the hits found
 	 */
-	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector);
+	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
+			IProgressMonitor monitor, QueryHitCollector resultCollector);
 
 	public abstract String getLabel();
 
@@ -100,10 +97,10 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on
-	 * task synchronization if {@link #getOfflineTaskHandler()} returns
+	 * task synchronization if {@link #getTaskDataHandler()} returns
 	 * <code>null</code> or
-	 * {@link IOfflineTaskHandler#downloadTaskData(TaskRepository, String)}
-	 * returns <code>null</code>.
+	 * {@link ITaskDataHandler#getTaskData(TaskRepository, String)} returns
+	 * <code>null</code>.
 	 * 
 	 * <p>
 	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks
@@ -115,9 +112,10 @@ public abstract class AbstractRepositoryConnector {
 	 *            the task that is synchronized
 	 * @throws CoreException
 	 *             thrown in case of error while synchronizing
-	 * @see {@link #getOfflineTaskHandler()}
+	 * @see {@link #getTaskDataHandler()}
 	 */
-	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException;
+	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask)
+			throws CoreException;
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
@@ -158,7 +156,8 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment) throws CoreException {
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+			throws CoreException {
 		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
@@ -204,7 +203,7 @@ public abstract class AbstractRepositoryConnector {
 				return false;
 			}
 		}
-		attachmentHandler.downloadAttachment(repository, AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()), attachment, destinationContextFile);
+		attachmentHandler.downloadAttachment(repository, attachment, destinationContextFile);
 		return true;
 	}
 

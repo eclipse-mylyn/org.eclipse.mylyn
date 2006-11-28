@@ -163,7 +163,11 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 		// getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 	}
 
-	public boolean isLocallyCreated() {
+	/**
+	 * true if this is a new, unsubmitted task
+	 * false otherwise (exists on repository)
+	 */
+	public boolean isNew() {
 		return false;
 	}
 

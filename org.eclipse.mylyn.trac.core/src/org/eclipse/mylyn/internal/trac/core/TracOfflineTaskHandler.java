@@ -34,7 +34,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -45,7 +45,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Steffen Pingel
  */
-public class TracOfflineTaskHandler implements IOfflineTaskHandler {
+public class TracOfflineTaskHandler implements ITaskDataHandler {
 
 	private static final String CC_DELIMETER = ", ";
 
@@ -57,7 +57,7 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId)
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId)
 			throws CoreException {
 		int id = Integer.parseInt(taskId);
 		return downloadTaskData(repository, id);
@@ -143,8 +143,11 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 		TracAttachment[] attachments = ticket.getAttachments();
 		if (attachments != null) {
 			for (int i = 0; i < attachments.length; i++) {
-				RepositoryAttachment taskAttachment = new RepositoryAttachment(repository, factory);
+				RepositoryAttachment taskAttachment = new RepositoryAttachment(factory);
 				taskAttachment.setCreator(attachments[i].getAuthor());
+				taskAttachment.setRepositoryKind(TracCorePlugin.REPOSITORY_KIND);
+				taskAttachment.setRepositoryUrl(repository.getUrl());
+				taskAttachment.setTaskId(""+ticket.getId());
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME, attachments[i]
 						.getFilename());
@@ -298,5 +301,10 @@ public class TracOfflineTaskHandler implements IOfflineTaskHandler {
 			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
 					"could not determine changed tasks", e));
 		}
+	}
+
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+		// TODO: implement
+		return null;
 	}
 }

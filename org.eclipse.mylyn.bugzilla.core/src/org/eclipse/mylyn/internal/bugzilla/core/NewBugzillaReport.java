@@ -39,9 +39,6 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	/** The summary for the bug */
 	protected String summary = "";
 
-	/** The description for the bug */
-	protected String description = "";
-
 	/**
 	 * Flag to indicate status of connection to Bugzilla server to identify
 	 * whether ProductConfiguration should be used instead
@@ -160,7 +157,7 @@ public class NewBugzillaReport extends RepositoryTaskData implements Serializabl
 	}
 
 	@Override
-	public boolean isLocallyCreated() {
+	public boolean isNew() {
 		return true;
 	}
 

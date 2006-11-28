@@ -31,8 +31,8 @@ import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -43,7 +43,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
+public class BugzillaTaskDataHandler implements ITaskDataHandler {
 
 	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
 
@@ -79,17 +79,17 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 
-	private static SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
+	private static final SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
 
-	private static SimpleDateFormat creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
+	private static final SimpleDateFormat creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
 
 	/**
 	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions
 	 * use DATE_FORMAT_2 Using lowest common denominator DATE_FORMAT_1
 	 */
-	public static SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
+	public static final SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
 
-	private static SimpleDateFormat attachment_creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
+	private static final SimpleDateFormat attachment_creation_ts_format = new SimpleDateFormat(DATE_FORMAT_1);
 
 	private AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
@@ -97,20 +97,27 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 	private BugzillaRepositoryConnector connector;
 
-	public BugzillaOfflineTaskHandler(BugzillaRepositoryConnector connector, TaskList taskList) {
+	public BugzillaTaskDataHandler(BugzillaRepositoryConnector connector, TaskList taskList) {
 		this.taskList = taskList;
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData downloadTaskData(TaskRepository repository, String taskId) throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
 		try {
 
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			int bugId = Integer.parseInt(taskId);
-			RepositoryTaskData taskData = client.getTaskData(repository, bugId);
+			RepositoryTaskData taskData = client.getTaskData(bugId);
 			if (taskData != null) {
-				connector.updateAttributeOptions(repository, taskData);
-				addValidOperations(taskData, repository.getUserName());
+				try {
+					configureTaskData(repository, taskData);
+				} catch (CoreException ce) {
+					// retry since data retrieved may be corrupt
+					taskData = client.getTaskData(bugId);
+					if (taskData != null) {
+						configureTaskData(repository, taskData);
+					}
+				}
 				return taskData;
 			}
 			return null;
@@ -123,6 +130,21 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 					+ repository.getUrl() + " failed. File not found: " + e.getMessage(), e));
 		} catch (final Exception e) {
 			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0, "Report download from "
+					+ repository.getUrl() + " failed: " + e.getMessage(), e));
+		}
+	}
+
+	private void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+		connector.updateAttributeOptions(repository, taskData);
+		addValidOperations(taskData, repository.getUserName());
+	}
+
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+		try {
+			BugzillaClient client = connector.getClientManager().getClient(repository);
+			return client.postTaskData(taskData);
+		} catch (Throwable e) {
+			throw new CoreException(new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR, "Posting to "
 					+ repository.getUrl() + " failed: " + e.getMessage(), e));
 		}
 	}
@@ -175,7 +197,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
 				+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
-		urlQueryString = new String(urlQueryBase + BUG_ID);
+		urlQueryString = urlQueryBase + BUG_ID;
 
 		int queryCounter = -1;
 		Iterator<AbstractRepositoryTask> itr = tasks.iterator();
@@ -187,7 +209,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > MAX_URL_LENGTH) {
 				queryForChanged(repository, changedTasks, urlQueryString);
 				queryCounter = 0;
-				urlQueryString = new String(urlQueryBase + BUG_ID);
+				urlQueryString = urlQueryBase + BUG_ID;
 				urlQueryString += newurlQueryString;
 			} else if (!itr.hasNext()) {
 				urlQueryString += newurlQueryString;
@@ -201,7 +223,6 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
-
 		QueryHitCollector collector = new QueryHitCollector(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", "-1",
 				taskList);
@@ -243,7 +264,7 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 				if (repositoryTask.getTaskData() != null
 						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
 					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData taskData = downloadTaskData(repository, taskId);
+					RepositoryTaskData taskData = getTaskData(repository, taskId);
 					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}
@@ -253,13 +274,13 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 		}
 	}
 
-	public static void addValidOperations(RepositoryTaskData bugReport, String userName) {
+	public static void addValidOperations(RepositoryTaskData bugReport, String userName) throws CoreException {
 		BUGZILLA_REPORT_STATUS status;
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
-		} catch (IllegalArgumentException e) {
+		} catch (RuntimeException e) {
 			MylarStatusHandler.log(e, "Unable to get status object for: " + bugReport.getStatus());
-			return;
+			throw new CoreException(Status.CANCEL_STATUS);
 		}
 		switch (status) {
 		case UNCONFIRMED:
@@ -346,6 +367,165 @@ public class BugzillaOfflineTaskHandler implements IOfflineTaskHandler {
 			bugReport.addOperation(newOperation);
 		}
 	}
+	//	
+	// public void submitBugReport(BugzillaReportSubmitForm form,
+	// IJobChangeListener listener, boolean synchExec,
+	// boolean addToTaskListRoot) {
+	// submitBugReport(form, listener, synchExec, addToTaskListRoot ?
+	// TasksUiPlugin.getTaskListManager().getTaskList()
+	// .getRootCategory() : null);
+	// }
+	//
+	// public void submitBugReport(final BugzillaReportSubmitForm form,
+	// IJobChangeListener listener, boolean synchExec,
+	// final AbstractTaskContainer container) {
+	// if (synchExec) {
+	// try {
+	// TaskRepository repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(
+	// form.getTaskData().getRepositoryKind(),
+	// form.getTaskData().getRepositoryUrl());
+	// if (repository != null) {
+	// BugzillaClient client = ((BugzillaRepositoryConnector)
+	// connector).getClientManager().getClient(
+	// repository);
+	// String submittedBugId = form.submitReportToRepository(client);
+	// if (form.isNewBugPost()) {
+	// handleNewBugPost(form.getTaskData(), submittedBugId, container);
+	// } else {
+	// handleExistingBugPost(form.getTaskData(), submittedBugId);
+	// }
+	// }
+	// } catch (Exception e) {
+	// throw new RuntimeException(e);
+	// }
+	// } else {
+	// Job submitJob = new Job(LABEL_JOB_SUBMIT) {
+	//
+	// @Override
+	// protected IStatus run(IProgressMonitor monitor) {
+	// try {
+	// String submittedBugId = "";
+	// TaskRepository repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(
+	// form.getTaskData().getRepositoryKind(),
+	// form.getTaskData().getRepositoryUrl());
+	// BugzillaClient client = ((BugzillaRepositoryConnector)
+	// connector).getClientManager().getClient(
+	// repository);
+	//						
+	// submittedBugId = form.submitReportToRepository(client);
+	//
+	// if (form.isNewBugPost()) {
+	// handleNewBugPost(form.getTaskData(), submittedBugId, container);
+	// return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.OK,
+	// submittedBugId, null);
+	// } else {
+	// // NOTE: sync now handled by editor
+	// //handleExistingBugPost(form.getTaskData(), submittedBugId);
+	// return Status.OK_STATUS;
+	// }
+	// } catch (GeneralSecurityException e) {
+	// return new Status(
+	// Status.OK,
+	// BugzillaUiPlugin.PLUGIN_ID,
+	// Status.ERROR,
+	// "Bugzilla could not post your bug, probably because your credentials are
+	// incorrect. Ensure proper repository configuration in "
+	// + TaskRepositoriesView.NAME + ".", e);
+	// } catch (UnrecognizedReponseException e) {
+	// return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
+	// "Unrecognized response from server", e);
+	// } catch (IOException e) {
+	// return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
+	// "IO Error: \n\n"
+	// + e.getMessage(), e);
+	// } catch (BugzillaException e) {
+	// // MylarStatusHandler.fail(e, "Failed to submit",
+	// // false);
+	// String message = e.getMessage();
+	// return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.ERROR,
+	// "Bugzilla could not post your bug. \n\n" + message, e);
+	// } catch (PossibleBugzillaFailureException e) {
+	// return new Status(Status.OK, BugzillaUiPlugin.PLUGIN_ID, Status.INFO,
+	// "Possible bugzilla failure", e);
+	// }
+	// }
+	// };
+	//
+	// submitJob.addJobChangeListener(listener);
+	// submitJob.schedule();
+	// }
+	// }
+	//
+	// private void handleNewBugPost(RepositoryTaskData taskData, String
+	// resultId, AbstractTaskContainer category)
+	// throws BugzillaException {
+	// int bugId = -1;
+	// try {
+	// bugId = Integer.parseInt(resultId);
+	// } catch (NumberFormatException e) {
+	// throw new BugzillaException("Invalid bug id returned by repository.");
+	// }
+	//
+	// TaskRepository repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(taskData.getRepositoryKind(),
+	// taskData.getRepositoryUrl());
+	//
+	// BugzillaTask newTask = new
+	// BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
+	// bugId),
+	// "<bugzilla info>", true);
+	//
+	// if (category != null) {
+	// TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
+	// category);
+	// } else {
+	// TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask);
+	// }
+	// TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
+	// Collections.singletonList(repository));
+	//
+	// }
+	//
+	// // Used when run in forced sync mode for testing
+	// private void handleExistingBugPost(RepositoryTaskData repositoryTaskData,
+	// String resultId) {
+	// try {
+	// String handle =
+	// AbstractRepositoryTask.getHandle(repositoryTaskData.getRepositoryUrl(),
+	// repositoryTaskData
+	// .getId());
+	// final ITask task =
+	// TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+	// if (task != null) {
+	// Set<AbstractRepositoryQuery> queriesWithHandle =
+	// TasksUiPlugin.getTaskListManager().getTaskList()
+	// .getQueriesForHandle(task.getHandleIdentifier());
+	// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+	// queriesWithHandle, null, Job.SHORT, 0,
+	// false);
+	// TaskRepository repository =
+	// TasksUiPlugin.getRepositoryManager().getRepository(
+	// repositoryTaskData.getRepositoryKind(),
+	// repositoryTaskData.getRepositoryUrl());
+	// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
+	// repository);
+	// if (task instanceof AbstractRepositoryTask) {
+	// AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+	// // TODO: This is set to null in order for update to bypass
+	// // ui override check with user
+	// // Need to change how this is achieved.
+	// repositoryTask.setTaskData(null);
+	// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+	// repositoryTask, true, null);
+	// }
+	// }
+	//
+	// } catch (Exception e) {
+	// throw new RuntimeException(e);
+	// }
+	// }
 
 	// // TODO: getAttributeOptions()
 	// public void updateAttributeOptions(TaskRepository taskRepository,

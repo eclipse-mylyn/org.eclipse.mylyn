@@ -33,7 +33,7 @@ import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -97,7 +97,7 @@ class SynchronizeTaskJob extends Job {
 							}
 						});
 					} else if (e.getStatus().getException() instanceof LoginException) {
-						MylarStatusHandler.fail(e, "Report download failed. Ensure proper repository configuration of "
+						MylarStatusHandler.fail(e, "Task download failed. Ensure proper repository configuration of "
 								+ repositoryTask.getRepositoryUrl() + " in " + TaskRepositoriesView.NAME + ".", true);
 						repositoryTask.setStatus(e.getStatus());
 					} else if (forceSync) {
@@ -141,15 +141,17 @@ class SynchronizeTaskJob extends Job {
 			}
 
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-			IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-				RepositoryTaskData downloadedTaskData = offlineHandler.downloadTaskData(repository, taskId);
+				RepositoryTaskData downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
 
 				if (downloadedTaskData != null) {
 					TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask, downloadedTaskData,
 							forceSync);
-					refreshEditors(repositoryTask);
+					if(!forceSync) {
+						refreshEditors(repositoryTask);
+					}
 				} else {
 					connector.updateTask(repository, repositoryTask);
 				}

@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.trac.core;
 
 import java.io.File;
-import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +28,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -102,7 +101,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IOfflineTaskHandler getOfflineTaskHandler() {
+	public ITaskDataHandler getTaskDataHandler() {
 		return offlineTaskHandler;
 	}
 
@@ -147,9 +146,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 		return Status.OK_STATUS;
 	}
-	
+
 	@Override
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
+	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
 		int bugId = -1;
 		try {
 			bugId = Integer.parseInt(id);

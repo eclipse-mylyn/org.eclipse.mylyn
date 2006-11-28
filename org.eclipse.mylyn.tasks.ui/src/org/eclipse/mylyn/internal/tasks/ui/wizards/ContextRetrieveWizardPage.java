@@ -20,7 +20,7 @@ import java.util.List;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -91,7 +91,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>(connector
 				.getContextAttachments(repository, task));
 
-		final IOfflineTaskHandler offlineHandler = connector.getOfflineTaskHandler();
+		final ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 		if (offlineHandler != null) {
 			Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 

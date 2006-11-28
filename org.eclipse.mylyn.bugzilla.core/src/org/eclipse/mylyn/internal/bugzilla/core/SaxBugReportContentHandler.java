@@ -20,7 +20,6 @@ import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -44,18 +43,15 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	private RepositoryAttachment attachment;
 
-	private RepositoryTaskData report;
+	private RepositoryTaskData repositoryTaskData;
 
 	private String errorMessage = null;
 
 	private AbstractAttributeFactory attributeFactory;
-	
-	private TaskRepository repository;
 
-	public SaxBugReportContentHandler(AbstractAttributeFactory factory, RepositoryTaskData rpt, TaskRepository repository) {
+	public SaxBugReportContentHandler(AbstractAttributeFactory factory, RepositoryTaskData taskData) {
 		this.attributeFactory = factory;
-		this.report = rpt;
-		this.repository = repository;
+		this.repositoryTaskData = taskData;
 	}
 
 	public boolean errorOccurred() {
@@ -67,7 +63,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	}
 
 	public RepositoryTaskData getReport() {
-		return report;
+		return repositoryTaskData;
 	}
 
 	@Override
@@ -104,7 +100,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			taskComment = new TaskComment(attributeFactory, commentNum++);
 			break;
 		case ATTACHMENT:
-			attachment = new RepositoryAttachment(repository, attributeFactory);
+			attachment = new RepositoryAttachment(attributeFactory);
 			if (attributes != null) {
 				if ("1".equals(attributes.getValue(BugzillaReportElement.IS_OBSOLETE.getKeyString()))) {
 					attachment.addAttribute(BugzillaReportElement.IS_OBSOLETE.getKeyString(), attributeFactory
@@ -138,17 +134,17 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		switch (tag) {
 		case BUG_ID: {
 			try {
-				if (!report.getId().equals(parsedText)) {
+				if (!repositoryTaskData.getId().equals(parsedText)) {
 					errorMessage = "Requested report number does not match returned report number.";
 				}
 			} catch (Exception e) {
 				errorMessage = "Bug id from server did not match requested id.";
 			}
 
-			RepositoryTaskAttribute attr = report.getAttribute(tag.getKeyString());
+			RepositoryTaskAttribute attr = repositoryTaskData.getAttribute(tag.getKeyString());
 			if (attr == null) {
 				attr = attributeFactory.createAttribute(tag.getKeyString());
-				report.addAttribute(tag.getKeyString(), attr);
+				repositoryTaskData.addAttribute(tag.getKeyString(), attr);
 			}
 			attr.setValue(parsedText);
 			break;
@@ -176,10 +172,10 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case LONG_DESC:
 			if (taskComment != null) {
 				if(taskComment.getNumber() == 0) {					
-				    report.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
+				    repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
 					break;
 				}
-				report.addComment(taskComment);
+				repositoryTaskData.addComment(taskComment);
 			}
 			break;
 
@@ -207,7 +203,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		case ATTACHMENT:
 			if (attachment != null) {
-				report.addAttachment(attachment);
+				repositoryTaskData.addAttachment(attachment);
 			}
 			break;
 
@@ -222,34 +218,37 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			RepositoryTaskAttribute numCommentsAttribute = report.getAttribute(BugzillaReportElement.LONGDESCLENGTH
+			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData.getAttribute(BugzillaReportElement.LONGDESCLENGTH
 					.getKeyString());
 			if (numCommentsAttribute == null) {
 				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH
 						.getKeyString());
-				numCommentsAttribute.setValue("" + report.getComments().size());
-				report.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(), numCommentsAttribute);
+				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
+				repositoryTaskData.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(), numCommentsAttribute);
 			} else {
-				numCommentsAttribute.setValue("" + report.getComments().size());
+				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
 			}
 
 			// Set the creator name on all attachments
-			for (RepositoryAttachment attachment : report.getAttachments()) {
+			for (RepositoryAttachment attachment : repositoryTaskData.getAttachments()) {
 				TaskComment taskComment = attachIdToComment.get(attachment.getId());
 				if (taskComment != null) {
 					attachment.setCreator(taskComment.getAuthor());
 				}
-				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, report.getRepositoryUrl()+IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX+attachment.getId());
+				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repositoryTaskData.getRepositoryUrl()+IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX+attachment.getId());
+				attachment.setRepositoryKind(repositoryTaskData.getRepositoryKind());
+				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
+				attachment.setTaskId(repositoryTaskData.getId());				
 			}
 			break;
 
 		case BLOCKED:
 		case DEPENDSON:
-			RepositoryTaskAttribute dependancyAttribute = report.getAttribute(tag.getKeyString());
+			RepositoryTaskAttribute dependancyAttribute = repositoryTaskData.getAttribute(tag.getKeyString());
 			if (dependancyAttribute == null) {
 				dependancyAttribute = attributeFactory.createAttribute(tag.getKeyString());
 				dependancyAttribute.setValue(parsedText);
-				report.addAttribute(tag.getKeyString(), dependancyAttribute);
+				repositoryTaskData.addAttribute(tag.getKeyString(), dependancyAttribute);
 			} else {
 				if(dependancyAttribute.getValue().equals("")) {
 					dependancyAttribute.setValue(parsedText);
@@ -260,11 +259,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		// All others added as report attribute
 		default:			
-			RepositoryTaskAttribute attribute = report.getAttribute(tag.getKeyString());
+			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(tag.getKeyString());
 			if (attribute == null) {
 				attribute = attributeFactory.createAttribute(tag.getKeyString());
 				attribute.setValue(parsedText);
-				report.addAttribute(tag.getKeyString(), attribute);
+				repositoryTaskData.addAttribute(tag.getKeyString(), attribute);
 			} else {
 				attribute.addValue(parsedText);
 			}

@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
-import java.net.Proxy;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,8 +20,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.IOfflineTaskHandler;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -49,7 +47,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITask createTaskFromExistingKey(TaskRepository repository, String id, Proxy proxySettings) throws CoreException {
+	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
 		// ignore
 		return null;
 	}
@@ -66,7 +64,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IOfflineTaskHandler getOfflineTaskHandler() {
+	public ITaskDataHandler getTaskDataHandler() {
 		// ignore
 		return null;
 	}

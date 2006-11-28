@@ -24,9 +24,9 @@ public interface IAttachmentHandler {
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
 			String description, File file, String contentType, boolean isPatch) throws CoreException;
 
-	public void downloadAttachment(TaskRepository taskRepository, String taskId, RepositoryAttachment attachment, File file) throws CoreException;
+	public void downloadAttachment(TaskRepository taskRepository, RepositoryAttachment attachment, File file) throws CoreException;
 
-	public byte[] getAttachmentData(TaskRepository repository, String taskId) throws CoreException;
+	public byte[] getAttachmentData(TaskRepository repository, RepositoryAttachment attachment) throws CoreException;
 	
 	//public InputStream getAttachmentInputStream(TaskRepository repository, String taskId) throws CoreException;
 	

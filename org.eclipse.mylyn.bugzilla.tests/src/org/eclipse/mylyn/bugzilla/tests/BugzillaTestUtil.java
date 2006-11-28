@@ -23,7 +23,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaOfflineTaskHandler;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
@@ -75,7 +75,7 @@ public class BugzillaTestUtil {
 			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
-			attribute.setValue(BugzillaOfflineTaskHandler.comment_creation_ts_format.format(new Date()));
+			attribute.setValue(BugzillaTaskDataHandler.comment_creation_ts_format.format(new Date()));
 			taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 			report.addComment(taskComment);
 		} else {
