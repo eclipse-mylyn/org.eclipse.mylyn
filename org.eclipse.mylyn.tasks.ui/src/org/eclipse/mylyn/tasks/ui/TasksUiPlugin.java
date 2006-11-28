@@ -439,7 +439,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
 					
-						// TODO: get rid of this, hack to make decorators show up on startup
+						// XXX: get rid of this, hack to make decorators show up on startup
 						TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
 						if (repositoriesView != null) {
 							repositoriesView.getViewer().refresh();
