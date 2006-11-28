@@ -59,7 +59,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				if (!connectorUi.hasRichEditor()) {
 					decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 				} else if (connector != null && connector.hasRepositoryContext(repository, task)) {
-					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
+					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.TOP_LEFT);
 				} else {
 					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 				}

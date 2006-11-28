@@ -213,7 +213,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		addToTaskListComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		addToTaskListCheck = new Button(addToTaskListComposite, SWT.CHECK);
-		addToTaskListCheck.setText("Add to task &list:");
+		addToTaskListCheck.setText("Add to Task &List category:");
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
