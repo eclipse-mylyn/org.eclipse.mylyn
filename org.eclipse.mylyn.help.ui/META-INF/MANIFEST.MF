@@ -8,6 +8,7 @@ Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
+ org.eclipse.mylar.tasks.core,
  org.eclipse.mylar.tasks.ui
 Export-Package: org.eclipse.mylar.doc.internal.actions,
  org.eclipse.mylar.doc.internal.dialogs
