@@ -21,7 +21,7 @@
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.mylar.context.core.IMylarElement">
      	<action  
-  		  	label="Mylar: Mark as Less Interesting" 
+  		  	label="Mark Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="additions" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
@@ -29,7 +29,7 @@
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
-  		  	label="Mylar: Mark as Landmark" 
+  		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="additions" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
@@ -236,18 +236,20 @@
             visible="true"
             id="org.eclipse.mylar.ui.mylar.actionSet">
          <action
-               definitionId="org.eclipse.mylar.ui.interest.increment"
-               label="Mark as Landmark"
-               class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
-               menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.ui.actions.InterestIncrementAction">
+               class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+               definitionId="org.eclipse.mylar.ui.interest.decrement"
+               icon="icons/elcl16/interest-decrease.gif"
+               id="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+               label="Mark Less Interesting"
+               menubarPath="navigate/open.ext2">
          </action>
          <action
-               definitionId="org.eclipse.mylar.ui.interest.decrement"
-               label="Mark Less Interesting"
-               class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
-               menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.ui.actions.InterestDecrementAction">
+               class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
+               definitionId="org.eclipse.mylar.ui.interest.increment"
+               icon="icons/elcl16/interest-increase.gif"
+               id="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+               label="Mark as Landmark"
+               menubarPath="navigate/open.ext2">
          </action>
          <!--
          <action
