@@ -12,7 +12,6 @@
       </toc>
    </extension>
    
-   <!--
     <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylar.doc.actionSet"
@@ -23,10 +22,10 @@
           definitionId="org.eclipse.mylar.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
           id="org.eclipse.mylar.doc.legend.show.action"
-          label="Mylar UI Legend..."
+          label="Tasks UI Legend"
           menubarPath="help/helpStart"
           style="push"
-          tooltip="Mylar UI Legend..."> 
+          tooltip="Tasks UI Legend"> 
       	</action> 
     </actionSet>
     </extension>
@@ -34,20 +33,19 @@
    <extension point="org.eclipse.ui.commands">
 	  <command
          categoryId="org.eclipse.mylar.ui"
-         description="Show Mylar UI Legend"
+         description="Show Tasks UI Legend"
          id="org.eclipse.mylar.doc.legend.show"
-         name="Show Mylar UI Legend">
+         name="Show Task UI Legend">
       </command>
    </extension>
   
    <extension point="org.eclipse.ui.bindings">   
       <key
-            sequence="M1+M2+M3+?"
+            sequence="M1+M2+?"
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylar.doc.legend.show"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension> 
-  -->
   
 </plugin>

@@ -29,7 +29,7 @@ public class MylarPreferencePage extends PreferencePage implements IWorkbenchPre
 		container.setLayout(layout);
 
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Please select a preference page below \"Mylar\".");
+		label.setText("Please select a preference page below \"Tasks\".");
 		
 		return container;
 	}

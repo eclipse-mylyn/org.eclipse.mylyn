@@ -19,7 +19,7 @@
     </extension>
 
     <extension
-         name="Mylar Task List Startup (required)"
+         name="Task List Startup (required)"
          point="org.eclipse.ui.startup">
     </extension>
 
@@ -76,7 +76,7 @@
             class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasks.ui.activity.report"
-            name="Task Activity Report (Experimental)">
+            name="Task Activity Report">
       </wizard> 
 	</extension>
 
@@ -87,9 +87,9 @@
            class="org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizard"
            icon="icons/eview16/task-list.gif"
            id="org.eclipse.mylar.tasklist.ui.importWizard"
-           name="Mylar Task Data">
+           name="Task List">
         <description>
-           Import Mylar task data files from file system.
+           Import task data files from file system.
         </description>
      </wizard>
      <category
@@ -103,25 +103,25 @@
             class="org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylar.tasklist.ui.exportWizard"
-            name="Mylar Task Data"> 
+            name="Task Data"> 
          <description> 
-            Export Mylar task data files to the file system.
+            Export Task List data files to the file system.
          </description> 
       </wizard>
       <category
             id="org.eclipse.mylar.tasklist.exportcategory"
-            name="Mylar"/> 
+            name="Task List"/> 
     </extension> 
 
    <extension point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylar.internal.tasks.ui.RepositoryTaskDecorator"
             id="org.eclipse.mylar.tasklist.ui.decorator.repositories"
-            label="Mylar Repository Task Decorator"
+            label="Task Decorator"
             lightweight="true"
             state="true">
          <description>
-			Mylar Repository Task Decorator
+			Task Decorator
 		 </description>
          <enablement>
             <or>
@@ -160,7 +160,7 @@
             class="org.eclipse.mylar.internal.tasks.ui.views.TaskActivityView"
             icon="icons/eview16/task-activity.gif"
             id="org.eclipse.mylar.tasklist.activity"
-            name="Task Activity (Experimental)"/>
+            name="Task Activity"/>
   	</extension>
 
   	<extension
@@ -181,7 +181,7 @@
           contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
           icon="icons/eview16/task-list.gif"
           id="org.eclipse.mylar.tasklist.ui.planner.editor"
-          name="Mylar Task Planner"/>                      
+          name="Task Planner"/>                      
   </extension>
   
       <extension point="org.eclipse.ui.perspectiveExtensions">
@@ -405,13 +405,13 @@
 
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
-            name="Mylar"
+            name="Tasks"
             class="org.eclipse.mylar.internal.tasks.ui.preferences.MylarPreferencePage"
             id="org.eclipse.mylar.ui.preferences">
             <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
       </page>  
       <page 
-         name="Tasks"
+         name="Task List"
          class="org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage"
          id="org.eclipse.mylar.tasklist.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
@@ -454,7 +454,7 @@
          point="org.eclipse.ui.themes">
       <themeElementCategory
            id="org.eclipse.mylar.tasklist.ui.presentation"
-           label="Mylar"/>         
+           label="Tasks"/>         
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"

@@ -195,6 +195,8 @@ public class TaskListImages {
 	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TaskListImages.STATUS_NORMAL,
 								TaskListImages.OVERLAY_WARNING, false, true);
 
+	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
+
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
