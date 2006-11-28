@@ -364,10 +364,10 @@
           definitionId="org.eclipse.mylar.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
           id="org.eclipse.mylar.java.ui.editor.folding.auto"
-          label="Mylar Active Editor Folding"
+          label="Focus Editor on Active Task"
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
-          tooltip="Mylar Active Folding"> 
+          tooltip="Focus Editor on Active Task"> 
       	</action> 
         <action
                definitionId="org.eclipse.mylar.java.ui.search.context"
