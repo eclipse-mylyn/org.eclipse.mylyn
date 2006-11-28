@@ -41,56 +41,56 @@ public class ApplyPatchAction implements IViewActionDelegate {
 			Object object = ((StructuredSelection) currentSelection).getFirstElement();
 			if (object instanceof RepositoryAttachment) {
 				RepositoryAttachment attachment = (RepositoryAttachment) object;
-				if (attachment.getRepository() == null) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							TasksUiPlugin.TITLE_DIALOG, "Please synchronize this task in order to apply the patch.");
+				final String contents = TasksUiPlugin.getRepositoryManager().getAttachmentContents(attachment);
+				if (contents == null) {
+					MessageDialog
+							.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+									TasksUiPlugin.TITLE_DIALOG,
+									"Patch could not be retrieved. Please try re-synchronizing task in order to apply the patch.");
 				} else {
-					final String contents = TasksUiPlugin.getRepositoryManager().getAttachmentContents(attachment);
-					if (contents == null) {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-								TasksUiPlugin.TITLE_DIALOG, "Patch could not be retrieved.");
-					} else {
-						// TODO: shouldn't need to do this
-						IPath statePath = MylarTeamPlugin.getDefault().getStateLocation();
-						final File tempFile = new File(statePath.toString() + File.separator + "patch.txt");
-						tempFile.deleteOnExit();
-						try {
-							BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-							writer.write(contents);
-							writer.close();
-						} catch (Exception e) {
-							MylarStatusHandler.fail(e, "could not write patch file", true);
-						}
-
-//						IStorage storage = new IStorage() {
-//
-//							@SuppressWarnings("deprecation")
-//							public InputStream getContents() throws CoreException {
-//								return new StringBufferInputStream(contents);
-//							}
-//
-//							public IPath getFullPath() {
-//								return new Path(tempFile.getAbsolutePath());
-//							}
-//
-//							public String getName() {
-//								return null;
-//							}
-//
-//							public boolean isReadOnly() {
-//								return true;
-//							}
-//
-//							public Object getAdapter(Class adapter) {
-//								return null;
-//							}
-//
-//						};
-//						ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
-//								.getActiveWorkbenchWindow().getActivePage().getActivePart(), storage, null, null);
-//						BusyIndicator.showWhile(Display.getDefault(), op);
+					// TODO: shouldn't need to do this
+					IPath statePath = MylarTeamPlugin.getDefault().getStateLocation();
+					final File tempFile = new File(statePath.toString() + File.separator + "patch.txt");
+					tempFile.deleteOnExit();
+					try {
+						BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+						writer.write(contents);
+						writer.close();
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "could not write patch file", true);
 					}
+
+					// IStorage storage = new IStorage() {
+					//
+					// @SuppressWarnings("deprecation")
+					// public InputStream getContents() throws CoreException {
+					// return new StringBufferInputStream(contents);
+					// }
+					//
+					// public IPath getFullPath() {
+					// return new Path(tempFile.getAbsolutePath());
+					// }
+					//
+					// public String getName() {
+					// return null;
+					// }
+					//
+					// public boolean isReadOnly() {
+					// return true;
+					// }
+					//
+					// public Object getAdapter(Class adapter) {
+					// return null;
+					// }
+					//
+					// };
+					// ApplyPatchOperation op = new
+					// ApplyPatchOperation(PlatformUI.getWorkbench()
+					// .getActiveWorkbenchWindow().getActivePage().getActivePart(),
+					// storage, null, null);
+					// BusyIndicator.showWhile(Display.getDefault(), op);
 				}
+
 			}
 		}
 	}
