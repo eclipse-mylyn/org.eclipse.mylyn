@@ -147,7 +147,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
 
-		toolkit.createLabel(composite, BugzillaReportElement.DEPENDSON.toString());
+		Label label = toolkit.createLabel(composite, BugzillaReportElement.DEPENDSON.toString());
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite textFieldComposite = toolkit.createComposite(composite);
 		GridLayout textLayout = new GridLayout();
 		textLayout.marginWidth = 1;
@@ -177,7 +178,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			text.addListener(SWT.FocusIn, new GenericListener());
 		}
 
-		toolkit.createLabel(composite, BugzillaReportElement.BLOCKED.toString());
+		label = toolkit.createLabel(composite, BugzillaReportElement.BLOCKED.toString());
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		textFieldComposite = toolkit.createComposite(composite);
 		textLayout = new GridLayout();
 		textLayout.marginWidth = 1;
@@ -260,8 +262,18 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							+ "\n\nError reported: " + e.getMessage());
 		}
 
+		label = toolkit.createLabel(composite, BugzillaReportElement.BUG_FILE_LOC.toString());
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
+		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
+		createTextField(composite, attribute, SWT.FLAT);
+//		TextViewer viewer = addTextEditor(repository, composite, attribute.getValue(), false, SWT.SINGLE);
+//		viewer.setEditable(true);
+//		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(viewer.getTextWidget());
+		
+
 		addVoting(composite);
 
+		label = toolkit.createLabel(composite, "");
 		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
 		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
@@ -588,7 +600,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		votingComposite.setLayout(layout);
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(votingComposite);
+		// GridDataFactory.fillDefaults().span(2, 1).applyTo(votingComposite);
 		RepositoryTaskAttribute votesAttribute = taskData.getAttribute(BugzillaReportElement.VOTES.getKeyString());
 		String voteValue = votesAttribute != null ? votesAttribute.getValue() : "0";
 		votesText = toolkit.createText(votingComposite, voteValue);

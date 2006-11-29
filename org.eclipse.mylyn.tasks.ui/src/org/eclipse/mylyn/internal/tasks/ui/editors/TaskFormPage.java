@@ -273,7 +273,7 @@ public class TaskFormPage extends FormPage {
 	// }
 
 	/**
-	 * Text viewer gennerally used for displaying non-editable text. No
+	 * Text viewer generally used for displaying non-editable text. No
 	 * annotation model or spell checking support. Supports cut/copy/paste/etc..
 	 */
 	protected TextViewer addTextViewer(TaskRepository repository, Composite composite, String text, int style) {

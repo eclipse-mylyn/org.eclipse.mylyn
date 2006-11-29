@@ -632,7 +632,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @param style
 	 */
 	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style) {
-		Text text;
+		final Text text;
 		String value;
 		if (attribute == null) {
 			value = "";
@@ -640,6 +640,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			value = attribute.getValue();
 		}
 		text = toolkit.createText(composite, value, style);
+		text.setData(attribute);
+		if (!attribute.isReadOnly()) {
+			text.setData(attribute);
+			text.addListener(SWT.KeyUp, new Listener() {
+				public void handleEvent(Event event) {
+					String sel = text.getText();
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+		}
 		if (hasChanged(attribute)) {
 			text.setBackground(backgroundIncoming);
 		}
@@ -2502,7 +2516,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
 										Collections.singletonList(repository));
 							} else {
-								
+
 								// TaskUiUtil.openRepositoryTask(repository.getUrl(),
 								// AbstractRepositoryTaskEditor.this
 								// .getRepositoryTaskData().getId(),

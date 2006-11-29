@@ -27,7 +27,7 @@ public enum BugzillaReportElement {
 	ATTACHMENT ("attachment", "attachment"),
 	BLOCKED ("Bug blocks:", "blocked", true, false),
 	BUG ("bug","bug", true),
-	BUG_FILE_LOC ("URL:", "bug_file_loc", true),
+	BUG_FILE_LOC ("URL:", "bug_file_loc", true, false),
 	BUG_ID ("Bug:", "bug_id", true),
 	BUG_SEVERITY ("Severity:", "bug_severity", false),
 	BUG_STATUS ("Status:", "bug_status", true, true),
