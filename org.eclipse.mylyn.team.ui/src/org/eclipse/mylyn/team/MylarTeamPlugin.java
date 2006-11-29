@@ -13,6 +13,7 @@ package org.eclipse.mylar.team;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.team.ContextChangeSetManager;
+import org.eclipse.mylar.internal.team.LinkedTaskInfoAdapterFactory;
 import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -48,6 +49,8 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		initPreferenceDefaults();
 		commitTemplateManager = new CommitTemplateManager();
 		
+		LinkedTaskInfoAdapterFactory.registerAdapters();
+
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
@@ -71,6 +74,8 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		INSTANCE = null;
 		super.stop(context);
 		changeSetManager.disable();
+
+		LinkedTaskInfoAdapterFactory.unregisterAdapters();
 	}
 
 	private void initPreferenceDefaults() {

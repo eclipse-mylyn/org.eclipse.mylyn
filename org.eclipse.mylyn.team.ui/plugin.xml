@@ -68,6 +68,22 @@
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
+		
+		<!-- Subclipse History view -->
+		<objectContribution
+            objectClass="org.tigris.subversion.subclipse.core.history.LogEntry"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+         <action
+	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           enablesFor="1" 
+	           icon="icons/elcl16/task-repository.gif"
+	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           label="Open Corresponding Task"
+	           menubarPath="mylar"
+	           tooltip="Open Corresponding Task">
+	  		</action> 
+	    </objectContribution>
+	    
 	    <!--
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
