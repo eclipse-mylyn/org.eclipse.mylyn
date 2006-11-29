@@ -240,7 +240,8 @@ public class BugzillaClient {
 			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
-
+			getMethod.setDoAuthentication(true);
+			
 			int code;
 			try {
 				code = httpClient.executeMethod(getMethod);
@@ -814,7 +815,8 @@ public class BugzillaClient {
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
-			RepositoryTaskAttribute a = it.next();
+			
+			RepositoryTaskAttribute a = it.next();			
 			if (a == null) {
 				continue;
 			} else if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
@@ -844,7 +846,7 @@ public class BugzillaClient {
 			fields.put(KEY_KNOB, new NameValuePair(KEY_KNOB, o.getKnobName()));
 			if (o.hasOptions()) {
 				String sel = o.getOptionValue(o.getOptionSelection());
-				fields.put(o.getOptionName(), new NameValuePair(o.getOperationName(), sel));
+				fields.put(o.getOptionName(), new NameValuePair(o.getOptionName(), sel));
 			} else if (o.isInput()) {
 				String sel = o.getInputValue();
 				fields.put(o.getInputName(), new NameValuePair(o.getInputName(), sel));
