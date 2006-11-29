@@ -14,10 +14,13 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -82,13 +85,18 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Only override if task should be opened by a custom editor, default
-	 * beahvior is to open with browser.
+	 * behavior is to open with browser.
 	 * 
-	 * @return	true if the task was successfully opened
+	 * @return true if the task was successfully opened
 	 */
 	public boolean openRemoteTask(String repositoryUrl, String idString) {
-		return false;
-//		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-//				TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " + this.getClass().getSimpleName());
+		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
+		TasksUiUtil.openUrl(connector.getTaskWebUrl(repositoryUrl, idString));
+
+		return true;
+		// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+		// TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " +
+		// this.getClass().getSimpleName());
 	}
 }

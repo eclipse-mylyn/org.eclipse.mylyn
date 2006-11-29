@@ -79,7 +79,18 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 		return null;
 	}
+	
+	@Override
+	public String getTaskIdFromTaskUrl(String url) {
+		// ignore
+		return null;
+	}
 
+	@Override
+	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+		return null;
+	}
+	
 	@Override
 	public List<String> getSupportedVersions() {
 		// ignore

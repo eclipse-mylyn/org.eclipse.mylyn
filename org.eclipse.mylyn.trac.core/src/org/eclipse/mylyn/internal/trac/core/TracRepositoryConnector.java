@@ -80,10 +80,24 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (url == null) {
 			return null;
 		}
-		int i = url.lastIndexOf(ITracClient.TICKET_URL);
-		return (i != -1) ? url.substring(0, i) : null;
+		int index = url.lastIndexOf(ITracClient.TICKET_URL);
+		return index == -1 ? null : url.substring(0, index);
 	}
 
+	public String getTaskIdFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		int index = url.lastIndexOf(ITracClient.TICKET_URL);
+		return index == -1 ? null : url.substring(index + ITracClient.TICKET_URL.length());
+	}
+
+	@Override
+	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+		return repositoryUrl + ITracClient.TICKET_URL + taskId;
+	}
+
+	
 	@Override
 	public List<String> getSupportedVersions() {
 		if (supportedVersions == null) {

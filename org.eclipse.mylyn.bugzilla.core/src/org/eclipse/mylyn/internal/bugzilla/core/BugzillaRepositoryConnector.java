@@ -195,14 +195,23 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public String getRepositoryUrlFromTaskUrl(String url) {
 		if (url == null) {
 			return null;
-		} else {
-			int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
-			if (index != -1) {
-				return url.substring(0, index);
-			} else {
-				return null;
-			}
 		}
+		int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
+		return index == -1 ? null : url.substring(0, index);
+	}
+
+	@Override
+	public String getTaskIdFromTaskUrl(String url) {
+		if (url == null) {
+			return null;
+		}
+		int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
+		return index == -1 ? null : url.substring(index + IBugzillaConstants.URL_GET_SHOW_BUG.length());
+	}
+	
+	@Override
+	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+		return repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG + taskId;
 	}
 
 	// @Override
