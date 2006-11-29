@@ -641,7 +641,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		text = toolkit.createText(composite, value, style);
 		text.setData(attribute);
-		if (!attribute.isReadOnly()) {
+		if (attribute != null && !attribute.isReadOnly()) {
 			text.setData(attribute);
 			text.addListener(SWT.KeyUp, new Listener() {
 				public void handleEvent(Event event) {
