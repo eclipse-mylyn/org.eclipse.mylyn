@@ -36,8 +36,8 @@ Export-Package: org.apache.commons.codec,
  org.eclipse.mylar.internal.context.core.util
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .,
+ lib/commons-httpclient-3.0.1.jar,
  lib/commons-codec-1.3.jar,
- lib/commons-httpclient-3.0.jar,
  lib/commons-logging.jar,
  lib/xmlrpc-client-3.0.jar,
  lib/xmlrpc-common-3.0.jar,
