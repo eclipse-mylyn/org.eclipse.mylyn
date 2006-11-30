@@ -48,7 +48,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static File repositoryConfigurationFile = null;
 	
-	private BugzillaRepositoryConnector connector;
+	private static BugzillaRepositoryConnector connector;
 
 	/** Product configuration for the current server */
 	private static Map<String, RepositoryConfiguration> repositoryConfigurations = new HashMap<String, RepositoryConfiguration>();
@@ -75,13 +75,9 @@ public class BugzillaCorePlugin extends Plugin {
 		INSTANCE = null;
 		super.stop(context);
 	}
-
-	public BugzillaRepositoryConnector getConnector() {
-		return connector;
-	}
 	
-	void setConnector(BugzillaRepositoryConnector connector) {
-		this.connector = connector;
+	static void setConnector(BugzillaRepositoryConnector theConnector) {
+		connector = theConnector;
 	}
 	
 	public static Map<String, RepositoryConfiguration> getConfigurations() {
@@ -114,13 +110,13 @@ public class BugzillaCorePlugin extends Plugin {
 	 * @throws GeneralSecurityException
 	 * @throws
 	 */
-	public RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh) throws CoreException {
+	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh) throws CoreException {
 		try {
 		if (!cacheFileRead) {
 			readRepositoryConfigurationFile();
 			cacheFileRead = true;
 		}
-		if (repositoryConfigurations.get(repository.getUrl()) == null || forceRefresh) {
+		if (repositoryConfigurations.get(repository.getUrl()) == null || forceRefresh) {			
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			RepositoryConfiguration config = client.getRepositoryConfiguration();
 			if(config != null) {
@@ -151,7 +147,7 @@ public class BugzillaCorePlugin extends Plugin {
 	// }
 
 	/** public for testing */
-	public void removeConfiguration(RepositoryConfiguration config) {
+	public static void removeConfiguration(RepositoryConfiguration config) {
 		repositoryConfigurations.remove(config.getRepositoryUrl());
 	}
 

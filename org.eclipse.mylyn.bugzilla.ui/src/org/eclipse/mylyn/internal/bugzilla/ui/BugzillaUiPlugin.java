@@ -22,6 +22,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
@@ -94,7 +95,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(IBugzillaConstants.MAX_RESULTS, 100);
 
 		IPath repConfigCacheFile = getProductConfigurationCachePath();
-		if(repConfigCacheFile != null) {
+		if (repConfigCacheFile != null) {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
 
@@ -106,8 +107,11 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			authenticator = new BugzillaAuthenticator();
 		}
 		Authenticator.setDefault(authenticator);
-		
-		TasksUiPlugin.getRepositoryManager().addListener(BugzillaCorePlugin.getDefault().getConnector().getClientManager());
+
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
+				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+
+		TasksUiPlugin.getRepositoryManager().addListener(bugzillaConnector.getClientManager());
 
 		// migrateOldAuthenticationData();
 	}
@@ -120,7 +124,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		IPath configFile = stateLocation.append("repositoryConfigurations");
 		return configFile;
 	}
-	
+
 	public int getMaxResults() {
 		return getPreferenceStore().getInt(IBugzillaConstants.MAX_RESULTS);
 	}
@@ -130,7 +134,12 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		TasksUiPlugin.getRepositoryManager().removeListener(BugzillaCorePlugin.getDefault().getConnector().getClientManager());
+
+		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
+				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+
+		TasksUiPlugin.getRepositoryManager().removeListener(bugzillaConnector.getClientManager());
+
 		super.stop(context);
 		plugin = null;
 	}
@@ -171,7 +180,8 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 			for (String product : selectedProducts) {
 				for (String option : convertQueryOptionsToArray(prefs.getString(prefId + PREF_DELIM_REPOSITORY
 						+ repositoryUrl + PREF_DELIM_REPOSITORY + product))) {
-					if(!options.contains(option)) options.add(option);
+					if (!options.contains(option))
+						options.add(option);
 				}
 			}
 			return options.toArray(new String[options.size()]);
@@ -220,29 +230,30 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Update all of the query options for the bugzilla search page
-	 * TODO: unify update of search options with update of bug attributes 
+	 * Update all of the query options for the bugzilla search page TODO: unify
+	 * update of search options with update of bug attributes
 	 * (BugzillaServerFacade.updateBugAttributeOptions)
 	 */
 	public static void updateQueryOptions(TaskRepository repository, IProgressMonitor monitor) {
-		
+
 		String repositoryUrl = repository.getUrl();
 
-		if(monitor.isCanceled())
+		if (monitor.isCanceled())
 			throw new OperationCanceledException();
-		
-		// TODO: pass monitor along since it is this call that does the work and can hang due to network IO
+
+		// TODO: pass monitor along since it is this call that does the work and
+		// can hang due to network IO
 		RepositoryConfiguration config = null;
 		try {
-			config = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false);
+			config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
 			return;
 		}
 
-		if(monitor.isCanceled())
+		if (monitor.isCanceled())
 			throw new OperationCanceledException();
-		
+
 		// get the preferences store so that we can change the data in it
 		IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
 
@@ -404,4 +415,4 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 // public List<BugzillaReport> getSavedBugReports() {
 // return offlineReportsFile.elements();
-//	}
+// }

@@ -150,8 +150,8 @@ public class BugzillaConfigurationTest extends TestCase {
 		BugzillaCorePlugin.addRepositoryConfiguration(configuration1);
 		BugzillaCorePlugin.addRepositoryConfiguration(configuration2);
 		BugzillaCorePlugin.writeRepositoryConfigFile();
-		BugzillaCorePlugin.getDefault().removeConfiguration(configuration1);
-		BugzillaCorePlugin.getDefault().removeConfiguration(configuration2);
+		BugzillaCorePlugin.removeConfiguration(configuration1);
+		BugzillaCorePlugin.removeConfiguration(configuration2);
 		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration1.getRepositoryUrl()));
 		assertNull(BugzillaCorePlugin.getRepositoryConfiguration(configuration2.getRepositoryUrl()));
 		BugzillaCorePlugin.readRepositoryConfigurationFile();

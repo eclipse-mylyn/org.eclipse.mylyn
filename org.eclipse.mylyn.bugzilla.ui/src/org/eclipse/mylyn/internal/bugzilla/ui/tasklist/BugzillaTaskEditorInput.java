@@ -18,11 +18,13 @@ import java.security.GeneralSecurityException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IPersistableElement;
 
 /**
@@ -61,10 +63,10 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return null;
 	}
 
-//	@Override
-//	public String getName() {
-//		return bugTask.getDescription();
-//	}
+	// @Override
+	// public String getName() {
+	// return bugTask.getDescription();
+	// }
 
 	@Override
 	public IPersistableElement getPersistable() {
@@ -103,7 +105,9 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	private void updateOptions(RepositoryTaskData taskData) {
 		try {
 			if (taskData != null) {
-				BugzillaCorePlugin.getDefault().getConnector().updateAttributeOptions(repository, taskData);
+				BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
+						.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+				bugzillaConnector.updateAttributeOptions(repository, taskData);
 			}
 		} catch (Exception e) {
 			// ignore

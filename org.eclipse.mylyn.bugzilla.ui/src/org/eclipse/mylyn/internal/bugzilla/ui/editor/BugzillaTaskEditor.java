@@ -557,7 +557,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		java.util.List<String> validKeywords = new ArrayList<String>();
 		try {
-			validKeywords = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getKeywords();
+			validKeywords = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getKeywords();
 		} catch (Exception e) {
 			// ignore
 		}

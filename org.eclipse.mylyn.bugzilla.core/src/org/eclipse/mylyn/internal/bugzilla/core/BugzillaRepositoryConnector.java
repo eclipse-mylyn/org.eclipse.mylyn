@@ -59,8 +59,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	public void init(TaskList taskList) {
 		super.init(taskList);
 		this.taskDataHandler = new BugzillaTaskDataHandler(this, taskList);
-		BugzillaCorePlugin.getDefault().setConnector(this);
-		attachmentHandler = new BugzillaAttachmentHandler(this);
+		this.attachmentHandler = new BugzillaAttachmentHandler(this);
+		BugzillaCorePlugin.setConnector(this);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		int index = url.indexOf(IBugzillaConstants.URL_GET_SHOW_BUG);
 		return index == -1 ? null : url.substring(index + IBugzillaConstants.URL_GET_SHOW_BUG.length());
 	}
-	
+
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
 		return repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG + taskId;
@@ -290,7 +290,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		if (repository != null) {
-			BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, true);
+			BugzillaCorePlugin.getRepositoryConfiguration(repository, true);
 		}
 	}
 
@@ -300,7 +300,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(taskRepository,
+			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository,
 					false).getOptionValues(element, product);
 			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
 					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
@@ -347,8 +347,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		newReport.removeAllAttributes();
 
-		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(
-				taskRepository, false);
+		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository,
+				false);
 
 		RepositoryTaskAttribute a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRODUCT);
 		List<String> optionValues = repositoryConfiguration.getProducts();

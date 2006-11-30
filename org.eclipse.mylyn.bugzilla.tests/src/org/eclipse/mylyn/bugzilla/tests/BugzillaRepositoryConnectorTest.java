@@ -112,7 +112,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 
 		// test anonymous update of configuration
-		RepositoryConfiguration config = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false);
+		RepositoryConfiguration config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
 		assertNotNull(config);
 		assertTrue(config.getComponents().size() > 0);
 	}

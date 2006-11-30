@@ -311,7 +311,7 @@ public class BugzillaProductPage extends WizardPage {
 				if (storedProducts.length > 0) {
 					products = Arrays.asList(storedProducts);
 				} else {
-					products = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false)
+					products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false)
 							.getProducts();
 				}
 				bugWizard.model.setConnected(true);

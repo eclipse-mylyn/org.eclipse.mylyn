@@ -58,7 +58,7 @@ public class BugzillaProductParserTest extends TestCase {
 	
 	public void test222Products() throws Exception {
 		setRepository(IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		List<String> productList = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
+		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
 		assertEquals("Read Only Test Cases", itr.next());
@@ -66,7 +66,7 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test2201Products() throws Exception {
 		setRepository(IBugzillaConstants.TEST_BUGZILLA_2201_URL);		
-		List<String> productList = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
+		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		Iterator<String> itr = productList.iterator();
 		assertTrue(itr.hasNext());
 		assertEquals("TestProduct", "TestProduct", itr.next());
@@ -75,7 +75,7 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test220Products() throws Exception {
 		setRepository(IBugzillaConstants.TEST_BUGZILLA_220_URL);	
-		List<String> productList = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
+		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		assertEquals(2, productList.size());
 		assertTrue(productList.contains("TestProduct"));
 		assertTrue(productList.contains("Widget"));	
@@ -84,7 +84,7 @@ public class BugzillaProductParserTest extends TestCase {
 
 	public void test218Products() throws Exception {
 		setRepository(IBugzillaConstants.TEST_BUGZILLA_218_URL);	
-		List<String> productList = BugzillaCorePlugin.getDefault().getRepositoryConfiguration(repository, false).getProducts();
+		List<String> productList = BugzillaCorePlugin.getRepositoryConfiguration(repository, false).getProducts();
 		assertEquals(1, productList.size());
 		assertTrue(productList.contains("TestProduct"));
 	}
