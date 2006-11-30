@@ -172,15 +172,20 @@ public abstract class AbstractRepositoryConnector {
 			}
 
 			try {
-				// TODO: 'faking' outgoing state
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+				if(task.getTaskData() != null) {
+					task.getTaskData().setHasLocalChanges(true);
+				}
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
 						APPLICATION_OCTET_STREAM, false);
 			} catch (CoreException e) {
+
+				// TODO: Calling method should be responsible for returning
+				// state of task. Wizard will have different behaviour than
+				// editor.
 				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				throw e;
 			}
-			task.setTaskData(null);
 		}
 		return true;
 	}

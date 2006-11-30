@@ -84,7 +84,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 			task.getTaskData().setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
 
-		submit(task.getTaskData());
+		submit(task);
 		taskList.deleteTask(task);
 		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");
 		assertNotNull(task);

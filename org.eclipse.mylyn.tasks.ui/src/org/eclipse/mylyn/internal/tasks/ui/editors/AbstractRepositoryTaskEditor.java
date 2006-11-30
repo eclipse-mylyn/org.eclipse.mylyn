@@ -2448,8 +2448,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				try {
 					String result = dataHandler.postTaskData(repository, getRepositoryTaskData());
-
-					getRepositoryTaskData().setHasLocalChanges(false);
 					return new Status(Status.OK, AbstractRepositoryTaskEditor.this.getPluginId(), Status.OK, result,
 							null);
 				} catch (CoreException e) {
@@ -2499,8 +2497,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							}
 
 							if (modifiedTask != null) {
-								// Technically we now have new incoming
-								modifiedTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+								// Mark as synchronized because the content DID get submitted
+								// Since the task data is marked as haveing local changes
+								// the subsequent synchronization doesn't result in INCOMING
+								modifiedTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+								
 
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 										new JobChangeAdapter() {

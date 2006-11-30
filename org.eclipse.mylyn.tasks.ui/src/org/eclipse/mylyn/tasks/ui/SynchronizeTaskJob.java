@@ -82,7 +82,7 @@ class SynchronizeTaskJob extends Job {
 				}
 
 				repositoryTask.setStatus(null);
-				
+
 				try {
 					syncTask(monitor, repositoryTask);
 				} catch (final CoreException e) {
@@ -110,10 +110,10 @@ class SynchronizeTaskJob extends Job {
 
 				repositoryTask.setCurrentlySynchronizing(false);
 				TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-				
+
 				monitor.worked(1);
 			}
-			TasksUiPlugin.getDefault().getTaskDataManager().save();			
+			TasksUiPlugin.getDefault().getTaskDataManager().save();
 
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
@@ -149,9 +149,9 @@ class SynchronizeTaskJob extends Job {
 				if (downloadedTaskData != null) {
 					TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask, downloadedTaskData,
 							forceSync);
-					if(!forceSync) {
-						refreshEditors(repositoryTask);
-					}
+					// if(!forceSync) {
+					refreshEditors(repositoryTask);
+					// }
 				} else {
 					connector.updateTask(repository, repositoryTask);
 				}
@@ -172,10 +172,9 @@ class SynchronizeTaskJob extends Job {
 
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							if ((repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING && MessageDialog
-									.openConfirm(null, "Stale Editor",
-											"Remote copy of task has changes. Refresh and open report?"))
-									|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+							if (((repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING || repositoryTask
+									.getSyncState() == RepositoryTaskSyncState.CONFLICT) && MessageDialog.openConfirm(
+									null, "Stale Editor", "Remote copy of task has changes. Refresh and open report?"))) {
 								TasksUiUtil.closeEditorInActivePage(input.getTask());
 								TasksUiUtil.refreshAndOpenTaskListElement(input.getTask());
 							}
@@ -185,5 +184,4 @@ class SynchronizeTaskJob extends Job {
 			}
 		}
 	}
-
 }

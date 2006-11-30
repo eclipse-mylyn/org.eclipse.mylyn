@@ -165,10 +165,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		// Submit changes
 		
-		submit(task.getTaskData());
+		submit(task);		
 //		task.setTaskData(null);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
+		// After submit SYNCHRONIZED is set, after synchronize it should remain SYNCHRONIZED
+		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 
 		// Has no outgoing changes or conflicts yet needs synch
@@ -404,8 +405,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(repository.getUserName());
 		assertNotNull(repository.getPassword());
 
-		submit(task4.getTaskData());
-		submit(task5.getTaskData());
+		submit(task4);
+		submit(task5);
 //		BugzillaReportSubmitForm bugzillaReportSubmitForm;
 //
 //		bugzillaReportSubmitForm = makeExistingBugPost(task4.getTaskData());
@@ -469,7 +470,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
 
-		submit(recentTaskData);
+		connector.getTaskDataHandler().postTaskData(repository, recentTaskData);
 		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());
 	}
@@ -550,7 +551,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		for (AbstractRepositoryTask task : tasks) {
 			task.getTaskData().setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(),
 					"New Estimate: " + estimatedTime + "\nNew Remaining: " + remainingTime + "\nAdd: " + addTime);
-			submit(task.getTaskData());
+			submit(task);
 		}
 
 		// assertEquals("Changed reports expected ", 1,

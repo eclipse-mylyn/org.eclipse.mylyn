@@ -20,6 +20,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
@@ -65,6 +66,7 @@ public class ContextAttachWizard extends Wizard {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
+				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
