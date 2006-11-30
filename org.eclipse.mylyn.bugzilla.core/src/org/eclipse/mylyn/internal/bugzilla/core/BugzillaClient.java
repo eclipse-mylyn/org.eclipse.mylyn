@@ -70,6 +70,8 @@ import org.eclipse.mylar.tasks.core.TaskList;
  */
 public class BugzillaClient {
 
+	private static final String QUERY_DELIMITER = "?";
+
 	private static final String KEY_ID = "id";
 
 	private static final String VAL_TRUE = "true";
@@ -228,16 +230,26 @@ public class BugzillaClient {
 				authenticate();
 			}
 
-			GetMethod getMethod = new GetMethod(WebClientUtil.getRequestPath(serverURL));
-			// getMethod.getParams().setSoTimeout(CONNECT_TIMEOUT);
+			// System.err.println("\n\n>>>> " +
+			// httpClient.getParams().getParameter("http.useragent"));
+
+			String requestPath = WebClientUtil.getRequestPath(serverURL);
+			if (requestPath.contains(QUERY_DELIMITER)) {
+				requestPath = requestPath.substring(0, requestPath.indexOf(QUERY_DELIMITER));
+			}
+			GetMethod getMethod = new GetMethod(requestPath);
+			if (serverURL.contains(QUERY_DELIMITER)) {
+				getMethod.setQueryString(serverURL.substring(serverURL.indexOf(QUERY_DELIMITER)));
+			}
+
 			httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
-			// WARNING! Setting browser compatability breaks Bugzilla
+			// WARNING!! Setting browser compatability breaks Bugzilla
 			// authentication
-			// method.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 			getMethod.setDoAuthentication(true);
@@ -253,6 +265,7 @@ public class BugzillaClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return getMethod;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
+				getMethod.getResponseBody();
 				// login or reauthenticate due to an expired session
 				getMethod.releaseConnection();
 				authenticated = false;
@@ -447,6 +460,7 @@ public class BugzillaClient {
 			if (!queryUrl.contains("ctype=rdf")) {
 				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 			}
+			
 			method = getConnect(queryUrl);
 
 			if (method.getResponseHeader("Content-Type") != null) {
@@ -815,8 +829,8 @@ public class BugzillaClient {
 		fields.put(KEY_FORM_NAME, new NameValuePair(KEY_FORM_NAME, VAL_PROCESS_BUG));
 		// go through all of the attributes and add them to the bug post
 		for (Iterator<RepositoryTaskAttribute> it = model.getAttributes().iterator(); it.hasNext();) {
-			
-			RepositoryTaskAttribute a = it.next();			
+
+			RepositoryTaskAttribute a = it.next();
 			if (a == null) {
 				continue;
 			} else if (a.getID().equals(BugzillaReportElement.CC.getKeyString())

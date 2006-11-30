@@ -101,6 +101,20 @@ public class WebClientUtil {
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
+		// Note: The following debug code requires http commons-logging and
+		// commons-logging-api jars
+		// System.setProperty("org.apache.commons.logging.Log",
+		// "org.apache.commons.logging.impl.SimpleLog");
+		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
+		// "true");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
+		// "debug");
+		
+
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
