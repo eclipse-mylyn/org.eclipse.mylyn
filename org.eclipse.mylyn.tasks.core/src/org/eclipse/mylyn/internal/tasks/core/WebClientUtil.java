@@ -148,7 +148,7 @@ public class WebClientUtil {
 	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getSystemProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+		if (UpdateCore.getPlugin() != null && UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
 			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
 			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
 
