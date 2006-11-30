@@ -112,12 +112,12 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 					"Response from server", e));
 		} catch (IOException e) {
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Check repository credentials and connectivity.", e));
+					e.getMessage(), e));
 
 		} catch (BugzillaException e) {
 			String message = e.getMessage();
 			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Bugzilla could not post your bug. \n\n" + message, e));
+					"Could not post your attachment. \n\n" + message, e));
 		}
 		// uploadAttachment(repository.getUrl(), repository.getUserName(),
 		// repository.getPassword(), bugId, comment,

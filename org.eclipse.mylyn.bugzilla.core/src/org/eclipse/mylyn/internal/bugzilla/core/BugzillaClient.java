@@ -253,7 +253,7 @@ public class BugzillaClient {
 
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 			getMethod.setDoAuthentication(true);
-			
+
 			int code;
 			try {
 				code = httpClient.executeMethod(getMethod);
@@ -460,7 +460,7 @@ public class BugzillaClient {
 			if (!queryUrl.contains("ctype=rdf")) {
 				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
 			}
-			
+
 			method = getConnect(queryUrl);
 
 			if (method.getResponseHeader("Content-Type") != null) {
@@ -583,24 +583,11 @@ public class BugzillaClient {
 			authenticate();
 		}
 		PostMethod postMethod = null;
-		// Note: The following debug code requires http commons-logging and
-		// commons-logging-api jars
-		// System.setProperty("org.apache.commons.logging.Log",
-		// "org.apache.commons.logging.impl.SimpleLog");
-		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
-		// "true");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
-		// "debug");
-
-		// Protocol.registerProtocol("https", new Protocol("https", new
-		// TrustAllSslProtocolSocketFactory(), 443));
 
 		try {
 			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString())
 					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD);
-			// My understanding is that this option causes the client to first
+			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
 			// actually sending the contents.
