@@ -401,7 +401,6 @@ public class MylarTaskEditor extends FormEditor {
 				}
 			}
 			String urlToOpen = getUrl();
-			// System.err.println(">>> " + urlToOpen);
 			if (urlToOpen != null && !urlToOpen.equals("")) {
 				browserPageIndex = createBrowserPage(urlToOpen);
 				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {

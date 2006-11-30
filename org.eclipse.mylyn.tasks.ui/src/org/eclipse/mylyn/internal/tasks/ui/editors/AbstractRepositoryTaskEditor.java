@@ -202,7 +202,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected TaskRepository repository;
 
-	public static final int WRAP_LENGTH = 90;
+	public static final int RADIO_OPTION_WIDTH = 150;
 
 	protected Display display;
 
@@ -2251,7 +2251,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
-				radioData.widthHint = AbstractRepositoryTaskEditor.WRAP_LENGTH;
+				radioData.widthHint = AbstractRepositoryTaskEditor.RADIO_OPTION_WIDTH;
 				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
 				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(radioOptions[i], true, true);
