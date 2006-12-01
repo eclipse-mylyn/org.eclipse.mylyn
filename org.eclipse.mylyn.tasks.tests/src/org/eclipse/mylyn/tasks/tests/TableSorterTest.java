@@ -13,7 +13,6 @@ package org.eclipse.mylar.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
@@ -25,7 +24,7 @@ import org.eclipse.mylar.tasks.core.TaskList;
 public class TableSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
-		TaskListTableSorter sorter = new TaskListTableSorter(null, "description", new TaskElementLabelProvider() );
+		TaskListTableSorter sorter = new TaskListTableSorter(null, "description");
 		 		
 		Task task = new Task("1", "", true);
 		TaskCategory category = new TaskCategory("cat", new TaskList());

@@ -779,7 +779,7 @@ public class TaskListView extends ViewPart {
 		editors[4] = textEditor;
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
-		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex], taskListTableLabelProvider);
+		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
 		getViewer().setSorter(tableSorter);
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
