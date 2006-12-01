@@ -18,13 +18,13 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.internal.monitor.reports.collectors.DataOverviewCollector;
 import org.eclipse.mylar.internal.monitor.usage.AbstractMonitorLog;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.monitor.reports.IUsageCollector;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylar.monitor.usage.core.IUsageCollector;
+import org.eclipse.mylar.monitor.usage.core.ReportGenerator;
+import org.eclipse.mylar.monitor.usage.core.collectors.DataOverviewCollector;
 
 /**
  * 

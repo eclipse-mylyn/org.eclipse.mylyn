@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylar.context.tests.ContextTest;
-import org.eclipse.mylar.internal.monitor.reports.InteractionEventSummary;
-import org.eclipse.mylar.internal.monitor.reports.ReportGenerator;
-import org.eclipse.mylar.internal.monitor.reports.collectors.SummaryCollector;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.monitor.reports.IUsageCollector;
+import org.eclipse.mylar.monitor.usage.core.IUsageCollector;
+import org.eclipse.mylar.monitor.usage.core.InteractionEventSummary;
+import org.eclipse.mylar.monitor.usage.core.ReportGenerator;
+import org.eclipse.mylar.monitor.usage.core.collectors.SummaryCollector;
 
 /**
  * @author Mik Kersten
