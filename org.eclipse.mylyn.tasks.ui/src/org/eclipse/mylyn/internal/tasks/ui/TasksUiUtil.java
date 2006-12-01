@@ -153,16 +153,15 @@ public class TasksUiUtil {
 				}
 			}
 		}
-
+ 
 		if (task != null) {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getConnectorForRepositoryTaskUrl(fullUrl);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
-
 			if (connector != null) {
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 				opened = connectorUi.openRemoteTask(repositoryUrl, taskId);
 			}
 		}
