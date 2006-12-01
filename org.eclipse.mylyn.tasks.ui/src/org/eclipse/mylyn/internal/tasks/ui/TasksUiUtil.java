@@ -205,7 +205,10 @@ public class TasksUiUtil {
 				}
 
 				if (connector != null)
-					if (repositoryTask.getTaskData() != null) {
+					if (repositoryTask.getTaskData() != null || TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(repositoryTask.getHandleIdentifier()) != null) {
+						if(repositoryTask.getTaskData() == null) {
+							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(repositoryTask.getHandleIdentifier()));
+						}
 						TasksUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);

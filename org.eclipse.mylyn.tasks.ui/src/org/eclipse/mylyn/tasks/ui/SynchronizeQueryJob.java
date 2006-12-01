@@ -12,17 +12,22 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -32,11 +37,15 @@ import org.eclipse.ui.progress.IProgressConstants;
  */
 class SynchronizeQueryJob extends Job {
 
+	private static final int NUM_HITS_TO_PRIME = 19;
+
 	private final AbstractRepositoryConnector connector;
 
 	private static final String JOB_LABEL = "Synchronizing queries";
 
 	private Set<AbstractRepositoryQuery> queries;
+
+	private Set<TaskRepository> repositories;
 
 	private boolean synchTasks;
 
@@ -48,6 +57,7 @@ class SynchronizeQueryJob extends Job {
 		this.connector = connector;
 		this.queries = queries;
 		this.taskList = taskList;
+		this.repositories = new HashSet<TaskRepository>();
 	}
 
 	@Override
@@ -63,8 +73,8 @@ class SynchronizeQueryJob extends Job {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
-				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
-						IStatus.OK, "No task repository found: " + repositoryQuery.getRepositoryUrl(), null));
+				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
+						"No task repository found: " + repositoryQuery.getRepositoryUrl(), null));
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
@@ -72,10 +82,38 @@ class SynchronizeQueryJob extends Job {
 
 				if (resultingStatus.getException() == null) {
 					repositoryQuery.updateHits(collector.getHits(), taskList);
+					HashSet<AbstractQueryHit> hits2sync = new HashSet<AbstractQueryHit>();
+					if (connector.getTaskDataHandler() != null) {
+						for (AbstractQueryHit hit : collector.getHits()) {
+							if ((hit.getCorrespondingTask() == null || hit.getCorrespondingTask().getTaskData() == null)
+									&& TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+											hit.getHandleIdentifier()) == null) {
+								hits2sync.add(hit);
+							}
+							if (hits2sync.size() > NUM_HITS_TO_PRIME)
+								break;
+						}
+						PrimeTaskData job = new PrimeTaskData(repository, hits2sync);
+						job.setPriority(Job.LONG);
+						job.schedule();
+					}
+
+					// for (AbstractQueryHit hit: collector.getHits()) {
+					// if(hit.getCorrespondingTask() != null &&
+					// hit.getCorrespondingTask().getTaskData() == null &&
+					// tasks2syc.size() < 20) {
+					// tasks2syc.add(hit.getCorrespondingTask());
+					// connector.getTaskDataHandler().getTaskData(repository,
+					// hit.getHandleIdentifier());
+					// }
+					// }
+
 					if (synchTasks) {
+						repositories.add(repository);
 						// TODO: Should sync changed per repository not per
 						// query
-						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
+						// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
+						// repository);
 					}
 				} else {
 					repositoryQuery.setStatus(resultingStatus);
@@ -88,6 +126,10 @@ class SynchronizeQueryJob extends Job {
 			}
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 			monitor.worked(1);
+		}
+
+		for (TaskRepository repository : repositories) {
+			TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		}
 
 		// HACK: force entire Task List to refresh in case containers need to
@@ -103,4 +145,48 @@ class SynchronizeQueryJob extends Job {
 	public void setSynchTasks(boolean syncTasks) {
 		this.synchTasks = syncTasks;
 	}
+
+	class PrimeTaskData extends Job {
+
+		private Set<AbstractQueryHit> hits;
+
+		private ITaskDataHandler handler;
+
+		private TaskRepository repository;
+
+		public PrimeTaskData(TaskRepository repository, Set<AbstractQueryHit> hits) {
+			super("");
+			this.hits = hits;
+			this.handler = connector.getTaskDataHandler();
+			this.repository = repository;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			if (monitor == null) {
+				monitor = new NullProgressMonitor();
+			}
+			try {
+				monitor.beginTask("Retrieving hit data", hits.size());
+				for (AbstractQueryHit hit : hits) {
+					RepositoryTaskData taskData = handler.getTaskData(repository, hit.getId());
+
+					if (taskData != null) {
+						if (hit.getCorrespondingTask() != null) {
+							hit.getCorrespondingTask().setTaskData(taskData);
+						}
+						TasksUiPlugin.getDefault().getTaskDataManager().put(taskData);
+					}
+					monitor.worked(1);
+				}
+				TasksUiPlugin.getDefault().getTaskDataManager().save();
+			} catch (Throwable e) {
+				// ignore failed task data retrieval
+			} finally {
+				monitor.done();
+			}
+			return Status.OK_STATUS;
+		}
+	}
+
 }
