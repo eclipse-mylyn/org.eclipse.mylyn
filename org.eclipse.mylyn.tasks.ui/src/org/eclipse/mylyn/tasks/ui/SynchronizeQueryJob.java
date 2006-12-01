@@ -82,18 +82,18 @@ class SynchronizeQueryJob extends Job {
 
 				if (resultingStatus.getException() == null) {
 					repositoryQuery.updateHits(collector.getHits(), taskList);
-					HashSet<AbstractQueryHit> hits2sync = new HashSet<AbstractQueryHit>();
+					HashSet<AbstractQueryHit> hitsToSync = new HashSet<AbstractQueryHit>();
 					if (connector.getTaskDataHandler() != null) {
 						for (AbstractQueryHit hit : collector.getHits()) {
 							if ((hit.getCorrespondingTask() == null || hit.getCorrespondingTask().getTaskData() == null)
 									&& TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
 											hit.getHandleIdentifier()) == null) {
-								hits2sync.add(hit);
+								hitsToSync.add(hit);
 							}
-							if (hits2sync.size() > NUM_HITS_TO_PRIME)
+							if (hitsToSync.size() > NUM_HITS_TO_PRIME)
 								break;
 						}
-						PrimeTaskData job = new PrimeTaskData(repository, hits2sync);
+						PrimeTaskData job = new PrimeTaskData(repository, hitsToSync);
 						job.setPriority(Job.LONG);
 						job.schedule();
 					}

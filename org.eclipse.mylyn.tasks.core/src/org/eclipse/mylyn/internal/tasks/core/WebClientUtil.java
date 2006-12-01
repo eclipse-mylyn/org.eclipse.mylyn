@@ -103,17 +103,11 @@ public class WebClientUtil {
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
-		// System.setProperty("org.apache.commons.logging.Log",
-		// "org.apache.commons.logging.impl.SimpleLog");
-		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
-		// "true");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
-		// "debug");
-		
+		//System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		//System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+		//System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+		//System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
+		//System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
 
 		if (proxySettings != null && proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
@@ -144,11 +138,11 @@ public class WebClientUtil {
 		}
 	}
 
-	
 	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getSystemProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin() != null && UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+		if (UpdateCore.getPlugin() != null
+				&& UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
 			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
 			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
 
