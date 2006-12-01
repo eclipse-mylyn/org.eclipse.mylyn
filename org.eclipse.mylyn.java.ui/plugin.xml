@@ -265,18 +265,7 @@
                     relationship="stack"/>-->
           </perspectiveExtension>
    </extension>
-
-
-   <extension point="org.eclipse.ui.views"> 
-   	  <view
-            allowMultiple="false"
-            category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.java.ui.views.ActiveHierarchyView"
-            icon="icons/eview16/active-hierarchy.gif"
-            id="org.eclipse.mylar.ui.views.active.hierarchy"
-            name="Context Hierarchy"/>
-   </extension>
-  
+ 
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
 		id="org.eclipse.mylar.java.explorer.contribution" 
