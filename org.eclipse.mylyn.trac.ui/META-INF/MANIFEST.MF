@@ -18,3 +18,4 @@ Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.trac.ui,
  org.eclipse.mylar.internal.trac.ui.editor,
  org.eclipse.mylar.internal.trac.ui.wizard
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

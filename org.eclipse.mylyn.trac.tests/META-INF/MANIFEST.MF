@@ -17,3 +17,4 @@ Require-Bundle: org.junit,
 Export-Package: org.eclipse.mylar.trac.tests
 Bundle-Activator: org.eclipse.mylar.trac.tests.TracTestPlugin
 Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
