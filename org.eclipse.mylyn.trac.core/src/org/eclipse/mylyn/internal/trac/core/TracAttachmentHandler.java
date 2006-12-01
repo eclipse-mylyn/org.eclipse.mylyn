@@ -99,10 +99,16 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+		if (repository == null) {
+			return false;
+		}
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
 	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+		if (repository == null) {
+			return false;
+		}
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
