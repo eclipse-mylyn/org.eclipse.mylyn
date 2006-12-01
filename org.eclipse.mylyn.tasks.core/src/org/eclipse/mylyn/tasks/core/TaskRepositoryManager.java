@@ -280,7 +280,7 @@ public class TaskRepositoryManager {
 		// }
 	}
 
-	public boolean saveRepositories(String destinationPath) {
+	public synchronized boolean saveRepositories(String destinationPath) {
 		if (!Platform.isRunning()) {// || TasksUiPlugin.getDefault() == null) {
 			return false;
 		}
