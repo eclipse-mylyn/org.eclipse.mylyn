@@ -332,7 +332,7 @@ public class TaskList {
 	}
 
 	public Collection<ITask> getAllTasks() {
-		return tasks.values();
+		return Collections.unmodifiableCollection(tasks.values());
 	}
 
 	public Set<AbstractTaskContainer> getTaskContainers() {
