@@ -30,7 +30,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	
 	private boolean completed = false;
 
-	protected boolean isNotified = false;
+	private boolean isNotified = false;
 
 	private AbstractRepositoryQuery parent;
 
