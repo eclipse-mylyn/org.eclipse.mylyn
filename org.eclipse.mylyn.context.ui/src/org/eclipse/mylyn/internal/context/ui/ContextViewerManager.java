@@ -17,15 +17,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.workbench.AbstractPartTracker;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -36,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class ContextViewerManager implements IMylarContextListener { //, IPropertyChangeListener {
+public class ContextViewerManager implements IMylarContextListener, ISelectionListener	 { //, IPropertyChangeListener {
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -84,6 +86,10 @@ public class ContextViewerManager implements IMylarContextListener { //, IProper
 	
 	public ContextViewerManager() {
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
+	}
+	
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// ignore	
 	}
 	
 	public void dispose() {
@@ -254,4 +260,5 @@ public class ContextViewerManager implements IMylarContextListener { //, IProper
 	public void setSyncRefreshMode(boolean syncRefreshMode) {
 		this.syncRefreshMode = syncRefreshMode;
 	}
+
 }
