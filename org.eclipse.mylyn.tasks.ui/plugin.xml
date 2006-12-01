@@ -11,8 +11,35 @@
     </extension>
 
 	<extension point="org.eclipse.ui.views">
-     	<category name="Mylar" id="org.eclipse.mylar"/>
+     	<category name="Tasks" id="org.eclipse.mylar.tasks"/>
     </extension>
+	
+  
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+         allowMultiple="true"
+         category="org.eclipse.mylar.tasks"
+         class="org.eclipse.mylar.internal.tasks.ui.views.TaskListView"
+         icon="icons/eview16/task-list.gif"
+         id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+         name="Task List"/> 
+      <view
+            id="org.eclipse.mylar.tasklist.repositories"
+            allowMultiple="false"
+            category="org.eclipse.mylar.tasks"
+            class="org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView"
+            icon="icons/eview16/repositories.gif"
+            name="Task Repositories">
+      </view>
+      <view
+            allowMultiple="false"
+            category="org.eclipse.mylar.tasks"
+            class="org.eclipse.mylar.internal.tasks.ui.views.TaskActivityView"
+            icon="icons/eview16/task-activity.gif"
+            id="org.eclipse.mylar.tasklist.activity"
+            name="Task Activity"/>
+  	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
         <category name="Mylar" id="org.eclipse.mylar.wizards"/>
@@ -135,33 +162,6 @@
          </enablement>
       </decorator>
    </extension>
-	
-  
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-         allowMultiple="true"
-         category="org.eclipse.mylar"
-         class="org.eclipse.mylar.internal.tasks.ui.views.TaskListView"
-         icon="icons/eview16/task-list.gif"
-         id="org.eclipse.mylar.tasks.ui.views.TaskListView"
-         name="Task List"/> 
-      <view
-            id="org.eclipse.mylar.tasklist.repositories"
-            allowMultiple="false"
-            category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView"
-            icon="icons/eview16/repositories.gif"
-            name="Task Repositories">
-      </view>
-      <view
-            allowMultiple="false"
-            category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.tasks.ui.views.TaskActivityView"
-            icon="icons/eview16/task-activity.gif"
-            id="org.eclipse.mylar.tasklist.activity"
-            name="Task Activity"/>
-  	</extension>
 
   	<extension
         point="org.eclipse.ui.editors">
