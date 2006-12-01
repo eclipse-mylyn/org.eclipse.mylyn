@@ -12,7 +12,9 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,10 +36,11 @@ import org.eclipse.ui.progress.IProgressConstants;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 class SynchronizeQueryJob extends Job {
 
-	private static final int NUM_HITS_TO_PRIME = 19;
+	// private static final int NUM_HITS_TO_PRIME = 19;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -46,6 +49,8 @@ class SynchronizeQueryJob extends Job {
 	private Set<AbstractRepositoryQuery> queries;
 
 	private Set<TaskRepository> repositories;
+
+	private Map<TaskRepository, Set<AbstractQueryHit>> hitsToSynch;
 
 	private boolean synchTasks;
 
@@ -58,6 +63,8 @@ class SynchronizeQueryJob extends Job {
 		this.queries = queries;
 		this.taskList = taskList;
 		this.repositories = new HashSet<TaskRepository>();
+		this.hitsToSynch = new HashMap<TaskRepository, Set<AbstractQueryHit>>();
+
 	}
 
 	@Override
@@ -82,20 +89,22 @@ class SynchronizeQueryJob extends Job {
 
 				if (resultingStatus.getException() == null) {
 					repositoryQuery.updateHits(collector.getHits(), taskList);
-					HashSet<AbstractQueryHit> hitsToSync = new HashSet<AbstractQueryHit>();
+					Set<AbstractQueryHit> temp = hitsToSynch.get(repository);
+					if (temp == null) {
+						temp = new HashSet<AbstractQueryHit>();
+						hitsToSynch.put(repository, temp);
+					}
 					if (connector.getTaskDataHandler() != null) {
 						for (AbstractQueryHit hit : collector.getHits()) {
-							if ((hit.getCorrespondingTask() == null || hit.getCorrespondingTask().getTaskData() == null)
+							if (!temp.contains(hit)
+									&& (hit.getCorrespondingTask() == null || hit.getCorrespondingTask().getTaskData() == null)
 									&& TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
 											hit.getHandleIdentifier()) == null) {
-								hitsToSync.add(hit);
+								temp.add(hit);
 							}
-							if (hitsToSync.size() > NUM_HITS_TO_PRIME)
-								break;
+							// if (temp.size() > NUM_HITS_TO_PRIME)
+							// break;
 						}
-						PrimeTaskData job = new PrimeTaskData(repository, hitsToSync);
-						job.setPriority(Job.LONG);
-						job.schedule();
 					}
 
 					// for (AbstractQueryHit hit: collector.getHits()) {
@@ -128,6 +137,10 @@ class SynchronizeQueryJob extends Job {
 			monitor.worked(1);
 		}
 
+		PrimeTaskData job = new PrimeTaskData();
+		job.setPriority(Job.LONG);
+		job.schedule();
+
 		for (TaskRepository repository : repositories) {
 			TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		}
@@ -148,17 +161,11 @@ class SynchronizeQueryJob extends Job {
 
 	class PrimeTaskData extends Job {
 
-		private Set<AbstractQueryHit> hits;
-
 		private ITaskDataHandler handler;
 
-		private TaskRepository repository;
-
-		public PrimeTaskData(TaskRepository repository, Set<AbstractQueryHit> hits) {
+		public PrimeTaskData() {
 			super("");
-			this.hits = hits;
 			this.handler = connector.getTaskDataHandler();
-			this.repository = repository;
 		}
 
 		@Override
@@ -167,21 +174,37 @@ class SynchronizeQueryJob extends Job {
 				monitor = new NullProgressMonitor();
 			}
 			try {
-				monitor.beginTask("Retrieving hit data", hits.size());
-				for (AbstractQueryHit hit : hits) {
-					RepositoryTaskData taskData = handler.getTaskData(repository, hit.getId());
-
-					if (taskData != null) {
-						if (hit.getCorrespondingTask() != null) {
-							hit.getCorrespondingTask().setTaskData(taskData);
-						}
-						TasksUiPlugin.getDefault().getTaskDataManager().put(taskData);
-					}
-					monitor.worked(1);
+				int size = 0;
+				for (TaskRepository repository : hitsToSynch.keySet()) {
+					size = size + hitsToSynch.get(repository).size();
 				}
+				monitor.beginTask("Retrieving hit data", size);
+				for (TaskRepository repository : hitsToSynch.keySet()) {
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+					Set<AbstractQueryHit> hits = hitsToSynch.get(repository);
+					for (AbstractQueryHit hit : hits) {
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+						RepositoryTaskData taskData;
+						try {
+							taskData = handler.getTaskData(repository, hit.getId());
+						} catch (Throwable e) {
+							// ignore failures
+							monitor.worked(1);
+							continue;
+						}
+						if (taskData != null) {
+							if (hit.getCorrespondingTask() != null) {
+								hit.getCorrespondingTask().setTaskData(taskData);
+							}
+							TasksUiPlugin.getDefault().getTaskDataManager().put(taskData);
+						}
+						monitor.worked(1);
+					}
+				}
+
 				TasksUiPlugin.getDefault().getTaskDataManager().save();
-			} catch (Throwable e) {
-				// ignore failed task data retrieval
 			} finally {
 				monitor.done();
 			}
