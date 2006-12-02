@@ -254,13 +254,19 @@ public class TasksUiUtil {
 		if (asyncExec) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					if (window != null) {
+						IWorkbenchPage page = window.getActivePage();
+						openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+					}
 				}
 			});
 		} else {
-			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (window != null) {
+				IWorkbenchPage page = window.getActivePage();
+				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			}
 		}
 	}
 
@@ -277,8 +283,11 @@ public class TasksUiUtil {
 		final IEditorInput input = new CategoryEditorInput(category);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				openEditor(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID, page);
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window != null) {
+					IWorkbenchPage page = window.getActivePage();
+					openEditor(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID, page);
+				}
 			}
 		});
 	}
