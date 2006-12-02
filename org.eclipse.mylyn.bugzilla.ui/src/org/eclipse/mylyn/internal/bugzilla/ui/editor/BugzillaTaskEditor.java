@@ -639,10 +639,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		});
 	}
 
-	@Override
-	protected void updateTask() {
-		taskData.setHasLocalChanges(true);
-	}
 
 	// @Override
 	// protected void restoreBug() {

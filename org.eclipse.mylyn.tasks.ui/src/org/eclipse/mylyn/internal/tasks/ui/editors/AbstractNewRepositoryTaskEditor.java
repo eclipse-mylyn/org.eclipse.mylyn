@@ -366,9 +366,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void updateTask() {
+	protected void updateTask() {		
 		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
+		super.updateTask();
 	}
 
 	/**

@@ -123,6 +123,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -471,8 +472,29 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return editorInput.getTaskData();
 	}
 
+	/**
+	 * Update task state
+	 */
 	protected void updateTask() {
+		if (getRepositoryTaskData() == null)
+			return;
 		getRepositoryTaskData().setHasLocalChanges(true);
+		IEditorInput input = this.getEditorInput();
+		if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
+			AbstractRepositoryTask repositoryTask = existingInput.getRepositoryTask();
+			if (repositoryTask != null) {
+				if (getRepositoryTaskData().hasLocalChanges() == true) {
+					TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask,
+							getRepositoryTaskData(), false);
+				}
+				TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+			}
+		}
+		if (parentEditor != null) {
+			parentEditor.notifyTaskChanged();
+		}
+
 	}
 
 	protected abstract void validateInput();
@@ -1803,34 +1825,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// generalTitleText.redraw();
 	}
 
-	/**
-	 * If there is no locally saved copy of the current bug, then it saved
-	 * offline. Otherwise, any changes are updated in the file.
-	 */
-	public void saveBug() {
+	public void saveTaskOffline(IProgressMonitor progressMonitor) {
+		if (progressMonitor == null) {
+			progressMonitor = new NullProgressMonitor();
+		}
 		try {
-			updateTask();
-
-			IEditorInput input = this.getEditorInput();
-			if (input instanceof RepositoryTaskEditorInput) {
-				RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
-				AbstractRepositoryTask repositoryTask = existingInput.getRepositoryTask();
-				if (repositoryTask != null) {
-
-					if (getRepositoryTaskData().hasLocalChanges() == true) {
-						TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask,
-								getRepositoryTaskData(), false);
-						TasksUiPlugin.getDefault().getTaskDataManager().save();
-					}
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-				}
-			}
-			markDirty(false);
-			if (parentEditor != null) {
-				parentEditor.notifyTaskChanged();
-			}
+			progressMonitor.beginTask("Saving...", IProgressMonitor.UNKNOWN);
+			TasksUiPlugin.getDefault().getTaskDataManager().save();
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "bug save offline failed", true);
+			MylarStatusHandler.fail(e, "Saveing of offline task data failed", true);
+		} finally {
+			progressMonitor.done();
 		}
 
 	}
@@ -1883,8 +1888,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		saveBug();
+		updateTask();
 		updateEditor();
+		saveTaskOffline(monitor);
+		markDirty(false);
 	}
 
 	@Override
@@ -2435,8 +2442,27 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void submitToRepository() {
 		submitButton.setEnabled(false);
 		showBusy(true);
+		updateEditor();
+		updateTask();
 		if (isDirty()) {
-			doSave(new NullProgressMonitor());
+			IWorkbench wb = PlatformUI.getWorkbench();
+			IProgressService ps = wb.getProgressService();
+			try {
+				ps.busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor pm) {
+						saveTaskOffline(pm);
+					}
+				});
+			} catch (InvocationTargetException e) {
+				submitButton.setEnabled(true);
+				showBusy(false);
+				return;
+			} catch (InterruptedException e) {
+				submitButton.setEnabled(true);
+				showBusy(false);
+				return;
+			}
+			markDirty(false);
 		}
 
 		final ITaskDataHandler dataHandler = connector.getTaskDataHandler();
@@ -2497,11 +2523,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							}
 
 							if (modifiedTask != null) {
-								// Mark as synchronized because the content DID get submitted
-								// Since the task data is marked as haveing local changes
-								// the subsequent synchronization doesn't result in INCOMING
+								// Mark as synchronized because the content DID
+								// get submitted
+								// Since the task data is marked as haveing
+								// local changes
+								// the subsequent synchronization doesn't result
+								// in INCOMING
 								modifiedTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-								
 
 								TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 										new JobChangeAdapter() {
