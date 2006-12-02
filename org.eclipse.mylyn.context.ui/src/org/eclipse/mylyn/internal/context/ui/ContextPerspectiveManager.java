@@ -24,30 +24,44 @@ import org.eclipse.ui.WorkbenchException;
 /**
  * @author Mik Kersten
  */
-public class MylarPerspectiveManager implements ITaskActivityListener {
+public class ContextPerspectiveManager implements ITaskActivityListener {
 
 	public void taskActivated(ITask task) {
-		String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
+		IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getPerspective();
+		ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
 		
-		if (perspectiveId != null && !"".equals(perspectiveId) 
-				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+		String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
+		showPerspective(perspectiveId);
+	}
+	
+	public void taskDeactivated(ITask task) {
+		if (PlatformUI.isWorkbenchRunning()
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getPerspective();
+			ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
+	
+			String previousPerspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(null);
+			showPerspective(previousPerspectiveId);
+		}
+	}
+
+	private void showPerspective(String perspectiveId) {
+		if (perspectiveId != null
+				&& !"".equals(perspectiveId)
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			try {
-				PlatformUI.getWorkbench().showPerspective(perspectiveId, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+				PlatformUI.getWorkbench().showPerspective(perspectiveId,
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			} catch (WorkbenchException e) {
 				// ignore
 			}
 		}
 	}
-
-	public void taskDeactivated(ITask task) {
-		if (PlatformUI.isWorkbenchRunning() 
-				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
-			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-					.getPerspective();
-			ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
-		}
-	}
-
+	
 	public void activityChanged(DateRangeContainer week) {
 		// ignore
 	}

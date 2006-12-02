@@ -25,9 +25,9 @@ public class ContextUiPrefContstants {
 	
 	public static final String PREFIX_TASK_TO_PERSPECTIVE = "org.eclipse.mylar.ui.perspectives.task.";
 	
+	public static final String PERSPECTIVE_NO_ACTIVE_TASK = "org.eclipse.mylar.ui.perspectives.task.none";
+	
 	public static final String MARKER_LANDMARK = "org.eclipse.mylar.ui.interest.landmark";
-
-//	public static final String INTEREST_FILTER_EXCLUSION = "org.eclipse.mylar.ui.interest.filter.exclusion";
 
 	public static final String AUTO_MANAGE_EDITORS_OPEN_NUM = "org.eclipse.mylar.ide.ui.editors.auto.open.num";
 
@@ -42,8 +42,6 @@ public class ContextUiPrefContstants {
 	public static final String GAMMA_SETTING_STANDARD = "org.eclipse.mylar.ui.gamma.standard";
 
 	public static final String GAMMA_SETTING_LIGHTENED = "org.eclipse.mylar.ui.gamma.lightened";
-
-//	public static final String GLOBAL_FILTERING = "org.eclipse.mylar.ui.interest.filter.global";
 
 	public static final String INTERSECTION_MODE = "org.eclipse.mylar.ui.interest.intersection";
 

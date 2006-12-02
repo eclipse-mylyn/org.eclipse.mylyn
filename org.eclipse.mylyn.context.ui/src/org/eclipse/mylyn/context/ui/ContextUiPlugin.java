@@ -47,7 +47,7 @@ import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.ContextViewerManager;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
-import org.eclipse.mylar.internal.context.ui.MylarPerspectiveManager;
+import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -89,7 +89,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ContextViewerManager viewerManager;
 
-	private MylarPerspectiveManager perspectiveManager = new MylarPerspectiveManager();
+	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
@@ -551,7 +551,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				if (child.getName().equals(UiExtensionPointReader.ELEMENT_FILTER)) {
 					try {
 						Object filterClass = child.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
-						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, (ViewerFilter)filterClass);
+						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, (ViewerFilter) filterClass);
 					} catch (Exception e) {
 						MylarStatusHandler.log(e, "Could not load filter");
 					}
@@ -565,14 +565,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				Object bridge = element.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 				Object contentType = element.getAttribute(UiExtensionPointReader.ELEMENT_UI_BRIDGE_CONTENT_TYPE);
 				if (bridge instanceof AbstractContextUiBridge && contentType != null) {
-					ContextUiPlugin.getDefault().internalAddBridge((String) contentType, (AbstractContextUiBridge) bridge);
+					ContextUiPlugin.getDefault().internalAddBridge((String) contentType,
+							(AbstractContextUiBridge) bridge);
 
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
 						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element
 								.getDeclaringExtension().getNamespace(), iconPath);
 						if (descriptor != null) {
-							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge, descriptor);
+							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge,
+									descriptor);
 						}
 					}
 					String label = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_LABEL);
@@ -590,14 +592,30 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	/**
+	 * @param task	can be null to indicate no task
+	 */
 	public String getPerspectiveIdFor(ITask task) {
-		return getPreferenceStore().getString(
+		if (task != null) {
+			return getPreferenceStore().getString(
 				ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
+		} else {
+			return getPreferenceStore().getString(
+					ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK);	
+		}
 	}
 
+	/**
+	 * @param task
+	 *            can be null to indicate no task
+	 */
 	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
-		getPreferenceStore().setValue(ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(),
-				perspectiveId);
+		if (task != null) {
+			getPreferenceStore().setValue(
+					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);
+		} else {
+			getPreferenceStore().setValue(ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK, perspectiveId);
+		}
 	}
 
 	public void addWorkingSetManager(MylarWorkingSetManager updater) {
@@ -674,7 +692,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 		preservedList.add(filter.getClass());
 	}
-	
+
 	public Set<Class<?>> getPreservedFilterClasses(String id) {
 		UiExtensionPointReader.initExtensions();
 		if (preservedFilters.containsKey(id)) {
