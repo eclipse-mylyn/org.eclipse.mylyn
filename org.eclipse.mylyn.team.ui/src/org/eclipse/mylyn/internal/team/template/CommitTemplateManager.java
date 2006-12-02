@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.team.template;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -164,7 +165,8 @@ public class CommitTemplateManager {
 
 	private String processKeywords(ITask task, String template) {
 		String[] segments = template.split("\\$\\{");
-		StringBuffer buffer = new StringBuffer(segments[0]);
+		Stack<String> evaluated = new Stack<String>();
+		evaluated.add(segments[0]);
 
 		for (int i = 1; i < segments.length; i++) {
 			String segment = segments[i];
@@ -176,15 +178,22 @@ public class CommitTemplateManager {
 			}
 
 			if (value != null) {
-				buffer.append(value);
-				buffer.append(segment.substring(brace + 1));
-			} 
+				evaluated.add(value);
+				evaluated.add(segment.substring(brace + 1));
+			} else if (!evaluated.isEmpty()) {
+				evaluated.pop();
+			}
 //			else {
 //				buffer.append("${");
 //				buffer.append(segment);
 //			}
 		}
-		return buffer.toString();
+		StringBuffer buffer = new StringBuffer();
+		for (String string : evaluated) {
+			buffer.append(string);
+		}
+		
+ 		return buffer.toString();
 	}
 
 	private String processKeyword(ITask task, String keyword) {
