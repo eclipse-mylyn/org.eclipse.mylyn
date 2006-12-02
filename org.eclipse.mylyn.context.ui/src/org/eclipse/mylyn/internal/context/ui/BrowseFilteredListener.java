@@ -130,10 +130,18 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	private Object getClickedItem(MouseEvent event) {
 		if (event.getSource() instanceof Table) {
 			TableItem item = ((Table) event.getSource()).getItem(new Point(event.x, event.y));
-			return item.getData();
+			if (item != null) {
+				return item.getData();
+			} else {
+				return null;
+			}
 		} else if (event.getSource() instanceof Tree) {
 			TreeItem item = ((Tree) event.getSource()).getItem(new Point(event.x, event.y));
-			return item.getData();
+			if (item != null) {
+				return item.getData();
+			} else {
+				return null;
+			}
 		}
 		return null;
 	}
