@@ -123,7 +123,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -2445,23 +2444,36 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		updateEditor();
 		updateTask();
 		if (isDirty()) {
-			IWorkbench wb = PlatformUI.getWorkbench();
-			IProgressService ps = wb.getProgressService();
-			try {
-				ps.busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor pm) {
-						saveTaskOffline(pm);
-					}
-				});
-			} catch (InvocationTargetException e) {
-				submitButton.setEnabled(true);
-				showBusy(false);
-				return;
-			} catch (InterruptedException e) {
-				submitButton.setEnabled(true);
-				showBusy(false);
-				return;
-			}
+			
+			Job saveJob = new Job("Save") {
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					saveTaskOffline(monitor);
+					return Status.OK_STATUS;
+				}
+				
+			};
+			saveJob.setSystem(true);
+			saveJob.schedule();
+			
+//			IWorkbench wb = PlatformUI.getWorkbench();
+//			IProgressService ps = wb.getProgressService();
+//			try {
+//				ps.busyCursorWhile(new IRunnableWithProgress() {
+//					public void run(IProgressMonitor pm) {
+//						saveTaskOffline(pm);
+//					}
+//				});
+//			} catch (InvocationTargetException e) {
+//				submitButton.setEnabled(true);
+//				showBusy(false);
+//				return;
+//			} catch (InterruptedException e) {
+//				submitButton.setEnabled(true);
+//				showBusy(false);
+//				return;
+//			}
 			markDirty(false);
 		}
 
