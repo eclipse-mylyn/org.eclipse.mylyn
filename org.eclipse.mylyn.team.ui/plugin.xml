@@ -8,7 +8,6 @@
    <extension
          point="org.eclipse.mylar.team.providers">
       <repository class="org.eclipse.mylar.internal.team.ccvs.CvsRepositoryProvider"/>
-      <repository class="org.eclipse.mylar.internal.team.subclipse.SubclipseTeamRepositoryProvider"/>
    </extension>
     
    <extension
@@ -29,6 +28,23 @@
     </extension>
     
      <extension point="org.eclipse.ui.popupMenus"> 
+
+     	<objectContribution
+				id="org.eclipse.mylar.ui.team.synchronize.open.report"
+				objectClass="org.eclipse.mylar.internal.team.ILinkedTaskInfo"
+				adaptable="true">
+			<action
+				class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+				enablesFor="1" 
+				icon="icons/elcl16/task-repository.gif"
+				id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+				label="Open Corresponding Task"
+				menubarPath="mylar"
+				tooltip="Open Corresponding Task">
+			</action> 
+		</objectContribution>
+
+        <!--
 		<objectContribution
             objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
             id="org.eclipse.mylar.ui.team.synchronize.open.report">
@@ -42,6 +58,9 @@
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
+	    -->
+	   	
+	   	<!-- is this from Eclipse 3.1 History view?
 	   	<objectContribution
             objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
             id="org.eclipse.mylar.ui.team.history.open.report">
@@ -55,6 +74,9 @@
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
+	   	-->
+		
+		<!--
 		<objectContribution
             objectClass="org.eclipse.team.core.history.IFileRevision"
             id="org.eclipse.mylar.ui.team.synchronize.open.report">
@@ -68,22 +90,8 @@
 	           tooltip="Open Corresponding Task"> 
 	  		</action> 
 	    </objectContribution>
+	    -->
 		
-		<!-- Subclipse History view -->
-		<objectContribution
-            objectClass="org.tigris.subversion.subclipse.core.history.LogEntry"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
-         <action
-	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
-	           enablesFor="1" 
-	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
-	           label="Open Corresponding Task"
-	           menubarPath="mylar"
-	           tooltip="Open Corresponding Task">
-	  		</action> 
-	    </objectContribution>
-	    
 	    <!--
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"

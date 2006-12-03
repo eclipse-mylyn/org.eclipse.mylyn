@@ -210,6 +210,8 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 			return new ChangeSetResourceMapping(this);
 		} else if (adapter == ITask.class) {
 			return task;
+		} else if (adapter == ILinkedTaskInfo.class) {
+			return new LinkedTaskInfo(getTask());
 		} else {
 			return null;
 		}

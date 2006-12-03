@@ -11,12 +11,7 @@
 
 package org.eclipse.mylar.internal.team;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Default implementation of {@link ILinkedTaskInfo}
@@ -25,80 +20,30 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class LinkedTaskInfo implements ILinkedTaskInfo {
 
+	private ITask task;
+	
+	private String repositoryUrl;
+	
 	private String taskId;
 
 	private String taskFullUrl;
 
-	private String repositoryUrl;
-
-	private ITask task;
+	private String comment;
+	
 
 	public LinkedTaskInfo(ITask task) {
-		init(task, //
-				AbstractRepositoryTask.getRepositoryUrl(task.getHandleIdentifier()), //
-				AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()), //
-				task.getUrl());
+		this.task = task;
 	}
 
 	public LinkedTaskInfo(String taskFullUrl) {
-		init(null, null, null, taskFullUrl);
+		this.taskFullUrl = taskFullUrl;
 	}
 
-	public LinkedTaskInfo(String repositoryUrl, String taskId, String taskFullUrl) {
-		init(null, repositoryUrl, taskId, taskFullUrl);
-	}
-
-	private void init(ITask task, String repositoryUrl, String taskId, String taskFullUrl) {
-		// TODO should this even be here?
-
-		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-		AbstractRepositoryConnector connector = repositoryManager.getConnectorForRepositoryTaskUrl(taskFullUrl);
-		if (connector == null && repositoryUrl != null) {
-			TaskRepository repository = repositoryManager.getRepository(repositoryUrl);
-			if (repository != null) {
-				connector = repositoryManager.getRepositoryConnector(repository.getKind());
-			}
-		}
-
-		if (repositoryUrl == null && connector != null) {
-			repositoryUrl = connector.getRepositoryUrlFromTaskUrl(taskFullUrl);
-		}
-
-		if (taskId == null && connector != null) {
-			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
-		}
-
-		if (taskFullUrl == null && repositoryUrl != null && taskId != null && connector != null) {
-			taskFullUrl = connector.getTaskWebUrl(repositoryUrl, taskId);
-		}
-		
-		if (task == null) {
-			if (taskId != null && repositoryUrl != null) {
-				String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-				task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-			}
-			if (task == null && taskFullUrl != null) {
-				// search by fullUrl
-				for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
-					if (currTask instanceof AbstractRepositoryTask) {
-						String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
-						if (taskFullUrl.equals(currUrl)) {
-							task = currTask;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if (taskFullUrl == null && task != null) {
-			taskFullUrl = task.getUrl();
-		}
-
-		this.task = task;
+	public LinkedTaskInfo(String repositoryUrl, String taskId, String taskFullUrl, String comment) {
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.taskFullUrl = taskFullUrl;
+		this.comment = comment;
 	}
 
 	public String getRepositoryUrl() {
@@ -117,4 +62,9 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 		return taskId;
 	}
 
+	public String getComment() {
+		return comment;
+	}
+
 }
+

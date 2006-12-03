@@ -13,7 +13,7 @@ package org.eclipse.mylar.ide.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.team.LinkedTaskInfoAdapterFactory;
+import org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction;
 
 /**
  * @author Mik Kersten
@@ -34,13 +34,13 @@ public class OpenCorrespondingTaskActionTest extends TestCase {
 
 	public void test07LegacyMatching() {
 		String label = "Progress on: 123: foo \nhttps://bugs.eclipse.org";
-		String id = LinkedTaskInfoAdapterFactory.getTaskIdFromLegacy07Label(label);
+		String id = OpenCorrespondingTaskAction.getTaskIdFromLegacy07Label(label);
 		assertEquals("123", id);
 	}
 	
 	public void testUrlMatching() {
 		String label = "bla bla\nhttp://foo.bar-123 bla bla";
-		String id = LinkedTaskInfoAdapterFactory.getUrlFromComment(label);
+		String id = OpenCorrespondingTaskAction.getUrlFromComment(label);
 		assertEquals("http://foo.bar-123", id);
 	}
 	

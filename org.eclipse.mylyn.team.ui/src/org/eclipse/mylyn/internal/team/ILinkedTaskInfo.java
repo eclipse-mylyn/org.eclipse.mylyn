@@ -30,4 +30,6 @@ public interface ILinkedTaskInfo {
 	
 	ITask getTask();
 	
+	String getComment();
+	
 }

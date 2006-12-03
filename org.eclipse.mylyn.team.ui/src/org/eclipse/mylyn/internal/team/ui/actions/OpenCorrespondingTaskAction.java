@@ -11,51 +11,45 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
-import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.team.ContextChangeSet;
+import org.eclipse.mylar.internal.team.ILinkedTaskInfo;
+import org.eclipse.mylar.internal.team.LinkedTaskInfo;
+import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;
-import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.team.core.variants.IResourceVariant;
-import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSCheckedInChangeSet;
-import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
-import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
-import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
-import org.eclipse.team.internal.ui.synchronize.SynchronizeModelElement;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
 /**
+ * Action used to open linked task
+ * 
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public class OpenCorrespondingTaskAction extends Action implements IViewActionDelegate {
 
 	private static final String LABEL = "Open Corresponding Task";
 
-	private ISelection selection;
-
 	private static final String PREFIX_HTTP = "http://";
 
 	private static final String PREFIX_HTTPS = "https://";
+
+	private ISelection selection;
 
 	public OpenCorrespondingTaskAction() {
 		setText(LABEL);
@@ -86,121 +80,130 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 	private void run(StructuredSelection selection) {
 		Object element = selection.getFirstElement();
-		boolean opened = false;
 
-		if (element instanceof ChangeSetDiffNode) {
-			ChangeSetDiffNode diffNode = (ChangeSetDiffNode) element;
-			if (diffNode.getSet() instanceof ContextChangeSet) {
-				ITask task = ((ContextChangeSet) diffNode.getSet()).getTask();
-				TasksUiUtil.openEditor(task, false);
-				opened = true;
-			} 
-		} else if (element instanceof ContextChangeSet) {
-			ITask task = ((ContextChangeSet) element).getTask();
-			if (task != null) {
-				TasksUiUtil.openEditor(task, false);
-				opened = true;
-			}
-		}
-
-		if (!opened) {
-			IProject project = findCorrespondingProject(element);
-			String comment = getCommentFromSelection(element);
-			
-			if (comment != null) {
-				String id = MylarTeamPlugin.getDefault().getCommitTemplateManager()
-						.getTaskIdFromCommentOrLabel(comment);
-				if (id == null) {
-					id = getTaskIdFromLegacy07Label(comment);
-				}
-				
-				if (project != null) {
-					TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, false);
-					if (repository != null) {
-						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-						if (connectorUi != null && id != null) {
-							opened = TasksUiUtil.openRepositoryTask(repository, id);
-						}
-					}
-				}
-
-				// try opening via URL if present
-				if (!opened) {
-					String fullUrl = getUrlFromComment(comment);
-
-					String repositoryUrl = null;
-					if (fullUrl != null) {
-						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-								.getConnectorForRepositoryTaskUrl(fullUrl);
-						if (connector != null) {
-							repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
-						}
-					} else {
-						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-						if (task instanceof AbstractRepositoryTask) {
-							repositoryUrl = ((AbstractRepositoryTask) task).getRepositoryUrl();
-						} else if (TasksUiPlugin.getRepositoryManager().getAllRepositories().size() == 1) {
-							repositoryUrl = TasksUiPlugin.getRepositoryManager().getAllRepositories().get(0).getUrl();
-						}
-					}
-
-					opened = TasksUiUtil.openRepositoryTask(repositoryUrl, id, fullUrl);
-					if (!opened) {
-						TasksUiUtil.openUrl(fullUrl);
-					}
-				}
-			}
-		}
-	}
-
-	private String getCommentFromSelection(Object element) {
-		if (element instanceof DiffChangeSet) {
-			return ((CVSCheckedInChangeSet) element).getComment();
-		} else if (element instanceof ChangeSetDiffNode) {
-			return ((ChangeSetDiffNode) element).getName();
-		} else if (element instanceof LogEntry) {
-			return ((LogEntry) element).getComment();
-		} else if (element instanceof IFileRevision) {
-			return ((IFileRevision) element).getComment();
-		}
-		return null;
-	}
-
-	private IProject findCorrespondingProject(Object element) {
-		if (element instanceof DiffChangeSet) {
-			IResource[] resources = ((DiffChangeSet) element).getResources();
-			if (resources.length > 0) {
-				// TODO: only checks first resource
-				return resources[0].getProject();
-			}
-		} else if (element instanceof SynchronizeModelElement) {
-			SynchronizeModelElement modelElement = (SynchronizeModelElement)element;
-			IResource resource = modelElement.getResource();
-			if (resource != null) {
-				return resource.getProject();
-			} else {
-				IDiffElement[] elements = modelElement.getChildren();
-				if (elements.length > 0) {
-					// TODO: only checks first diff
-					if (elements[0] instanceof SynchronizeModelElement) {
-						return ((SynchronizeModelElement)elements[0]).getResource().getProject();
-					}
-				}
-			}
+		ILinkedTaskInfo info = null;
+		if (element instanceof ILinkedTaskInfo) {
+			info = (ILinkedTaskInfo) element;
 		} else if (element instanceof IAdaptable) {
-			// TODO: there must be a better way to get at the local resource
-			IResourceVariant resourceVariant = (IResourceVariant) ((IAdaptable) element)
-					.getAdapter(IResourceVariant.class);
-			if (resourceVariant != null && resourceVariant instanceof RemoteResource) {
-				RemoteResource remoteResource = (RemoteResource) resourceVariant;
-				String path = remoteResource.getRepositoryRelativePath();
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				return root.getProject(new Path(path).removeFirstSegments(1).uptoSegment(1).toString());
-			}
-		} else {
-			
+			info = (ILinkedTaskInfo) ((IAdaptable) element).getAdapter(ILinkedTaskInfo.class);
 		}
-		return null;
+		if (info == null) {
+			info = (ILinkedTaskInfo) Platform.getAdapterManager().getAdapter(element, ILinkedTaskInfo.class);
+		}
+
+		if (info != null) {
+			info = reconsile(info);
+			if (info.getTask() != null) {
+				// XXX which one to use?
+				// TaskUiUtil.openEditor(info.getTask(), false);
+				TasksUiUtil.refreshAndOpenTaskListElement(info.getTask());
+				return;
+			}
+			if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
+				if (repository != null) {
+					if (TasksUiUtil.openRepositoryTask(repository, info.getTaskId())) {
+						return;
+					}
+				}
+			}
+			if (info.getTaskFullUrl() != null) {
+				TasksUiUtil.openUrl(info.getTaskFullUrl());
+				return;
+			}
+		}
+
+		// TODO show Open Remote Task dialog?
+		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				"Unable to open correspond task", "Unable to open correspond task");
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		this.selection = selection;
+	}
+
+	/**
+	 * Reconcile <code>ILinkedTaskInfo</code> data.
+	 * 
+	 * This is used in order to keep LinkedTaskInfo lightweight with minimal
+	 * dependencies.
+	 */
+	private ILinkedTaskInfo reconsile(ILinkedTaskInfo info) {
+		ITask task = info.getTask();
+		if (task != null) {
+			return info;
+		}
+
+		String repositoryUrl = info.getRepositoryUrl();
+		String taskId = info.getTaskId();
+		String taskFullUrl = info.getTaskFullUrl();
+		String comment = info.getComment();
+
+		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+
+		TaskRepository repository = null;
+		if(repositoryUrl!=null) {
+			repository = repositoryManager.getRepository(repositoryUrl);
+		}
+
+		AbstractRepositoryConnector connector = null;
+		if(taskFullUrl!=null) {
+			connector = repositoryManager.getConnectorForRepositoryTaskUrl(taskFullUrl);
+		}		
+		if (connector == null && repository!=null) {
+			connector = repositoryManager.getRepositoryConnector(repository.getKind());
+		}
+
+		if (repositoryUrl == null && connector != null) {
+			repositoryUrl = connector.getRepositoryUrlFromTaskUrl(taskFullUrl);
+		}
+
+		if (taskId == null && connector != null) {
+			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
+		}
+		if (taskId == null && repository != null && comment != null) {
+			String[] ids = connector.getTaskIdsFromComment(repository, comment);
+			if (ids != null && ids.length > 0) {
+				taskId = ids[0];
+			}
+		}
+		if (taskId == null && comment!=null) {
+			CommitTemplateManager commitTemplateManager = MylarTeamPlugin.getDefault().getCommitTemplateManager();
+			taskId = commitTemplateManager.getTaskIdFromCommentOrLabel(comment);
+			if (taskId == null) {
+				taskId = getTaskIdFromLegacy07Label(comment);
+			}
+		}
+
+		if (taskFullUrl == null && repositoryUrl != null && taskId != null && connector != null) {
+			taskFullUrl = connector.getTaskWebUrl(repositoryUrl, taskId);
+		}
+
+		if (task == null) {
+			if (taskId != null && repositoryUrl != null) {
+				// XXX fix this hack (jira ids don't work here)
+				if(!taskId.contains(AbstractRepositoryTask.HANDLE_DELIM)) {
+					String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+				}
+			}
+			if (task == null && taskFullUrl != null) {
+				// search by fullUrl
+				for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
+					if (currTask instanceof AbstractRepositoryTask) {
+						String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
+						if (taskFullUrl.equals(currUrl)) {
+							return new LinkedTaskInfo(currTask);
+						}
+					}
+				}
+			}
+		}
+		if (task != null) {
+			return new LinkedTaskInfo(task);
+		}
+
+		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment);
 	}
 
 	public static String getUrlFromComment(String comment) {
@@ -246,21 +249,6 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			}
 		}
 		return null;
-	}
-	
-
-//	private Object findParent(ISynchronizeModelElement element) {
-//		if (element instanceof ChangeSetDiffNode) {
-//			return element;
-//		} else if (element.getParent() instanceof ISynchronizeModelElement) {
-//			return findParent((ISynchronizeModelElement) element.getParent());
-//		}
-//		return null;
-//	}
-	
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
 	}
 
 }
