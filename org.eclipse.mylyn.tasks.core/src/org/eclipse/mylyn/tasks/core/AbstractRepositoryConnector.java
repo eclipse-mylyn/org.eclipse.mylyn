@@ -63,6 +63,10 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract String getTaskWebUrl(String repositoryUrl, String taskId);
 	
+	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
+		return null;
+	}
+	
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
