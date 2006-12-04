@@ -76,22 +76,22 @@ public class TaskListInterestSorter extends ViewerSorter {
 				if (complete != 0) {
 					return complete;
 				} else {
-					int thisWeek = compareThisWeek(task1, task2);
-					if (thisWeek != 0) {
-						return thisWeek;
+					int overdue = compareOverdue(task1, task2);
+					if (overdue != 0) {
+						return overdue;
 					} else {
-						int today = compareToday(task1, task2);
-						if (today != 0) {
-							return today;
+						int thisWeek = compareThisWeek(task1, task2);
+						if (thisWeek != 0) {
+							return thisWeek;
 						} else {
-							int overdue = compareOverdue(task1, task2);
-							if (overdue != 0) {
-								return overdue;
+							int today = compareToday(task1, task2);
+							if (today != 0) {
+								return today;
 							} else {
-								int hasChanges = compareChanges(task1, task2);
-								if (hasChanges != 0) {
-									return hasChanges;
-								}
+//								int hasChanges = compareChanges(task1, task2);
+//								if (hasChanges != 0) {
+//									return hasChanges;
+//								}
 							}
 						}
 					}
@@ -104,11 +104,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	private int compareOverdue(ITask task1, ITask task2) {
 		if (task1.isPastReminder() && !task2.isPastReminder()) {
-			return 1;
-		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
 			return -1;
-			// } else if (task1.isPastReminder() && task2.isPastReminder()){
-			// return comparePrioritiesAndKeys(task1, task2);
+		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
+			return 1;
 		} else {
 			return 0;
 		}
@@ -121,29 +119,20 @@ public class TaskListInterestSorter extends ViewerSorter {
 		} else if (!TasksUiPlugin.getTaskListManager().isScheduledForToday(task1)
 				&& TasksUiPlugin.getTaskListManager().isScheduledForToday(task2)) {
 			return 1;
-			// } else if
-			// (MylarTaskListPlugin.getTaskListManager().isReminderToday(task1)
-			// &&
-			// MylarTaskListPlugin.getTaskListManager().isReminderToday(task2))
-			// {
-			// return comparePrioritiesAndKeys(task1, task2);
 		} else {
 			return 0;
 		}
 	}
 
-	private int compareChanges(ITask task1, ITask task2) {
-		if (TaskListInterestFilter.hasChanges(task1) && !TaskListInterestFilter.hasChanges(task2)) {
-			return 1;
-		} else if (!TaskListInterestFilter.hasChanges(task1) && TaskListInterestFilter.hasChanges(task2)) {
-			return -1;
-			// } else if (TaskListInterestFilter.hasChanges(task1)
-			// && TaskListInterestFilter.hasChanges(task2)) {
-			// return comparePrioritiesAndKeys(task1, task2);
-		} else {
-			return 0;
-		}
-	}
+//	private int compareChanges(ITask task1, ITask task2) {
+//		if (TaskListInterestFilter.hasChanges(task1) && !TaskListInterestFilter.hasChanges(task2)) {
+//			return 1;
+//		} else if (!TaskListInterestFilter.hasChanges(task1) && TaskListInterestFilter.hasChanges(task2)) {
+//			return -1;
+//		} else { 
+//			return 0;
+//		}
+//	}
 
 	private int compareThisWeek(ITask task1, ITask task2) {
 		if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
@@ -152,12 +141,6 @@ public class TaskListInterestSorter extends ViewerSorter {
 		} else if (!TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
 				&& TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task2)) {
 			return -1;
-			// } else if
-			// (MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task1)
-			// &&
-			// MylarTaskListPlugin.getTaskListManager().isReminderThisWeek(task2))
-			// {
-			// return comparePrioritiesAndKeys(task1, task2);
 		} else {
 			return 0;
 		}
@@ -168,8 +151,6 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 1;
 		} else if (!task1.isCompleted() && task2.isCompleted()) {
 			return -1;
-			// } else if (task1.isCompleted() && task2.isCompleted()){
-			// return comparePrioritiesAndKeys(task1, task2);
 		} else {
 			return 0;
 		}

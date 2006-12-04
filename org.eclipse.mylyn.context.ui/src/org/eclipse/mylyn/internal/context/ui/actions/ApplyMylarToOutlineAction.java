@@ -38,7 +38,7 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	public static final String ID_CONTENT_OUTLINE = "org.eclipse.ui.views.ContentOutline";
 
 	public ApplyMylarToOutlineAction() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, false);
 	}
 
 	/**
@@ -100,11 +100,6 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 	public void propertyChange(PropertyChangeEvent event) {
 		// ignore
 	}
-
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
 
 	public static ApplyMylarToOutlineAction getOutlineActionForEditor(IEditorPart part) {
 		IViewPart outlineView = part.getSite().getPage().findView(ID_CONTENT_OUTLINE);
