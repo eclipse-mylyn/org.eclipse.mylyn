@@ -63,6 +63,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
+import org.eclipse.mylar.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
@@ -1557,10 +1558,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						strBuilder.append("\n");
 					}
 					strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
-					String[] lines = taskComment.getText().split("\n");
-					for (String line : lines) {
-						strBuilder.append("> " + line + "\n");
-					}
+					CommentQuoter quoter = new CommentQuoter();
+					strBuilder.append(quoter.quote(taskComment.getText()));
 					newCommentTextViewer.getDocument().set(strBuilder.toString());
 					selectNewComment();
 					newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
@@ -2444,7 +2443,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		updateEditor();
 		updateTask();
 		if (isDirty()) {
-			
+
 			Job saveJob = new Job("Save") {
 
 				@Override
@@ -2452,28 +2451,28 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					saveTaskOffline(monitor);
 					return Status.OK_STATUS;
 				}
-				
+
 			};
 			saveJob.setSystem(true);
 			saveJob.schedule();
-			
-//			IWorkbench wb = PlatformUI.getWorkbench();
-//			IProgressService ps = wb.getProgressService();
-//			try {
-//				ps.busyCursorWhile(new IRunnableWithProgress() {
-//					public void run(IProgressMonitor pm) {
-//						saveTaskOffline(pm);
-//					}
-//				});
-//			} catch (InvocationTargetException e) {
-//				submitButton.setEnabled(true);
-//				showBusy(false);
-//				return;
-//			} catch (InterruptedException e) {
-//				submitButton.setEnabled(true);
-//				showBusy(false);
-//				return;
-//			}
+
+			// IWorkbench wb = PlatformUI.getWorkbench();
+			// IProgressService ps = wb.getProgressService();
+			// try {
+			// ps.busyCursorWhile(new IRunnableWithProgress() {
+			// public void run(IProgressMonitor pm) {
+			// saveTaskOffline(pm);
+			// }
+			// });
+			// } catch (InvocationTargetException e) {
+			// submitButton.setEnabled(true);
+			// showBusy(false);
+			// return;
+			// } catch (InterruptedException e) {
+			// submitButton.setEnabled(true);
+			// showBusy(false);
+			// return;
+			// }
 			markDirty(false);
 		}
 
