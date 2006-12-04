@@ -132,8 +132,9 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		List<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments();
 		for (IMylarElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
-			if (resource != null)
+			if (resource != null) {
 				interestingResources.add(resource);
+			}
 		}
 		return interestingResources;
 	}
