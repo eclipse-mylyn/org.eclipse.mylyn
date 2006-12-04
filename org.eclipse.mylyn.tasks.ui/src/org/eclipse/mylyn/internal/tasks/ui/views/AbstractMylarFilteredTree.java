@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -38,9 +39,9 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	private Job refreshJob;
 
 	private AdaptiveRefreshPolicy refreshPolicy;
-	
+
 	private Composite progressComposite;
-	
+
 	private boolean showProgress = false;
 
 	/**
@@ -77,7 +78,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		((GridData) progressComposite.getLayoutData()).exclude = true;
 		return super.createTreeControl(parent, style);
 	}
-	
+
 	@Override
 	protected Composite createFilterControls(Composite parent) {
 		GridLayout gridLayout = new GridLayout(4, false);
@@ -107,15 +108,23 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		createStatusComposite(parent);
 		return parent;
 	}
-	
+
 	protected abstract Composite createProgressComposite(Composite container);
 
 	protected abstract Composite createStatusComposite(Composite container);
 
 	@Override
 	protected void textChanged() {
-		if (refreshPolicy != null) {
-			refreshPolicy.textChanged(filterText.getText());
+		if (TasksUiPlugin.getDefault().isEclipse_3_3_workbench()) {
+			// bug 165353 work-around for premature return at
+			// FilteredTree.java:374
+			super.textChanged();
+			updateToolbar(true);
+		} else {
+			// TODO: get rid of this when forked for 3.3
+			if (refreshPolicy != null) {
+				refreshPolicy.textChanged(filterText.getText());
+			}
 		}
 	}
 
