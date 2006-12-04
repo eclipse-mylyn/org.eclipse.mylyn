@@ -42,7 +42,7 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 	private boolean wasLinkingEnabled = false;
 
 	public ApplyMylarToProjectExplorerAction() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, true);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 	}
 
 	protected ApplyMylarToProjectExplorerAction(InterestFilter filter) {
-		super(filter);
+		super(filter, true, true);
 	}
 
 	@Override
@@ -136,9 +136,4 @@ public class ApplyMylarToProjectExplorerAction extends AbstractAutoApplyMylarAct
 		// TODO Auto-generated method stub
 	}
 
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		List<Class> preserved = new ArrayList<Class>();
-//		return preserved;
-//	}
 }

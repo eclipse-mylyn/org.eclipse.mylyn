@@ -32,8 +32,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractAutoApplyMylarAction extends AbstractApplyMylarAction implements IMylarContextListener { // IPropertyChangeListener, 
 
-	public AbstractAutoApplyMylarAction(InterestFilter interestFilter) {
-		super(interestFilter);
+	public AbstractAutoApplyMylarAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters) {
+		super(interestFilter, manageViewer, manageFilters);
 		ContextCorePlugin.getContextManager().addListener(this);
 	}
 
