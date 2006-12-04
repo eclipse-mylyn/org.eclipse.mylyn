@@ -24,18 +24,11 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
  */
 public abstract class AbstractApplyMylartoMarkerViewAction extends AbstractApplyMylarAction {
 
-//	protected MarkerViewerInterestSorter interestSorter = new MarkerViewerInterestSorter();
-
 	protected StructuredViewer cachedViewer = null;
 	
 	public AbstractApplyMylartoMarkerViewAction() {
-		super(new MarkerInterestFilter());
+		super(new MarkerInterestFilter(), true, true);
 	}
-	
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
 	
 	/**
 	 * HACK: should use platform decorating label provider
@@ -63,9 +56,4 @@ public abstract class AbstractApplyMylartoMarkerViewAction extends AbstractApply
 		}
 	}
 	
-//	protected void verifySorterInstalled(StructuredViewer viewer) {
-//		if (viewer != null && viewer.getSorter() != interestSorter) {
-//			viewer.setSorter(interestSorter);
-//		}
-//	}
 }

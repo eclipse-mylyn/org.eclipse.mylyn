@@ -44,8 +44,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 	private ViewerSorter previousSorter;
 
 	public ApplyMylarToTaskListAction() {
-		super(new InterestFilter());
-		super.manageViewer = false;
+		super(new InterestFilter(), false, true);
 	}
 
 	@Override

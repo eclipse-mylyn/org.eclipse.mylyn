@@ -58,8 +58,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 
 	protected Map<StructuredViewer, List<ViewerFilter>> previousFilters = new WeakHashMap<StructuredViewer, List<ViewerFilter>>();
 
-	protected boolean manageViewer = true;
+	private boolean manageViewer = true;
 
+	private boolean manageFilters = true;
+	
 	private static Map<IViewPart, AbstractApplyMylarAction> partMap = new WeakHashMap<IViewPart, AbstractApplyMylarAction>();
 
 	public static AbstractApplyMylarAction getActionForPart(IViewPart part) {
@@ -79,9 +81,11 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		return viewPart;
 	}
 
-	public AbstractApplyMylarAction(InterestFilter interestFilter) {
+	public AbstractApplyMylarAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters) {
 		super();
 		this.interestFilter = interestFilter;
+		this.manageViewer = manageViewer;
+		this.manageFilters = manageFilters;
 		setText(ACTION_LABEL);
 		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
@@ -190,7 +194,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
-			if (viewPart != null) {
+			if (viewPart != null && manageFilters) {
 				Set<Class<?>> excludedFilters = getPreservedFilters();
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
 					if (!excludedFilters.contains(filter.getClass())) {
@@ -226,7 +230,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		}
 
 		viewer.getControl().setRedraw(false);
-		if (viewPart != null) {
+		if (viewPart != null && manageFilters) {
 			Set<Class<?>> excludedFilters = getPreservedFilters();
 			if (previousFilters.containsKey(viewer)) {
 				for (ViewerFilter filter : previousFilters.get(viewer)) {

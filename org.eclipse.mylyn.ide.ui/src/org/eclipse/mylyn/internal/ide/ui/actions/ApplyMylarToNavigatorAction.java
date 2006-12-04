@@ -27,7 +27,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 public class ApplyMylarToNavigatorAction extends AbstractAutoApplyMylarAction {
 
 	public ApplyMylarToNavigatorAction() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, true);
 	}
 
 	@Override
@@ -43,8 +43,4 @@ public class ApplyMylarToNavigatorAction extends AbstractAutoApplyMylarAction {
 		// ignore
 	}
 	
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
 }

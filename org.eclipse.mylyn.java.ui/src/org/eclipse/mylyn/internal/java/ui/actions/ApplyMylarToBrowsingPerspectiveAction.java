@@ -46,7 +46,7 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 	private IWorkbenchWindow initWindow;
 	
 	public ApplyMylarToBrowsingPerspectiveAction() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, true);
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
 	

@@ -26,7 +26,7 @@ import org.eclipse.ui.IViewPart;
 public class ApplyMylarToDebugView extends AbstractApplyMylarAction {
 
 	public ApplyMylarToDebugView() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, true);
 	}
 	
 	@Override
@@ -40,9 +40,4 @@ public class ApplyMylarToDebugView extends AbstractApplyMylarAction {
 		return viewers;
 	}
 	
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		return Collections.emptyList();
-//	}
-
 }
