@@ -40,7 +40,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  */
 class SynchronizeQueryJob extends Job {
 
-	private static final int NUM_HITS_TO_PRIME = 100;
+	private static final int NUM_HITS_TO_PRIME = 20;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -97,7 +97,7 @@ class SynchronizeQueryJob extends Job {
 					if (connector.getTaskDataHandler() != null) {
 						for (AbstractQueryHit hit : collector.getHits()) {
 							if (!temp.contains(hit)
-									&& (hit.getCorrespondingTask() == null || hit.getCorrespondingTask().getTaskData() == null)
+									&& hit.getCorrespondingTask() == null
 									&& TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
 											hit.getHandleIdentifier()) == null) {
 								temp.add(hit);
