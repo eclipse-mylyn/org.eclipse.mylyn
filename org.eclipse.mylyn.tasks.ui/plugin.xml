@@ -14,8 +14,7 @@
      	<category name="Tasks" id="org.eclipse.mylar.tasks"/>
     </extension>
 	
-  
-   <extension
+    <extension
          point="org.eclipse.ui.views">
       <view
          allowMultiple="true"
@@ -42,7 +41,7 @@
   	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
-        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
+        <category name="Tasks" id="org.eclipse.mylar.wizards"/>
     </extension>
 
     <extension
@@ -121,7 +120,7 @@
      </wizard>
      <category
            id="org.eclipse.mylar.tasklist.importcategory"
-           name="Mylar"/>
+           name="Tasks"/>
   </extension>
 
      <extension point="org.eclipse.ui.exportWizards"> 

@@ -65,9 +65,9 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -82,6 +82,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -93,7 +94,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: move constants
-
+	
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
 
 	public static final String FILE_EXTENSION = ".xml.zip";
@@ -148,10 +149,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListWriter taskListWriter;
 
-	// private long AUTOMATIC_BACKUP_SAVE_INTERVAL = 1 * 3600 * 1000; // every
-	//
-	// private static Date lastBackup = new Date();
-
 	private ITaskHighlighter highlighter;
 
 	private static boolean shellActive = true;
@@ -162,6 +159,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
+	private boolean eclipse_3_3_workbench = false;
+	
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
 		@Override
@@ -449,7 +448,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			});
-
+			
+			Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
+			if (bundle.getLocation().contains("_3.3.")) {
+				eclipse_3_3_workbench = true;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
@@ -803,5 +806,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		}
 		return taskRepository;
+	}
+
+	public boolean isEclipse_3_3_workbench() {
+		return eclipse_3_3_workbench;
 	}
 }
