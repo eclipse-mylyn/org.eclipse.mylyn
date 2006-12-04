@@ -37,41 +37,39 @@ import org.eclipse.ui.PlatformUI;
 public class ApplyMylarToPackageExplorerAction extends AbstractAutoApplyMylarAction {
 
 	public ApplyMylarToPackageExplorerAction() {
-		super(new InterestFilter());
+		super(new InterestFilter(), true, true);
 	}
 
 	@Override
 	public void run(IAction action) {
 		super.run(action);
-//		if (!super.isChecked()) {
-			List<StructuredViewer> viewers = getViewers();
-			if (viewers.size() == 1) {
-				StructuredViewer viewer = getViewers().get(0);
-				// bug 15933: work-around for viewer's auto-collapse
-				Object element = null;
-				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.getActiveEditor();
-				if (activeEditor != null) {
-					Object input = getElementOfInput(activeEditor.getEditorInput());
-					if (input instanceof IFile) {
-						element = JavaCore.create((IFile) input);
-					}
+		List<StructuredViewer> viewers = getViewers();
+		if (viewers.size() == 1) {
+			StructuredViewer viewer = getViewers().get(0);
+			// bug 159333: work-around for viewer's auto-collapse
+			Object element = null;
+			IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getActiveEditor();
+			if (activeEditor != null) {
+				Object input = getElementOfInput(activeEditor.getEditorInput());
+				if (input instanceof IFile) {
+					element = JavaCore.create((IFile) input);
+				}
 
-					if (element == null) { // try a non Java resource
-						element = input;
-					}
+				if (element == null) { // try a non Java resource
+					element = input;
+				}
 
-					if (element != null) {
-						ISelection newSelection = new StructuredSelection(element);
-						if (viewer.getSelection().equals(newSelection)) {
-							viewer.reveal(element);
-						} else {
-							viewer.setSelection(newSelection, true);
-						}
+				if (element != null) {
+					ISelection newSelection = new StructuredSelection(element);
+					if (viewer.getSelection().equals(newSelection)) {
+						viewer.reveal(element);
+					} else {
+						viewer.setSelection(newSelection, true);
 					}
 				}
 			}
-//		}
+		}
 	}
 
 	/**
@@ -98,17 +96,4 @@ public class ApplyMylarToPackageExplorerAction extends AbstractAutoApplyMylarAct
 		return viewers;
 	}
 
-	public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
-		// ignore
-	}
-
-//	@Override
-//	public List<Class> getPreservedFilters() {
-//		List<Class> preserved = new ArrayList<Class>();
-//		preserved.add(ImportDeclarationFilter.class);
-//		preserved.add(PackageDeclarationFilter.class);
-//		preserved.add(JavaDeclarationsFilter.class);
-//		preserved.add(ClosedProjectFilter.class);
-//		return preserved;
-//	}
 }
