@@ -31,7 +31,7 @@
 
      	<objectContribution
 				id="org.eclipse.mylar.ui.team.synchronize.open.report"
-				objectClass="org.eclipse.mylar.internal.team.ILinkedTaskInfo"
+				objectClass="org.eclipse.mylar.tasks.core.ILinkedTaskInfo"
 				adaptable="true">
 			<action
 				class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"

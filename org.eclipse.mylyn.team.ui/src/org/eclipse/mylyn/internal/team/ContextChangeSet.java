@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.team.core.TeamException;

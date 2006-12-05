@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.team;
 
+import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylar.tasks.core.ITask;
 
 /**
