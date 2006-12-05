@@ -162,12 +162,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 			if (manageLinking) {
 				updateLinking(on);
-				if (!on && viewers.size() == 1) {
-					StructuredViewer structuredViewer = viewers.get(0);
-					if (structuredViewer instanceof TreeViewer) {
-						((TreeViewer)structuredViewer).collapseAll();
-					}
-				}
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);

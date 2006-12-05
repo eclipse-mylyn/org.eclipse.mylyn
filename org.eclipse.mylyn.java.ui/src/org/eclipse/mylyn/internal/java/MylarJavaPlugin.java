@@ -29,7 +29,6 @@ import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -50,7 +49,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private ActiveFoldingEditorTracker editorTracker;
 
-	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
+//	private PackageExplorerManager packageExplorerManager = new PackageExplorerManager();
 
 	private TypeHistoryManager typeHistoryManager = null;
 
@@ -79,7 +78,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
+//					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
 					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 					
 					try {
@@ -94,7 +93,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 					}
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
-					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
+//					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
 					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
@@ -144,7 +143,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			INSTANCE = null;
 			resourceBundle = null;
 
-			ContextCorePlugin.getContextManager().removeListener(packageExplorerManager);
+//			ContextCorePlugin.getContextManager().removeListener(packageExplorerManager);
 			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
 			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 
@@ -154,12 +153,12 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 //				getPreferenceStore().removePropertyChangeListener(FocusPackageExplorerAction.getDefault());
 //			}
 
-			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-				for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-					ISelectionService service = w.getSelectionService();
-					service.removePostSelectionListener(packageExplorerManager);
-				}
-  		}
+//			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+//				for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+//					ISelectionService service = w.getSelectionService();
+//					service.removePostSelectionListener(packageExplorerManager);
+//				}
+//  		}
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker

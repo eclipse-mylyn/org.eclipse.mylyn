@@ -38,7 +38,9 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class ContextViewerManager implements IMylarContextListener, ISelectionListener	 { //, IPropertyChangeListener {
+public class FocusedViewerManager implements IMylarContextListener, ISelectionListener { // ,
+																							// IPropertyChangeListener
+																							// {
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -47,11 +49,11 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
 	private Map<IViewPart, StructuredViewer> partToViewerMap = new HashMap<IViewPart, StructuredViewer>();
-	
+
 	/**
 	 * For testing.
 	 */
-	private boolean syncRefreshMode = false; 
+	private boolean syncRefreshMode = false;
 
 	private AbstractPartTracker VIEWER_PART_TRACKER = new AbstractPartTracker() {
 
@@ -60,14 +62,14 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 			if (partToViewerMap.containsKey(part)) {
 				StructuredViewer viewer = partToViewerMap.get(part);
 				refreshViewer(null, false, viewer);
-			} 
+			}
 		}
-		
+
 		@Override
 		public void partBroughtToTop(IWorkbenchPart part) {
 
 		}
-		
+
 		@Override
 		public void partClosed(IWorkbenchPart part) {
 			// ignore
@@ -75,7 +77,7 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 
 		@Override
 		public void partDeactivated(IWorkbenchPart part) {
-			// ignore	
+			// ignore
 		}
 
 		@Override
@@ -83,19 +85,19 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 			// ignore
 		}
 	};
-	
-	public ContextViewerManager() {
+
+	public FocusedViewerManager() {
 		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
-	
+
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// ignore	
+		// ignore
 	}
-	
+
 	public void dispose() {
 		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
-	
+
 	public void addManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
 		if (!managedViewers.contains(viewer)) {
 			managedViewers.add(viewer);
@@ -105,7 +107,7 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 			viewer.getControl().addMouseListener(listener);
 			viewer.getControl().addKeyListener(listener);
 		}
-	} 
+	}
 
 	public void removeManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
 		managedViewers.remove(viewer);
@@ -133,6 +135,11 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 
 	public void contextDeactivated(IMylarContext context) {
 		refreshViewers();
+		for (StructuredViewer structuredViewer : managedViewers) {
+			if (structuredViewer instanceof TreeViewer) {
+				((TreeViewer) structuredViewer).collapseAll();
+			}
+		}
 	}
 
 	public void presentationSettingsChanging(UpdateKind kind) {
@@ -185,7 +192,7 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			managedViewers.remove(viewer);
-		} else { //if (viewer.getControl().isVisible()) {
+		} else { // if (viewer.getControl().isVisible()) {
 			if (nodesToRefresh == null || nodesToRefresh.isEmpty()) {
 				if (!minor) {
 					viewer.refresh(false);
@@ -202,11 +209,11 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 					viewer.refresh(minor);
 					updateExpansionState(viewer, null);
 					viewer.getControl().setRedraw(true);
-				} else { // don't need to worry about content changes 
+				} else { // don't need to worry about content changes
 					viewer.getControl().setRedraw(false);
 					for (IMylarElement node : nodesToRefresh) {
-						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
-								node.getContentType());
+						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
+								.getStructureBridge(node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
 						if (objectToRefresh != null) {
 							viewer.update(objectToRefresh, null);
@@ -221,7 +228,7 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
 		if (viewer instanceof TreeViewer && filteredViewers.contains(viewer)) {
-			TreeViewer treeViewer = (TreeViewer)viewer;
+			TreeViewer treeViewer = (TreeViewer) viewer;
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();
 			} else {
@@ -231,11 +238,12 @@ public class ContextViewerManager implements IMylarContextListener, ISelectionLi
 	}
 
 	public void nodeDeleted(IMylarElement node) {
-		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
+				node.getContentType());
 		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
 		ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
-  
+
 		if (parent != null) {
 			toRefresh.add(parent);
 			refreshViewers(toRefresh, false);

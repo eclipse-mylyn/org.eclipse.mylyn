@@ -44,7 +44,7 @@ import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
 import org.eclipse.mylar.internal.context.ui.ColorMap;
 import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.context.ui.ContextViewerManager;
+import org.eclipse.mylar.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
@@ -87,7 +87,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ColorMap colorMap = new ColorMap();
 
-	private ContextViewerManager viewerManager;
+	private FocusedViewerManager viewerManager;
 
 	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
@@ -211,7 +211,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		initializeHighlighters();
 		initializeActions();
 
-		viewerManager = new ContextViewerManager();
+		viewerManager = new FocusedViewerManager();
 
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
@@ -475,7 +475,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
 	}
 
-	public ContextViewerManager getViewerManager() {
+	public FocusedViewerManager getViewerManager() {
 		return viewerManager;
 	}
 
