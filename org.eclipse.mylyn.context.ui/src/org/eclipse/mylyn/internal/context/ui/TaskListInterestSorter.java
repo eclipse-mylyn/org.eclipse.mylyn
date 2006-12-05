@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.context.ui;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -170,7 +171,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 	}
 
 	private int compareKeys(ITaskListElement element1, ITaskListElement element2) {
-		return taskKeyComparator.compare(element1.getSummary(), element2.getSummary());
+		String summary1 = TaskListTableSorter.getSortableSummaryFromElement(element1);
+		String summary2 = TaskListTableSorter.getSortableSummaryFromElement(element2);
+		return taskKeyComparator.compare(summary1, summary2);
 	}
 
 	private int comparePriorities(ITaskListElement element1, ITaskListElement element2) {
