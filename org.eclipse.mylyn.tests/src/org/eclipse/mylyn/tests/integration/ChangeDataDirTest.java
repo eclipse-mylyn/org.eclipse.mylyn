@@ -53,7 +53,8 @@ public class ChangeDataDirTest extends TestCase {
 		dir.deleteOnExit();
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+//		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class ChangeDataDirTest extends TestCase {
 		manager.getTaskList().moveToRoot(task);
 
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
-		TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
+		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
 		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
@@ -120,7 +121,7 @@ public class ChangeDataDirTest extends TestCase {
 		assertNotNull(readTaskBeforeMove);
 		assertEquals(refreshDate, readTaskBeforeMove.getLastSyncDateStamp());
 
-		TasksUiPlugin.getDefault().getTaskListSaveManager().copyDataDirContentsTo(newDataDir);
+		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
