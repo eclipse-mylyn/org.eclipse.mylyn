@@ -550,7 +550,7 @@ public class MylarContextManager {
 		}
 	}
 
-	public void saveContext(String handleIdentifier) {
+	public synchronized void saveContext(String handleIdentifier) {
 		boolean wasPaused = contextCapturePaused;
 		try {
 			if (!wasPaused) {
