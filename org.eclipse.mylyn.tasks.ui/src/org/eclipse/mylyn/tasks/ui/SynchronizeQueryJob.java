@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
@@ -170,6 +171,9 @@ class SynchronizeQueryJob extends Job {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			if (!Platform.isRunning()) {
+				return Status.CANCEL_STATUS;
+			}
 			if (monitor == null) {
 				monitor = new NullProgressMonitor();
 			}

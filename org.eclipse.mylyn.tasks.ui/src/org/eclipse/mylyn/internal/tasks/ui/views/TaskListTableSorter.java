@@ -94,34 +94,29 @@ public class TaskListTableSorter extends ViewerSorter {
 		} else if (column == this.view.columnNames[2]) {
 			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 		} else if (column == this.view.columnNames[4]) {
-			String summary1 = element1.getSummary();
-			String summary2 = element2.getSummary();
-			
-			if (element1 instanceof AbstractQueryHit) {
-				AbstractRepositoryTask task1 = ((AbstractQueryHit)element1).getCorrespondingTask();
-				if (task1 != null && task1.getIdLabel() != null) {
-					summary1 = task1.getIdLabel() + ": " + summary1;
-				}
-			} else if (element1 instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask task1 = (AbstractRepositoryTask)element1;
-				if (task1.getIdLabel() != null) {
-					summary1 = task1.getIdLabel() + ": " + summary1;
-				}
-			}
-			if (element2 instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask task2 = (AbstractRepositoryTask)element2;
-				if (task2.getIdLabel() != null) {
-					summary2 = task2.getIdLabel() + ": " + summary2;
-				}
-			} else if (element2 instanceof AbstractQueryHit) {
-				AbstractRepositoryTask task2 = ((AbstractQueryHit)element2).getCorrespondingTask();
-				if (task2 != null && task2.getIdLabel() != null) {
-					summary2 = task2.getIdLabel() + ": " + summary2;
-				}
-			}
+			String summary1 = getSortableSummaryFromElement(element1);
+			String summary2 = getSortableSummaryFromElement(element2);
+			element2.getSummary();
 			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
 		} else {
 			return 0;
 		}
+	}
+
+	public static String getSortableSummaryFromElement(ITaskListElement element) {
+		String summary = element.getSummary();
+		
+		if (element instanceof AbstractQueryHit) {
+			AbstractRepositoryTask task1 = ((AbstractQueryHit)element).getCorrespondingTask();
+			if (task1 != null && task1.getIdLabel() != null) {
+				summary = task1.getIdLabel() + ": " + summary;
+			}
+		} else if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask task1 = (AbstractRepositoryTask)element;
+			if (task1.getIdLabel() != null) {
+				summary = task1.getIdLabel() + ": " + summary;
+			}
+		}
+		return summary;
 	}
 }
