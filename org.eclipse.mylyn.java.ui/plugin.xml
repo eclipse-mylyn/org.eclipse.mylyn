@@ -271,7 +271,7 @@
 		id="org.eclipse.mylar.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
-           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction"
+           class="org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.actions.filter.packageExplorer"
@@ -291,7 +291,7 @@
 		id="org.eclipse.mylar.ui.debug.view.contribution" 
    		targetID="org.eclipse.debug.ui.DebugView">
     	<action
-           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToDebugView"
+           class="org.eclipse.mylar.internal.java.ui.actions.FocusDebugViewAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
@@ -373,7 +373,7 @@
             label="Mylar Java Browsing"
             visible="false"> 
 	    <action
-           class="org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
+           class="org.eclipse.mylar.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
            id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            style="toggle"
 	       label="Apply Mylar" 

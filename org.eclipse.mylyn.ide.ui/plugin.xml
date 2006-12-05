@@ -56,7 +56,7 @@
 		id="org.eclipse.mylar.ui.projectexplorer.filter" 
    		targetID="org.eclipse.ui.navigator.ProjectExplorer">
     	<action
-           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProjectExplorerAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.FocusProjectExplorerAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
@@ -72,7 +72,7 @@
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
-           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToNavigatorAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.FocusNavigatorAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -32,7 +32,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAction implements
+public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction implements
 		IWorkbenchWindowActionDelegate {
 
 	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
@@ -45,8 +45,8 @@ public class ApplyMylarToBrowsingPerspectiveAction extends AbstractApplyMylarAct
 
 	private IWorkbenchWindow initWindow;
 	
-	public ApplyMylarToBrowsingPerspectiveAction() {
-		super(new InterestFilter(), true, true);
+	public FocusBrowsingPerspectiveAction() {
+		super(new InterestFilter(), true, true, false);
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
 	

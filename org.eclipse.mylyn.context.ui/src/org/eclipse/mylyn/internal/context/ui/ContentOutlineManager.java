@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.context.ui;
 
-import org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction;
+import org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -26,7 +26,7 @@ public class ContentOutlineManager implements IPartListener {
 //		} else {
 		if (part instanceof IEditorPart) {
 			IEditorPart editorPart = (IEditorPart) part;
-			ApplyMylarToOutlineAction applyAction = ApplyMylarToOutlineAction.getOutlineActionForEditor(editorPart);
+			FocusOutlineAction applyAction = FocusOutlineAction.getOutlineActionForEditor(editorPart);
 			if (applyAction != null) {
 				applyAction.update(editorPart);
 			}

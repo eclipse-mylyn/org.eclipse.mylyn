@@ -24,9 +24,9 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.UiTestUtil;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction;
+import org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
@@ -39,16 +39,16 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
-	private ApplyMylarToOutlineAction action;
+	private FocusOutlineAction action;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		view = openView(ApplyMylarToOutlineAction.ID_CONTENT_OUTLINE);
+		view = openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
 		assertNotNull(ContextUiPlugin.getDefault());
 		assertNotNull(MylarJavaPlugin.getDefault());
-		action = new ApplyMylarToOutlineAction();
+		action = new FocusOutlineAction();
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 	}
 	
 	public void testPreservationOfContextPause() {
-		ApplyMylarToPackageExplorerAction action = new ApplyMylarToPackageExplorerAction();
+		FocusPackageExplorerAction action = new FocusPackageExplorerAction();
 		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 		action.update(true);
 		assertTrue(ContextCorePlugin.getContextManager().isContextCapturePaused());
@@ -75,7 +75,7 @@ public class ApplyMylarActionTest extends AbstractJavaContextTest {
 		openView("org.eclipse.ui.views.ContentOutline");
 		JavaUI.openInEditor(m1);
 
-//		ApplyMylarToOutlineAction.getDefault().update(true);
+//		FocusOutlineAction.getDefault().update(true);
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IEditorPart[] parts = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 		for (int i = 0; i < parts.length; i++) {

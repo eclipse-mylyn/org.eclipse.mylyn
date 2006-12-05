@@ -17,26 +17,31 @@ import java.util.List;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoApplyMylarAction;
-import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoFocusViewAction;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToNavigatorAction extends AbstractAutoApplyMylarAction {
+public class FocusNavigatorAction extends AbstractAutoFocusViewAction {
 
-	public ApplyMylarToNavigatorAction() {
-		super(new InterestFilter(), true, true);
+	public FocusNavigatorAction() {
+		super(new InterestFilter(), true, true, true);
 	}
 
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
-		ResourceNavigator navigator = IdeUiUtil.getNavigatorFromActivePage();
-		if (navigator != null)
-			viewers.add(navigator.getTreeViewer());
+		IViewPart part = super.getPartForAction();
+		if (part instanceof ResourceNavigator) {
+			viewers.add(((ResourceNavigator)part).getTreeViewer());
+		}
 		return viewers;
+//		ResourceNavigator navigator = IdeUiUtil.getNavigatorFromActivePage();
+//		if (navigator != null)
+//			viewers.add(navigator.getTreeViewer());
+//		return viewers;
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {

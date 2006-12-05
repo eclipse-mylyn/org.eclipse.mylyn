@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.ide.ui.actions;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.mylar.internal.ide.ui.MarkerInterestFilter;
 import org.eclipse.mylar.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
@@ -22,12 +22,12 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractApplyMylartoMarkerViewAction extends AbstractApplyMylarAction {
+public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAction {
 
 	protected StructuredViewer cachedViewer = null;
 	
-	public AbstractApplyMylartoMarkerViewAction() {
-		super(new MarkerInterestFilter(), true, true);
+	public AbstractFocusMarkerViewAction() {
+		super(new MarkerInterestFilter(), true, true, false);
 	}
 	
 	/**

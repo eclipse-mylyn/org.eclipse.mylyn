@@ -22,8 +22,8 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
+import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
 
 /**
  * @author Mik Kersten
@@ -34,7 +34,7 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 
 	private PackageExplorerPart explorer;
 
-	private AbstractApplyMylarAction applyAction;
+	private AbstractFocusViewAction applyAction;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -42,8 +42,8 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
-		applyAction = AbstractApplyMylarAction.getActionForPart(explorer);		
-		assertTrue(applyAction instanceof ApplyMylarToPackageExplorerAction);
+		applyAction = AbstractFocusViewAction.getActionForPart(explorer);		
+		assertTrue(applyAction instanceof FocusPackageExplorerAction);
 	}
 
 	@Override

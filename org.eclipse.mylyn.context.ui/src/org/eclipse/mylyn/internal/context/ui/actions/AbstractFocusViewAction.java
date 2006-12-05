@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -29,10 +31,14 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
+import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
@@ -42,7 +48,8 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractApplyMylarAction extends Action implements IViewActionDelegate, IActionDelegate2 {
+public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
+		ISelectionListener {
 
 	private static final String ACTION_LABEL = "Apply Mylar";
 
@@ -61,10 +68,14 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 	private boolean manageViewer = true;
 
 	private boolean manageFilters = true;
-	
-	private static Map<IViewPart, AbstractApplyMylarAction> partMap = new WeakHashMap<IViewPart, AbstractApplyMylarAction>();
 
-	public static AbstractApplyMylarAction getActionForPart(IViewPart part) {
+	private boolean manageLinking = false;
+
+	private boolean wasLinkingEnabled = false;
+	
+	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
+
+	public static AbstractFocusViewAction getActionForPart(IViewPart part) {
 		return partMap.get(part);
 	}
 
@@ -81,11 +92,13 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		return viewPart;
 	}
 
-	public AbstractApplyMylarAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters) {
+	public AbstractFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
+			boolean manageLinking) {
 		super();
 		this.interestFilter = interestFilter;
 		this.manageViewer = manageViewer;
 		this.manageFilters = manageFilters;
+		this.manageLinking = manageLinking;
 		setText(ACTION_LABEL);
 		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
@@ -145,6 +158,10 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				}
 				updateInterestFilter(on, viewer);
 			}
+
+			if (manageLinking) {
+				updateLinking(on);
+			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
 		} finally {
@@ -152,6 +169,68 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 			}
 		}
+	}
+
+	private void updateLinking(boolean on) {
+		if (on) {
+			wasLinkingEnabled = isDefaultLinkingEnabled();
+			setDefaultLinkingEnabled(false);
+			MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(this);
+		} else {
+			MylarMonitorPlugin.getDefault().removeWindowPostSelectionListener(this);
+			setDefaultLinkingEnabled(wasLinkingEnabled);
+		}
+	}
+
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		if (manageLinking && selection instanceof ITextSelection && part instanceof IEditorPart) {
+			try {
+				List<StructuredViewer> viewers = getViewers();
+				if (viewers.size() == 1) {
+					StructuredViewer viewer = getViewers().get(0);
+					ITextSelection textSelection = (ITextSelection) selection;
+					ISelection toSelect = resolveSelection((IEditorPart)part, textSelection, viewer);
+					if (toSelect != null) {
+						ISelection currentSelection = viewer.getSelection();
+						if (!selection.equals(currentSelection)) {
+							select(viewer, toSelect);
+						}
+					}
+				}
+			} catch (Throwable t) {
+				// ignore, linking failure is not fatal
+			}
+		}
+	}
+
+	protected void select(StructuredViewer viewer, ISelection selection) {
+		viewer.setSelection(selection, true);
+	}
+
+	/**
+	 * Override to provide managed linking
+	 */
+	protected ISelection resolveSelection(IEditorPart part, ITextSelection selection, StructuredViewer viewer)
+			throws CoreException {
+		return null;
+	}
+
+	/**
+	 * Override to provide managed linking
+	 */
+	protected void setDefaultLinkingEnabled(boolean on) {
+		// ignore
+	}
+	
+	/**
+	 * Override to provide managed linking
+	 */	
+	protected boolean isDefaultLinkingEnabled() {
+		return false;
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		// ignore
 	}
 
 	/**
@@ -203,7 +282,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 						} catch (Throwable t) {
 							MylarStatusHandler.fail(t, "Failed to remove filter: " + filter, false);
 						}
-					} 
+					}
 				}
 			}
 			viewer.addFilter(interestFilter);
@@ -253,10 +332,6 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 		viewer.getControl().setRedraw(true);
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		// ignore
-	}
-
 	public void dispose() {
 		partMap.remove(getPartForAction());
 		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
@@ -264,6 +339,7 @@ public abstract class AbstractApplyMylarAction extends Action implements IViewAc
 				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
+		MylarMonitorPlugin.getDefault().removeWindowPostSelectionListener(this);
 	}
 
 	public void runWithEvent(IAction action, Event event) {

@@ -17,16 +17,16 @@ import java.util.List;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.ui.IViewPart;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToDebugView extends AbstractApplyMylarAction {
+public class FocusDebugViewAction extends AbstractFocusViewAction {
 
-	public ApplyMylarToDebugView() {
-		super(new InterestFilter(), true, true);
+	public FocusDebugViewAction() {
+		super(new InterestFilter(), true, true, false);
 	}
 	
 	@Override

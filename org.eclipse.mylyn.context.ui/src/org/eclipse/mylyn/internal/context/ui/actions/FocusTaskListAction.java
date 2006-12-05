@@ -33,7 +33,7 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction implements IFilteredTreeListener {
+public class FocusTaskListAction extends AbstractFocusViewAction implements IFilteredTreeListener {
 
 	private TaskListInterestFilter taskListInterestFilter = new TaskListInterestFilter();
 
@@ -43,8 +43,8 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 
 	private ViewerSorter previousSorter;
 
-	public ApplyMylarToTaskListAction() {
-		super(new InterestFilter(), false, true);
+	public FocusTaskListAction() {
+		super(new InterestFilter(), false, true, false);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class ApplyMylarToTaskListAction extends AbstractApplyMylarAction impleme
 
 	public void filterTextChanged(final String text) {
 		if (isChecked() && (text == null || "".equals(text))) {
-			IViewPart part = ApplyMylarToTaskListAction.super.getPartForAction();
+			IViewPart part = FocusTaskListAction.super.getPartForAction();
 			if (part instanceof TaskListView) {
 				((TaskListView) part).getViewer().expandAll();
 			}

@@ -359,7 +359,7 @@
 		id="org.eclipse.mylar.ui.tasklist.apply" 
    		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
     	<action
-           class="org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToTaskListAction"
+           class="org.eclipse.mylar.internal.context.ui.actions.FocusTaskListAction"
            enablesFor="*"
            icon="icons/eview16/mylar-apply-activity.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
@@ -373,7 +373,7 @@
 		id="org.eclipse.mylar.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-           class="org.eclipse.mylar.internal.context.ui.actions.ApplyMylarToOutlineAction"
+           class="org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"

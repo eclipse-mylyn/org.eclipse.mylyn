@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.tests.UiTestUtil;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
 
 /**
  * @author Mik Kersten
@@ -35,7 +35,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
 		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
-		ApplyMylarToPackageExplorerAction.getActionForPart(view).update(true);
+		FocusPackageExplorerAction.getActionForPart(view).update(true);
 	}
 
 	@Override
@@ -54,9 +54,9 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		assertNotNull(viewer.testFindItem(m1.getParent()));
 
 		manager.deactivateContext(contextId);
-		ApplyMylarToPackageExplorerAction.getActionForPart(view).update(true);
+		FocusPackageExplorerAction.getActionForPart(view).update(true);
 		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()), UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
-		ApplyMylarToPackageExplorerAction.getActionForPart(view).update();
+		FocusPackageExplorerAction.getActionForPart(view).update();
 	}
 
 	public void testPropagation() throws JavaModelException {

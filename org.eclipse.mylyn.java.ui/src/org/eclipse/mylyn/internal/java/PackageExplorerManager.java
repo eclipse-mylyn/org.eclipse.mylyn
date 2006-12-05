@@ -29,7 +29,7 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -46,7 +46,7 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 		if (!(part instanceof PackageExplorerPart)) {
 			return;
 		}		
-		AbstractApplyMylarAction applyAction = AbstractApplyMylarAction.getActionForPart((PackageExplorerPart)part);		
+		AbstractFocusViewAction applyAction = AbstractFocusViewAction.getActionForPart((PackageExplorerPart)part);		
 		if (!ContextCorePlugin.getContextManager().isContextActive()
 			|| (applyAction != null && !applyAction.isChecked())) {
 			return;
@@ -105,8 +105,8 @@ public class PackageExplorerManager implements IMylarContextListener, ISelection
 	public void contextActivated(IMylarContext taskscape) {
 //		try {
 //			if (ContextCorePlugin.getContextManager().isContextActive()
-//					&& ApplyMylarToPackageExplorerAction.getDefault() != null
-//					&& ApplyMylarToPackageExplorerAction.getDefault().isChecked()) {
+//					&& FocusPackageExplorerAction.getDefault() != null
+//					&& FocusPackageExplorerAction.getDefault().isChecked()) {
 //
 //				PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 //				if (packageExplorer != null) { 

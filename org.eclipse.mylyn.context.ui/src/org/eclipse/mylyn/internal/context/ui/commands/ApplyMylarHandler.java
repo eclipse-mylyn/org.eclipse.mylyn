@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.context.ui.commands;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractApplyMylarAction;
+import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -26,7 +26,7 @@ public class ApplyMylarHandler extends AbstractHandler {
 
 	private static final String PARAMETER_VIEW_ID = "viewId";
 
-	private AbstractApplyMylarAction applyAction = null;
+	private AbstractFocusViewAction applyAction = null;
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -41,7 +41,7 @@ public class ApplyMylarHandler extends AbstractHandler {
 		if (viewPart == null)
 			return returnValue;
 
-		applyAction = AbstractApplyMylarAction.getActionForPart(viewPart);
+		applyAction = AbstractFocusViewAction.getActionForPart(viewPart);
 
 		if (applyAction != null) {
 			applyAction.update(true);

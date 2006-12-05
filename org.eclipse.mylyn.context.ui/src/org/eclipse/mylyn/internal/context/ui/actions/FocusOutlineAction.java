@@ -32,13 +32,13 @@ import org.eclipse.ui.PlatformUI;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
+public class FocusOutlineAction extends AbstractFocusViewAction {
 
 	// TODO: move or delete?
 	public static final String ID_CONTENT_OUTLINE = "org.eclipse.ui.views.ContentOutline";
 
-	public ApplyMylarToOutlineAction() {
-		super(new InterestFilter(), true, false);
+	public FocusOutlineAction() {
+		super(new InterestFilter(), true, false, false);
 	}
 
 	/**
@@ -101,10 +101,10 @@ public class ApplyMylarToOutlineAction extends AbstractApplyMylarAction {
 		// ignore
 	}
 
-	public static ApplyMylarToOutlineAction getOutlineActionForEditor(IEditorPart part) {
+	public static FocusOutlineAction getOutlineActionForEditor(IEditorPart part) {
 		IViewPart outlineView = part.getSite().getPage().findView(ID_CONTENT_OUTLINE);
 		if (outlineView != null) {
-			return (ApplyMylarToOutlineAction) AbstractApplyMylarAction.getActionForPart(outlineView);
+			return (FocusOutlineAction) AbstractFocusViewAction.getActionForPart(outlineView);
 		} else {
 			return null;
 		}
