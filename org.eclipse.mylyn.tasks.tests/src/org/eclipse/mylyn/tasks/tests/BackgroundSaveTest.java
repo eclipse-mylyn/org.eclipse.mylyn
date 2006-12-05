@@ -35,19 +35,20 @@ public class BackgroundSaveTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		policy = TasksUiPlugin.getDefault().getTaskListSaveManager();
+		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+//		policy = TasksUiPlugin.getDefault().getTaskListSaveManager();
 
 		saveTimer = new BackgroundSaveTimer(policy);
 		saveTimer.setSaveIntervalMillis(50);
 		saveTimer.start();
-		policy.setForceBackgroundSave(true);
+//		policy.setForceBackgroundSave(true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		saveTimer.stop();
 		super.tearDown();
-		policy.setForceBackgroundSave(false);
+//		policy.setForceBackgroundSave(false);
 	}
 
 	public void testBackgroundSave() throws InterruptedException, IOException {
@@ -56,7 +57,8 @@ public class BackgroundSaveTest extends TestCase {
 		} else {
 			File file = TasksUiPlugin.getTaskListManager().getTaskListFile();
 			long previouslyModified = file.lastModified();
-			policy.saveTaskList(true, false);
+			TasksUiPlugin.getTaskListManager().saveTaskList();
+//			policy.saveTaskList(true, false);
 			assertTrue(file.lastModified() > previouslyModified);
 		}
 	}

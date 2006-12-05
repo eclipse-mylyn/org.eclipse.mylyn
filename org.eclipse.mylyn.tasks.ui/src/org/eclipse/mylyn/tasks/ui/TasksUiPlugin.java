@@ -518,7 +518,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void setDataDirectory(String newPath) {
-		getTaskListSaveManager().saveTaskList(true);
+		getTaskListManager().saveTaskList(); 
+//		getTaskListSaveManager().saveTaskList(true);
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
@@ -648,9 +649,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			this.taskEditors.add(contextEditor);
 	}
 
-	public TaskListSaveManager getTaskListSaveManager() {
-		return taskListSaveManager;
-	}
+//	/**
+//	 * Public for testing.
+//	 */
+//	public TaskListSaveManager getTaskListSaveManager() {
+//		return taskListSaveManager;
+//	}
 
 	public boolean isShellActive() {
 		return TasksUiPlugin.shellActive;

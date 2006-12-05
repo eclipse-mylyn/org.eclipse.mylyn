@@ -50,7 +50,8 @@ public class TaskReportGeneratorTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+//		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 

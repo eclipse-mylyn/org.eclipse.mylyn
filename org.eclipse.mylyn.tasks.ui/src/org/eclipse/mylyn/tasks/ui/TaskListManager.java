@@ -668,6 +668,10 @@ public class TaskListManager implements IPropertyChangeListener {
 		this.taskListFile = file;
 	}
 
+	public void copyDataDirContentsTo(String newDataDir) {
+		taskListSaveManager.copyDataDirContentsTo(newDataDir);
+	}
+	
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}

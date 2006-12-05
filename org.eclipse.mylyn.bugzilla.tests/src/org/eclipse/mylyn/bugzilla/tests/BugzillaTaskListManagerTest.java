@@ -57,7 +57,8 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+//		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 	
