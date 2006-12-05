@@ -77,7 +77,7 @@ public class TaskListManagerTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
@@ -117,6 +117,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
 		manager.getTaskList().deleteTask(task);
+		manager.saveTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 
 		manager.resetTaskList();

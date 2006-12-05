@@ -238,7 +238,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	};
 
 	/**
-	 * TODO: move into reminder mechanims
+	 * TODO: move into reminder mechanisms
 	 */
 	private IWindowListener WINDOW_LISTENER = new IWindowListener() {
 		/**
@@ -258,7 +258,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
-			taskListSaveManager.saveTaskList(true);
+			taskListManager.saveTaskList();
 		}
 	};
 
@@ -429,7 +429,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						synchronizationScheduler.startSynchJob();
 
 						taskListSaveManager = new TaskListSaveManager();
-						taskListManager.getTaskList().addChangeListener(taskListSaveManager);
+						taskListManager.setTaskListSaveManager(taskListSaveManager);
 
 						ContextCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
 								PREFERENCE_LISTENER);

@@ -18,27 +18,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public class TaskListSaveManager implements ITaskListChangeListener, IBackgroundSaveListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
 
-	// private static final String FILE_SUFFIX_BACKUP = "-backup.xml.zip";
+	private BackgroundSaveTimer saveTimer;
 
-	private BackgroundSaveTimer saveTimer = null;
+	private TaskListSaverJob taskListSaverJob;
 
 	private boolean initializationWarningDialogShow = false;
 
@@ -51,6 +59,9 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		saveTimer = new BackgroundSaveTimer(this);
 		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
 		saveTimer.start();
+		
+		taskListSaverJob = new TaskListSaverJob();
+		taskListSaverJob.schedule();
 	}
 
 	/**
@@ -59,7 +70,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	public void saveRequested() {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isShellActive() || forceBackgroundSave) {
 			try {
-				saveTaskList(true);
+				saveTaskList(true, true);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}
@@ -67,13 +78,30 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void saveTaskList(boolean saveContext) {
+		saveTaskList(saveContext, false);
+	}
+	
+	public void saveTaskList(boolean saveContext, boolean async) {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isInitialized()) {
-			TasksUiPlugin.getTaskListManager().saveTaskList();
-			if (saveContext) {
-				for (ITask task : new ArrayList<ITask>(TasksUiPlugin.getTaskListManager().getTaskList()
-						.getActiveTasks())) {
-					ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
+			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
+			if(async) {
+				if (saveContext) {
+					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList()
+							.getActiveTasks())) {
+						taskListSaverJob.addTaskContext(task);
+					}
 				}
+				taskListSaverJob.requestSave();
+			} else {
+				taskListSaverJob.waitSaveCompleted();
+				MylarContextManager contextManager = ContextCorePlugin.getContextManager();
+				if (saveContext) {
+					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList()
+							.getActiveTasks())) {
+						contextManager.saveContext(task.getHandleIdentifier());
+					}
+				}
+				internalSaveTaskList();
 			}
 		} else if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
 			MylarStatusHandler.log("Possible task list initialization failure, not saving list.", this);
@@ -95,6 +123,12 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				});
 			}
 		}
+	}
+	
+	private void internalSaveTaskList() {
+		TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
+		taskListManager.getTaskListWriter().writeTaskList(taskListManager.getTaskList(),
+				taskListManager.getTaskListFile());
 	}
 
 	/**
@@ -183,11 +217,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void taskDeactivated(ITask task) {
-		saveTaskList(true);
+		saveTaskList(true, true);
 	}
 
 	public void localInfoChanged(ITask task) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void repositoryInfoChanged(ITask task) {
@@ -207,23 +241,23 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void taskDeleted(ITask task) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void containerAdded(AbstractTaskContainer container) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void containerDeleted(AbstractTaskContainer container) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void taskAdded(ITask task) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	/** For testing only * */
@@ -232,10 +266,80 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	}
 
 	public void containerInfoChanged(AbstractTaskContainer container) {
-		saveTaskList(false);
+		saveTaskList(false, true);
 	}
 
 	public void synchronizationCompleted() {
 		// ignore
 	}
+	
+	private class TaskListSaverJob extends Job {
+
+		private final Queue<ITask> taskQueue = new LinkedList<ITask>();
+
+		private volatile boolean saveRequested = false;
+
+		private volatile boolean saveCompleted = true; 
+		
+		
+		TaskListSaverJob() {
+			super("Task List Saver");
+			setPriority(Job.LONG);
+			setSystem(true);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			while(true) {
+				if(saveRequested) {
+					saveRequested = false;
+					saveCompleted = false;
+					MylarContextManager contextManager = ContextCorePlugin.getContextManager();
+					while(!taskQueue.isEmpty()) {
+						ITask task = taskQueue.poll();
+						if(task!=null) {
+							contextManager.saveContext(task.getHandleIdentifier());
+						}
+					}
+					internalSaveTaskList();
+				}
+				
+				if(!saveRequested) {
+					synchronized (this) {
+						saveCompleted = true;
+						notifyAll();
+						try {
+							wait();
+						} catch (InterruptedException ex) {
+							// ignore
+						}
+					}
+				}
+			}
+		}
+		
+		void addTaskContext(ITask task) {
+			taskQueue.add(task);
+		}
+		
+		void requestSave() {
+			saveRequested = true;
+			synchronized (this) {
+				notifyAll();
+			}
+		}
+
+		void waitSaveCompleted() {
+			while(!saveCompleted) {
+				synchronized (this) {
+					try {
+						wait();
+					} catch (InterruptedException ex) {
+						// ignore
+					}
+				}
+			}
+		}
+
+	}
+	
 }

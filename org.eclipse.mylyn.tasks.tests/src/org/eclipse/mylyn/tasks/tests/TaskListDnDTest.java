@@ -46,7 +46,7 @@ public class TaskListDnDTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		manager.resetTaskList();
-		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		manager.saveTaskList();
 		assertNull(manager.getTaskList().getActiveTask());
 	}
 

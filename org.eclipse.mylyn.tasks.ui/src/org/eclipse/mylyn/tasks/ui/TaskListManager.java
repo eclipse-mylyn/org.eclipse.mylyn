@@ -39,6 +39,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -129,6 +130,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private File taskListFile;
 
+	private TaskListSaveManager taskListSaveManager;
+	
 	// TODO: guard against overwriting the single instance?
 	private TaskList taskList = new TaskList();
 
@@ -594,10 +597,10 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * Will not save an empty task list to avoid losing data on bad startup.
 	 */
-	public void saveTaskList() {
+	public synchronized void saveTaskList() {
 		try {
 			if (taskListInitialized) {
-				taskListWriter.writeTaskList(taskList, taskListFile);
+				taskListSaveManager.saveTaskList(true, false);
 				// TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
 				// nextLocalTaskId);
 			} else {
@@ -861,5 +864,10 @@ public class TaskListManager implements IPropertyChangeListener {
 			task = (ITask) element;
 		}
 		return task;
+	}
+
+	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
+		this.taskListSaveManager = taskListSaveManager;
+		this.taskList.addChangeListener(taskListSaveManager);
 	}
 }
