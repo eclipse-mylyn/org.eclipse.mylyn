@@ -115,17 +115,15 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected void textChanged() {
+		if (refreshPolicy != null) {
+			refreshPolicy.textChanged(filterText.getText());
+		}
+		
 		if (TasksUiPlugin.getDefault().isEclipse_3_3_workbench()) {
 			// bug 165353 work-around for premature return at
 			// FilteredTree.java:374
-			super.textChanged();
 			updateToolbar(true);
-		} else {
-			// TODO: get rid of this when forked for 3.3
-			if (refreshPolicy != null) {
-				refreshPolicy.textChanged(filterText.getText());
-			}
-		}
+		} 
 	}
 
 	protected Job getRefreshJob() {
