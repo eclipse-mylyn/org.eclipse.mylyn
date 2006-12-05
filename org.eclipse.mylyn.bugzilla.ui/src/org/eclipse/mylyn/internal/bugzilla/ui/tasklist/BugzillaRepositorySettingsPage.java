@@ -271,7 +271,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 						"Unable to authenticate with server.\n\n" + e.getCause().getMessage());
 			} else if (e.getCause() instanceof IOException) {
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"No Bugzilla server found at url");
+						"Error connecting to repository: "+e.getCause().getMessage());
 			} else {
 				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
 			}

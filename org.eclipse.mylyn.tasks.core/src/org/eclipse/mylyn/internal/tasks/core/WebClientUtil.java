@@ -68,10 +68,15 @@ public class WebClientUtil {
 	}
 
 	public static String getDomain(String repositoryUrl) {
+		String result = repositoryUrl;
 		int colonSlashSlash = repositoryUrl.indexOf("://");
 
-		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
-		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
+		if (colonSlashSlash >= 0) {
+			result = repositoryUrl.substring(colonSlashSlash + 3);
+		}
+
+		int colonPort = result.indexOf(':');
+		int requestPath = result.indexOf('/');
 
 		int substringEnd;
 
@@ -83,19 +88,20 @@ public class WebClientUtil {
 		else if (requestPath > 0)
 			substringEnd = requestPath;
 		else
-			substringEnd = repositoryUrl.length();
+			substringEnd = result.length();
 
-		return repositoryUrl.substring(colonSlashSlash + 3, substringEnd);
+		return result.substring(0, substringEnd);
 	}
 
 	public static String getRequestPath(String repositoryUrl) {
 		int colonSlashSlash = repositoryUrl.indexOf("://");
 		int requestPath = repositoryUrl.indexOf('/', colonSlashSlash + 3);
 
-		if (requestPath < 0)
+		if (requestPath < 0) {
 			return "";
-		else
+		} else {
 			return repositoryUrl.substring(requestPath);
+		}
 	}
 
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,

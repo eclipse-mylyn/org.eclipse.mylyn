@@ -824,11 +824,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		String url = getServerUrl();
 		isComplete = isUniqueUrl(url) && isValidUrl(url);
-		if (systemProxyButton != null && proxyHostnameEditor != null) {
-			if (isComplete && !getUseDefaultProxy()) {
-				isComplete = isValidUrl(getProxyHostname());
-			}
-		}
+//		if (systemProxyButton != null && proxyHostnameEditor != null) {
+//			if (isComplete && !getUseDefaultProxy()) {
+//				isComplete = isValidUrl(getProxyHostname());
+//			}
+//		}
 		return isComplete;
 	}
 
