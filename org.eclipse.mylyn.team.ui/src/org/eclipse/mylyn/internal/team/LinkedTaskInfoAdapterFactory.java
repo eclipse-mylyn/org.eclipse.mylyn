@@ -170,15 +170,17 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 				RemoteResource remoteResource = (RemoteResource) resourceVariant;
 				// TODO is there a better way then iterating trough all projects?
 				String path = remoteResource.getRepositoryRelativePath();
-				for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-					if (project.isAccessible()) {
-						ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
-						try {
-							if (cvsResource != null && path.startsWith(cvsResource.getRepositoryRelativePath())) {
-								return project;
+				if (path != null) {
+					for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+						if (project.isAccessible()) {
+							ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
+							try {
+								if (cvsResource != null && path.startsWith(cvsResource.getRepositoryRelativePath())) {
+									return project;
+								}
+							} catch (CVSException ex) {
+								// ignore
 							}
-						} catch (CVSException ex) {
-							// ignore
 						}
 					}
 				}
