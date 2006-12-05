@@ -24,7 +24,7 @@ import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.ui.actions.ApplyMylarToPackageExplorerAction;
+import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
@@ -145,12 +145,12 @@ public class StatisticsReportingTest extends TestCase {
 		mockTypesSelection("A.java");
 
 		assertNotNull(ContextUiPlugin.getDefault().getPreferenceStore());
-		String prefId = ApplyMylarToPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
+		String prefId = FocusPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
 		assertNotNull(prefId);
 		
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(part);
-//		AbstractApplyMylarAction action = ApplyMylarToPackageExplorerAction.getActionForPart(part);
+//		AbstractFocusViewAction action = FocusPackageExplorerAction.getActionForPart(part);
 //		assertNotNull(action);
 		
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(prefId, true);
