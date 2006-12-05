@@ -14,7 +14,9 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -92,9 +94,32 @@ public class TaskListTableSorter extends ViewerSorter {
 		} else if (column == this.view.columnNames[2]) {
 			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 		} else if (column == this.view.columnNames[4]) {
-			String c1 = element1.getSummary();
-			String c2 = element2.getSummary();
-			return this.view.sortDirection * taskKeyComparator.compare(c1, c2);
+			String summary1 = element1.getSummary();
+			String summary2 = element2.getSummary();
+			
+			if (element1 instanceof AbstractQueryHit) {
+				AbstractRepositoryTask task1 = ((AbstractQueryHit)element1).getCorrespondingTask();
+				if (task1 != null && task1.getIdLabel() != null) {
+					summary1 = task1.getIdLabel() + ": " + summary1;
+				}
+			} else if (element1 instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask task1 = (AbstractRepositoryTask)element1;
+				if (task1.getIdLabel() != null) {
+					summary1 = task1.getIdLabel() + ": " + summary1;
+				}
+			}
+			if (element2 instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask task2 = (AbstractRepositoryTask)element2;
+				if (task2.getIdLabel() != null) {
+					summary2 = task2.getIdLabel() + ": " + summary2;
+				}
+			} else if (element2 instanceof AbstractQueryHit) {
+				AbstractRepositoryTask task2 = ((AbstractQueryHit)element2).getCorrespondingTask();
+				if (task2 != null && task2.getIdLabel() != null) {
+					summary2 = task2.getIdLabel() + ": " + summary2;
+				}
+			}
+			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
 		} else {
 			return 0;
 		}

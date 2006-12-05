@@ -2485,6 +2485,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				try {
 					String result = dataHandler.postTaskData(repository, getRepositoryTaskData());
+					if (result == null) {
+						result = "no message";
+					}
 					return new Status(Status.OK, AbstractRepositoryTaskEditor.this.getPluginId(), Status.OK, result,
 							null);
 				} catch (CoreException e) {
