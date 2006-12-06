@@ -123,7 +123,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
-
+		TasksUiPlugin.getDefault().reloadDataDirectory(false);
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
 		assertNotNull(readTaskAfterMove);
 		assertEquals(refreshDate, readTaskAfterMove.getLastSyncDateStamp());
