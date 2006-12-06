@@ -44,7 +44,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Loads context from repository task into the workspace";
 
-	private static final String COLUMN_COMMENT = "Comment";
+	private static final String COLUMN_COMMENT = "Description";
 
 	private static final String COLUMN_AUTHOR = "Author";
 

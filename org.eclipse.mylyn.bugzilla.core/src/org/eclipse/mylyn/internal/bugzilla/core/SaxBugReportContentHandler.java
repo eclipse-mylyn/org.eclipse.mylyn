@@ -37,7 +37,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	private TaskComment taskComment;
 
-	private final Map<Integer, TaskComment> attachIdToComment = new HashMap<Integer, TaskComment>();
+	private final Map<String, TaskComment> attachIdToComment = new HashMap<String, TaskComment>();
 
 	private int commentNum = 0;
 
@@ -68,7 +68,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		characters.append(ch, start, length);		
+		characters.append(ch, start, length);
 		// if (monitor.isCanceled()) {
 		// throw new OperationCanceledException("Search cancelled");
 		// }
@@ -171,8 +171,8 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 		case LONG_DESC:
 			if (taskComment != null) {
-				if(taskComment.getNumber() == 0) {					
-				    repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
+				if (taskComment.getNumber() == 0) {
+					repositoryTaskData.setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, taskComment.getText());
 					break;
 				}
 				repositoryTaskData.addComment(taskComment);
@@ -218,13 +218,14 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		case BUG:
 			// Reached end of bug. Need to set LONGDESCLENGTH to number of
 			// comments
-			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData.getAttribute(BugzillaReportElement.LONGDESCLENGTH
-					.getKeyString());
+			RepositoryTaskAttribute numCommentsAttribute = repositoryTaskData
+					.getAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString());
 			if (numCommentsAttribute == null) {
 				numCommentsAttribute = attributeFactory.createAttribute(BugzillaReportElement.LONGDESCLENGTH
 						.getKeyString());
 				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
-				repositoryTaskData.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(), numCommentsAttribute);
+				repositoryTaskData.addAttribute(BugzillaReportElement.LONGDESCLENGTH.getKeyString(),
+						numCommentsAttribute);
 			} else {
 				numCommentsAttribute.setValue("" + repositoryTaskData.getComments().size());
 			}
@@ -233,12 +234,14 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			for (RepositoryAttachment attachment : repositoryTaskData.getAttachments()) {
 				TaskComment taskComment = attachIdToComment.get(attachment.getId());
 				if (taskComment != null) {
-					attachment.setCreator(taskComment.getAuthor());
+					attachment.setCreator(taskComment.getAuthor());					
 				}
-				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repositoryTaskData.getRepositoryUrl()+IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX+attachment.getId());
+				attachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_URL, repositoryTaskData
+						.getRepositoryUrl()
+						+ IBugzillaConstants.URL_GET_ATTACHMENT_SUFFIX + attachment.getId());
 				attachment.setRepositoryKind(repositoryTaskData.getRepositoryKind());
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
-				attachment.setTaskId(repositoryTaskData.getId());				
+				attachment.setTaskId(repositoryTaskData.getId());
 			}
 			break;
 
@@ -250,15 +253,15 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 				dependancyAttribute.setValue(parsedText);
 				repositoryTaskData.addAttribute(tag.getKeyString(), dependancyAttribute);
 			} else {
-				if(dependancyAttribute.getValue().equals("")) {
+				if (dependancyAttribute.getValue().equals("")) {
 					dependancyAttribute.setValue(parsedText);
 				} else {
-					dependancyAttribute.setValue(dependancyAttribute.getValue()+", "+parsedText);
+					dependancyAttribute.setValue(dependancyAttribute.getValue() + ", " + parsedText);
 				}
 			}
 			break;
 		// All others added as report attribute
-		default:			
+		default:
 			RepositoryTaskAttribute attribute = repositoryTaskData.getAttribute(tag.getKeyString());
 			if (attribute == null) {
 				attribute = attributeFactory.createAttribute(tag.getKeyString());
@@ -275,20 +278,17 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 	/** determines attachment id from comment */
 	private void parseAttachment(TaskComment taskComment, String commentText) {
 
-		int attachmentID = -1;
+		String attachmentID = "";
 
 		if (commentText.startsWith(COMMENT_ATTACHMENT_STRING)) {
-			try {
-				int endIndex = commentText.indexOf(")");
-				if (endIndex > 0 && endIndex < commentText.length()) {
-					attachmentID = Integer
-							.parseInt(commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex));
+			int endIndex = commentText.indexOf(")");
+			if (endIndex > 0 && endIndex < commentText.length()) {
+				attachmentID = commentText.substring(COMMENT_ATTACHMENT_STRING.length(), endIndex);
+				if (!attachmentID.equals("")) {
 					taskComment.setHasAttachment(true);
 					taskComment.setAttachmentId(attachmentID);
 					attachIdToComment.put(attachmentID, taskComment);
 				}
-			} catch (NumberFormatException e) {
-				return;
 			}
 		}
 	}

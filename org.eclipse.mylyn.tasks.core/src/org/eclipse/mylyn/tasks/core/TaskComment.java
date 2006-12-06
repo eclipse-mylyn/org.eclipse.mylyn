@@ -20,14 +20,14 @@ import java.io.Serializable;
  */
 public class TaskComment extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = 1076016406335550308L;
+	private static final long serialVersionUID = 1076016406335550318L;
 
 	/** Comment's number */
 	private final int number;
 
 	private boolean hasAttachment;
 
-	private int attachmentId;
+	private String attachmentId;
 
 	public TaskComment(AbstractAttributeFactory attributeFactory, int num) {
 		super(attributeFactory);
@@ -89,11 +89,11 @@ public class TaskComment extends AttributeContainer implements Serializable {
 		return hasAttachment;
 	}
 
-	public void setAttachmentId(int attachmentID) {
+	public void setAttachmentId(String attachmentID) {
 		this.attachmentId = attachmentID;
 	}
 
-	public int getAttachmentId() {
+	public String getAttachmentId() {
 		return attachmentId;
 	}
 }
