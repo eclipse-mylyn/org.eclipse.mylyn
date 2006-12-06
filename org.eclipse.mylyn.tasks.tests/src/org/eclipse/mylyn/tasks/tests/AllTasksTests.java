@@ -23,7 +23,7 @@ public class AllTasksTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasks.tests");
 
 		// $JUnit-BEGIN$
-//		suite.addTest(WebRepositoryConnectorTest.suite());
+		suite.addTest(WebRepositoryConnectorTest.suite());
 		suite.addTestSuite(TaskDataManagerTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(TaskListTest.class);
