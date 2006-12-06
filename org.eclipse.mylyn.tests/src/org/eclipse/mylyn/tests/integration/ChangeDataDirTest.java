@@ -101,11 +101,9 @@ public class ChangeDataDirTest extends TestCase {
 		ITask task = new Task(handle, "label", true);
 		manager.getTaskList().moveToRoot(task);
 
-		System.err.println(">>>> " + manager.getTaskList().getAllTasks());
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
-		System.err.println(">>>> " + manager.getTaskList().getAllTasks());
 		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
 		
 		assertNotNull(readTaskAfterMove);
