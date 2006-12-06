@@ -79,7 +79,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		} 
 	}
 
-	public void edgesChanged(IMylarElement element) {
+	public void relationsChanged(IMylarElement element) {
 		// ignore
 	}
 
@@ -95,7 +95,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		// ignore
 	}
 
-	public void nodeDeleted(IMylarElement element) {
+	public void elementDeleted(IMylarElement element) {
 		// ignore
 	}
 

@@ -129,7 +129,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 		return degreeOfSeparation;
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		// we don't care when this happens
 	}
 
@@ -149,7 +149,7 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 		// we don't care about this event
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// we don't care about this event
 	}
 

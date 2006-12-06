@@ -237,7 +237,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
 				node.getContentType());
 		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
@@ -258,7 +258,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		refreshViewers(node, true);
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// ignore
 	}
 

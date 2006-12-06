@@ -18,6 +18,7 @@ import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.internal.team.template.TemplateHandlerContentProposalProvider;
+import org.eclipse.mylar.team.AbstractContextChangeSetManager;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -66,9 +67,15 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 		getPreferenceStore().setValue(MylarTeamPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
 
 		if (manageChangeSets.getSelection()) {
-			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
+			for (AbstractContextChangeSetManager changeSetManager : MylarTeamPlugin.getDefault().getContextChangeSetManagers()) {
+				changeSetManager.enable();
+			}
+//			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
-			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
+			for (AbstractContextChangeSetManager changeSetManager : MylarTeamPlugin.getDefault().getContextChangeSetManagers()) {
+				changeSetManager.disable();
+			}
+//			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 		}
 		return true;
 	}

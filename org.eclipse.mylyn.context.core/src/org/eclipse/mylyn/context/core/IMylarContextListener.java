@@ -16,13 +16,11 @@ import java.util.List;
 
 /**
  * @author Mik Kersten
- * 
- * TODO: refactor this interface, it's too cumbersome
  */
 public interface IMylarContextListener {
 
 	/**
-	 * TODO: refactor
+	 * TODO: refactor, mixes presentation
 	 */
 	public enum UpdateKind {
 		HIGHLIGHTER, SCALING, UPDATE
@@ -56,8 +54,6 @@ public interface IMylarContextListener {
 	 */
 	public void interestChanged(List<IMylarElement> elements);
 
-	public void nodeDeleted(IMylarElement element);
-
 	/**
 	 * @param newLandmarks
 	 *            list of IJavaElement(s)
@@ -70,5 +66,7 @@ public interface IMylarContextListener {
 	 */
 	public void landmarkRemoved(IMylarElement element);
 
-	public void edgesChanged(IMylarElement element);
+	public void elementDeleted(IMylarElement element);
+	
+	public void relationsChanged(IMylarElement element);
 }

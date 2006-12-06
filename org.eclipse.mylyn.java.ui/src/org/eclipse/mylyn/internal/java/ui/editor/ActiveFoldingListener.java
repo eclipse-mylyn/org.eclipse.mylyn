@@ -201,11 +201,11 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		// ignore
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// ignore
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		// ignore
 	}
 }

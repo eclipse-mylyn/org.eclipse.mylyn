@@ -2,13 +2,17 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="providers" name="Mylar Team Providers" schema="schema/providers.exsd"/>
+   <extension-point id="changeSets" name="Mylar Team Providers" schema="schema/changeSets.exsd"/>
    <extension-point id="commitTemplates" name="Mylar Template Handlers" schema="schema/commitTemplates.exsd"/>
     
    <extension
-         point="org.eclipse.mylar.team.providers">
-      <repository class="org.eclipse.mylar.internal.team.ccvs.CvsRepositoryProvider"/>
-   </extension>
+         point="org.eclipse.mylar.team.changeSets">
+      <activeChangeSetProvider 
+      	class="org.eclipse.mylar.internal.team.ccvs.CvsActiveChangeSetProvider"/>
+      <contextChangeSetManager
+            class="org.eclipse.mylar.internal.team.ContextActiveChangeSetManager">
+      </contextChangeSetManager>
+   </extension> 
     
    <extension
          point="org.eclipse.ui.decorators">

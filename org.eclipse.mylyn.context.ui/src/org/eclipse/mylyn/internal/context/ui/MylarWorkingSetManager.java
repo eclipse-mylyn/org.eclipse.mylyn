@@ -78,7 +78,7 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		updateWorkingSet();
 	}
 
@@ -92,7 +92,7 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// don't care about this relationship
 
 	}

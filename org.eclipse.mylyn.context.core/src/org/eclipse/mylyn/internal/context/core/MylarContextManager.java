@@ -623,7 +623,7 @@ public class MylarContextManager {
 			}
 		}
 		for (IMylarContextListener listener : listeners)
-			listener.edgesChanged(null);
+			listener.relationsChanged(null);
 	}
 
 	/**
@@ -635,7 +635,7 @@ public class MylarContextManager {
 		if (suppressListenerNotification)
 			return;
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-			listener.edgesChanged(node);
+			listener.relationsChanged(node);
 		}
 	}
 
@@ -812,7 +812,7 @@ public class MylarContextManager {
 			return;
 		getActiveContext().delete(element);
 		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-			listener.nodeDeleted(element);
+			listener.elementDeleted(element);
 		}
 	}
 

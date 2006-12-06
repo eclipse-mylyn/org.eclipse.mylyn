@@ -150,7 +150,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		}
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// don't care when the relationships changed
 	}
 
@@ -162,7 +162,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		// don't care when there is a presentation setting change
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		// don't care when a node is deleted
 	}
 }

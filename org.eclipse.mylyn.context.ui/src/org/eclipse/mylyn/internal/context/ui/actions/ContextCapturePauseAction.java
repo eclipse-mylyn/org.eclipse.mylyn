@@ -71,7 +71,7 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 		// ignore
 	}
 
-	public void edgesChanged(IMylarElement element) {
+	public void relationsChanged(IMylarElement element) {
 		// ignore
 	}
 
@@ -87,7 +87,7 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 		// ignore
 	}
 
-	public void nodeDeleted(IMylarElement element) {
+	public void elementDeleted(IMylarElement element) {
 		// ignore
 	}
 

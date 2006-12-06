@@ -96,7 +96,7 @@ public class ActiveHierarchyView extends ViewPart {
 			refreshHierarchy();
 		}
 
-		public void edgesChanged(IMylarElement node) {
+		public void relationsChanged(IMylarElement node) {
 		}
 
 		public void presentationSettingsChanging(UpdateKind kind) {
@@ -106,7 +106,7 @@ public class ActiveHierarchyView extends ViewPart {
 			refreshHierarchy();
 		}
 
-		public void nodeDeleted(IMylarElement node) {
+		public void elementDeleted(IMylarElement node) {
 			// ignore
 		}
 

@@ -102,11 +102,11 @@ public class ActiveSearchView extends ViewPart {
 			refresh(null, true);
 		}
 
-		public void edgesChanged(IMylarElement node) {
+		public void relationsChanged(IMylarElement node) {
 			refresh(node, true);
 		}
 
-		public void nodeDeleted(IMylarElement node) {
+		public void elementDeleted(IMylarElement node) {
 			refresh(null, true);
 		}
 

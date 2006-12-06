@@ -15,24 +15,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.team.AbstractTeamRepositoryProvider;
+import org.eclipse.mylar.team.AbstractActiveChangeSetProvider;
+import org.eclipse.mylar.team.AbstractContextChangeSetManager;
+import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -40,8 +38,8 @@ import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
 /**
  * @author Mik Kersten
  */
-public class ContextChangeSetManager implements IMylarContextListener {
-
+public class ContextActiveChangeSetManager extends AbstractContextChangeSetManager {
+	
 	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
 		public void setRemoved(ChangeSet set) {
 			if (set instanceof ContextChangeSet) {
@@ -75,116 +73,52 @@ public class ContextChangeSetManager implements IMylarContextListener {
 
 	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
 
-	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
-
-		public void taskListRead() {
-			initContextChangeSets();
+	public ContextActiveChangeSetManager() {
+		Set<AbstractActiveChangeSetProvider> providerList = MylarTeamPlugin.getDefault().getActiveChangeSetProviders();
+		for (AbstractActiveChangeSetProvider provider : providerList) {
+			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
+			if (null != changeSetManager) {
+				collectors.add(changeSetManager);
+			}
 		}
+	}
 
-		public void taskActivated(ITask task) {
-			// ignore
-		}
-
-		public void tasksActivated(List<ITask> tasks) {
-			// ignore
-		}
-
-		public void taskDeactivated(ITask task) {
-			// ignore
-		}
-
-		public void activityChanged(DateRangeContainer week) {
-			// ignore
-		}
-
-		public void calendarChanged() {
-			// ignore
-		}
-	};
-
-	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
-
-		public void localInfoChanged(ITask task) {
-			for (ActiveChangeSetManager collector : collectors) {
-				ChangeSet[] sets = collector.getSets();
-				for (int i = 0; i < sets.length; i++) {
-					ChangeSet set = sets[i];
-					if (set instanceof ContextChangeSet) {
-						ContextChangeSet contextChangeSet = (ContextChangeSet) set;
-						if (contextChangeSet.getTask().equals(task)) {
-							contextChangeSet.initTitle();
-						}
+	@Override
+	protected void updateChangeSetLabel(ITask task) {
+		for (ActiveChangeSetManager collector : collectors) {
+			ChangeSet[] sets = collector.getSets();
+			for (int i = 0; i < sets.length; i++) {
+				ChangeSet set = sets[i];
+				if (set instanceof ContextChangeSet) {
+					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
+					if (contextChangeSet.getTask().equals(task)) {
+						contextChangeSet.initTitle();
 					}
 				}
 			}
 		}
-
-		public void repositoryInfoChanged(ITask task) {
-			// ignore
-		}
-
-		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			// ignore
-		}
-
-		public void taskDeleted(ITask task) {
-			// ignore
-		}
-
-		public void containerAdded(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void containerDeleted(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void taskAdded(ITask task) {
-			// ignore
-		}
-
-		public void containerInfoChanged(AbstractTaskContainer container) {
-			// ignore
-		}
-	};
-
-	private boolean isEnabled = false;
-
-	public ContextChangeSetManager() {
-		List<AbstractTeamRepositoryProvider> providerList = TeamRespositoriesManager.getInstance().getProviders();
-		for (AbstractTeamRepositoryProvider provider : providerList) {
-			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
-			if (null != changeSetManager)
-				collectors.add(changeSetManager);
-		}
 	}
-
+	
+	@Override
 	public void enable() {
+		super.enable();
 		if (!isEnabled) {
-			ContextCorePlugin.getContextManager().addListener(this);
-			TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_CHANGE_LISTENER);
-			TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
-			if (TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
-				initContextChangeSets(); // otherwise listener will do it
-			}
 			for (ActiveChangeSetManager collector : collectors) {
 				collector.addListener(CHANGE_SET_LISTENER);
 			}
-			isEnabled = true;
 		}
 	}
 
+	@Override
 	public void disable() {
-		ContextCorePlugin.getContextManager().removeListener(this);
-		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
-		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
+		super.disable();
 		for (ActiveChangeSetManager collector : collectors) {
 			collector.removeListener(CHANGE_SET_LISTENER);
 		}
-		isEnabled = false;
 	}
 
-	private void initContextChangeSets() {
+	@Override
+	protected void initContextChangeSets() {
 		for (ActiveChangeSetManager collector : collectors) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
@@ -245,11 +179,6 @@ public class ContextChangeSetManager implements IMylarContextListener {
 					if (!collector.contains(contextChangeSet)) {
 						collector.add(contextChangeSet);
 					}
-					// collector.makeDefault(contextChangeSet);
-					// IdeUiUtil.forceSynchronizeViewUpdate();
-					// DiffChangeEvent event = new
-					// DiffChangeEvent(contextChangeSet.getDiffTree());
-					// collector.diffsChanged(event, new NullProgressMonitor());
 				}
 			}
 		} catch (Exception e) {
@@ -271,30 +200,6 @@ public class ContextChangeSetManager implements IMylarContextListener {
 			}
 		}
 		activeChangeSets.clear();
-	}
-
-	public List<ContextChangeSet> getActiveChangeSets() {
-		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
-	}
-
-	private ITask getTask(IMylarContext context) {
-		List<ITask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
-
-		// TODO: support multiple tasks
-		if (activeTasks.size() > 0) {
-			return activeTasks.get(0);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Ignores decay.
-	 */
-	private boolean shouldRemove(IMylarElement element) {
-		// TODO: generalize this logic?
-		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < MylarContextManager
-				.getScalingFactors().getInteresting();
 	}
 
 	public void interestChanged(List<IMylarElement> elements) {
@@ -321,14 +226,6 @@ public class ContextChangeSetManager implements IMylarContextListener {
 								}
 							}
 						}
-						// if (shouldRemove(element)) {
-						// ChangeSet[] sets = collector.getSets();
-						// for (int i = 0; i < sets.length; i++) {
-						// if (sets[i] instanceof MylarActiveChangeSet) {
-						// sets[i].remove(resource);
-						// }
-						// }
-						// }
 					}
 				}
 			} catch (Exception e) {
@@ -336,28 +233,28 @@ public class ContextChangeSetManager implements IMylarContextListener {
 			}
 		}
 	}
-
-	public void nodeDeleted(IMylarElement node) {
-		// TODO: handle?
+	
+	public List<ContextChangeSet> getActiveChangeSets() {
+		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
 	}
 
-	public void landmarkAdded(IMylarElement node) {
-		// ignore
+	private ITask getTask(IMylarContext context) {
+		List<ITask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+
+		// TODO: support multiple tasks
+		if (activeTasks.size() > 0) {
+			return activeTasks.get(0);
+		} else {
+			return null;
+		}
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
-		// ignore
-	}
-
-	public void edgesChanged(IMylarElement node) {
-		// ignore
-	}
-
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
+	/**
+	 * Ignores decay.
+	 */
+	private boolean shouldRemove(IMylarElement element) {
+		// TODO: generalize this logic?
+		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < MylarContextManager
+				.getScalingFactors().getInteresting();
 	}
 }

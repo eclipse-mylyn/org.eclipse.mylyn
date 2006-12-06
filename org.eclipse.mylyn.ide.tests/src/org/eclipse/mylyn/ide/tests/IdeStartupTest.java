@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.internal.team.ContextChangeSetManager;
+import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
 
 /**
  * @author Mik Kersten
@@ -28,7 +28,7 @@ public class IdeStartupTest extends TestCase {
 		List<IMylarContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
 		boolean containsManager = false;
 		for (IMylarContextListener listener : listeners) {
-			if (listener instanceof ContextChangeSetManager) {
+			if (listener instanceof ContextActiveChangeSetManager) {
 				containsManager = true;
 			}
 		}

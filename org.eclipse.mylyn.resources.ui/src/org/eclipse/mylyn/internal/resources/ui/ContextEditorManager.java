@@ -151,7 +151,7 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
-	public void nodeDeleted(IMylarElement node) {
+	public void elementDeleted(IMylarElement node) {
 		// ignore
 	}
 
@@ -163,7 +163,7 @@ public class ContextEditorManager implements IMylarContextListener {
 		// ignore
 	}
 
-	public void edgesChanged(IMylarElement node) {
+	public void relationsChanged(IMylarElement node) {
 		// ignore
 	}
 }

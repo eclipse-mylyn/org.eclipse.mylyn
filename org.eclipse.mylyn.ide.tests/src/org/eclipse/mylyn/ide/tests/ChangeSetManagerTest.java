@@ -22,7 +22,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.team.ContextChangeSet;
-import org.eclipse.mylar.internal.team.ContextChangeSetManager;
+import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
 import org.eclipse.mylar.resources.tests.AbstractResourceContextTest;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -36,7 +36,7 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
  */
 public class ChangeSetManagerTest extends AbstractResourceContextTest {
 
-	private ContextChangeSetManager changeSetManager;
+	private ContextActiveChangeSetManager changeSetManager;
 
 	private ActiveChangeSetManager collector;
 
@@ -44,7 +44,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		assertNotNull(MylarIdePlugin.getDefault());
-		changeSetManager = MylarTeamPlugin.getDefault().getChangeSetManager();
+		changeSetManager = (ContextActiveChangeSetManager)MylarTeamPlugin.getDefault().getContextChangeSetManagers().iterator().next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
 		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks().size());
@@ -65,7 +65,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
-		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
+		changeSetManager.disable();
+//		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 
 		Task task1 = new Task("task1", "label", true);
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
@@ -73,7 +74,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, collector.getSets().length);
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
-		MylarTeamPlugin.getDefault().getChangeSetManager().enable();
+		changeSetManager.enable();
+//		MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 	}
 
 	public void testSingleContextActivation() {

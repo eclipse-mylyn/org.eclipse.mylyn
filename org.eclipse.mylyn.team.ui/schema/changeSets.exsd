@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.mylar.team">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.team" id="providers" name="Mylar Team Repository Provider"/>
+         <meta.schema plugin="org.eclipse.mylar.team" id="changeSets" name="Mylar Chagne Set Integration"/>
       </appInfo>
       <documentation>
          Provides repository specific team integration for Mylar.
@@ -13,7 +13,8 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="repository" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="activeChangeSetProvider" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="contextChangeSetManager" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +43,7 @@
       </complexType>
    </element>
 
-   <element name="repository">
+   <element name="activeChangeSetProvider">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -51,6 +52,21 @@
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.mylar.provisional.ide.team.TeamRepositoryProvider"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contextChangeSetManager">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.team.AbstractContextChangeSetManager"/>
                </appInfo>
             </annotation>
          </attribute>

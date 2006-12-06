@@ -12,7 +12,6 @@ package org.eclipse.mylar.team;
 
 import org.eclipse.mylar.tasks.core.ITask;
 
-
 /**
  * @author Eike Stepper
  * @author Mik Kersten
