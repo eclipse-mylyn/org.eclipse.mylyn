@@ -177,7 +177,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			parseInteractionEvent(event);
 		}
 
-		public void nodeDeleted(IMylarElement element) {
+		public void elementDeleted(IMylarElement element) {
 			// ignore
 		}
 
@@ -189,7 +189,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			// ignore
 		}
 
-		public void edgesChanged(IMylarElement element) {
+		public void relationsChanged(IMylarElement element) {
 			// ignore
 		}
 	};
