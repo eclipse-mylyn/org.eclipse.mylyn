@@ -364,6 +364,7 @@
            icon="icons/eview16/mylar-apply-activity.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
            label="Focus on Workweek"
+           menubarPath="additions"
            style="toggle"
            toolbarPath="context"
            tooltip="Focus on Workweek"> 
