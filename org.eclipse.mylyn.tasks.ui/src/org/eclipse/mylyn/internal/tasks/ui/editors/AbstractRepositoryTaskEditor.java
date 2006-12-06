@@ -2516,11 +2516,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 									modifiedTask = handleNewBugPost(event.getJob().getResult().getMessage());
 								} catch (CoreException e) {
 									MylarStatusHandler
-											.fail(e, "Failed to synchronize new task with repository"
-													+ ": Changes may not have successfully committed.\n"
-													+ e.getMessage(), true);
-									submitButton.setEnabled(true);
-									AbstractRepositoryTaskEditor.this.showBusy(false);
+											.fail(
+													e,
+													"Unable to open newly submitted task. \n\n"
+															+ e.getMessage()
+															+ "\n\nTry opening task via Navigate > Open Repository Task in menu.\n New task id is "
+															+ event.getJob().getResult().getMessage(), true);
+									close();
 									return;
 								}
 
@@ -2606,8 +2608,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void handleSubmitError(final IJobChangeEvent event) {
 		if (event.getJob().getResult().getCode() == Status.INFO) {
-			WebBrowserDialog.openAcceptAgreement(this.getSite().getShell(), "Failed to submit to repository", event.getJob().getResult()
-					.getMessage(), event.getJob().getResult().getException().getMessage());
+			WebBrowserDialog.openAcceptAgreement(this.getSite().getShell(), "Failed to submit to repository", event
+					.getJob().getResult().getMessage(), event.getJob().getResult().getException().getMessage());
 		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
 			MylarStatusHandler.fail(event.getJob().getResult().getException(), "Failed to submit to repository"
 					+ ": Changes may not have successfully committed.\n" + event.getJob().getResult().getMessage(),
