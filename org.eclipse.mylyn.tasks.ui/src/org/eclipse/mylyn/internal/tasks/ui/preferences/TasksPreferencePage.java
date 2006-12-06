@@ -133,7 +133,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
 			if (taskDataDirectoryAction == OVERWRITE) {
-				TasksUiPlugin.getTaskListManager().saveTaskList();
+//				TasksUiPlugin.getTaskListManager().saveTaskList();
 				TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(taskDirectory);
 				TasksUiPlugin.getDefault().setDataDirectory(taskDirectory);
 			} else if (taskDataDirectoryAction == LOAD_EXISTING) {

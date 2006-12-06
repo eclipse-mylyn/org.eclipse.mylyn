@@ -136,6 +136,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 * Will overwrite.
 	 */
 	public void copyDataDirContentsTo(String targetFolderPath) {
+		saveTaskList(true, false);
+		
 		File mainDataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
 
 		for (File currFile : mainDataDir.listFiles()) {

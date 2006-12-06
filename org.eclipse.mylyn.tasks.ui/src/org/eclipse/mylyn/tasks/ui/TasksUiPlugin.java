@@ -531,7 +531,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * @param withProgress
 	 */
 	public void reloadDataDirectory(boolean withProgress) {
-		System.err.println(">>>>>> reloading");
 		// In case new data folder has hold style task data
 		migrateContextStoreFrom06Format(withProgress);
 		getTaskListManager().resetTaskList();
@@ -539,7 +538,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE));
-		System.err.println(">>> 111111111");
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().parseTaskActivityInteractionHistory();
 	}
