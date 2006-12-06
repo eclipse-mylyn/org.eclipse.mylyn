@@ -125,7 +125,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 		// ignore
 	}
 
-	public void nodeDeleted(IMylarElement element) {
+	public void elementDeleted(IMylarElement element) {
 		// ignore
 	}
 
@@ -137,7 +137,7 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 		// ignore
 	}
 
-	public void edgesChanged(IMylarElement element) {
+	public void relationsChanged(IMylarElement element) {
 		// ignore
 	}
 }
