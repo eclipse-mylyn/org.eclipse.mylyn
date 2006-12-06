@@ -2510,7 +2510,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (event.getJob().getResult().getCode() != Status.ERROR) {
+						if (event.getJob().getResult().getCode() == Status.OK) {
 							if (getRepositoryTaskData().isNew()) {
 								try {
 									modifiedTask = handleNewBugPost(event.getJob().getResult().getMessage());
@@ -2606,7 +2606,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void handleSubmitError(final IJobChangeEvent event) {
 		if (event.getJob().getResult().getCode() == Status.INFO) {
-			WebBrowserDialog.openAcceptAgreement(null, "Failed to submit to repository", event.getJob().getResult()
+			WebBrowserDialog.openAcceptAgreement(this.getSite().getShell(), "Failed to submit to repository", event.getJob().getResult()
 					.getMessage(), event.getJob().getResult().getException().getMessage());
 		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
 			MylarStatusHandler.fail(event.getJob().getResult().getException(), "Failed to submit to repository"

@@ -143,6 +143,9 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			return client.postTaskData(taskData);
+		} catch (UnrecognizedReponseException e) {
+			throw new CoreException(new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.INFO, "Posting to "
+					+ repository.getUrl() + " failed.", e));
 		} catch (Throwable e) {
 			throw new CoreException(new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.ERROR, "Posting to "
 					+ repository.getUrl() + " failed: " + e.getMessage(), e));

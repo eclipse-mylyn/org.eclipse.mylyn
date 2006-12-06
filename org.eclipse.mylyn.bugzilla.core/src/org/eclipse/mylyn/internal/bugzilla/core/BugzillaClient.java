@@ -977,8 +977,8 @@ public class BugzillaClient {
 							// MylarStatusHandler.log("Login Error: "+body,
 							// BugzillaServerFacade.class);
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
-						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
-							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
+//						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
+//							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
 						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
 							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_COMMENT_REQUIRED);
 						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
