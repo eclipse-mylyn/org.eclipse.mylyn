@@ -377,7 +377,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (taskElapsedTimeMap.containsKey(task)) {
 			return unaccounted + taskElapsedTimeMap.get(task);
 		} else {
-			return 0;
+			return unaccounted;
 		}
 	}
 
