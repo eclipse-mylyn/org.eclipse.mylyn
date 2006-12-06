@@ -530,7 +530,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @param withProgress
 	 */
-	public void reloadDataDirectory(boolean withProgress) {
+	public synchronized void reloadDataDirectory(boolean withProgress) {
+		System.err.println(">>>>>> reloading");
 		// In case new data folder has hold style task data
 		migrateContextStoreFrom06Format(withProgress);
 		getTaskListManager().resetTaskList();
