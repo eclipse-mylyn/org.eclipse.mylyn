@@ -23,7 +23,7 @@ public class AllTasksTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tasks.tests");
 
 		// $JUnit-BEGIN$
-		suite.addTest(WebRepositoryConnectorTest.suite());
+//		suite.addTest(WebRepositoryConnectorTest.suite());
 		suite.addTestSuite(TaskDataManagerTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(TaskListTest.class);
@@ -43,15 +43,16 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListDnDTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
-		suite.addTestSuite(BackgroundSaveTest.class);
 		suite.addTestSuite(TaskActivityViewTest.class);
 		suite.addTestSuite(TaskAttachmentActionsTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
-		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(UrlConnectionUtilTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
 		// $JUnit-END$
+		
+		// suite.addTestSuite(BackgroundSaveTest.class);
+		// suite.addTestSuite(RetrieveTitleFromUrlTest.class);
 		return suite;
 	}
 }
