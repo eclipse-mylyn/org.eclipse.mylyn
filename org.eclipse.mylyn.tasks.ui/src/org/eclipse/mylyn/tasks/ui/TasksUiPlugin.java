@@ -520,6 +520,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void setDataDirectory(String newPath) {
 		getTaskListManager().saveTaskList(); 
 //		getTaskListSaveManager().saveTaskList(true);
+//		taskListSaveManager.saveTaskList(true, false);
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
@@ -814,5 +815,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public boolean isEclipse_3_3_workbench() {
 		return eclipse_3_3_workbench;
+	}
+
+	/**
+	 * Public for testing.
+	 */
+	public TaskListSaveManager getTaskListSaveManager() {
+		return taskListSaveManager;
 	}
 }

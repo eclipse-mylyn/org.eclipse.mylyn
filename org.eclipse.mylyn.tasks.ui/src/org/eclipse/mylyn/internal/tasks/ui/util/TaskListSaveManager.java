@@ -125,7 +125,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		}
 	}
 	
-	private void internalSaveTaskList() {
+	private synchronized void internalSaveTaskList() {
 		TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 		taskListManager.getTaskListWriter().writeTaskList(taskListManager.getTaskList(),
 				taskListManager.getTaskListFile());
@@ -339,7 +339,6 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				}
 			}
 		}
-
 	}
 	
 }
