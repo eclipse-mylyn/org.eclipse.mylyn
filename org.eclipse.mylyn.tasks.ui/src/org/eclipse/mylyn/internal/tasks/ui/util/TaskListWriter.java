@@ -84,7 +84,7 @@ public class TaskListWriter {
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
 	}
 
-	public void writeTaskList(TaskList taskList, File outFile) {
+	public synchronized void writeTaskList(TaskList taskList, File outFile) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
