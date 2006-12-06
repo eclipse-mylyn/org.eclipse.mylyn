@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.security.auth.login.LoginException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -107,7 +109,13 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			int bugId = Integer.parseInt(taskId);
-			RepositoryTaskData taskData = client.getTaskData(bugId);
+			RepositoryTaskData taskData;
+			try {
+				taskData = client.getTaskData(bugId);
+			} catch (LoginException e) {
+				// TODO: Move retry handling into client
+				taskData = client.getTaskData(bugId);
+			}
 			if (taskData != null) {
 				try {
 					configureTaskData(repository, taskData);
@@ -142,7 +150,13 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
-			return client.postTaskData(taskData);
+			try {
+				return client.postTaskData(taskData);
+			} catch (LoginException e) {
+				// TODO: Move retry handling into client
+				return client.postTaskData(taskData);
+			}
+
 		} catch (UnrecognizedReponseException e) {
 			throw new CoreException(new Status(IStatus.OK, BugzillaCorePlugin.PLUGIN_ID, IStatus.INFO, "Posting to "
 					+ repository.getUrl() + " failed.", e));

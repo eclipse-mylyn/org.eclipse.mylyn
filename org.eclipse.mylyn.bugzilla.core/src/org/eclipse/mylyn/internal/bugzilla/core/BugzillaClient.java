@@ -288,7 +288,7 @@ public class BugzillaClient {
 		String loginUrl = repositoryUrl + "/relogin.cgi";
 		GetMethod method = null;
 		try {
-			//httpClient.getParams().setAuthenticationPreemptive(true);
+			// httpClient.getParams().setAuthenticationPreemptive(true);
 			method = getConnect(loginUrl);
 			method.setFollowRedirects(false);
 			int code = httpClient.executeMethod(method);
@@ -330,17 +330,19 @@ public class BugzillaClient {
 		if (!hasAuthenticationCredentials()) {
 			throw new LoginException();
 		}
+	
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 
 		NameValuePair[] formData = new NameValuePair[2];
 		formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
 		formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
 
-		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + IBugzillaConstants.URL_POST_LOGIN));
+		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
+				+ IBugzillaConstants.URL_POST_LOGIN));
 
 		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		method.setRequestBody(formData);
-		method.setDoAuthentication(true);		
+		method.setDoAuthentication(true);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		method.setFollowRedirects(false);
@@ -588,7 +590,8 @@ public class BugzillaClient {
 		PostMethod postMethod = null;
 
 		try {
-			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
+			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl
+					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
 			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
@@ -645,12 +648,12 @@ public class BugzillaClient {
 	 * calling method must release the connection on the returned PostMethod
 	 * once finished. TODO: refactor
 	 */
-	public PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException {
+	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
-		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()+formUrl));
+		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
@@ -760,6 +763,9 @@ public class BugzillaClient {
 			return result;
 		} catch (ParseException e) {
 			throw new IOException("Could not parse response from server.");
+		} catch (LoginException e) {
+			authenticated = false;
+			throw e;
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
@@ -977,8 +983,11 @@ public class BugzillaClient {
 							// MylarStatusHandler.log("Login Error: "+body,
 							// BugzillaServerFacade.class);
 							throw new LoginException(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD);
-//						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
-//							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
+							// } else if
+							// (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION)
+							// != -1) {
+							// throw new
+							// BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
 						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
 							throw new BugzillaException(IBugzillaConstants.ERROR_MSG_COMMENT_REQUIRED);
 						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
