@@ -74,8 +74,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
-	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on.\n Inactivity timeout is "
-			+ MylarMonitorPlugin.getDefault().getInactivityTimeout() + " seconds.";
+	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on in Eclipse.\n Inactivity timeout is "
+			+ MylarMonitorPlugin.getDefault().getInactivityTimeout()/(60*1000) + " minutes.";
 
 	public static final String LABEL_INCOMPLETE = "Incomplete";
 
@@ -770,7 +770,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Elapsed Time
 
-		label = toolkit.createLabel(sectionClient, "Elapsed time:");
+		label = toolkit.createLabel(sectionClient, "Active time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
