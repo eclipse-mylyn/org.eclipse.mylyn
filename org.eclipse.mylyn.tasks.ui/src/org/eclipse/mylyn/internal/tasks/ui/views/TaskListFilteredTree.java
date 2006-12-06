@@ -39,11 +39,11 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	private static final String LABEL_NO_ACTIVE = "<no active task>";
-	
+
 	private Hyperlink activeTaskLabel;
-	
+
 	private TaskProgressBar taskProgressBar;
-	
+
 	@Override
 	protected Composite createProgressComposite(Composite container) {
 		Composite progressComposite = new Composite(container, SWT.NONE);
@@ -55,11 +55,11 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		progressLayout.verticalSpacing = 0;
 		progressComposite.setLayout(progressLayout);
 		progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
-		
+
 		taskProgressBar = new TaskProgressBar(progressComposite);
-		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));		
+		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		updateTaskProgressBar();
-		
+
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
 
 			public void containerAdded(AbstractTaskContainer container) {
@@ -87,7 +87,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			}
 		});
-		
+
 		TasksUiPlugin.getTaskListManager().addActivityListener(new ITaskActivityListener() {
 
 			public void activityChanged(DateRangeContainer week) {
@@ -108,16 +108,16 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 			public void tasksActivated(List<ITask> tasks) {
 			}
-			
+
 		});
 		return progressComposite;
 	}
-	
+
 	private void updateTaskProgressBar() {
 		if (taskProgressBar.isDisposed()) {
 			return;
 		}
-		
+
 		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
 		int totalTasks = tasksThisWeek.size();
 		int completeTime = 0;
@@ -139,11 +139,11 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				}
 			}
 		}
-		taskProgressBar.reset(completeTime, (completeTime+incompleteTime));
-		taskProgressBar.setToolTipText("Completed " + completeTime + " of " + (completeTime+incompleteTime) + " hours estimated for this week"
-				+ "\n(" + completeTasks + " tasks of " + totalTasks + " scheduled)");
+		taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
+		taskProgressBar.setToolTipText("Completed " + completeTime + " of " + (completeTime + incompleteTime)
+				+ " hours estimated for this week" + "\n(" + completeTasks + " tasks of " + totalTasks + " scheduled)");
 	}
-	
+
 	@Override
 	protected Composite createStatusComposite(Composite container) {
 
@@ -153,7 +153,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		
+
 		activeTaskLabel.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -165,40 +165,43 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
-//				TaskListView.getFromActivePerspective().selectedAndFocusTask(
-//						TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()
-//				);
-				TasksUiUtil.openEditor(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask(), false);
+				// TaskListView.getFromActivePerspective().selectedAndFocusTask(
+				// TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()
+				// );
+				// TasksUiUtil.openEditor(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask(),
+				// false);
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
+						.getActiveTask()));
 			}
 
 		});
 		return activeTaskLabel;
 	}
 
-    public void indicateActiveTask(ITask task) {
-    	String text = task.getSummary();
-    	activeTaskLabel.setText(text);
+	public void indicateActiveTask(ITask task) {
+		String text = task.getSummary();
+		activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(task.getSummary());
 		filterComposite.layout();
-    }
-    
-    public String getActiveTaskLabelText() {
-    	return activeTaskLabel.getText();
-    }
-    
-    public void indicateNoActiveTask() {
-    	activeTaskLabel.setText(LABEL_NO_ACTIVE);
+	}
+
+	public String getActiveTaskLabelText() {
+		return activeTaskLabel.getText();
+	}
+
+	public void indicateNoActiveTask() {
+		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText("");
 		filterComposite.layout();
-    }
-    
+	}
+
 	@Override
 	public void setFilterText(String string) {
-		if (filterText != null){
+		if (filterText != null) {
 			filterText.setText(string);
-			selectAll();		
+			selectAll();
 		}
 	}
 }
