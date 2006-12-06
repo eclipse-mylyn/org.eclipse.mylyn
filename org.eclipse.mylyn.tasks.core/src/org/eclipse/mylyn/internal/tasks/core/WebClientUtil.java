@@ -15,6 +15,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -115,6 +116,18 @@ public class WebClientUtil {
 		//System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
 
 
+		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings) && !WebClientUtil.repositoryUsesHttps(repositoryUrl) && proxySettings.address() instanceof InetSocketAddress) {
+			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
+			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());			
+			if (proxySettings instanceof AuthenticatedProxy) {
+				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
+				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
+						.getPassword());
+				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
+				client.getState().setProxyCredentials(proxyAuthScope, credentials);
+			}
+		}
+		
 		if (user != null && password != null) {
 			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil
 					.getPort(repositoryUrl), AuthScope.ANY_REALM);
