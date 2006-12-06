@@ -118,7 +118,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		
 		IResource resource = getResourceForElement(object);
 		if (resource != null) {
-			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, false);
+			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			if (repository != null) {
 				return new LinkedTaskInfo(repository.getUrl(), null, null, comment);
 			}
@@ -175,7 +175,9 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 						if (project.isAccessible()) {
 							ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
 							try {
-								if (cvsResource != null && path.startsWith(cvsResource.getRepositoryRelativePath())) {
+								String repositoryRelativePath = cvsResource.getRepositoryRelativePath();
+								if (cvsResource != null && repositoryRelativePath != null
+										&& path.startsWith(repositoryRelativePath)) {
 									return project;
 								}
 							} catch (CVSException ex) {
