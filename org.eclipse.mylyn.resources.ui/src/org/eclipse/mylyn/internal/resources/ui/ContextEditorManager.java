@@ -94,8 +94,8 @@ public class ContextEditorManager implements IMylarContextListener {
 			if (PlatformUI.getWorkbench().isClosing()) {
 				return;  
 			}
-			for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-				IWorkbenchPage page = w.getActivePage();
+			for(IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					IEditorReference[] references = page.getEditorReferences();
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
