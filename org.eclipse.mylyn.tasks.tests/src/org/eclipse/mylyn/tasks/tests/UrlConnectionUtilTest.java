@@ -29,6 +29,11 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals(321, WebClientUtil.getPort(url));
 		assertEquals("example.com", WebClientUtil.getDomain(url));
 		assertEquals("", WebClientUtil.getRequestPath(url));
+		
+		url = "example.com:321";
+		assertEquals(321, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("", WebClientUtil.getRequestPath(url));
 	}
 
 }

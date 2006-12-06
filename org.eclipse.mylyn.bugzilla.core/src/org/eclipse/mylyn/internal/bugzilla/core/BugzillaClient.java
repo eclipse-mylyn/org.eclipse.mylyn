@@ -239,7 +239,7 @@ public class BugzillaClient {
 			// requestPath = requestPath.substring(0,
 			// requestPath.indexOf(QUERY_DELIMITER));
 			// }
-			GetMethod getMethod = new GetMethod(requestURL);
+			GetMethod getMethod = new GetMethod(WebClientUtil.getRequestPath(requestURL));
 			if (requestURL.contains(QUERY_DELIMITER)) {
 				getMethod.setQueryString(requestURL.substring(requestURL.indexOf(QUERY_DELIMITER)));
 			}
@@ -336,11 +336,11 @@ public class BugzillaClient {
 		formData[0] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username);
 		formData[1] = new NameValuePair(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password);
 
-		PostMethod method = new PostMethod(repositoryUrl.toString() + IBugzillaConstants.URL_POST_LOGIN);
+		PostMethod method = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + IBugzillaConstants.URL_POST_LOGIN));
 
 		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		method.setRequestBody(formData);
-		method.setDoAuthentication(true);
+		method.setDoAuthentication(true);		
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 		method.setFollowRedirects(false);
@@ -588,7 +588,7 @@ public class BugzillaClient {
 		PostMethod postMethod = null;
 
 		try {
-			postMethod = new PostMethod(repositoryUrl.toString() + IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD);
+			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
 			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
@@ -650,7 +650,7 @@ public class BugzillaClient {
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
-		PostMethod postMethod = new PostMethod(repositoryUrl.toString() + formUrl);
+		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()+formUrl));
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);

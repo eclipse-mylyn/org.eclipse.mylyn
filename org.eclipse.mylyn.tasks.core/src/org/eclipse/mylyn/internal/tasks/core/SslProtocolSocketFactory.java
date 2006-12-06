@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.core;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -21,16 +22,27 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.ProxyClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
-/** 
+/**
  * @author Nathan Hapke
+ * @author Rob Elves
  */
 public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 
 	private SSLContext sslContext;
+
+	private Proxy proxy;
+
+	public SslProtocolSocketFactory(Proxy proxy) {
+		this.proxy = proxy;
+	}
 
 	private SSLContext getSslContext() {
 		if (sslContext == null) {
@@ -39,7 +51,7 @@ public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 				sslContext.init(null, new TrustManager[] { new RepositoryTrustManager() }, null);
 			} catch (Exception e) {
 				MylarStatusHandler.log(e, "could not get SSL context");
-			} 
+			}
 		}
 		return sslContext;
 	}
@@ -57,6 +69,33 @@ public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
 		if (params == null || params.getConnectionTimeout() == 0)
 			return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+
+		if (proxy != null && !Proxy.NO_PROXY.equals(proxy) && proxy.address() instanceof InetSocketAddress) {
+			ProxyClient proxyClient = new ProxyClient();
+
+			InetSocketAddress address = (InetSocketAddress) proxy.address();
+			proxyClient.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()),
+					address.getPort());
+			proxyClient.getHostConfiguration().setHost(remoteHost, remotePort);
+			if (proxy instanceof AuthenticatedProxy) {
+				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
+				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
+						.getPassword());
+				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
+				proxyClient.getState().setProxyCredentials(proxyAuthScope, credentials);
+			}
+
+			ProxyClient.ConnectResponse response = proxyClient.connect();
+			if (response.getSocket() != null) {
+				// tunnel SSL via the resultant socket
+				Socket sslsocket = getSslContext().getSocketFactory().createSocket(response.getSocket(), remoteHost,
+						remotePort, true);
+				return sslsocket;
+			} else {
+				MylarStatusHandler.log("Could not make proxy connection. Trying direct...", this);
+			}
+
+		}
 
 		Socket socket = getSslContext().getSocketFactory().createSocket();
 		socket.bind(new InetSocketAddress(clientHost, clientPort));
