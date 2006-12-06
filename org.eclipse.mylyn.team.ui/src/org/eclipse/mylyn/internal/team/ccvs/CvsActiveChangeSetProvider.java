@@ -27,36 +27,4 @@ public class CvsActiveChangeSetProvider extends AbstractActiveChangeSetProvider 
 	public ActiveChangeSetManager getActiveChangeSetManager() {
 		return CVSUIPlugin.getPlugin().getChangeSetManager();
 	}
-
-//	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
-	
-//	@Override
-//	public boolean hasOutgoingChanges(IResource[] resources) {
-//		try {
-//			CommitContextWizard wizard = new CommitContextWizard(resources, null);
-//			return wizard.hasOutgoingChanges();
-//		} catch (CVSException e) {
-//			return false;
-//		}
-//	}
-//
-//	@Override
-//	public void commit(IResource[] resources) {
-//		try {
-//			CommitContextWizard wizard = new CommitContextWizard(resources, null);
-//			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//			if (shell != null && !shell.isDisposed() && wizard.hasOutgoingChanges()) {
-//				wizard.loadSize();
-//				WizardDialog dialog = new WizardDialog(shell, wizard);
-//				dialog.setMinimumPageSize(wizard.loadSize());
-//				dialog.create();
-//				dialog.setTitle(WIZARD_LABEL);
-//				dialog.setBlockOnOpen(true);
-//				if (dialog.open() == Dialog.CANCEL) {
-//					dialog.close();
-//				}
-//			}
-//		} catch (CVSException e) {
-//		}
-//	}
 }
