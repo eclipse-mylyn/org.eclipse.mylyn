@@ -107,19 +107,27 @@ public class NewAttachmentWizard extends Wizard {
 			if (contents == null) {
 				// TODO Handle error
 			}
-
-			File file = new File(TasksUiPlugin.getDefault().getDataDirectory()
-					+ System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
+			// File file = new
+			// File(TasksUiPlugin.getDefault().getDefaultDataDirectory()
+			// + System.getProperty("file.separator").charAt(0) +
+			// "Clipboard-attachment");
+			File file = null;
 			try {
+				file = File.createTempFile("clipboard", ".txt");
 				FileWriter writer = new FileWriter(file);
 				writer.write(contents);
 				writer.flush();
 				writer.close();
 			} catch (IOException e) {
 				// TODO Handle error
+				return false;
 			}
-			path = file.getAbsolutePath();
-			attachment.setDeleteAfterUpload(true);
+			if (file != null) {
+				path = file.getAbsolutePath();
+				attachment.setDeleteAfterUpload(true);
+			} else {
+				return false;
+			}
 		}
 		attachment.setFilePath(path);
 
@@ -143,8 +151,8 @@ public class NewAttachmentWizard extends Wizard {
 		Job submitJob = new Job("Submitting attachment") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-						.getRepositoryConnector(repository.getKind());
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						repository.getKind());
 				try {
 					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
 							.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(),
@@ -159,8 +167,10 @@ public class NewAttachmentWizard extends Wizard {
 
 					if (attachContext) {
 						connector.attachContext(repository, task, "");
-						// attachContext sets outgoing state but we want to recieve incoming
-						// on synchronization. This could result in lost edits so need to 
+						// attachContext sets outgoing state but we want to
+						// recieve incoming
+						// on synchronization. This could result in lost edits
+						// so need to
 						// review the whole attachment interaction.
 						task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 					}
@@ -181,7 +191,7 @@ public class NewAttachmentWizard extends Wizard {
 						});
 					}
 				}
-				
+
 				TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, false, new JobChangeAdapter() {
 					@Override
 					public void done(final IJobChangeEvent event) {
