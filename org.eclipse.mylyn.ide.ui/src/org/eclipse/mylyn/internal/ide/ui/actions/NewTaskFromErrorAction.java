@@ -19,11 +19,11 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -75,7 +75,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 					+ ((selection.getStack() == null) ? "no stack trace available" : selection.getStack());
 
 			try {
-				MylarTaskEditor taskEditor = (MylarTaskEditor)page.getActiveEditor();			
+				TaskEditor taskEditor = (TaskEditor)page.getActiveEditor();			
 				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();				
 			} catch (ClassCastException e) {
 				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
@@ -84,7 +84,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 				MessageDialog
 						.openInformation(
 								page.getWorkbenchWindow().getShell(),
-								TasksUiPlugin.TITLE_DIALOG,
+								ITasksUiConstants.TITLE_DIALOG,
 								"This connector does not provide a rich task editor for creating tasks.\n\n"
 								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
 				return;

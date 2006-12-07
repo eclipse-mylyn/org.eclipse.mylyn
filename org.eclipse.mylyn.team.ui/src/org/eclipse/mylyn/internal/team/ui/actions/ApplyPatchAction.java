@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;
@@ -45,7 +46,7 @@ public class ApplyPatchAction implements IViewActionDelegate {
 				if (contents == null) {
 					MessageDialog
 							.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									TasksUiPlugin.TITLE_DIALOG,
+									ITasksUiConstants.TITLE_DIALOG,
 									"Patch could not be retrieved. Please try re-synchronizing task in order to apply the patch.");
 				} else {
 					// TODO: shouldn't need to do this

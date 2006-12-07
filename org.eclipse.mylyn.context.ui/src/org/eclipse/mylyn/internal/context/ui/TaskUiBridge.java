@@ -18,7 +18,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -44,7 +44,7 @@ public class TaskUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public boolean acceptsEditor(IEditorPart editorPart) {
-		return editorPart instanceof MylarTaskEditor;
+		return editorPart instanceof TaskEditor;
 	}
 
 	@Override

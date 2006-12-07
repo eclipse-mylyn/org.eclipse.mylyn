@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -58,7 +59,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 //		}
 		if (task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, "Task must be synchronized before attaching context");
+					ITasksUiConstants.TITLE_DIALOG, "Task must be synchronized before attaching context");
 			return;
 		}
 

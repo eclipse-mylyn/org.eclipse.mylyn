@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -43,7 +44,7 @@ public class ContextCopyAction extends TaskContextAction {
 		
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, "No source task selected.");
+					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
 		}
 
 		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -79,10 +80,10 @@ public class ContextCopyAction extends TaskContextAction {
 
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TasksUiPlugin.TITLE_DIALOG, "Target task can not be the same as source task.");				
+						ITasksUiConstants.TITLE_DIALOG, "Target task can not be the same as source task.");				
 			} else if (!contextFile.exists()) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TasksUiPlugin.TITLE_DIALOG, "Source task does not have a context.");
+						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
 				ContextCorePlugin.getContextManager().transferContextAndActivate(targetTask.getHandleIdentifier(),
 						contextFile);
@@ -94,7 +95,7 @@ public class ContextCopyAction extends TaskContextAction {
 			}
 		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, "No target task selected.");
+					ITasksUiConstants.TITLE_DIALOG, "No target task selected.");
 		}
 	}
 }
