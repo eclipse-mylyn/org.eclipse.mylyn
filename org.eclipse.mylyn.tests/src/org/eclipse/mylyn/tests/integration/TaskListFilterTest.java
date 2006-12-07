@@ -66,15 +66,15 @@ public class TaskListFilterTest extends TestCase {
 		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getRootCategory());
 		
 		taskOverdue = new Task("overdue-3", "t-overdue", true);
-		taskOverdue.setReminderDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
+		taskOverdue.setScheduledForDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getRootCategory());
 		
 		taskDueToday = new Task("today-4", "t-today", true);
-		taskDueToday.setReminderDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
+		taskDueToday.setScheduledForDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
 		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getRootCategory());
 		
 		taskCompletedToday = new Task("donetoday-5", "t-donetoday", true);
-		taskCompletedToday.setReminderDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
+		taskCompletedToday.setScheduledForDate(manager.setScheduledToday(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
 		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getRootCategory());
 	}
