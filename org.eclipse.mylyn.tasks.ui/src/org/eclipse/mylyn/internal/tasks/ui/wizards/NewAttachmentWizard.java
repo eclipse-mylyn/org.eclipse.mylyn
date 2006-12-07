@@ -108,7 +108,7 @@ public class NewAttachmentWizard extends Wizard {
 				// TODO Handle error
 			}
 
-			File file = new File(TasksUiPlugin.getDefault().getDefaultDataDirectory()
+			File file = new File(TasksUiPlugin.getDefault().getDataDirectory()
 					+ System.getProperty("file.separator").charAt(0) + "Clipboard-attachment");
 			try {
 				FileWriter writer = new FileWriter(file);
