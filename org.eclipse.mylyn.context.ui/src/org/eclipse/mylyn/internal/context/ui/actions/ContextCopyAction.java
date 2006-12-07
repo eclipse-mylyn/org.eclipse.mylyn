@@ -17,8 +17,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskSelectionDialog;
@@ -26,33 +24,23 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
  */
-public class CopyContextToAction implements IViewActionDelegate {
+public class ContextCopyAction extends TaskContextAction {
 
 	private static final String OPEN_TASK_ACTION_DIALOG_SETTINGS = "open.task.action.dialog.settings";
-
-	private ISelection selection;
 
 	public void init(IViewPart view) {
 		// ignore
 	}
 
 	public void run(IAction action) {
-		ITask sourceTask = null;
-		if (selection instanceof StructuredSelection) {
-			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
-			if (selectedObject instanceof ITask) {
-				sourceTask = (ITask) selectedObject;
-			} else if (selectedObject instanceof AbstractQueryHit) {
-				sourceTask = ((AbstractQueryHit) selectedObject).getCorrespondingTask();
-			}
-		}
+		ITask sourceTask = getSelectedTask(selection);
+		
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					TasksUiPlugin.TITLE_DIALOG, "No source task selected.");
@@ -88,7 +76,11 @@ public class CopyContextToAction implements IViewActionDelegate {
 			TasksUiPlugin.getTaskListManager().deactivateAllTasks();
 			File contextFile = ContextCorePlugin.getContextManager()
 					.getFileForContext(sourceTask.getHandleIdentifier());
-			if (!contextFile.exists()) {
+
+			if (targetTask.equals(sourceTask)) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						TasksUiPlugin.TITLE_DIALOG, "Target task can not be the same as source task.");				
+			} else if (!contextFile.exists()) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						TasksUiPlugin.TITLE_DIALOG, "Source task does not have a context.");
 			} else {
@@ -105,9 +97,4 @@ public class CopyContextToAction implements IViewActionDelegate {
 					TasksUiPlugin.TITLE_DIALOG, "No target task selected.");
 		}
 	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
-	}
-
 }

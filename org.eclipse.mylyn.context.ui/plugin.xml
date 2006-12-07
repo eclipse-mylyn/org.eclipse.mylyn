@@ -102,7 +102,7 @@
               tooltip="Clear Context">
         </action>
   <action
-        class="org.eclipse.mylar.internal.context.ui.actions.CopyContextToAction"
+        class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
         icon="icons/elcl16/context-transfer.gif"
         id="org.eclipse.mylar.context.ui.action.copy.context.to"
         label="Copy Context to..."
@@ -162,7 +162,7 @@
               tooltip="Clear Context">
         </action>
           <action
-        class="org.eclipse.mylar.internal.context.ui.actions.CopyContextToAction"
+        class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
         icon="icons/elcl16/context-transfer.gif"
         id="org.eclipse.mylar.context.ui.action.copy.context.to"
         label="Copy Context to..."
