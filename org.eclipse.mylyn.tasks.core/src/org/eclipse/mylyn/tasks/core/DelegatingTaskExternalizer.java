@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -110,7 +111,16 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_SYNC_STATE = "offlineSyncState";
 
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
-
+	
+	/**
+	 * Only needed by delegating externalizer, not subtypes
+	 */
+	private TaskDataManager taskDataManager;
+	
+	public void init(TaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
+	}
+	
 	/**
 	 * Set these on the TaskListWriter instead
 	 */
@@ -428,10 +438,15 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 	}
 
-	// TODO pull up implementation from BugzillaTaskExternalizer and TracTaskExternalizer
 	protected void readTaskData(AbstractRepositoryTask task) {
+		RepositoryTaskData data = taskDataManager.getTaskData(task.getHandleIdentifier());		
+//		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(task.getHandleIdentifier());		
+		task.setTaskData(data);
+		if (data != null && data.hasLocalChanges()) {
+			task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+		}
 	}
-
+	
 	protected Date getDateFromString(String dateString) {
 		Date date = null;
 		if ("".equals(dateString))

@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -38,6 +37,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
 
 /**
  * @author Mik Kersten
@@ -342,7 +342,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	 * @throws KeyManagementException
 	 * @throws BugzillaException
 	 */
-	public static void setupNewBugAttributes(TaskRepository taskRepository, NewBugzillaReport newReport)
+	public static void setupNewBugAttributes(TaskRepository taskRepository, NewBugzillaTaskData newReport)
 			throws CoreException {
 
 		newReport.removeAllAttributes();
@@ -531,7 +531,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	// * and move TaskRepositoryManager
 	// */
 	// public void setupNewBugAttributes(TaskRepository taskRepository,
-	// NewBugzillaReport newReport) throws CoreException {
+	// NewBugzillaTaskData newReport) throws CoreException {
 	//
 	// newReport.removeAllAttributes();
 	//

@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -64,7 +65,7 @@ public class ContextAttachWizard extends Wizard {
 		try {
 			if (!connector.attachContext(repository, task, wizardPage.getComment())) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						TasksUiPlugin.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+						ITasksUiConstants.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
 				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
@@ -77,7 +78,7 @@ public class ContextAttachWizard extends Wizard {
 			}
 		} catch (final CoreException e) {			
 			String message = e.getStatus().getMessage() != null ? e.getStatus().getMessage() : "";
-			MessageDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED. \n\n"+message);
+			MessageDialog.openError(null, ITasksUiConstants.TITLE_DIALOG, "Attachment of task context FAILED. \n\n"+message);
 			MylarStatusHandler.log(e.getStatus());			
 			//ErrorDialog.openError(null, TasksUiPlugin.TITLE_DIALOG, "Attachment of task context FAILED.", e.getStatus());
 			return false;

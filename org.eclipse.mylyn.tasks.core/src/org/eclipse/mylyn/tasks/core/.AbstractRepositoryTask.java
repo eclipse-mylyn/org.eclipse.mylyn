@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
 
 /**
  * Virtual proxy for a repository task.

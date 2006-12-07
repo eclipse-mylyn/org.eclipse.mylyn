@@ -299,11 +299,11 @@ public class TaskList {
 	}
 
 	public Set<ITask> getRootTasks() {
-		return rootCategory.getChildren();
+		return Collections.unmodifiableSet(rootCategory.getChildren());
 	}
 
 	public Set<AbstractTaskContainer> getCategories() {
-		return categories;
+		return Collections.unmodifiableSet(categories);
 	}
 
 	public List<AbstractTaskContainer> getUserCategories() {
@@ -317,7 +317,7 @@ public class TaskList {
 	}
 
 	public Set<AbstractRepositoryQuery> getQueries() {
-		return queries;
+		return Collections.unmodifiableSet(queries);
 	}
 
 	public Set<ITaskListElement> getRootElements() {

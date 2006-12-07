@@ -48,7 +48,7 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadCategory(Node node);
 
-	public abstract void readCategory(Node node, TaskList tlist) throws TaskExternalizationException;
+	public abstract void readCategory(Node node, TaskList taskList) throws TaskExternalizationException;
 
 	public abstract boolean canReadTask(Node node);
 

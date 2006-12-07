@@ -24,8 +24,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -36,6 +36,7 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -83,7 +84,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 			if (targetTask != null) {
 				final String[] names = (String[]) data;
-				boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(), TasksUiPlugin.TITLE_DIALOG, 
+				boolean confirmed = MessageDialog.openConfirm(getViewer().getControl().getShell(), ITasksUiConstants.TITLE_DIALOG, 
 						"Overwrite the context of the target task with the source's?");
 				if (confirmed) {
 					String path = names[0];

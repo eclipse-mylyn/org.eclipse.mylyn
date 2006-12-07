@@ -165,7 +165,7 @@
   	<extension
         point="org.eclipse.ui.editors">
      <editor
-           class="org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor"
+           class="org.eclipse.mylar.tasks.ui.editors.TaskEditor"
            contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
            icon="icons/etool16/task.gif"
            id="org.eclipse.mylar.tasklist.ui.taskEditor"
@@ -646,7 +646,7 @@
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
             class="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResultView"
-            searchResultClass="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult"
+            searchResultClass="org.eclipse.mylar.tasks.ui.search.RepositorySearchResult"
             id="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResultView"/>
 <!--            id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>-->
    </extension>

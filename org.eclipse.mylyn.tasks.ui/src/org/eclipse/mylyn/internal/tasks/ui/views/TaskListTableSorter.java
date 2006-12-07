@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -21,7 +22,6 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -45,7 +45,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		this.column = column;
 		if (view.isFocusedMode()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-					TasksUiPlugin.TITLE_DIALOG, 
+					ITasksUiConstants.TITLE_DIALOG, 
 					"Manual sorting is disabled in focused mode, sort order will not take effect until focused mode is disabled.");
 		}
 	}

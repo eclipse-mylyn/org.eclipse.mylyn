@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.tasks.ui.search;
 
+import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 

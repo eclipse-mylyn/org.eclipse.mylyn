@@ -45,8 +45,6 @@ public class TaskRepositoriesView extends ViewPart {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.repositories";
 
-	public static final String NAME = "Task Repositories View";
-
 	private TableViewer viewer;
 
 	private Action addRepositoryAction = new AddRepositoryAction();

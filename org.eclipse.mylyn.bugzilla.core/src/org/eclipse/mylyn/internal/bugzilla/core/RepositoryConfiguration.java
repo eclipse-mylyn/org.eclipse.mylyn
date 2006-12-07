@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Class describing the configuration of products and components for a given
  * Bugzilla installation.

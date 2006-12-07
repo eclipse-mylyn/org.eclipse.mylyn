@@ -18,9 +18,9 @@ import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.tasks.core.HtmlTag;
-import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.web.HtmlTag;
+import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer.Token;
 
 /**
  * Parses Bugzilla keywords page to determine keywords valid in this

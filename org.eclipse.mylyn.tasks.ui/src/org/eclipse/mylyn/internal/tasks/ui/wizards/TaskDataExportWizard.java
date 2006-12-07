@@ -24,6 +24,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -120,7 +121,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 			return false;
 		}
 
-		final File destTaskListFile = new File(destDir + File.separator + TasksUiPlugin.DEFAULT_TASK_LIST_FILE);
+		final File destTaskListFile = new File(destDir + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 		final File destActivationHistoryFile = new File(destDir + File.separator
 				+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
 		final File destZipFile = new File(destDir + File.separator + getZipFileName());

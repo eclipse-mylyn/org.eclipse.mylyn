@@ -18,6 +18,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 
 /**
@@ -60,8 +61,8 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 	}
 
 	public boolean migrateTaskList(IProgressMonitor monitor) {
-		File oldTasklistFile = new File(dataDirectory, TasksUiPlugin.OLD_TASK_LIST_FILE);
-		File newTasklistFile = new File(dataDirectory, TasksUiPlugin.DEFAULT_TASK_LIST_FILE);
+		File oldTasklistFile = new File(dataDirectory, ITasksUiConstants.OLD_TASK_LIST_FILE);
+		File newTasklistFile = new File(dataDirectory, ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 		if (!oldTasklistFile.exists())
 			return false;
 		if (newTasklistFile.exists()) {

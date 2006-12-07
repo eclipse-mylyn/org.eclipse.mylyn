@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
@@ -113,11 +114,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 							MessageDialog
 									.openInformation(
 											PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-											TasksUiPlugin.TITLE_DIALOG,
+											ITasksUiConstants.TITLE_DIALOG,
 											"If task list is blank, Mylar Task List may have failed to initialize.\n\n"
 													+ "First, try restarting to see if that corrects the problem.\n\n"
 													+ "Then, check the Error Log view for messages, and the FAQ for solutions.\n\n"
-													+ TasksUiPlugin.URL_HOMEPAGE);
+													+ ITasksUiConstants.URL_HOMEPAGE);
 						}
 					}
 				});

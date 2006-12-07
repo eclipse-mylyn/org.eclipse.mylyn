@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
-import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
+import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

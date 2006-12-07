@@ -28,15 +28,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,7 +55,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
-	private static final String DESCRIPTION = "Add new repositories using the " + TaskRepositoriesView.NAME
+	private static final String DESCRIPTION = "Add new repositories using the " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 			+ " view.\n" + "If a repository is missing it does not support the requested operation.";
 
 	private static final String TITLE = "Select a repository";

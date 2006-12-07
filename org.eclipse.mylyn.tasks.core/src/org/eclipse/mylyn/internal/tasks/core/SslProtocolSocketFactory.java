@@ -29,6 +29,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.tasks.core.web.WebClientUtil;
 
 /**
  * @author Nathan Hapke

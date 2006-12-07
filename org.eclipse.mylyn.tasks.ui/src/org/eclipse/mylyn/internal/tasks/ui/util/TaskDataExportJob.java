@@ -30,6 +30,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -137,11 +138,11 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			TasksUiPlugin.getTaskListManager().saveTaskList();
 
 			String sourceTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-					+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE;
+					+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
 				File destTaskListFile = new File(destinationDirectory + File.separator
-						+ TasksUiPlugin.DEFAULT_TASK_LIST_FILE);				
+						+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE);				
 
 				if (zip) {
 					filesToZip.add(sourceTaskListFile);

@@ -23,13 +23,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -103,7 +103,7 @@ public class TasksUiExtensionReader {
 
 	private static boolean coreExtensionsRead = false;
 
-	public static void initStartupExtensions(TaskListWriter writer) {
+	public static void initStartupExtensions(TaskListWriter delegatingExternalizer) {
 		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -156,7 +156,7 @@ public class TasksUiExtensionReader {
 					}
 				}
 			}
-			writer.setDelegateExternalizers(externalizers);
+			delegatingExternalizer.setDelegateExternalizers(externalizers);
 			coreExtensionsRead = true;
 		}
 	}

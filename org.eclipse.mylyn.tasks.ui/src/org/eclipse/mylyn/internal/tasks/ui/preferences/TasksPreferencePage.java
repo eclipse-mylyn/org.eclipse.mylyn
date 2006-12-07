@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -200,13 +201,13 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 			if (taskDataDirectoryAction != CANCEL) {
 				taskDirectoryText.setText(taskDirectory);				
 				backupFolderText.setText(taskDirectory + FORWARDSLASH
-						+ TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+						+ ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 				backupNow.setEnabled(false);
 			}
 		} else {
 			taskDirectoryText.setText(taskDirectory);				
 			backupFolderText.setText(taskDirectory + FORWARDSLASH
-					+ TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+					+ ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 			backupNow.setEnabled(true);
 		}
 
@@ -382,7 +383,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 				if (taskDataDirectoryAction != CANCEL) {
 					taskDirectoryText.setText(dir);
-					backupFolderText.setText(dir + FORWARDSLASH + TasksUiPlugin.DEFAULT_BACKUP_FOLDER_NAME);
+					backupFolderText.setText(dir + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 					backupNow.setEnabled(false);
 				}
 			}
@@ -577,7 +578,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		File newDataFolder = new File(dir);
 		if (newDataFolder.exists()) {
 			for (String filename : newDataFolder.list()) {
-				if (filename.equals(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
+				if (filename.equals(ITasksUiConstants.DEFAULT_TASK_LIST_FILE)) {
 
 					MessageDialog dialogConfirm = new MessageDialog(
 							null,

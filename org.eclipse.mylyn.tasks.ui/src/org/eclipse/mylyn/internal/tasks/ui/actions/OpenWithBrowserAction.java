@@ -13,10 +13,10 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.Iterator;
 
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**

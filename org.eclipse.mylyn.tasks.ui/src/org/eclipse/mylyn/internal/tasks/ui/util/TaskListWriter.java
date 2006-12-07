@@ -37,6 +37,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
@@ -44,7 +46,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -71,7 +72,7 @@ public class TaskListWriter {
 
 	private List<ITaskListExternalizer> externalizers;
 
-	private DelegatingTaskExternalizer delagatingExternalizer = new DelegatingTaskExternalizer();
+	private DelegatingTaskExternalizer delagatingExternalizer;
 
 	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
 
@@ -79,6 +80,15 @@ public class TaskListWriter {
 
 	private boolean hasCaughtException = false;
 
+	public TaskListWriter() {
+		this.delagatingExternalizer = new DelegatingTaskExternalizer();
+	}
+	
+
+	public void setTaskDataManager(TaskDataManager taskDataManager) {
+		delagatingExternalizer.init(taskDataManager);
+	}
+	
 	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.externalizers = externalizers;
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
@@ -172,7 +182,7 @@ public class TaskListWriter {
 	private void writeDOMtoFile(Document doc, File file) {
 		try {
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(TasksUiPlugin.OLD_TASK_LIST_FILE);
+			ZipEntry zipEntry = new ZipEntry(ITasksUiConstants.OLD_TASK_LIST_FILE);
 			outputStream.putNextEntry(zipEntry);
 			outputStream.setMethod(ZipOutputStream.DEFLATED);
 			// OutputStream outputStream = new FileOutputStream(file);
@@ -224,7 +234,7 @@ public class TaskListWriter {
 	/**
 	 * TODO: fix this old mess
 	 */
-	public void readTaskList(TaskList taskList, File inFile) {
+	public void readTaskList(TaskList taskList, File inFile, TaskDataManager taskDataManager) {
 		hasCaughtException = false;
 		orphanedTaskNodes.clear();
 		try {
@@ -364,7 +374,7 @@ public class TaskListWriter {
 			// Parse the content of the given file as an XML document
 			// and return a new DOM Document object. Also throws IOException
 			InputStream inputStream = null;
-			if (inputFile.getName().endsWith(TasksUiPlugin.DEFAULT_TASK_LIST_FILE)) {
+			if (inputFile.getName().endsWith(ITasksUiConstants.DEFAULT_TASK_LIST_FILE)) {
 				// is zipped context
 				inputStream = new ZipInputStream(new FileInputStream(inputFile));
 				((ZipInputStream) inputStream).getNextEntry();
@@ -415,7 +425,7 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			MylarStatusHandler.log(e, TasksUiPlugin.MESSAGE_RESTORE);
+			MylarStatusHandler.log(e, ITasksUiConstants.MESSAGE_RESTORE);
 		} else {
 			MylarStatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}

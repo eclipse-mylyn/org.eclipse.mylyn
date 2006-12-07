@@ -51,17 +51,17 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer;
-import org.eclipse.mylar.internal.tasks.core.HtmlTag;
-import org.eclipse.mylar.internal.tasks.core.UnrecognizedReponseException;
-import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
-import org.eclipse.mylar.internal.tasks.core.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
+import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
+import org.eclipse.mylar.tasks.core.web.HtmlTag;
+import org.eclipse.mylar.tasks.core.web.WebClientUtil;
+import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten
@@ -1012,7 +1012,7 @@ public class BugzillaClient {
 // */
 // public static void setupNewBugAttributes(String repositoryUrl, Proxy
 // proxySettings, String userName,
-// String password, NewBugzillaReport newReport, String characterEncoding)
+// String password, NewBugzillaTaskData newReport, String characterEncoding)
 // throws IOException,
 // KeyManagementException, GeneralSecurityException,
 // NoSuchAlgorithmException, BugzillaException {

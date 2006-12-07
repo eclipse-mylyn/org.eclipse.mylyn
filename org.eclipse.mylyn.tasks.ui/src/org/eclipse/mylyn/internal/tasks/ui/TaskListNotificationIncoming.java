@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 

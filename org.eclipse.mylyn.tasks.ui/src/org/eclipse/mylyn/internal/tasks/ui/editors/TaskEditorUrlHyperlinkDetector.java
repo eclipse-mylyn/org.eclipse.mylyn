@@ -21,7 +21,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 
 /**
  * @author Rob Elves

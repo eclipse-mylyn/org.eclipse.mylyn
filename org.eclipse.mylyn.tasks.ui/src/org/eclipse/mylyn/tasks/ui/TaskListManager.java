@@ -566,7 +566,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
-				taskListWriter.readTaskList(taskList, taskListFile);
+				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getDefault().getTaskDataManager());
 			} else {
 				resetTaskList();
 			}

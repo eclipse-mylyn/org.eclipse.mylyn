@@ -23,7 +23,6 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -33,7 +32,11 @@ import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -119,7 +122,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Button getDescButton;
 
-	private MylarTaskEditor parentEditor = null;
+	private TaskEditor parentEditor = null;
 
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
@@ -927,7 +930,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(container);
 	}
 
-	public void setParentEditor(MylarTaskEditor parentEditor) {
+	public void setParentEditor(TaskEditor parentEditor) {
 		this.parentEditor = parentEditor;
 	}
 

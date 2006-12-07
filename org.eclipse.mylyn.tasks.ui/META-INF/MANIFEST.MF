@@ -23,13 +23,18 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.internal.tasks.ui,
- org.eclipse.mylar.internal.tasks.ui.search,
  org.eclipse.mylar.internal.tasks.ui.actions,
+ org.eclipse.mylar.internal.tasks.ui.commands,
  org.eclipse.mylar.internal.tasks.ui.editors,
  org.eclipse.mylar.internal.tasks.ui.planner,
  org.eclipse.mylar.internal.tasks.ui.preferences,
+ org.eclipse.mylar.internal.tasks.ui.search,
  org.eclipse.mylar.internal.tasks.ui.util,
  org.eclipse.mylar.internal.tasks.ui.views,
  org.eclipse.mylar.internal.tasks.ui.wizards,
- org.eclipse.mylar.tasks.ui
+ org.eclipse.mylar.tasks.ui,
+ org.eclipse.mylar.tasks.ui.editors,
+ org.eclipse.mylar.tasks.ui.properties,
+ org.eclipse.mylar.tasks.ui.search,
+ org.eclipse.mylar.tasks.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -40,13 +40,12 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarPreferenceContstants;
-import org.eclipse.mylar.internal.tasks.core.WebClientUtil;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylar.internal.tasks.ui.ITaskListNotificationProvider;
-import org.eclipse.mylar.internal.tasks.ui.TaskDataManager;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationIncoming;
@@ -65,15 +64,19 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
+import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.core.web.WebClientUtil;
+import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
@@ -93,22 +96,10 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
-	// TODO: move constants
-	
-	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
-
-	public static final String FILE_EXTENSION = ".xml.zip";
-
-	public static final String OLD_TASK_LIST_FILE = "tasklist.xml";
-
-	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
-
-	public static final String TITLE_DIALOG = "Mylar Information";
+	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
-
-	public static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
-
+	
 	private static final String PROPERTY_PREFIX = "project.repository";
 
 	private static final String PROJECT_REPOSITORY_KIND = PROPERTY_PREFIX + ".kind";
@@ -120,8 +111,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
 
 	private static final int NOTIFICATION_DELAY = 5000;
-
-	public static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylar Task Data";
 
 	private static TasksUiPlugin INSTANCE;
 
@@ -160,7 +149,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
 	private boolean eclipse_3_3_workbench = false;
-	
+
 	public enum TaskListSaveMode {
 		ONE_HOUR, THREE_HOURS, DAY;
 		@Override
@@ -385,20 +374,27 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
 			migrateContextStoreFrom06Format(false);
-			String path = getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE;
+			String path = getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
 
 			File taskListFile = new File(path);
 			taskListManager = new TaskListManager(taskListWriter, taskListFile);
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
-			
+
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
+
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
-			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
-			
 			readOfflineReports();
-			
+			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
+				if (externalizer instanceof DelegatingTaskExternalizer) {
+					((DelegatingTaskExternalizer) externalizer).init(offlineTaskManager);
+				}
+			}
+			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+
+			taskListWriter.setTaskDataManager(offlineTaskManager);
+
 			taskListManager.init();
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
@@ -415,7 +411,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
 						}
 						taskListManager.initActivityHistory();
-						
+
 						taskListNotificationManager = new TaskListNotificationManager();
 						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
@@ -437,8 +433,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						getPreferenceStore().addPropertyChangeListener(PROPERTY_LISTENER);
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
-					
-						// XXX: get rid of this, hack to make decorators show up on startup
+
+						// XXX: get rid of this, hack to make decorators show up
+						// on startup
 						TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
 						if (repositoriesView != null) {
 							repositoriesView.getViewer().refresh();
@@ -448,7 +445,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			});
-			
+
 			Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
 			if (bundle.getLocation().contains("_3.3.")) {
 				eclipse_3_3_workbench = true;
@@ -458,7 +455,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
 		}
 	}
-
+ 
 	/**
 	 * Will run with every startup in case somebody copies over an old data
 	 * directory. Called upon import. Called upon change of task data directory
@@ -518,9 +515,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public void setDataDirectory(String newPath) {
-		getTaskListManager().saveTaskList(); 
-//		getTaskListSaveManager().saveTaskList(true);
-//		taskListSaveManager.saveTaskList(true, false);
+		getTaskListManager().saveTaskList();
+		// getTaskListSaveManager().saveTaskList(true);
+		// taskListSaveManager.saveTaskList(true, false);
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
@@ -537,11 +534,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		getTaskListManager().getTaskActivationHistory().clear();
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
-		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + DEFAULT_TASK_LIST_FILE));
+		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().parseTaskActivityInteractionHistory();
 	}
- 
+
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
@@ -595,14 +592,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return INSTANCE;
 	}
 
-//	private void checkTaskListBackup() {
-//		Date currentTime = new Date();
-//		if (currentTime.getTime() > lastBackup.getTime() + AUTOMATIC_BACKUP_SAVE_INTERVAL) {// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
-//			// {
-//			TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
-//			lastBackup = new Date();
-//		}
-//	}
+	// private void checkTaskListBackup() {
+	// Date currentTime = new Date();
+	// if (currentTime.getTime() > lastBackup.getTime() +
+	// AUTOMATIC_BACKUP_SAVE_INTERVAL) {//
+	// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
+	// // {
+	// TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
+	// lastBackup = new Date();
+	// }
+	// }
 
 	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
@@ -630,7 +629,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public String getBackupFolderPath() {
-		return getDataDirectory() + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME;
+		return getDataDirectory() + DEFAULT_PATH_SEPARATOR + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME;
 	}
 
 	public ITaskHighlighter getHighlighter() {
@@ -650,12 +649,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			this.taskEditors.add(contextEditor);
 	}
 
-//	/**
-//	 * Public for testing.
-//	 */
-//	public TaskListSaveManager getTaskListSaveManager() {
-//		return taskListSaveManager;
-//	}
+	// /**
+	// * Public for testing.
+	// */
+	// public TaskListSaveManager getTaskListSaveManager() {
+	// return taskListSaveManager;
+	// }
 
 	public boolean isShellActive() {
 		return TasksUiPlugin.shellActive;
@@ -703,16 +702,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), true);
+			offlineTaskManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), true);
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t,
+			MylarStatusHandler
+					.log(t,
 							"Could not restore offline repository tasks file, creating new one, likely cause is format update.");
 			boolean deleted = offlineReportsPath.toFile().delete();
 			if (!deleted) {
 				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
 			}
 			try {
-				offlineTaskManager = new TaskDataManager(offlineReportsPath.toFile(), false);
+				offlineTaskManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
 			}
@@ -720,8 +720,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * Returns the path to the file caching the offline bug reports.
-	 * PUBLIC FOR TESTING
+	 * Returns the path to the file caching the offline bug reports. PUBLIC FOR
+	 * TESTING
 	 */
 	public IPath getOfflineReportsFilePath() {
 		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
@@ -822,5 +822,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	 */
 	public TaskListSaveManager getTaskListSaveManager() {
 		return taskListSaveManager;
+	}
+
+	public String getNextNewRepositoryTaskId() {
+		return getTaskDataManager().getNewRepositoryTaskId();
 	}
 }

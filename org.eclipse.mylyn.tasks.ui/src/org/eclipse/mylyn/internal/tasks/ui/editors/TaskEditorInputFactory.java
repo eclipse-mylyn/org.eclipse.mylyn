@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.editors;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
 

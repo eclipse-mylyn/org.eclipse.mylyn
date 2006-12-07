@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
 
 /**
  * @author Rob Elves (moved into task.ui)

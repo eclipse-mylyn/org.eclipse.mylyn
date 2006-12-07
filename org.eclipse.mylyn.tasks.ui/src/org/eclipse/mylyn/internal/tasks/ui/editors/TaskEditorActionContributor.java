@@ -34,6 +34,9 @@ import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
@@ -56,7 +59,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private SubActionBars sourceActionBars;
 
-	private MylarTaskEditor editor;
+	private TaskEditor editor;
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
@@ -257,7 +260,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	}
 
-	public MylarTaskEditor getEditor() {
+	public TaskEditor getEditor() {
 		return editor;
 	}
 
@@ -267,8 +270,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	@Override
 	public void setActiveEditor(IEditorPart targetEditor) {
-		if (targetEditor instanceof MylarTaskEditor) {
-			editor = (MylarTaskEditor) targetEditor;
+		if (targetEditor instanceof TaskEditor) {
+			editor = (TaskEditor) targetEditor;
 			updateSelectableActions(editor.getSelection());
 		}
 	}

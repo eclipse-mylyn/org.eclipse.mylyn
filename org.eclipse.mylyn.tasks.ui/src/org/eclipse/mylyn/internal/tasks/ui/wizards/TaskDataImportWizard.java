@@ -35,6 +35,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -138,7 +139,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 						// ignore directories (shouldn't be any)
 						continue;
 					}
-					if (!importPage.importTaskList() && entry.getName().endsWith(TasksUiPlugin.OLD_TASK_LIST_FILE)) {
+					if (!importPage.importTaskList() && entry.getName().endsWith(ITasksUiConstants.OLD_TASK_LIST_FILE)) {
 						continue;
 					}
 
@@ -185,7 +186,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 
 			// make sure selected files for import are there
-			sourceTaskListFile = new File(sourceDir + File.separator + TasksUiPlugin.OLD_TASK_LIST_FILE);
+			sourceTaskListFile = new File(sourceDir + File.separator + ITasksUiConstants.OLD_TASK_LIST_FILE);
 			sourceRepositoriesFile = new File(sourceDir + File.separator + TaskRepositoryManager.OLD_REPOSITORIES_FILE);
 			sourceActivationHistoryFile = new File(sourceDir + File.separator
 					+ MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
@@ -349,7 +350,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 			if (importTaskList) {
 				String destTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ TasksUiPlugin.OLD_TASK_LIST_FILE;
+						+ ITasksUiConstants.OLD_TASK_LIST_FILE;
 				File destTaskListFile = new File(destTaskListPath);
 
 				if (destTaskListFile.exists()) {
