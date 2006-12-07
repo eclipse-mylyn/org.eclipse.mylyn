@@ -72,12 +72,15 @@ public class TaskRepository {
 
 	public static final String PROXY_PASSWORD = "org.eclipse.mylar.tasklist.repositories.proxy.password";
 
-	// HACK: Lock used to work around race condition in Platform.add/get/flushAuthorizationInfo()  
+	// HACK: Lock used to work around race condition in
+	// Platform.add/get/flushAuthorizationInfo()
 	private static final Object LOCK = new Object();
-	
-	
+
+	// HACK: private credentials for headless operation
+	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
+
 	private String cachedUserName = null;
-	
+
 	static {
 		URL url = null;
 		try {
@@ -123,9 +126,9 @@ public class TaskRepository {
 		return properties.get(IRepositoryConstants.PROPERTY_URL);
 	}
 
-//	private String getProxyHostname() {
-//		return properties.get(PROXY_HOSTNAME);
-//	}
+	// private String getProxyHostname() {
+	// return properties.get(PROXY_HOSTNAME);
+	// }
 
 	public void setUrl(String newUrl) {
 		properties.put(IRepositoryConstants.PROPERTY_URL, newUrl);
@@ -138,7 +141,8 @@ public class TaskRepository {
 	}
 
 	/**
-	 * The username is cached since it needs to be retrieved frequently (e.g. for Task List decoration).
+	 * The username is cached since it needs to be retrieved frequently (e.g.
+	 * for Task List decoration).
 	 */
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
@@ -185,7 +189,7 @@ public class TaskRepository {
 		if (map == null) {
 			map = new HashMap<String, String>();
 		}
-		
+
 		if (username != null) {
 			map.put(PROXY_USERNAME, username);
 		}
@@ -194,13 +198,18 @@ public class TaskRepository {
 		}
 		addAuthInfo(map);
 	}
-	
+
 	public void flushAuthenticationCredentials() {
 		try {
-			try {
-				Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
-			} catch (MalformedURLException ex) {
-				Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+			if (Platform.isRunning()) {
+				try {
+					Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+				} catch (MalformedURLException ex) {
+					Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+				}
+			} else {
+				Map<String, String> headlessCreds = getAuthInfo();
+				headlessCreds.clear();
 			}
 		} catch (CoreException e) {
 			MylarStatusHandler.fail(e, "could not flush authorization credentials", true);
@@ -210,11 +219,16 @@ public class TaskRepository {
 	private void addAuthInfo(Map<String, String> map) {
 		synchronized (LOCK) {
 			try {
-				// write the map to the keyring
-				try {
-					Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
-				} catch (MalformedURLException ex) {
-					Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+				if (Platform.isRunning()) {
+					// write the map to the keyring
+					try {
+						Platform.addAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME, map);
+					} catch (MalformedURLException ex) {
+						Platform.addAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME, map);
+					}
+				} else {
+					Map<String, String> headlessCreds = getAuthInfo();
+					headlessCreds.putAll(map);
 				}
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, "Could not set authorization credentials", true);
@@ -225,12 +239,21 @@ public class TaskRepository {
 	@SuppressWarnings("unchecked")
 	private Map<String, String> getAuthInfo() {
 		synchronized (LOCK) {
-			try {
-				return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
-			} catch (MalformedURLException ex) {
-				return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+			if (Platform.isRunning()) {
+				try {
+					return Platform.getAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+				} catch (MalformedURLException ex) {
+					return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "Could not retrieve authentication credentials", false);
+				}
+			} else {
+				Map<String, String> headlessCreds = credentials.get(getUrl());
+				if (headlessCreds == null) {
+					headlessCreds = new HashMap<String, String>();
+					credentials.put(getUrl(), headlessCreds);
+				}
+				return headlessCreds;
 			}
 			return null;
 		}
@@ -240,9 +263,9 @@ public class TaskRepository {
 		Map<String, String> map = getAuthInfo();
 		return map == null ? null : map.get(property);
 	}
-	
+
 	public void clearCredentials() {
-		
+
 	}
 
 	@Override
