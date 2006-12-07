@@ -223,7 +223,7 @@ public class CommitTemplateVariables {
 	public static class TaskType extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			return task.getTaskType();
+			return task.getTaskKind();
 		}
 	}
 
