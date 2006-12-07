@@ -186,6 +186,9 @@ class SynchronizeQueryJob extends Job {
 				for (TaskRepository repository : hitsToSynch.keySet()) {
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
+					if (repository == null)
+						continue;
+					monitor.setTaskName("Retrieving hit data from " + repository.getUrl());
 					Set<AbstractQueryHit> hits = hitsToSynch.get(repository);
 					for (AbstractQueryHit hit : hits) {
 						if (monitor.isCanceled())
