@@ -84,52 +84,6 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 		return false;
 	}
 	
-	// @Override
-	// public void run(IAction action) {
-	// super.run(action);
-	// List<StructuredViewer> viewers = getViewers();
-	// if (viewers.size() == 1) {
-	// StructuredViewer viewer = getViewers().get(0);
-	// // bug 159333: work-around for viewer's auto-collapse
-	// Object element = null;
-	// IEditorPart activeEditor =
-	// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-	// .getActiveEditor();
-	// if (activeEditor != null) {
-	// Object input = getElementOfInput(activeEditor.getEditorInput());
-	// if (input instanceof IFile) {
-	// element = JavaCore.create((IFile) input);
-	// }
-	//
-	// if (element == null) { // try a non Java resource
-	// element = input;
-	// }
-	//
-	// if (element != null) {
-	// ISelection newSelection = new StructuredSelection(element);
-	// if (viewer.getSelection().equals(newSelection)) {
-	// viewer.reveal(element);
-	// } else {
-	// viewer.setSelection(newSelection, true);
-	// }
-	// }
-	// }
-	// }
-	// }
-
-	// /**
-	// * Copied from PackageExplorerPart
-	// */
-	// private Object getElementOfInput(IEditorInput input) {
-	// if (input instanceof IClassFileEditorInput)
-	// return ((IClassFileEditorInput) input).getClassFile();
-	// else if (input instanceof IFileEditorInput)
-	// return ((IFileEditorInput) input).getFile();
-	// else if (input instanceof JarEntryEditorInput)
-	// return ((JarEntryEditorInput) input).getStorage();
-	// return null;
-	// }
-
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();

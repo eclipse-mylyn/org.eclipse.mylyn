@@ -14,11 +14,18 @@ package org.eclipse.mylar.internal.ide.ui.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractAutoFocusViewAction;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.views.navigator.IResourceNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**
@@ -38,14 +45,35 @@ public class FocusNavigatorAction extends AbstractAutoFocusViewAction {
 			viewers.add(((ResourceNavigator)part).getTreeViewer());
 		}
 		return viewers;
-//		ResourceNavigator navigator = IdeUiUtil.getNavigatorFromActivePage();
-//		if (navigator != null)
-//			viewers.add(navigator.getTreeViewer());
-//		return viewers;
+	}
+	
+	@Override
+	protected ISelection resolveSelection(IEditorPart part, ITextSelection changedSelection, StructuredViewer viewer)
+			throws CoreException {
+		IEditorInput input = part.getEditorInput();
+		Object adapted = input.getAdapter(IResource.class);
+		if (adapted instanceof IResource) {
+			return new StructuredSelection((IResource)adapted);
+		} else {
+			return null;
+		}
 	}
 
-	public void propertyChange(PropertyChangeEvent event) {
-		// ignore
+	@Override
+	protected void setDefaultLinkingEnabled(boolean on) {
+		IViewPart part = super.getPartForAction();
+		if (part instanceof IResourceNavigator) {
+			((IResourceNavigator)part).setLinkingEnabled(on);
+		}
+	}
+
+	@Override
+	protected boolean isDefaultLinkingEnabled() {
+		IViewPart part = super.getPartForAction();
+		if (part instanceof IResourceNavigator) {
+			return ((IResourceNavigator)part).isLinkingEnabled();
+		}
+		return false;
 	}
 	
 }
