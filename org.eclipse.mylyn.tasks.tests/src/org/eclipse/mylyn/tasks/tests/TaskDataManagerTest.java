@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.internal.tasks.ui.TaskDataManager;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;

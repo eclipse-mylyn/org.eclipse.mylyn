@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -35,6 +34,7 @@ import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
 

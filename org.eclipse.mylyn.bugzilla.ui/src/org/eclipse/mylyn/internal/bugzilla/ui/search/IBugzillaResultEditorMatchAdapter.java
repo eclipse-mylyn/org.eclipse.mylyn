@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
-import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.Match;

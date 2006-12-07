@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;

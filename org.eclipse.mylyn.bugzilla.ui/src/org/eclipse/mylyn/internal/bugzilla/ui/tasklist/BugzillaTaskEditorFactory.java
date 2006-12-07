@@ -19,16 +19,15 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.BugzillaTaskEditor;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.ITaskEditorFactory;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
@@ -42,7 +41,7 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 
 	private static final String TITLE = "Bugzilla";
 
-	public EditorPart createEditor(MylarTaskEditor parentEditor, IEditorInput editorInput) {
+	public EditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
 		AbstractRepositoryTaskEditor editor = null;
 		if (editorInput instanceof RepositoryTaskEditorInput || editorInput instanceof TaskEditorInput) {
 			editor = new BugzillaTaskEditor(parentEditor);
@@ -66,7 +65,7 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), "Report Download Failed",
-								"Ensure proper repository configuration in " + TaskRepositoriesView.NAME + ".\n"
+								"Ensure proper repository configuration in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n"
 										+ "Repository set to: " + repository.getUrl() + ", username: "
 										+ repository.getUserName());
 					}

@@ -12,11 +12,11 @@
 package org.eclipse.mylar.tasks.tests;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -56,8 +56,8 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
@@ -78,8 +78,8 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());
@@ -102,8 +102,8 @@ public class TaskPlanningEditorTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof TaskPlanningEditor);
 		TaskPlanningEditor editor = (TaskPlanningEditor) taskEditor.getActivePageInstance();
 		assertFalse(editor.isDirty());

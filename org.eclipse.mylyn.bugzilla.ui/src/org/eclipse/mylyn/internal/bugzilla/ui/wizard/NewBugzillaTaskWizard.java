@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaTaskData;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -45,16 +45,15 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 	 */
 	protected boolean completed = false;
 
-	/** The model used to store all of the data for the wizard */
-	protected NewBugzillaReport model;
+	/** The taskData used to store all of the data for the wizard */
+	protected NewBugzillaTaskData taskData;
 
-	// TODO: Change model to a RepositoryTaskData
-	// protected RepositoryTaskData model;
+	// TODO: Change taskData to a RepositoryTaskData
+	// protected RepositoryTaskData taskData;
 
 	public NewBugzillaTaskWizard(TaskRepository repository) {
 		this(false, repository);
-		model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault().getTaskDataManager()
-				.getNewRepositoryTaskId());
+		taskData = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
@@ -87,7 +86,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 
 		try {
 			productPage.saveDataToModel();
-			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
+			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, taskData);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			TasksUiUtil.openEditor(editorInput,  TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 			return true;
@@ -105,7 +104,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 // // AbstractRepositoryConnector client = (AbstractRepositoryConnector)
 // // MylarTaskListPlugin.getRepositoryManager()
 // // .getRepositoryConnector(BugzillaPlugin.REPOSITORY_KIND);
-// // client.saveOffline(model);
+// // client.saveOffline(taskData);
 // }
 //
 // @Override

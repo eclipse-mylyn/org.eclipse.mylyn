@@ -12,9 +12,9 @@
 package org.eclipse.mylar.internal.bugzilla.ui;
 
 import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorInput;

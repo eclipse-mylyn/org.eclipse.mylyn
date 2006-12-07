@@ -30,12 +30,11 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.tasks.ui.search.AbstractRepositoryQueryPage;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -1367,11 +1366,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						if (ce.getStatus().getException() instanceof GeneralSecurityException) {
 							MylarStatusHandler.fail(ce,
 									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-											+ "Please ensure proper configuration in " + TaskRepositoriesView.NAME
+											+ "Please ensure proper configuration in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 											+ ". ", true);
 						} else if (ce.getStatus().getException() instanceof IOException) {
 							MylarStatusHandler.fail(ce, "Connection Error, please ensure proper configuration in "
-									+ TaskRepositoriesView.NAME + ".", true);
+									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 						} else {
 							MylarStatusHandler.fail(ce, "Error updating repository attributes for "
 									+ repository.getUrl(), true);

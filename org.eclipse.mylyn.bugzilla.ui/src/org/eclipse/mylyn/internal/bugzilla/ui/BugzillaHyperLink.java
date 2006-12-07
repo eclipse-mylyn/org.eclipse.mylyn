@@ -14,7 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten

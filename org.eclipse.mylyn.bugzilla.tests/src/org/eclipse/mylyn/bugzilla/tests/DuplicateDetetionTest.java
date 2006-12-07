@@ -15,14 +15,14 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaTaskData;
 import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -44,7 +44,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -52,7 +52,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertTrue(editor.searchForDuplicates());
 
@@ -62,7 +62,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 	public void testNoStackTrace() throws Exception {
 		String fakeStackTrace = "this is not really a stacktrace";
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(fakeStackTrace);
 		model.setHasLocalChanges(true);
@@ -70,7 +70,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertNull(editor.getStackTraceFromDescription());
 
@@ -83,7 +83,7 @@ public class DuplicateDetetionTest extends TestCase {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(extraText + "\n" + stackTrace + "\n");
 		model.setHasLocalChanges(true);
@@ -91,7 +91,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 
@@ -112,7 +112,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"(JarURLConnection.java:124)\n" +
 		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -120,7 +120,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 
@@ -140,7 +140,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"     at sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:124)\n" +
 		"     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -148,7 +148,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 
@@ -164,7 +164,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at gnu.java.lang.MainThread.call_main() (/usr/lib/libgcj.so.6.0.0)\n" +
 		"	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
 		
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -172,7 +172,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 		
@@ -187,7 +187,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at testcase.main (testcase.java)\n" +
 		"	at java.lang.reflect.Method.Invoke (Method.java)";
 		
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -195,7 +195,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 		
@@ -212,7 +212,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at java/util/Properties.load(Properties.java:192)\n" +
 		"	at java/util/logging/LogManager.readConfiguration(L:555)";
 	    
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -220,7 +220,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 		
@@ -236,7 +236,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at java.lang.VirtualMachine.invokeMain (VirtualMachine.java)\n" +
 		"	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
 		
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNewComment(stackTrace);
 		model.setHasLocalChanges(true);
@@ -244,7 +244,7 @@ public class DuplicateDetetionTest extends TestCase {
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
 		assertEquals(stackTrace, editor.getStackTraceFromDescription().trim());
 		

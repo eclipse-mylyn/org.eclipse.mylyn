@@ -22,11 +22,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -157,17 +154,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 				
 		return task;
-	}
-
-	// TODO move to DelegatingTaskExternalizer
-	@Override
-	public void readTaskData(AbstractRepositoryTask task) {
-		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(task.getHandleIdentifier());		
-		task.setTaskData(data);
-
-		if (data != null && data.hasLocalChanges()) {
-			task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-		}
 	}
 
 	@Override

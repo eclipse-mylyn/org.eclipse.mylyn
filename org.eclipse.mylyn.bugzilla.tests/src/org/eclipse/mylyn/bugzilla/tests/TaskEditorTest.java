@@ -13,14 +13,14 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaTaskData;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
@@ -56,13 +56,13 @@ public class TaskEditorTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		NewBugzillaReport model = new NewBugzillaReport(repository.getUrl(), TasksUiPlugin.getDefault()
+		NewBugzillaTaskData model = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
-		assertTrue(page.getActiveEditor() instanceof MylarTaskEditor);
-		MylarTaskEditor taskEditor = (MylarTaskEditor) page.getActiveEditor();
+		assertTrue(page.getActiveEditor() instanceof TaskEditor);
+		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
 		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 

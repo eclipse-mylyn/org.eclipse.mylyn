@@ -55,9 +55,8 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaReport;
+import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaTaskData;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -264,11 +263,11 @@ public class BugzillaProductPage extends WizardPage {
 									MylarStatusHandler.fail(ce,
 											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
 													+ "Please ensure proper configuration in "
-													+ TaskRepositoriesView.NAME + ". ", true);
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", true);
 								} else if (ce.getStatus().getException() instanceof IOException) {
 									MylarStatusHandler.fail(ce,
 											"Connection Error, please ensure proper configuration in "
-													+ TaskRepositoriesView.NAME + ".", true);
+													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 								} else {
 									MylarStatusHandler.fail(ce, "Error updating repository attributes for "
 											+ repository.getUrl(), true);
@@ -303,7 +302,7 @@ public class BugzillaProductPage extends WizardPage {
 
 	private void initProducts() {
 		// try to get the list of products from the server
-		if (!bugWizard.model.hasParsedProducts()) {
+		if (!bugWizard.taskData.hasParsedProducts()) {
 			String repositoryUrl = repository.getUrl();
 			try {
 				String[] storedProducts = BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRODUCT, null,
@@ -314,16 +313,16 @@ public class BugzillaProductPage extends WizardPage {
 					products = BugzillaCorePlugin.getRepositoryConfiguration(repository, false)
 							.getProducts();
 				}
-				bugWizard.model.setConnected(true);
-				bugWizard.model.setParsedProductsStatus(true);
+				bugWizard.taskData.setConnected(true);
+				bugWizard.taskData.setParsedProductsStatus(true);
 
 			} catch (final Exception e) {
-				bugWizard.model.setConnected(false);
+				bugWizard.taskData.setConnected(false);
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), NEW_BUGZILLA_TASK_ERROR_TITLE,
 								"Unable to get products. Ensure proper repository configuration in "
-										+ TaskRepositoriesView.NAME + ".\n\n");
+										+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".\n\n");
 						MylarStatusHandler.log(e, "Failed to retrieve products from server");
 					}
 				});
@@ -429,7 +428,7 @@ public class BugzillaProductPage extends WizardPage {
 	}
 
 	/**
-	 * Save the currently selected product to the model when next is clicked
+	 * Save the currently selected product to the taskData when next is clicked
 	 *
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
@@ -438,7 +437,7 @@ public class BugzillaProductPage extends WizardPage {
 	 * @throws BugzillaException
 	 */
 	public void saveDataToModel() throws CoreException {
-		NewBugzillaReport model = bugWizard.model;
+		NewBugzillaTaskData model = bugWizard.taskData;
 		prevProduct = model.getProduct();
 		model.setProduct((String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
 
@@ -456,7 +455,7 @@ public class BugzillaProductPage extends WizardPage {
 		return bugWizard.completed;
 	}
 
-	public void setPlatformOptions(NewBugzillaReport newBugModel) {
+	public void setPlatformOptions(NewBugzillaTaskData newBugModel) {
 		try {
 
 			// Get OS Lookup Map
@@ -502,7 +501,7 @@ public class BugzillaProductPage extends WizardPage {
 				bugzillaPlatform = null;
 			}
 
-			// Set the OS and the Platform in the model
+			// Set the OS and the Platform in the taskData
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);
 			} else if (opSysAttribute != null && opSysAttribute.getOptionParameter(OPTION_ALL) != null) {
@@ -522,21 +521,21 @@ public class BugzillaProductPage extends WizardPage {
 
 	// @Override
 	// public IWizardPage getNextPage() {
-	// // save the product information to the model
+	// // save the product information to the taskData
 	// saveDataToModel();
 	// NewBugzillaTaskWizard wizard = (NewBugzillaTaskWizard) getWizard();
-	// NewBugzillaReport model = wizard.model;
+	// NewBugzillaTaskData taskData = wizard.model;
 	//
 	// // try to get the attributes from the bugzilla server
 	// try {
-	// if (!model.hasParsedAttributes() ||
-	// !model.getProduct().equals(prevProduct)) {
+	// if (!taskData.hasParsedAttributes() ||
+	// !taskData.getProduct().equals(prevProduct)) {
 	// BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(),
 	// MylarTaskListPlugin.getDefault()
 	// .getProxySettings(), repository.getUserName(), repository.getPassword(),
-	// model, repository
+	// taskData, repository
 	// .getCharacterEncoding());
-	// model.setParsedAttributesStatus(true);
+	// taskData.setParsedAttributesStatus(true);
 	// }
 	//
 	// // if (prevProduct == null) {
@@ -544,7 +543,7 @@ public class BugzillaProductPage extends WizardPage {
 	// // bugWizard.addPage(bugWizard.getAttributePage());
 	// // } else {
 	// // // selected product has changed
-	// // // will createControl again with new attributes in model
+	// // // will createControl again with new attributes in taskData
 	// // bugWizard.getAttributePage().setControl(null);
 	// // }
 	//

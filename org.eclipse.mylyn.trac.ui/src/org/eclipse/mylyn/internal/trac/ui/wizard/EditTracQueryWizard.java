@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.internal.trac.ui.wizard;
 
-import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractEditQueryWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.wizards.AbstractEditQueryWizard;
 
 /**
  * @author Steffen Pingel

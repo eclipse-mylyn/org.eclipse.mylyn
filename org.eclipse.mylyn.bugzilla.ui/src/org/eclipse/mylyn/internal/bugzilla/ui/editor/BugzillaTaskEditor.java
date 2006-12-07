@@ -27,21 +27,20 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.MylarTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
-import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylar.internal.tasks.ui.views.DatePicker;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
+import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -220,8 +219,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// "Show dependency tree", SWT.NONE);
 		// showDependencyTree.addHyperlinkListener(new HyperlinkAdapter() {
 		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// if (ExistingBugEditor.this.getEditor() instanceof TaskEditor) {
+		// TaskEditor mylarTaskEditor = (TaskEditor)
 		// ExistingBugEditor.this.getEditor();
 		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
 		// IBugzillaConstants.DEPENDENCY_TREE_URL
@@ -239,8 +238,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// "Show dependency graph", SWT.NONE);
 		// showDependencyGraph.addHyperlinkListener(new HyperlinkAdapter() {
 		// public void linkActivated(HyperlinkEvent e) {
-		// if (ExistingBugEditor.this.getEditor() instanceof MylarTaskEditor) {
-		// MylarTaskEditor mylarTaskEditor = (MylarTaskEditor)
+		// if (ExistingBugEditor.this.getEditor() instanceof TaskEditor) {
+		// TaskEditor mylarTaskEditor = (TaskEditor)
 		// ExistingBugEditor.this.getEditor();
 		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
 		// IBugzillaConstants.DEPENDENCY_GRAPH_URL
@@ -258,7 +257,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			addKeywordsList(composite);
 		} catch (IOException e) {
 			MessageDialog.openInformation(null, "Attribute Display Error",
-					"Could not retrieve keyword list, ensure proper configuration in " + TaskRepositoriesView.NAME
+					"Could not retrieve keyword list, ensure proper configuration in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 							+ "\n\nError reported: " + e.getMessage());
 		}
 
@@ -278,8 +277,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
 							+ getRepositoryTaskData().getId());
 				}
@@ -618,8 +617,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES
 							+ getRepositoryTaskData().getId());
 				}
@@ -630,8 +629,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				if (BugzillaTaskEditor.this.getEditor() instanceof MylarTaskEditor) {
-					MylarTaskEditor mylarTaskEditor = (MylarTaskEditor) BugzillaTaskEditor.this.getEditor();
+				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
 					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_VOTE
 							+ getRepositoryTaskData().getId());
 				}

@@ -15,8 +15,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.internal.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
@@ -31,6 +29,8 @@ import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**

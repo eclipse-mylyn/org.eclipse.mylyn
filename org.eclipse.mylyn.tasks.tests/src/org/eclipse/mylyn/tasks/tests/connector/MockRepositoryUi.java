@@ -9,10 +9,10 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
  * @author Mik Kersten
