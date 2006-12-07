@@ -778,7 +778,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 */
 	public void setScheduledFor(ITask task, Date reminderDate) {
 		if(task == null) return;
-		task.setReminderDate(reminderDate);
+		task.setScheduledForDate(reminderDate);
 		task.setReminded(false);
 		if (reminderDate == null) {
 			tasksWithReminders.remove(task);

@@ -25,7 +25,7 @@ public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof BugzillaTask) {
-			String kind = ((BugzillaTask)element).getTaskType();
+			String kind = ((BugzillaTask)element).getTaskKind();
 			// XXX: refactor to use configuration
 			if ("major".equals(kind) || "blocker".equals(kind) || "critical".equals(kind)) {
 				decoration.addOverlay(BugzillaImages.OVERLAY_MAJOR, IDecoration.BOTTOM_RIGHT);

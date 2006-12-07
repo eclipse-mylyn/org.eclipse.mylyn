@@ -141,8 +141,8 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getHandleIdentifier();
 	}
 
-	public String getTaskType() {
-		return task.getTaskType();
+	public String getTaskKind() {
+		return task.getTaskKind();
 	}
 
 	public String getNotes() {
@@ -237,8 +237,8 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setReminded(reminded);
 	}
 
-	public void setReminderDate(Date date) {
-		task.setReminderDate(date);
+	public void setScheduledForDate(Date date) {
+		task.setScheduledForDate(date);
 	}
 
 	public void setUrl(String url) {

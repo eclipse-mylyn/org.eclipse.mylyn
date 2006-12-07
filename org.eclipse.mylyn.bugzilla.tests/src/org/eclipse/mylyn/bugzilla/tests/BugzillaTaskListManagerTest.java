@@ -105,7 +105,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
 		assertEquals(repositoryTask.getSummary(), readTask.getSummary());
-		assertEquals(repositoryTask.getTaskType(), readTask.getTaskType());
+		assertEquals(repositoryTask.getTaskKind(), readTask.getTaskKind());
 	}
 	
 	public void testQueryExternalization() {

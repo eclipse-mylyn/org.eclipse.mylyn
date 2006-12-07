@@ -226,7 +226,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123: mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
-		assertEquals("mytype", task.getTaskType());
+		assertEquals("mytype", task.getTaskKind());
 	}
 
 	public void testUpdateTaskDetailsSummaryOnly() throws InvalidTicketException {
@@ -241,7 +241,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456: mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
-		assertEquals(null, task.getTaskType());
+		assertEquals(null, task.getTaskKind());
 	}
 
 	public void testUpdateAttributesWeb096() throws Exception {

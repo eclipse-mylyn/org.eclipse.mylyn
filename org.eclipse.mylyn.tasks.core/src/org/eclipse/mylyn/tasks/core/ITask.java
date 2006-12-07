@@ -31,7 +31,7 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setActive(boolean active);
 
-	public String getTaskType();
+	public String getTaskKind();
 
 	public void setKind(String kind);
 	
@@ -49,9 +49,6 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setNotes(String notes);
 
-	/**
-	 * TODO: change to millis
-	 */
 	public abstract int getEstimateTimeHours();
 
 	public abstract void setEstimatedTimeHours(int estimated);
@@ -79,18 +76,12 @@ public interface ITask extends ITaskListElement {
 
 	public abstract void setCreationDate(Date date);
 
-	public abstract void setReminderDate(Date date);
+	public abstract void setScheduledForDate(Date date);
 
 	public abstract Date getScheduledForDate();
 
-	/**
-	 * TODO: move
-	 */
 	public abstract boolean hasBeenReminded();
 
-	/**
-	 * TODO: move
-	 */
 	public abstract void setReminded(boolean reminded);
 
 	public abstract boolean isPastReminder();

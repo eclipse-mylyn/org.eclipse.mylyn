@@ -126,7 +126,7 @@ public class Task implements ITask {
 
 	private Date creationDate = null;
 
-	private Date reminderDate = null;
+	private Date scheduledForDate = null;
 
 	/**
 	 * @return null if root
@@ -296,12 +296,12 @@ public class Task implements ITask {
 		return completionDate;
 	}
 
-	public void setReminderDate(Date date) {
-		reminderDate = date;
+	public void setScheduledForDate(Date date) {
+		scheduledForDate = date;
 	}
 
 	public Date getScheduledForDate() {
-		return reminderDate;
+		return scheduledForDate;
 	}
 
 	public boolean hasBeenReminded() {
@@ -331,11 +331,11 @@ public class Task implements ITask {
 	}
 
 	public boolean isPastReminder() {
-		if (reminderDate == null) {
+		if (scheduledForDate == null) {
 			return false;
 		} else {
 			Date now = new Date();
-			if (reminderDate.compareTo(now) < 0) {
+			if (scheduledForDate.compareTo(now) < 0) {
 				return true;
 			} else {
 				return false;
@@ -360,7 +360,7 @@ public class Task implements ITask {
 		return REPOSITORY_KIND_LOCAL;
 	}
 
-	public String getTaskType() {
+	public String getTaskKind() {
 		return kind;
 	}
 

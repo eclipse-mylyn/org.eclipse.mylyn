@@ -162,7 +162,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 
 		node.setAttribute(KEY_PRIORITY, task.getPriority());
-		node.setAttribute(KEY_KIND, task.getTaskType());
+		node.setAttribute(KEY_KIND, task.getTaskKind());
 
 		if (task.isCompleted()) {
 			node.setAttribute(KEY_COMPLETE, VAL_TRUE);
@@ -382,9 +382,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.setCreationDate(Calendar.getInstance().getTime());
 		}
 		if (element.hasAttribute(KEY_DATE_REMINDER)) {
-			task.setReminderDate(getDateFromString(element.getAttribute(KEY_DATE_REMINDER)));
+			task.setScheduledForDate(getDateFromString(element.getAttribute(KEY_DATE_REMINDER)));
 		} else {
-			task.setReminderDate(null);
+			task.setScheduledForDate(null);
 		}
 		if (element.hasAttribute(KEY_REMINDED) && element.getAttribute(KEY_REMINDED).compareTo(VAL_TRUE) == 0) {
 			task.setReminded(true);

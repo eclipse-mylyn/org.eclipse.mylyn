@@ -51,9 +51,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 		ITask task1 = new Task("t1", "t1 - test 1", true);
 		ITask task2 = new Task("t2", "t2 - test 2", true);
 
-		task0.setReminderDate(new Date(now.getTime() - 2000));
-		task1.setReminderDate(new Date(now.getTime() - 2000));
-		task2.setReminderDate(new Date(now.getTime() - 2000));
+		task0.setScheduledForDate(new Date(now.getTime() - 2000));
+		task1.setScheduledForDate(new Date(now.getTime() - 2000));
+		task2.setScheduledForDate(new Date(now.getTime() - 2000));
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task0);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);

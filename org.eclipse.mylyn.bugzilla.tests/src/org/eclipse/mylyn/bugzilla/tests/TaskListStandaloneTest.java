@@ -59,13 +59,13 @@ public class TaskListStandaloneTest extends TestCase {
 	public void testPastReminder() {
 		ITask task = new Task("1", "1", true);
 		long now = new Date().getTime();
-		task.setReminderDate(new Date(now - 1000));
+		task.setScheduledForDate(new Date(now - 1000));
 		assertTrue(task.isPastReminder());
 
-		task.setReminderDate(new Date(now + 1000));
+		task.setScheduledForDate(new Date(now + 1000));
 		assertFalse(task.isPastReminder());
 
-		task.setReminderDate(new Date(now - 1000));
+		task.setScheduledForDate(new Date(now - 1000));
 		task.setCompleted(true);
 		assertTrue(task.isPastReminder());
 	}
@@ -81,7 +81,7 @@ public class TaskListStandaloneTest extends TestCase {
 		task.setCompleted(true);
 		assertDatesCloseEnough(task.getCompletionDate(), start);
 
-		task.setReminderDate(start);
+		task.setScheduledForDate(start);
 		assertDatesCloseEnough(task.getScheduledForDate(), start);
 
 		assertEquals(2, manager.getTaskList().getRootElements().size());

@@ -174,7 +174,7 @@ public class TasksReminderDialog extends Dialog {
 			if (sel != null && sel instanceof ITask) {
 				ITask t = (ITask) sel;
 				t.setReminded(false);
-				t.setReminderDate(new Date(new Date().getTime() + DAY));
+				t.setScheduledForDate(new Date(new Date().getTime() + DAY));
 				tasks.remove(t);
 				if (tasks.isEmpty()) {
 					okPressed();
