@@ -28,6 +28,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * Subclass externalizers must override the get*TagName() methods for the types
+ * of externalized items they support to ensure that their externalizer does not
+ * externalize tasks from other connectors incorrectly.
+ * 
+ * These tag names uniquely identify the externalizer to be used to read the
+ * task from externalized form on disk.
+ * 
+ * The canCreateElementFor methods specify which tasks the externalizer should
+ * write to disk.
+ * 
+ * 
  * @author Mik Kersten
  * @author Ken Sueda (XML serialization support)
  * @author Steffen Pingel
