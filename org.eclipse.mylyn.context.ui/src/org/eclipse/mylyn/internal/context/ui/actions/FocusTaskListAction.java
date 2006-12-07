@@ -54,10 +54,13 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		if (part instanceof TaskListView) {
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().addListener(this);
 		}
-		// NOTE: if re-enabling this, ensure that two filters can not get added on startup
-//		if (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty()) {
-//			update(true);
-//		}
+		// NOTE: if re-enabling this, ensure that two filters can not get added
+		// on startup
+		// if
+		// (!TasksUiPlugin.getTaskListManager().getActivityThisWeek().getChildren().isEmpty())
+		// {
+		// update(true);
+		// }
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 			((TaskListView) part).getFilteredTree().getRefreshPolicy().removeListener(this);
 		}
 	}
-	
+
 	@Override
 	public void run(IAction action) {
 		super.run(action);
@@ -93,16 +96,22 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			TaskListView taskListView = (TaskListView) part;
-			previousSorter = taskListView.getViewer().getSorter();
-			taskListView.getViewer().setSorter(taskListInterestSorter);
-			previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
-			taskListView.clearFilters(true);
-			if (!taskListView.getFilters().contains(taskListInterestFilter)) {
-				taskListView.addFilter(taskListInterestFilter);
+
+			try {
+				taskListView.getViewer().getControl().setRedraw(false);
+				previousSorter = taskListView.getViewer().getSorter();
+				taskListView.getViewer().setSorter(taskListInterestSorter);
+				previousFilters = new HashSet<AbstractTaskListFilter>(taskListView.getFilters());
+				taskListView.clearFilters(true);
+				if (!taskListView.getFilters().contains(taskListInterestFilter)) {
+					taskListView.addFilter(taskListInterestFilter);
+				}
+				taskListView.setFocusedMode(true);
+				taskListView.setManualFiltersEnabled(false);
+				taskListView.refreshAndFocus(true);
+			} finally {
+				taskListView.getViewer().getControl().setRedraw(true);
 			}
-			taskListView.setFocusedMode(true);
-			taskListView.setManualFiltersEnabled(false);
-			taskListView.refreshAndFocus(true);
 			return true;
 		} else {
 			return false;
@@ -114,15 +123,20 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		IViewPart part = super.getPartForAction();
 		if (part instanceof TaskListView) {
 			TaskListView taskListView = (TaskListView) part;
-			taskListView.getViewer().setSorter(previousSorter);
-			taskListView.removeFilter(taskListInterestFilter);
-			taskListView.setManualFiltersEnabled(true);
-			for (AbstractTaskListFilter filter : previousFilters) {
-				TaskListView.getFromActivePerspective().addFilter(filter);
+			try {
+				taskListView.getViewer().getControl().setRedraw(false);
+				taskListView.getViewer().setSorter(previousSorter);
+				taskListView.removeFilter(taskListInterestFilter);
+				taskListView.setManualFiltersEnabled(true);
+				for (AbstractTaskListFilter filter : previousFilters) {
+					TaskListView.getFromActivePerspective().addFilter(filter);
+				}
+				taskListView.setFocusedMode(false);
+				taskListView.getViewer().collapseAll();
+				taskListView.refreshAndFocus(false);
+			} finally {
+				taskListView.getViewer().getControl().setRedraw(true);
 			}
-			taskListView.setFocusedMode(false);
-			taskListView.getViewer().collapseAll();
-			taskListView.refreshAndFocus(false);
 		}
 	}
 
@@ -139,5 +153,4 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 		}
 	}
 
-	
 }
