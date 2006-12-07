@@ -553,8 +553,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (getRepositoryTaskData() == null) {
 			toolkit.createLabel(editorComposite,
-					"Could not download task data, possibly due to timeout or connectivity problem.\n"
-							+ "Please check connection and try again.");
+					"Task data not available, please synchronize and reopen.");
 			return;
 		}
 
