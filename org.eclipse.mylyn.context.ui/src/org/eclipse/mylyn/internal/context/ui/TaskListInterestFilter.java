@@ -74,19 +74,6 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 //				|| isCurrentlySelectedInEditor(task);
 	}
 
-//	private boolean isCurrentlySelectedInEditor(ITask task) {
-//		try {
-//			IEditorInput input = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()
-//					.getEditorInput();
-//			if (input instanceof TaskEditorInput && task != null) {
-//				return task.equals(((TaskEditorInput) input).getTask());
-//			}
-//		} catch (NullPointerException npe) {
-//			// ingore, active part can be null
-//		}
-//		return false;
-//	}
-
 	public static boolean isInterestingForThisWeek(ITask task) {
 		return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
 				|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
