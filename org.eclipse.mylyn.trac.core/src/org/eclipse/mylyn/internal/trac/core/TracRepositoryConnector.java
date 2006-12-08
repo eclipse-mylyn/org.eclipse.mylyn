@@ -246,7 +246,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static String getTicketDescription(TracTicket ticket) {
-		return ticket.getId() + ": " + ticket.getValue(Key.SUMMARY);
+		return /* ticket.getId() + ": " + */ ticket.getValue(Key.SUMMARY);
 	}
 
 	public static String getTicketDescription(RepositoryTaskData taskData) {
