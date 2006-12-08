@@ -18,6 +18,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.team.LinkedTaskInfo;
 import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
@@ -102,8 +103,15 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
 				if (repository != null) {
-					if (TasksUiUtil.openRepositoryTask(repository, info.getTaskId())) {
-						return;
+					// TODO: temporary work-around for bug 166174
+					if (!info.getTaskId().contains(AbstractRepositoryTask.HANDLE_DELIM)) {	
+						if (TasksUiUtil.openRepositoryTask(repository, info.getTaskId())) {
+							return;
+						}
+					} else {
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+								ITasksUiConstants.TITLE_DIALOG, 
+								"Could not resolve task, use Navigate -> Open Task... and enter the task ID or key.");
 					}
 				}
 			}
