@@ -171,8 +171,9 @@ class SynchronizeQueryJob extends Job {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			if (!Platform.isRunning()) {
-				return Status.CANCEL_STATUS;
+			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
+				monitor.setCanceled(true);
+				return Status.OK_STATUS;
 			}
 			if (monitor == null) {
 				monitor = new NullProgressMonitor();
