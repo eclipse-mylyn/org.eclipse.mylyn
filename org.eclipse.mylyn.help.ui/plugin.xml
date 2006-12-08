@@ -22,10 +22,10 @@
           definitionId="org.eclipse.mylar.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
           id="org.eclipse.mylar.doc.legend.show.action"
-          label="Tasks UI Legend"
+          label="Mylar UI Legend"
           menubarPath="help/helpStart"
           style="push"
-          tooltip="Tasks UI Legend"> 
+          tooltip="Mylar UI Legend"> 
       	</action> 
     </actionSet>
     </extension>
@@ -33,9 +33,9 @@
    <extension point="org.eclipse.ui.commands">
 	  <command
          categoryId="org.eclipse.mylar.ui"
-         description="Show Tasks UI Legend"
+         description="Show Mylar UI Legend"
          id="org.eclipse.mylar.doc.legend.show"
-         name="Show Task UI Legend">
+         name="Show Mylar UI Legend">
       </command>
    </extension>
   

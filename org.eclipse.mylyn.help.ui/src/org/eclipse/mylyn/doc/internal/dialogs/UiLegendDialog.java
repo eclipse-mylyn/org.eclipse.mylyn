@@ -67,7 +67,7 @@ public class UiLegendDialog extends PopupDialog {
 	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
-		getShell().setText("Tasks UI Legend");
+		getShell().setText("Mylar UI Legend");
 		
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
@@ -77,7 +77,7 @@ public class UiLegendDialog extends PopupDialog {
 		Label image = null;
 		
 		Section section = toolkit.createSection(form.getBody(), Section.DESCRIPTION);
-		section.setText("Tasks UI Legend                                                        ");
+		section.setText("Mylar UI Legend                                                        ");
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.verticalSpacing = 0;

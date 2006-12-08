@@ -41,7 +41,7 @@
   	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
-        <category name="Tasks" id="org.eclipse.mylar.wizards"/>
+        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
     </extension>
 
     <extension
@@ -120,7 +120,7 @@
      </wizard>
      <category
            id="org.eclipse.mylar.tasklist.importcategory"
-           name="Tasks"/>
+           name="Mylar"/>
   </extension>
 
      <extension point="org.eclipse.ui.exportWizards"> 
@@ -136,7 +136,7 @@
       </wizard>
       <category
             id="org.eclipse.mylar.tasklist.exportcategory"
-            name="Task List"/> 
+            name="Mylar"/> 
     </extension> 
 
    <extension point="org.eclipse.ui.decorators">

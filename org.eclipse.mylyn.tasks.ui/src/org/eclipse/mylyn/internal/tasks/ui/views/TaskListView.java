@@ -983,7 +983,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
-		if (task != null) {
+		if (task != null && !(element instanceof AbstractQueryHit)) {
 			addAction(removeFromCategoryAction, manager, element);
 		}
 		addAction(deleteAction, manager, element);
