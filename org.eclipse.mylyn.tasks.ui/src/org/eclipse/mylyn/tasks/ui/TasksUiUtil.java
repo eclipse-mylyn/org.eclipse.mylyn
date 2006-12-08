@@ -74,7 +74,7 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
-	
+
 	/**
 	 * TODO: move
 	 */
@@ -153,7 +153,7 @@ public class TasksUiUtil {
 				}
 			}
 		}
- 
+
 		if (task != null) {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
@@ -161,7 +161,8 @@ public class TasksUiUtil {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getConnectorForRepositoryTaskUrl(fullUrl);
 			if (connector != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
+						.getRepositoryUi(connector.getRepositoryType());
 				opened = connectorUi.openRemoteTask(repositoryUrl, taskId);
 			}
 		}
@@ -204,9 +205,12 @@ public class TasksUiUtil {
 				}
 
 				if (connector != null)
-					if (repositoryTask.getTaskData() != null || TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(repositoryTask.getHandleIdentifier()) != null) {
-						if(repositoryTask.getTaskData() == null) {
-							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(repositoryTask.getHandleIdentifier()));
+					if (repositoryTask.getTaskData() != null
+							|| TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+									repositoryTask.getHandleIdentifier()) != null) {
+						if (repositoryTask.getTaskData() == null) {
+							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+									repositoryTask.getHandleIdentifier()));
 						}
 						TasksUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
@@ -341,7 +345,7 @@ public class TasksUiUtil {
 
 			if (TaskRepositoriesView.getFromActivePerspective() != null) {
 				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
-			}			
+			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
@@ -368,53 +372,64 @@ public class TasksUiUtil {
 		}
 		return repositoryTaskEditors;
 	}
-	
+
+	public static TaskRepository getSelectedRepository() {
+		return getSelectedRepository(null);
+	}
+
 	/**
 	 * Will use the workbench window's selection if viewer's selection is null
 	 */
 	public static TaskRepository getSelectedRepository(StructuredViewer viewer) {
-		IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
-		if (selection == null) {
+		IStructuredSelection selection = null;
+		if (viewer != null) {
+			selection = (IStructuredSelection) viewer.getSelection();
+		}
+		if (selection == null || selection.isEmpty()) {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			ISelection windowSelection = window.getSelectionService().getSelection();
 			if (windowSelection instanceof IStructuredSelection) {
-				selection = (IStructuredSelection)windowSelection;
+				selection = (IStructuredSelection) windowSelection;
 			}
 		}
 
 		Object element = selection.getFirstElement();
 		if (element instanceof TaskRepository) {
-			return (TaskRepository)selection.getFirstElement();
+			return (TaskRepository) selection.getFirstElement();
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			return TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
+			return TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
+					query.getRepositoryUrl());
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit queryHit = (AbstractQueryHit) element;
 			if (queryHit.getParent() != null) {
-				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl(), queryHit.getParent().getRepositoryKind());
+				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getParent().getRepositoryKind(),
+						queryHit.getRepositoryUrl());
 			} else {
 				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
-			return TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
+			return TasksUiPlugin.getRepositoryManager()
+					.getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-		} else if( element instanceof IAdaptable) {
+		} else if (element instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) element;
 			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
-			if(resource!=null) {
+			if (resource != null) {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			} else {
 				ITask task = (ITask) adaptable.getAdapter(ITask.class);
-				if(task instanceof AbstractRepositoryTask) {
+				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
-					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
+					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getRepositoryKind(),
+							rtask.getRepositoryUrl());
 				}
 			}
 		}
-		
+
 		// TODO mapping between LogEntry.pliginId and repositories
 		// TODO handle other selection types
 		return null;
