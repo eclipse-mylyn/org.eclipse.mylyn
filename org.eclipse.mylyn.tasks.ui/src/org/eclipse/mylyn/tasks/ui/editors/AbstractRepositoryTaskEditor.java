@@ -855,11 +855,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry()
 				.get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		summaryText.setFont(summaryFont);
-		GridData summaryTextData = new GridData(GridData.FILL_HORIZONTAL);// HORIZONTAL_ALIGN_FILL
-		summaryTextData.horizontalSpan = 1;
-		// summaryTextData.widthHint = 200;
+		
+		GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
 
-		summaryText.setLayoutData(summaryTextData);
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
 		summaryText.addListener(SWT.FocusIn, new GenericListener());
 		toolkit.paintBordersFor(summaryComposite);
