@@ -37,7 +37,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.mylar.monitor,
  org.eclipse.mylar.resources,
- org.eclipse.jdt.debug
+ org.eclipse.jdt.debug,
+ org.eclipse.mylar.doc
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.internal.java,

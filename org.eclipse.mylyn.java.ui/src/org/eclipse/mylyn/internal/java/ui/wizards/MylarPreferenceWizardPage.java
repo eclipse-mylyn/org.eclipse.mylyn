@@ -210,6 +210,12 @@ public class MylarPreferenceWizardPage extends WizardPage {
 		hyperlink.setUnderlined(true);
 		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		hyperlink.setText("If this is your first time using Mylar please watch the short Getting Started video");
+
+		label = new Label(containerComposite, SWT.NONE);
+		label.setText("For a legend of the icons used by Mylar open: Help (menu) -> Mylar UI Legend");
+		gd = new GridData();
+		label.setLayoutData(gd);
+		
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {

@@ -26,7 +26,7 @@
      	<action  
   		  	label="Make Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
-	  		menubarPath="mylar" 
+	  		menubarPath="additions" 
 	  		id="org.eclipse.mylar.ui.actions.InterestDecrementAction" 
 	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
@@ -34,7 +34,7 @@
 	    <action  
   		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"
-	  		menubarPath="mylar" 
+	  		menubarPath="additions" 
 	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
 	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
