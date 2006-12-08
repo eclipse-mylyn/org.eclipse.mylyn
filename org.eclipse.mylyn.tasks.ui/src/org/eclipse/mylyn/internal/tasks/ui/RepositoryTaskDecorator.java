@@ -18,7 +18,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -63,9 +62,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				} else {
 					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 				}
-			} else {
-				MylarStatusHandler.log("Could not get icon overlay, connector UI not yet started.", this);
-			}
+			} 
 			if (task.isSynchronizing()) {
 				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
 			}
