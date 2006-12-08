@@ -264,7 +264,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		label = toolkit.createLabel(composite, BugzillaReportElement.BUG_FILE_LOC.toString());
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		attribute = this.getRepositoryTaskData().getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
-		createTextField(composite, attribute, SWT.FLAT);
+		Text urlField = createTextField(composite, attribute, SWT.FLAT);
+		GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(urlField);
 //		TextViewer viewer = addTextEditor(repository, composite, attribute.getValue(), false, SWT.SINGLE);
 //		viewer.setEditable(true);
 //		GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(viewer.getTextWidget());
