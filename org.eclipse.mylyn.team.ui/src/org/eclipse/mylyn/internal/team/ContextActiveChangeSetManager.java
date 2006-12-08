@@ -45,7 +45,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (set instanceof ContextChangeSet) {
 				ContextChangeSet contextChangeSet = (ContextChangeSet) set;
 				if (contextChangeSet.getTask().isActive()) {
-					for (ActiveChangeSetManager collector : collectors) {
+					for (ActiveChangeSetManager collector : changeSetManagers) {
 						collector.add(contextChangeSet); // put it back
 					}
 				}
@@ -69,7 +69,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		}
 	};
 
-	private List<ActiveChangeSetManager> collectors = new ArrayList<ActiveChangeSetManager>();
+	private List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
 
 	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
 
@@ -78,14 +78,15 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {
-				collectors.add(changeSetManager);
+				System.err.println(">>> adding: " + changeSetManager);
+				changeSetManagers.add(changeSetManager);
 			}
 		}
 	}
 
 	@Override
 	protected void updateChangeSetLabel(ITask task) {
-		for (ActiveChangeSetManager collector : collectors) {
+		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
@@ -103,7 +104,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public void enable() {
 		super.enable();
 		if (!isEnabled) {
-			for (ActiveChangeSetManager collector : collectors) {
+			for (ActiveChangeSetManager collector : changeSetManagers) {
 				collector.addListener(CHANGE_SET_LISTENER);
 			}
 		}
@@ -112,14 +113,14 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	@Override
 	public void disable() {
 		super.disable();
-		for (ActiveChangeSetManager collector : collectors) {
+		for (ActiveChangeSetManager collector : changeSetManagers) {
 			collector.removeListener(CHANGE_SET_LISTENER);
 		}
 	}
 
 	@Override
 	protected void initContextChangeSets() {
-		for (ActiveChangeSetManager collector : collectors) {
+		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet restoredSet = sets[i];
@@ -150,7 +151,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	public IResource[] getResources(ITask task) {
-		for (ActiveChangeSetManager collector : collectors) {
+		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
@@ -169,7 +170,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		try {
 			ITask task = getTask(context);
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
-				for (ActiveChangeSetManager collector : collectors) {
+				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
 					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources();
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
@@ -187,7 +188,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	public void contextDeactivated(IMylarContext context) {
-		for (ActiveChangeSetManager collector : collectors) {
+		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
@@ -217,7 +218,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							}
 						}
 						if (shouldRemove(element)) {
-							for (ActiveChangeSetManager collector : collectors) {
+							for (ActiveChangeSetManager collector : changeSetManagers) {
 								ChangeSet[] sets = collector.getSets();
 								for (int i = 0; i < sets.length; i++) {
 									if (sets[i] instanceof ContextChangeSet) {

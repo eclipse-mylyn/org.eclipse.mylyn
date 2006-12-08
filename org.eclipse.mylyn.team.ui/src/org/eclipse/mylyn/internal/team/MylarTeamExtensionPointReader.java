@@ -35,9 +35,9 @@ public class MylarTeamExtensionPointReader {
 	private static final String ELEM_ACTIVE_CHANGE_SET_PROVIDER = "activeChangeSetProvider";
 
 	private static final String ELEM_CHANGE_SET_MANAGER = "contextChangeSetManager";
-	
+
 	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets";
-	
+
 	public void readExtensions() {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(MylarTeamPlugin.PLUGIN_ID,
 				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
@@ -45,6 +45,7 @@ public class MylarTeamExtensionPointReader {
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];
 			IConfigurationElement[] elements = extension.getConfigurationElements();
+
 			for (int j = 0; j < elements.length; j++) {
 				IConfigurationElement element = elements[j];
 				if (ELEM_ACTIVE_CHANGE_SET_PROVIDER.equals(element.getName())) {
@@ -57,7 +58,16 @@ public class MylarTeamExtensionPointReader {
 								"Error while initializing repository contribution {0} from plugin {1}.", element
 										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
 					}
-				} else if (ELEM_CHANGE_SET_MANAGER.equals(element.getName())) {
+				}
+			}
+		}
+		// NOTE: must first have read providers to properly instantiate manager
+		for (int i = 0; i < extensions.length; i++) {
+			IExtension extension = extensions[i];
+			IConfigurationElement[] elements = extension.getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				IConfigurationElement element = elements[j];
+				if (ELEM_CHANGE_SET_MANAGER.equals(element.getName())) {
 					try {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element
 								.createExecutableExtension(ATTR_CLASS);
