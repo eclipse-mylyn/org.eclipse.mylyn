@@ -330,7 +330,7 @@ public class BugzillaClient {
 		if (!hasAuthenticationCredentials()) {
 			throw new LoginException();
 		}
-	
+
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 
 		NameValuePair[] formData = new NameValuePair[2];
@@ -649,6 +649,13 @@ public class BugzillaClient {
 	 * once finished. TODO: refactor
 	 */
 	private PostMethod postFormData(String formUrl, NameValuePair[] formData) throws LoginException, IOException {
+
+		// DEBUG
+		// for (NameValuePair nameValuePair : formData) {
+		// System.err.println(">>> " + nameValuePair.getName() + " val: " +
+		// nameValuePair.getValue());
+		// }
+
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
@@ -836,7 +843,7 @@ public class BugzillaClient {
 				continue;
 			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
 				String value = a.getValue();
-				if (value != null && value.equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}
 				fields.put(a.getID(), new NameValuePair(a.getID(), value != null ? value : ""));
