@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.ide_feature"
       label="Mylar Focused UI (Recommended)"
-      version="0.9.2.1"
+      version="0.9.2.2"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -241,67 +241,68 @@ litigation.
       <import plugin="org.eclipse.pde.core"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.mylar.context.core" version="0.6.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.ide"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
+      <import plugin="org.eclipse.mylar.context.ui"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.mylar.monitor"/>
+      <import plugin="org.eclipse.mylar.resources"/>
       <import plugin="org.eclipse.jdt.debug"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ant.ui"/>
       <import plugin="org.eclipse.ui.navigator.resources"/>
+      <import plugin="org.eclipse.pde.runtime"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import feature="org.eclipse.mylar_feature" version="0.9.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.ide"/>
-      <import plugin="org.eclipse.mylar.context.ui"/>
-      <import plugin="org.eclipse.mylar.resources"/>
-      <import plugin="org.eclipse.pde.runtime"/>
+      <import plugin="org.eclipse.mylar.doc"/>
    </requires>
 
    <plugin
          id="org.eclipse.mylar.java"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.ide"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.resources"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.ui"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.team"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.web"
          download-size="0"
          install-size="0"
-         version="0.9.2.1"
+         version="0.9.2.2"
          unpack="false"/>
 
 </feature>
