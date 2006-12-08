@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,6 +22,7 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -43,7 +46,31 @@ public class DeleteAction extends Action {
 	@Override
 	public void run() {
 		ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
-		for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
+
+		List<?> toDelete = ((IStructuredSelection) selection).toList();
+
+		String message = "Delete the elements listed?  If categories or queries are selected contained tasks"
+				+ " will not be deleted.  Contexts will be deleted for selected tasks.\n\n";
+//				+ "This operation cannot be undone (the Task List can be restored from history).\n\n";
+		int i = 0;
+		for (Object object : toDelete) {
+			i++;
+			if (i < 20) {
+				if (object instanceof ITaskListElement) {
+					message += "    " + ((ITaskListElement) object).getSummary() + "\n";
+				}
+			} else {
+				message += "...";
+				break;
+			}
+		}
+		boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell(), "Confirm Delete", message);
+		if (!deleteConfirmed) {
+			return;
+		}
+
+		for (Object selectedObject : toDelete) {
 			if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
 				ITask task = null;
 				if (selectedObject instanceof AbstractQueryHit) {
@@ -51,35 +78,28 @@ public class DeleteAction extends Action {
 				} else {
 					task = (ITask) selectedObject;
 				}
-				if (task == null) {
-					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							"Mylar Tasks", "No task data to delete.");
-					return;
+				if (task != null) {
+					TasksUiPlugin.getTaskListManager().deactivateTask(task);
+					TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+					TasksUiUtil.closeEditorInActivePage(task);
 				}
-
-				String message = genDeleteConfirmationMessage(task);
-				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getShell(), "Confirm Delete", message);
-				if (!deleteConfirmed) {
-					return;
-				}
-
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
-				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
-				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-				TasksUiUtil.closeEditorInActivePage(task);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
-				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getShell(), "Confirm delete", "Delete the selected query? Task data will not be deleted.");
-				if (deleteConfirmed) {
-					TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
-				}
+				// boolean deleteConfirmed =
+				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
+				// .getActiveWorkbenchWindow().getShell(), "Confirm delete",
+				// "Delete the selected query? Task data will not be deleted.");
+				// if (deleteConfirmed) {
+				TasksUiPlugin.getTaskListManager().getTaskList().deleteQuery((AbstractRepositoryQuery) selectedObject);
+				// }
 			} else if (selectedObject instanceof TaskCategory) {
-				boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getShell(), "Confirm Delete", "Delete the selected category?  Contained tasks will be moved to the root.");
-				if (!deleteConfirmed)
-					return;
-
+				// boolean deleteConfirmed =
+				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
+				// .getActiveWorkbenchWindow().getShell(), "Confirm Delete",
+				// "Delete the selected category? Contained tasks will be moved
+				// to the root.");
+				// if (!deleteConfirmed)
+				// return;
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (ITask task : cat.getChildren()) {
 					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
@@ -87,14 +107,10 @@ public class DeleteAction extends Action {
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else {
-				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Delete failed",
-						"Nothing selected.");
+				MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						"Delete failed", "Nothing selected.");
 				return;
 			}
 		}
-	}
-
-	public static String genDeleteConfirmationMessage(ITask task) {
-		return "Delete the selected task and discard task context?\n\n" + task.getSummary();
 	}
 }
