@@ -84,7 +84,9 @@ public class OpenRepositoryTaskJob extends Job {
 					RepositoryTaskData downloadedTaskData = null;
 					try {
 						downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
-						TasksUiPlugin.getDefault().getTaskDataManager().put(downloadedTaskData);						
+						if (downloadedTaskData != null) {
+							TasksUiPlugin.getDefault().getTaskDataManager().put(downloadedTaskData);
+						}
 						openEditor(repository, AbstractRepositoryTask.getHandle(repository.getUrl(), taskId), downloadedTaskData);										
 					} catch (final CoreException e) {	
 						if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
