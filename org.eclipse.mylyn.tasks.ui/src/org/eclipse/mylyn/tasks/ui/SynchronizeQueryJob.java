@@ -165,7 +165,7 @@ class SynchronizeQueryJob extends Job {
 		private ITaskDataHandler handler;
 
 		public PrimeTaskData() {
-			super("");
+			super("Retrieving hit data");
 			this.handler = connector.getTaskDataHandler();
 		}
 
