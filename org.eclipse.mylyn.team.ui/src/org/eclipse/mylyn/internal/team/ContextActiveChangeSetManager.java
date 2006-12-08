@@ -78,7 +78,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {
-				System.err.println(">>> adding: " + changeSetManager);
 				changeSetManagers.add(changeSetManager);
 			}
 		}
