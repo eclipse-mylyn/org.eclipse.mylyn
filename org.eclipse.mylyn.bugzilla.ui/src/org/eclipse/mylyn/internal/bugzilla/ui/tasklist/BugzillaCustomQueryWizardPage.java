@@ -127,6 +127,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 					TasksUiPlugin.getTaskListManager().getTaskList());
 			query.setCustomQuery(true);
 		} else {
+			query.setDescription(this.getQueryTitle());
 			query.setUrl(queryText.getText());
 		}
 		return query;
