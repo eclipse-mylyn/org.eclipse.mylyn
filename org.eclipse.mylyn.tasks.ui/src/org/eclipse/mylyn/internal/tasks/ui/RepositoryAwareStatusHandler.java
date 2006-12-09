@@ -22,7 +22,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	protected static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
 		+ "http://eclipse.org/mylar\n\n"
-		+ "For details on this error please open the PDE Runtime -> Error Log view";
+		+ "For details please use Window -> Show View -> Error Log";
 	
 	// TODO: implement option to report bug
 	public void notify(final Status status, boolean informUser) {
