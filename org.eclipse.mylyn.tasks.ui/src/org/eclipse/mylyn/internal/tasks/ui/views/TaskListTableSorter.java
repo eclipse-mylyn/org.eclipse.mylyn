@@ -110,6 +110,8 @@ public class TaskListTableSorter extends ViewerSorter {
 			AbstractRepositoryTask task1 = ((AbstractQueryHit)element).getCorrespondingTask();
 			if (task1 != null && task1.getIdLabel() != null) {
 				summary = task1.getIdLabel() + ": " + summary;
+			} else {
+				summary = ((AbstractQueryHit)element).getIdLabel() + ": " + summary;
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task1 = (AbstractRepositoryTask)element;
