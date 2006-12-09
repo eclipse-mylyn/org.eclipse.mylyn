@@ -303,12 +303,10 @@ public class RepositorySynchronizationManager {
 								updateLocalCopy = MessageDialog
 										.openQuestion(
 												null,
-												"Local Task Conflicts with Repository",
-												"Local copy of: "
-														+ repositoryTask.getSummary()
-														+ "\n\n on: "
-														+ repositoryTask.getRepositoryUrl()
-														+ "\n\n has changes, override local? \n\nNOTE: if you select No, only the new comment will be saved with the updated bug, all other changes will be lost.");
+												"Repository Task Conflict",
+														"Task: " + repositoryTask.getSummary()
+														+ "\n\nHas been modified locally, discard local changes?"
+												        + "\nIf you select \"No\" only the new comment will be retained.");
 							}
 						});
 					} else {
