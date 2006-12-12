@@ -19,7 +19,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
@@ -104,7 +106,8 @@ public class TaskListStandaloneTest extends TestCase {
 		assertEquals(task.getScheduledForDate(), readTask.getScheduledForDate());
 	}
 
-	public void testTaskRetentionWhenConnectorMissing() {
+	// Task retention when connector missing upon startup
+	public void testOrphanedTasks() {
 		List<ITaskListExternalizer> originalExternalizers = manager.getTaskListWriter().getExternalizers();
 		List<ITaskListExternalizer> externalizers;
 		externalizers = new ArrayList<ITaskListExternalizer>();
@@ -142,6 +145,49 @@ public class TaskListStandaloneTest extends TestCase {
 
 		// ensure that task now gets loaded
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		manager.getTaskListWriter().setDelegateExternalizers(originalExternalizers);
+	}
+
+	// Query retention when connector missing/fails to load
+	public void testOrphanedQueries() {
+		List<ITaskListExternalizer> originalExternalizers = manager.getTaskListWriter().getExternalizers();
+		List<ITaskListExternalizer> externalizers;
+		externalizers = new ArrayList<ITaskListExternalizer>();
+		externalizers.add(new BugzillaTaskExternalizer());
+		// make a query
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"http://queryurl", "description", "-1", TasksUiPlugin.getTaskListManager().getTaskList());
+
+		manager.getTaskList().addQuery(query);
+		manager.saveTaskList();
+
+		// reload tasklist and check that they persist
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getQueries().size());
+
+		// removed/disable externalizers
+		externalizers.clear();
+		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
+
+		// reload tasklist ensure query didn't load
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(0, manager.getTaskList().getQueries().size());
+		// Save the task list (queries with missing connectors should get
+		// persisted)
+		manager.saveTaskList();
+
+		// re-enable connector
+		externalizers.add(new BugzillaTaskExternalizer());
+		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
+
+		// re-load tasklist
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+
+		// ensure that task now gets loaded
+		assertEquals(1, manager.getTaskList().getQueries().size());		
 		manager.getTaskListWriter().setDelegateExternalizers(originalExternalizers);
 	}
 

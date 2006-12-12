@@ -55,6 +55,7 @@ import org.xml.sax.SAXException;
 /**
  * @author Mik Kersten
  * @author Ken Sueda
+ * @author Rob Elves
  */
 public class TaskListWriter {
 	// Last number given to new local task
@@ -75,6 +76,8 @@ public class TaskListWriter {
 	private DelegatingTaskExternalizer delagatingExternalizer;
 
 	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
+	
+	private List<Node> orphanedQueryNodes = new ArrayList<Node>();
 
 	private String readVersion = "";
 
@@ -140,9 +143,18 @@ public class TaskListWriter {
 		for (ITask task : new ArrayList<ITask>(taskList.getAllTasks())) {
 			createTaskElement(doc, root, task);
 		}
-
+	
+		// Persist orphaned tasks...
 		for (Node orphanedTaskNode : orphanedTaskNodes) {
 			Node tempNode = doc.importNode(orphanedTaskNode, true);
+			if (tempNode != null) {
+				root.appendChild(tempNode);
+			}
+		}
+		
+		// Persist orphaned queries....
+		for (Node orphanedQueryNode : orphanedQueryNodes) {
+			Node tempNode = doc.importNode(orphanedQueryNode, true);
 			if (tempNode != null) {
 				root.appendChild(tempNode);
 			}
@@ -237,6 +249,7 @@ public class TaskListWriter {
 	public void readTaskList(TaskList taskList, File inFile, TaskDataManager taskDataManager) {
 		hasCaughtException = false;
 		orphanedTaskNodes.clear();
+		orphanedQueryNodes.clear();
 		try {
 			if (!inFile.exists())
 				return;
@@ -303,19 +316,24 @@ public class TaskListWriter {
 					}
 				}
 
-				// then query hits hits, which get corresponded to tasks
+				// then queries and hits which get linked to tasks
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
+						boolean wasRead = false;
 						if (child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 							for (ITaskListExternalizer externalizer : externalizers) {
 								if (externalizer.canReadQuery(child)) {
 									AbstractRepositoryQuery query = externalizer.readQuery(child, taskList);
 									if (query != null) {
+										wasRead = true;
 										taskList.internalAddQuery(query);
 									}
 									break;
 								}
+							}
+							if(!wasRead) {
+								orphanedQueryNodes.add(child);
 							}
 						}
 					} catch (Exception e) {

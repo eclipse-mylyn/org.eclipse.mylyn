@@ -82,31 +82,30 @@ public class TaskListManagerTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
-	
-	public void testUniqueTaskID() {		
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+	public void testUniqueTaskID() {
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
 		manager.getTaskList().addTask(task1);
-		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
 		manager.getTaskList().addTask(task2);
 		assertEquals(2, manager.getTaskList().getLastTaskNum());
 		manager.getTaskList().deleteTask(task2);
-		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
+		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
 		manager.getTaskList().addTask(task3);
-		assertTrue(task3.getHandleIdentifier()+" should end with 3", task3.getHandleIdentifier().endsWith("3"));
+		assertTrue(task3.getHandleIdentifier() + " should end with 3", task3.getHandleIdentifier().endsWith("3"));
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
-		
+
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 		manager.resetTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
-		assertEquals(0, manager.getTaskList().getLastTaskNum());		
+		assertEquals(0, manager.getTaskList().getLastTaskNum());
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
-		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),"label", true);
-		assertTrue(task4.getHandleIdentifier()+" should end with 4", task4.getHandleIdentifier().endsWith("4"));
+		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
+		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}
-	
+
 	public void testSingleTaskDeletion() {
 		MockRepositoryTask task = new MockRepositoryTask("mock-1");
 		manager.getTaskList().moveToRoot(task);
@@ -568,7 +567,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testgetQueriesAndHitsForHandle() {
 		TaskList taskList = manager.getTaskList();
-		
+
 		MockQueryHit hit1 = new MockQueryHit(taskList, "repositoryURL", "description1", "1");
 		MockQueryHit hit2 = new MockQueryHit(taskList, "repositoryURL", "description2", "2");
 		MockQueryHit hit3 = new MockQueryHit(taskList, "repositoryURL", "description3", "3");
@@ -601,8 +600,7 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(queriesReturned.contains(query2));
 
 		Set<String> handles = new HashSet<String>();
-		handles.add(AbstractRepositoryTask.getHandle(
-				"repositoryURL", 2));
+		handles.add(AbstractRepositoryTask.getHandle("repositoryURL", 2));
 		Set<AbstractQueryHit> hitsReturned = taskList.getQueryHits(handles);
 		assertNotNull(hitsReturned);
 		assertEquals(1, hitsReturned.size());
@@ -613,7 +611,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testQueryHitHasParent() {
 		TaskList taskList = manager.getTaskList();
-		
+
 		MockQueryHit hit1 = new MockQueryHit(taskList, MOCK_REPOSITORY_URL, "description1", "1");
 		assertNull(hit1.getParent());
 		MockRepositoryQuery query1 = new MockRepositoryQuery("query1", manager.getTaskList());
@@ -625,7 +623,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testUpdateQueryHits() {
 
 		TaskList taskList = manager.getTaskList();
-		
+
 		MockQueryHit hit1 = new MockQueryHit(taskList, "repositoryURL", "description1", "1");
 		MockQueryHit hit2 = new MockQueryHit(taskList, "repositoryURL", "description2", "2");
 		MockQueryHit hit3 = new MockQueryHit(taskList, "repositoryURL", "description3", "3");
@@ -784,7 +782,5 @@ public class TaskListManagerTest extends TestCase {
 				fail();
 			}
 		}
-
 	}
-
 }
