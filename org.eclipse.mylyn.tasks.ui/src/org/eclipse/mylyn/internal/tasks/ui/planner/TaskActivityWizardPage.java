@@ -179,7 +179,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		layout.numColumns = 1;
 		categorySelectionGroup.setLayout(layout);
 		categorySelectionGroup.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL));
-		categorySelectionGroup.setText("Catagory Selection");
+		categorySelectionGroup.setText("Category Selection");
 		categorySelectionGroup.setFont(composite.getFont());
 
 		createFilterTable(categorySelectionGroup, true);
