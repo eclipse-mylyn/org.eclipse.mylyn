@@ -74,7 +74,7 @@ public class TaskEditor extends FormEditor {
 
 	private IEditorPart contentOutlineProvider = null;
 
-	private int browserPageIndex;
+	private int browserPageIndex = -1;
 
 	public TaskEditor() {
 		super();
@@ -288,11 +288,13 @@ public class TaskEditor extends FormEditor {
 
 	@Override
 	public void setFocus() {
-		if (this.getActivePage() > -1) {
+		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
 			IFormPage page = this.getPages()[this.getActivePage()];
 			if (page != null) {
 				page.setFocus();
 			}
+		} else if(this.getActivePage() == browserPageIndex) {
+			webBrowser.setFocus();
 		}
 	}
 
