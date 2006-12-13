@@ -117,6 +117,9 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 //			case RESOLUTION:
 //				resolution = parsedText;
 //				break;
+			case SHORT_DESC:
+				description = parsedText;
+				break;
 			case SHORT_SHORT_DESC:
 				description = parsedText;
 				break;
