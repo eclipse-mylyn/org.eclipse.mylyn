@@ -293,7 +293,7 @@ public class TaskEditor extends FormEditor {
 			if (page != null) {
 				page.setFocus();
 			}
-		} else if(this.getActivePage() == browserPageIndex) {
+		} else if(this.getActivePage() == browserPageIndex && webBrowser != null) {
 			webBrowser.setFocus();
 		}
 	}
