@@ -1389,9 +1389,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		textLayout.marginHeight = 0;
 		textLayout.marginRight = 5;
 		textFieldComposite.setLayout(textLayout);
-		createTextField(textFieldComposite,
+		Text textField = createTextField(textFieldComposite,
 				getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT | SWT.READ_ONLY);
 
+		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+		
+		
 		label = toolkit.createLabel(peopleComposite, "Reporter:");
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
 		textFieldComposite = toolkit.createComposite(peopleComposite);
@@ -1400,9 +1403,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		textLayout.verticalSpacing = 0;
 		textLayout.marginHeight = 0;
 		textFieldComposite.setLayout(textLayout);
-		createTextField(textFieldComposite,
+		textField = createTextField(textFieldComposite,
 				getRepositoryTaskData().getAttribute(RepositoryTaskAttribute.USER_REPORTER), SWT.FLAT | SWT.READ_ONLY);
 
+		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		addSelfToCC(peopleComposite);
 
 		addCCList(peopleComposite);
