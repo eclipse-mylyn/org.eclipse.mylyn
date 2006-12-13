@@ -117,13 +117,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private boolean needsHttpAuth;
 
 	private Composite container;
-	
-	private Composite httpAuthComp; 
-	
+
+	private Composite httpAuthComp;
+
 	private Composite proxyAuthComp;
-	
+
 	private ExpandableComposite httpAuthExpComposite;
-	
+
 	private ExpandableComposite proxyExpComposite;
 
 	private Set<String> repositoryUrls;
@@ -149,7 +149,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private String oldProxyPort = "";
 
 	private Button proxyAuthButton;
-	
+
 	private FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
@@ -385,9 +385,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (needsHttpAuth()) {
-			
-			httpAuthExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT
-					| Section.TWISTIE | Section.TITLE_BAR);
+
+			httpAuthExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+					| Section.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
 			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
@@ -397,13 +397,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite.setText("Http Authentication");
 			httpAuthExpComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
-				public void expansionStateChanged(ExpansionEvent e) {													
-					getControl().getShell().pack();					
+				public void expansionStateChanged(ExpansionEvent e) {
+					getControl().getShell().pack();
 				}
 			});
 
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(httpAuthExpComposite);
-			
+
 			httpAuthComp = toolkit.createComposite(httpAuthExpComposite, SWT.NONE);
 			GridLayout gridLayout2 = new GridLayout();
 			gridLayout2.numColumns = 2;
@@ -411,8 +411,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthComp.setLayout(gridLayout2);
 			httpAuthComp.setBackground(container.getBackground());
 			httpAuthExpComposite.setClient(httpAuthComp);
-			
-			
+
 			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
 			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
 
@@ -475,9 +474,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	private void addProxySection() {
-		
-		proxyExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT
-				| Section.TWISTIE | Section.TITLE_BAR);
+
+		proxyExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+				| Section.TITLE_BAR);
 		proxyExpComposite.clientVerticalSpacing = 0;
 		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gridData_2.horizontalIndent = -5;
@@ -487,13 +486,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyExpComposite.setText("Proxy Server Configuration");
 		proxyExpComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
-			public void expansionStateChanged(ExpansionEvent e) {													
-				getControl().getShell().pack();					
+			public void expansionStateChanged(ExpansionEvent e) {
+				getControl().getShell().pack();
 			}
 		});
 
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(proxyExpComposite);
-		
+
 		proxyAuthComp = toolkit.createComposite(proxyExpComposite, SWT.NONE);
 		GridLayout gridLayout2 = new GridLayout();
 		gridLayout2.numColumns = 2;
@@ -501,8 +500,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthComp.setLayout(gridLayout2);
 		proxyAuthComp.setBackground(container.getBackground());
 		proxyExpComposite.setClient(proxyAuthComp);
-		
-		
+
 		systemProxyButton = new Button(proxyAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
 
@@ -518,7 +516,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		});
 
-		proxyHostnameEditor = new StringFieldEditor("", "Proxy host address: ", StringFieldEditor.UNLIMITED, proxyAuthComp) {
+		proxyHostnameEditor = new StringFieldEditor("", "Proxy host address: ", StringFieldEditor.UNLIMITED,
+				proxyAuthComp) {
 
 			@Override
 			protected boolean doCheckState() {
@@ -543,7 +542,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyHostnameEditor.setEnabled(systemProxyButton.getSelection(), proxyAuthComp);
 		proxyPortEditor.setEnabled(systemProxyButton.getSelection(), proxyAuthComp);
 
-		//************* PROXY AUTHENTICATION **************
+		// ************* PROXY AUTHENTICATION **************
 
 		proxyAuthButton = new Button(proxyAuthComp, SWT.CHECK);
 		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
@@ -574,7 +573,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			}
 		};
-		proxyPasswordEditor = new RepositoryStringFieldEditor("", "Password: ", StringFieldEditor.UNLIMITED, proxyAuthComp);
+		proxyPasswordEditor = new RepositoryStringFieldEditor("", "Password: ", StringFieldEditor.UNLIMITED,
+				proxyAuthComp);
 		((RepositoryStringFieldEditor) proxyPasswordEditor).getTextControl().setEchoChar('*');
 
 		// proxyPasswordEditor.setEnabled(httpAuthButton.getSelection(),
@@ -672,11 +672,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyHostnameEditor.setEnabled(!selected, proxyAuthComp);
 		proxyPortEditor.setEnabled(!selected, proxyAuthComp);
 		proxyAuthButton.setEnabled(!selected);
-
 		setProxyAuth(proxyAuthButton.getSelection());
-		if(getWizard() != null && getWizard().getContainer() != null) {
-			getWizard().getContainer().updateButtons();
-		}
 	}
 
 	public void setProxyAuth(boolean selected) {
@@ -824,11 +820,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		String url = getServerUrl();
 		isComplete = isUniqueUrl(url) && isValidUrl(url);
-//		if (systemProxyButton != null && proxyHostnameEditor != null) {
-//			if (isComplete && !getUseDefaultProxy()) {
-//				isComplete = isValidUrl(getProxyHostname());
-//			}
-//		}
 		return isComplete;
 	}
 
