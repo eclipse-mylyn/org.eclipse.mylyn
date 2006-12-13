@@ -552,8 +552,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		if (getRepositoryTaskData() == null) {
-			toolkit.createLabel(editorComposite,
-					"Task data not available, please synchronize and reopen.");
+			toolkit.createLabel(editorComposite, "Task data not available, please synchronize and reopen.");
 			return;
 		}
 
@@ -855,7 +854,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry()
 				.get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
 		summaryText.setFont(summaryFont);
-		
+
 		GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
 
 		summaryText.addListener(SWT.KeyUp, new SummaryListener());
@@ -1850,7 +1849,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void setFocus() {
-		form.setFocus();
+		if (summaryText != null && !summaryText.isDisposed()) {
+			summaryText.setFocus();
+		} else {
+			form.setFocus();
+		}
 	}
 
 	// /**
@@ -2586,7 +2589,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return submitJobListener;
 	}
 
-
 	protected void attachContext(final AbstractRepositoryTask modifiedTask) {
 		IProgressService ps = PlatformUI.getWorkbench().getProgressService();
 		try {
@@ -2611,8 +2613,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void handleSubmitError(final IJobChangeEvent event) {
 		if (event.getJob().getResult().getCode() == Status.INFO) {
-			WebBrowserDialog.openAcceptAgreement(this.getSite().getShell(), "Failed to submit to repository", event.getJob().getResult()
-					.getMessage(), event.getJob().getResult().getException().getMessage());
+			WebBrowserDialog.openAcceptAgreement(this.getSite().getShell(), "Failed to submit to repository", event
+					.getJob().getResult().getMessage(), event.getJob().getResult().getException().getMessage());
 		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
 			MylarStatusHandler.fail(event.getJob().getResult().getException(), "Failed to submit to repository"
 					+ ": Changes may not have successfully committed.\n" + event.getJob().getResult().getMessage(),

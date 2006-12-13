@@ -288,8 +288,12 @@ public class TaskEditor extends FormEditor {
 
 	@Override
 	public void setFocus() {
-		if (taskPlanningEditor != null)
-			taskPlanningEditor.setFocus();
+		if (this.getActivePage() > -1) {
+			IFormPage page = this.getPages()[this.getActivePage()];
+			if (page != null) {
+				page.setFocus();
+			}
+		}
 	}
 
 	public Browser getWebBrowser() {
