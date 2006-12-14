@@ -146,13 +146,6 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 		}
 	};
 
-	
-//	private void setNotified() {
-//		for (ITaskListNotification notification : currentlyNotifying) {
-//			notification.setNotified(true);
-//		}
-//	}
-	
 	private void cleanNotified() {
 		currentlyNotifying.clear();
 	}
