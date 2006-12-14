@@ -167,38 +167,43 @@ public class TaskRepository {
 	public String getProxyPassword() {
 		return getAuthInfo(PROXY_PASSWORD);
 	}
+	
+	public String getHttpUser() {
+		return getAuthInfo(AUTH_HTTP_USERNAME);
+	}
+	
+	public String getHttpPassword() {
+		return getAuthInfo(AUTH_HTTP_PASSWORD);
+	}
 
 	public void setAuthenticationCredentials(String username, String password) {
-		Map<String, String> map = getAuthInfo();
-		if (map == null) {
-			map = new HashMap<String, String>();
-		}
-
-		if (username != null) {
-			map.put(AUTH_USERNAME, username);
-			cachedUserName = username;
-		}
-		if (password != null) {
-			map.put(AUTH_PASSWORD, password);
-		}
-		addAuthInfo(map);
+		setCredentials(username, password, AUTH_USERNAME, AUTH_PASSWORD);
+		cachedUserName = username;
 	}
 
 	public void setProxyAuthenticationCredentials(String username, String password) {
+		setCredentials(username, password, PROXY_USERNAME, PROXY_PASSWORD);
+	}
+
+	public void setHttpAuthenticationCredentials(String username, String password) {
+		setCredentials(username, password, AUTH_HTTP_USERNAME, AUTH_HTTP_PASSWORD);
+	}
+
+	private void setCredentials(String username, String password, String userProperty, String passwordProperty) {
 		Map<String, String> map = getAuthInfo();
 		if (map == null) {
 			map = new HashMap<String, String>();
 		}
 
 		if (username != null) {
-			map.put(PROXY_USERNAME, username);
+			map.put(userProperty, username);
 		}
 		if (password != null) {
-			map.put(PROXY_PASSWORD, password);
+			map.put(passwordProperty, password);
 		}
 		addAuthInfo(map);
 	}
-
+	
 	public void flushAuthenticationCredentials() {
 		try {
 			if (Platform.isRunning()) {

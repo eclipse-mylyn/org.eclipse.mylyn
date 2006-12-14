@@ -33,10 +33,8 @@ public class BugzillaClientManager implements ITaskRepositoryListener {
 		BugzillaClient client = clientByUrl.get(taskRepository.getUrl());
 		if (client == null) {
 
-			String htUser = taskRepository.getProperty(TaskRepository.AUTH_HTTP_USERNAME) != null ? taskRepository
-					.getProperty(TaskRepository.AUTH_HTTP_USERNAME) : "";
-			String htPass = taskRepository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD) != null ? taskRepository
-					.getProperty(TaskRepository.AUTH_HTTP_PASSWORD) : "";
+			String htUser = taskRepository.getHttpUser() != null ? taskRepository.getHttpUser() : "";
+			String htPass = taskRepository.getHttpPassword() != null ? taskRepository.getHttpPassword() : "";
 
 			client = BugzillaClientFactory.createClient(taskRepository.getUrl(), taskRepository.getUserName(),
 					taskRepository.getPassword(), htUser, htPass, taskRepository.getProxy(), taskRepository

@@ -245,10 +245,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			originalUrl = repository.getUrl();
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
-			if (repository.hasProperty(TaskRepository.AUTH_HTTP_USERNAME)
-					&& repository.hasProperty(TaskRepository.AUTH_HTTP_PASSWORD)) {
-				oldHttpAuthUserId = repository.getProperty(TaskRepository.AUTH_HTTP_USERNAME);
-				oldHttpAuthPassword = repository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD);
+		
+			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
+				oldHttpAuthUserId = repository.getHttpUser();
+				oldHttpAuthPassword = repository.getHttpPassword();
 			} else {
 				oldHttpAuthPassword = "";
 				oldHttpAuthUserId = "";
@@ -894,15 +894,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
 
-		repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, getHttpAuthUserId());
-		repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, getHttpAuthPassword());
+		//repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, getHttpAuthUserId());
+		//repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, getHttpAuthPassword());
+		if(getHttpAuthUserId().length()>0 && getHttpAuthPassword().length()>0) {
+			repository.setHttpAuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
+		}
 
 		repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(getUseDefaultProxy()));
 		repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 		repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 
-		if (getProxyUsername() != null && getProxyPassword() != null && getProxyUsername().length() > 0
-				&& getProxyPassword().length() > 0) {
+		if (getProxyUsername().length() > 0 && getProxyPassword().length() > 0) {
 			repository.setProxyAuthenticationCredentials(getProxyUsername(), getProxyPassword());
 		}
 		// repository.setProperty(TaskRepository.PROXY_USERNAME,

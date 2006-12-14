@@ -219,6 +219,7 @@ public class TaskRepositoryManager {
 
 	private void loadRepositories(String repositoriesFilePath) {
 		try {
+			boolean migration = false;
 			// String dataDirectory =
 			// TasksUiPlugin.getDefault().getDataDirectory();
 			File repositoriesFile = new File(repositoriesFilePath);
@@ -231,6 +232,11 @@ public class TaskRepositoryManager {
 				Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);
 				if (repositories != null && repositories.size() > 0) {
 					for (TaskRepository repository : repositories) {
+
+						if(removeHttpAuthMigration(repository)) {
+							migration = true;
+						}
+
 						if (repositoryMap.containsKey(repository.getKind())) {
 							repositoryMap.get(repository.getKind()).add(repository);
 						} else {
@@ -238,10 +244,28 @@ public class TaskRepositoryManager {
 						}
 					}
 				}
+				if(migration) {
+					System.err.println(">> saving");
+					saveRepositories(repositoriesFilePath);
+				}
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not load repositories", false);
 		}
+	}
+
+	private boolean removeHttpAuthMigration(TaskRepository repository) {
+		String httpusername = repository.getProperty(TaskRepository.AUTH_HTTP_USERNAME);
+		String httppassword = repository.getProperty(TaskRepository.AUTH_HTTP_PASSWORD);
+		if (httpusername != null && httppassword != null) {
+			repository.removeProperty(TaskRepository.AUTH_HTTP_USERNAME);
+			repository.removeProperty(TaskRepository.AUTH_HTTP_PASSWORD);
+			if (httpusername.length() > 0 && httppassword.length() > 0) {
+				repository.setHttpAuthenticationCredentials(httpusername, httppassword);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**

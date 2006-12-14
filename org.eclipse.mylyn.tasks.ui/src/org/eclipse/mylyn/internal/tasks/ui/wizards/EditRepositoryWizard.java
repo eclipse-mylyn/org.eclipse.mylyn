@@ -63,8 +63,8 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());			
 			repository.setRepositoryLabel(abstractRepositorySettingsPage.getRepositoryLabel());
 			
-			repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, abstractRepositorySettingsPage.getHttpAuthUserId());
-			repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, abstractRepositorySettingsPage.getHttpAuthPassword());
+			repository.setHttpAuthenticationCredentials(abstractRepositorySettingsPage.getHttpAuthUserId(),
+					abstractRepositorySettingsPage.getHttpAuthPassword());
 			
 			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, abstractRepositorySettingsPage.getProxyHostname());
