@@ -198,7 +198,11 @@ public class TaskListNotificationManager implements IPropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED)) {
-			if ((Boolean)event.getNewValue() == true) {
+			Object newValue = event.getNewValue(); 
+			if (!(newValue instanceof Boolean)) {
+				// default if no preference value
+				startNotification(OPEN_POPUP_DELAY);
+			} else if ((Boolean)newValue == true) {
 				startNotification(OPEN_POPUP_DELAY);
 			} else {
 				stopNotification();
