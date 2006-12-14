@@ -123,6 +123,7 @@ public class AbstractReportFactory {
 		}
 	}
 
+	// Copy and remove control characters other than \n and \r
 	private void copyAndCleanByteStream(InputStream in, OutputStream out) throws IOException {
 
 		if (in != null && out != null) {
