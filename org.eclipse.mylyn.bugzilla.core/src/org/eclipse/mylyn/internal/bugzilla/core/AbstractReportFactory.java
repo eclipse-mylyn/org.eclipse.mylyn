@@ -11,10 +11,13 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
@@ -53,15 +56,22 @@ public class AbstractReportFactory {
 	protected void collectResults(DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException,
 			GeneralSecurityException {
 
-		if(inStream == null) {
+		if (inStream == null) {
 			return;
 		}
-		
+
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+		copyAndCleanByteStream(inStream, byteStream);
+
 		BufferedReader in;
 		if (characterEncoding != null) {
-			in = new BufferedReader(new InputStreamReader(inStream, characterEncoding));
+			// in = new BufferedReader(new InputStreamReader(inStream,
+			// characterEncoding));
+			in = new BufferedReader(new StringReader(byteStream.toString(characterEncoding)));
 		} else {
-			in = new BufferedReader(new InputStreamReader(inStream));
+			// in = new BufferedReader(new InputStreamReader(inStream));
+			in = new BufferedReader(new StringReader(byteStream.toString()));
 		}
 
 		if (in != null && clean) {
@@ -78,8 +88,7 @@ public class AbstractReportFactory {
 
 				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 					// The default resolver will try to resolve the dtd via
-					// URLConnection. We would need to implement
-					// via httpclient to handle authorization properly. Since we
+					// URLConnection. Since we
 					// don't have need of entity resolving
 					// currently, we just supply a dummy (empty) resource for
 					// each request...
@@ -113,4 +122,39 @@ public class AbstractReportFactory {
 			}
 		}
 	}
+
+	private void copyAndCleanByteStream(InputStream in, OutputStream out) throws IOException {
+
+		if (in != null && out != null) {
+			BufferedInputStream inBuffered = new BufferedInputStream(in);
+
+			int bufferSize = 1000;
+			byte[] buffer = new byte[bufferSize];
+
+			int readCount;
+
+			BufferedOutputStream outStream = new BufferedOutputStream(out);
+
+			while ((readCount = inBuffered.read(buffer)) != -1) {
+				for (int x = 0; x < readCount; x++) {
+
+					if (!Character.isISOControl(buffer[x])) {
+						outStream.write(buffer[x]);
+					} else if (buffer[x] == '\n' || buffer[x] == '\r') {
+						outStream.write(buffer[x]);
+					}
+				}
+				// if (readCount < bufferSize) {
+				// outStream.write(buffer, 0, readCount);
+				// } else {
+				// outStream.write(buffer);
+				// }
+			}
+			outStream.flush();
+			outStream.close();
+			in.close();
+		}
+
+	}
+
 }

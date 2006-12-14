@@ -36,7 +36,7 @@ public class WebClientUtil {
 
 	// private static final int COM_TIME_OUT = 30000;
 
-	public static final String ENCODING_GZIP = "gzip";
+	//public static final String ENCODING_GZIP = "gzip";
 
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
