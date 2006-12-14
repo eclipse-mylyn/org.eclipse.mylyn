@@ -811,8 +811,7 @@ public class BugzillaClient {
 		fields.put(BugzillaReportElement.SHORT_DESC.getKeyString(), new NameValuePair(BugzillaReportElement.SHORT_DESC
 				.getKeyString(), taskData.getSummary()));
 
-		String formattedDescription = formatTextToLineWrap(taskData.getDescription(), true);
-		taskData.setDescription(formattedDescription);
+		taskData.setDescription(taskData.getDescription());
 
 		if (taskData.getDescription().length() != 0) {
 			// add the new comment to the bug post if there
@@ -889,46 +888,6 @@ public class BugzillaClient {
 
 	}
 
-	/**
-	 * Break text up into lines of about 80 characters so that it is displayed
-	 * properly in bugzilla
-	 */
-	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
-		// BugzillaServerVersion bugzillaServerVersion =
-		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
-		// .getVersion());
-		// if (bugzillaServerVersion != null &&
-		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
-		// 0) {
-		// return origText;
-		if (!hardWrap) {
-			return origText;
-		} else {
-			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
-			for (int i = 0; i < textArray.length; i++)
-				textArray[i] = null;
-			int j = 0;
-			while (true) {
-				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
-				if (spaceIndex == origText.length() || spaceIndex == -1) {
-					textArray[j] = origText;
-					break;
-				}
-				textArray[j] = origText.substring(0, spaceIndex);
-				origText = origText.substring(spaceIndex + 1, origText.length());
-				j++;
-			}
-
-			String newText = "";
-
-			for (int i = 0; i < textArray.length; i++) {
-				if (textArray[i] == null)
-					break;
-				newText += textArray[i] + "\n";
-			}
-			return newText;
-		}
-	}
 
 	public static String stripTimeZone(String longTime) {
 		String result = longTime;
@@ -1010,6 +969,7 @@ public class BugzillaClient {
 			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
 		}
 	}
+
 
 }
 

@@ -31,6 +31,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
  */
 public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
+	private static final int WRAP_LENGTH = 90;
+
 	public NewBugzillaTaskEditor(FormEditor editor) {
 		super(editor);
 	}
@@ -39,6 +41,16 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		expandedStateAttributes = true;
+	}
+
+	@Override
+	protected void updateTask() {
+		String text = descriptionTextViewer.getTextWidget().getText();
+		if (repository.getVersion().startsWith("2.18")) {
+			text = formatTextToLineWrap(text, true);
+			descriptionTextViewer.getTextWidget().setText(text);
+		}
+		super.updateTask();
 	}
 
 	// @Override
@@ -95,7 +107,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	// TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
 	// Collections.singletonList(repository));
 	//
-	//	}
+	// }
 
 	// protected void addActionButtons(Composite buttonComposite) {
 	//
@@ -140,17 +152,58 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		return BugzillaUiPlugin.PLUGIN_ID;
 	}
 
-//	@Override
-//	protected void handleErrorStatus(IJobChangeEvent event) {
-//		if (event.getJob().getResult().getCode() == Status.INFO) {
-//			WebBrowserDialog.openAcceptAgreement(NewBugzillaTaskEditor.this.getSite().getShell(),
-//					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getJob().getResult().getMessage(), event.getJob()
-//							.getResult().getException().getMessage());
-//		} else if (event.getJob().getResult().getCode() == Status.ERROR) {
-//			MessageDialog.openError(NewBugzillaTaskEditor.this.getSite().getShell(),
-//					IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
-//		}
-//		super.handleErrorStatus(event);
-//	}
+	// @Override
+	// protected void handleErrorStatus(IJobChangeEvent event) {
+	// if (event.getJob().getResult().getCode() == Status.INFO) {
+	// WebBrowserDialog.openAcceptAgreement(NewBugzillaTaskEditor.this.getSite().getShell(),
+	// IBugzillaConstants.REPORT_SUBMIT_ERROR,
+	// event.getJob().getResult().getMessage(), event.getJob()
+	// .getResult().getException().getMessage());
+	// } else if (event.getJob().getResult().getCode() == Status.ERROR) {
+	// MessageDialog.openError(NewBugzillaTaskEditor.this.getSite().getShell(),
+	// IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
+	// }
+	// super.handleErrorStatus(event);
+	// }
+
+	/**
+	 * Break text up into lines so that it is displayed properly in bugzilla
+	 */
+	private static String formatTextToLineWrap(String origText, boolean hardWrap) {
+		// BugzillaServerVersion bugzillaServerVersion =
+		// IBugzillaConstants.BugzillaServerVersion.fromString(repository
+		// .getVersion());
+		// if (bugzillaServerVersion != null &&
+		// bugzillaServerVersion.compareTo(BugzillaServerVersion.SERVER_220) >=
+		// 0) {
+		// return origText;
+		if (!hardWrap) {
+			return origText;
+		} else {
+			String[] textArray = new String[(origText.length() / WRAP_LENGTH + 1) * 2];
+			for (int i = 0; i < textArray.length; i++)
+				textArray[i] = null;
+			int j = 0;
+			while (true) {
+				int spaceIndex = origText.indexOf(" ", WRAP_LENGTH - 5);
+				if (spaceIndex == origText.length() || spaceIndex == -1) {
+					textArray[j] = origText;
+					break;
+				}
+				textArray[j] = origText.substring(0, spaceIndex);
+				origText = origText.substring(spaceIndex + 1, origText.length());
+				j++;
+			}
+
+			String newText = "";
+
+			for (int i = 0; i < textArray.length; i++) {
+				if (textArray[i] == null)
+					break;
+				newText += textArray[i] + "\n";
+			}
+			return newText;
+		}
+	}
 
 }
