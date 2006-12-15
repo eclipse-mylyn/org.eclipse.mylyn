@@ -245,7 +245,6 @@ public class TaskRepositoryManager {
 					}
 				}
 				if(migration) {
-					System.err.println(">> saving");
 					saveRepositories(repositoriesFilePath);
 				}
 			}
