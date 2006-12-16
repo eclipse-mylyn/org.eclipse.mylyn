@@ -38,12 +38,13 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JarEntryFile;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
+import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -217,6 +218,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		boolean accepts = object instanceof IJavaElement || object instanceof ClassPathContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
 				|| object instanceof IPackageFragment || object instanceof WorkingSet 
+				|| object instanceof PackageFragmentRootContainer
 				|| isWtpClass(object);
 		
 		return accepts;
@@ -234,7 +236,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			// HACK: check if it has anything interesting
 			ClassPathContainer container = (ClassPathContainer) object;
 
-			Object[] children = container.getChildren(container);
+			Object[] children = container.getChildren();
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof JarPackageFragmentRoot) {
 					JarPackageFragmentRoot element = (JarPackageFragmentRoot) children[i];
