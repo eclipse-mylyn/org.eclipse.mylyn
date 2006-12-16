@@ -145,7 +145,7 @@ public class StatisticsReportingTest extends TestCase {
 		mockTypesSelection("A.java");
 
 		assertNotNull(ContextUiPlugin.getDefault().getPreferenceStore());
-		String prefId = FocusPackageExplorerAction.PREF_ID_PREFIX + PackageExplorerPart.VIEW_ID;
+		String prefId = FocusPackageExplorerAction.PREF_ID_PREFIX + JavaUI.ID_PACKAGES;
 		assertNotNull(prefId);
 		
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
