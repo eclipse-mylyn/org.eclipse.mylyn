@@ -183,7 +183,7 @@ public class BugzillaProductPage extends WizardPage {
 
 			public Object[] getChildren(Object parentElement) {
 				if (parentElement instanceof Collection) {
-					return ((Collection) parentElement).toArray();
+					return ((Collection<?>) parentElement).toArray();
 				}
 				return null;
 			}

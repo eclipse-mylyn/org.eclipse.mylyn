@@ -185,7 +185,7 @@ public class XmlRpcServer {
 		}
 
 		public Map<?, ?> getValues() throws Exception {
-			return (Map) ((Object[]) call("ticket.get", id))[3];
+			return (Map<?, ?>) ((Object[]) call("ticket.get", id))[3];
 		}
 
 		@SuppressWarnings("unchecked")

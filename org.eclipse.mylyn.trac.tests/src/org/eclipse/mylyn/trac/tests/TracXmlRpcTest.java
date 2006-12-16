@@ -164,7 +164,7 @@ public class TracXmlRpcTest extends TestCase {
 
 		try {
 			assertHasValue((Object[]) call(module + ".getAll"), "foo");
-			Map<?, ?> values = (Map) call(module + ".get", "foo");
+			Map<?, ?> values = (Map<?, ?>) call(module + ".get", "foo");
 			for (String attribute : attributes.keySet()) {
 				assertEquals(attributes.get(attribute), values.get(attribute));
 			}
@@ -174,7 +174,7 @@ public class TracXmlRpcTest extends TestCase {
 			}
 
 			call(module + ".update", "foo", attributes);
-			values = (Map) call(module + ".get", "foo");
+			values = (Map<?, ?>) call(module + ".get", "foo");
 			for (String attribute : attributes.keySet()) {
 				assertEquals(attributes.get(attribute), values.get(attribute));
 			}
@@ -199,7 +199,7 @@ public class TracXmlRpcTest extends TestCase {
 
 		call("ticket.milestone.create", "foo", attributes);
 
-		Map<?, ?> values = (Map) call("ticket.milestone.get", "foo");
+		Map<?, ?> values = (Map<?, ?>) call("ticket.milestone.get", "foo");
 		assertEquals(new Integer(due), (Integer) values.get("due"));
 		assertEquals(new Integer(completed), (Integer) values.get("completed"));
 
@@ -228,7 +228,7 @@ public class TracXmlRpcTest extends TestCase {
 		} else {
 			assertTrue((Integer) ticket[2] >= (Integer) ticket[1]);
 		}
-		Map<?, ?> values = (Map) ticket[3];
+		Map<?, ?> values = (Map<?, ?>) ticket[3];
 		for (String attribute : attributes.keySet()) {
 			assertEquals(attributes.get(attribute), values.get(attribute));
 		}
@@ -255,7 +255,7 @@ public class TracXmlRpcTest extends TestCase {
 		}
 
 		try {
-			List<?> ticket = (List) call("ticket.get", Integer.MAX_VALUE);
+			List<?> ticket = (List<?>) call("ticket.get", Integer.MAX_VALUE);
 			fail("Expected XmlRpcException, got ticket instead: " + ticket);
 		} catch (XmlRpcException e) {
 			// ignore
@@ -283,7 +283,7 @@ public class TracXmlRpcTest extends TestCase {
 		attributes.put("description", "description");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
-		Map<?, ?> values = (Map) ticket[3];
+		Map<?, ?> values = (Map<?, ?>) ticket[3];
 		for (String attribute : attributes.keySet()) {
 			assertEquals(attributes.get(attribute), values.get(attribute));
 		}

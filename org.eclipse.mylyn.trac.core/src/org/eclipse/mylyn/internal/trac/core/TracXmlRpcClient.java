@@ -265,7 +265,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		Object[] result = getAttributes("ticket.component");
 		data.components = new ArrayList<TracComponent>(result.length);
 		for (Object item : result) {
-			data.components.add(parseComponent((Map) getMultiCallResult(item)));
+			data.components.add(parseComponent((Map<?, ?>) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
@@ -274,7 +274,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		result = getAttributes("ticket.milestone");
 		data.milestones = new ArrayList<TracMilestone>(result.length);
 		for (Object item : result) {
-			data.milestones.add(parseMilestone((Map) getMultiCallResult(item)));
+			data.milestones.add(parseMilestone((Map<?, ?>) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
@@ -333,7 +333,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		result = getAttributes("ticket.version");
 		data.versions = new ArrayList<TracVersion>(result.length);
 		for (Object item : result) {
-			data.versions.add(parseVersion((Map) getMultiCallResult(item)));
+			data.versions.add(parseVersion((Map<?, ?>) getMultiCallResult(item)));
 		}
 		monitor.worked(1);
 		if (monitor.isCanceled())
