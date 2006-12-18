@@ -61,24 +61,25 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public String getHandleIdentifier(Object object) {
-			throw new RuntimeException("null bridge for object: " + object.getClass());
+			return null;
+//			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
 		@Override
 		public Object getObjectForHandle(String handle) {
-			MylarStatusHandler.log("null bridge for handle: " + handle, this);
+//			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
 		@Override
 		public String getParentHandle(String handle) {
-			MylarStatusHandler.log("null bridge for handle: " + handle, this);
+//			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
 		@Override
 		public String getName(Object object) {
-			MylarStatusHandler.log("null bridge for object: " + object.getClass(), this);
+//			MylarStatusHandler.log("null bridge for object: " + object.getClass(), this);
 			return "";
 		}
 
@@ -89,7 +90,8 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public boolean acceptsObject(Object object) {
-			throw new RuntimeException("null bridge for object: " + object.getClass());
+			return false;
+//			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
 		@Override
@@ -99,8 +101,8 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public boolean isDocument(String handle) {
-			// return false;
-			throw new RuntimeException("null adapter for handle: " + handle);
+			 return false;
+//			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
 		@Override
@@ -120,7 +122,7 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public String getHandleForOffsetInObject(Object resource, int offset) {
-			MylarStatusHandler.log("null bridge for marker: " + resource.getClass(), this);
+//			MylarStatusHandler.log("null bridge for marker: " + resource.getClass(), this);
 			return null;
 		}
 
@@ -221,7 +223,7 @@ public class ContextCorePlugin extends Plugin {
 			}
 		}
 
-		// use the default if not finding
+		// use the default if not found
 		return (defaultBridge != null && defaultBridge.acceptsObject(object)) ? defaultBridge : DEFAULT_BRIDGE;
 	}
 
