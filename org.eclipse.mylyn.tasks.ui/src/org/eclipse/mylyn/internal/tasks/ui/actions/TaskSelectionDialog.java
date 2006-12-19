@@ -18,8 +18,10 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -221,6 +223,15 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
+		viewer.addOpenListener(new IOpenListener() {
+
+			public void open(OpenEvent event) {
+				if (getOkButton().getEnabled()) {
+					okPressed();
+				}
+			}
+
+		});
 
 		filterText.addKeyListener(new KeyAdapter() {
 
@@ -249,7 +260,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		if (selection instanceof ITextSelection) {
 			String text = ((ITextSelection) selection).getText();
 			int n = text.indexOf('\n');
-			if(n>-1) {
+			if (n > -1) {
 				text.substring(0, n);
 			}
 			filterText.setText(text);
