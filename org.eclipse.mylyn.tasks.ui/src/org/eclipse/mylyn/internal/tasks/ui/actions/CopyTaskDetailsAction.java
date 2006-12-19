@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -22,35 +21,37 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class CopyTaskDetailsAction extends Action {
+public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	private static final String LABEL = "Copy Details";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 
-	private TaskListView view;
-
-	public CopyTaskDetailsAction(TaskListView view) {
-		this.view = view;
-		setText(LABEL);
+	public CopyTaskDetailsAction(boolean setAccelerator) {
+		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
 		setImageDescriptor(TaskListImages.COPY);
-		setAccelerator(SWT.MOD1 + 'c');
+		if (setAccelerator) {
+			setAccelerator(SWT.MOD1 + 'c');
+		}
 	}
 
 	@Override
 	public void run() {
-		ISelection selection = this.view.getViewer().getSelection();
+		ISelection selection = super.getStructuredSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		String text = getTextForTask(object); 
 
 		// HACK: this should be done using proper copying
-		StyledText styledText = new StyledText(view.getDummyComposite(), SWT.NULL);
+		Composite dummyComposite = TaskListView.getFromActivePerspective().getFilteredTree();
+		StyledText styledText = new StyledText(dummyComposite, SWT.NULL);
 		styledText.setText(text);
 		styledText.selectAll();
 		styledText.copy();

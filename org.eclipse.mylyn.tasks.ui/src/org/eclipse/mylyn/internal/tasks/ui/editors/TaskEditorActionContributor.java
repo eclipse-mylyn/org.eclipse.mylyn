@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -63,6 +64,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
+	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+	
 	private GlobalAction cutAction;
 
 	private GlobalAction undoAction;
@@ -74,7 +77,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private GlobalAction pasteAction;
 
 	private GlobalAction selectAllAction;
-
+	
 	public TaskEditorActionContributor() {
 
 		cutAction = new GlobalAction(ActionFactory.CUT.getId());
@@ -100,7 +103,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
-
+		
 		undoAction = new GlobalAction(ActionFactory.UNDO.getId());
 		undoAction.setText(WorkbenchMessages.Workbench_undo);
 		undoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
@@ -128,6 +131,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		manager.add(new Separator());
 		manager.add(cutAction);
 		manager.add(copyAction);
+		manager.add(copyTaskDetailsAction);
 		manager.add(pasteAction);
 		manager.add(selectAllAction);
 		manager.add(new Separator());
@@ -154,7 +158,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		if (task == null) {
 			return;
 		} else {
+			// TODO: refactor
 			openWithBrowserAction.selectionChanged(new StructuredSelection(task));
+			copyTaskDetailsAction.selectionChanged(new StructuredSelection(task));
+			
 			manager.add(openWithBrowserAction);
 
 			if (task.isActive()) {

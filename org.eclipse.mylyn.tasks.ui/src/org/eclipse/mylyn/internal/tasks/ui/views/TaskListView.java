@@ -938,8 +938,6 @@ public class TaskListView extends ViewPart {
 				selectedElements.add((ITaskListElement) object);
 			}
 		}
-		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
-
 		ITask task = null;
 		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
 			if (element instanceof AbstractQueryHit) {
@@ -1109,23 +1107,18 @@ public class TaskListView extends ViewPart {
 
 	private void makeActions() {
 
-		copyDetailsAction = new CopyTaskDetailsAction(this);
-		// workOffline = new WorkOfflineAction();
+		copyDetailsAction = new CopyTaskDetailsAction(true);
 
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
 
 		newLocalTaskAction = new NewLocalTaskAction(this);
-		// newCategoryAction = new NewCategoryAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 
 		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
-		// autoClose = new ManageEditorsAction();
-		// markIncompleteAction = new MarkTaskCompleteAction(this);
-		// markCompleteAction = new MarkTaskIncompleteAction(this);
 		openAction = new OpenTaskListElementAction(this.getViewer());
 		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
@@ -1134,8 +1127,12 @@ public class TaskListView extends ViewPart {
 		filterOnPriority = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
-		// nextTaskAction = new NextTaskDropDownAction(this,
-		// TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
+		
+		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
+		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
+//		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
+//		copyDetailsAction.selectionChanged((StructuredSelection) getViewer().getSelection());
+//		
 	}
 
 	// public void toggleNextAction(boolean enable) {
@@ -1276,13 +1273,6 @@ public class TaskListView extends ViewPart {
 		} else {
 			goUpAction.setEnabled(false);
 		}
-	}
-
-	/**
-	 * HACK: This is used for the copy action
-	 */
-	public Composite getDummyComposite() {
-		return filteredTree;
 	}
 
 	private boolean isInRenameAction = false;
