@@ -93,7 +93,8 @@ public class TracXmlRpcTest extends TestCase {
 		// this.password = password;
 	}
 
-	private int createTicket(String summary, String description, Map<String, Object> attributes) throws XmlRpcException, IOException {
+	private int createTicket(String summary, String description, Map<String, Object> attributes)
+			throws XmlRpcException, IOException {
 		int id = (Integer) call("ticket.create", summary, description, attributes);
 		tickets.add(id);
 		return id;
@@ -356,31 +357,33 @@ public class TracXmlRpcTest extends TestCase {
 	public void testAttachment() throws XmlRpcException, IOException {
 		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+				true);
 		// the returned filename may differ, since another ticket may have an
 		// attachment named "attach.txt"
 		// assertEquals("attach.txt", filename);
 
 		Object[] ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
-		Object[] attachment = (Object[]) ret[0];  
+		Object[] attachment = (Object[]) ret[0];
 		assertEquals("attach.txt", attachment[0]);
 		assertEquals("description", attachment[1]);
 		assertEquals(4, attachment[2]);
 		// date
 		assertEquals(username, attachment[4]);
-		
+
 		byte[] bytes = (byte[]) call("ticket.getAttachment", id, filename);
 		String data = new String(bytes);
 		assertEquals("data", data);
 
 		// test override
-		
-		String filename2 = (String) call("ticket.putAttachment", id, filename, "newdescription", "newdata".getBytes(), true);
+
+		String filename2 = (String) call("ticket.putAttachment", id, filename, "newdescription", "newdata".getBytes(),
+				true);
 		assertEquals(filename, filename2);
 		ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
-		attachment = (Object[]) ret[0];  
+		attachment = (Object[]) ret[0];
 		assertEquals("attach.txt", attachment[0]);
 		assertEquals("newdescription", attachment[1]);
 		assertEquals(7, attachment[2]);
@@ -390,8 +393,8 @@ public class TracXmlRpcTest extends TestCase {
 		data = new String(bytes);
 		assertEquals("newdata", data);
 
-
-		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), false);
+		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+				false);
 		assertFalse("attach.txt".equals(filename3));
 		ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(2, ret.length);
@@ -400,7 +403,8 @@ public class TracXmlRpcTest extends TestCase {
 	public void testDeleteAttachment() throws XmlRpcException, IOException {
 		int id = createTicket("summary", "description", new Hashtable<String, Object>());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(), true);
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+				true);
 
 		Object[] ret = (Object[]) call("ticket.listAttachments", id);
 		assertEquals(1, ret.length);
@@ -415,11 +419,13 @@ public class TracXmlRpcTest extends TestCase {
 		int id1 = createTicket("summary", "description", new Hashtable<String, Object>());
 		int id2 = createTicket("summary", "description", new Hashtable<String, Object>());
 
-		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "description", "data".getBytes(), true);
-		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "description", "data2".getBytes(), true);
+		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "description", "data".getBytes(),
+				true);
+		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "description", "data2".getBytes(),
+				true);
 		assertEquals("attach.txt", filename1);
 		assertEquals(filename1, filename2);
-		
+
 		byte[] bytes = (byte[]) call("ticket.getAttachment", id1, "attach.txt");
 		String data = new String(bytes);
 		assertEquals("data", data);
@@ -428,7 +434,7 @@ public class TracXmlRpcTest extends TestCase {
 		data = new String(bytes);
 		assertEquals("data2", data);
 	}
-	
+
 	public void testQuery() throws XmlRpcException, IOException {
 		Object[] ret = (Object[]) call("ticket.query", "summary~=foo|bar|baz");
 		for (Object id : ret) {
