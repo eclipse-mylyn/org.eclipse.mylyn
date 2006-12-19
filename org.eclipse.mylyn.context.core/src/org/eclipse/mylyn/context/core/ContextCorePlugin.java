@@ -292,19 +292,20 @@ public class ContextCorePlugin extends Plugin {
 		}
 
 		private static void readStore(IConfigurationElement element) {
-			try {
-				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
-
-				if (!(object instanceof AbstractContextStore)) {
-					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
-					return;
-				} else {
-					contextStore = (AbstractContextStore) object;
-				}
-			} catch (CoreException e) {
-				MylarStatusHandler.log(e, "Could not load bridge extension");
-			}
+			// Currently disabled
+//			try {
+//				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
+//
+//				if (!(object instanceof AbstractContextStore)) {
+//					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
+//							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
+//					return;
+//				} else {
+//					contextStore = (AbstractContextStore) object;
+//				}
+//			} catch (CoreException e) {
+//				MylarStatusHandler.log(e, "Could not load bridge extension");
+//			}
 		}
 	}
 
