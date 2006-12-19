@@ -81,6 +81,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			ITask targetTask = null;
 			if (getCurrentTarget() instanceof ITask) {
 				targetTask = (ITask)getCurrentTarget();
+			} else if (getCurrentTarget() instanceof AbstractQueryHit) {
+				targetTask = ((AbstractQueryHit) getCurrentTarget()).getCorrespondingTask();
 			}
 			if (targetTask != null) {
 				final String[] names = (String[]) data;
@@ -204,8 +206,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		currentTransfer = transferType;
 
 		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
-		if (FileTransfer.getInstance().isSupportedType(currentTransfer) && getCurrentTarget() instanceof ITask) {
-			return true;
+		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
+			if(getCurrentTarget() instanceof ITask) {
+				return true;
+			} else if (getCurrentTarget() instanceof AbstractQueryHit) {
+				return ((AbstractQueryHit) getCurrentTarget()).getCorrespondingTask() != null;
+			}
 		} else if (!(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
