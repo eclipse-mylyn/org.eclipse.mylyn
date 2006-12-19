@@ -54,6 +54,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationScheduler;
+import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -367,6 +368,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		// NOTE: Startup order is very sensitive
 		try {
+			// TODO: move this back to the extension point, bug 167784
+			ContextCorePlugin.setContextStore(new WorkspaceAwareContextStore());
+			
 			WebClientUtil.initCommonsLoggingSettings();
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();
@@ -383,7 +387,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
-
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
 			readOfflineReports();
 			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
@@ -392,17 +395,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
-
 			taskListWriter.setTaskDataManager(offlineTaskManager);
-
+			
+			// NOTE: task list must be read before Task List view can be initialized
 			taskListManager.init();
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
-
+			
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					try {
+					try {												
 						TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
@@ -434,8 +437,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						getPreferenceStore().addPropertyChangeListener(synchronizationScheduler);
 						getPreferenceStore().addPropertyChangeListener(taskListManager);
 
-						// XXX: get rid of this, hack to make decorators show up
-						// on startup
+						// TODO: get rid of this, hack to make decorators show up on startup
 						TaskRepositoriesView repositoriesView = TaskRepositoriesView.getFromActivePerspective();
 						if (repositoriesView != null) {
 							repositoriesView.getViewer().refresh();
