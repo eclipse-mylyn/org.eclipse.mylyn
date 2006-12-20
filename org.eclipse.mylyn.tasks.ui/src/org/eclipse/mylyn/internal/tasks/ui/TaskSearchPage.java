@@ -125,6 +125,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 					try {
 						searchPage.createControl(fParentComposite);
 					} catch (Exception e) {
+						if (searchPage.getControl() != null) {
+							searchPage.getControl().dispose();
+						}
 						searchPage.dispose();
 						searchPage = new DeadSearchPage(repository) {
 							@Override
@@ -152,8 +155,6 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 						searchPage.createControl(fParentComposite);
 						MylarStatusHandler.log(e, "Error occurred while constructing search page for "
 								+ repository.getUrl() + " [" + repository.getKind() + "]");
-						// searchPage.getControl().dispose();
-
 					}
 				}
 				return searchPage;
@@ -309,5 +310,14 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			return taskRepository;
 		}
 
+		@Override
+		public void setVisible(boolean visible) {
+			super.setVisible(visible);
+			
+			if (visible) {
+				scontainer.setPerformActionEnabled(false);
+			}
+		}
+		
 	}
 }
