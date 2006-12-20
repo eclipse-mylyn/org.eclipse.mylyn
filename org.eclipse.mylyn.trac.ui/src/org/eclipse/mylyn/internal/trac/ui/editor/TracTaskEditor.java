@@ -21,7 +21,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
@@ -98,10 +97,6 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 								attachContext();
 							}
 							close();
-						} else {
-							// TracUiPlugin.handleTracException(event.getResult());
-							submitButton.setEnabled(true);
-							TracTaskEditor.this.showBusy(false);
 						}
 					}
 				});
@@ -121,8 +116,18 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 					}
 					return Status.OK_STATUS;
-				} catch (Exception e) {
-					return TracCorePlugin.toStatus(e);
+				} catch (final Exception e) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (!isDisposed() && !submitButton.isDisposed()) {
+								TracUiPlugin.handleTracException(e);
+								// TracUiPlugin.handleTracException(event.getResult());
+								submitButton.setEnabled(true);
+								TracTaskEditor.this.showBusy(false);
+							}
+						}
+					});
+					return Status.CANCEL_STATUS;
 				}
 			}
 

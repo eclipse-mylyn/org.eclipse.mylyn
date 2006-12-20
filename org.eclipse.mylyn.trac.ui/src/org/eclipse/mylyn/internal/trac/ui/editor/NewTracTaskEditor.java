@@ -121,8 +121,12 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 	@Override
 	protected void handleSubmitError(final IJobChangeEvent event) {
-		super.handleSubmitError(event);
 		TracUiPlugin.handleTracException(event.getJob().getResult());
+		
+		if (!isDisposed() && !submitButton.isDisposed()) {
+			submitButton.setEnabled(true);
+			showBusy(false);
+		}
 	}
 
 	@Override
