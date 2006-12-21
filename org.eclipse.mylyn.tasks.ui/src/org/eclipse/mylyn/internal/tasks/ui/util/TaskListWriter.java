@@ -140,7 +140,7 @@ public class TaskListWriter {
 		// Collection<ITask> allTasks =
 		// Collections.synchronizedCollection(taskList.getAllTasks());
 		// synchronized (allTasks) {
-		for (ITask task : new ArrayList<ITask>(taskList.getAllTasks())) {
+		for (ITask task : taskList.getAllTasks()) {
 			createTaskElement(doc, root, task);
 		}
 	

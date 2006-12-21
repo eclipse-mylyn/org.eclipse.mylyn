@@ -306,6 +306,7 @@ public class TaskList {
 	}
 
 	public Set<AbstractTaskContainer> getCategories() {
+		// TODO: remove wrapping once API can change
 		return Collections.unmodifiableSet(new HashSet<AbstractTaskContainer>(categories.values()));
 	}
 
@@ -320,6 +321,7 @@ public class TaskList {
 	}
 
 	public Set<AbstractRepositoryQuery> getQueries() {
+		// TODO: remove wrapping once API can change
 		return Collections.unmodifiableSet(new HashSet<AbstractRepositoryQuery>(queries.values()));
 	}
 
@@ -428,6 +430,7 @@ public class TaskList {
 
 	/** for testing */
 	public Set<AbstractQueryHit> getQueryHits() {
+		// TODO: remove wrapping once API can change
 		return new HashSet<AbstractQueryHit>(queryHits.values());
 	}
 
