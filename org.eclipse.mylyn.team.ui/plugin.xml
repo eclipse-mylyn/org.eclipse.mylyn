@@ -12,7 +12,7 @@
       <contextChangeSetManager
             class="org.eclipse.mylar.internal.team.ContextActiveChangeSetManager">
       </contextChangeSetManager>
-   </extension> 
+   </extension>
     
    <extension
          point="org.eclipse.ui.decorators">
@@ -155,7 +155,6 @@
 		</objectContribution>
 	  -->
 	  
-	  <!--
       <objectContribution
             adaptable="false"
             id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
@@ -167,7 +166,6 @@
                label="Apply Patch...">
          </action>
       </objectContribution>
-      -->
       
    </extension>
 	

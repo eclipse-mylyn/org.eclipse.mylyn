@@ -8,20 +8,24 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.*;
 
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.patch.ApplyPatchOperation;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -49,47 +53,35 @@ public class ApplyPatchAction implements IViewActionDelegate {
 									ITasksUiConstants.TITLE_DIALOG,
 									"Patch could not be retrieved. Please try re-synchronizing task in order to apply the patch.");
 				} else {
-					// TODO: shouldn't need to do this
-					IPath statePath = MylarTeamPlugin.getDefault().getStateLocation();
-					final File tempFile = new File(statePath.toString() + File.separator + "patch.txt");
-					tempFile.deleteOnExit();
-					try {
-						BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-						writer.write(contents);
-						writer.close();
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "could not write patch file", true);
-					}
+					IStorage storage = new IStorage() {
 
-					// IStorage storage = new IStorage() {
-					//
-					// @SuppressWarnings("deprecation")
-					// public InputStream getContents() throws CoreException {
-					// return new StringBufferInputStream(contents);
-					// }
-					//
-					// public IPath getFullPath() {
-					// return new Path(tempFile.getAbsolutePath());
-					// }
-					//
-					// public String getName() {
-					// return null;
-					// }
-					//
-					// public boolean isReadOnly() {
-					// return true;
-					// }
-					//
-					// public Object getAdapter(Class adapter) {
-					// return null;
-					// }
-					//
-					// };
-					// ApplyPatchOperation op = new
-					// ApplyPatchOperation(PlatformUI.getWorkbench()
-					// .getActiveWorkbenchWindow().getActivePage().getActivePart(),
-					// storage, null, null);
-					// BusyIndicator.showWhile(Display.getDefault(), op);
+						@SuppressWarnings("deprecation")
+						public InputStream getContents() throws CoreException {
+							return new StringBufferInputStream(contents);
+						}
+
+						public IPath getFullPath() {
+							return MylarTeamPlugin.getDefault().getStateLocation();
+						}
+
+						public String getName() {
+							return null;
+						}
+
+						public boolean isReadOnly() {
+							return true;
+						}
+
+						@SuppressWarnings("unchecked")
+						public Object getAdapter(Class adapter) {
+							return null;
+						}
+
+					};
+					ApplyPatchOperation op = new ApplyPatchOperation(
+							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(), 
+							storage, null, new CompareConfiguration());
+					BusyIndicator.showWhile(Display.getDefault(), op);
 				}
 
 			}
