@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
@@ -66,7 +67,7 @@ public class TaskList {
 		archiveContainer = new TaskArchive(this);
 		rootCategory = new TaskCategory(LABEL_ROOT, this);
 				
-		activeTasks = new ArrayList<ITask>();
+		activeTasks = new CopyOnWriteArrayList<ITask>();
 		lastTaskNum = 0;
 		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 	}

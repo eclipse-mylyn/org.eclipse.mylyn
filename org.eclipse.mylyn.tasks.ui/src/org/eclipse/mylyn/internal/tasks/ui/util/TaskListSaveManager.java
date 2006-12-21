@@ -87,8 +87,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 			if(async) {
 				if (saveContext) {
-					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList()
-							.getActiveTasks())) {
+					for (ITask task : taskListManager.getTaskList().getActiveTasks()) {
 						taskListSaverJob.addTaskContext(task);
 					}
 				}

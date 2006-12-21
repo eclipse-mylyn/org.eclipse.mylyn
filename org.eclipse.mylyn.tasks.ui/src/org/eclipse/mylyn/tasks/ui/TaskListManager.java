@@ -641,7 +641,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void deactivateAllTasks() {
 		// Make a copy to avoid modification on list being traversed; can result
 		// in a ConcurrentModificationException
-		List<ITask> activeTasks = new ArrayList<ITask>(taskList.getActiveTasks());
+		List<ITask> activeTasks = taskList.getActiveTasks();
 		for (ITask task : activeTasks) {
 			deactivateTask(task);
 		}
