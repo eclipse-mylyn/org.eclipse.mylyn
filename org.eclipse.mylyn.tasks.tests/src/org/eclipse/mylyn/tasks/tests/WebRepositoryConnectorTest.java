@@ -66,12 +66,13 @@ public class WebRepositoryConnectorTest extends TestCase {
 	    }
 
         TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
-        if(repository.getUrl().equals("http://demo.otrs.org")) {
-        	// HACK: OTRS repository require auth 
-        	repository.setAuthenticationCredentials("skywalker", "skywalker");
-//        } else {
-//        	repository.setAuthenticationCredentials("user", "pwd");
-        }
+        String url = repository.getUrl();
+        // HACK: repositories that require auth
+		if ("http://demo.otrs.org".equals(url)) {
+			repository.setAuthenticationCredentials("skywalker", "skywalker");
+		} else if ("http://changelogic.araneaframework.org".equals(url)) {
+			repository.setAuthenticationCredentials("mylar2", "mylar123");
+		}
  
         String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
         String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
@@ -96,12 +97,16 @@ public class WebRepositoryConnectorTest extends TestCase {
 		return template.label;
 	}
 
+	private static final String excluded = "http://demo.otrs.org,";
+	
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(WebRepositoryConnectorTest.class.getName());
 
 		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(WebTask.REPOSITORY_TYPE);
 		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
-			suite.addTest(new WebRepositoryConnectorTest(template));
+			if (excluded.indexOf(template.repositoryUrl + ",") == -1) {
+				suite.addTest(new WebRepositoryConnectorTest(template));
+			}
 		}
 
 		return suite;
