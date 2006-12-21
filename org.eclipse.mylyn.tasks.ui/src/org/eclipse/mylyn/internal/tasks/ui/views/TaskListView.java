@@ -230,7 +230,7 @@ public class TaskListView extends ViewPart {
 
 	public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
 
-	private static final int DEFAULT_SORT_DIRECTION = -1;
+	private static final int DEFAULT_SORT_DIRECTION = 1;
 
 	private int sortIndex = 2;
 
