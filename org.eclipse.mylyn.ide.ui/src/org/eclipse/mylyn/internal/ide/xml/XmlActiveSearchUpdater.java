@@ -62,10 +62,10 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 							for (int j = 0; j < matches.length; j++) {
 								// Match m = matches[j];
 								// XmlNodeHelper xnode =
-								// XmlReferencesProvider.nodeMap.remove(m);
+								// XmlJavaReferencesProvider.nodeMap.remove(m);
 								// System.out.println("REMOVED RES: " +
 								// xnode.getHandle());
-								// System.out.println(XmlReferencesProvider.nodeMap);
+								// System.out.println(XmlJavaReferencesProvider.nodeMap);
 							}
 						}
 						break;

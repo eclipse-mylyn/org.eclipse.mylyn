@@ -24,15 +24,15 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
+import org.eclipse.mylar.internal.ide.xml.XmlJavaReferencesProvider;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylar.internal.ide.xml.XmlReferencesProvider;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
@@ -54,7 +54,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 
 	public PdeStructureBridge() {
 		providers = new ArrayList<AbstractRelationProvider>();
-		providers.add(new XmlReferencesProvider());
+		providers.add(new XmlJavaReferencesProvider());
 
 	}
 
