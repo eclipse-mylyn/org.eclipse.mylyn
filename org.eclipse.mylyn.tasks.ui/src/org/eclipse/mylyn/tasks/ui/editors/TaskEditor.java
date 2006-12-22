@@ -286,17 +286,17 @@ public class TaskEditor extends FormEditor {
 		return;
 	}
 
-	@Override
-	public void setFocus() {
-		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
-			IFormPage page = this.getPages()[this.getActivePage()];
-			if (page != null) {
-				page.setFocus();
-			}
-		} else if(this.getActivePage() == browserPageIndex && webBrowser != null) {
-			webBrowser.setFocus();
-		}
-	}
+//	@Override
+//	public void setFocus() {
+//		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
+//			IFormPage page = this.getPages()[this.getActivePage()];
+//			if (page != null) {
+//				page.setFocus();
+//			}
+//		} else if(this.getActivePage() == browserPageIndex && webBrowser != null) {
+//			webBrowser.setFocus();
+//		}
+//	}
 
 	public Browser getWebBrowser() {
 		return webBrowser;
