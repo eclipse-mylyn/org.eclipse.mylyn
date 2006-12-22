@@ -79,7 +79,9 @@ public class TaskRepository {
 	// HACK: private credentials for headless operation
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
-	private String cachedUserName = null;
+	private boolean isCachedUserName;
+	
+	private String cachedUserName;
 
 	static {
 		URL url = null;
@@ -146,7 +148,7 @@ public class TaskRepository {
 	 */
 	public String getUserName() {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
-		if (cachedUserName == null) {
+		if (!isCachedUserName) {
 			cachedUserName = getUserNameFromKeyRing();
 		}
 		return cachedUserName;
@@ -179,6 +181,7 @@ public class TaskRepository {
 	public void setAuthenticationCredentials(String username, String password) {
 		setCredentials(username, password, AUTH_USERNAME, AUTH_PASSWORD);
 		cachedUserName = username;
+		isCachedUserName = true;
 	}
 
 	public void setProxyAuthenticationCredentials(String username, String password) {
@@ -205,19 +208,22 @@ public class TaskRepository {
 	}
 	
 	public void flushAuthenticationCredentials() {
-		try {
-			if (Platform.isRunning()) {
-				try {
-					Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
-				} catch (MalformedURLException ex) {
-					Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+		synchronized (LOCK) {
+			try {
+				if (Platform.isRunning()) {
+					try {
+						Platform.flushAuthorizationInfo(new URL(getUrl()), AUTH_REALM, AUTH_SCHEME);
+					} catch (MalformedURLException ex) {
+						Platform.flushAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
+					}
+				} else {
+					Map<String, String> headlessCreds = getAuthInfo();
+					headlessCreds.clear();
 				}
-			} else {
-				Map<String, String> headlessCreds = getAuthInfo();
-				headlessCreds.clear();
+				isCachedUserName = false;
+			} catch (CoreException e) {
+				MylarStatusHandler.fail(e, "could not flush authorization credentials", true);
 			}
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, "could not flush authorization credentials", true);
 		}
 	}
 
