@@ -36,6 +36,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -49,11 +50,11 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private Action addRepositoryAction = new AddRepositoryAction();
 
-	private Action deleteRepositoryAction = new DeleteTaskRepositoryAction(this);
+	private BaseSelectionListenerAction deleteRepositoryAction;
 
-	private Action repositoryPropertiesAction = new EditRepositoryPropertiesAction(this);
+	private BaseSelectionListenerAction repositoryPropertiesAction;
 
-	private Action resetConrigurationAction = new ResetRepositoryConfigurationAction(this);
+	private BaseSelectionListenerAction resetConrigurationAction;
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
@@ -131,9 +132,21 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 
+		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
 		getSite().setSelectionProvider(getViewer());
+	}
+
+	private void makeActions() {
+		deleteRepositoryAction = new DeleteTaskRepositoryAction();
+		viewer.addSelectionChangedListener(deleteRepositoryAction);
+		
+		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
+		viewer.addSelectionChangedListener(repositoryPropertiesAction);
+		
+		resetConrigurationAction = new ResetRepositoryConfigurationAction();
+		viewer.addSelectionChangedListener(resetConrigurationAction);
 	}
 
 	private void hookContextMenu() {
@@ -161,11 +174,12 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(addRepositoryAction);
-		manager.add(deleteRepositoryAction);
 		manager.add(new Separator());
-		manager.add(repositoryPropertiesAction);
+		manager.add(deleteRepositoryAction);
 		manager.add(resetConrigurationAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(new Separator());
+		manager.add(repositoryPropertiesAction);
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {

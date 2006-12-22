@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -23,31 +22,30 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class ResetRepositoryConfigurationAction extends Action {
+public class ResetRepositoryConfigurationAction extends BaseSelectionListenerAction {
 
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.reset";
 
-	private TaskRepositoriesView repositoriesView;
-
-	public ResetRepositoryConfigurationAction(TaskRepositoriesView repositoriesView) {
-		this.repositoriesView = repositoriesView;
-		setText("Update Attributes");
+	public ResetRepositoryConfigurationAction() {
+		super("Update Attributes");
 		setId(ID);
-	}
-
-	public void init(IViewPart view) {
-		// ignore
+		setEnabled(false);
 	}
 
 	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		return selection != null && !selection.isEmpty();
+	}
+	
+	@Override
 	public void run() {
 		try {
-			IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
+			IStructuredSelection selection = getStructuredSelection();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object selectedObject = iter.next();
 				if (selectedObject instanceof TaskRepository) {

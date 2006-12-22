@@ -11,43 +11,34 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class EditRepositoryPropertiesAction extends Action {
+public class EditRepositoryPropertiesAction extends BaseSelectionListenerAction {
 
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.properties";
 
-	private TaskRepositoriesView repositoriesView;
-
-	public EditRepositoryPropertiesAction(TaskRepositoriesView repositoriesView) {
-		this.repositoriesView = repositoriesView;
-		setText("Properties");
+	public EditRepositoryPropertiesAction() {
+		super("Properties");
 		setId(ID);
-	}
-
-	public void init(IViewPart view) {
-		// ignore
+		setEnabled(false);
 	}
 
 	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+		return selection != null && !selection.isEmpty();
+	}
+	
+	@Override
 	public void run() {
-		IStructuredSelection selection = (IStructuredSelection) repositoriesView.getViewer().getSelection();
+		IStructuredSelection selection = getStructuredSelection();
 		if (selection.getFirstElement() instanceof TaskRepository) {
 			TasksUiUtil.openEditRepositoryWizard((TaskRepository) selection.getFirstElement());
 		}
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
 	}
 }
