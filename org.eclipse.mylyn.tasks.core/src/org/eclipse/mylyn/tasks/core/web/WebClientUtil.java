@@ -19,6 +19,7 @@ import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.eclipse.mylar.internal.tasks.core.AuthenticatedProxy;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
@@ -108,6 +109,8 @@ public class WebClientUtil {
 
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
+
+		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
