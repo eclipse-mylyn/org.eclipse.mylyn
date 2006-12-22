@@ -91,7 +91,7 @@ public class TaskList {
 	}
 
 	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
-		for (ITask task : new ArrayList<ITask>(tasks.values())) {
+		for (ITask task : tasks.values()) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				if (oldUrl.equals(AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
@@ -415,8 +415,8 @@ public class TaskList {
 		HashSet<AbstractQueryHit> result = new HashSet<AbstractQueryHit>();
 		for (String handle : handles) {
 			AbstractQueryHit hit = queryHits.get(handle);
-			if(hit != null) {
-				result.add(queryHits.get(handle));
+			if (hit != null) {
+				result.add(hit);
 			}
 		}
 		return result;
