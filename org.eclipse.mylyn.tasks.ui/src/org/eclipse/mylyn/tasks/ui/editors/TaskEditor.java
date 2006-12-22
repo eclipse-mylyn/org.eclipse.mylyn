@@ -298,7 +298,7 @@ public class TaskEditor extends FormEditor {
 //		}
 //	}
 
-	public void focusDescription() { 
+	public void setFocusOfActivePage() { 
 		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
 			IFormPage page = this.getPages()[this.getActivePage()];
 			if (page != null) {

@@ -264,7 +264,7 @@ public class TasksUiUtil {
 						IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 						if (newTask && part instanceof TaskEditor) {
 							TaskEditor taskEditor = (TaskEditor)part;
-							taskEditor.focusDescription();
+							taskEditor.setFocusOfActivePage();
 						}
 					}
 				}

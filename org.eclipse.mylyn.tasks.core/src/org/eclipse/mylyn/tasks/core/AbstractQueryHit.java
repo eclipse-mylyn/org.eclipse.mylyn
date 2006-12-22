@@ -34,14 +34,11 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	private AbstractRepositoryQuery parent;
 
-	private String handleIDentifier;
-	
 	protected AbstractQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
 		this.taskList = taskList;
 		this.repositoryUrl = repositoryUrl;
 		this.description = description;
 		this.id = id;
-		this.handleIDentifier = AbstractRepositoryTask.getHandle(repositoryUrl, id);
 	}
 
 	public AbstractRepositoryQuery getParent() {
@@ -112,10 +109,8 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	public String getHandleIdentifier() {
 		if (task != null) {
 			return task.getHandleIdentifier();
-		} else {
-			return handleIDentifier;
 		}
-//		return AbstractRepositoryTask.getHandle(repositoryUrl, id);
+		return AbstractRepositoryTask.getHandle(repositoryUrl, id);
 	}
 
 	/**

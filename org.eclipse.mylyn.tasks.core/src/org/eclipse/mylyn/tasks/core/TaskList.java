@@ -108,7 +108,9 @@ public class TaskList {
 			if (query.getRepositoryUrl().equals(oldUrl)) {
 				query.setRepositoryUrl(newUrl);
 				for (AbstractQueryHit hit : query.getHits()) {
+					queryHits.remove(hit.getHandleIdentifier());
 					hit.setRepositoryUrl(newUrl);
+					queryHits.put(hit.getHandleIdentifier(), hit);
 				}
 				for (ITaskListChangeListener listener : changeListeners) {
 					listener.containerInfoChanged(query);

@@ -155,6 +155,17 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.getTaskList().getRepositoryQueries("http://a").isEmpty());
 	}
 
+	public void testMigrateQueryHits() {
+		AbstractRepositoryQuery query = new MockRepositoryQuery("mquery", manager.getTaskList());
+		query.setRepositoryUrl("http://a");
+		manager.getTaskList().addQuery(query);		
+		AbstractQueryHit hit = new MockQueryHit(manager.getTaskList(), "http://a", "", "123");
+		query.addHit(hit);
+		manager.refactorRepositoryUrl("http://a", "http://b");
+		assertNotNull(manager.getTaskList().getQueryHit("http://b-123"));
+		assertEquals("http://b-123", hit.getHandleIdentifier());
+	} 
+
 	public void testMigrateTaskHandles() {
 		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123");
 		manager.getTaskList().addTask(task);
