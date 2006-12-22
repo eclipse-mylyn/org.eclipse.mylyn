@@ -190,4 +190,22 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.status = status;
 	}
 	
+	/**
+	 * Need to update URL since it is derived from handle identifier.
+	 */
+	@Override
+	public void setHandleIdentifier(String newHandleIdentifier) {
+		String oldHandleIdentifier = getHandleIdentifier();
+		String url = getUrl();
+		if (oldHandleIdentifier != null && url != null) {
+			String oldRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(oldHandleIdentifier);
+			String newRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(newHandleIdentifier);
+
+			if (url.startsWith(oldRepositoryUrl)) {
+				setUrl(newRepositoryUrl + url.substring(oldRepositoryUrl.length()));
+			}
+		}		
+		super.setHandleIdentifier(newHandleIdentifier);		
+	}
+	
 }

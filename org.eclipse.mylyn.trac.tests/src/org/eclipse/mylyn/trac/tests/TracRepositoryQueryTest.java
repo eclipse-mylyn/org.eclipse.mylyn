@@ -19,8 +19,10 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -41,6 +43,9 @@ public class TracRepositoryQueryTest extends TestCase {
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", TasksUiPlugin.getTaskListManager().getTaskList());
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+
+		TracTask task = new TracTask(AbstractRepositoryTask.getHandle(Constants.TEST_TRAC_096_URL, 123), "desc", true);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);		
 		
 		String oldUrl = repository.getUrl();
 		String newUrl = Constants.TEST_TRAC_010_URL;
@@ -49,6 +54,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		
 		assertEquals(newUrl, query.getRepositoryUrl());
 		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());
+		assertEquals(newUrl + ITracClient.TICKET_URL + 123, task.getUrl());
 	}
 	
 	public void testGetFilterList() {

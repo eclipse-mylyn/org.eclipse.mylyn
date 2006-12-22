@@ -161,7 +161,17 @@ public class TaskListManagerTest extends TestCase {
 		manager.refactorRepositoryUrl("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
-	}
+	} 
+	
+	public void testMigrateTaskHandlesWithExplicitSet() {
+		AbstractRepositoryTask task = new MockRepositoryTask("http://a-123");
+		task.setUrl("http://a/task/123");
+		manager.getTaskList().addTask(task);
+		manager.refactorRepositoryUrl("http://a", "http://b");
+		assertNull(manager.getTaskList().getTask("http://a-123"));
+		assertNotNull(manager.getTaskList().getTask("http://b-123"));
+		assertEquals("http://b/task/123", task.getUrl());
+	} 
 
 	public void testIsActiveToday() {
 		ITask task = new Task("1", "task-1", true);
