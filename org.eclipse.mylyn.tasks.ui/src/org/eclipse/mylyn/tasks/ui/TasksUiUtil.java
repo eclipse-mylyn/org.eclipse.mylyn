@@ -251,7 +251,7 @@ public class TasksUiUtil {
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
-	public static void openEditor(final ITask task, boolean asyncExec, boolean newTask) {
+	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
@@ -261,7 +261,11 @@ public class TasksUiUtil {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window != null) {
 						IWorkbenchPage page = window.getActivePage();
-						openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+						IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+						if (newTask && part instanceof TaskEditor) {
+							TaskEditor taskEditor = (TaskEditor)part;
+							taskEditor.focusDescription();
+						}
 					}
 				}
 			});
@@ -273,7 +277,7 @@ public class TasksUiUtil {
 			}
 		}
 	}
-
+	
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
 			return page.openEditor(input, editorId);
