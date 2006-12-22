@@ -215,10 +215,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			return adapter instanceof IJavaElement;
 		}
 
-		boolean accepts = object instanceof IJavaElement || object instanceof ClassPathContainer
+		boolean accepts = object instanceof IJavaElement || object instanceof PackageFragmentRootContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
 				|| object instanceof IPackageFragment || object instanceof WorkingSet 
-				|| object instanceof PackageFragmentRootContainer
 				|| isWtpClass(object);
 		
 		return accepts;
@@ -232,9 +231,9 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	public boolean canFilter(Object object) {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
-		} else if (object instanceof ClassPathContainer) { 
-			// HACK: check if it has anything interesting
-			ClassPathContainer container = (ClassPathContainer) object;
+		} else if (object instanceof PackageFragmentRootContainer) { 
+			// since not in model, check if it contains anything interesting
+			PackageFragmentRootContainer container = (PackageFragmentRootContainer) object;
 
 			Object[] children = container.getChildren();
 			for (int i = 0; i < children.length; i++) {
