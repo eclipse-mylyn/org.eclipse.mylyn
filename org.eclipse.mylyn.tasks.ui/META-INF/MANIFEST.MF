@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasks UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.tasks.ui;singleton:=true
-Bundle-Version: 1.0.0.v20061219-1530
+Bundle-Version: 1.0.0.v20061222-1030
 Bundle-Activator: org.eclipse.mylar.tasks.ui.TasksUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
