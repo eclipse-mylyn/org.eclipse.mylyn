@@ -218,7 +218,7 @@ litigation.
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui" version="3.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.3.0.I20061214" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text"/>
