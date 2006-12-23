@@ -45,8 +45,6 @@ public class TaskRepositoriesExternalizer {
 	public static final String ATTRIBUTE_VERSION = "OutputVersion";
 
 	public void writeRepositoriesToXML(Collection<TaskRepository> repositories, File file) {
-		if (repositories.isEmpty())
-			return;
 		ZipOutputStream outputStream = null;
 		try {
 			if (!file.exists())

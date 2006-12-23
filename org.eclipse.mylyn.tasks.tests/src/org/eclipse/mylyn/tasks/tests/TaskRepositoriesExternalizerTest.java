@@ -22,6 +22,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /** 
  * @author Rob Elves
+ * @author Erik Ramfelt (bug 168782)
  */
 public class TaskRepositoriesExternalizerTest extends TestCase {
 
@@ -86,6 +87,20 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 			}
 		}
 		
+	}
+
+	public void testExternalizationEmptyRepository() {
+		TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
+		String path = "repositories.xml";
+		File file = new File(path);
+		file.deleteOnExit();
+		externalizer.writeRepositoriesToXML(taskRepositories, file);
+		taskRepositories = externalizer.readRepositoriesFromXML(file);
+		assertEquals(2, taskRepositories.size());		
+		taskRepositories.clear();
+		externalizer.writeRepositoriesToXML(taskRepositories, file);
+		taskRepositories = externalizer.readRepositoriesFromXML(file);
+		assertEquals(0, taskRepositories.size());		
 	}
 
 }

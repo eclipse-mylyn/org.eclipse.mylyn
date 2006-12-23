@@ -117,7 +117,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 			entry = zipInputStream.getNextEntry();
 		}
 		zipInputStream.close();
-		assertEquals(2, entries.size());
+		assertEquals(3, entries.size());
 		assertTrue(entries.contains("tasklist.xml.zip"));
 		assertTrue(entries.contains("contexts/local-1.xml.zip"));
 	}
