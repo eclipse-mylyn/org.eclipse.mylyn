@@ -248,9 +248,9 @@ litigation.
       <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.mylar.monitor"/>
       <import plugin="org.eclipse.mylar.resources"/>
       <import plugin="org.eclipse.jdt.debug"/>
+      <import plugin="org.eclipse.mylar.doc"/>
       <import plugin="org.eclipse.ui.navigator"/>
       <import plugin="org.eclipse.ant.ui"/>
       <import plugin="org.eclipse.ui.navigator.resources"/>
@@ -259,8 +259,8 @@ litigation.
       <import plugin="org.eclipse.mylar.tasks.core"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui.workbench"/>
-      <import feature="org.eclipse.mylar_feature" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.mylar.doc"/>
+      <import feature="org.eclipse.mylar_feature" version="1.0.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.monitor"/>
    </requires>
 
    <plugin
