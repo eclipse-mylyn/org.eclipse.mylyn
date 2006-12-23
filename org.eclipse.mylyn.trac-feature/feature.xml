@@ -226,7 +226,7 @@ litigation.
       <import plugin="org.eclipse.mylar.tasks.core"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.mylar.trac.core"/>
-      <import feature="org.eclipse.mylar_feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="1.0.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
