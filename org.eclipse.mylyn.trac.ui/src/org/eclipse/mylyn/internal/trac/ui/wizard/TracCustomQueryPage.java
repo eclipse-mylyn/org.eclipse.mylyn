@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -75,6 +76,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private static final int PRODUCT_HEIGHT = 60;
 
 	private static final int STATUS_HEIGHT = 40;
+
+	protected final static String PAGE_NAME = "TracSearchPage"; //$NON-NLS-1$
+	
+	private static final String SEARCH_URL_ID = PAGE_NAME + ".SEARCHURL";
 
 	protected Combo summaryText = null;
 
@@ -149,7 +154,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		if (query != null) {
 			titleText.setText(query.getSummary());
-			restoreSearchFilterFromQuery(query);
+			restoreWidgetValues(query.getTracSearch());
 		}
 
 		setControl(control);
@@ -160,8 +165,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return false;
 	}
 
-	private void restoreSearchFilterFromQuery(TracRepositoryQuery query) {
-		TracSearch search = query.getTracSearch();
+	private void restoreWidgetValues(TracSearch search) {
 		java.util.List<TracSearchFilter> filters = search.getFilters();
 		for (TracSearchFilter filter : filters) {
 			SearchField field = searchFieldByName.get(filter.getFieldName());
@@ -327,21 +331,33 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						if (getControl() != null && !getControl().isDisposed()) {
-							updateAttributesFromRepository(false);
+							initializePage();
 						}
 					}
+
 				});
 			} else {
 				// no remote connection is needed to get attributes therefore do
 				// not use delayed execution to avoid flickering
-				updateAttributesFromRepository(false);
-			}
-			
-			// initialize with default values
-			if (query == null) {
-				statusField.selectItems(DEFAULT_STATUS_SELECTION);
+				initializePage();
 			}
 		}
+	}
+
+	private void initializePage() {
+		updateAttributesFromRepository(false);
+		boolean restored = (query != null);
+		if (isSearchPage()) {
+			restored |= restoreWidgetValues();
+		}
+		// initialize with default values
+		if (!restored) {
+			statusField.selectItems(DEFAULT_STATUS_SELECTION);
+		}
+	}
+
+	private boolean isSearchPage() {
+		return scontainer != null;
 	}
 
 	private boolean hasAttributes() {
@@ -421,6 +437,16 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	public String getQueryUrl(String repsitoryUrl) {
+		TracSearch search = getTracSearch();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(repsitoryUrl);
+		sb.append(ITracClient.QUERY_URL);
+		sb.append(search.toUrl());
+		return sb.toString();
+	}
+
+	private TracSearch getTracSearch() {
 		TracSearch search = new TracSearch();
 		for (SearchField field : searchFieldByName.values()) {
 			TracSearchFilter filter = field.getFilter();
@@ -428,12 +454,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 				search.addFilter(filter);
 			}
 		}
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(repsitoryUrl);
-		sb.append(ITracClient.QUERY_URL);
-		sb.append(search.toUrl());
-		return sb.toString();
+		return search;
 	}
 
 	@Override
@@ -455,6 +476,43 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 //
 //		return true;
 //	}
+
+	@Override
+	public boolean performAction() {
+		if (isSearchPage()) {
+			saveWidgetValues();
+		}
+
+		return super.performAction();
+	}
+
+	public IDialogSettings getDialogSettings() {
+		IDialogSettings settings = TracUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings dialogSettings = settings.getSection(PAGE_NAME);
+		if (dialogSettings == null) {
+			dialogSettings = settings.addNewSection(PAGE_NAME);
+		}
+		return dialogSettings;
+	}
+
+	private boolean restoreWidgetValues() {
+		IDialogSettings settings = getDialogSettings();
+		String repoId = "." + repository.getUrl();
+		
+		String searchUrl = settings.get(SEARCH_URL_ID + repoId);
+		if (searchUrl == null) {
+			return false;
+		}
+		
+		restoreWidgetValues(new TracSearch(searchUrl));
+		return true;
+	}
+
+	public void saveWidgetValues() {
+		String repoId = "." + repository.getUrl();
+		IDialogSettings settings = getDialogSettings();
+		settings.put(SEARCH_URL_ID + repoId, getTracSearch().toUrl());
+	}
 
 	private abstract class SearchField {
 

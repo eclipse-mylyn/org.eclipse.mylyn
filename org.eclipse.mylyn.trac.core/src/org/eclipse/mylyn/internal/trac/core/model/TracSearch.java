@@ -12,12 +12,14 @@
 package org.eclipse.mylar.internal.trac.core.model;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
@@ -38,6 +40,10 @@ public class TracSearch {
 	private String orderBy;
 
 	private boolean ascending = true;
+
+	public TracSearch(String queryParameter) {
+		fromUrl(queryParameter);
+	}
 
 	public TracSearch() {
 	}
@@ -147,4 +153,30 @@ public class TracSearch {
 		return sb.toString();
 	}
 
+	public void fromUrl(String url) {
+		StringTokenizer t = new StringTokenizer(url, "&");
+		while (t.hasMoreTokens()) {
+			String token = t.nextToken();
+			int i = token.indexOf("=");
+			if (i != -1) {
+				try {
+					String key = URLDecoder.decode(token.substring(0, i), ITracClient.CHARSET);
+					String value = URLDecoder.decode(token.substring(i + 1), ITracClient.CHARSET);
+
+					if ("order".equals(key)) {
+						setOrderBy(value);
+					} else if ("desc".equals(key)) {
+						setAscending(!"1".equals(value));
+					} else if ("group".equals(key) || "groupdesc".equals(key) || "verbose".equals(key)) {
+						// ignore these parameters
+					} else {
+						addFilter(key, value);
+					}
+				} catch (UnsupportedEncodingException e) {
+					MylarStatusHandler.log(e, "Unexpected exception while decoding URL");
+				}
+			}
+		}
+	}
+	
 }
