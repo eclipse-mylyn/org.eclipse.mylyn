@@ -97,46 +97,25 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			if (!forceSynchExecForTesting) {
 				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
 						"invalid report id: " + id, nfe));
-				// MessageDialog.openInformation(null,
-				// TasksUiPlugin.TITLE_DIALOG, "Invalid report id: " + id);
 			}
 			return null;
 		}
 
 		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		ITask task = taskList.getTask(handle);
-
+		AbstractRepositoryTask repositoryTask = null;
 		if (task == null) {
 			RepositoryTaskData taskData = null;
-			// try {
 			taskData = taskDataHandler.getTaskData(repository, id);
-			// BugzillaClient client = getClientManager().getClient(repository);
-			// taskData = client.getTaskData(Integer.parseInt(id));
 			if (taskData != null) {
-				task = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
-				((BugzillaTask) task).setTaskData(taskData);
-				// ((BugzillaTask) task).setLastSyncDateStamp(lastSyncDateStamp)
-				taskList.addTask(task);
+				repositoryTask = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
+				repositoryTask.setTaskData(taskData);
+				taskList.addTask(repositoryTask);
 			}
-			// } catch (final UnrecognizedReponseException e) {
-			// throw new CoreException(new Status(IStatus.ERROR,
-			// BugzillaCorePlugin.PLUGIN_ID, 0,
-			// "Report retrieval failed. Unrecognized response from " +
-			// repository.getUrl() + ".", e));
-			// } catch (final FileNotFoundException e) {
-			// throw new CoreException(
-			// new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-			// "Report download from "
-			// + repository.getUrl() + " failed. File not found: " +
-			// e.getMessage(), e));
-			// } catch (final Exception e) {
-			// throw new CoreException(new Status(IStatus.ERROR,
-			// BugzillaCorePlugin.PLUGIN_ID, 0,
-			// "Report download from " + repository.getUrl() + " failed, please
-			// see details.", e));
-			// }
+		} else if (task instanceof AbstractRepositoryTask) {
+			repositoryTask = (AbstractRepositoryTask) task;
 		}
-		return (AbstractRepositoryTask) task;
+		return repositoryTask;
 	}
 
 	@Override
@@ -300,8 +279,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
 			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
 			attribute.clearOptions();
-			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository,
-					false).getOptionValues(element, product);
+			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
+					.getOptionValues(element, product);
 			if (element != BugzillaReportElement.OP_SYS && element != BugzillaReportElement.BUG_SEVERITY
 					&& element != BugzillaReportElement.PRIORITY && element != BugzillaReportElement.BUG_STATUS) {
 				Collections.sort(optionValues);
