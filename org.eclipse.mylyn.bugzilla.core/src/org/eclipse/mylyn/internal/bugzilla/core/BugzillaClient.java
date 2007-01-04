@@ -733,9 +733,7 @@ public class BugzillaClient {
 					} else if (token.getType() == Token.TAG
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
-						if (!taskData.isNew()
-								&& (title.toLowerCase().matches(".*bug\\s+processed.*") || title.toLowerCase().matches(
-										".*defect\\s+processed.*"))) {
+						if (!taskData.isNew() && (title.toLowerCase().matches(".*\\s+processed.*"))) {	
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null && result == null) {
@@ -888,7 +886,6 @@ public class BugzillaClient {
 
 	}
 
-
 	public static String stripTimeZone(String longTime) {
 		String result = longTime;
 		if (longTime != null) {
@@ -969,7 +966,6 @@ public class BugzillaClient {
 			throw new IOException("Unable to parse result from repository:\n" + e.getMessage());
 		}
 	}
-
 
 }
 
