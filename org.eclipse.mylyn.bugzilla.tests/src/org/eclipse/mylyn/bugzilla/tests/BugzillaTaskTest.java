@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.TestCase;
@@ -56,7 +57,7 @@ public class BugzillaTaskTest extends TestCase {
 		assertNull(task.getCompletionDate());
 
 		Date now = new Date();
-		String nowTimeStamp = BugzillaTaskDataHandler.comment_creation_ts_format.format(now);
+		String nowTimeStamp = new SimpleDateFormat(BugzillaTaskDataHandler.comment_creation_ts_format).format(now);
 
 		TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 		RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN

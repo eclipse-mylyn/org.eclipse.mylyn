@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -75,7 +76,7 @@ public class BugzillaTestUtil {
 			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
-			attribute.setValue(BugzillaTaskDataHandler.comment_creation_ts_format.format(new Date()));
+			attribute.setValue(new SimpleDateFormat(BugzillaTaskDataHandler.comment_creation_ts_format).format(new Date()));
 			taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 			report.addComment(taskComment);
 		} else {
