@@ -36,9 +36,6 @@ import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -123,23 +120,26 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		if (!(input instanceof RepositoryTaskEditorInput))
-			return;// MylarStatusHandler.log("Invalid Input: Must be
-		// RepositoryTaskEditorInput", this);
-
-		editorInput = (AbstractTaskEditorInput) input;
+		super.init(site, input);
 		taskData = editorInput.getTaskData();
-		repository = editorInput.getRepository();
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-
-		setSite(site);
-		setInput(input);
-
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
-
-		// restoreBug();
-		isDirty = false;
-		updateEditorTitle();
+//		if (!(input instanceof RepositoryTaskEditorInput)) {
+//			return;
+//		}
+//		super.init(site, input);
+//
+//		editorInput = (AbstractTaskEditorInput) input;
+//		taskData = editorInput.getTaskData();
+//		repository = editorInput.getRepository();
+//		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+//
+//		setSite(site);
+//		setInput(input);
+//
+//		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
+//
+//		// restoreBug();
+//		isDirty = false;
+//		updateEditorTitle();
 	}
 
 	@Override

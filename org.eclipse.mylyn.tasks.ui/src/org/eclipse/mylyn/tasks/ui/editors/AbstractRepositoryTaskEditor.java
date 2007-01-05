@@ -66,6 +66,7 @@ import org.eclipse.mylar.internal.context.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.ContentOutlineTools;
@@ -282,7 +283,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected RetargetAction cutAction;
 
 	protected RetargetAction pasteAction;
-
+	
 	protected Composite editorComposite;
 
 	protected TextViewer newCommentTextViewer;
@@ -530,7 +531,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
+		if (!(input instanceof RepositoryTaskEditorInput)) {
+			return;
+		}
+
+		editorInput = (AbstractTaskEditorInput) input;
+		repository = editorInput.getRepository();
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+
+		setSite(site);
+		setInput(input);
+
+		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
+
+		// restoreBug();
+		isDirty = false;
+		updateEditorTitle();
 	}
 
 	public String getNewCommentText() {
@@ -1155,13 +1171,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							"Task not synchronized or dirty editor",
 							"Commit edits or synchronize task before adding attachments.");
 					return;
+				} else {
+					AttachFileAction attachFileAction = new AttachFileAction();
+					attachFileAction.selectionChanged(new StructuredSelection(task));
+					attachFileAction.run();
 				}
-
-				NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task);
-				NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(attachmentsComposite.getShell(), naw);
-				naw.setDialog(dialog);
-				dialog.create();
-				dialog.open();
+//				NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task);
+//				NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(attachmentsComposite.getShell(), naw);
+//				naw.setDialog(dialog);
+//				dialog.create();
+//				dialog.open();
 			}
 		});
 

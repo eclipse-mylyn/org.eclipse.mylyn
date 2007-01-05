@@ -25,13 +25,16 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -65,6 +68,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+	
+	private AttachFileAction attachFileAction = new AttachFileAction();
 	
 	private GlobalAction cutAction;
 
@@ -159,11 +164,17 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			return;
 		} else {
 			// TODO: refactor
-			openWithBrowserAction.selectionChanged(new StructuredSelection(task));
-			copyTaskDetailsAction.selectionChanged(new StructuredSelection(task));
+			IStructuredSelection selection = new StructuredSelection(task);
+			
+			openWithBrowserAction.selectionChanged(selection);
+			copyTaskDetailsAction.selectionChanged(selection);
+			attachFileAction.selectionChanged(selection);
 			
 			manager.add(openWithBrowserAction);
-
+			if (task instanceof AbstractRepositoryTask) {
+				manager.add(attachFileAction);
+			}			
+			
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {
 					@Override

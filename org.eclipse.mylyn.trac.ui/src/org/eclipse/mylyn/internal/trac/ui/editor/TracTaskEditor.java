@@ -27,9 +27,6 @@ import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -49,21 +46,24 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		if (!(input instanceof RepositoryTaskEditorInput))
-			return;
-
-		editorInput = (AbstractTaskEditorInput) input;
-		repository = editorInput.getRepository();
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
-
-		setSite(site);
-		setInput(input);
-
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
-
-		isDirty = false;
-		updateEditorTitle();
+		super.init(site, input);
+//		if (!(input instanceof RepositoryTaskEditorInput)) {
+//			return;
+//		}
+//		super.init(site, input);
+//
+//		editorInput = (AbstractTaskEditorInput) input;
+//		repository = editorInput.getRepository();
+//		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+//				repository.getKind());
+//
+//		setSite(site);
+//		setInput(input);
+//
+//		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
+//
+//		isDirty = false;
+//		updateEditorTitle();
 	}
 
 	@Override
