@@ -27,6 +27,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -53,6 +54,8 @@ public class PreviewAttachmentPage extends WizardPage {
 	private static HashMap<String, String> textTypes;
 
 	private static HashMap<String, String> imageTypes;
+
+	private ScrolledComposite scrolledComposite;
 
 	static {
 		textTypes = new HashMap<String, String>();
@@ -129,30 +132,39 @@ public class PreviewAttachmentPage extends WizardPage {
 	}
 
 	private void createImagePreview(Composite composite, LocalAttachment attachment) {
-		final Image image = new Image(composite.getDisplay(), attachment.getFilePath());
-		final ScrolledComposite scrolledComposite = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER);
+		// Uses double buffering to paint the image; there was a weird behavior
+		// with transparent images and flicker with large images
+		Image originalImage = new Image(composite.getDisplay(), attachment.getFilePath());
+		final Image bufferedImage = new Image(composite.getDisplay(), originalImage.getBounds());
+		GC gc = new GC(bufferedImage);
+		gc.setBackground(composite.getBackground());
+		gc.fillRectangle(originalImage.getBounds());
+		gc.drawImage(originalImage, 0, 0);
+		gc.dispose();
+		originalImage.dispose();
+
+		scrolledComposite = new ScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scrolledComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
 		Composite canvasComposite = new Composite(scrolledComposite, SWT.NONE);
 		canvasComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-		Canvas canvas = new Canvas(canvasComposite, SWT.NONE);
-		final Rectangle imgSize = image.getBounds();
+		Canvas canvas = new Canvas(canvasComposite, SWT.NO_BACKGROUND);
+		final Rectangle imgSize = bufferedImage.getBounds();
 		canvas.setLayoutData(GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).hint(
 				imgSize.width, imgSize.height).create());
 		canvas.addPaintListener(new PaintListener() {
 
 			public void paintControl(PaintEvent e) {
-				e.gc.drawImage(image, 0, 0);
+				e.gc.drawImage(bufferedImage, 0, 0);
 			}
 
 		});
 		canvas.addDisposeListener(new DisposeListener() {
 
 			public void widgetDisposed(DisposeEvent e) {
-				image.dispose();
+				bufferedImage.dispose();
 			}
 
 		});
@@ -163,22 +175,27 @@ public class PreviewAttachmentPage extends WizardPage {
 
 			@Override
 			public void controlResized(ControlEvent e) {
-				Rectangle clientArea = scrolledComposite.getClientArea();
-
-				ScrollBar hBar = scrolledComposite.getHorizontalBar();
-				hBar.setMinimum(1);
-				hBar.setMaximum(clientArea.width - imgSize.width);
-				hBar.setPageIncrement(hBar.getThumb());
-				hBar.setIncrement(10);
-
-				ScrollBar vBar = scrolledComposite.getVerticalBar();
-				vBar.setMinimum(0);
-				vBar.setMaximum(clientArea.height - imgSize.height);
-				vBar.setPageIncrement(vBar.getThumb());
-				vBar.setIncrement(10);
+				adjustScrollbars(imgSize);
 			}
 
 		});
+		adjustScrollbars(imgSize);
+	}
+
+	private void adjustScrollbars(Rectangle imgSize) {
+		Rectangle clientArea = scrolledComposite.getClientArea();
+
+		ScrollBar hBar = scrolledComposite.getHorizontalBar();
+		hBar.setMinimum(0);
+		hBar.setMaximum(imgSize.width - 1);
+		hBar.setPageIncrement(clientArea.width);
+		hBar.setIncrement(10);
+
+		ScrollBar vBar = scrolledComposite.getVerticalBar();
+		vBar.setMinimum(0);
+		vBar.setMaximum(imgSize.height - 1);
+		vBar.setPageIncrement(clientArea.height);
+		vBar.setIncrement(10);
 	}
 
 	private void createGenericPreview(Composite composite, LocalAttachment attachment) {
@@ -193,4 +210,5 @@ public class PreviewAttachmentPage extends WizardPage {
 		label.setLayoutData(new GridData(GridData.FILL_BOTH));
 		label.setText(message);
 	}
+
 }
