@@ -620,6 +620,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		contributors.add(contributor);
 	}
 
+	// TODO: remove
 	public boolean isMultipleActiveTasksMode() {
 		return getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS);
 	}

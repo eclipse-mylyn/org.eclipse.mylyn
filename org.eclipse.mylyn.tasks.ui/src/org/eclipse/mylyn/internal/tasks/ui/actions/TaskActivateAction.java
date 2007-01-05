@@ -35,8 +35,7 @@ public class TaskActivateAction extends Action implements IViewActionDelegate {
 	}
 
 	public void init(IViewPart view) {
-		// TODO Auto-generated method stub
-
+		// ignore
 	}
 
 	@Override
