@@ -111,16 +111,9 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 
 		Label idLabel = new Label(area, SWT.NULL);
-		idLabel.setText("Enter Key/&ID: ");
+		idLabel.setText("Enter Key/&ID (use comma for multiple): ");
 		idText = new Text(area, SWT.BORDER);
 		idText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		idText.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				validate();
-			}
-
-		});
 
 		Label matchingTasksLabel = new Label(area, SWT.NONE);
 		matchingTasksLabel.setText("&Matching tasks:");
@@ -133,12 +126,22 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (selectedIds == null) {
+					return false;
+				}
+
 				// Only shows exact task matches
 				if (!(element instanceof AbstractRepositoryTask)) {
 					return false;
 				}
 				AbstractRepositoryTask task = (AbstractRepositoryTask) element;
-				return idText.getText().trim().equals(task.getIdLabel());
+				String taskId = task.getIdLabel();
+				for (String id : selectedIds) {
+					if (id.equals(taskId)) {
+						return true;
+					}
+				}
+				return false;
 			}
 
 		});
@@ -146,6 +149,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		idText.addModifyListener(new ModifyListener() {
 
 			public void modifyText(ModifyEvent e) {
+				computeIds();
+				validate();
 				tasksViewer.refresh(false);
 			}
 
@@ -331,7 +336,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		updateStatus(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, 0, "", null));
 	}
 
-	private String selectedId;
+	private String[] selectedIds;
 
 	private TaskRepository selectedRepository;
 
@@ -341,8 +346,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	private AbstractTaskContainer selectedCategory;
 
-	public String getSelectedId() {
-		return selectedId;
+	public String[] getSelectedIds() {
+		return selectedIds;
 	}
 
 	public TaskRepository getSelectedTaskRepository() {
@@ -363,7 +368,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	@Override
 	protected void computeResult() {
-		selectedId = idText.getText().trim();
+		computeIds();
+
 		ISelection taskSelection = tasksViewer.getSelection();
 		if (!taskSelection.isEmpty()) {
 			selectedTask = (AbstractRepositoryTask) ((IStructuredSelection) taskSelection).getFirstElement();
@@ -375,6 +381,13 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		if (shouldAddToTaskList) {
 			selectedCategory = (AbstractTaskContainer) ((IStructuredSelection) categoryViewer.getSelection())
 					.getFirstElement();
+		}
+	}
+
+	private void computeIds() {
+		selectedIds = idText.getText().split(",");
+		for (String id : selectedIds) {
+			id = id.trim();
 		}
 	}
 

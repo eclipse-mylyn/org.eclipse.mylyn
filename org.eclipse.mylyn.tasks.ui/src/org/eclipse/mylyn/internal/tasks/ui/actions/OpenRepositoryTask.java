@@ -29,7 +29,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate {
 
 	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylar.tasks.ui.open.remote";
-	
+
 	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getShell());
@@ -66,23 +66,28 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 	 * Selected a repository, so try to obtain the task using id
 	 */
 	private void openRemoteTask(RemoteTaskSelectionDialog dlg) {
+		String[] selectedIds = dlg.getSelectedIds();
 		if (dlg.shouldAddToTaskList()) {
-			final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
-			final AddExistingTaskJob job = new AddExistingTaskJob(dlg.getSelectedTaskRepository(), dlg.getSelectedId(),
-					dlg.getSelectedCategory());
-			job.schedule();
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			for (String id : selectedIds) {
+				final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
+				final AddExistingTaskJob job = new AddExistingTaskJob(dlg.getSelectedTaskRepository(), id, dlg
+						.getSelectedCategory());
+				job.schedule();
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-				public void run() {
-					svc.showInDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), job);
-				}
+					public void run() {
+						svc.showInDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), job);
+					}
 
-			});
+				});
+			}
 		} else {
-			TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), dlg.getSelectedId());
+			for (String id : selectedIds) {
+				TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), id);
+			}
 		}
 	}
-	
+
 	public void dispose() {
 	}
 
