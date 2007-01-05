@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.TextSelection;
@@ -49,9 +50,16 @@ import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
 import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
+import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -191,6 +199,53 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
+	private static final ITaskActivityListener TASK_ACTIVATION_LISTENER = new ITaskActivityListener() {
+
+		public void activityChanged(DateRangeContainer week) {
+			// ignore
+			
+		}
+
+		public void calendarChanged() {
+			// ignore
+			
+		}
+
+		public void taskActivated(ITask task) {
+			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
+			if (!hasLocalContext && task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryTask);
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryUrl());
+				
+				if (connector != null && connector.hasRepositoryContext(repository, repositoryTask)) {
+					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							ITasksUiConstants.TITLE_DIALOG, 
+							"No local task context exists.  Retrieve from repository?");
+					if (getRemote) {
+						new ContextRetrieveAction().run(repositoryTask);
+					}
+				}
+			}
+		}
+
+		public void taskDeactivated(ITask task) {
+			// ignore
+			
+		}
+
+		public void taskListRead() {
+			// ignore
+			
+		}
+
+		public void tasksActivated(List<ITask> tasks) {
+			// ignore
+			
+		}
+		
+	};
+	
 	public ContextUiPlugin() {
 		super();
 		INSTANCE = this;
@@ -223,7 +278,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
-
+					TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
+					
 					workbench.addWindowListener(activeSearchViewTracker);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {
@@ -249,7 +305,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
 			MylarMonitorPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-
+			
+			TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
+			TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
+			
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.removeWindowListener(activeSearchViewTracker);

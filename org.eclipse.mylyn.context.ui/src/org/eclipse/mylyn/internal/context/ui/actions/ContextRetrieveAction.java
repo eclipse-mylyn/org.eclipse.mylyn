@@ -34,9 +34,11 @@ import org.eclipse.ui.PlatformUI;
  * @author Steffen Pingel
  */
 public class ContextRetrieveAction implements IViewActionDelegate {
-	
+
 	private AbstractRepositoryTask task;
+
 	private TaskRepository repository;
+
 	private AbstractRepositoryConnector connector;
 
 	public void init(IViewPart view) {
@@ -46,11 +48,12 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		if (task == null) {
 			return;
+		} else {
+			run(task);
 		}
-		
-//		if (!connector.validate(repository)) {
-//			return;
-//		}
+	}
+
+	public void run(AbstractRepositoryTask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
@@ -68,12 +71,13 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		ITask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask instanceof AbstractRepositoryTask) {
-			task = (AbstractRepositoryTask)selectedTask;
+			task = (AbstractRepositoryTask) selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
 			IAttachmentHandler handler = connector.getAttachmentHandler();
-			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task) && connector.hasRepositoryContext(repository, task));
+			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
+					&& connector.hasRepositoryContext(repository, task));
 		} else {
 			task = null;
 			action.setEnabled(false);
