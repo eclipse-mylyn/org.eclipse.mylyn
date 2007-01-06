@@ -31,9 +31,9 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 /**
  * @author Mik Kersten
  */
-public class FocusNavigatorAction extends AbstractAutoFocusViewAction {
+public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 
-	public FocusNavigatorAction() {
+	public FocusResourceNavigatorAction() {
 		super(new InterestFilter(), true, true, true);
 	}
 

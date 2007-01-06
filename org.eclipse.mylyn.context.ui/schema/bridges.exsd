@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="uiBridge" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="uiBridge" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="labelProvider" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="preservedFilters" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>

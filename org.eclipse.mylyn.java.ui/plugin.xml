@@ -40,7 +40,7 @@
           <filter
                 class="org.eclipse.jdt.internal.ui.filters.ClosedProjectFilter">
           </filter>
-      </preservedFilters>
+        </preservedFilters>
         <preservedFilters
               viewId="org.eclipse.ui.navigator.ProjectExplorer">
            <filter

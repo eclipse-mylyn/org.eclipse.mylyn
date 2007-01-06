@@ -72,7 +72,7 @@
 		id="org.eclipse.mylar.ui.resource.navigator.filter" 
    		targetID="org.eclipse.ui.views.ResourceNavigator">
     	<action
-           class="org.eclipse.mylar.internal.ide.ui.actions.FocusNavigatorAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.FocusResourceNavigatorAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
