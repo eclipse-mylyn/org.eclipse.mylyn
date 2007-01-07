@@ -78,7 +78,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private static final int STATUS_HEIGHT = 40;
 
 	protected final static String PAGE_NAME = "TracSearchPage"; //$NON-NLS-1$
-	
+
 	private static final String SEARCH_URL_ID = PAGE_NAME + ".SEARCHURL";
 
 	protected Combo summaryText = null;
@@ -107,11 +107,15 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private TextSearchField keywordsField;
 
-	private TextSearchField ownerField;
-
 	private Map<String, SearchField> searchFieldByName = new HashMap<String, SearchField>();
 
 	private boolean firstTime = true;
+
+	private UserSearchField ownerField;
+
+	private UserSearchField reporterField;
+
+	private UserSearchField ccField;
 
 	public TracCustomQueryPage(TaskRepository repository, AbstractRepositoryQuery query) {
 		super(TITLE);
@@ -129,11 +133,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public void createControl(Composite parent) {
-
 		Composite control = new Composite(parent, SWT.NONE);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(4, false);
 		control.setLayout(layout);
 
 		createTitleGroup(control);
@@ -144,13 +147,12 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		descriptionField = new TextSearchField("description");
 		descriptionField.createControls(control, "Description");
 
-		ownerField = new TextSearchField("owner");
-		ownerField.createControls(control, "Owner");
-
 		keywordsField = new TextSearchField("keywords");
 		keywordsField.createControls(control, "Keywords");
 
 		createOptionsGroup(control);
+
+		createUserGroup(control);
 
 		if (query != null) {
 			titleText.setText(query.getSummary());
@@ -187,7 +189,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		titleText = new Text(control, SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		gd.horizontalSpan = 2;
+		gd.horizontalSpan = 3;
 		titleText.setLayoutData(gd);
 		titleText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -207,7 +209,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		layout.numColumns = 1;
 		group.setLayout(layout);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gd.horizontalSpan = 3;
+		gd.horizontalSpan = 4;
 		group.setLayoutData(gd);
 
 		createProductAttributes(group);
@@ -217,6 +219,36 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return group;
 	}
 
+	protected void createUserGroup(Composite control) {
+		TextSearchField userField = new TextSearchField(null);
+		userField.createControls(control, "User");
+
+		Composite radioGroup = new Composite(control, SWT.NONE);
+		radioGroup.setLayout(new GridLayout(3, false));
+
+		ownerField = new UserSearchField("owner", userField);
+		ownerField.createControls(radioGroup, "Owner");
+
+		reporterField = new UserSearchField("reporter", userField);
+		reporterField.createControls(radioGroup, "Reporter");
+
+		ccField = new UserSearchField("cc", userField);
+		ccField.createControls(radioGroup, "CC");
+
+		// select first control by default
+		setUserGroupSelection(ownerField);
+	}
+
+	/**
+	 * Selects a user radio button and make sure only a single radio button is
+	 * selected at a time.
+	 */
+	protected void setUserGroupSelection(UserSearchField searchField) {
+		ownerField.getRadioButton().setSelection(searchField == ownerField);
+		reporterField.getRadioButton().setSelection(searchField == reporterField);
+		ccField.getRadioButton().setSelection(searchField == ccField);
+	}
+	
 	/**
 	 * Creates the area for selection on product attributes
 	 * component/version/milestone.
@@ -467,15 +499,16 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return (titleText != null) ? titleText.getText() : "<search>";
 	}
 
-//	public boolean performAction() {
-//
-//		Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-//		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-//				repository, getQuery(), proxySettings);
-//		NewSearchUI.runQueryInBackground(collector);
-//
-//		return true;
-//	}
+	// public boolean performAction() {
+	//
+	// Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
+	// SearchHitCollector collector = new
+	// SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+	// repository, getQuery(), proxySettings);
+	// NewSearchUI.runQueryInBackground(collector);
+	//
+	// return true;
+	// }
 
 	@Override
 	public boolean performAction() {
@@ -498,12 +531,12 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private boolean restoreWidgetValues() {
 		IDialogSettings settings = getDialogSettings();
 		String repoId = "." + repository.getUrl();
-		
+
 		String searchUrl = settings.get(SEARCH_URL_ID + repoId);
 		if (searchUrl == null) {
 			return false;
 		}
-		
+
 		restoreWidgetValues(new TracSearch(searchUrl));
 		return true;
 	}
@@ -521,8 +554,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		public SearchField(String fieldName) {
 			this.fieldName = fieldName;
 
-			assert !searchFieldByName.containsKey(fieldName);
-			searchFieldByName.put(fieldName, this);
+			if (fieldName != null) {
+				assert !searchFieldByName.containsKey(fieldName);
+				searchFieldByName.put(fieldName, this);
+			}
 		}
 
 		public String getFieldName() {
@@ -539,7 +574,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		private Combo conditionCombo;
 
-		private Text searchText;
+		protected Text searchText;
 
 		private Label label;
 
@@ -561,7 +596,11 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			conditionCombo.setText(compareOperators[0].toString());
 
 			searchText = new Text(parent, SWT.BORDER);
-			GridData gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+			GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			// the user search field has additional controls and no fieldName
+			if (fieldName != null) {
+				gd.horizontalSpan = 2;
+			}
 			searchText.setLayoutData(gd);
 		}
 
@@ -606,6 +645,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			setCondition(filter.getOperator());
 			java.util.List<String> values = filter.getValues();
 			setSearchText(values.get(0));
+		}
+
+		public void setFieldName(String fieldName) {
+			this.fieldName = fieldName;
 		}
 
 	}
@@ -683,6 +726,45 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 					list.select(i);
 				}
 			}
+		}
+
+	}
+
+	private class UserSearchField extends SearchField {
+
+		private TextSearchField textField;
+
+		private Button radioButton;
+
+		public UserSearchField(String fieldName, TextSearchField textField) {
+			super(fieldName);
+
+			this.textField = textField;
+		}
+
+		public Button getRadioButton() {
+			return radioButton;
+		}
+		
+		public void createControls(Composite parent, String labelText) {
+			radioButton = new Button(parent, SWT.RADIO);
+			radioButton.setText(labelText);
+		}
+
+		@Override
+		public TracSearchFilter getFilter() {
+			if (radioButton.getSelection()) {
+				textField.setFieldName(fieldName);
+				return textField.getFilter();
+			}
+			return null;
+		}
+
+		@Override
+		public void setFilter(TracSearchFilter filter) {
+			textField.setFieldName(fieldName);
+			textField.setFilter(filter);
+			setUserGroupSelection(this);
 		}
 
 	}
