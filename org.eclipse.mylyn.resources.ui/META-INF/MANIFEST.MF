@@ -5,10 +5,11 @@ Bundle-SymbolicName: org.eclipse.mylar.resources;singleton:=true
 Bundle-Version: 1.0.1.v20070105-1700
 Bundle-Activator: org.eclipse.mylar.resources.MylarResourcesPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.ide,
+Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.core.runtime,
+ org.eclipse.ui,
  org.eclipse.core.resources,
+ org.eclipse.ui.navigator,
  org.eclipse.jface.text,
  org.eclipse.compare,
  org.eclipse.mylar.context.core,
