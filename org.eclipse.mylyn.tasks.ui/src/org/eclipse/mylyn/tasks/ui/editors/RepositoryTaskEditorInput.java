@@ -113,7 +113,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 		if (repositoryTask == null) {
 			if (other.repositoryTask != null) {
 				return false;
-			} else if (other.getId() != this.getId()) {
+			} else if (!other.getId().equals(this.getId())) {
 				return false;
 			}
 		} else if (!repositoryTask.equals(other.repositoryTask))
