@@ -9,6 +9,6 @@
             label="Eclipse.org"
             repositoryKind="bugzilla"
             urlRepository="https://bugs.eclipse.org/bugs"
-            version="2.20"/>
+            version="2.22"/>
    </extension>
 </plugin>
