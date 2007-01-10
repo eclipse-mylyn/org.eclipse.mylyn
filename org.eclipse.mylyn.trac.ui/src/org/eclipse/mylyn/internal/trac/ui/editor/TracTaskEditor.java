@@ -77,14 +77,14 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 		final TracTicket ticket;
 		try {
-			ticket = TracRepositoryConnector.getTracTicket(repository, getRepositoryTaskData());
+			ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
 		} catch (InvalidTicketException e) {
 			TracUiPlugin.handleTracException(e);
 			return;
 		}
 		final String comment = getNewCommentText();
 		final AbstractRepositoryTask task = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList()
-				.getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), getRepositoryTaskData().getId()));
+				.getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
 		final boolean attachContext = getAttachContext();
 
 		JobChangeAdapter listener = new JobChangeAdapter() {
@@ -143,7 +143,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	private void attachContext() {
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), getRepositoryTaskData().getId());
+		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId());
 		final AbstractRepositoryTask modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
 				.getTaskList().getTask(handle);
 

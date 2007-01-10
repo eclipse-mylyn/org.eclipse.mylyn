@@ -57,7 +57,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		final TracTicket ticket;
 		try {
-			ticket = TracRepositoryConnector.getTracTicket(repository, getRepositoryTaskData());
+			ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
 		} catch (InvalidTicketException e) {
 			TracUiPlugin.handleTracException(e);
 			submitButton.setEnabled(true);

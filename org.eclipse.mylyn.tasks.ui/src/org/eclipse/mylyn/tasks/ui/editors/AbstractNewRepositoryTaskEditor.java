@@ -27,7 +27,6 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.ui.DatePicker;
@@ -73,8 +72,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
-
-	protected RepositoryTaskData taskData;
 
 	protected Button searchDuplicatesButton;
 
@@ -124,11 +121,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	public RepositoryTaskData getRepositoryTaskData() {
-		return taskData;
-	}
-
-	@Override
 	protected void createDescriptionLayout(Composite composite) {
 		FormToolkit toolkit = this.getManagedForm().getToolkit();
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
@@ -147,7 +139,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		section.setClient(descriptionComposite);
 
 		descriptionTextViewer = addTextEditor(repository, descriptionComposite,
-				getRepositoryTaskData().getNewComment(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+				taskData.getDescription(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		descriptionTextViewer.setEditable(true);
 
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
@@ -499,6 +491,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				submitToRepository();
 			}
 		});
+		submitButton.setToolTipText("Submit to "+this.repository.getUrl());		
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
