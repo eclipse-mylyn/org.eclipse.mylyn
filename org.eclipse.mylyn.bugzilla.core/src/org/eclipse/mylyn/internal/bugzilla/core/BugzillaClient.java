@@ -733,7 +733,7 @@ public class BugzillaClient {
 					} else if (token.getType() == Token.TAG
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
-						if (!taskData.isNew() && (title.toLowerCase().matches(".*\\s+processed.*"))) {	
+						if (!taskData.isNew() && (title.toLowerCase().matches(".*\\s+processed.*"))) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null && result == null) {
@@ -799,24 +799,17 @@ public class BugzillaClient {
 			}
 		}
 
-		// form.add(KEY_BUG_FILE_LOC, "");
-
-		// specify the product
-		fields.put(BugzillaReportElement.PRODUCT.getKeyString(), new NameValuePair(BugzillaReportElement.PRODUCT
-				.getKeyString(), taskData.getProduct()));
-
-		// add the summary to the bug post
-		fields.put(BugzillaReportElement.SHORT_DESC.getKeyString(), new NameValuePair(BugzillaReportElement.SHORT_DESC
-				.getKeyString(), taskData.getSummary()));
-
-		taskData.setDescription(taskData.getDescription());
-
 		if (taskData.getDescription().length() != 0) {
 			// add the new comment to the bug post if there
 			// is some text in
 			// it
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, taskData.getDescription()));
 		}
+
+		// for (String key: fields.keySet()) {
+		// System.err.println(">>>"+fields.get(key).getName()+" =
+		// "+fields.get(key).getValue());
+		// }
 
 		return fields.values().toArray(new NameValuePair[fields.size()]);
 

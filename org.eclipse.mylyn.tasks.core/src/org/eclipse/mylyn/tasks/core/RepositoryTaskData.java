@@ -19,15 +19,20 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
+ * This data structure is not to be subclassed but rather used directly to hold
+ * repository task data (attribute key, value pairs along with valid options for
+ * each attribute).
+ * 
  * @author Mik Kersten
  * @author Rob Elves
- * 
  */
-public class RepositoryTaskData extends AttributeContainer implements Serializable {
+public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = 2302511248225227689L;
+	private static final long serialVersionUID = 2304511248225227689L;
 
 	private boolean hasLocalChanges = false;
+
+	private boolean isNew = false;
 
 	public static final String VAL_STATUS_NEW = "NEW";
 
@@ -69,7 +74,11 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public String getLabel() {
-		return getSummary();
+		if (isNew()) {
+			return "<unsubmitted> " + this.getRepositoryUrl();
+		} else {
+			return getSummary();
+		}
 	}
 
 	/**
@@ -164,16 +173,15 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	/**
-	 * true if this is a new, unsubmitted task
-	 * false otherwise (exists on repository)
+	 * true if this is a new, unsubmitted task false otherwise
 	 */
 	public boolean isNew() {
-		return false;
+		return isNew;
 	}
 
-	// public boolean isResolved() {
-	// return isResolvedStatus(getStatus());
-	// }
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
+	}
 
 	/**
 	 * Get the date that the bug was created
@@ -250,10 +258,7 @@ public class RepositoryTaskData extends AttributeContainer implements Serializab
 	}
 
 	public void setDescription(String description) {
-		RepositoryTaskAttribute attribute = getDescriptionAttribute();
-		if (attribute != null) {
-			attribute.setValue(description);
-		}
+		setAttributeValue(RepositoryTaskAttribute.DESCRIPTION, description);
 	}
 
 	public String getDescription() {

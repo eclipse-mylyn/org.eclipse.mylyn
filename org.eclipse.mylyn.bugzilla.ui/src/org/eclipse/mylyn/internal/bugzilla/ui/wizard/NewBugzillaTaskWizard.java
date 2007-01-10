@@ -14,9 +14,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.bugzilla.core.NewBugzillaTaskData;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -46,14 +48,16 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 	protected boolean completed = false;
 
 	/** The taskData used to store all of the data for the wizard */
-	protected NewBugzillaTaskData taskData;
+	protected RepositoryTaskData taskData;
 
 	// TODO: Change taskData to a RepositoryTaskData
 	// protected RepositoryTaskData taskData;
 
 	public NewBugzillaTaskWizard(TaskRepository repository) {
 		this(false, repository);
-		taskData = new NewBugzillaTaskData(repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
+				repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+		taskData.setNew(true);
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
@@ -88,7 +92,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			productPage.saveDataToModel();
 			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, taskData);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TasksUiUtil.openEditor(editorInput,  TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 			return true;
 		} catch (Exception e) {
 			productPage.applyToStatusLine(new Status(IStatus.ERROR, "not_used", 0,
