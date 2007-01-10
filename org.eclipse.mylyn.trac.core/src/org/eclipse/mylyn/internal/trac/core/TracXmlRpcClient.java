@@ -378,7 +378,9 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	@SuppressWarnings("unchecked")
 	private List<TicketAttributeResult> getTicketAttributes(String attributeType) throws TracException {
+		// get list of attribute ids first
 		Object[] ids = (Object[]) call(attributeType + ".getAll");
+		// fetch all attributes in a single call
 		Map<String, Object>[] calls = new Map[ids.length];
 		for (int i = 0; i < calls.length; i++) {
 			calls[i] = createMultiCall(attributeType + ".get", ids[i]);
@@ -392,8 +394,12 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			try {
 				TicketAttributeResult attribute = new TicketAttributeResult();
 				attribute.name = (String) ids[i];
-				attribute.value = Integer.parseInt((String) getMultiCallResult(result[i]));
+				Object value = getMultiCallResult(result[i]);
+				attribute.value = (value instanceof Integer) ? (Integer) value : Integer.parseInt((String) value);
 				attributes.add(attribute);
+			} catch (ClassCastException e) {
+				MylarStatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
+						+ "'");
 			} catch (NumberFormatException e) {
 				MylarStatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
 						+ "'");
