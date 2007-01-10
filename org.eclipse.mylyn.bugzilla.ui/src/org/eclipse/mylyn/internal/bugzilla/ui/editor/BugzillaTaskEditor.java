@@ -52,8 +52,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -115,10 +113,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// compareInput = new BugzillaCompareInput(config);
 	}
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
-		
+//	@Override
+//	public void init(IEditorSite site, IEditorInput input) {
+//		super.init(site, input);
+//		
 //		if (!(input instanceof RepositoryTaskEditorInput)) {
 //			return;
 //		}
@@ -137,7 +135,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 //		// restoreBug();
 //		isDirty = false;
 //		updateEditorTitle();
-	}
+//	}
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {

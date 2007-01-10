@@ -27,8 +27,6 @@ import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.progress.IProgressService;
@@ -44,9 +42,9 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		super(editor);
 	}
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
+//	@Override
+//	public void init(IEditorSite site, IEditorInput input) {
+//		super.init(site, input);
 //		if (!(input instanceof RepositoryTaskEditorInput)) {
 //			return;
 //		}
@@ -64,7 +62,7 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 //
 //		isDirty = false;
 //		updateEditorTitle();
-	}
+//	}
 
 	@Override
 	public void submitToRepository() {
