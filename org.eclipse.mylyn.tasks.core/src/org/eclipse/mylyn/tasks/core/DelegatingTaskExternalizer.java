@@ -38,6 +38,8 @@ import org.w3c.dom.NodeList;
  * The canCreateElementFor methods specify which tasks the externalizer should
  * write to disk.
  * 
+ * The TaskList is read on startup, so externalizers extending this should not 
+ * perform any slow (i.e., network) operations when overriding methods.
  * 
  * @author Mik Kersten
  * @author Ken Sueda (XML serialization support)
@@ -515,6 +517,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
+	/**
+	 * This happens on startup, so connectors should not perform any network operations
+	 * when reading queries.
+	 */
 	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
 		return null;

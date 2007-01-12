@@ -1141,7 +1141,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		/* Launch a NewAttachemntWizard */
-		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Add...", SWT.PUSH);
+		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Attach File...", SWT.PUSH);
 
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
