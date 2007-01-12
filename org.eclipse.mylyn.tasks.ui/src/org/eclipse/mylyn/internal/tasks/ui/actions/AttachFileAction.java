@@ -31,7 +31,7 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 		Object selection = super.getStructuredSelection().getFirstElement();
 		if (selection instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)selection;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getUrl());
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 			
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
 			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), attachmentWizard);
