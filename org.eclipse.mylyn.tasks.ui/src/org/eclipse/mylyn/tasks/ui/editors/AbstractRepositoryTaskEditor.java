@@ -2533,8 +2533,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						// For some reason the task wasn't retrieved.
 						// Try to
 						// open local then via web browser...
-						TasksUiUtil.openRepositoryTask(repository.getUrl(), taskData.getId(), connector.getTaskWebUrl(
-								taskData.getRepositoryUrl(), taskData.getId()));
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								TasksUiUtil.openRepositoryTask(repository.getUrl(), taskData.getId(), connector
+										.getTaskWebUrl(taskData.getRepositoryUrl(), taskData.getId()));
+							}
+						});
 					}
 
 					return Status.OK_STATUS;
@@ -2597,7 +2601,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				if (exception.getStatus().getCode() == IMylarStatusConstants.COMMENT_REQUIRED) {
+				if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
 					TasksUiUtil.displayStatus("Comment required", exception.getStatus(), shell);
 					if (!isDisposed && newCommentTextViewer != null && !newCommentTextViewer.getControl().isDisposed()) {
 						newCommentTextViewer.getControl().setFocus();

@@ -37,7 +37,7 @@ public interface IMylarStatusConstants {
 	
 	public final static int OPERATION_CANCELLED = 8;
 	
-	public final static int COMMENT_REQUIRED = 9;
+	public final static int REPOSITORY_COMMENT_REQD = 9;
 	
 	public final static int LOGGED_OUT_OF_REPOSITORY = 10;
 	

@@ -72,9 +72,9 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 			return MylarMessages.bind(MylarMessages.internal_error, this.errorMessage);
 		case OPERATION_CANCELLED:
 			return MylarMessages.bind(MylarMessages.operation_cancelled, this.errorMessage);
-		case COMMENT_REQUIRED:
+		case REPOSITORY_COMMENT_REQD:
 			if (errorMessage == null) {
-				return MylarMessages.comment_required;
+				return MylarMessages.repository_comment_reqd;
 			} else {
 				return errorMessage;
 			}

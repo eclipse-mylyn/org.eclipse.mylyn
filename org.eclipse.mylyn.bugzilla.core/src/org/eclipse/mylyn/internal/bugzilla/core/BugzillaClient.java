@@ -952,7 +952,7 @@ public class BugzillaClient {
 							// BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
 						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
 							throw new CoreException(new MylarStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
-									IMylarStatusConstants.COMMENT_REQUIRED));
+									IMylarStatusConstants.REPOSITORY_COMMENT_REQD));
 						} else if (title.indexOf(IBugzillaConstants.LOGGED_OUT) != -1) {
 							authenticated = false;
 							// throw new

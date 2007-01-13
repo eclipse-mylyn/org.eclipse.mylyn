@@ -31,6 +31,8 @@ public class MylarMessages extends NLS {
 	public static String repository_login_failure;
 
 	public static String repository_not_found;
+	
+	public static String repository_comment_reqd;
 
 	public static String operation_cancelled;
 
@@ -40,7 +42,6 @@ public class MylarMessages extends NLS {
 
 	public static String internal_error;
 
-	public static String comment_required;
 
 	public static String repository_error;
 
