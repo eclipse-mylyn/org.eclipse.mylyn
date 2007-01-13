@@ -329,7 +329,8 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from "+repositoryUrl.toString()+"."));
+					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from " + repositoryUrl.toString()
+							+ "."));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -418,7 +419,8 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from "+repositoryUrl.toString()+"."));
+					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from " + repositoryUrl.toString()
+							+ "."));
 
 		} catch (IOException e) {
 			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -778,7 +780,8 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from "+repositoryUrl.toString()+"."));
+					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from " + repositoryUrl.toString()
+							+ "."));
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
@@ -808,9 +811,6 @@ public class BugzillaClient {
 		}
 
 		if (taskData.getDescription().length() != 0) {
-			// add the new comment to the bug post if there
-			// is some text in
-			// it
 			fields.put(KEY_COMMENT, new NameValuePair(KEY_COMMENT, taskData.getDescription()));
 		}
 
@@ -967,12 +967,14 @@ public class BugzillaClient {
 				}
 			}
 
-			throw new CoreException(new MylarStatus(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR_HTML, repositoryUrl.toString(), body));
+			throw new CoreException(new MylarStatus(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.REPOSITORY_ERROR_HTML, repositoryUrl.toString(), body));
 
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from "+repositoryUrl.toString()+"."));
+					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from " + repositoryUrl.toString()
+							+ "."));
 		}
 	}
 

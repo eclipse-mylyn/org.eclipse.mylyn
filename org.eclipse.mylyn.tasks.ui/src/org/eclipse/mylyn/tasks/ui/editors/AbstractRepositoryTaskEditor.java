@@ -2565,22 +2565,27 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void attachContext(final AbstractRepositoryTask modifiedTask) {
-		IProgressService ps = PlatformUI.getWorkbench().getProgressService();
-		try {
-			ps.busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor pm) {
-					try {
-						// TODO: pass progress monitor to handler
-						connector.attachContext(repository, modifiedTask, "");
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
-					}
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IProgressService ps = PlatformUI.getWorkbench().getProgressService();
+				try {
+					ps.busyCursorWhile(new IRunnableWithProgress() {
+						public void run(IProgressMonitor pm) {
+							try {
+								// TODO: pass progress monitor to handler
+								connector.attachContext(repository, modifiedTask, "");
+							} catch (Exception e) {
+								MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
+							}
+						}
+					});
+				} catch (InvocationTargetException e) {
+					MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
+				} catch (InterruptedException ignore) {
 				}
-			});
-		} catch (InvocationTargetException e) {
-			MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
-		} catch (InterruptedException ignore) {
-		}
+			}
+		});
+
 	}
 
 	protected AbstractTaskContainer getCategory() {
