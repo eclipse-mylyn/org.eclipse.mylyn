@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,13 +101,6 @@ public class BugzillaCorePlugin extends Plugin {
 	
 	/**
 	 * Retrieves the latest repository configuration from the server
-	 * @throws CoreException 
-	 * @throws GeneralSecurityException 
-	 * @throws BugzillaException 
-	 * @throws IOException 
-	 * @throws BugzillaException
-	 * @throws GeneralSecurityException
-	 * @throws
 	 */
 	public static RepositoryConfiguration getRepositoryConfiguration(TaskRepository repository, boolean forceRefresh) throws CoreException {
 		try {

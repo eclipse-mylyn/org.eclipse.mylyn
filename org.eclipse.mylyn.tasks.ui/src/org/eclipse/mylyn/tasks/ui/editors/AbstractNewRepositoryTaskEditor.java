@@ -63,6 +63,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
+	private static final int DEFAULT_FIELD_WIDTH = 150;
+
 	private static final int DEFAULT_ESTIMATED_TIME = 1;
 
 	private static final String LABEL_CREATE = "Create New";
@@ -84,23 +86,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected Button addToCategory;
 
 	protected CCombo categoryCombo;
-
-	// protected JobChangeAdapter submitJobListener = new JobChangeAdapter() {
-	// @Override
-	// public void done(final IJobChangeEvent event) {
-	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-	// public void run() {
-	// if (event.getJob().getResult().getCode() == Status.OK
-	// && event.getJob().getResult().getMessage() != null) {
-	// handleOkayStatus(event);
-	// } else {// if (event.getJob().getResult().getCode() ==
-	// // Status.ERROR) {
-	// handleSubmitError(event);
-	// }
-	// }
-	// });
-	// }
-	// };
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -138,8 +123,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		descriptionComposite.setLayoutData(descriptionData);
 		section.setClient(descriptionComposite);
 
-		descriptionTextViewer = addTextEditor(repository, descriptionComposite,
-				taskData.getDescription(), true, SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		descriptionTextViewer = addTextEditor(repository, descriptionComposite, taskData.getDescription(), true,
+				SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		descriptionTextViewer.setEditable(true);
 
 		GridData descriptionTextData = new GridData(GridData.FILL_BOTH);
@@ -358,7 +343,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void updateTask() {		
+	protected void updateTask() {
 		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
 		super.updateTask();
@@ -416,8 +401,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		buttonComposite.setLayout(new GridLayout(4, false));
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		section.setClient(buttonComposite);
-		addActionButtons(buttonComposite);
-
+		
+		
 		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
 		categoryCombo = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryCombo.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
@@ -447,6 +432,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			}
 
 		});
+		
+		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(categoryCombo);
+		
+		
+		addActionButtons(buttonComposite);
+
+		
 
 		toolkit.paintBordersFor(buttonComposite);
 	}
@@ -491,7 +483,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				submitToRepository();
 			}
 		});
-		submitButton.setToolTipText("Submit to "+this.repository.getUrl());		
+		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
@@ -550,26 +542,30 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	public AbstractRepositoryTask handleNewBugPost(String id) throws CoreException {
-		AbstractRepositoryTask newTask = super.handleNewBugPost(id);
+		final AbstractRepositoryTask newTask = super.handleNewBugPost(id);
 
 		if (newTask != null) {
-			Calendar selectedDate = datePicker.getDate();
-			if (selectedDate != null) {
-				// NewLocalTaskAction.scheduleNewTask(newTask);
-				TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
-			}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					Calendar selectedDate = datePicker.getDate();
+					if (selectedDate != null) {
+						// NewLocalTaskAction.scheduleNewTask(newTask);
+						TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
+					}
 
-			newTask.setEstimatedTimeHours(estimated.getSelection());
+					newTask.setEstimatedTimeHours(estimated.getSelection());
 
-			Object selectedObject = null;
-			if (TaskListView.getFromActivePerspective() != null)
-				selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
-						.getSelection()).getFirstElement();
+					Object selectedObject = null;
+					if (TaskListView.getFromActivePerspective() != null)
+						selectedObject = ((IStructuredSelection) TaskListView.getFromActivePerspective().getViewer()
+								.getSelection()).getFirstElement();
 
-			if (selectedObject instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory) selectedObject),
-						newTask);
-			}
+					if (selectedObject instanceof TaskCategory) {
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
+								((TaskCategory) selectedObject), newTask);
+					}
+				}
+			});
 		}
 
 		return newTask;

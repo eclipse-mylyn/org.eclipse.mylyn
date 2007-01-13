@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -266,7 +265,7 @@ public class TracOfflineTaskHandler implements ITaskDataHandler {
 	}
 
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException {
+			Set<AbstractRepositoryTask> tasks) throws CoreException {
 		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}

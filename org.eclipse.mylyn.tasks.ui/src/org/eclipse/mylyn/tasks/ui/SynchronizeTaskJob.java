@@ -14,8 +14,6 @@ package org.eclipse.mylar.tasks.ui;
 import java.util.List;
 import java.util.Set;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -25,13 +23,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
@@ -84,25 +80,13 @@ class SynchronizeTaskJob extends Job {
 				try {
 					syncTask(monitor, repositoryTask);
 				} catch (final CoreException e) {
-					if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
-						// TODO move this handler
+					repositoryTask.setStatus(e.getStatus());
+					if (forceSync) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								WebBrowserDialog.openAcceptAgreement(PlatformUI.getWorkbench()
-										.getActiveWorkbenchWindow().getShell(), "Unrecognized response from server", e
-										.getStatus().getMessage(), e.getStatus().getException().getMessage());
-								MylarStatusHandler.log(e.getStatus());
+								TasksUiUtil.displayStatus("Task synchronization failed", e.getStatus(), null);
 							}
 						});
-					} else if (e.getStatus().getException() instanceof LoginException) {
-						MylarStatusHandler.fail(e, "Task download failed. Ensure proper repository configuration of "
-								+ repositoryTask.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
-						repositoryTask.setStatus(e.getStatus());
-					} else if (forceSync) {
-						MylarStatusHandler.log(e.getStatus().getException(), "Unable to retrieve task "
-								+ AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier()) + " from "
-								+ repositoryTask.getRepositoryUrl());
-						repositoryTask.setStatus(e.getStatus());
 					}
 				}
 
@@ -122,8 +106,7 @@ class SynchronizeTaskJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void syncTask(IProgressMonitor monitor, final AbstractRepositoryTask repositoryTask) throws LoginException,
-			CoreException {
+	private void syncTask(IProgressMonitor monitor, final AbstractRepositoryTask repositoryTask) throws CoreException {
 		boolean canNotSynch = repositoryTask.isDirty();
 		boolean hasLocalChanges = repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT;
@@ -135,21 +118,20 @@ class SynchronizeTaskJob extends Job {
 			if (repository == null) {
 				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
 						"Associated repository could not be found. Ensure proper repository configuration of "
-								+ repositoryTask.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", null));
+								+ repositoryTask.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
+								+ ".", null));
 			}
 
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
-			if (offlineHandler != null) {
+			ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
+			if (taskDataHandler != null) {
 				String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-				RepositoryTaskData downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
+				RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
 
 				if (downloadedTaskData != null) {
 					TasksUiPlugin.getSynchronizationManager().updateOfflineState(repositoryTask, downloadedTaskData,
 							forceSync);
-					// if(!forceSync) {
 					refreshEditors(repositoryTask);
-					// }
 				} else {
 					connector.updateTask(repository, repositoryTask);
 				}

@@ -224,7 +224,7 @@ public interface IBugzillaConstants {
 
 	public static final String ERROR_MSG_OP_NOT_PERMITTED = "The requested operation is not permitted.";
 
-	public static final String ERROR_MSG_INVALID_BUG_ID = "Invalid Bug ID. The requested bug id does not exist.";
+	public static final String ERROR_MSG_INVALID_BUG_ID = "Invalid bug id. The requested bug id does not exist.";
 
 	public static final String FORM_PREFIX_BUG_218 = "Bug ";
 
@@ -233,5 +233,9 @@ public interface IBugzillaConstants {
 	public static final String FORM_POSTFIX_216 = " posted";
 
 	public static final String FORM_POSTFIX_218 = " Submitted";
+
+	public static final String INVALID_CREDENTIALS = "Invalid repository credentials.";
+
+	public static final String CHANGES_SUBMITTED = "changes submitted";
 
 }

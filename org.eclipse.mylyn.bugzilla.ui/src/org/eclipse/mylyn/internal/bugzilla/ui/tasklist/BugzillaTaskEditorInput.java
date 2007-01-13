@@ -13,9 +13,6 @@
  */
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -38,8 +35,7 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 
 	private BugzillaTask bugTask;
 
-	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline)
-			throws IOException, GeneralSecurityException {
+	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) {
 		super(repository, bugTask.getHandleIdentifier(), bugTask.getUrl());
 		this.bugTask = bugTask;
 		migrateDescToReadOnly(getTaskData());

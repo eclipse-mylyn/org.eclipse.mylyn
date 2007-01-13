@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
@@ -64,9 +63,9 @@ public class RepositoryReportFactoryTest extends TestCase {
 			repository.setAuthenticationCredentials("invalid", "invalid");
 			init(bugid);
 		} catch (CoreException e) {
-			errorMessage = e.getStatus().getException().getMessage();
+			errorMessage = e.getStatus().getMessage();
 		}
-		assertEquals("Invalid credentials.", errorMessage);
+		assertTrue(errorMessage.startsWith("Unable to login"));
 		repository.flushAuthenticationCredentials();
 	}
 
@@ -83,9 +82,9 @@ public class RepositoryReportFactoryTest extends TestCase {
 			connector.getClientManager().repositoryAdded(repository);
 			init(bugid);
 		} catch (CoreException e) {
-			errorMessage = e.getStatus().getException().getMessage();
+			errorMessage = e.getStatus().getMessage();
 		}
-		assertEquals(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID, errorMessage);
+		assertTrue(errorMessage.startsWith("Repository error from"));
 	}
 
 	// public void testReadingReport() throws Exception {
@@ -372,7 +371,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testTimeTracking222() throws Exception {
 		setRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		RepositoryTaskData report = init("11");		
+		RepositoryTaskData report = init("11");
 		assertEquals("7.50", report.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()).getValue());
 		assertEquals("4.00", report.getAttribute(BugzillaReportElement.ACTUAL_TIME.getKeyString()).getValue());
 		assertEquals("3.00", report.getAttribute(BugzillaReportElement.REMAINING_TIME.getKeyString()).getValue());
@@ -409,7 +408,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	public void testTimeTracking218() throws Exception {
 		setRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_218_URL);
-		RepositoryTaskData report = init("19");		
+		RepositoryTaskData report = init("19");
 		assertEquals("7.50", report.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()).getValue());
 		assertEquals("1.00", report.getAttribute(BugzillaReportElement.ACTUAL_TIME.getKeyString()).getValue());
 		assertEquals("3.00", report.getAttribute(BugzillaReportElement.REMAINING_TIME.getKeyString()).getValue());

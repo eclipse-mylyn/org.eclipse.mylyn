@@ -11,26 +11,17 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
-import java.text.ParseException;
-
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 
 /**
  * @author Mik Kersten
  */
 public class EncodingTest extends AbstractBugzillaTest {
 
-	public void testEncodingSetting() throws LoginException, IOException, ParseException {
+	public void testEncodingSetting()  {
 
 		String charset = BugzillaClient.getCharsetFromString("text/html; charset=UTF-8");
 		assertEquals("UTF-8", charset);
@@ -69,7 +60,7 @@ public class EncodingTest extends AbstractBugzillaTest {
 		assertFalse(task.getSummary().equals("\u05D0"));
 	}
 	
-	public void testProperEncodingUponPost() throws MalformedURLException, IOException, BugzillaException, PossibleBugzillaFailureException, GeneralSecurityException, CoreException {
+	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");

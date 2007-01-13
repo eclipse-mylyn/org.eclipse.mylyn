@@ -15,7 +15,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
@@ -41,20 +40,27 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
 			return existingInput.getTaskData() != null
 					&& TracCorePlugin.REPOSITORY_KIND.equals(existingInput.getRepository().getKind());
-		} else if (input instanceof NewTaskEditorInput) {
-			NewTaskEditorInput newInput = (NewTaskEditorInput) input;
-			return newInput.getTaskData() != null
-					&& TracCorePlugin.REPOSITORY_KIND.equals(newInput.getRepository().getKind());
-		}
+		} 
+//		else if (input instanceof NewTaskEditorInput) {
+//			NewTaskEditorInput newInput = (NewTaskEditorInput) input;
+//			return newInput.getTaskData() != null
+//					&& TracCorePlugin.REPOSITORY_KIND.equals(newInput.getRepository().getKind());
+//		}
 		return false;
 	}
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
-		if (editorInput instanceof RepositoryTaskEditorInput  || editorInput instanceof TaskEditorInput) {
+
+		if (editorInput instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) editorInput;
+			if (taskInput.getTaskData().isNew()) {
+				return new NewTracTaskEditor(parentEditor);
+			} else {
+				return new TracTaskEditor(parentEditor);
+			}
+		} else if (editorInput instanceof TaskEditorInput) {
 			return new TracTaskEditor(parentEditor);
-		} else if (editorInput instanceof NewTaskEditorInput) {
-			return new NewTracTaskEditor(parentEditor);
-		} 
+		}
 		return null;
 	}
 
@@ -64,7 +70,6 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 				tracTask.getRepositoryUrl());
 		try {
 			return new RepositoryTaskEditorInput(repository, tracTask.getHandleIdentifier(), tracTask.getUrl());
-//			return new RepositoryTaskEditorInput(repository, tracTask);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not create Trac editor input", true);
 		}

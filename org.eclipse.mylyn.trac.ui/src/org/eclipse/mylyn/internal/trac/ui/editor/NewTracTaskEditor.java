@@ -10,10 +10,10 @@ package org.eclipse.mylar.internal.trac.ui.editor;
 
 import java.util.Collections;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
@@ -66,7 +66,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		}
 
 		final AbstractTaskContainer category = getCategory();
-		
+
 		Job submitJob = new Job(SUBMIT_JOB_LABEL) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -76,7 +76,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 					TracTask newTask = new TracTask(AbstractRepositoryTask.getHandle(repository.getUrl(), id),
 							TracRepositoryConnector.getTicketDescription(ticket), true);
-					
+
 					if (category != null) {
 						TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask, category);
 					} else {
@@ -84,7 +84,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 					}
 
 					TasksUiPlugin.getSynchronizationScheduler().synchNow(0, Collections.singletonList(repository));
-
+					close();
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					return TracCorePlugin.toStatus(e);
@@ -92,7 +92,9 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 			}
 		};
 
-		submitJob.addJobChangeListener(getSubmitJobListener());
+		if (getSubmitJobListener() != null) {
+			submitJob.addJobChangeListener(getSubmitJobListener());
+		}
 		submitJob.schedule();
 	}
 
@@ -120,18 +122,14 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	protected void handleSubmitError(final IJobChangeEvent event) {
-		TracUiPlugin.handleTracException(event.getJob().getResult());
-		
+	protected IStatus handleSubmitError(final CoreException exception) {
+		TracUiPlugin.handleTracException(exception.getStatus());
+
 		if (!isDisposed() && !submitButton.isDisposed()) {
 			submitButton.setEnabled(true);
 			showBusy(false);
 		}
-	}
-
-	@Override
-	protected String getPluginId() {
-		return TracUiPlugin.PLUGIN_ID;
+		return Status.OK_STATUS;
 	}
 
 }

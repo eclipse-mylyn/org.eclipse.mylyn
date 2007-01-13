@@ -1,0 +1,102 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylar.tasks.core;
+
+import org.eclipse.core.runtime.Status;
+
+/**
+ * @author Rob Elves
+ */
+public class MylarStatus extends Status implements IMylarStatusConstants {
+
+	private String errorMessage;
+
+	private String repsitoryUrl = "";
+
+	public MylarStatus(int severity, String pluginId, int code) {
+		super(severity, pluginId, code, "MylarStatus", null);
+		this.errorMessage = null;
+	}
+
+	public MylarStatus(int severity, String pluginId, int code, String errorMessage) {
+		super(severity, pluginId, code, "MylarStatus", null);
+		this.errorMessage = errorMessage;
+	}
+
+	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
+		super(severity, pluginId, code, "MylarStatus", e);
+		this.repsitoryUrl = repositoryUrl;
+		this.errorMessage = e.getMessage();
+	}
+
+	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
+		super(severity, pluginId, code, "MylarStatus", null);
+		this.errorMessage = errorMessage;
+		this.repsitoryUrl = repositoryUrl;
+	}
+
+	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage, Throwable e) {
+		super(severity, pluginId, code, "MylarStatus", e);
+		this.errorMessage = errorMessage;
+		this.repsitoryUrl = repositoryUrl;
+	}
+
+	/**
+	 * Returns the message that is relevant to the code of this status.
+	 */
+	public String getMessage() {
+
+		switch (getCode()) {
+		case REPOSITORY_LOGIN_ERROR:
+			return MylarMessages
+					.bind(MylarMessages.repository_login_failure, this.getRepsitoryUrl(), this.errorMessage);
+		case REPOSITORY_NOT_FOUND:
+			return MylarMessages.bind(MylarMessages.repository_not_found, this.errorMessage);
+		case REPOSITORY_ERROR:
+			return MylarMessages.bind(MylarMessages.repository_error, this.errorMessage);
+		case IO_ERROR:
+			String string1 = getException().getClass().getSimpleName();
+			String string2 = getException().getMessage();
+			Object[] strings = { getRepsitoryUrl(), string1, string2 };
+			return MylarMessages.bind(MylarMessages.io_error, strings);
+		case INTERNAL_ERROR:
+			return MylarMessages.bind(MylarMessages.internal_error, this.errorMessage);
+		case OPERATION_CANCELLED:
+			return MylarMessages.bind(MylarMessages.operation_cancelled, this.errorMessage);
+		case COMMENT_REQUIRED:
+			if (errorMessage == null) {
+				return MylarMessages.comment_required;
+			} else {
+				return errorMessage;
+			}
+		}
+		if (errorMessage != null) {
+			return errorMessage;
+		} else if (getException() != null) {
+			String message = getException().getMessage();
+			if (message != null) {
+				return message;
+			} else {
+				return getException().toString();
+			}
+		}
+		return "Unknown";
+	}
+
+	public String getRepsitoryUrl() {
+		return repsitoryUrl;
+	}
+
+	public void setRepsitoryUrl(String repsitoryUrl) {
+		this.repsitoryUrl = repsitoryUrl;
+	}
+}

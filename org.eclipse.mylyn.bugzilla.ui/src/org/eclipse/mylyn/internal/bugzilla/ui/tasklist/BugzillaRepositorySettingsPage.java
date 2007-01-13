@@ -17,20 +17,25 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 
-import javax.security.auth.login.LoginException;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.web.WebClientUtil;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,15 +44,15 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	public static final String LABEL_AUTOMATIC_VERSION = "Automatic (Use Validate Settings)";
-
-	private static final String MESSAGE_FAILURE_UNKNOWN = "Unknown error occured. Check that server url and credentials are valid.";
 
 	private static final String TITLE = "Bugzilla Repository Settings";
 
@@ -170,15 +175,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	@Override
 	public void validateSettings() {
 
+		final String serverUrl = getServerUrl();
+		final String newUserId = getUserName();
+		final String newPassword = getPassword();
+		final boolean isAnonymous = isAnonymousAccess();
+		final String newEncoding = getCharacterEncoding();
+		final String httpAuthUser = getHttpAuthUserId();
+		final String httpAuthPass = getHttpAuthPassword();
+		final Proxy tempProxy;
 		try {
-			final String serverUrl = getServerUrl();
-			final String newUserId = getUserName();
-			final String newPassword = getPassword();
-			final boolean isAnonymous = isAnonymousAccess();
-			final String newEncoding = getCharacterEncoding();
-			final String httpAuthUser = getHttpAuthUserId();
-			final String httpAuthPass = getHttpAuthPassword();
-			final Proxy tempProxy;
 			if (getUseDefaultProxy()) {
 				tempProxy = WebClientUtil.getSystemProxy();
 			} else {
@@ -206,54 +211,18 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 								version[0] = config.getInstallVersion();
 							}
 						}
-					} catch (Exception e) {
+					} catch (final Exception e) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								displayError(serverUrl, e);
+							}
+						});
 						throw new InvocationTargetException(e);
 					} finally {
 						monitor.done();
 					}
 				}
 			});
-
-			// getWizard().getContainer().run(true, false, new
-			// IRunnableWithProgress() {
-			// public void run(IProgressMonitor monitor) throws
-			// InvocationTargetException, InterruptedException {
-			// monitor.beginTask("Validating server settings",
-			// IProgressMonitor.UNKNOWN);
-			// try {
-			//
-			// // Check that the server exists and we can connect
-			// // (proxy or not)
-			// Proxy proxySettings =
-			// TasksUiPlugin.getDefault().getProxySettings();
-			// WebClientUtil.openUrlConnection(serverURL, proxySettings, false,
-			// httpAuthUser, httpAuthPass);
-			//
-			// if (!isAnonymous) {
-			// // Server exists, connect to service and validate
-			// // credentials
-			// BugzillaClient.validateCredentials(proxySettings, serverUrl,
-			// newEncoding, newUserId,
-			// newPassword);
-			// }
-			//
-			// if (checkVersion) {
-			// RepositoryConfiguration config =
-			// BugzillaCorePlugin.getRepositoryConfiguration(true,
-			// serverUrl, proxySettings, newUserId, newPassword, newEncoding);
-			//
-			// if (config != null) {
-			// version[0] = config.getInstallVersion();
-			// }
-			// }
-			//
-			// } catch (Exception e) {
-			// throw new InvocationTargetException(e);
-			// } finally {
-			// monitor.done();
-			// }
-			// }
-			// });
 
 			if (version[0] != null) {
 				setBugzillaVersion(version[0]);
@@ -263,24 +232,52 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
 						"Authentication credentials are valid.");
 			}
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof MalformedURLException) {
-				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Server URL is invalid.");
-			} else if (e.getCause() instanceof LoginException) {
-				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"Unable to authenticate with server.\n\n" + e.getCause().getMessage());
-			} else if (e.getCause() instanceof IOException) {
-				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"Error connecting to repository: "+e.getCause().getMessage());
-			} else {
-				MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
-			}
+		} catch (InvocationTargetException e) {			
+			// ignore
 		} catch (InterruptedException e) {
-			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, MESSAGE_FAILURE_UNKNOWN);
+			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Validation cancelled");
 		}
 
 		super.getWizard().getContainer().updateButtons();
 	}
+
+	private void displayError(final String serverUrl, Exception e) {
+		IStatus status;
+		if (e instanceof MalformedURLException) {
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.NETWORK_ERROR, "Server URL is invalid.");
+		} else if (e instanceof CoreException) {
+			status = ((CoreException) e).getStatus();
+		} else if (e instanceof IOException) {
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.IO_ERROR, serverUrl, e);
+		} else {
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.NETWORK_ERROR, serverUrl, e.getMessage());
+		}
+		TasksUiUtil.displayStatus("Validation failed", status, BugzillaRepositorySettingsPage.this.getShell());
+	}
+
+	// private void displayError(final String serverUrl, Exception e) {
+	// CoreException coreException;
+	// if (e.getCause() instanceof MalformedURLException) {
+	// coreException = new CoreException(new MylarStatus(Status.WARNING,
+	// BugzillaCorePlugin.PLUGIN_ID,
+	// IMylarStatusConstants.NETWORK_ERROR, "Server URL is invalid."));
+	// } else if (e.getCause() instanceof CoreException) {
+	// coreException = (CoreException) e.getCause();
+	// } else if (e.getCause() instanceof IOException) {
+	// coreException = new CoreException(new MylarStatus(Status.WARNING,
+	// BugzillaCorePlugin.PLUGIN_ID,
+	// IMylarStatusConstants.IO_ERROR, serverUrl, e.getCause()));
+	// } else {
+	// coreException = new CoreException(new MylarStatus(Status.WARNING,
+	// BugzillaCorePlugin.PLUGIN_ID,
+	// IMylarStatusConstants.NETWORK_ERROR, e.getCause().getMessage()));
+	// }
+	// TasksUiUtil.displayDialog("Validation failed", coreException,
+	// BugzillaRepositorySettingsPage.this.getShell());
+	// }
 
 	public void setTesting(boolean testing) {
 		this.testing = testing;

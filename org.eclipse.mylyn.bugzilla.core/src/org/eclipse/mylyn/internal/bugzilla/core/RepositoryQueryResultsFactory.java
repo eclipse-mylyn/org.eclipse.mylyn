@@ -30,7 +30,7 @@ public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
 	/** expects rdf returned from repository (ctype=rdf in url) 
 	 * @throws GeneralSecurityException */
-	public void performQuery(TaskList taskList, String repositoryUrl, QueryHitCollector collector,  int maxHits) throws IOException, BugzillaException, GeneralSecurityException {
+	public void performQuery(TaskList taskList, String repositoryUrl, QueryHitCollector collector,  int maxHits) throws IOException {
 		
 		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(taskList, repositoryUrl,
 				collector, maxHits);		

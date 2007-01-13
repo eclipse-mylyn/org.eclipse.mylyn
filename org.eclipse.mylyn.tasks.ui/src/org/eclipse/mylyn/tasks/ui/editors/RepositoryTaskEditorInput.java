@@ -27,13 +27,6 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
 	protected AbstractRepositoryTask repositoryTask = null;
 
-//	// Called for existing report without a local task
-//	public RepositoryTaskEditorInput(String url, TaskRepository repository, RepositoryTaskData newData, RepositoryTaskData oldData) {
-//		super(repository, newData, oldData);
-//		this.id = newData.getId();
-//		this.url = url;
-//	}
-
 	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl) {
 		super(repository, handle);
 		this.id = AbstractRepositoryTask.getTaskId(handle);
@@ -47,25 +40,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	public AbstractRepositoryTask getRepositoryTask() {
 		return repositoryTask;
 	}
-	
-//	/**
-//	 * @return Returns the label.
-//	 */
-//	public String getLabel() {
-//		if (repositoryTask != null) {			
-//			String idLabel = repositoryTask.getIdLabel();
-//			
-//			label = "";
-//			if (idLabel != null) {
-//				label += idLabel + ": ";
-//			}
-//			label += truncateDescription(task.getDescription());
-//		} else if (task != null){
-//			label = truncateDescription(task.getDescription());
-//		} 
-//		return label;
-//	}
-	
+		
 	public String getName() {
 		if(repositoryTask != null) {
 			String idLabel = repositoryTask.getIdLabel();
@@ -75,8 +50,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 				label += idLabel + ": ";
 			}
 			label += repositoryTask.getSummary();
-			return label;
-			//return repositoryTask.getIdLabel();//getDescription();
+			return label;			
 		} else if (getTaskData() != null && getTaskData().getLabel() != null) {
 			return getTaskData().getId()+": "+getTaskData().getLabel();
 		} else if (id != null) {

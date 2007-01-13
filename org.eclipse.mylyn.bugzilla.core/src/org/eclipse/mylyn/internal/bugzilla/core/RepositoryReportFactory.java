@@ -13,10 +13,11 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
@@ -27,23 +28,28 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 public class RepositoryReportFactory extends AbstractReportFactory {
 
 	public RepositoryReportFactory(InputStream inStream, String encoding) {
-		super(inStream, encoding);		
+		super(inStream, encoding);
 	}
 
 	private static BugzillaAttributeFactory bugzillaAttributeFactory = new BugzillaAttributeFactory();
 
-	public void populateReport(RepositoryTaskData bugReport) throws GeneralSecurityException,
-			KeyManagementException, NoSuchAlgorithmException, IOException, BugzillaException {
+	public void populateReport(RepositoryTaskData bugReport) throws IOException, CoreException {
 
 		SaxBugReportContentHandler contentHandler = new SaxBugReportContentHandler(bugzillaAttributeFactory, bugReport);
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
 			String errorResponse = contentHandler.getErrorMessage().toLowerCase();
-			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND) || errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
-				throw new BugzillaException(IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID);
-			}if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
-				throw new BugzillaException(IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED);
+			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)
+					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
+				throw new CoreException(new MylarStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						IMylarStatusConstants.REPOSITORY_ERROR, bugReport.getRepositoryUrl(),
+						IBugzillaConstants.ERROR_MSG_INVALID_BUG_ID));
+			}
+			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTPERMITTED)) {
+				throw new CoreException(new MylarStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						IMylarStatusConstants.REPOSITORY_ERROR, bugReport.getRepositoryUrl(),
+						IBugzillaConstants.ERROR_MSG_OP_NOT_PERMITTED));
 			}
 		}
 	}

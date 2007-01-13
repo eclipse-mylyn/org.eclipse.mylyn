@@ -8,8 +8,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.mylar.context.core.IStatusHandler;
 import org.eclipse.swt.widgets.Shell;
@@ -25,7 +25,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 		+ "For details please use Window -> Show View -> Error Log";
 	
 	// TODO: implement option to report bug
-	public void notify(final Status status, boolean informUser) {
+	public void notify(final IStatus status, boolean informUser) {
 		if (informUser && Platform.isRunning()) {
 			try {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

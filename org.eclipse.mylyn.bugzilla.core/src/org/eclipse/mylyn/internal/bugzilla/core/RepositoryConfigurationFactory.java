@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -30,7 +30,7 @@ public class RepositoryConfigurationFactory extends AbstractReportFactory {
 		super(inStream, encoding);		
 	}
 
-	public RepositoryConfiguration getConfiguration() throws IOException, BugzillaException, GeneralSecurityException {		
+	public RepositoryConfiguration getConfiguration() throws IOException, CoreException {		
 		SaxConfigurationContentHandler contentHandler = new SaxConfigurationContentHandler();
 		collectResults(contentHandler, true);
 		RepositoryConfiguration config = contentHandler.getConfiguration();

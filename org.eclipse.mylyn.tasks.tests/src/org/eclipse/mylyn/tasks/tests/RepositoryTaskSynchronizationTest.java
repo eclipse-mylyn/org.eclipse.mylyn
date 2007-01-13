@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.tasks.tests;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -329,8 +328,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		}
 
 		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-				Set<AbstractRepositoryTask> tasks) throws CoreException,
-				UnsupportedEncodingException {
+				Set<AbstractRepositoryTask> tasks) throws CoreException {
 			return null;
 		}
 

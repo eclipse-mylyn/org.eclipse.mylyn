@@ -162,9 +162,4 @@ public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
-	@Override
-	protected String getPluginId() {
-		return TracUiPlugin.PLUGIN_ID;
-	}
-
 }

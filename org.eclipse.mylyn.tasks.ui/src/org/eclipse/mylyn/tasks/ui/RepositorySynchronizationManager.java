@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -28,15 +27,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 
@@ -237,20 +235,17 @@ public class RepositorySynchronizationManager {
 				});
 
 			} catch (final CoreException e) {
-				if (e.getStatus().getException() instanceof UnrecognizedReponseException) {
+				if (e.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_ERROR_HTML) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							WebBrowserDialog.openAcceptAgreement(null, "Unrecognized response from "
-									+ repository.getUrl(), e.getStatus().getMessage(), e.getStatus().getException()
-									.getMessage());
+							TasksUiUtil.displayStatus("Synchronization Error", e.getStatus(), PlatformUI.getWorkbench()
+									.getDisplay().getActiveShell());
 						}
 					});
 				} else {
 					// ignore, indicates working offline
 					// error reported in ui (tooltip and warning icon)
 				}
-			} catch (UnsupportedEncodingException e) {
-				MylarStatusHandler.log(e, "Could not determine modified tasks for " + repository.getUrl() + ".");
 			}
 			return Status.OK_STATUS;
 		};
@@ -300,13 +295,10 @@ public class RepositorySynchronizationManager {
 					if (!forceSyncExecForTesting) {
 						PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 							public void run() {
-								updateLocalCopy = MessageDialog
-										.openQuestion(
-												null,
-												"Repository Task Conflict",
-														"Task: " + repositoryTask.getSummary()
-														+ "\n\nHas been modified locally, discard local changes?"
-												        + "\nIf you select \"No\" only the new comment will be retained.");
+								updateLocalCopy = MessageDialog.openQuestion(null, "Repository Task Conflict", "Task: "
+										+ repositoryTask.getSummary()
+										+ "\n\nHas been modified locally, discard local changes?"
+										+ "\nIf you select \"No\" only the new comment will be retained.");
 							}
 						});
 					} else {

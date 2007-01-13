@@ -17,10 +17,11 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Rob Elves
  */
-public class NewTaskEditorInput extends AbstractTaskEditorInput {
+public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
-		super(repository, null);
+		super(repository, taskData.getId(), "");
+		super.setOldTaskData(taskData);
 		super.setNewTaskData(taskData);
 	}
 

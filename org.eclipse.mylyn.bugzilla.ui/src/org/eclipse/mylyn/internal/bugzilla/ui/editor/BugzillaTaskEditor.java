@@ -25,7 +25,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -820,10 +819,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		urlText.addListener(SWT.FocusIn, new GenericListener());
 	}
 
-	@Override
-	protected String getPluginId() {
-		return BugzillaUiPlugin.PLUGIN_ID;
-	}
 
 	// protected void createDescriptionLayout(Composite composite) {
 	// // This is migration code from 0.6.1 -> 0.6.2

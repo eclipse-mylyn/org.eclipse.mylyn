@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 
 /**
  * Operations on a task repository
- *
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  */
@@ -62,11 +62,11 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
 	public abstract String getTaskWebUrl(String repositoryUrl, String taskId);
-	
+
 	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
 		return null;
 	}
-	
+
 	public abstract boolean canCreateTaskFromKey(TaskRepository repository);
 
 	public abstract boolean canCreateNewTask(TaskRepository repository);
@@ -83,7 +83,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Implementors must execute query synchronously.
-	 *
+	 * 
 	 * @param query
 	 * @param repository
 	 *            TODO
@@ -94,6 +94,9 @@ public abstract class AbstractRepositoryConnector {
 	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
 			IProgressMonitor monitor, QueryHitCollector resultCollector);
 
+	/**
+	 * The connector's description i.e. "JIRA (supports 3.3.1 and later)"
+	 */
 	public abstract String getLabel();
 
 	/**
@@ -134,7 +137,7 @@ public abstract class AbstractRepositoryConnector {
 	 * Implementors of this repositoryOperations must perform it locally without
 	 * going to the server since it is used for frequent repositoryOperations
 	 * such as decoration.
-	 *
+	 * 
 	 * @return an empty set if no contexts
 	 */
 	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
@@ -161,7 +164,7 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Attaches the associated context to <code>task</code>.
-	 *
+	 * 
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
@@ -177,7 +180,7 @@ public abstract class AbstractRepositoryConnector {
 
 			try {
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				if(task.getTaskData() != null) {
+				if (task.getTaskData() != null) {
 					task.getTaskData().setHasLocalChanges(true);
 				}
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
@@ -197,7 +200,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Retrieves a context stored in <code>attachment</code> from
 	 * <code>task</code>.
-	 *
+	 * 
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
@@ -249,7 +252,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Reset and update the repository attributes from the server (e.g.
 	 * products, components)
-	 *
+	 * 
 	 * TODO: remove?
 	 */
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;

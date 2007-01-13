@@ -13,16 +13,15 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import java.net.UnknownHostException;
 
-import javax.security.auth.login.LoginException;
-
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -67,9 +66,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setPassword("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
-		} catch (LoginException e) {
+		} catch (CoreException e) {
 			return;
 		}
 		fail("LoginException didn't occur!");
@@ -83,9 +83,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUserId("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
-		} catch (LoginException e) {
+		} catch (CoreException e) {
 			return;
 		}
 		fail("LoginException didn't occur!");
@@ -99,7 +100,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUrl("http://invalid");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (UnknownHostException e) {
 			return;
@@ -108,18 +110,22 @@ public class RepositoryEditorWizardTest extends TestCase {
 	}
 
 	// TODO: Test locking up?
-//	public void testAutoVersion() throws Exception {		
-//		repository.setVersion(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION);
-//		EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
-//		WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), wizard);
-//		dialog.create();
-//		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
-//		page.setTesting(true);
-//		assertEquals(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION, page.getVersion());
-//		page.validateSettings();
-//		assertEquals("2.22", page.getVersion());
-//	}
-	
+	// public void testAutoVersion() throws Exception {
+	// repository.setVersion(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION);
+	// EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
+	// WizardDialog dialog = new
+	// WizardDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+	// wizard);
+	// dialog.create();
+	// BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage)
+	// wizard.getSettingsPage();
+	// page.setTesting(true);
+	// assertEquals(BugzillaRepositorySettingsPage.LABEL_AUTOMATIC_VERSION,
+	// page.getVersion());
+	// page.validateSettings();
+	// assertEquals("2.22", page.getVersion());
+	// }
+
 	public void testPersistChangeOfUrl() throws Exception {
 		assertEquals(1, manager.getAllRepositories().size());
 		String tempUid = repository.getUserName();
@@ -129,7 +135,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(),
+				page.getCharacterEncoding());
 		client.validate();
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 		wizard.performFinish();
@@ -148,7 +155,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(),
+				page.getCharacterEncoding());
 		client.validate();
 		page.setUserId("bogus");
 		wizard.performFinish();
@@ -162,9 +170,10 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
 			client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
-					page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page.getCharacterEncoding());
+					page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getSystemProxy(), page
+							.getCharacterEncoding());
 			client.validate();
-		} catch (LoginException e) {
+		} catch (CoreException e) {
 			return;
 		}
 		fail("LoginException didn't occur!");

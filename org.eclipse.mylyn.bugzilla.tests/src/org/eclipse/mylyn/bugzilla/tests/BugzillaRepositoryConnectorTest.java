@@ -23,21 +23,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.security.auth.login.LoginException;
-
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.PossibleBugzillaFailureException;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.tasks.core.SslProtocolSocketFactory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -140,8 +136,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		fail("Should have failed due to invalid userid and password.");
 	}
 
-	public void testSynchronize() throws InterruptedException, LoginException, BugzillaException,
-			PossibleBugzillaFailureException, CoreException {
+	public void testSynchronize() throws CoreException {
 		init222();
 
 		// Get the task
@@ -287,7 +282,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testAttachToExistingReport() throws Exception {
 		init222();
-		int bugId = 31;
+		int bugId = 32;
 		String taskNumber = "" + bugId;
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);

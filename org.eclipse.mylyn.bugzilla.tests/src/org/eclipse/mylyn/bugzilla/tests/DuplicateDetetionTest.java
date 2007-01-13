@@ -49,6 +49,7 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -67,6 +68,7 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setDescription(fakeStackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -89,6 +91,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(extraText + "\n" + stackTrace + "\n");
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -119,6 +122,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -148,6 +152,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -173,6 +178,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -197,6 +203,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -223,6 +230,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
@@ -248,6 +256,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		model.setDescription(stackTrace);
 		model.setHasLocalChanges(true);
+		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
 		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);

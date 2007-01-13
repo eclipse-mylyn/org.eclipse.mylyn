@@ -16,18 +16,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.security.auth.login.LoginException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
 
 /**
  * @author Mik Kersten
@@ -46,9 +45,9 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			byte[] data = client.getAttachmentData(attachment.getId());
 			return data;
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, 0,
-					"Download of attachment " + attachment.getId() + " from " + repository.getUrl() + " failed.", e));
+		} catch (IOException e) {
+			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));			
 		}
 	}
 
@@ -90,28 +89,10 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			String bugId = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			client.postAttachment(bugId, comment, description, file, contentType, isPatch);
-		} catch (LoginException e) {
-			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Your login name or password is incorrect. Ensure proper repository configuration.", e));
-		} catch (UnrecognizedReponseException e) {
-			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
-					"Response from server", e));
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					e.getMessage(), e));
-
-		} catch (BugzillaException e) {
-			String message = e.getMessage();
-			throw new CoreException(new Status(Status.OK, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
-					"Could not post your attachment. \n\n" + message, e));
+			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
 		}
-		// uploadAttachment(repository.getUrl(), repository.getUserName(),
-		// repository.getPassword(), bugId, comment,
-		// description, file, contentType, isPatch, proxySettings);
-		// } catch (Exception e) {
-		// throw new CoreException(new Status(IStatus.ERROR,
-		// BugzillaCorePlugin.PLUGIN_ID, 0, "could not upload", e));
-		// }
 	}
 
 	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {

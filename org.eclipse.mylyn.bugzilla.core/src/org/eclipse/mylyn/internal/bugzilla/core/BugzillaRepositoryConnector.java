@@ -12,14 +12,9 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.security.auth.login.LoginException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -159,12 +154,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		} catch (IOException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Check repository configuration: " + e.getMessage(), e);
-		} catch (BugzillaException e) {
-			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK, "Bugzilla error: "
-					+ e.getMessage(), e);
-		} catch (GeneralSecurityException e) {
-			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-					"Check repository configuration: " + e.getMessage(), e);
+		} catch (CoreException e) {
+			queryStatus = e.getStatus();
 		}
 		return queryStatus;
 
@@ -315,17 +306,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	 * @param characterEncoding
 	 *            TODO
 	 * 
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException
-	 * @throws LoginException
-	 * @throws KeyManagementException
-	 * @throws BugzillaException
 	 */
 	public static void setupNewBugAttributes(TaskRepository taskRepository, RepositoryTaskData newTaskData)
 			throws CoreException {
 
 		String product = newTaskData.getProduct();
-		
+
 		newTaskData.removeAllAttributes();
 
 		RepositoryConfiguration repositoryConfiguration = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository,

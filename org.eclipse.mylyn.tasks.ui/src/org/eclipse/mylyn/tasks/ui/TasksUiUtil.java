@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -37,6 +38,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
+import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
@@ -45,6 +47,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -263,7 +266,7 @@ public class TasksUiUtil {
 						IWorkbenchPage page = window.getActivePage();
 						IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 						if (newTask && part instanceof TaskEditor) {
-							TaskEditor taskEditor = (TaskEditor)part;
+							TaskEditor taskEditor = (TaskEditor) part;
 							taskEditor.setFocusOfActivePage();
 						}
 					}
@@ -277,7 +280,7 @@ public class TasksUiUtil {
 			}
 		}
 	}
-	
+
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
 			return page.openEditor(input, editorId);
@@ -454,5 +457,30 @@ public class TasksUiUtil {
 				result[0] = (dialog.open() == Window.OK);
 			}
 		});
+	}
+
+	/**
+	 * Must be called from a ui thread
+	 * TODO: move to RepositoryAwareStatusHandler and use MylarStatusHandler instead
+	 */
+	public static void displayStatus(final String title, final IStatus status, final Shell shell) {
+		if (status.getCode() == IMylarStatusConstants.REPOSITORY_ERROR_HTML) {
+			WebBrowserDialog.openAcceptAgreement(shell, title, "", status.getMessage());
+			MylarStatusHandler.log(status);
+			return;
+		}
+		switch (status.getSeverity()) {
+		case IStatus.CANCEL:
+		case IStatus.INFO:
+			MessageDialog.openInformation(shell, title, status.getMessage());
+			break;
+		case IStatus.WARNING:
+			MessageDialog.openWarning(shell, title, status.getMessage());
+			break;
+		case IStatus.ERROR:
+		default:
+			MessageDialog.openError(shell, title, status.getMessage());
+			break;
+		}
 	}
 }

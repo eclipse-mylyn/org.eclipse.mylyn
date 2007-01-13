@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,10 +31,11 @@ public interface ITaskDataHandler {
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException;
 
 	/**
+	 * TODO: Move to AbstractRepositoyConnector? This looks like task level api not taskdata.
 	 * returns all tasks if date is null or an error occurs
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException, UnsupportedEncodingException;
+			Set<AbstractRepositoryTask> tasks) throws CoreException;
 
 	/**
 	 * @return null if date cannot be parsed

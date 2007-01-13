@@ -21,8 +21,6 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
-import javax.security.auth.login.LoginException;
-
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -53,8 +51,7 @@ public class AbstractReportFactory {
 	 * 
 	 * @throws GeneralSecurityException
 	 */
-	protected void collectResults(DefaultHandler contentHandler, boolean clean) throws IOException, BugzillaException,
-			GeneralSecurityException {
+	protected void collectResults(DefaultHandler contentHandler, boolean clean) throws IOException {
 
 		if (inStream == null) {
 			return;
@@ -115,11 +112,13 @@ public class AbstractReportFactory {
 			});
 			reader.parse(new InputSource(in));
 		} catch (SAXException e) {
-			if (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD)) {
-				throw new LoginException(e.getMessage());
-			} else {
-				throw new IOException(e.getMessage());
-			}
+			// if
+			// (e.getMessage().equals(IBugzillaConstants.ERROR_INVALID_USERNAME_OR_PASSWORD))
+			// {
+			// throw new LoginException(e.getMessage());
+			// } else {
+			throw new IOException(e.getMessage());
+			// }
 		}
 	}
 
