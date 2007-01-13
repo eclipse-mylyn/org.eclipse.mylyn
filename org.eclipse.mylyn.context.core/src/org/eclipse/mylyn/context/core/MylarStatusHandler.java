@@ -81,7 +81,7 @@ public class MylarStatusHandler {
 			handler.notify(status, informUser);
 		}
 		log(status);
-	}
+	}	
 
 //	public static void setDumpErrorsForTesting(boolean dumpErrors) {
 //		MylarStatusHandler.testingMode = dumpErrors;

@@ -11,13 +11,13 @@
 
 package org.eclipse.mylar.context.core;
 
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Mik Kersten
  */
 public interface IStatusHandler {
 	
-	public abstract void notify(Status status, boolean informUser);
+	public abstract void notify(IStatus status, boolean informUser);
 	
 }
