@@ -14,7 +14,7 @@ package org.eclipse.mylar.tests;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.context.core.IStatusHandler;
 import org.eclipse.mylar.internal.context.core.util.DateUtil;
 
@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.context.core.util.DateUtil;
  */
 public class TestingStatusNotifier implements IStatusHandler {
 
-	public void notify(Status status, boolean informUser) {
+	public void notify(IStatus status, boolean informUser) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[");
 		buffer.append(DateUtil.getFormattedDate());
