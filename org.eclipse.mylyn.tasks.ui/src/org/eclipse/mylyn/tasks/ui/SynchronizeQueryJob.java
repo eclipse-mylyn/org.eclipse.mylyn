@@ -28,7 +28,9 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -81,14 +83,16 @@ class SynchronizeQueryJob extends Job {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
-				repositoryQuery.setStatus(new Status(Status.ERROR, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
-						"No task repository found: " + repositoryQuery.getRepositoryUrl(), null));
+				repositoryQuery.setStatus(new MylarStatus(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
+						IMylarStatusConstants.REPOSITORY_NOT_FOUND, repositoryQuery.getRepositoryUrl()));
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 
-				if (resultingStatus.getException() == null) {
+				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
+					// do nothing
+				} else if (resultingStatus.isOK()) {
 					repositoryQuery.updateHits(collector.getHits(), taskList);
 					Set<AbstractQueryHit> temp = hitsToSynch.get(repository);
 					if (temp == null) {
@@ -125,15 +129,15 @@ class SynchronizeQueryJob extends Job {
 						// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
 						// repository);
 					}
+
+					repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 				} else {
 					repositoryQuery.setStatus(resultingStatus);
 				}
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-			if (repositoryQuery.getStatus() == null) {
-				repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
-			}
+
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 			monitor.worked(1);
 		}

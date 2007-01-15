@@ -20,7 +20,7 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 
 	private String errorMessage;
 
-	private String repsitoryUrl = "";
+	private String repositoryUrl = "";
 
 	public MylarStatus(int severity, String pluginId, int code) {
 		super(severity, pluginId, code, "MylarStatus", null);
@@ -34,20 +34,20 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 
 	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
 		super(severity, pluginId, code, "MylarStatus", e);
-		this.repsitoryUrl = repositoryUrl;
+		this.repositoryUrl = repositoryUrl;
 		this.errorMessage = e.getMessage();
 	}
 
 	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
 		super(severity, pluginId, code, "MylarStatus", null);
 		this.errorMessage = errorMessage;
-		this.repsitoryUrl = repositoryUrl;
+		this.repositoryUrl = repositoryUrl;
 	}
 
 	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage, Throwable e) {
 		super(severity, pluginId, code, "MylarStatus", e);
 		this.errorMessage = errorMessage;
-		this.repsitoryUrl = repositoryUrl;
+		this.repositoryUrl = repositoryUrl;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		switch (getCode()) {
 		case REPOSITORY_LOGIN_ERROR:
 			return MylarMessages
-					.bind(MylarMessages.repository_login_failure, this.getRepsitoryUrl(), this.errorMessage);
+					.bind(MylarMessages.repository_login_failure, this.getRepositoryUrl(), this.errorMessage);
 		case REPOSITORY_NOT_FOUND:
 			return MylarMessages.bind(MylarMessages.repository_not_found, this.errorMessage);
 		case REPOSITORY_ERROR:
@@ -66,7 +66,7 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		case IO_ERROR:
 			String string1 = getException().getClass().getSimpleName();
 			String string2 = getException().getMessage();
-			Object[] strings = { getRepsitoryUrl(), string1, string2 };
+			Object[] strings = { getRepositoryUrl(), string1, string2 };
 			return MylarMessages.bind(MylarMessages.io_error, strings);
 		case INTERNAL_ERROR:
 			return MylarMessages.bind(MylarMessages.internal_error, this.errorMessage);
@@ -92,11 +92,11 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		return "Unknown";
 	}
 
-	public String getRepsitoryUrl() {
-		return repsitoryUrl;
+	public String getRepositoryUrl() {
+		return repositoryUrl;
 	}
 
-	public void setRepsitoryUrl(String repsitoryUrl) {
-		this.repsitoryUrl = repsitoryUrl;
+	public void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
 	}
 }
