@@ -104,6 +104,15 @@ public class TracAttachmentHandlerTest extends TestCase {
 		}
 	}
 
+	public void testGetAttachmentDataXmlRpc() throws Exception {
+		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
+		assertTrue(task.getTaskData().getAttachments().size() > 0);
+		byte[] result = attachmentHandler.getAttachmentData(repository, task.getTaskData().getAttachments().get(0));
+		assertEquals("Mylar\n", new String(result));
+	}
+
 	public void testUploadAttachmentXmlRpc() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");

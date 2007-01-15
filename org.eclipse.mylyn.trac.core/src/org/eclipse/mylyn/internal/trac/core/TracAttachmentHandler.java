@@ -20,7 +20,6 @@ import java.io.OutputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
@@ -40,18 +39,11 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file) throws CoreException {
-		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
-		if (filename == null) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK, "Attachment download from " + repository.getUrl() + " failed, missing attachment filename.", null));
-		}
-		
+		byte[] data = getAttachmentData(repository, attachment);
 		try {
-			ITracClient client = connector.getClientManager().getRepository(repository);
-			int id = Integer.parseInt(attachment.getTaskId());
-			byte[] data = client.getAttachmentData(id, filename);
 			writeData(file, data);
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Attachment download from " +repository.getUrl() + " failed, please see details.", e ));
+		} catch (IOException e) {
+			throw new CoreException(TracCorePlugin.toStatus(e));
 		}
 	}
 
@@ -66,7 +58,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment, String description, File file, String contentType, boolean isPatch) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
-			throw new CoreException(new Status(IStatus.INFO, TracCorePlugin.PLUGIN_ID, IStatus.OK, "Attachments are not supported by this repository access type.", null));
+			throw new CoreException(new TracStatus(IStatus.INFO, TracCorePlugin.PLUGIN_ID, TracStatus.INTERNAL_ERROR, "Attachments are not supported by this repository access type.", null));
 		}
 
 		try {
@@ -79,7 +71,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 				client.updateTicket(ticket, comment);
 			}
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Attachment upload to " + task.getRepositoryUrl() + " failed, please see details.", e ));
+			throw new CoreException(TracCorePlugin.toStatus(e));
 		}
 	}
 
@@ -117,12 +109,22 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void updateAttachment(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
-		// ignore
+		throw new UnsupportedOperationException();
 	}
 
 	public byte[] getAttachmentData(TaskRepository repository, RepositoryAttachment attachment) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
+		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
+		if (filename == null) {
+			throw new CoreException(new TracStatus(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, TracStatus.INTERNAL_ERROR, "Attachment download from " + repository.getUrl() + " failed, missing attachment filename.", null));
+		}
+
+		try {
+			ITracClient client = connector.getClientManager().getRepository(repository);
+			int id = Integer.parseInt(attachment.getTaskId());
+			return client.getAttachmentData(id, filename);
+		} catch (Exception e) {
+			throw new CoreException(TracCorePlugin.toStatus(e));
+		}
 	}
 	
 }
