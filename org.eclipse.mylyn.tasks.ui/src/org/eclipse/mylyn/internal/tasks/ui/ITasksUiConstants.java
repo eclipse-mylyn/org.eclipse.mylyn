@@ -14,11 +14,17 @@ package org.eclipse.mylar.internal.tasks.ui;
 public interface ITasksUiConstants {
 
 	public static final String TITLE_DIALOG = "Mylar Information";
+
 	public static final String MESSAGE_RESTORE = "Could not read task list.  Consider restoring via File -> Import -> Mylar Task Data";
+
 	public static final String URL_HOMEPAGE = "http://eclipse.org/mylar";
+
 	public static final String FILE_EXTENSION = ".xml.zip";
+
 	public static final String OLD_TASK_LIST_FILE = "tasklist.xml";
+
 	public static final String DEFAULT_BACKUP_FOLDER_NAME = "backup";
+
 	public static final String DEFAULT_TASK_LIST_FILE = "tasklist" + FILE_EXTENSION;
 
 }

@@ -1131,6 +1131,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (att.getContentType().startsWith(CTYPE_TEXT) || att.getContentType().endsWith("xml")) {
 						popupMenu.add(copyToClipAction);
 					}
+					popupMenu.add(new Separator("actions"));
 					// if (att.isPatch()) {
 					// popupMenu.add(applyPatchAction);
 					// }
