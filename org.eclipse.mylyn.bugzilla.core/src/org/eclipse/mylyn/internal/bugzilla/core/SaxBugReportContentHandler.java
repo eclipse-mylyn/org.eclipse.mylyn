@@ -208,11 +208,11 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 			break;
 
 		// IGNORED ELEMENTS
-		case REPORTER_ACCESSIBLE:
-		case CLASSIFICATION_ID:
-		case CLASSIFICATION:
-		case CCLIST_ACCESSIBLE:
-		case EVERCONFIRMED:
+		// case REPORTER_ACCESSIBLE:
+		// case CLASSIFICATION_ID:
+		// case CLASSIFICATION:
+		// case CCLIST_ACCESSIBLE:
+		// case EVERCONFIRMED:
 		case BUGZILLA:
 			break;
 		case BUG:
