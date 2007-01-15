@@ -238,8 +238,7 @@ public class RepositorySynchronizationManager {
 				if (e.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_ERROR_HTML) {
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							TasksUiUtil.displayStatus("Synchronization Error", e.getStatus(), PlatformUI.getWorkbench()
-									.getDisplay().getActiveShell());
+							MylarStatusHandler.displayStatus("Synchronization Error", e.getStatus());
 						}
 					});
 				} else {

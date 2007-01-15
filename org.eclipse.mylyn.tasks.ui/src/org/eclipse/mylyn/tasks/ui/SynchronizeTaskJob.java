@@ -84,7 +84,7 @@ class SynchronizeTaskJob extends Job {
 					if (forceSync) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								TasksUiUtil.displayStatus("Task synchronization failed", e.getStatus(), null);
+								MylarStatusHandler.displayStatus("Task synchronization failed", e.getStatus());
 							}
 						});
 					}

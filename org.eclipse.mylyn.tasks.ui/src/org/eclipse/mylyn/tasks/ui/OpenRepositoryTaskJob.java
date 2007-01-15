@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -96,8 +97,7 @@ public class OpenRepositoryTaskJob extends Job {
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					TasksUiUtil.displayStatus("Unable to open task", e.getStatus(), PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getShell());
+					MylarStatusHandler.displayStatus("Unable to open task", e.getStatus());
 				}
 			});
 		} finally {

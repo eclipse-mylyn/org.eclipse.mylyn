@@ -35,7 +35,6 @@ import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.web.WebClientUtil;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -255,7 +254,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.NETWORK_ERROR, serverUrl, e.getMessage());
 		}
-		TasksUiUtil.displayStatus("Validation failed", status, BugzillaRepositorySettingsPage.this.getShell());
+		MylarStatusHandler.displayStatus("Validation failed", status);
 	}
 
 	// private void displayError(final String serverUrl, Exception e) {

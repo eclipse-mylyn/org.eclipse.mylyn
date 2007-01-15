@@ -123,7 +123,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -2598,17 +2597,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected IStatus handleSubmitError(final CoreException exception) {
-		final Shell shell = AbstractRepositoryTaskEditor.this.getSite().getShell();
-
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
-					TasksUiUtil.displayStatus("Comment required", exception.getStatus(), shell);
+					MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
 					if (!isDisposed && newCommentTextViewer != null && !newCommentTextViewer.getControl().isDisposed()) {
 						newCommentTextViewer.getControl().setFocus();
 					}
 				} else {
-					TasksUiUtil.displayStatus("Submit failed", exception.getStatus(), shell);
+					MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
 				}
 				enableButtons();
 			}
