@@ -30,7 +30,9 @@ import org.eclipse.ui.IStorageEditorInput;
 public class RepositoryAttachmentEditorInput extends PlatformObject implements IStorageEditorInput {
 
 	private RepositoryAttachment attachment;
+
 	private RepositoryAttachmentStorage storage;
+
 	private TaskRepository repository;
 
 	public RepositoryAttachmentEditorInput(TaskRepository repository, RepositoryAttachment att) {
@@ -38,7 +40,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 		this.storage = new RepositoryAttachmentStorage();
 		this.repository = repository;
 	}
-	
+
 	public IStorage getStorage() throws CoreException {
 		return storage;
 	}
@@ -78,27 +80,16 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 
 		private static final String CTYPE_HTML = "html";
 
-
 		public InputStream getContents() throws CoreException {
-//			URLConnection urlConnect;
-//			InputStream stream = null;
-//			try {
-				
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-				IAttachmentHandler handler = connector.getAttachmentHandler();
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					repository.getKind());
+			IAttachmentHandler handler = connector.getAttachmentHandler();
+			byte[] data = handler.getAttachmentData(repository, attachment);
+			if (data != null) {
 				return new ByteArrayInputStream(handler.getAttachmentData(repository, attachment));
-//				urlConnect = (new URL(attachment.getUrl())).openConnection();
-//				urlConnect.connect();
-//				stream = urlConnect.getInputStream();
-
-//			} catch (MalformedURLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return stream;
+			} else {
+				return new ByteArrayInputStream(new byte[0]);
+			}
 		}
 
 		public IPath getFullPath() {
@@ -127,7 +118,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 			}
 			// treat .patch files as text files
 			if (name.endsWith(".patch")) {
-				name += ".txt"; 
+				name += ".txt";
 			}
 
 			return name;
