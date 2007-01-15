@@ -372,8 +372,15 @@ public class TaskList {
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
 	}
 
+	/**
+	 * @return	null if no such task.
+	 */
 	public ITask getTask(String handleIdentifier) {
-		return tasks.get(handleIdentifier);
+		if (handleIdentifier == null) {
+			return null;
+		} else {
+			return tasks.get(handleIdentifier);
+		}
 	}
 
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
