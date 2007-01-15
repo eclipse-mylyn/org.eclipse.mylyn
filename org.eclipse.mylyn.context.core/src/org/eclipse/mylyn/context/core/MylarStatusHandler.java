@@ -22,18 +22,18 @@ import org.eclipse.core.runtime.Status;
  */
 public class MylarStatusHandler {
 
-//	private static boolean testingMode = false;
+	// private static boolean testingMode = false;
 
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
-	
+
 	public static void addStatusHandler(IStatusHandler handler) {
 		handlers.add(handler);
 	}
-	
+
 	public static void removeStatusHandler(IStatusHandler handler) {
 		handlers.remove(handler);
 	}
-	
+
 	/**
 	 * Logs the specified status with this plug-in's log.
 	 * 
@@ -61,7 +61,7 @@ public class MylarStatusHandler {
 	public static void fail(Throwable throwable, String message, boolean informUser) {
 		fail(throwable, message, informUser, Status.ERROR);
 	}
-	
+
 	/**
 	 * @param throwable
 	 *            can be null
@@ -76,14 +76,28 @@ public class MylarStatusHandler {
 		message += "\n";
 
 		final Status status = new Status(severity, ContextCorePlugin.PLUGIN_ID, IStatus.OK, message, throwable);
-		
+
 		for (IStatusHandler handler : handlers) {
-			handler.notify(status, informUser);
+			handler.fail(status, informUser);
 		}
 		log(status);
-	}	
+	}
 
-//	public static void setDumpErrorsForTesting(boolean dumpErrors) {
-//		MylarStatusHandler.testingMode = dumpErrors;
-//	}
+	/**
+	 * Display error to user
+	 * 
+	 * @param title
+	 *            dialog title
+	 * @param status
+	 *            IStatus to reveal in dialog
+	 */
+	public static void displayStatus(String title, IStatus status) {
+		for (IStatusHandler handler : handlers) {
+			handler.displayStatus(title, status);
+		}
+	}
+
+	// public static void setDumpErrorsForTesting(boolean dumpErrors) {
+	// MylarStatusHandler.testingMode = dumpErrors;
+	// }
 }
