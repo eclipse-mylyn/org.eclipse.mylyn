@@ -44,7 +44,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Steffen Pingel
  */
-public class TracOfflineTaskHandler implements ITaskDataHandler {
+public class TracTaskDataHandler implements ITaskDataHandler {
 
 	private static final String CC_DELIMETER = ", ";
 
@@ -52,12 +52,11 @@ public class TracOfflineTaskHandler implements ITaskDataHandler {
 
 	private TracRepositoryConnector connector;
 
-	public TracOfflineTaskHandler(TracRepositoryConnector connector) {
+	public TracTaskDataHandler(TracRepositoryConnector connector) {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId)
-			throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
 		int id = Integer.parseInt(taskId);
 		return downloadTaskData(repository, id);
 	}
@@ -78,8 +77,7 @@ public class TracOfflineTaskHandler implements ITaskDataHandler {
 			updateTaskData(repository, attributeFactory, data, ticket);
 			return data;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, 0, "Ticket download from "
-					+ repository.getUrl() + " for task " + id + " failed, please see details.", e));
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
 
@@ -146,7 +144,7 @@ public class TracOfflineTaskHandler implements ITaskDataHandler {
 				taskAttachment.setCreator(attachments[i].getAuthor());
 				taskAttachment.setRepositoryKind(TracCorePlugin.REPOSITORY_KIND);
 				taskAttachment.setRepositoryUrl(repository.getUrl());
-				taskAttachment.setTaskId(""+ticket.getId());
+				taskAttachment.setTaskId("" + ticket.getId());
 				taskAttachment.setAttributeValue(Attribute.DESCRIPTION.getTracKey(), attachments[i].getDescription());
 				taskAttachment.setAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME, attachments[i]
 						.getFilename());
@@ -303,7 +301,19 @@ public class TracOfflineTaskHandler implements ITaskDataHandler {
 	}
 
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
-		// TODO: implement
-		return null;
+		try {
+			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
+			ITracClient server = ((TracRepositoryConnector) connector).getClientManager().getRepository(repository);
+			if (taskData.isNew()) {
+				int id = server.createTicket(ticket);
+				return id + "";
+			} else {
+				server.updateTicket(ticket, taskData.getNewComment());
+				return null;
+			}
+		} catch (Exception e) {
+			throw new CoreException(TracCorePlugin.toStatus(e));
+		}
 	}
+
 }

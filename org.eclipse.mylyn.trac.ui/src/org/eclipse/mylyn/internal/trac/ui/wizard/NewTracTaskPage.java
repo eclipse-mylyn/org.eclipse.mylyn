@@ -20,7 +20,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracOfflineTaskHandler;
+import org.eclipse.mylar.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -129,11 +129,11 @@ public class NewTracTaskPage extends WizardPage {
 			}
 		}
 
-		TracOfflineTaskHandler offlineHandler = (TracOfflineTaskHandler) connector.getTaskDataHandler();
+		TracTaskDataHandler offlineHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
 		this.taskData = new RepositoryTaskData(offlineHandler.getAttributeFactory(), TracCorePlugin.REPOSITORY_KIND,
 				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		this.taskData.setNew(true);
-		TracOfflineTaskHandler.createDefaultAttributes(offlineHandler.getAttributeFactory(), taskData, client, false);
+		TracTaskDataHandler.createDefaultAttributes(offlineHandler.getAttributeFactory(), taskData, client, false);
 	}
 
 	public RepositoryTaskData getRepositoryTaskData() {

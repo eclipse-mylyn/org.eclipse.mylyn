@@ -28,11 +28,11 @@ public class TracException extends Exception {
 	}
 
 	public TracException(Throwable cause) {
-		super(cause);
+		super(cause.getMessage(), cause);
 	}
 
 	public TracException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
+	
 }

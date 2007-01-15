@@ -47,7 +47,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private TracClientManager clientManager;
 
-	private TracOfflineTaskHandler offlineTaskHandler = new TracOfflineTaskHandler(this);
+	private TracTaskDataHandler taskDataHandler = new TracTaskDataHandler(this);
 
 	private TracAttachmentHandler attachmentHandler = new TracAttachmentHandler(this);
 
@@ -116,7 +116,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public ITaskDataHandler getTaskDataHandler() {
-		return offlineTaskHandler;
+		return taskDataHandler;
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
-			RepositoryTaskData taskData = offlineTaskHandler.downloadTaskData(repository, bugId);
+			RepositoryTaskData taskData = taskDataHandler.downloadTaskData(repository, bugId);
 			if (taskData != null) {
 				task = new TracTask(handle, getTicketDescription(taskData), true);
 				task.setTaskData(taskData);
@@ -193,7 +193,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					updateTaskDetails(task, ticket, false);
 					taskList.addTask(task);
 				} catch (Exception e) {
-					throw new CoreException(TracCorePlugin.toStatus(e));
+					throw new CoreException(TracCorePlugin.toStatus(e, repository));
 				}
 			}
 		}

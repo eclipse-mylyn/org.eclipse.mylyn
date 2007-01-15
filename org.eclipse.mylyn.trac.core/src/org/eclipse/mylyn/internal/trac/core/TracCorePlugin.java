@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -75,16 +76,21 @@ public class TracCorePlugin extends Plugin {
 		return cacheFile;
 	}
 
-	public static IStatus toStatus(Throwable e) {
+	public static TracStatus toStatus(Throwable e, TaskRepository repository) {
+		TracStatus status = toStatus(e);
+		status.setRepositoryUrl(repository.getUrl());
+		return status;
+	}
+
+	public static TracStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, 
-					"Your login name or password is incorrect. Ensure proper repository configuration in Task Repositories View.", null);
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.REPOSITORY_LOGIN_ERROR);
 		} else if (e instanceof TracException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Connection Error: " + e.getMessage(), e);
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, e.getMessage());
 		} else if (e instanceof ClassCastException) {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.INFO, "Error parsing server response", e);
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, "Unexpected server response: " + e.getMessage(), e);
 		} else {
-			return new Status(Status.ERROR, PLUGIN_ID, IStatus.ERROR, "Unexpected error", e);
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.INTERNAL_ERROR, "Unexpected error", e);
 		}
 	}
 
