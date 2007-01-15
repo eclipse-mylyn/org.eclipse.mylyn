@@ -163,7 +163,8 @@
                class="org.eclipse.mylar.internal.team.ui.actions.ApplyPatchAction"
                icon="icons/elcl16/apply-patch.gif"
                id="org.eclipse.mylar.team.ui.patch.apply"
-               label="Apply Patch...">
+               label="Apply Patch..."
+               menubarPath="actions">
          </action>
       </objectContribution>
       
