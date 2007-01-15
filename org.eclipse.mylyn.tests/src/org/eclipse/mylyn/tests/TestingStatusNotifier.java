@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.context.core.util.DateUtil;
  */
 public class TestingStatusNotifier implements IStatusHandler {
 
-	public void notify(IStatus status, boolean informUser) {
+	public void fail(IStatus status, boolean informUser) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[");
 		buffer.append(DateUtil.getFormattedDate());
@@ -42,6 +42,11 @@ public class TestingStatusNotifier implements IStatusHandler {
 		StringWriter writer = new StringWriter();
 		t.printStackTrace(new PrintWriter(writer));
 		return writer.toString();
+	}
+
+	public void displayStatus(String title, IStatus status) {
+		// ignore
+		
 	}
 
 }
