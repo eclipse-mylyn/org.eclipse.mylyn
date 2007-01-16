@@ -49,6 +49,10 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 	}
 
 	public void displayStatus(final String title, final IStatus status) {
+		if (status.getCode() == IMylarStatusConstants.INTERNAL_ERROR) {
+			MylarStatusHandler.log(status);
+		}
+		
 		if (Platform.isRunning()) {
 			try {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

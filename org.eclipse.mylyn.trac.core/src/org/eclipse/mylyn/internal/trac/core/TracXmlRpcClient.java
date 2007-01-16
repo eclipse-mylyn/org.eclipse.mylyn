@@ -98,8 +98,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		try {
 			return xmlrpc.execute(method, parameters);
 		} catch (TracHttpException e) {
-			if (e.code == HttpURLConnection.HTTP_FORBIDDEN || e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				throw new TracLoginException();
+			if (e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+				throw new TracLoginException();				
+			} else if (e.code == HttpURLConnection.HTTP_FORBIDDEN) {
+				throw new TracPermissionDeniedException();
 			} else {
 				throw new TracException(e);
 			}

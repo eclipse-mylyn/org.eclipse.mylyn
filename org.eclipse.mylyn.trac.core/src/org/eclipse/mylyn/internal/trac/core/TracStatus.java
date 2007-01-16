@@ -21,6 +21,8 @@ import org.eclipse.osgi.util.NLS;
  */
 public class TracStatus extends Status implements IMylarStatusConstants {
 
+	public static final int PERMISSION_DENIED_ERROR = 1001;
+
 	private String repositoryUrl;
 
 	public TracStatus(int severity, String pluginId, int code) {
@@ -57,6 +59,8 @@ public class TracStatus extends Status implements IMylarStatusConstants {
 			return NLS.bind("Unable to login to {0}. Please validate credentials via Task Repositories view.", getRepositoryUrl());
 		case REPOSITORY_NOT_FOUND:
 			return NLS.bind("Repository {0} could not be found.", getRepositoryUrl());
+		case PERMISSION_DENIED_ERROR:
+			return "Insufficient permissions.";
 		default:
 			return "";
 		}

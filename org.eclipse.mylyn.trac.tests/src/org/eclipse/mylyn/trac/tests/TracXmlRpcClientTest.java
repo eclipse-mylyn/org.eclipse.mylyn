@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.core.TracLoginException;
+import org.eclipse.mylar.internal.trac.core.TracPermissionDeniedException;
 import org.eclipse.mylar.internal.trac.core.TracRemoteException;
 import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
@@ -36,7 +36,7 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		try {
 			repository.validate();
 			fail("Expected TracLoginException");
-		} catch (TracLoginException e) {
+		} catch (TracPermissionDeniedException e) {
 		}
 	}
 
