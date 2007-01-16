@@ -301,7 +301,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected boolean hasVisibleAttributeChanges() {
-		return super.hasChanges || this.hasCustomAttributeChanges();
+		return super.hasAttributeChanges || this.hasCustomAttributeChanges();
 
 	}
 

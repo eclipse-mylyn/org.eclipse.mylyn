@@ -491,7 +491,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		setInput(input);
 
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
-		hasChanges = hasVisibleAttributeChanges();
+		hasAttributeChanges = hasVisibleAttributeChanges();
 		isDirty = false;
 		updateEditorTitle();
 	}
@@ -532,7 +532,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Color backgroundIncoming;
 
-	protected boolean hasChanges = false;
+	protected boolean hasAttributeChanges = false;
 
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
@@ -708,15 +708,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Composite createAttributeLayout(Composite composite) {
 		String title = getTitleString();
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
-		section.setExpanded(expandedStateAttributes || hasChanges);
-		if (hasChanges) {
-			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-			backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
-					TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
-			// TODO: Use darker color (this color isn't different enough from
-			// regular header color)
-			section.setTitleBarBackground(backgroundIncoming);
-		}
+		section.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
