@@ -22,7 +22,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.dnd.Clipboard;
@@ -52,7 +51,9 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		if (items.length > 0) {
 			selection = (LogEntry) items[0].getData();
 		}
-
+		if (selection == null) {
+			return;
+		}
 		NewRepositoryTaskWizard wizard = new NewRepositoryTaskWizard();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -75,22 +76,19 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 					+ ((selection.getStack() == null) ? "no stack trace available" : selection.getStack());
 
 			try {
-				TaskEditor taskEditor = (TaskEditor)page.getActiveEditor();			
-				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();				
+				TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
+				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 			} catch (ClassCastException e) {
 				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
-				clipboard.setContents(new Object[] { summary + "\n" + description }, new Transfer[] { TextTransfer.getInstance() });
+				clipboard.setContents(new Object[] { summary + "\n" + description }, new Transfer[] { TextTransfer
+						.getInstance() });
 
 				MessageDialog
 						.openInformation(
 								page.getWorkbenchWindow().getShell(),
 								ITasksUiConstants.TITLE_DIALOG,
 								"This connector does not provide a rich task editor for creating tasks.\n\n"
-								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
-				return;
-			}
-
-			if (selection == null || editor.getEditorInput() instanceof RepositoryTaskEditorInput) {
+										+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
 				return;
 			}
 
