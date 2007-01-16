@@ -487,12 +487,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-
 		setSite(site);
 		setInput(input);
 
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
-
+		hasChanges = hasVisibleAttributeChanges();
 		isDirty = false;
 		updateEditorTitle();
 	}
@@ -532,6 +531,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// protected abstract void submitToRepository();
 
 	private Color backgroundIncoming;
+
+	protected boolean hasChanges = false;
 
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
@@ -706,9 +707,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected Composite createAttributeLayout(Composite composite) {
 		String title = getTitleString();
-
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
-		section.setExpanded(expandedStateAttributes || hasAttributeChanges());
+		section.setExpanded(expandedStateAttributes || hasChanges);
+		if (hasChanges) {
+			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+			backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+					TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
+			// TODO: Use darker color (this color isn't different enough from
+			// regular header color)
+			section.setTitleBarBackground(backgroundIncoming);
+		}
+
 		// Attributes Composite- this holds all the combo fields and text fields
 		Composite attributesComposite = toolkit.createComposite(section);
 		GridLayout attributesLayout = new GridLayout();
@@ -1714,6 +1723,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createActionsLayout(Composite composite) {
 		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
+		section.setTextClient(createActionsTextClient(section));
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
@@ -1722,6 +1732,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
 		section.setClient(buttonComposite);
+	}
+
+	/**
+	 * Override to contribute controls to Action section's title area
+	 */
+	protected Control createActionsTextClient(Section section) {
+		return null;
 	}
 
 	protected Section createSection(Composite composite, String title) {
@@ -2339,11 +2356,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
-	protected boolean hasAttributeChanges() {
-		RepositoryTaskData newTaskData = editorInput.getTaskData();
-		if (newTaskData == null)
+	/**
+	 * If implementing custom attributes you may need to override this method
+	 * 
+	 * @return true if one or more attributes exposed in the editor have changed
+	 */
+	protected boolean hasVisibleAttributeChanges() {
+		if (taskData == null)
 			return false;
-		for (RepositoryTaskAttribute attribute : newTaskData.getAttributes()) {
+		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
 			if (!attribute.isHidden()) {
 				if (hasChanged(attribute)) {
 					return true;
