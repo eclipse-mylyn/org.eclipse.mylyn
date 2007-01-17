@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
@@ -43,7 +42,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -58,8 +56,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	protected Combo repositoryVersionCombo;
-
-	private boolean testing = false;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -183,6 +179,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		final String httpAuthPass = getHttpAuthPassword();
 		final Proxy tempProxy;
 		try {
+			setMessage("Validating server settings...");
+			setErrorMessage(null);
 			if (getUseDefaultProxy()) {
 				tempProxy = WebClientUtil.getSystemProxy();
 			} else {
@@ -199,7 +197,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					try {
 						monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
 						BugzillaClient client = null;
-						if (!isAnonymous && version != null) {
+						if (isAnonymous) {
+							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
+									httpAuthUser, httpAuthPass, tempProxy, newEncoding);
+							client.logout();
+						} else if (version != null) {
 							client = BugzillaClientFactory.createClient(serverUrl, newUserId, newPassword,
 									httpAuthUser, httpAuthPass, tempProxy, newEncoding);
 							client.validate();
@@ -210,76 +212,48 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 								version[0] = config.getInstallVersion();
 							}
 						}
-					} catch (final Exception e) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								displayError(serverUrl, e);
-							}
-						});
-						throw new InvocationTargetException(e);
+
+					} catch (Exception ex) {
+						throw new InvocationTargetException(ex);
+
 					} finally {
 						monitor.done();
 					}
 				}
 			});
-
+			
 			if (version[0] != null) {
 				setBugzillaVersion(version[0]);
 			}
 
-			if (!testing) {
-				MessageDialog.openInformation(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-						"Authentication credentials are valid.");
+			if (!isAnonymous) {
+				setMessage("Valid Bugzilla server found and your login was accepted");
+			} else {
+				setMessage("Valid Bugzilla server found");
 			}
-		} catch (InvocationTargetException e) {			
-			// ignore
-		} catch (InterruptedException e) {
-			MessageDialog.openWarning(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG, "Validation cancelled");
-		}
+		} catch (InvocationTargetException e) {
+			setMessage(null);
+			displayError(serverUrl, e.getTargetException());
 
-		super.getWizard().getContainer().updateButtons();
+		} catch (InterruptedException e) {
+			setErrorMessage("Could not connect to Bugzilla server or authentication failed");
+		}
 	}
 
-	private void displayError(final String serverUrl, Exception e) {
+	private void displayError(final String serverUrl, Throwable e) {
 		IStatus status;
 		if (e instanceof MalformedURLException) {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.NETWORK_ERROR, "Server URL is invalid.");
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+					"Server URL is invalid.");
 		} else if (e instanceof CoreException) {
 			status = ((CoreException) e).getStatus();
 		} else if (e instanceof IOException) {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.IO_ERROR, serverUrl, e);
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.IO_ERROR,
+					serverUrl, e.getMessage());
 		} else {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.NETWORK_ERROR, serverUrl, e.getMessage());
+			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+					serverUrl, e.getMessage());
 		}
 		MylarStatusHandler.displayStatus("Validation failed", status);
 	}
-
-	// private void displayError(final String serverUrl, Exception e) {
-	// CoreException coreException;
-	// if (e.getCause() instanceof MalformedURLException) {
-	// coreException = new CoreException(new MylarStatus(Status.WARNING,
-	// BugzillaCorePlugin.PLUGIN_ID,
-	// IMylarStatusConstants.NETWORK_ERROR, "Server URL is invalid."));
-	// } else if (e.getCause() instanceof CoreException) {
-	// coreException = (CoreException) e.getCause();
-	// } else if (e.getCause() instanceof IOException) {
-	// coreException = new CoreException(new MylarStatus(Status.WARNING,
-	// BugzillaCorePlugin.PLUGIN_ID,
-	// IMylarStatusConstants.IO_ERROR, serverUrl, e.getCause()));
-	// } else {
-	// coreException = new CoreException(new MylarStatus(Status.WARNING,
-	// BugzillaCorePlugin.PLUGIN_ID,
-	// IMylarStatusConstants.NETWORK_ERROR, e.getCause().getMessage()));
-	// }
-	// TasksUiUtil.displayDialog("Validation failed", coreException,
-	// BugzillaRepositorySettingsPage.this.getShell());
-	// }
-
-	public void setTesting(boolean testing) {
-		this.testing = testing;
-	}
-
 }
