@@ -225,7 +225,9 @@ public class TaskDataManager {
 				in.close();
 				readOldOfflineFile();
 			} finally {
-				in.close();
+				if (in != null) {
+					in.close();
+				}
 			}
 		}
 	}
