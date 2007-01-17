@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesViewSorter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -100,7 +100,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 
 		});
 
-		listViewer.setSorter(new TaskRepositoriesViewSorter());
+		listViewer.setSorter(new TaskRepositoriesSorter());
 		listViewer.setInput(project.getWorkspace());
 
 		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);

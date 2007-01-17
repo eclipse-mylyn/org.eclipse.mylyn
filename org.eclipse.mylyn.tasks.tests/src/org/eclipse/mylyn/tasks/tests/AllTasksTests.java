@@ -24,6 +24,8 @@ public class AllTasksTests {
 
 		// $JUnit-BEGIN$
 		suite.addTest(WebRepositoryConnectorTest.suite());
+		
+		suite.addTestSuite(TaskRepositorySorterTest.class);
 		suite.addTestSuite(TaskDataManagerTest.class);
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(TaskListTest.class);

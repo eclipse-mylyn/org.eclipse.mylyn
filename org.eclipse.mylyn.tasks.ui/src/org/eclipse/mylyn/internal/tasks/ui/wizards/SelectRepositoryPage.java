@@ -29,6 +29,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -112,6 +113,8 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		container.setLayout(layout);
 
 		Table table = createTableViewer(container);
+		viewer.setSorter(new TaskRepositoriesSorter());
+		
 		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
 		table.setLayoutData(gridData);
 

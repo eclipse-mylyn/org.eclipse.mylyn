@@ -226,8 +226,12 @@ public class TaskDataManager {
 				readOldOfflineFile();
 			} finally {
 				if (in != null) {
-					in.close();
-				}
+                    try {
+                      in.close();
+                    } catch(IOException e) {
+                       MylarStatusHandler.fail(e, "Could not close stream", false);
+                    }
+                }
 			}
 		}
 	}

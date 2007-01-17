@@ -302,8 +302,16 @@ public class TaskRepository {
 		return getUrl();
 	}
 
+	/**
+	 * @return	"<unknown>" if kind is unknown
+	 */
 	public String getKind() {
-		return properties.get(IRepositoryConstants.PROPERTY_KIND);
+		String kind = properties.get(IRepositoryConstants.PROPERTY_KIND);
+		if (kind != null) {
+			return kind;
+		} else {
+			return IRepositoryConstants.KIND_UNKNOWN;
+		}
 	}
 
 	public String getVersion() {

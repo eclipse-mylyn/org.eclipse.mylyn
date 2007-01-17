@@ -109,7 +109,7 @@ public class TaskRepositoriesView extends ViewPart {
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
-		viewer.setSorter(new TaskRepositoriesViewSorter());
+		viewer.setSorter(new TaskRepositoriesSorter());
 				
 //				new ViewerSorter() {
 //

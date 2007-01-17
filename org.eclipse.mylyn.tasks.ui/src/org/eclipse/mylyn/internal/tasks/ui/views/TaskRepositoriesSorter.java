@@ -15,13 +15,29 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 /**
  * @author Mik Kersten 
  */
-public class TaskRepositoriesViewSorter extends ViewerSorter {
+public class TaskRepositoriesSorter extends ViewerSorter {
+	
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
 			TaskRepository t1 = (TaskRepository) e1;
 			TaskRepository t2 = (TaskRepository) e2;
-			return (t1.getKind() + t1.getUrl()).compareTo(t2.getKind() + t2.getUrl());
+			String label1 = t1.getRepositoryLabel();
+			String label2 = t2.getRepositoryLabel();
+			
+			if (!t1.getKind().equals(t2.getKind())) {
+				return (t1.getKind()).compareTo(t2.getKind());
+			} else { 
+				if ((label1 == null || label1.equals("")) && label2 != null) {
+					return 1;
+				} else if (label1 != null && (label2 == null || label2.equals(""))) {
+					return -1; 
+				} else if (label1 != null && label2 != null) {
+					return label1.compareTo(label2);
+				} else {
+					return (t1.getUrl()).compareTo(t2.getUrl());				
+				}
+			}
 		} else {
 			return super.compare(viewer, e1, e2);
 		}
