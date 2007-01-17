@@ -39,12 +39,14 @@ import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -244,52 +246,37 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		addVoting(composite);
 
-		label = toolkit.createLabel(composite, "");
+//		label = toolkit.createLabel(composite, "");
+//		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
+//		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
+//			@Override
+//			public void linkActivated(HyperlinkEvent e) {
+//				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+//					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
+//					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
+//							+ taskData.getId());
+//				}
+//			}
+//		});
 
-		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
-		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
-							+ taskData.getId());
-				}
-			}
-		});
+		// If groups is available add roles
+		if (taskData.getAttribute(BugzillaReportElement.GROUP.getKeyString()) != null) {
+			addRoles(composite);
+		}
 
 		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 			addBugzillaTimeTracker(toolkit, composite);
 
 	}
 
-	// @Override
-	// protected Control createActionsTextClient(Section section) {
-	// Hyperlink hyperlink =
-	// super.getManagedForm().getToolkit().createHyperlink(section, "Past
-	// activity", SWT.NONE);
-	// hyperlink.setBackground(section.getBackground());
-	// hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-	// @Override
-	// public void linkActivated(HyperlinkEvent e) {
-	// if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-	// TaskEditor mylarTaskEditor = (TaskEditor)
-	// BugzillaTaskEditor.this.getEditor();
-	// mylarTaskEditor.displayInBrowser(repository.getUrl() +
-	// IBugzillaConstants.URL_BUG_ACTIVITY
-	// + taskData.getId());
-	// }
-	// }
-	// });
-	// return hyperlink;
-	// }
-
 	private boolean hasCustomAttributeChanges() {
 		if (taskData == null)
 			return false;
 		String customAttributeKeys[] = { BugzillaReportElement.BUG_FILE_LOC.getKeyString(),
 				BugzillaReportElement.DEPENDSON.getKeyString(), BugzillaReportElement.BLOCKED.getKeyString(),
-				BugzillaReportElement.KEYWORDS.getKeyString(), BugzillaReportElement.VOTES.getKeyString() };
+				BugzillaReportElement.KEYWORDS.getKeyString(), BugzillaReportElement.VOTES.getKeyString(),
+				BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString(),
+				BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString() };
 		for (String key : customAttributeKeys) {
 			RepositoryTaskAttribute attribute = taskData.getAttribute(key);
 			if (hasChanged(attribute)) {
@@ -435,12 +422,86 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 	}
 
+	protected void addRoles(Composite parent) {
+		Section rolesSection = toolkit.createSection(parent, ExpandableComposite.SHORT_TITLE_BAR);
+		rolesSection.setText("Users in the roles selected below can always view this bug");
+		rolesSection
+				.setDescription("(The assignee can always see a bug, and this section does not take effect unless the bug is restricted to at least one group.)");
+		GridLayout gl = new GridLayout();
+		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);
+		gd.horizontalSpan = 4;
+		rolesSection.setLayout(gl);
+		rolesSection.setLayoutData(gd);
+
+		Composite rolesComposite = toolkit.createComposite(rolesSection);
+		GridLayout attributesLayout = new GridLayout();
+		attributesLayout.numColumns = 4;
+		attributesLayout.horizontalSpacing = 5;
+		attributesLayout.verticalSpacing = 4;
+		rolesComposite.setLayout(attributesLayout);
+		GridData attributesData = new GridData(GridData.FILL_BOTH);
+		attributesData.horizontalSpan = 1;
+		attributesData.grabExcessVerticalSpace = false;
+		rolesComposite.setLayoutData(attributesData);
+		rolesSection.setClient(rolesComposite);
+
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE
+				.getKeyString());
+		if (attribute == null) {
+			taskData.setAttributeValue(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString(), "0");
+			attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString());
+		}
+		Button button = addButtonField(rolesComposite, attribute, SWT.CHECK);
+		if (hasChanged(attribute)) {
+			button.setBackground(color_backgroundIncoming);
+		}
+
+		attribute = null;
+		attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString());
+		if (attribute == null) {
+			taskData.setAttributeValue(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString(), "0");
+			attribute = taskData.getAttribute(BugzillaReportElement.CCLIST_ACCESSIBLE.getKeyString());
+		}
+		button = addButtonField(rolesComposite, attribute, SWT.CHECK);
+		if (hasChanged(attribute)) {
+			button.setBackground(color_backgroundIncoming);
+		}
+	}
+
+	private Button addButtonField(Composite rolesComposite, RepositoryTaskAttribute attribute, int style) {
+		if (attribute == null) {
+			return null;
+		}
+		final Button button = toolkit.createButton(rolesComposite, attribute.getName(), style);
+		if (!attribute.isReadOnly()) {
+			button.setData(attribute);
+			button.setSelection(attribute.getValue().equals("1"));
+			button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+			button.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					String sel = "1";
+					if (!button.getSelection()) {
+						sel = "0";
+					}
+					RepositoryTaskAttribute a = (RepositoryTaskAttribute) button.getData();
+					if (!(a.getValue().equals(sel))) {
+						a.setValue(sel);
+						markDirty(true);
+					}
+				}
+			});
+		}
+		return button;
+	}
+
 	protected void addBugzillaTimeTracker(FormToolkit toolkit, Composite parent) {
 
-		Section timeSection = toolkit.createSection(parent, ExpandableComposite.TREE_NODE);
+		Section timeSection = toolkit.createSection(parent, ExpandableComposite.SHORT_TITLE_BAR);
 		timeSection.setText(LABEL_TIME_TRACKING);
 		GridLayout gl = new GridLayout();
-		GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false);
+		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);
 		gd.horizontalSpan = 4;
 		timeSection.setLayout(gl);
 		timeSection.setLayoutData(gd);
@@ -840,6 +901,21 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		urlText.addListener(SWT.FocusIn, new GenericListener());
 	}
 
+	protected void addActionButtons(Composite buttonComposite) {
+		super.addActionButtons(buttonComposite);
+		Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "Past activity", SWT.NONE);
+		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
+					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
+							+ taskData.getId());
+				}
+			}
+		});
+
+	}
 	// protected void createDescriptionLayout(Composite composite) {
 	// // This is migration code from 0.6.1 -> 0.6.2
 	// // Changes to the abstract editor causes the description

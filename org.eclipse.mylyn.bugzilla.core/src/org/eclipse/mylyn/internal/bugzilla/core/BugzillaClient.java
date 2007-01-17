@@ -841,6 +841,7 @@ public class BugzillaClient {
 				continue;
 			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
 				String value = a.getValue();
+				// DEBUG: System.err.println(">>> "+a.getName()+" = "+a.getValue());
 				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}

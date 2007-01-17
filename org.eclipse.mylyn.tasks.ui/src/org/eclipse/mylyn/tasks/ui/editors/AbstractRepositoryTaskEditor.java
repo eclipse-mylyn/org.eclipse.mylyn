@@ -204,7 +204,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected static final String SECTION_TITLE_PEOPLE = "People";
 
-	private FormToolkit toolkit;
+	protected FormToolkit toolkit;
 
 	private ScrolledForm form;
 
@@ -530,7 +530,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	// protected abstract void submitToRepository();
 
-	private Color backgroundIncoming;
+	protected Color color_backgroundIncoming;
 
 	protected boolean hasAttributeChanges = false;
 
@@ -555,7 +555,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void createFormContent(final IManagedForm managedForm) {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+		color_backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
@@ -696,7 +696,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 		}
 		if (hasChanged(attribute)) {
-			text.setBackground(backgroundIncoming);
+			text.setBackground(color_backgroundIncoming);
 		}
 		return text;
 	}
@@ -750,7 +750,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attributeCombo.setFont(TEXT_FONT);
 
 				if (hasChanged(attribute)) {
-					attributeCombo.setBackground(backgroundIncoming);
+					attributeCombo.setBackground(color_backgroundIncoming);
 				}
 				attributeCombo.setLayoutData(data);
 				for (String val : values) {
@@ -1377,7 +1377,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
-			descriptionTextViewer.getTextWidget().setBackground(backgroundIncoming);
+			descriptionTextViewer.getTextWidget().setBackground(color_backgroundIncoming);
 		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
@@ -1468,7 +1468,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
-			ccList.setBackground(backgroundIncoming);
+			ccList.setBackground(color_backgroundIncoming);
 		}
 		java.util.List<String> ccs = taskData.getCC();
 		if (ccs != null) {
@@ -1611,9 +1611,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (commentDate != null
 							&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 						expandableComposite.setExpanded(true);
-						expandableComposite.setBackground(backgroundIncoming);
+						expandableComposite.setBackground(color_backgroundIncoming);
 						if (expandableComposite.getTextClient() != null) {
-							expandableComposite.getTextClient().setBackground(backgroundIncoming);
+							expandableComposite.getTextClient().setBackground(color_backgroundIncoming);
 						}
 					}
 				}
@@ -1715,7 +1715,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createActionsLayout(Composite composite) {
 		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
-		section.setTextClient(createActionsTextClient(section));
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
@@ -1724,13 +1723,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		addRadioButtons(buttonComposite);
 		addActionButtons(buttonComposite);
 		section.setClient(buttonComposite);
-	}
-
-	/**
-	 * Override to contribute controls to Action section's title area
-	 */
-	protected Control createActionsTextClient(Section section) {
-		return null;
 	}
 
 	protected Section createSection(Composite composite, String title) {
