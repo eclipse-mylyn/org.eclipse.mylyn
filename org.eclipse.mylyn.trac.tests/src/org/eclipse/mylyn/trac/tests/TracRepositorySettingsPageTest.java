@@ -1,0 +1,104 @@
+/*******************************************************************************
+ * Copyright (c) 2006 - 2006 Mylar eclipse.org project and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Mylar project committers - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylar.trac.tests;
+
+import java.net.Proxy;
+
+import org.eclipse.mylar.internal.trac.core.ITracClient;
+import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylar.internal.trac.ui.TracRepositoryUi;
+import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
+import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage.Validator;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+
+/**
+ * @author Steffen Pingel
+ */
+public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
+
+	private TracRepositoryUi connector;
+	private TracRepositorySettingsPage page;
+	private Validator validator;
+
+	public TracRepositorySettingsPageTest() {
+		super(null);
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		connector = (TracRepositoryUi) TasksUiPlugin.getRepositoryUi(TracCorePlugin.REPOSITORY_KIND);
+		page = new TracRepositorySettingsPage(connector);
+
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		page.createControl(shell);
+		page.setVisible(true);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+
+		// TestFixture.cleanupRepository1();
+	}
+
+	@Override
+	public ITracClient connect(String url, String username, String password, Proxy proxy, Version version) throws Exception {
+		page.setUrl(url);
+		page.setUserId(username);
+		page.setPassword(password);
+		page.setTracVersion(version);
+		validator = page.new Validator();
+		return null;
+	}
+	
+	public void testValidateXmlRpc() throws Exception {
+		version = Version.XML_RPC;
+		connect010();
+
+		validator.run();
+		assertNull(validator.getResult());
+		assertNull(validator.getStatus());
+	}
+
+	public void testValidateWeb() throws Exception {
+		version = Version.TRAC_0_9;
+		connect010();
+
+		validator.run();
+		assertNull(validator.getResult());
+		assertNull(validator.getStatus());
+	}
+
+	public void testValidateAutomaticUser() throws Exception {
+		version = null;
+		connect010();
+
+		validator.run();
+		assertEquals(Version.XML_RPC, validator.getResult());
+		assertNull(validator.getStatus());
+	}
+
+	public void testValidateAutomaticAnonymous() throws Exception {
+		version = null;
+		connect(Constants.TEST_TRAC_010_URL, "", "");
+
+		validator.run();
+		assertEquals(Version.TRAC_0_9, validator.getResult());
+		assertNotNull(validator.getStatus());
+	}
+
+}
