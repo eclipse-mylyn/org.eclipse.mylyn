@@ -145,6 +145,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -1766,6 +1767,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
+
+		if (getActivityUrl() != null) {
+			Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "Past activity", SWT.NONE);
+			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
+						TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
+						mylarTaskEditor.displayInBrowser(getActivityUrl());
+					}
+				}
+			});
+		}
+	}
+
+	protected String getActivityUrl() {
+		return null;
 	}
 
 	/**

@@ -246,18 +246,21 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		addVoting(composite);
 
-//		label = toolkit.createLabel(composite, "");
-//		Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug Activity", SWT.NONE);
-//		viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
-//			@Override
-//			public void linkActivated(HyperlinkEvent e) {
-//				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-//					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
-//					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
-//							+ taskData.getId());
-//				}
-//			}
-//		});
+		// label = toolkit.createLabel(composite, "");
+		// Hyperlink viewActivity = toolkit.createHyperlink(composite, "Show Bug
+		// Activity", SWT.NONE);
+		// viewActivity.addHyperlinkListener(new HyperlinkAdapter() {
+		// @Override
+		// public void linkActivated(HyperlinkEvent e) {
+		// if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
+		// TaskEditor mylarTaskEditor = (TaskEditor)
+		// BugzillaTaskEditor.this.getEditor();
+		// mylarTaskEditor.displayInBrowser(repository.getUrl() +
+		// IBugzillaConstants.URL_BUG_ACTIVITY
+		// + taskData.getId());
+		// }
+		// }
+		// });
 
 		// If groups is available add roles
 		if (taskData.getAttribute(BugzillaReportElement.GROUP.getKeyString()) != null) {
@@ -901,20 +904,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		urlText.addListener(SWT.FocusIn, new GenericListener());
 	}
 
-	protected void addActionButtons(Composite buttonComposite) {
-		super.addActionButtons(buttonComposite);
-		Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "Past activity", SWT.NONE);
-		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY
-							+ taskData.getId());
-				}
-			}
-		});
-
+	protected String getActivityUrl() {
+		return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
 	}
 	// protected void createDescriptionLayout(Composite composite) {
 	// // This is migration code from 0.6.1 -> 0.6.2
