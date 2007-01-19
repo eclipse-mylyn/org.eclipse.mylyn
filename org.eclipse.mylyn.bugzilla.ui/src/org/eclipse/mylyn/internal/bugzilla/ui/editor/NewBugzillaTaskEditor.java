@@ -88,116 +88,6 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		peopleSection.setClient(peopleComposite);
 	}
 
-	// @Override
-	// protected void createCustomAttributeLayout(Composite composite) {
-	// FormToolkit toolkit = getManagedForm().getToolkit();
-	// Label label = toolkit.createLabel(composite,
-	// BugzillaReportElement.ASSIGNED_TO.toString());
-	//
-	// GridDataFactory.fillDefaults().align(SWT.RIGHT,
-	// SWT.CENTER).applyTo(label);
-	// Composite textFieldComposite = toolkit.createComposite(composite);
-	// GridLayout textLayout = new GridLayout();
-	// textLayout.marginWidth = 1;
-	// textLayout.marginHeight = 2;
-	// textFieldComposite.setLayout(textLayout);
-	// GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-	// textData.horizontalSpan = 1;
-	// textData.widthHint = 135;
-	// RepositoryTaskAttribute attribute =
-	// taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
-	// final Text text = createTextField(textFieldComposite, attribute,
-	// SWT.FLAT);
-	// // text.setFont(COMMENT_FONT);
-	// text.setLayoutData(textData);
-	// toolkit.paintBordersFor(textFieldComposite);
-	// text.setData(attribute);
-	// text.addListener(SWT.KeyUp, new Listener() {
-	// public void handleEvent(Event event) {
-	// String sel = text.getText();
-	// RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
-	// if (!(a.getValue().equals(sel))) {
-	// a.setValue(sel);
-	// markDirty(true);
-	// }
-	// }
-	// });
-	// text.addListener(SWT.FocusIn, new GenericListener());
-	// }
-
-	// @Override
-	// protected void submitToRepository() {
-	// if (!prepareSubmit()) {
-	// return;
-	// }
-	// updateTask();
-	// boolean wrap =
-	// IBugzillaConstants.BugzillaServerVersion.SERVER_218.equals(repository.getVersion());
-	//
-	// try {
-	// final BugzillaReportSubmitForm bugzillaReportSubmitForm =
-	// BugzillaReportSubmitForm.makeNewBugPost(
-	// repository.getUrl(), repository.getUserName(), repository.getPassword(),
-	// repository
-	// .getCharacterEncoding(), taskData, wrap);
-	//
-	// submissionHandler.submitBugReport(bugzillaReportSubmitForm,
-	// submitJobListener, false, getCategory());
-	//
-	// } catch (UnsupportedEncodingException e) {
-	// MessageDialog.openError(null, "Posting Error", "Ensure proper encoding
-	// selected in "
-	// + TaskRepositoriesView.NAME + ".");
-	// return;
-	// } catch (Exception e) {
-	// MylarStatusHandler.fail(e, "Posting Error. Ensure proper configuration in
-	// " + TaskRepositoriesView.NAME
-	// + ".", true);
-	// return;
-	// }
-	//
-	// }
-	// protected void handleNewBugPost(String postResult) throws CoreException {
-	// int bugId = -1;
-	// try {
-	// bugId = Integer.parseInt(postResult);
-	// } catch (NumberFormatException e) {
-	// throw new CoreException(new Status(Status.ERROR,
-	// BugzillaUiPlugin.PLUGIN_ID,
-	// "Invalid id returned by repository: " + postResult));
-	// }
-	//
-	// BugzillaTask newTask = new
-	// BugzillaTask(AbstractRepositoryTask.getHandle(repository.getUrl(),
-	// bugId),
-	// "<bugzilla info>", true);
-	//
-	// if (getCategory() != null) {
-	// TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(getCategory(),
-	// newTask);
-	// }
-	// TasksUiPlugin.getSynchronizationScheduler().synchNow(0,
-	// Collections.singletonList(repository));
-	//
-	// }
-
-	// protected void addActionButtons(Composite buttonComposite) {
-	//
-	// FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-	// searchDuplicatesButton = toolkit.createButton(buttonComposite,
-	// LABEL_SEARCH_DUPS, SWT.NONE);
-	// GridData searchDuplicatesButtonData = new
-	// GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-	// searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-	// searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
-	// public void handleEvent(Event e) {
-	// searchForDuplicates();
-	// }
-	// });
-	//
-	// super.addActionButtons(buttonComposite);
-	// }
-
 	@Override
 	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
 		String queryUrl = "";
@@ -218,25 +108,6 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 				repository, bugzillaQuery);
 		return collector;
 	}
-
-	// @Override
-	// protected String getPluginId() {
-	// return BugzillaUiPlugin.PLUGIN_ID;
-	// }
-
-	// @Override
-	// protected void handleErrorStatus(IJobChangeEvent event) {
-	// if (event.getJob().getResult().getCode() == Status.INFO) {
-	// WebBrowserDialog.openAcceptAgreement(NewBugzillaTaskEditor.this.getSite().getShell(),
-	// IBugzillaConstants.REPORT_SUBMIT_ERROR,
-	// event.getJob().getResult().getMessage(), event.getJob()
-	// .getResult().getException().getMessage());
-	// } else if (event.getJob().getResult().getCode() == Status.ERROR) {
-	// MessageDialog.openError(NewBugzillaTaskEditor.this.getSite().getShell(),
-	// IBugzillaConstants.REPORT_SUBMIT_ERROR, event.getResult().getMessage());
-	// }
-	// super.handleErrorStatus(event);
-	// }
 
 	/**
 	 * Break text up into lines so that it is displayed properly in bugzilla
@@ -277,5 +148,4 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			return newText;
 		}
 	}
-
 }
