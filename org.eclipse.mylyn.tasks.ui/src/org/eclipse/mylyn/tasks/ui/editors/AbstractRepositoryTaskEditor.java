@@ -1752,6 +1752,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 *            Composite to add the buttons to.
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+		if (task != null) {
+			addAttachContextButton(buttonComposite, task);
+		}
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
@@ -1762,12 +1767,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
-		if (task != null) {
-			addAttachContextButton(buttonComposite, task);
-		}
 
+		toolkit.createLabel(buttonComposite, "");
 		if (getActivityUrl() != null) {
 			Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "Past activity", SWT.NONE);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -1779,12 +1780,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				}
 			});
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).align(SWT.RIGHT, SWT.DEFAULT).applyTo(hyperlink);
 		}
 	}
 
 	/**
-	 * Override to make hyperlink available. If not overridden hyperlink will simply
-	 * not be displayed.
+	 * Override to make hyperlink available. If not overridden hyperlink will
+	 * simply not be displayed.
+	 * 
 	 * @return url String form of url that points to task's past activity
 	 */
 	protected String getActivityUrl() {
@@ -2360,6 +2363,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			i++;
 		}
+
 		toolkit.paintBordersFor(buttonComposite);
 	}
 
@@ -2399,18 +2403,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
-		// File contextFile =
-		// ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
-		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-		toolkit.createLabel(buttonComposite, "");
-		toolkit.createLabel(buttonComposite, "");
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		data.horizontalSpan = 1;
+		data.horizontalSpan = 4;
 		attachContextButton.setLayoutData(data);
-		// attachContextButton.setEnabled(contextFile != null &&
-		// (contextFile.exists() || task.isActive()));
 	}
 
 	/**
