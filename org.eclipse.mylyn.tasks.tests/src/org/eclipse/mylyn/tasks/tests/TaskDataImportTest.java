@@ -36,11 +36,11 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	private TaskDataImportWizardPage wizardPage = null;
 
-	private String sourceDir = "testdata/taskdataimporttest";
+	// private String sourceDir = "testdata/taskdataimporttest";
 
-	private File sourceDirFile = null;
+	// private File sourceDirFile = null;
 
-	private String sourceZipPath = "testdata/taskdataimporttest/mylardata-2006-02-16.zip";
+	private String sourceZipPath = "testdata/taskdataimporttest/mylardata-2007-01-19.zip";
 
 	private File sourceZipFile = null;
 
@@ -60,8 +60,6 @@ public class TaskDataImportTest extends AbstractContextTest {
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().getRootElements().size() == 1);
 
-		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
-		assertTrue(sourceDirFile.exists());
 		sourceZipFile = TaskTestUtil.getLocalFile(sourceZipPath);
 		assertTrue(sourceZipFile.exists());
 
@@ -74,34 +72,10 @@ public class TaskDataImportTest extends AbstractContextTest {
 	protected void tearDown() throws Exception {
 		ContextCorePlugin.getContextManager().resetActivityHistory();
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TasksUiPlugin.getTaskListManager().resetTaskList();		
+		TasksUiPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();
 	}
 
-	/** Tests the wizard when it has been asked to import task data from folder */
-	public void testImportFromAllFromFolder() {
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		MylarContext historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
-		assertNotNull(taskList);
-		assertNotNull(historyContext);
-		assertTrue(taskList.getAllTasks().size() == 0);		
-		assertTrue(historyContext.getInteractionHistory().size() == 0);
-		assertEquals(0, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
-		
-		wizardPage.setParameters(true, true, true, true, false, sourceDirFile.getPath(), "");
-		wizard.performFinish();	
-		
-		Collection<ITask> tasks = taskList.getAllTasks();
-		assertTrue(tasks.size() > 0);
-		for (ITask task : tasks) {
-			assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
-		}		
-		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();		
-		assertNotNull(historyContext);
-		assertTrue(historyContext.getInteractionHistory().size() > 0);
-		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
-	}
-	
 	/**
 	 * Tests the wizard when it has been asked to import all task data from a
 	 * zip file
@@ -111,35 +85,30 @@ public class TaskDataImportTest extends AbstractContextTest {
 		MylarContext historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
-		assertTrue(taskList.getAllTasks().size() == 0);		
+		assertTrue(taskList.getAllTasks().size() == 0);
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
 		assertEquals(0, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
-		
+
 		wizardPage.setParameters(true, true, true, true, true, "", sourceZipFile.getPath());
 		wizard.performFinish();
-		
+
 		Collection<ITask> tasks = taskList.getAllTasks();
 		assertEquals(2, tasks.size());
 		for (ITask task : tasks) {
 			assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
-		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();		
+		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
 		assertNotNull(historyContext);
 		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
 	}
-	
-	
-	/**
-	 * Tests the wizard when it has been asked to import all task data from a
-	 * zip file
-	 */
+
 	public void testImportOverwritesAllTasks() {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		MylarContext historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
-		assertTrue(taskList.getAllTasks().size() == 0);		
+		assertTrue(taskList.getAllTasks().size() == 0);
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
 		assertEquals(0, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
 
@@ -147,21 +116,21 @@ public class TaskDataImportTest extends AbstractContextTest {
 		taskList.addTask(task1);
 		Collection<ITask> tasks = taskList.getAllTasks();
 		assertEquals(1, tasks.size());
-		
+
 		wizardPage.setParameters(true, true, true, true, true, "", sourceZipFile.getPath());
 		wizard.performFinish();
-		
+
 		tasks = taskList.getAllTasks();
 		assertEquals(2, tasks.size());
 		assertTrue(!taskList.getAllTasks().contains(task1));
 		for (ITask task : tasks) {
 			assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
-		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();		
+		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
 		assertNotNull(historyContext);
-		assertTrue(historyContext.getInteractionHistory().size() > 0);		
+		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
-				
+
 	}
-	
+
 }

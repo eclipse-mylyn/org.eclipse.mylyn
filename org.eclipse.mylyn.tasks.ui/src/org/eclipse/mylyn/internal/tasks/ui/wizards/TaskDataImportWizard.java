@@ -11,14 +11,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -39,7 +33,6 @@ import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -47,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
 /**
- * @author Rob Elves Some code leveraged from TaskDataExportWizard
+ * @author Rob Elves
  */
 public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
@@ -111,117 +104,65 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		File sourceRepositoriesFile = null;
 		File sourceActivationHistoryFile = null;
 		List<File> contextFiles = new ArrayList<File>();
-		List<String> zipFilesToExtract = new ArrayList<String>();
+		List<ZipEntry> zipFilesToExtract = new ArrayList<ZipEntry>();
 		boolean overwrite = importPage.overwrite();
-		boolean zip = importPage.zip();
+		// zip = true post 1.0.1, see history for folder import
+		// boolean zip = importPage.zip();
 
-		if (zip) {
+		String sourceZip = importPage.getSourceZipFile();
+		sourceZipFile = new File(sourceZip);
 
-			String sourceZip = importPage.getSourceZipFile();
-			sourceZipFile = new File(sourceZip);
+		if (!sourceZipFile.exists()) {
+			MessageDialog.openError(getShell(), "File not found", sourceZipFile.toString() + " could not be found.");
+			return false;
+		}
 
-			if (!sourceZipFile.exists()) {
-				MessageDialog
-						.openError(getShell(), "File not found", sourceZipFile.toString() + " could not be found.");
-				return false;
-			}
+		Enumeration<? extends ZipEntry> entries;
+		ZipFile zipFile;
 
-			Enumeration<? extends ZipEntry> entries;
-			ZipFile zipFile;
+		try {
+			zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+			entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
 
-			try {
-				zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-				entries = zipFile.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = entries.nextElement();
-
-					if (entry.isDirectory()) {
-						// ignore directories (shouldn't be any)
-						continue;
-					}
-					if (!importPage.importTaskList() && entry.getName().endsWith(ITasksUiConstants.OLD_TASK_LIST_FILE)) {
-						continue;
-					}
-
-					if (!importPage.importActivationHistory()
-							&& entry.getName().endsWith(
-									MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-											+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
-						continue;
-					}
-					if (!importPage.importTaskContexts()
-							&& entry.getName()
-									.matches(".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
-						continue;
-					}
-
-					File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-							+ entry.getName());
-
-					if (!overwrite && destContextFile.exists()) {
-						if (MessageDialog.openConfirm(getShell(), "File exists!", "Overwrite existing file?\n"
-								+ destContextFile.getName())) {
-							zipFilesToExtract.add(entry.toString());
-						} else {
-							// no overwrite
-						}
-					} else {
-						zipFilesToExtract.add(entry.toString());
-					}
-
+				if (entry.isDirectory()) {
+					// ignore directories (shouldn't be any)
+					continue;
+				}
+				if (!importPage.importTaskList() && entry.getName().endsWith(ITasksUiConstants.OLD_TASK_LIST_FILE)) {
+					continue;
 				}
 
-			} catch (IOException e) {
-				MylarStatusHandler.fail(e, "Could not import files", true);
-			}
+				if (!importPage.importActivationHistory()
+						&& entry.getName().endsWith(
+								MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+										+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
+					continue;
+				}
+				if (!importPage.importTaskContexts()
+						&& entry.getName().matches(".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
+					continue;
+				}
 
-		} else {
-			// Get file paths to check for existence
-			String sourceDir = importPage.getSourceDirectory();
-			sourceDirFile = new File(sourceDir);
-			if (!sourceDirFile.exists() || !sourceDirFile.isDirectory()) {
-				MessageDialog.openError(getShell(), "Source location not found",
-						"Resource could not be found or is not a folder.");
-				return false;
-			}
+				File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
+						+ entry.getName());
 
-			// make sure selected files for import are there
-			sourceTaskListFile = new File(sourceDir + File.separator + ITasksUiConstants.OLD_TASK_LIST_FILE);
-			sourceRepositoriesFile = new File(sourceDir + File.separator + TaskRepositoryManager.OLD_REPOSITORIES_FILE);
-			sourceActivationHistoryFile = new File(sourceDir + File.separator
-					+ MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
-
-			File[] children = sourceDirFile.listFiles();
-			for (int i = 0; i < children.length; i++) {
-				if (children[i].getAbsolutePath().matches(
-						".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
-
-					File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-							+ children[i].getName());
-
-					if (!overwrite && destContextFile.exists()) {
-						if (MessageDialog.openConfirm(getShell(), "Context exists!",
-								"Overwrite existing task context?\n" + destContextFile.getName())) {
-							contextFiles.add(children[i]);
-						} else {
-							// no overwrite
-						}
+				if (!overwrite && destContextFile.exists()) {
+					if (MessageDialog.openConfirm(getShell(), "File exists!", "Overwrite existing file?\n"
+							+ destContextFile.getName())) {
+						zipFilesToExtract.add(entry);
 					} else {
-						contextFiles.add(children[i]);
+						// no overwrite
 					}
+				} else {
+					zipFilesToExtract.add(entry);
 				}
 
 			}
 
-			if (importPage.importTaskList() && !sourceTaskListFile.exists()) {
-				MessageDialog.openError(getShell(), "File not found", sourceTaskListFile.toString() + " not found.");
-				return false;
-			} else if (importPage.importActivationHistory() && !sourceActivationHistoryFile.exists()) {
-				MessageDialog.openError(getShell(), "File not found", sourceActivationHistoryFile.toString()
-						+ " not found.");
-				return false;
-			}
-
+		} catch (IOException e) {
+			MylarStatusHandler.fail(e, "Could not import files", true);
 		}
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
@@ -248,163 +189,33 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		private File sourceZipFile = null;
 
-		private File sourceTaskListFile = null;
-
-		private File sourceActivationHistoryFile = null;
-
-		private File sourceRepositoriesFile = null;
-
-		private boolean zip;
-
-		private boolean importTaskList;
-
-		private boolean importActivationHistory;
-
-		private boolean importTaskContexts;
-
-		private List<File> sourceContextFiles;
-
-		private List<String> zipFilesToExtract;
+		private List<ZipEntry> zipEntriesToExtract;
 
 		public FileCopyJob(File sourceFolder, File sourceZipFile, File sourceTaskListFile, File sourceRepositoriesFile,
-				File sourceActivationHistoryFile, List<File> contextFiles, List<String> zipFiles) {
-
+				File sourceActivationHistoryFile, List<File> contextFiles, List<ZipEntry> zipEntries) {
 			this.sourceZipFile = sourceZipFile;
-			this.sourceTaskListFile = sourceTaskListFile;
-			this.sourceRepositoriesFile = sourceRepositoriesFile;
-			this.sourceActivationHistoryFile = sourceActivationHistoryFile;
-			this.sourceContextFiles = contextFiles;
-			this.zipFilesToExtract = zipFiles;
-
-			// Get parameters here to avoid accessing the UI thread
-			this.zip = importPage.zip();
-			this.importTaskList = importPage.importTaskList();
-			this.importActivationHistory = importPage.importActivationHistory();
-			this.importTaskContexts = importPage.importTaskContexts();
-
+			this.zipEntriesToExtract = zipEntries;
 		}
 
 		public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-			if (zip) {
-				monitor.beginTask(JOB_LABEL, zipFilesToExtract.size() + 2);
-				//ZipFile zipFile;
+			// always a zip source since post 1.0.1
 
-				try {
-					//zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-					ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
-//					for (String zipFileStr : zipFilesToExtract) {
-//						ZipEntry entry = zipFile.getEntry(zipFileStr);
-//						if (entry == null) {
-//							MylarStatusHandler.fail(new Exception("Import Exception"),
-//									"Problem occured extracting from zip file.", true);
-//							return;
-//						}
-//
-//						File destinationFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-//								+ entry.getName());
-//						if (destinationFile.exists()) {
-//							destinationFile.delete();
-//						}
-//
-//						copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(
-//								destinationFile)));
-//						monitor.worked(1);
-//
-//					}
-					//zipFile.close();
-				} catch (IOException ioe) {
-					MylarStatusHandler.fail(new Exception("Import Exception"),
-							"Problem occured extracting from zip file.", true);
-					return;
-				}
-				readTaskListData();
-				monitor.done();
+			monitor.beginTask(JOB_LABEL, zipEntriesToExtract.size() + 2);
+
+			try {
+				ZipFileUtil.extactEntries(sourceZipFile, zipEntriesToExtract, TasksUiPlugin.getDefault().getDataDirectory());
+				//ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
+
+			} catch (IOException ioe) {
+				MylarStatusHandler.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.",
+						true);
 				return;
-			}
-
-			int jobSize = 1;
-			if (importTaskList)
-				jobSize++;
-			if (importActivationHistory)
-				jobSize++;
-			if (importTaskContexts)
-				jobSize += sourceContextFiles.size();
-			monitor.beginTask(JOB_LABEL, jobSize);
-
-			if (true) {
-				String destRepositoriesPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ TaskRepositoryManager.OLD_REPOSITORIES_FILE;
-				File destRepositoriesFile = new File(destRepositoriesPath);
-
-				if (destRepositoriesFile.exists()) {
-					destRepositoriesFile.delete();
-				}
-
-				if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
-					MylarStatusHandler.fail(new Exception("Import Exception"), "Could not import repositories file.",
-							true);
-				}
-				monitor.worked(1);
-			}
-
-			if (importTaskList) {
-				String destTaskListPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-						+ ITasksUiConstants.OLD_TASK_LIST_FILE;
-				File destTaskListFile = new File(destTaskListPath);
-
-				if (destTaskListFile.exists()) {
-					destTaskListFile.delete();
-				}
-
-				if (!copy(sourceTaskListFile, destTaskListFile)) {
-					MylarStatusHandler
-							.fail(new Exception("Import Exception"), "Could not import task list file.", true);
-				}
-				monitor.worked(1);
-
-			}
-
-			if (importActivationHistory) {
-				try {
-					File destActivationHistoryFile = new File(TasksUiPlugin.getDefault().getDataDirectory()
-							+ File.separator + MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
-							+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
-
-					if (destActivationHistoryFile.exists()) {
-						destActivationHistoryFile.delete();
-					}
-
-					copy(sourceActivationHistoryFile, destActivationHistoryFile);
-					monitor.worked(1);
-
-				} catch (RuntimeException e) {
-					MylarStatusHandler.fail(e, "Could not import activity history context file", true);
-				}
-			}
-
-			if (importTaskContexts) {
-				boolean errorDisplayed = false;
-				for (File sourceContextFile : sourceContextFiles) {
-
-					File destContextFile = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-							+ sourceContextFile.getName());
-
-					if (destContextFile.exists()) {
-						destContextFile.delete();
-					}
-
-					if (!copy(sourceContextFile, destContextFile) && !errorDisplayed) {
-						MylarStatusHandler.fail(new Exception("Import Exception: " + sourceContextFile.getPath()
-								+ " -> " + destContextFile.getPath()),
-								"Could not import one or more task context files.", true);
-						errorDisplayed = true;
-					}
-					monitor.worked(1);
-				}
 			}
 			readTaskListData();
 			monitor.done();
+			return;
+
 		}
 	}
 
@@ -420,37 +231,6 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		}
 
 		return allTasks;
-	}
-
-	private boolean copy(File src, File dst) {
-
-		try {
-			InputStream in = new FileInputStream(src);
-			OutputStream out = new FileOutputStream(dst);
-			return copyInputStream(in, new BufferedOutputStream(out));
-		} catch (FileNotFoundException e) {
-			return false;
-		}
-
-	}
-
-	private boolean copyInputStream(InputStream inputStream, BufferedOutputStream stream) {
-		try {
-			InputStream in = inputStream;
-			OutputStream out = stream;
-
-			// Transfer bytes from in to out
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			in.close();
-			out.close();
-			return true;
-		} catch (IOException ioe) {
-			return false;
-		}
 	}
 
 	private void readTaskListData() {

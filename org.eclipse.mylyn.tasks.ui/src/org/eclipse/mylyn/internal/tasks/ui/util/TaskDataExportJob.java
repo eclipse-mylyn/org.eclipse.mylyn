@@ -199,21 +199,21 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 					// copy
 				}
 
-				File sourceTaskFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+				File sourceTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
-				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskFile.getName());
+				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskContextFile.getName());
 				
 				if (zip) {
 					if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
-						filesToZip.add(sourceTaskFile);
+						filesToZip.add(sourceTaskContextFile);
 						filesToZipMap.put(task.getHandleIdentifier(), null);
 					}
-				} else if(!sourceTaskFile.equals(destTaskFile)) {
+				} else if(!sourceTaskContextFile.equals(destTaskFile)) {
 					if (destTaskFile.exists()) {
 						destTaskFile.delete();
 					}
-					if (!copy(sourceTaskFile, destTaskFile) && !errorDisplayed) {						
-						MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskFile.getPath() + " -> "
+					if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {						
+						MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> "
 								+ destTaskFile.getPath()), "Could not export one or more task context files.", true);
 						errorDisplayed = true;
 					}
