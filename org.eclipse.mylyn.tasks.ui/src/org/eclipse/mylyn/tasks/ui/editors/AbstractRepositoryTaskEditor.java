@@ -1782,6 +1782,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	/**
+	 * Override to make hyperlink available. If not overridden hyperlink will simply
+	 * not be displayed.
+	 * @return url String form of url that points to task's past activity
+	 */
 	protected String getActivityUrl() {
 		return null;
 	}
