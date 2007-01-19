@@ -68,6 +68,56 @@ public class ZipFileUtil {
 		}
 		return outputFiles;
 	}
+	
+	public static List<File> extactEntries(File zippedFile, List<ZipEntry> entries, String destPath) throws FileNotFoundException, IOException {
+		ZipFile zipFile = new ZipFile(zippedFile);
+		List<File> outputFiles = new ArrayList<File>();
+		for (ZipEntry entry: entries) {
+			 if(entry.isDirectory()) {
+		          // Assume directories are stored parents first then children.		          
+		          (new File(entry.getName())).mkdir();
+		          continue;
+		     }
+			InputStream inputStream = zipFile.getInputStream(entry);
+			File outputFile = new File(destPath + File.separator + entry.getName());
+			FileOutputStream outStream = new FileOutputStream(outputFile);
+			copyByteStream(inputStream, outStream);
+			outputFiles.add(outputFile);
+		}
+		return outputFiles;
+	}
+	
+//	/**
+//	 * Only unzips files in zip file not directories
+//	 * 
+//	 * @param zipped
+//	 *            file
+//	 * @param destPath Destination path
+//	 * @return Files that were unzipped
+//	 */
+//	public static List<File> unzipFiles(File zippedfile, String destPath, List<>) throws FileNotFoundException, IOException {
+//		ZipFile zipFile = new ZipFile(zippedfile);
+//
+//		Enumeration<? extends ZipEntry> entries = zipFile.entries();
+//		List<File> outputFiles = new ArrayList<File>();
+//
+//		while (entries.hasMoreElements()) {
+//			ZipEntry entry = entries.nextElement();
+//			 if(entry.isDirectory()) {
+//		          // Assume directories are stored parents first then children.		          
+//		          (new File(entry.getName())).mkdir();
+//		          continue;
+//		     }
+//
+//			InputStream inputStream = zipFile.getInputStream(entry);
+//			File outputFile = new File(destPath + File.separator + entry.getName());
+//			FileOutputStream outStream = new FileOutputStream(outputFile);
+//			copyByteStream(inputStream, outStream);
+//
+//			outputFiles.add(outputFile);
+//		}
+//		return outputFiles;
+//	}
 
 	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
 		if (in != null && out != null) {
