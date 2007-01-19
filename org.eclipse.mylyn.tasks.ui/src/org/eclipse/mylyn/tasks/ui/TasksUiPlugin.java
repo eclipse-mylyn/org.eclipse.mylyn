@@ -26,14 +26,12 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -79,10 +77,8 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 import org.eclipse.mylar.tasks.core.web.WebClientUtil;
 import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -377,7 +373,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			File dataDir = new File(getDataDirectory());
 			dataDir.mkdirs();
-			migrateContextStoreFrom06Format(false);
 			String path = getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE;
 
 			File taskListFile = new File(path);
@@ -457,27 +452,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
 		}
 	}
- 
-	/**
-	 * Will run with every startup in case somebody copies over an old data
-	 * directory. Called upon import. Called upon change of task data directory
-	 * (from preference page).
-	 */
-	private void migrateContextStoreFrom06Format(boolean withProgress) {
-		TaskListDataMigration migrationOperation = new TaskListDataMigration(new File(getDataDirectory()));
-		try {
-			if (!withProgress) {
-				migrationOperation.run(new NullProgressMonitor());
-			} else {
-				IWorkbench wb = PlatformUI.getWorkbench();
-				IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-				Shell shell = win != null ? win.getShell() : null;
-				new ProgressMonitorDialog(shell).run(false, false, migrationOperation);
-			}
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating mylar data", false);
-		}
-	}
 
 	public void earlyStartup() {
 		// ignore
@@ -526,12 +500,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
+	 * Only support task data versions post 0.7
 	 * 
 	 * @param withProgress
 	 */
 	public void reloadDataDirectory(boolean withProgress) {
-		// In case new data folder has hold style task data
-		migrateContextStoreFrom06Format(withProgress);
 		getTaskListManager().resetTaskList();
 		getTaskListManager().getTaskActivationHistory().clear();
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());

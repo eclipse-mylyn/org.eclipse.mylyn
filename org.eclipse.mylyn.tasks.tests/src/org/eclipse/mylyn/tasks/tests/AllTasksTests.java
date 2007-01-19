@@ -30,7 +30,7 @@ public class AllTasksTests {
 		suite.addTestSuite(CopyDetailsActionTest.class);
 		suite.addTestSuite(TaskListTest.class);
 		suite.addTestSuite(ProjectRepositoryAssociationTest.class);
-		suite.addTestSuite(TaskListDataMigrationTest.class);
+		suite.addTestSuite(TaskList06DataMigrationTest.class);
 		suite.addTestSuite(TaskPlanningEditorTest.class);
 		suite.addTestSuite(TaskListManagerTest.class);
 		suite.addTestSuite(RepositoryTaskSynchronizationTest.class);

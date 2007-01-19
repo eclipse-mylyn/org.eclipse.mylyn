@@ -11,9 +11,6 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
@@ -36,8 +33,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	private static final String STATUS_RESO = "RESO";
 
 	private static final String STATUS_NEW = "NEW";
-
-	private static final String KEY_OLD_LAST_DATE = "LastDate";
 
 	private static final String TAG_BUGZILLA_QUERY_HIT = "Bugzilla" + KEY_QUERY_HIT;
 
@@ -127,31 +122,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		}
 		BugzillaTask task = new BugzillaTask(handle, label, false);
 		super.readTaskInfo(task, taskList, element, parent, category);
-
-		if (!element.hasAttribute(KEY_LAST_MOD_DATE) || element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
-			// migrate to new time stamp 0.5.3 -> 0.6.0
-			try {
-				if (element.hasAttribute(KEY_OLD_LAST_DATE)) {
-					String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
-					SimpleDateFormat delta_ts_format = new SimpleDateFormat(DATE_FORMAT_2);
-					String oldDateStamp = "";
-					try {
-						oldDateStamp = delta_ts_format.format(new Date(
-								new Long(element.getAttribute(KEY_OLD_LAST_DATE)).longValue()));
-						task.setLastSyncDateStamp(oldDateStamp);
-					} catch (NumberFormatException e) {
-						// For those who may have been working from head...
-						Date parsedDate = delta_ts_format.parse(element.getAttribute(KEY_OLD_LAST_DATE));
-						if (parsedDate != null) {
-							oldDateStamp = element.getAttribute(KEY_OLD_LAST_DATE);
-							task.setLastSyncDateStamp(oldDateStamp);
-						}
-					}
-				}
-			} catch (Exception e) {
-				// invalid date format/parse
-			}
-		}
 				
 		return task;
 	}

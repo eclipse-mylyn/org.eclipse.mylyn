@@ -23,7 +23,6 @@ public class AllBugzillaTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
 		// $JUnit-BEGIN$		
-		suite.addTestSuite(BugzillaTaskDataMigrationTest.class);
 		suite.addTestSuite(RepositoryTaskHandleTest.class);
 		suite.addTestSuite(TaskListNotificationManagerTest.class);
 		suite.addTestSuite(BugzillaTaskTest.class);

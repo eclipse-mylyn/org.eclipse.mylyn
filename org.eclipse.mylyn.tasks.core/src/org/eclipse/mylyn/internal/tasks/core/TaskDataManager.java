@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -218,12 +217,6 @@ public class TaskDataManager {
 				for (RepositoryTaskData taskData : getOldDataMap().values()) {
 					updateAttributeFactory(taskData);
 				}
-			} catch (OptionalDataException e) {
-				in.close();
-				readOldOfflineFile();
-			} catch (ClassCastException e) {
-				in.close();
-				readOldOfflineFile();
 			} finally {
 				if (in != null) {
                     try {
@@ -233,38 +226,6 @@ public class TaskDataManager {
                     }
                 }
 			}
-		}
-	}
-
-	/**
-	 * Migrate from old offline task data format (pre 1.0)
-	 */
-	private void readOldOfflineFile() throws IOException {
-		ObjectInputStream in = null;
-		try {
-			in = new ObjectInputStream(new FileInputStream(file));
-			// read in each of the offline reports in the file
-
-			dataStore = new OfflineDataStore();
-
-			// get the number of offline reports in the file
-			int size = in.readInt();
-			dataStore.setLastNewTaskId(in.readInt());
-			for (int nX = 0; nX < size; nX++) {
-				RepositoryTaskData taskData = null;
-
-				taskData = (RepositoryTaskData) in.readObject();
-
-				if (taskData != null) {
-					updateAttributeFactory(taskData);
-					put(taskData);
-				}
-			}
-		} catch (Exception ex) {
-			dataStore = new OfflineDataStore();
-			MylarStatusHandler.log(ex, "Could not migrate old offline data file, created new.");
-		} finally {
-			in.close();
 		}
 	}
 

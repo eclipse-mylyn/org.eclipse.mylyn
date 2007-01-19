@@ -48,8 +48,6 @@ public class TaskListPreferenceConstants {
 
 	public static final String PREVIOUS_SAVE_DATE = "org.eclipse.mylar.tasklist.save.last";
 
-	public static final String CONTEXTS_MIGRATED = "org.eclipse.mylar.tasklist.repositories.migrated.single";
-
 	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylar.tasklist.repositories.synch.schedule";
 	
 	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylar.tasklist.repositories.synch.schedule.miliseconds";

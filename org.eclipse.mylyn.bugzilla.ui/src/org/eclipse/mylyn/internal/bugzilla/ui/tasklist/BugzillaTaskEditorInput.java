@@ -17,7 +17,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -38,8 +37,6 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugTask, boolean offline) {
 		super(repository, bugTask.getHandleIdentifier(), bugTask.getUrl());
 		this.bugTask = bugTask;
-		migrateDescToReadOnly(getTaskData());
-		migrateDescToReadOnly(getOldTaskData());
 		updateOptions(getTaskData());
 		updateOptions(getOldTaskData());
 	}
@@ -58,11 +55,6 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
-
-	// @Override
-	// public String getName() {
-	// return bugTask.getDescription();
-	// }
 
 	@Override
 	public IPersistableElement getPersistable() {
@@ -85,16 +77,6 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	 */
 	public BugzillaTask getBugTask() {
 		return bugTask;
-	}
-
-	// TODO: migration code 0.6.1 -> 0.6.2
-	private void migrateDescToReadOnly(RepositoryTaskData taskData) {
-		if (taskData != null) {
-			RepositoryTaskAttribute attrib = taskData.getDescriptionAttribute();
-			if (attrib != null) {
-				attrib.setReadOnly(true);
-			}
-		}
 	}
 
 	// TODO: repository configuration update (remove at some point)

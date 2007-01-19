@@ -6,13 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylar.tasks.tests;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -20,13 +24,109 @@ import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
- * Migrate 0.6 -> 0.7 mylar data format
+ * Tests unused code that was live up to Mylar 1.0.1, {@link TasksUiPlugin}
  * 
  * @author Rob Elves
  */
-public class TaskListDataMigration implements IRunnableWithProgress {
+public class TaskList06DataMigrationTest extends TestCase {
+
+	private String sourceDir = "testdata/tasklistdatamigrationtest";
+
+	private File sourceDirFile;
+
+	private TaskListDataMigration migrator;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		sourceDirFile = TaskTestUtil.getLocalFile(sourceDir);
+		assertNotNull(sourceDirFile);
+		deleteAllFiles(sourceDirFile);
+		migrator = new TaskListDataMigration(sourceDirFile);
+		assertTrue(sourceDirFile.exists());
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		deleteAllFiles(sourceDirFile);
+	}
+
+	public void testOldTasklistMigration() throws Exception {
+		File oldTasklistFile = new File(sourceDirFile, "tasklist.xml");
+		oldTasklistFile.createNewFile();
+		assertTrue(new File(sourceDirFile, "tasklist.xml").exists());
+		assertTrue(!new File(sourceDirFile, "tasklist.xml.zip").exists());
+		assertTrue(migrator.migrateTaskList(new NullProgressMonitor()));
+		assertFalse(new File(sourceDirFile, "tasklist.xml").exists());
+		assertFalse(!new File(sourceDirFile, "tasklist.xml.zip").exists());
+	}
+
+	public void testOldRepositoriesMigration() throws Exception {
+		File oldRepositoriesFile = new File(sourceDirFile, "repositories.xml");
+		oldRepositoriesFile.createNewFile();
+		assertTrue(new File(sourceDirFile, "repositories.xml").exists());
+		assertTrue(!new File(sourceDirFile, "repositories.xml.zip").exists());
+		assertTrue(migrator.migrateRepositoriesData(new NullProgressMonitor()));
+		assertFalse(new File(sourceDirFile, "repositories.xml").exists());
+		assertTrue(new File(sourceDirFile, "repositories.xml.zip").exists());
+	}
+
+	public void testOldContextMigration() throws Exception {
+		String contextFileName1 = URLEncoder.encode("http://oldcontext1.xml",
+				MylarContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextFileName2 = URLEncoder.encode("http://oldcontext2.xml",
+				MylarContextManager.CONTEXT_FILENAME_ENCODING);
+		String contextFileName3 = "task-1.xml";
+		File oldContextFile1 = new File(sourceDirFile, contextFileName1);
+		oldContextFile1.createNewFile();
+		File oldContextFile2 = new File(sourceDirFile, contextFileName2);
+		oldContextFile2.createNewFile();
+		File oldContextFile3 = new File(sourceDirFile, contextFileName3);
+		oldContextFile3.createNewFile();
+		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
+		assertTrue(!contextFolder.exists());
+		assertTrue(migrator.migrateTaskContextData(new NullProgressMonitor()));
+		assertFalse(oldContextFile1.exists());
+		assertFalse(oldContextFile2.exists());
+		assertFalse(oldContextFile3.exists());
+		assertTrue(contextFolder.exists());
+		assertTrue(new File(contextFolder, contextFileName1 + ".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName2 + ".zip").exists());
+		assertTrue(new File(contextFolder, contextFileName3 + ".zip").exists());
+	}
+
+	public void testOldActivityMigration() throws Exception {
+		File oldActivityFile = new File(sourceDirFile, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
+		oldActivityFile.createNewFile();
+		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
+		assertTrue(!contextFolder.exists());
+		assertTrue(migrator.migrateActivityData(new NullProgressMonitor()));
+		assertFalse(oldActivityFile.exists());
+		assertTrue(contextFolder.exists());
+		assertTrue(new File(contextFolder, MylarContextManager.CONTEXT_HISTORY_FILE_NAME
+				+ MylarContextManager.CONTEXT_FILE_EXTENSION).exists());
+	}
+
+	private void deleteAllFiles(File folder) {
+		for (File file : folder.listFiles()) {
+			if (file.isDirectory()) {
+				if (!file.getName().equals("CVS")) {
+					deleteAllFiles(file);
+					file.delete();
+				}
+			} else if (!file.getName().equals("empty.txt")) {
+				file.delete();
+			}
+		}
+	}
+}
+
+class TaskListDataMigration implements IRunnableWithProgress {
 
 	private File dataDirectory = null;
 
@@ -222,40 +322,3 @@ public class TaskListDataMigration implements IRunnableWithProgress {
 	}
 
 }
-
-//public boolean migrateActivityData(IProgressMonitor monitor) {
-//File oldActivityFile = new File(dataDirectory, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME+MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
-//if (!oldActivityFile.exists())
-//	return false;
-//		
-//File newActivityFile = new File(dataDirectory, MylarContextManager.CONTEXT_HISTORY_FILE_NAME+MylarContextManager.CONTEXT_FILE_EXTENSION);
-//
-//if (newActivityFile.exists()) {
-//	if (!newActivityFile.delete()) {
-//		MylarStatusHandler.fail(null,
-//				"Could not overwrite activity file. Check read/write permission on data directory.", false);
-//		return false;
-//	}
-//}
-//ArrayList<File> filesToZip = new ArrayList<File>();
-//filesToZip.add(oldActivityFile);
-//try {
-//	monitor.beginTask("Migrate Activity Data", 1);
-//	ZipFileUtil.createZipFile(newActivityFile, filesToZip, new SubProgressMonitor(monitor, 1));
-//	if (!oldActivityFile.delete()) {
-//		MylarStatusHandler
-//				.fail(
-//						null,
-//						"Could not remove old activity file. Check read/write permission on data directory.",
-//						false);
-//		return false;
-//	}
-//	monitor.worked(1);
-//} catch (Exception e) {
-//	MylarStatusHandler.fail(e, "Error occurred while migrating old activity data: " + e.getMessage(), true);
-//	return false;
-//} finally {
-//	monitor.done();
-//}
-//return true;
-//}
