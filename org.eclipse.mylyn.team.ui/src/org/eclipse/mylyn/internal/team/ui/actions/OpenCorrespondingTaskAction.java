@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
@@ -169,10 +172,23 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		if (taskId == null && connector != null) {
 			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
 		}
-		if (taskId == null && repository != null && comment != null) {
-			String[] ids = connector.getTaskIdsFromComment(repository, comment);
-			if (ids != null && ids.length > 0) {
-				taskId = ids[0];
+		if (taskId == null && comment != null) {
+			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections
+					.singletonList(connector) : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();  
+			REPOSITORIES:
+			for(AbstractRepositoryConnector c : connectors) {
+				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
+						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getRepositoryType());
+				for (TaskRepository r : repositories) {
+					String[] ids = c.getTaskIdsFromComment(r, comment);
+					if (ids != null && ids.length > 0) {
+						taskId = ids[0];
+						connector = c;
+						repository = r;
+						repositoryUrl = r.getUrl();
+						break REPOSITORIES;
+					}
+				}
 			}
 		}
 		if (taskId == null && comment!=null) {
