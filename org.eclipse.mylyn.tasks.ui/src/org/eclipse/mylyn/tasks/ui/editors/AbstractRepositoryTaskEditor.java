@@ -524,16 +524,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected abstract void validateInput();
 
-	protected String getTitleString() {
-		return taskData.getLabel();// + ": " +
-		// checkText(summaryVal);
-	}
-
-	// protected abstract void submitToRepository();
-
-	protected Color color_backgroundIncoming;
+	protected Color backgroundIncoming;
 
 	protected boolean hasAttributeChanges = false;
+
+	protected boolean showAttachments = true;
 
 	/**
 	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the
@@ -556,7 +551,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void createFormContent(final IManagedForm managedForm) {
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		color_backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
+		backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKS_INCOMING_BACKGROUND);
 
 		super.createFormContent(managedForm);
@@ -576,7 +571,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createReportHeaderLayout(editorComposite);
 		Composite attribComp = createAttributeLayout(editorComposite);
 		createCustomAttributeLayout(attribComp);
-		createAttachmentLayout(editorComposite);
+		if (showAttachments) {
+			createAttachmentLayout(editorComposite);
+		}
 		createDescriptionLayout(editorComposite);
 		createCommentLayout(editorComposite);
 		createNewCommentLayout(editorComposite);
@@ -697,7 +694,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 		}
 		if (hasChanged(attribute)) {
-			text.setBackground(color_backgroundIncoming);
+			text.setBackground(backgroundIncoming);
 		}
 		return text;
 	}
@@ -707,7 +704,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * of the bug (some of which are editable).
 	 */
 	protected Composite createAttributeLayout(Composite composite) {
-		String title = getTitleString();
+		String title = taskData.getLabel();
 		Section section = createSection(composite, LABEL_SECTION_ATTRIBUTES);
 		section.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
@@ -751,7 +748,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attributeCombo.setFont(TEXT_FONT);
 
 				if (hasChanged(attribute)) {
-					attributeCombo.setBackground(color_backgroundIncoming);
+					attributeCombo.setBackground(backgroundIncoming);
 				}
 				attributeCombo.setLayoutData(data);
 				for (String val : values) {
@@ -1378,7 +1375,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
-			descriptionTextViewer.getTextWidget().setBackground(color_backgroundIncoming);
+			descriptionTextViewer.getTextWidget().setBackground(backgroundIncoming);
 		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
@@ -1469,7 +1466,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		ccListData.heightHint = 95;
 		ccList.setLayoutData(ccListData);
 		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
-			ccList.setBackground(color_backgroundIncoming);
+			ccList.setBackground(backgroundIncoming);
 		}
 		java.util.List<String> ccs = taskData.getCC();
 		if (ccs != null) {
@@ -1612,9 +1609,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (commentDate != null
 							&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
 						expandableComposite.setExpanded(true);
-						expandableComposite.setBackground(color_backgroundIncoming);
+						expandableComposite.setBackground(backgroundIncoming);
 						if (expandableComposite.getTextClient() != null) {
-							expandableComposite.getTextClient().setBackground(color_backgroundIncoming);
+							expandableComposite.getTextClient().setBackground(backgroundIncoming);
 						}
 					}
 				}

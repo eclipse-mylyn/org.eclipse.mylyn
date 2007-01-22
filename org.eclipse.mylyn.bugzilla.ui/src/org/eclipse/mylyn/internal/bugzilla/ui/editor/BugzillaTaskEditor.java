@@ -456,7 +456,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		Button button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(color_backgroundIncoming);
+			button.setBackground(backgroundIncoming);
 		}
 
 		attribute = null;
@@ -467,7 +467,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(color_backgroundIncoming);
+			button.setBackground(backgroundIncoming);
 		}
 	}
 
