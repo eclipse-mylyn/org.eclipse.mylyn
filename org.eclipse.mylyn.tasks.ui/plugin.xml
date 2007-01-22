@@ -522,6 +522,7 @@
        isEditable="true"
        label="Task Editor - Notes and Comments"
        value="Tahoma-regular-10">
+       <!--  defaultsTo="org.eclipse.jface.dialogfont" -->
          <description>
             Text font used for task editor text areas.
          </description>

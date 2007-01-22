@@ -259,43 +259,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// ignore
 	}
 
-	@Override
-	protected String getTitleString() {
-		return taskData.getLabel();
-	}
-
-	// public boolean searchForDuplicates() {
-	//
-	// String stackTrace = getStackTraceFromDescription();
-	// if (stackTrace == null) {
-	// MessageDialog.openWarning(null, "No Stack Trace Found",
-	// NO_STACK_MESSAGE);
-	// return false;
-	// }
-	//
-	// String queryUrl = "";
-	// try {
-	// queryUrl = repository.getUrl() +
-	// "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-	// + URLEncoder.encode(stackTrace, BugzillaCorePlugin.ENCODING_UTF_8);
-	// } catch (UnsupportedEncodingException e) {
-	// // This should never happen
-	// }
-	//
-	// queryUrl += "&product=" + getRepositoryTaskData().getProduct();
-	//
-	// BugzillaRepositoryQuery bugzillaQuery = new
-	// BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-	// "100", TasksUiPlugin.getTaskListManager().getTaskList());
-	// Proxy proxySettings = TasksUiPlugin.getDefault().getProxySettings();
-	// SearchHitCollector collector = new
-	// SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-	// repository, bugzillaQuery, proxySettings);
-	//
-	// NewSearchUI.runQueryInBackground(collector);
-	// return true;
-	// }
-
 	public String getStackTraceFromDescription() {
 		String description = descriptionTextViewer.getTextWidget().getText().trim();
 		String stackTrace = null;
