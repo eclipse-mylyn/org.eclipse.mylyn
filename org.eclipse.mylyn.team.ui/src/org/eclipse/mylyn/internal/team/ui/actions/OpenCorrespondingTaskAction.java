@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.actions.OpenRepositoryTask;
 import org.eclipse.mylar.internal.team.LinkedTaskInfo;
 import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -107,13 +108,13 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
 				if (repository != null) {
 					// TODO: temporary work-around for bug 166174
-					if (!info.getTaskId().contains(AbstractRepositoryTask.HANDLE_DELIM)) {	
+					if (!info.getTaskId().contains(AbstractRepositoryTask.HANDLE_DELIM)) {
 						if (TasksUiUtil.openRepositoryTask(repository, info.getTaskId())) {
 							return;
 						}
 					} else {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-								ITasksUiConstants.TITLE_DIALOG, 
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								ITasksUiConstants.TITLE_DIALOG,
 								"Could not resolve task, use Navigate -> Open Task... and enter the task ID or key.");
 					}
 				}
@@ -125,8 +126,11 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		}
 
 		// TODO show Open Remote Task dialog?
-		MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-				"Unable to open correspond task", "Unable to open correspond task");
+		boolean openDialog = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+				ITasksUiConstants.TITLE_DIALOG, "Unable to match task. Open Repository Task dialog?");
+		if (openDialog) {
+			new OpenRepositoryTask().run(null);
+		}
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -153,20 +157,27 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 
 		TaskRepository repository = null;
-		if(repositoryUrl!=null) {
+		if (repositoryUrl != null) {
 			repository = repositoryManager.getRepository(repositoryUrl);
 		}
 
+		if (taskFullUrl == null && comment != null) {
+			taskFullUrl = getUrlFromComment(comment);
+		}
+
 		AbstractRepositoryConnector connector = null;
-		if(taskFullUrl!=null) {
+		if (taskFullUrl != null) {
 			connector = repositoryManager.getConnectorForRepositoryTaskUrl(taskFullUrl);
-		}		
-		if (connector == null && repository!=null) {
+		}
+		if (connector == null && repository != null) {
 			connector = repositoryManager.getRepositoryConnector(repository.getKind());
 		}
 
 		if (repositoryUrl == null && connector != null) {
 			repositoryUrl = connector.getRepositoryUrlFromTaskUrl(taskFullUrl);
+			if (repository == null) {
+				repository = repositoryManager.getRepository(repositoryUrl);
+			}
 		}
 
 		if (taskId == null && connector != null) {
@@ -174,9 +185,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		}
 		if (taskId == null && comment != null) {
 			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections
-					.singletonList(connector) : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();  
-			REPOSITORIES:
-			for(AbstractRepositoryConnector c : connectors) {
+					.singletonList(connector) : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
+			REPOSITORIES: 
+			for (AbstractRepositoryConnector c : connectors) {
 				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
 						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getRepositoryType());
 				for (TaskRepository r : repositories) {
@@ -191,7 +202,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 			}
 		}
-		if (taskId == null && comment!=null) {
+		if (taskId == null && comment != null) {
 			CommitTemplateManager commitTemplateManager = MylarTeamPlugin.getDefault().getCommitTemplateManager();
 			taskId = commitTemplateManager.getTaskIdFromCommentOrLabel(comment);
 			if (taskId == null) {
@@ -206,7 +217,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		if (task == null) {
 			if (taskId != null && repositoryUrl != null) {
 				// XXX fix this hack (jira ids don't work here)
-				if(!taskId.contains(AbstractRepositoryTask.HANDLE_DELIM)) {
+				if (!taskId.contains(AbstractRepositoryTask.HANDLE_DELIM)) {
 					String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
 					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 				}
