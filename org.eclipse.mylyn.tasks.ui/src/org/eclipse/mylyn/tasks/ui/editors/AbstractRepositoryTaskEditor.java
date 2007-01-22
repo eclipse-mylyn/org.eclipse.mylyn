@@ -2484,7 +2484,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							throw new CoreException(
 									new MylarStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID,
 											IMylarStatusConstants.INTERNAL_ERROR,
-											"Task could not be created. No addition information was provided by the connector."));
+											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
 						modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList()

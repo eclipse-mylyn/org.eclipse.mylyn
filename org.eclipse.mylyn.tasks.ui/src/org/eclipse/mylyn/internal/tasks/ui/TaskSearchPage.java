@@ -36,8 +36,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Hyperlink;
@@ -47,6 +48,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Mik Kersten
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
+
+	private static final String PAGE_KEY = "page";
 
 	private static final String TITLE_REPOSITORY_SEARCH = "Repository Search";
 
@@ -66,13 +69,14 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 	private boolean firstView = true;
 
-	private WizardPage[] queryPages;
+	private Control[] queryPages;
 
 	private ISearchPageContainer pageContainer;
 
 	public boolean performAction() {
 		saveDialogSettings();
-		return ((ISearchPage) queryPages[currentPageIndex]).performAction();
+		ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
+		return page.performAction();
 	}
 
 	public void setContainer(ISearchPageContainer container) {
@@ -82,88 +86,77 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	public void createControl(Composite parent) {
 		fParentComposite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
+		// layout.marginHeight = 0;
+		// layout.marginWidth = 0;
 		fParentComposite.setLayout(layout);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		fParentComposite.setLayoutData(gd);
+
 		createRepositoryGroup(fParentComposite);
+
+		createSeparator(fParentComposite);
+
 		this.setControl(fParentComposite);
 	}
 
-	private void createRepositoryGroup(Composite control) {
-		Group group = new Group(control, SWT.NONE);
-		group.setText("Repository");
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		group.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 1;
-		group.setLayoutData(gd);
+	private void createSeparator(Composite parent) {
+		Label separator = new Label(parent, SWT.NONE);
+		separator.setVisible(false);
+		GridData data = new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1);
+		data.heightHint = convertHeightInCharsToPixels(1) / 3;
+		separator.setLayoutData(data);
+	}
 
-		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+	private void createRepositoryGroup(Composite control) {
+		// Group group = new Group(control, SWT.NONE);
+		// group.setText("Repository");
+		// GridLayout layout = new GridLayout();
+		// layout.numColumns = 1;
+		// group.setLayout(layout);
+		// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		// gd.horizontalSpan = 1;
+		// group.setLayoutData(gd);
+
+		Label label = new Label(control, SWT.NONE);
+		label.setText("Repository");
+
+		repositoryCombo = new Combo(control, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				displayQueryPage(repositoryCombo.getSelectionIndex());
 			}
 		});
-		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-		repositoryCombo.setLayoutData(gd);
+		repositoryCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 	}
 
-	private WizardPage createPage(final TaskRepository repository) {
-		if (repository != null) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-			if (connectorUi != null) {
-				WizardPage searchPage = null;
+	private Control createPage(TaskRepository repository, ISearchPage searchPage) {
+		// Page wrapper
+		final Composite pageWrapper = new Composite(fParentComposite, SWT.NONE);
+		pageWrapper.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		pageWrapper.setLayout(layout);
 
-				searchPage = connectorUi.getSearchPage(repository, null);
+		searchPage.setContainer(pageContainer);
+		try {
+			searchPage.createControl(pageWrapper);
+		} catch (Exception e) {
+			pageWrapper.dispose();
+			searchPage.dispose();
 
-				if (searchPage != null) {
-					((ISearchPage) searchPage).setContainer(pageContainer);
-					try {
-						searchPage.createControl(fParentComposite);
-					} catch (Exception e) {
-						if (searchPage.getControl() != null) {
-							searchPage.getControl().dispose();
-						}
-						searchPage.dispose();
-						searchPage = new DeadSearchPage(repository) {
-							@Override
-							public void createControl(Composite parent) {
-								Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
-								hyperlink
-										.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
-								hyperlink.setUnderlined(true);
-								hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-									@Override
-									public void linkActivated(HyperlinkEvent e) {
-										TaskSearchPage.this.getControl().getShell().close();
-										TasksUiUtil.openEditRepositoryWizard(getRepository());
-										// TODO: Re-construct this page with new
-										// repository data
-									}
-
-								});
-
-								GridDataFactory.fillDefaults().applyTo(hyperlink);
-								setControl(hyperlink);
-							}
-						};
-						((ISearchPage) searchPage).setContainer(pageContainer);
-						searchPage.createControl(fParentComposite);
-						MylarStatusHandler.log(e, "Error occurred while constructing search page for "
-								+ repository.getUrl() + " [" + repository.getKind() + "]");
-					}
-				}
-				return searchPage;
-			} else {
-				// Search page not available
-			}
+			searchPage = new DeadSearchPage(repository);
+			searchPage.setContainer(pageContainer);
+			searchPage.createControl(fParentComposite);
+			MylarStatusHandler.log(e, "Error occurred while constructing search page for " + repository.getUrl() + " ["
+					+ repository.getKind() + "]");
+			searchPage.getControl().setData(PAGE_KEY, searchPage);
+			return searchPage.getControl();
 		}
 
-		return null;
+		pageWrapper.setData(PAGE_KEY, searchPage);
+		return pageWrapper;
 	}
 
 	private void displayQueryPage(int pageIndex) {
@@ -173,29 +166,37 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		// TODO: if repository == null display invalid page?
 		if (currentPageIndex != -1 && queryPages[currentPageIndex] != null) {
 			queryPages[currentPageIndex].setVisible(false);
-			GridData data = (GridData) queryPages[currentPageIndex].getControl().getLayoutData();
+			ISearchPage page = (ISearchPage) queryPages[currentPageIndex].getData(PAGE_KEY);
+			page.setVisible(false);
+			GridData data = (GridData) queryPages[currentPageIndex].getLayoutData();
 			data.exclude = true;
-			queryPages[currentPageIndex].getControl().setLayoutData(data);
+			queryPages[currentPageIndex].setLayoutData(data);
 		}
 
 		if (queryPages[pageIndex] == null) {
 			String repositoryUrl = repositoryCombo.getItem(pageIndex);
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 			if (repository != null) {
-				queryPages[pageIndex] = createPage(repository);
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+				if (connectorUi != null) {
+					WizardPage searchPage = connectorUi.getSearchPage(repository, null);
+					if (searchPage != null && searchPage instanceof ISearchPage) {
+						queryPages[pageIndex] = createPage(repository, (ISearchPage) searchPage);
+					}
+				}
 			}
 		}
 
 		if (queryPages[pageIndex] != null) {
-			if (queryPages[pageIndex].getControl() != null) {
-				GridData data = (GridData) queryPages[pageIndex].getControl().getLayoutData();
-				if (data == null) {
-					data = new GridData();
-				}
-				data.exclude = false;
-				queryPages[pageIndex].getControl().setLayoutData(data);
-				queryPages[pageIndex].setVisible(true);
+			GridData data = (GridData) queryPages[pageIndex].getLayoutData();
+			if (data == null) {
+				data = new GridData();
 			}
+			data.exclude = false;
+			queryPages[pageIndex].setLayoutData(data);
+			queryPages[pageIndex].setVisible(true);
+			ISearchPage page = (ISearchPage) queryPages[pageIndex].getData(PAGE_KEY);
+			page.setVisible(true);
 		}
 
 		currentPageIndex = pageIndex;
@@ -246,7 +247,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 
 					// TODO: Create one page per connector and repopulate based
 					// on repository
-					queryPages = new AbstractRepositoryQueryPage[repositoryUrls.length];
+					queryPages = new Control[repositoryUrls.length];
 					displayQueryPage(repositoryCombo.getSelectionIndex());
 					// updateAttributesFromRepository(repositoryCombo.getText(),
 					// null, false);
@@ -278,8 +279,9 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	@Override
 	public void dispose() {
 		if (queryPages != null) {
-			for (WizardPage page : queryPages) {
-				if (page != null) {
+			for (Control control : queryPages) {
+				if (control != null) {
+					ISearchPage page = (ISearchPage) control.getData(PAGE_KEY);
 					page.dispose();
 				}
 			}
@@ -287,13 +289,34 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		super.dispose();
 	}
 
-	private static class DeadSearchPage extends AbstractRepositoryQueryPage {
+	private class DeadSearchPage extends AbstractRepositoryQueryPage {
 
 		private TaskRepository taskRepository;
 
 		public DeadSearchPage(TaskRepository rep) {
-			super("Seach page error");
+			super("Search page error");
 			this.taskRepository = rep;
+		}
+
+		@Override
+		public void createControl(Composite parent) {
+			Hyperlink hyperlink = new Hyperlink(parent, SWT.NONE);
+			hyperlink
+					.setText("ERROR: Unable to present query page, ensure repository configuration is valid and retry");
+			hyperlink.setUnderlined(true);
+			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					TaskSearchPage.this.getControl().getShell().close();
+					TasksUiUtil.openEditRepositoryWizard(getRepository());
+					// TODO: Re-construct this page with new
+					// repository data
+				}
+
+			});
+
+			GridDataFactory.fillDefaults().applyTo(hyperlink);
+			setControl(hyperlink);
 		}
 
 		@Override
@@ -313,11 +336,11 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 		@Override
 		public void setVisible(boolean visible) {
 			super.setVisible(visible);
-			
+
 			if (visible) {
 				scontainer.setPerformActionEnabled(false);
 			}
 		}
-		
+
 	}
 }

@@ -137,6 +137,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
 		GridLayout layout = new GridLayout(4, false);
+		if (isSearchPage()) {
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+		}
 		control.setLayout(layout);
 
 		createTitleGroup(control);
