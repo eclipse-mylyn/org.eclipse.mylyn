@@ -252,7 +252,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
 			TasksUiPlugin.getTaskListManager().setScheduledFor(task, datePicker.getDate().getTime());
-			// task.setReminderDate(datePicker.getDate().getTime());
+			// task.setReminderDate(scheduledForDate.getDate().getTime());
 		} else {
 			// task.setReminderDate(null);
 			TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);

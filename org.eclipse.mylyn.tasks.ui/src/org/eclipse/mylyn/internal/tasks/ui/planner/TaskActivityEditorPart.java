@@ -100,7 +100,7 @@ public class TaskActivityEditorPart extends EditorPart {
 
 	private int[] planColumnWidths = new int[] { 20, 30, 340, 90, 90, 100 };
 
-	private static final String LABEL_ESTIMATED = "Total estimated: ";
+	private static final String LABEL_ESTIMATED = "Total estimatedTime: ";
 
 	private static final String NO_TIME_ELAPSED = "&nbsp;";
 
@@ -295,7 +295,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		totalTimeOnIncomplete.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String spacer = "        ";
-		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		String totalEstimated = "Total estimatedTime time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
 		totalEstimatedTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -321,7 +321,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		totalTimeOnIncomplete.setText(totalInProgressTaskTime);
 
 		String spacer = "        ";
-		String totalEstimated = "Total estimated time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
+		String totalEstimated = "Total estimatedTime time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime.setText(totalEstimated);
 
 		String grandTotalTime = "Total time: " + getTotalTime();
@@ -845,7 +845,7 @@ public class TaskActivityEditorPart extends EditorPart {
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false) + "</td>");
 		writer.write("</tr>");
 
-		writer.write("<tr><td width=\"138\">Total estimated time:</td><td>" + totalEstimatedHoursLabel.getText()
+		writer.write("<tr><td width=\"138\">Total estimatedTime time:</td><td>" + totalEstimatedHoursLabel.getText()
 				+ "</td>");
 		writer.write("<td width=\"169\">Total time:</td><td width=\"376\">" + getTotalTime() + "</td>");
 		writer.write("</tr>");

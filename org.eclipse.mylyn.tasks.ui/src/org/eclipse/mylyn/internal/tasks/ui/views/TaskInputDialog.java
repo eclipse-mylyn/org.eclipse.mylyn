@@ -140,10 +140,10 @@ public class TaskInputDialog extends Dialog {
 		});
 		
 //		
-//		datePicker.setLayout(new GridLayout());
+//		scheduledForDate.setLayout(new GridLayout());
 //		GridData datePickerGD = new GridData();
 //		datePickerGD.widthHint = 300;
-//		datePicker.setLayoutData(datePickerGD);
+//		scheduledForDate.setLayoutData(datePickerGD);
 		
 		
 		Label urlLabel = new Label(composite, SWT.WRAP);

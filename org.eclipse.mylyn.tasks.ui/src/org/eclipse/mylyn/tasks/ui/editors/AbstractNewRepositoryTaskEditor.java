@@ -75,17 +75,17 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
-	protected Button searchDuplicatesButton;
+	protected Button searchForDuplicates;
 
-	protected DatePicker datePicker;
+	protected DatePicker scheduledForDate;
 
-	protected Spinner estimated;
+	protected Spinner estimatedTime;
 
 	protected String newSummary = "";
 
 	protected Button addToCategory;
 
-	protected CCombo categoryCombo;
+	protected CCombo categoryChooser;
 
 	public AbstractNewRepositoryTaskEditor(FormEditor editor) {
 		super(editor);
@@ -140,22 +140,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		addSummaryText(comp);
 	}
 
-	// @Override
-	// protected void createReportHeaderLayout(Composite comp) {
-	// FormToolkit toolkit = new FormToolkit(comp.getDisplay());
-	// Composite headerComposite = toolkit.createComposite(editorComposite);
-	// headerComposite.setLayout(new GridLayout(2, false));
-	// GridDataFactory.fillDefaults().grab(true,
-	// false).applyTo(headerComposite);
-	// toolkit.createLabel(headerComposite, "Posting To:").setFont(TITLE_FONT);
-	// Text target = toolkit.createText(headerComposite, repository.getUrl(),
-	// SWT.FLAT);
-	// target.setFont(TITLE_FONT);
-	// target.setEditable(false);
-	// addSummaryText(headerComposite);
-	// toolkit.paintBordersFor(headerComposite);
-	// }
-
 	@Override
 	protected void createAttachmentLayout(Composite comp) {
 		// currently can't attach while creating new bug
@@ -163,8 +147,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	@Override
 	protected void createCommentLayout(Composite comp) {
-		// Since NewBugModels have no comments, there is no
-		// GUI for them.
+		// ignore
 	}
 
 	@Override
@@ -193,9 +176,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, "Scheduled for:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
-		datePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		datePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		scheduledForDate = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
+		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		Calendar newTaskSchedule = Calendar.getInstance();
 		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 				TaskListPreferenceConstants.PLANNING_ENDHOUR);
@@ -205,12 +188,12 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		} else {
 			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
 		}
-		datePicker.setDate(newTaskSchedule);
+		scheduledForDate.setDate(newTaskSchedule);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				datePicker.setDate(null);
+				scheduledForDate.setDate(null);
 			}
 		});
 
@@ -224,16 +207,16 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// Estimated time
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-		estimated = new Spinner(sectionClient, SWT.NONE);
-		estimated.setDigits(0);
-		estimated.setMaximum(100);
-		estimated.setMinimum(0);
-		estimated.setIncrement(1);
-		estimated.setSelection(DEFAULT_ESTIMATED_TIME);
-		estimated.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		estimatedTime = new Spinner(sectionClient, SWT.NONE);
+		estimatedTime.setDigits(0);
+		estimatedTime.setMaximum(100);
+		estimatedTime.setMinimum(0);
+		estimatedTime.setIncrement(1);
+		estimatedTime.setSelection(DEFAULT_ESTIMATED_TIME);
+		estimatedTime.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridData estimatedDataLayout = new GridData();
 		estimatedDataLayout.widthHint = 110;
-		estimated.setLayoutData(estimatedDataLayout);
+		estimatedTime.setLayoutData(estimatedDataLayout);
 		label = toolkit.createLabel(sectionClient, "hours ");
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
@@ -245,7 +228,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		blankLabel2.setLayoutData(blankLabl2Layout);
 
 		toolkit.paintBordersFor(sectionClient);
-
 	}
 
 	@Override
@@ -367,10 +349,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		
 		
 		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
-		categoryCombo = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
-		categoryCombo.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-		toolkit.adapt(categoryCombo, true, true);
-		categoryCombo.setFont(TEXT_FONT);
+		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+		toolkit.adapt(categoryChooser, true, true);
+		categoryChooser.setFont(TEXT_FONT);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		List<AbstractTaskContainer> categories = taskList.getUserCategories();
 		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
@@ -380,23 +362,23 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			}
 
 		});
-		categoryCombo.add("<root>");
+		categoryChooser.add("<root>");
 		for (AbstractTaskContainer category : categories) {
-			categoryCombo.add(category.getSummary());
+			categoryChooser.add(category.getSummary());
 		}
-		categoryCombo.select(0);
-		categoryCombo.setEnabled(false);
-		categoryCombo.setData(categories);
+		categoryChooser.select(0);
+		categoryChooser.setEnabled(false);
+		categoryChooser.setData(categories);
 		addToCategory.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				categoryCombo.setEnabled(addToCategory.getSelection());
+				categoryChooser.setEnabled(addToCategory.getSelection());
 			}
 
 		});
 		
-		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(categoryCombo);
+		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(categoryChooser);
 		
 		
 		addActionButtons(buttonComposite);
@@ -415,12 +397,12 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 */
 	@SuppressWarnings("unchecked")
 	protected AbstractTaskContainer getCategory() {
-		int index = categoryCombo.getSelectionIndex();
+		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			if (index == 0) {
 				return TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
 			}
-			return ((List<AbstractTaskContainer>) categoryCombo.getData()).get(index - 1);
+			return ((List<AbstractTaskContainer>) categoryChooser.getData()).get(index - 1);
 		}
 		return null;
 	}
@@ -429,10 +411,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 
-		searchDuplicatesButton = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+		searchForDuplicates = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
 		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		searchDuplicatesButton.setLayoutData(searchDuplicatesButtonData);
-		searchDuplicatesButton.addListener(SWT.Selection, new Listener() {
+		searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
+		searchForDuplicates.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				searchForDuplicates();
 			}
@@ -510,13 +492,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					Calendar selectedDate = datePicker.getDate();
+					Calendar selectedDate = scheduledForDate.getDate();
 					if (selectedDate != null) {
 						// NewLocalTaskAction.scheduleNewTask(newTask);
 						TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, selectedDate.getTime());
 					}
 
-					newTask.setEstimatedTimeHours(estimated.getSelection());
+					newTask.setEstimatedTimeHours(estimatedTime.getSelection());
 
 					Object selectedObject = null;
 					if (TaskListView.getFromActivePerspective() != null)
@@ -533,39 +515,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		return newTask;
 	}
-
-	// protected void handleOkayStatus(final IJobChangeEvent event) {
-	// close();
-	// String newTaskHandle =
-	// AbstractRepositoryTask.getHandle(repository.getUrl(),
-	// event.getJob().getResult()
-	// .getMessage());
-	// ITask newTask =
-	// TasksUiPlugin.getTaskListManager().getTaskList().getTask(newTaskHandle);
-	// if (newTask != null) {
-	// Calendar selectedDate = datePicker.getDate();
-	// if (selectedDate != null) {
-	// // NewLocalTaskAction.scheduleNewTask(newTask);
-	// TasksUiPlugin.getTaskListManager().setScheduledFor(newTask,
-	// selectedDate.getTime());
-	// }
-	//
-	// newTask.setEstimatedTimeHours(estimated.getSelection());
-	//
-	// Object selectedObject = null;
-	// if (TaskListView.getFromActivePerspective() != null)
-	// selectedObject = ((IStructuredSelection)
-	// TaskListView.getFromActivePerspective().getViewer()
-	// .getSelection()).getFirstElement();
-	//
-	// if (selectedObject instanceof TaskCategory) {
-	// TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(((TaskCategory)
-	// selectedObject),
-	// newTask);
-	// }
-	// TaskUiUtil.refreshAndOpenTaskListElement(newTask);
-	// }
-	// }
 
 	protected abstract SearchHitCollector getDuplicateSearchCollector(String description);
 
