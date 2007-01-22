@@ -1724,6 +1724,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		submitButtonData.horizontalSpan = 3;
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -1733,9 +1734,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
 
-		toolkit.createLabel(buttonComposite, "");
+		//toolkit.createLabel(buttonComposite, "");
 		if (getActivityUrl() != null) {
-			Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "Past activity", SWT.NONE);
+			Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "View past activity", SWT.NONE);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
