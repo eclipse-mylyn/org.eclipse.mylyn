@@ -557,7 +557,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		super.createFormContent(managedForm);
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-
+		registerDropListener(form);
+		
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
 		editorComposite.setLayout(editorLayout);
@@ -589,9 +590,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		form.reflow(true);
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
-		if (this.addCommentsTextBox != null) {
-			registerDropListener(this.addCommentsTextBox);
-		}
+		// if (this.addCommentsTextBox != null) {
+		// registerDropListener(this.addCommentsTextBox);
+		// }
 		if (summaryText != null) {
 			summaryText.setFocus();
 		}
@@ -814,38 +815,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return attributesComposite;
 	}
 
-	// protected void createContextMenu(final Composite comp) {
-	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-	// contextMenuManager.setRemoveAllWhenShown(true);
-	// contextMenuManager.addMenuListener(new IMenuListener() {
-	// public void menuAboutToShow(IMenuManager manager) {
-	// manager.add(cutAction);
-	// manager.add(copyAction);
-	// manager.add(pasteAction);
-	// // Clipboard clipboard = new Clipboard(comp.getDisplay());
-	// // TextTransfer textTransfer = TextTransfer.getInstance();
-	// // String textData = (String) clipboard.getContents(textTransfer);
-	// // if (textData != null) {
-	// // pasteAction.setEnabled(true);
-	// // } else {
-	// // pasteAction.setEnabled(false);
-	// // }
-	//
-	// if (currentSelectedText == null ||
-	// currentSelectedText.getSelectionText().length() == 0) {
-	// copyAction.setEnabled(false);
-	// } else {
-	// copyAction.setEnabled(true);
-	// }
-	// // manager.add(revealAllAction);
-	// manager.add(new Separator());
-	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-	// }
-	// });
-	// // getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
-	// // getSite().getSelectionProvider());
-	// }
-
 	/**
 	 * Adds a text field to display and edit the bug's summary.
 	 * 
@@ -890,7 +859,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (taskData.getAttachments().size() > 0) {
 
 			attachmentsTable = toolkit.createTable(attachmentsComposite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
-			registerDropListener(attachmentsTable);
 			attachmentsTable.setLinesVisible(true);
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
