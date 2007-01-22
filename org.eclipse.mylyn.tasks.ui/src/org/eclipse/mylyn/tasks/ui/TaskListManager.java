@@ -44,10 +44,12 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
+import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -131,7 +133,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private File taskListFile;
 
 	private TaskListSaveManager taskListSaveManager;
-	
+
 	// TODO: guard against overwriting the single instance?
 	private TaskList taskList = new TaskList();
 
@@ -194,12 +196,42 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	};
 
+	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
+
+		public void containerAdded(AbstractTaskContainer container) {
+		}
+
+		public void containerDeleted(AbstractTaskContainer container) {
+		}
+
+		public void containerInfoChanged(AbstractTaskContainer container) {
+		}
+
+		public void localInfoChanged(ITask task) {
+		}
+
+		public void repositoryInfoChanged(ITask task) {
+		}
+
+		public void taskAdded(ITask task) {
+		}
+
+		public void taskDeleted(ITask task) {
+			TaskListManager.this.resetAndRollOver();
+		}
+
+		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+		}
+
+	};
+
 	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
 
 		timer = new Timer();
 		timer.schedule(new RolloverCheck(), ROLLOVER_DELAY, ROLLOVER_DELAY);
+		taskList.addChangeListener(CHANGE_LISTENER);
 	}
 
 	public void init() {
@@ -572,7 +604,8 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 
 			for (ITask task : taskList.getAllTasks()) {
-				if (task.getScheduledForDate() != null)// && task.hasBeenReminded()
+				if (task.getScheduledForDate() != null)// &&
+					// task.hasBeenReminded()
 					// != true
 					tasksWithReminders.add(task);
 			}
@@ -671,7 +704,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void copyDataDirContentsTo(String newDataDir) {
 		taskListSaveManager.copyDataDirContentsTo(newDataDir);
 	}
-	
+
 	public boolean isTaskListInitialized() {
 		return taskListInitialized;
 	}
@@ -695,12 +728,12 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
-			
+
 			if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-							
+
 				if (repository != null && repositoryTask.getOwner() != null
 						&& !repositoryTask.getOwner().equals(repository.getUserName()))
 					return false;
@@ -777,7 +810,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * TODO: Need to migrate to use of this method for setting of reminders
 	 */
 	public void setScheduledFor(ITask task, Date reminderDate) {
-		if(task == null) return;
+		if (task == null)
+			return;
 		task.setScheduledForDate(reminderDate);
 		task.setReminded(false);
 		if (reminderDate == null) {
@@ -848,13 +882,15 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		return tasksScheduled;
 	}
-	
-	/** 
-	 * @param element tasklist element to retrieve a task for 
-	 * currently will work for (ITask, AbstractQueryHit)
-	 * @param force - if a query hit is passed you can either force construction
-	 * of the task or not (if not and no task, null is returned)
-	 * TODO: Move into TaskList? 
+
+	/**
+	 * @param element
+	 *            tasklist element to retrieve a task for currently will work
+	 *            for (ITask, AbstractQueryHit)
+	 * @param force -
+	 *            if a query hit is passed you can either force construction of
+	 *            the task or not (if not and no task, null is returned) TODO:
+	 *            Move into TaskList?
 	 */
 	public ITask getTaskForElement(ITaskListElement element, boolean force) {
 		ITask task = null;
