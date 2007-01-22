@@ -114,32 +114,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// compareInput = new BugzillaCompareInput(config);
 	}
 
-	// @Override
-	// public void init(IEditorSite site, IEditorInput input) {
-	// super.init(site, input);
-	//		
-	// if (!(input instanceof RepositoryTaskEditorInput)) {
-	// return;
-	// }
-	// super.init(site, input);
-	//
-	// editorInput = (AbstractTaskEditorInput) input;
-	// taskData = editorInput.getTaskData();
-	// repository = editorInput.getRepository();
-	// connector =
-	// TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-	//
-	// setSite(site);
-	// setInput(input);
-	//
-	// taskOutlineModel =
-	// RepositoryTaskOutlineNode.parseBugReport(editorInput.getTaskData());
-	//
-	// // restoreBug();
-	// isDirty = false;
-	// updateEditorTitle();
-	// }
-
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
@@ -294,100 +268,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		return super.hasVisibleAttributeChanges() || this.hasCustomAttributeChanges();
 
 	}
-
-	// protected void createDependencyLayout(Composite composite) {
-	// FormToolkit toolkit = getManagedForm().getToolkit();
-	// final Section section = createSection(composite, "Dependencies");
-	// boolean expand = false;
-	// final Composite sectionComposite = toolkit.createComposite(section);
-	// section.setClient(sectionComposite);
-	// GridLayout sectionLayout = new GridLayout(7, false);
-	// sectionComposite.setLayout(sectionLayout);
-	//
-	// toolkit.createLabel(sectionComposite,
-	// BugzillaReportElement.DEPENDSON.toString());
-	// Composite textFieldComposite = toolkit.createComposite(sectionComposite);
-	// GridLayout textLayout = new GridLayout();
-	// textLayout.marginWidth = 1;
-	// textLayout.marginHeight = 3;
-	// textLayout.verticalSpacing = 3;
-	// textFieldComposite.setLayout(textLayout);
-	// GridData textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-	// textData.horizontalSpan = 1;
-	// textData.widthHint = 135;
-	// RepositoryTaskAttribute attribute =
-	// this.taskData.getAttribute(
-	// BugzillaReportElement.DEPENDSON.getKeyString());
-	// expand = attribute.getValue() != null && attribute.getValue().length() >
-	// 0;
-	// if (!attribute.isReadOnly()) {
-	// final Text text = toolkit.createText(textFieldComposite,
-	// attribute.getValue(), SWT.FLAT);
-	// text.setLayoutData(textData);
-	// toolkit.paintBordersFor(textFieldComposite);
-	// text.setData(attribute);
-	// text.addListener(SWT.KeyUp, new Listener() {
-	// public void handleEvent(Event event) {
-	// String sel = text.getText();
-	// RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
-	// if (!(a.getValue().equals(sel))) {
-	// a.setValue(sel);
-	// markDirty(true);
-	// }
-	// }
-	// });
-	// text.addListener(SWT.FocusIn, new GenericListener());
-	// }
-	//
-	// addBugHyperlinks(sectionComposite,
-	// BugzillaReportElement.DEPENDSON.getKeyString());
-	//
-	// // spacer
-	// GridDataFactory.fillDefaults().hint(20,
-	// SWT.DEFAULT).applyTo(toolkit.createLabel(sectionComposite, ""));
-	//
-	// toolkit.createLabel(sectionComposite,
-	// BugzillaReportElement.BLOCKED.toString());
-	// textFieldComposite = toolkit.createComposite(sectionComposite);
-	// textLayout = new GridLayout();
-	// textLayout.marginWidth = 1;
-	// textLayout.marginHeight = 3;
-	// textLayout.verticalSpacing = 3;
-	// textFieldComposite.setLayout(textLayout);
-	// textData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-	// textData.horizontalSpan = 1;
-	// textData.widthHint = 135;
-	// attribute =
-	// this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
-	// if (!expand) {
-	// expand = attribute.getValue() != null && attribute.getValue().length() >
-	// 0;
-	// }
-	// if (!attribute.isReadOnly()) {
-	// final Text text = toolkit.createText(textFieldComposite,
-	// attribute.getValue(), SWT.FLAT);
-	// text.setLayoutData(textData);
-	// toolkit.paintBordersFor(textFieldComposite);
-	// text.setData(attribute);
-	// text.addListener(SWT.KeyUp, new Listener() {
-	// public void handleEvent(Event event) {
-	// String sel = text.getText();
-	// RepositoryTaskAttribute a = (RepositoryTaskAttribute) text.getData();
-	// if (!(a.getValue().equals(sel))) {
-	// a.setValue(sel);
-	// markDirty(true);
-	// }
-	// }
-	// });
-	// text.addListener(SWT.FocusIn, new GenericListener());
-	// }
-	//
-	// addBugHyperlinks(sectionComposite,
-	// BugzillaReportElement.BLOCKED.getKeyString());
-	//
-	// section.setExpanded(expand);
-	//
-	// }
 
 	private void addBugHyperlinks(Composite composite, String key) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
@@ -718,77 +598,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 	}
-
-	// @Override
-	// protected void restoreBug() {
-	//
-	// if (taskData == null)
-	// return;
-	//
-	// // go through all of the attributes and restore the new values to the
-	// // main ones
-	// // for (Iterator<RepositoryTaskAttribute> it =
-	// // bug.getAttributes().iterator(); it.hasNext();) {
-	// // RepositoryTaskAttribute a = it.next();
-	// // a.setNewValue(a.getValue());
-	// // }
-	//
-	// // Restore some other fields as well.
-	// // bug.setNewNewComment(bug.getNewComment());
-	// }
-
-	/**
-	 * This job opens a compare editor to compare the current state of the bug
-	 * in the editor with the bug on the server.
-	 */
-	// protected class OpenCompareEditorJob extends Job {
-	//
-	// public OpenCompareEditorJob(String name) {
-	// super(name);
-	// }
-	//
-	// @Override
-	// protected IStatus run(IProgressMonitor monitor) {
-	// final RepositoryTaskData serverBug;
-	// try {
-	// TaskRepository repository =
-	// TasksUiPlugin.getRepositoryManager().getRepository(
-	// BugzillaPlugin.REPOSITORY_KIND, taskData.getRepositoryUrl());
-	// serverBug = BugzillaServerFacade.getBug(repository.getUrl(),
-	// repository.getUserName(), repository
-	// .getPassword(), editorInput.getProxySettings(),
-	// repository.getCharacterEncoding(), Integer
-	// .parseInt(taskData.getId()));
-	// // If no bug was found on the server, throw an exception so that
-	// // the
-	// // user gets the same message that appears when there is a
-	// // problem reading the server.
-	// if (serverBug == null)
-	// throw new Exception();
-	// } catch (Exception e) {
-	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-	// public void run() {
-	// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-	// "Could not open bug.", "Bug #" + taskData.getId()
-	// + " could not be read from the server.");
-	// }
-	// });
-	// return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK,
-	// "Could not get the bug report from the server.", null);
-	// }
-	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-	// public void run() {
-	// compareInput.setTitle("Bug #" + taskData.getId());
-	// compareInput.setLeft(taskData);
-	// compareInput.setRight(serverBug);
-	// CompareUI.openCompareEditor(compareInput);
-	// }
-	// });
-	// return new Status(IStatus.OK, BugzillaUiPlugin.PLUGIN_ID, IStatus.OK, "",
-	// null);
-	// }
-	//
-	// }
+	
 	/**
 	 * Class to handle the selection change of the keywords.
 	 */
@@ -861,16 +671,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void validateInput() {
-		// RepositoryOperation o = taskData.getSelectedOperation();
-		// if (o != null && o.getKnobName().compareTo("resolve") == 0
-		// && (addCommentsTextBox.getText() == null ||
-		// addCommentsTextBox.getText().equals(""))) {
-		// // TODO: Highlight (change to light red?) New Comment area to
-		// // indicate need for message
-		// submitButton.setEnabled(false);
-		// } else {
-		// submitButton.setEnabled(true);
-		// }
+
 	}
 
 	/**
@@ -907,75 +708,5 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected String getActivityUrl() {
 		return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
 	}
-	// protected void createDescriptionLayout(Composite composite) {
-	// // This is migration code from 0.6.1 -> 0.6.2
-	// // Changes to the abstract editor causes the description
-	// // field of the bugzilla editor to be editable if the offline
-	// // task data hasn't been saved yet. Upon being saved it works fine but
-	// // the initial load of the page would have an editable description
-	// // area if this was not present. TODO: Remove post 0.6.1.
-	// super.createDescriptionLayout(composite);
-	// descriptionTextViewer.setEditable(false);
-	// }
-
-	// TODO used for spell checking. Add back when we want to support this
-	// protected Button checkSpellingButton;
-	//	
-	// private void checkSpelling() {
-	// SpellingContext context= new SpellingContext();
-	// context.setContentType(Platform.getContentTypeManager().getContentType(IContentTypeManager.CT_TEXT));
-	// IDocument document = new Document(addCommentsTextBox.getText());
-	// ISpellingProblemCollector collector= new
-	// SpellingProblemCollector(document);
-	// EditorsUI.getSpellingService().check(document, context, collector, new
-	// NullProgressMonitor());
-	// }
-	//	
-	// private class SpellingProblemCollector implements
-	// ISpellingProblemCollector {
-	//
-	// private IDocument document;
-	//		
-	// private SpellingDialog spellingDialog;
-	//		
-	// public SpellingProblemCollector(IDocument document){
-	// this.document = document;
-	// spellingDialog = new
-	// SpellingDialog(Display.getCurrent().getActiveShell(), "Spell Checking",
-	// document);
-	// }
-	//		
-	// /*
-	// * @see
-	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#accept(org.eclipse.ui.texteditor.spelling.SpellingProblem)
-	// */
-	// public void accept(SpellingProblem problem) {
-	// try {
-	// int line= document.getLineOfOffset(problem.getOffset()) + 1;
-	// String word= document.get(problem.getOffset(), problem.getLength());
-	//				
-	// spellingDialog.open(word, problem.getProposals());
-	//				
-	// } catch (BadLocationException x) {
-	// // drop this SpellingProblem
-	// }
-	// }
-	//
-	// /*
-	// * @see
-	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#beginCollecting()
-	// */
-	// public void beginCollecting() {
-	//			
-	// }
-	//
-	// /*
-	// * @see
-	// org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector#endCollecting()
-	// */
-	// public void endCollecting() {
-	// MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-	// "Spell Checking Finished", "The spell check has finished");
-	// }
-	// }
+	
 }

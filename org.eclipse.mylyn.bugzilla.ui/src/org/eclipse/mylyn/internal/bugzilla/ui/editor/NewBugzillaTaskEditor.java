@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.editor;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
@@ -33,7 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
- * server.
+ * repository.
  * 
  * @author Rob Elves
  */
@@ -109,6 +110,20 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		return collector;
 	}
 
+	@Override
+	public void submitToRepository() {
+		if (summaryText.getText().equals("")) {
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please provide a brief summary with new reports.");
+			summaryText.setFocus();
+			return;
+		} else if (descriptionTextViewer.getTextWidget().getText().equals("")) {
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please proved a detailed description with new reports");
+			descriptionTextViewer.getTextWidget().setFocus();
+			return;
+		}
+		super.submitToRepository();
+	}
+	
 	/**
 	 * Break text up into lines so that it is displayed properly in bugzilla
 	 */
