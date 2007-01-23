@@ -227,8 +227,9 @@ public class TaskListToolTipHandler {
 		if (element instanceof ITask) {
 			Date date = ((ITask) element).getScheduledForDate();
 			if (date != null) {
-				return SEPARATOR + "Scheduled for: " + DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
-						+ ", " + DateFormat.getTimeInstance(DateFormat.SHORT).format(date);
+				return SEPARATOR + "Scheduled for: " 
+					    + DateFormat.getDateInstance(DateFormat.FULL).format(date)
+						+ ", " + DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + "";
 			}
 		}
 		return "";
