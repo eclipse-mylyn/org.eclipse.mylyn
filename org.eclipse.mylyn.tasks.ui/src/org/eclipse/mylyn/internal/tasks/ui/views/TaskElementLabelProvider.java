@@ -261,6 +261,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TaskListColorsAndFonts.BOLD;
 				}
 			}
+		} else if (element instanceof AbstractQueryHit) {
+			if (((AbstractQueryHit)element).isCompleted()) {
+				return TaskListColorsAndFonts.STRIKETHROUGH;
+			}
 		}
 		return null;
 	}
