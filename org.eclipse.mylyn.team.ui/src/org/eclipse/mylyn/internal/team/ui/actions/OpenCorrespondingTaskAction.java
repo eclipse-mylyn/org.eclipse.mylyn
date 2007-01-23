@@ -299,7 +299,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 				final String taskFullUrl = info.getTaskFullUrl();
 				if (taskFullUrl != null) {
-					TasksUiUtil.openUrl(taskFullUrl);
+					TasksUiUtil.openBrowser(taskFullUrl);
 					return Status.OK_STATUS;
 				}
 			}
