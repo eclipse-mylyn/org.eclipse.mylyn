@@ -71,8 +71,9 @@ public class MylarContextExternalizer {
 		if (context.getInteractionHistory().isEmpty())
 			return;
 		try {
-			 if (!file.exists())
+			 if (!file.exists()) {
 				file.createNewFile();
+			 }
 			String handleIdentifier = context.getHandleIdentifier();
 			String encoded = URLEncoder.encode(handleIdentifier, MylarContextManager.CONTEXT_FILENAME_ENCODING);		
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));

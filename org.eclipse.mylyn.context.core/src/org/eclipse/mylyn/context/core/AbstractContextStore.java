@@ -16,13 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * TODO: generalize and coupling to java.io.File
+ * 
  * @author Mik Kersten
  */
 public abstract class AbstractContextStore {
 
 	private List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
 	
+	public abstract void init();
+	
+	/**
+	 * @return 	a directory that can be written to.
+	 */
 	public abstract File getRootDirectory();
+	
+	public abstract File getContextDirectory();
 	
 	public void notifyContextStoreMoved() {
 		for (IContextStoreListener listener : listeners) {
@@ -37,5 +46,6 @@ public abstract class AbstractContextStore {
 	public void removeListener(IContextStoreListener listener) {
 		listeners.remove(listener);
 	}
+
 	
 }

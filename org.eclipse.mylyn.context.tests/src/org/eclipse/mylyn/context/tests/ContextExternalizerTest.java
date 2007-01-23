@@ -130,7 +130,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		externalizer.writeContextToXml(context, file);
 
 		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
-		File contextsDirectory = new File(dataDirectory, MylarContextManager.CONTEXTS_DIRECTORY);
+		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
 				+ MylarContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());

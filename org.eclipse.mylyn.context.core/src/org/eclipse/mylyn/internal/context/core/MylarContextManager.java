@@ -49,8 +49,6 @@ public class MylarContextManager {
 
 	// TODO: move constants
 
-	public static final String CONTEXTS_DIRECTORY = "contexts";
-
 	public static final String CONTEXT_FILENAME_ENCODING = "UTF-8";
 
 	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
@@ -594,11 +592,7 @@ public class MylarContextManager {
 		String encoded;
 		try {
 			encoded = URLEncoder.encode(handleIdentifier, CONTEXT_FILENAME_ENCODING);
-			File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
-			File contextDirectory = new File(dataDirectory, MylarContextManager.CONTEXTS_DIRECTORY);
-			if (!contextDirectory.exists()) {
-				contextDirectory.mkdir();
-			}
+			File contextDirectory = ContextCorePlugin.getDefault().getContextStore().getContextDirectory();
 			File contextFile = new File(contextDirectory, encoded + CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
