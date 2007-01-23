@@ -23,6 +23,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -87,7 +88,7 @@ public class TaskList06DataMigrationTest extends TestCase {
 		oldContextFile2.createNewFile();
 		File oldContextFile3 = new File(sourceDirFile, contextFileName3);
 		oldContextFile3.createNewFile();
-		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
+		File contextFolder = new File(sourceDirFile, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateTaskContextData(new NullProgressMonitor()));
 		assertFalse(oldContextFile1.exists());
@@ -103,7 +104,7 @@ public class TaskList06DataMigrationTest extends TestCase {
 		File oldActivityFile = new File(sourceDirFile, MylarContextManager.OLD_CONTEXT_HISTORY_FILE_NAME
 				+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD);
 		oldActivityFile.createNewFile();
-		File contextFolder = new File(sourceDirFile, MylarContextManager.CONTEXTS_DIRECTORY);
+		File contextFolder = new File(sourceDirFile, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		assertTrue(!contextFolder.exists());
 		assertTrue(migrator.migrateActivityData(new NullProgressMonitor()));
 		assertFalse(oldActivityFile.exists());
@@ -238,7 +239,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		try {
 			monitor.beginTask("Task Context Migration", contextFiles.size());
 
-			File contextsFolder = new File(dataDirectory, MylarContextManager.CONTEXTS_DIRECTORY);
+			File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 			if (!contextsFolder.exists()) {
 				if (!contextsFolder.mkdir()) {
 					MylarStatusHandler.fail(null,
@@ -280,7 +281,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		if (!oldActivityFile.exists())
 			return false;
 		
-		File contextsFolder = new File(dataDirectory, MylarContextManager.CONTEXTS_DIRECTORY);
+		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
 			if (!contextsFolder.mkdir()) {
 				MylarStatusHandler.fail(null,

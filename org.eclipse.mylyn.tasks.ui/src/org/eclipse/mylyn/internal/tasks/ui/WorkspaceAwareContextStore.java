@@ -20,10 +20,33 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * @author Mik Kersten
  */
 public class WorkspaceAwareContextStore extends AbstractContextStore {
-
+	
+	public static final String CONTEXTS_DIRECTORY = "contexts";
+		
+	private File rootDirectory;
+	
+	private File contextDirectory;
+	
+	@Override
+	public void init() {
+		rootDirectory = new File(TasksUiPlugin.getDefault().getDataDirectory());
+		if (!rootDirectory.exists()) {
+			rootDirectory.mkdir();
+		};
+		
+		contextDirectory = new File(rootDirectory, CONTEXTS_DIRECTORY);
+		if (!contextDirectory.exists()) {
+			contextDirectory.mkdir();
+		};
+	}
+	
 	@Override
 	public File getRootDirectory() {
-		return new File(TasksUiPlugin.getDefault().getDataDirectory());
+		return rootDirectory;
 	}
 
+	@Override
+	public File getContextDirectory() {
+		return contextDirectory;
+	}
 }

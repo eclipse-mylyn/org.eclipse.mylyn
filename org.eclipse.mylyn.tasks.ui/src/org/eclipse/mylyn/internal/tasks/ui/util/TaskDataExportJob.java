@@ -31,13 +31,16 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Job that performs exporting (copying or zipping) of Mylar Task List data
- * Assumes that check with user for overwrite already done. Overwrites destination if exists!
+ * Assumes that check with user for overwrite already done. Overwrites
+ * destination if exists!
+ * 
  * @author Wesley Coelho
  * @author Mik Kersten
  * @author Rob Elves
@@ -59,12 +62,13 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	private String zipFileName;
 
 	private File destZipFile = null;
-	
+
 	private Collection<ITask> tasks;
 
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
-		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks());
+		this(destinationDirectory, true, true, true, zipIt, zipFileName, TasksUiPlugin.getTaskListManager()
+				.getTaskList().getAllTasks());
 	}
 
 	/** export specified data */
@@ -80,7 +84,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 	}
 
 	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		//Collection<ITask> tasks = MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
+		// Collection<ITask> tasks =
+		// MylarTaskListPlugin.getTaskListManager().getTaskList().getAllTasks();
 		int jobSize = 1; // 1 for repositories.xml
 		if (exportTaskList)
 			jobSize++;
@@ -96,15 +101,14 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		// Map of file paths used to avoid duplicates
 		Map<String, String> filesToZipMap = new HashMap<String, String>();
 
-		
 		// Create folders in zip file before contained files
 		String sourceContextsPath = TasksUiPlugin.getDefault().getDataDirectory() + File.separator
-		+ MylarContextManager.CONTEXTS_DIRECTORY;
+				+ WorkspaceAwareContextStore.CONTEXTS_DIRECTORY;
 		File contextsDirectory = new File(sourceContextsPath);
-//		if(contextsDirectory.exists()) {
-//			filesToZip.add(contextsDirectory);
-//		}
-		
+		// if(contextsDirectory.exists()) {
+		// filesToZip.add(contextsDirectory);
+		// }
+
 		if (true) {
 			// Repositories always exported
 			TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -114,26 +118,24 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			File sourceRepositoriesFile = new File(sourceRepositoriesPath);
 			if (sourceRepositoriesFile.exists()) {
 				File destRepositoriesFile = new File(destinationDirectory + File.separator
-						+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);				
+						+ TaskRepositoryManager.DEFAULT_REPOSITORIES_FILE);
 
 				if (zip) {
 					filesToZip.add(sourceRepositoriesFile);
-				} else if(!destRepositoriesFile.equals(sourceRepositoriesFile)) {
+				} else if (!destRepositoriesFile.equals(sourceRepositoriesFile)) {
 					if (destRepositoriesFile.exists()) {
 						destRepositoriesFile.delete();
 					}
 					if (!copy(sourceRepositoriesFile, destRepositoriesFile)) {
-						MylarStatusHandler.fail(new Exception("Export Exception"), "Could not export repositories file.",
-								false);
+						MylarStatusHandler.fail(new Exception("Export Exception"),
+								"Could not export repositories file.", false);
 					}
 					monitor.worked(1);
 				}
 			}
 
 		}
-		
-		
-		
+
 		if (exportTaskList) {
 			TasksUiPlugin.getTaskListManager().saveTaskList();
 
@@ -142,11 +144,11 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 			File sourceTaskListFile = new File(sourceTaskListPath);
 			if (sourceTaskListFile.exists()) {
 				File destTaskListFile = new File(destinationDirectory + File.separator
-						+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE);				
+						+ ITasksUiConstants.DEFAULT_TASK_LIST_FILE);
 
 				if (zip) {
 					filesToZip.add(sourceTaskListFile);
-				} else if(!destTaskListFile.equals(sourceTaskListFile)) {
+				} else if (!destTaskListFile.equals(sourceTaskListFile)) {
 					if (destTaskListFile.exists()) {
 						destTaskListFile.delete();
 					}
@@ -162,8 +164,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 		if (exportActivationHistory) {
 			try {
-				File sourceActivationHistoryFile = new File(contextsDirectory, MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-						+ MylarContextManager.CONTEXT_FILE_EXTENSION);
+				File sourceActivationHistoryFile = new File(contextsDirectory,
+						MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
 
 				if (sourceActivationHistoryFile.exists()) {
 
@@ -172,11 +174,10 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 					File destActivationHistoryFile = new File(destinationDirectory + File.separator
 							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
 							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
-					
 
-					if (zip) {						
+					if (zip) {
 						filesToZip.add(sourceActivationHistoryFile);
-					} else if(!destActivationHistoryFile.equals(sourceActivationHistoryFile)){
+					} else if (!destActivationHistoryFile.equals(sourceActivationHistoryFile)) {
 						if (destActivationHistoryFile.exists()) {
 							destActivationHistoryFile.delete();
 						}
@@ -199,22 +200,24 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 					// copy
 				}
 
-				File sourceTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+				File sourceTaskContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+						task.getHandleIdentifier());
 
 				File destTaskFile = new File(destinationDirectory + File.separator + sourceTaskContextFile.getName());
-				
+
 				if (zip) {
 					if (!filesToZipMap.containsKey(task.getHandleIdentifier())) {
 						filesToZip.add(sourceTaskContextFile);
 						filesToZipMap.put(task.getHandleIdentifier(), null);
 					}
-				} else if(!sourceTaskContextFile.equals(destTaskFile)) {
+				} else if (!sourceTaskContextFile.equals(destTaskFile)) {
 					if (destTaskFile.exists()) {
 						destTaskFile.delete();
 					}
-					if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {						
-						MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskContextFile.getPath() + " -> "
-								+ destTaskFile.getPath()), "Could not export one or more task context files.", true);
+					if (!copy(sourceTaskContextFile, destTaskFile) && !errorDisplayed) {
+						MylarStatusHandler.fail(new Exception("Export Exception: " + sourceTaskContextFile.getPath()
+								+ " -> " + destTaskFile.getPath()), "Could not export one or more task context files.",
+								true);
 						errorDisplayed = true;
 					}
 					monitor.worked(1);
@@ -228,7 +231,8 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 				if (destZipFile.exists()) {
 					destZipFile.delete();
 				}
-				ZipFileUtil.createZipFile(destZipFile, filesToZip,TasksUiPlugin.getDefault().getDataDirectory(), monitor);
+				ZipFileUtil.createZipFile(destZipFile, filesToZip, TasksUiPlugin.getDefault().getDataDirectory(),
+						monitor);
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not create zip file.", true);
 			}

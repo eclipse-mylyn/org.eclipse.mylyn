@@ -39,6 +39,7 @@ import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
@@ -567,7 +568,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), MylarContextManager.CONTEXTS_DIRECTORY);
+		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
 				int dotIndex = file.getName().lastIndexOf(".xml");

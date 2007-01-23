@@ -365,7 +365,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		// NOTE: Startup order is very sensitive
 		try {
 			// TODO: move this back to the extension point, bug 167784
-			ContextCorePlugin.setContextStore(new WorkspaceAwareContextStore());
+			WorkspaceAwareContextStore contextStore = new WorkspaceAwareContextStore();
+			contextStore.init();
+			ContextCorePlugin.setContextStore(contextStore);
 			
 			WebClientUtil.initCommonsLoggingSettings();
 			initializeDefaultPreferences(getPreferenceStore());
