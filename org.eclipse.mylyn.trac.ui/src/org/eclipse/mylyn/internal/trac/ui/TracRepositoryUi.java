@@ -23,11 +23,8 @@ import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.mylar.tasks.ui.wizards.NewWebTaskWizard;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -78,13 +75,4 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
 
-	@Override
-	public boolean openRemoteTask(String repositoryUrl, String idString) {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		String ticketUrl = repositoryUrl + ITracClient.TICKET_URL + idString;
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(TracCorePlugin.REPOSITORY_KIND, repositoryUrl, idString, ticketUrl, page);
-		job.schedule();
-		return true;
-	}
-	
 }

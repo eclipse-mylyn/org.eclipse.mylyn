@@ -181,7 +181,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
-		return repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG + taskId;
+		try {
+			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(taskId));
+		} catch (NumberFormatException ex) {
+			return null;
+		}
 	}
 
 	// @Override

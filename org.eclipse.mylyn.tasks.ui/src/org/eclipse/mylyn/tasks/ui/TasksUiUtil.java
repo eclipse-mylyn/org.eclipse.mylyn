@@ -124,8 +124,7 @@ public class TasksUiUtil {
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 			if (connectorUi != null) {
-				connectorUi.openRemoteTask(repository.getUrl(), taskId);
-				opened = true;
+				opened = connectorUi.openRemoteTask(repository.getUrl(), taskId);
 			}
 		}
 		return opened;

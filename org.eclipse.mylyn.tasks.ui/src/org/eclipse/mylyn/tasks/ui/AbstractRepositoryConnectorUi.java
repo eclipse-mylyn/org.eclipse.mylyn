@@ -21,12 +21,15 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * TODO: refactor wizards into extension points
  * 
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public abstract class AbstractRepositoryConnectorUi {
 	
@@ -88,14 +91,35 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * 
 	 * @return true if the task was successfully opened
 	 */
-	public boolean openRemoteTask(String repositoryUrl, String idString) {
+	public boolean openRemoteTask(String repositoryUrl, String id) {
+//		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
+//		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
+//		TasksUiUtil.openUrl(connector.getTaskWebUrl(repositoryUrl, idString));
+//		return true;
+
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
-		TasksUiUtil.openUrl(connector.getTaskWebUrl(repositoryUrl, idString));
+		String taskUrl = connector.getTaskWebUrl(repositoryUrl, id);
+		if(taskUrl == null) {
+			return false;
+		}
+		
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+			if (windows != null && windows.length > 0) {
+				window = windows[0];
+			}
+		}
+		if (window == null) {
+			return false;
+		}
+		IWorkbenchPage page = window.getActivePage();
+		
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(getRepositoryType(), repositoryUrl, id, taskUrl, page);
+		job.schedule();
 
 		return true;
-		// MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-		// TasksUiPlugin.TITLE_DIALOG, "Not supported by connector: " +
-		// this.getClass().getSimpleName());
 	}
+
 }

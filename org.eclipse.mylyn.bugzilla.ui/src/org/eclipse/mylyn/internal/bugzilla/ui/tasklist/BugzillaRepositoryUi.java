@@ -14,21 +14,18 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
+ * @author Eugene Kuleshov
  */
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 
@@ -69,22 +66,6 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getRepositoryType() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
-	}
-
-	@Override
-	public boolean openRemoteTask(String repositoryUrl, String idString) {
-		int id = -1;
-		try {
-			id = Integer.parseInt(idString);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		String bugUrl = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id);
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl, idString,
-				bugUrl, page);
-		job.schedule();
-		return true;
 	}
 
 }

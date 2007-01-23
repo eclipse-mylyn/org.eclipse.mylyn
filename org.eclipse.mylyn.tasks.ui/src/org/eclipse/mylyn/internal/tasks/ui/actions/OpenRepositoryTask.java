@@ -12,9 +12,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -82,8 +84,17 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 				});
 			}
 		} else {
+			boolean openSuccessful = false;
 			for (String id : selectedIds) {
-				TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), id);
+				boolean opened = TasksUiUtil.openRepositoryTask(dlg.getSelectedTaskRepository(), id);
+				if (opened) {
+					openSuccessful = true;
+				}
+			}
+			if (!openSuccessful) {
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+						ITasksUiConstants.TITLE_DIALOG, 
+						"Could not find matching repository task.");
 			}
 		}
 	}

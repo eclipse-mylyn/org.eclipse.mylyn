@@ -47,7 +47,7 @@ public class OpenRepositoryTaskJob extends Job {
 
 	public OpenRepositoryTaskJob(String repositoryKind, String serverUrl, String taskId, String taskUrl,
 			IWorkbenchPage page) {
-		super("Opening remote task: " + taskId);
+		super("Opening repository task " + taskId);
 
 		this.repositoryKind = repositoryKind;
 		this.taskId = taskId;
@@ -97,7 +97,7 @@ public class OpenRepositoryTaskJob extends Job {
 		} catch (final CoreException e) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					MylarStatusHandler.displayStatus("Unable to open task", e.getStatus());
+					MylarStatusHandler.displayStatus("Unable to open task.", e.getStatus());
 				}
 			});
 		} finally {
