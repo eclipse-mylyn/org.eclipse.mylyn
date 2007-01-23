@@ -39,8 +39,6 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private CommitTemplateManager commitTemplateManager;
 	
-	private MylarTeamExtensionPointReader extensionPointReader;
-	
 	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylar.team.changesets.manage";
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylar.team.commit.template";
@@ -56,14 +54,15 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		initPreferenceDefaults();
 		commitTemplateManager = new CommitTemplateManager();
-		extensionPointReader = new MylarTeamExtensionPointReader();
-		extensionPointReader.readExtensions();
-		
-		LinkedTaskInfoAdapterFactory.registerAdapters();
 
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
+					MylarTeamExtensionPointReader extensionPointReader = new MylarTeamExtensionPointReader();
+					extensionPointReader.readExtensions();
+					
+					LinkedTaskInfoAdapterFactory.registerAdapters();
+					
 					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 						for (AbstractContextChangeSetManager changeSetManager : changeSetManagers) {
 							changeSetManager.enable();
