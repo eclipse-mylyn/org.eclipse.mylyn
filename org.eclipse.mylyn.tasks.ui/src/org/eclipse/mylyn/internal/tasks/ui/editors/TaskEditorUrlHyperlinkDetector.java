@@ -105,7 +105,7 @@ public class TaskEditorUrlHyperlinkDetector implements IHyperlinkDetector {
 		@Override
 		public void open() {
 			// TODO: if url is to a repository task, open task instead of url
-			TasksUiUtil.openUrl(getURLString());
+			TasksUiUtil.openBrowser(getURLString());
 		}
 
 	}

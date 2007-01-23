@@ -60,7 +60,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			ITask task = (ITask) result;
 			if (dlg.getOpenInBrowser()) {
 				if (task.hasValidUrl()) {
-					TasksUiUtil.openUrl(task.getUrl());
+					TasksUiUtil.openBrowser(task.getUrl());
 					TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 				}
 			} else {
@@ -73,7 +73,7 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			if (task != null) {
 				if (dlg.getOpenInBrowser()) {
 					if (task.hasValidUrl()) {
-						TasksUiUtil.openUrl(task.getUrl());
+						TasksUiUtil.openBrowser(task.getUrl());
 						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 					}
 				} else {

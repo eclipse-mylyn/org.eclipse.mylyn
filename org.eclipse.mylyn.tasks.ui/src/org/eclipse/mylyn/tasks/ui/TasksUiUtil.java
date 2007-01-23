@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
@@ -166,7 +167,7 @@ public class TasksUiUtil {
 			}
 		}
 		if (!opened) {
-			TasksUiUtil.openUrl(fullUrl);
+			TasksUiUtil.openBrowser(fullUrl);
 			opened = true;
 		}
 		return opened;
@@ -299,7 +300,7 @@ public class TasksUiUtil {
 		});
 	}
 
-	public static void openUrl(String url) {
+	public static void openBrowser(String url) {
 		try {
 			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
 				try {
@@ -319,9 +320,9 @@ public class TasksUiUtil {
 					flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
-				String title = "Browser";
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, TasksUiPlugin.PLUGIN_ID + title,
-						null, null);
+				
+				String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
+				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
 				browser.openURL(new URL(url));
 			}
 		} catch (PartInitException e) {

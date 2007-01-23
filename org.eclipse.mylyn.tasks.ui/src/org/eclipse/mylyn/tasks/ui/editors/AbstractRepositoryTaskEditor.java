@@ -929,7 +929,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
 						// address += attachment.getId() + "&amp;action=view";
-						TasksUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openBrowser(attachment.getUrl());
 					}
 				}
 			});
@@ -955,7 +955,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
 					if (attachment != null) {
-						TasksUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openBrowser(attachment.getUrl());
 					}
 				}
 			};
@@ -969,7 +969,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						return;
 
 					if (attachment.getContentType().endsWith(CTYPE_HTML)) {
-						TasksUiUtil.openUrl(attachment.getUrl());
+						TasksUiUtil.openBrowser(attachment.getUrl());
 						return;
 					}
 
