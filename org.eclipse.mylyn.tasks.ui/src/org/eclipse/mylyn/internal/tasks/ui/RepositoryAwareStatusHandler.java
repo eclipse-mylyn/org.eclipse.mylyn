@@ -25,8 +25,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class RepositoryAwareStatusHandler implements IStatusHandler {
 
-	protected static final String ERROR_MESSAGE = "Please report the following error by following the bugs link at:\n"
-			+ "http://eclipse.org/mylar\n\n" + "For details please use Window -> Show View -> Error Log";
+	protected static final String ERROR_MESSAGE = "Please report the following error at:\n"
+			+ "http://bugs.eclipse.org/bugs/enter_bug.cgi?product=Mylar\n\n"
+			+ "Or select Report as Bug from popup menu on error in the Error Log (Window -> Show View -> Error Log)";
 
 	// TODO: implement option to report bug
 	public void fail(final IStatus status, boolean informUser) {
@@ -51,8 +52,10 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 	public void displayStatus(final String title, final IStatus status) {
 		if (status.getCode() == IMylarStatusConstants.INTERNAL_ERROR) {
 			MylarStatusHandler.log(status);
+			fail(status, true);
+			return;
 		}
-		
+
 		if (Platform.isRunning()) {
 			try {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
