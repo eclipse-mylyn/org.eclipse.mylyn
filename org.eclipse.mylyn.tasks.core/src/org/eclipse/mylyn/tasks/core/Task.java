@@ -177,10 +177,6 @@ public class Task implements ITask {
 		return active;
 	}
 
-	public String getToolTipText() {
-		return getSummary();
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Task && obj != null) {
@@ -368,4 +364,7 @@ public class Task implements ITask {
 		this.kind = kind;
 	}
 
+	public int compareTo(ITaskListElement taskListElement) {
+		return description.compareTo(((Task)taskListElement).description);
+	}
 }

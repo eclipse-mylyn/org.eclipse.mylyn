@@ -26,7 +26,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected int maxHits;
 
-	//private Set<AbstractQueryHit> hits = new HashSet<AbstractQueryHit>();
 	private Set<String> hitHandles = new HashSet<String>(); 
 
 	protected String lastRefreshTimeStamp = "<never>";
@@ -181,4 +180,5 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	public void setStatus(IStatus status) {
 		this.status = status;
 	}
+	
 }

@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasks.core;
 /**
  * @author Mik Kersten
  */
-public interface ITaskListElement {
+public interface ITaskListElement extends Comparable<ITaskListElement> {
 
 	public abstract String getPriority();
 

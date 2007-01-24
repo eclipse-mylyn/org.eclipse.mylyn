@@ -178,4 +178,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		// ignore
 	}
 
+	public int compareTo(ITaskListElement taskListElement) {
+		return this.id.compareTo(((AbstractQueryHit)taskListElement).id);
+	}
 }

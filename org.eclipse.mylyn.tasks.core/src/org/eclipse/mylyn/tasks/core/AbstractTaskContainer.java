@@ -108,9 +108,16 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 		return "container: " + handle;
 	}
 
-
 	public boolean canRename() {
 		return true;
+	}
+	
+	/**
+	 * The handle for most containers is their description.  Override to specify a
+	 * different natural ordering.
+	 */
+	public int compareTo(ITaskListElement taskListElement) {
+		return getHandleIdentifier().compareTo(((AbstractTaskContainer)taskListElement).getHandleIdentifier());
 	}
 }
 

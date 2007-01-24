@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -34,8 +36,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 		subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
 		
-		for (final AbstractTaskContainer category : TasksUiPlugin.getTaskListManager().getTaskList()
-				.getCategories()) {
+		List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+		Collections.sort(categories);
+		for (final AbstractTaskContainer category : categories) {
 			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 				Action action = new Action() {
 					@Override
@@ -46,12 +49,6 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				String text = handleAcceleratorKeys(category.getSummary());
 				action.setText(text);
 				action.setImageDescriptor(TaskListImages.CATEGORY);
-//				if (selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractQueryHit) {
-//					AbstractQueryHit hit = (AbstractQueryHit) selectedElements.get(0);
-//					if (hit.getCorrespondingTask() == null) {
-//						action.setEnabled(false);
-//					}
-//				}
 				subMenuManager.add(action);
 			}
 		}
@@ -114,7 +111,4 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		}
 	}
 	
-	
-	
-
 }

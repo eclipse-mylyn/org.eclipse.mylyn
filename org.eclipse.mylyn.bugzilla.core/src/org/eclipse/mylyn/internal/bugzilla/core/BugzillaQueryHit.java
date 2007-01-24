@@ -51,5 +51,4 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 		}
 		return false;
 	}
-
 }

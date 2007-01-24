@@ -196,4 +196,13 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	public boolean isLocal() {
 		return true;
 	}
+
+	/**
+	 * The handle for most containers is their description.  Override to specify a
+	 * different natural ordering.
+	 */
+	@Override
+	public int compareTo(ITaskListElement taskListElement) {
+		return startDate.compareTo(((DateRangeContainer)taskListElement).startDate);
+	}
 }

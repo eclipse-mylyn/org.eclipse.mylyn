@@ -244,4 +244,8 @@ public class DateRangeActivityDelegate implements ITask {
 	public void setUrl(String url) {
 		task.setUrl(url);
 	}
+	
+	public int compareTo(ITaskListElement taskListElement) {
+		return task.toString().compareTo(((Task)taskListElement).toString());
+	}
 }
