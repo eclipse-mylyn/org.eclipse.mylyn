@@ -558,7 +558,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
-		
+
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
 		editorComposite.setLayout(editorLayout);
@@ -1569,17 +1569,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (lastModDate != null) {
 					// reduce granularity to minutes
 					Calendar calLastMod = Calendar.getInstance();
-					calLastMod.setTime(lastModDate);
+					calLastMod.setTimeInMillis(lastModDate.getTime());
 					calLastMod.set(Calendar.SECOND, 0);
-
+					
 					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 							taskComment.getCreated());
-					if (commentDate != null
-							&& (commentDate.after(calLastMod.getTime()) || commentDate.equals(calLastMod.getTime()))) {
-						expandableComposite.setExpanded(true);
-						expandableComposite.setBackground(backgroundIncoming);
-						if (expandableComposite.getTextClient() != null) {
-							expandableComposite.getTextClient().setBackground(backgroundIncoming);
+					if (commentDate != null) {
+						if (commentDate.after(calLastMod.getTime())) {
+							expandableComposite.setBackground(backgroundIncoming);
+						}
+						if (commentDate.equals(calLastMod.getTime()) || commentDate.after(calLastMod.getTime())) {
+							expandableComposite.setExpanded(true);
 						}
 					}
 				}
@@ -1734,7 +1734,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton.addListener(SWT.FocusIn, new GenericListener());
 		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
 
-		//toolkit.createLabel(buttonComposite, "");
+		// toolkit.createLabel(buttonComposite, "");
 		if (getActivityUrl() != null) {
 			Hyperlink hyperlink = toolkit.createHyperlink(buttonComposite, "View past activity", SWT.NONE);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
