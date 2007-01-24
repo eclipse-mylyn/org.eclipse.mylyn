@@ -1347,8 +1347,46 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
-		toolkit.paintBordersFor(sectionComposite);
+		createReplyHyperlink(0, section, taskData.getDescription());
 
+		// toolkit.paintBordersFor(sectionComposite);
+
+	}
+
+	private ImageHyperlink createReplyHyperlink(final int commentNum, final ExpandableComposite section,
+			final String commentBody) {
+		final ImageHyperlink replyLink = new ImageHyperlink(section, SWT.NULL);
+		toolkit.adapt(replyLink, true, true);
+		replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
+		// no need for the background - transparency will take care of it
+		replyLink.setBackground(null);
+		// replyLink.setBackground(section.getTitleBarGradientBackground());
+		replyLink.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				String oldText = newCommentTextViewer.getDocument().get();
+				StringBuilder strBuilder = new StringBuilder();
+				strBuilder.append(oldText);
+				if (strBuilder.length() != 0) {
+					strBuilder.append("\n");
+				}
+				strBuilder.append(" (In reply to comment #" + commentNum + ")\n");
+				CommentQuoter quoter = new CommentQuoter();
+				strBuilder.append(quoter.quote(commentBody));
+				newCommentTextViewer.getDocument().set(strBuilder.toString());
+				selectNewComment();
+				newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
+			}
+		});
+		section.addExpansionListener(new ExpansionAdapter() {
+
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				replyLink.setVisible(section.isExpanded());
+			}
+		});
+		section.setTextClient(replyLink);
+
+		return replyLink;
 	}
 
 	protected void createCustomAttributeLayout(Composite composite) {
@@ -1492,9 +1530,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		commentsSection = createSection(composite, LABEL_SECTION_COMMENTS + " (" + taskData.getComments().size() + ")");
 
-		ImageHyperlink hyperlink = toolkit.createImageHyperlink(commentsSection, SWT.NONE);
-		hyperlink.setBackgroundMode(SWT.INHERIT_NONE);
-		hyperlink.setBackground(commentsSection.getTitleBarBackground());
+		ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
+		toolkit.adapt(hyperlink, true, true);
+		hyperlink.setBackground(null);
 		hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
@@ -1529,38 +1567,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			final ImageHyperlink replyLink = toolkit.createImageHyperlink(expandableComposite, SWT.NONE);
-			replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
-			replyLink.setToolTipText("Reply");
-			replyLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					String oldText = newCommentTextViewer.getDocument().get();
-					StringBuilder strBuilder = new StringBuilder();
-					strBuilder.append(oldText);
-					if (strBuilder.length() != 0) {
-						strBuilder.append("\n");
-					}
-					strBuilder.append(" (In reply to comment #" + taskComment.getNumber() + ")\n");
-					CommentQuoter quoter = new CommentQuoter();
-					strBuilder.append(quoter.quote(taskComment.getText()));
-					newCommentTextViewer.getDocument().set(strBuilder.toString());
-					selectNewComment();
-					newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
-				}
-			});
-
-			expandableComposite.addExpansionListener(new ExpansionAdapter() {
-
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					replyLink.setVisible(expandableComposite.isExpanded());
-				}
-			});
-
-			expandableComposite.setTextClient(replyLink);
-
 			// Expand new comments
 			if (repositoryTask != null && offlineHandler != null) {
 				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
@@ -1571,7 +1577,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					Calendar calLastMod = Calendar.getInstance();
 					calLastMod.setTimeInMillis(lastModDate.getTime());
 					calLastMod.set(Calendar.SECOND, 0);
-					
+
 					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 							taskComment.getCreated());
 					if (commentDate != null) {
@@ -1597,7 +1603,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			});
 
+			ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), expandableComposite, taskComment
+					.getText());
 			replyLink.setVisible(expandableComposite.isExpanded());
+
+			// HACK: This is necessary
+			// due to a bug in SWT's ExpandableComposite. Link is manually set
+			// visible in revealAllComments()
+			expandableComposite.setData(replyLink);
+
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -2046,11 +2060,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (comp instanceof ExpandableComposite) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					ex.setExpanded(true);
+
+					// HACK: This is necessary
+					// due to a bug in SWT's ExpandableComposite.
+					if (ex.getData() != null && ex.getData() instanceof ImageHyperlink) {
+						((ImageHyperlink) ex.getData()).setVisible(true);
+					}
+
 					break;
 				}
 				comp = comp.getParent();
 			}
 		}
+
 		form.reflow(true);
 	}
 
