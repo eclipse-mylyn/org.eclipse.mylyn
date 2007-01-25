@@ -300,6 +300,9 @@ public class TasksUiUtil {
 		});
 	}
 
+	/**
+	 * Must be called from UI thread
+	 */
 	public static void openBrowser(String url) {
 		try {
 			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
