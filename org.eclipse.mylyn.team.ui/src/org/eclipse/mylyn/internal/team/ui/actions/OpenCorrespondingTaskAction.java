@@ -292,7 +292,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 //						}
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 						if (connectorUi != null) {
-							connectorUi.openRemoteTask(repository.getUrl(), taskId);
+							connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 							return Status.OK_STATUS;
 						}
 					}
