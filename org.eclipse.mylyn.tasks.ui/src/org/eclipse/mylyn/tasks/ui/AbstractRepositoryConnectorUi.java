@@ -87,16 +87,12 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	/**
 	 * Only override if task should be opened by a custom editor, default
-	 * behavior is to open with browser.
+	 * behavior is to open with a rich editor, falling back to the web browser
+	 * if not available.
 	 * 
 	 * @return true if the task was successfully opened
 	 */
-	public boolean openRemoteTask(String repositoryUrl, String id) {
-//		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-//		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
-//		TasksUiUtil.openUrl(connector.getTaskWebUrl(repositoryUrl, idString));
-//		return true;
-
+	public boolean openRepositoryTask(String repositoryUrl, String id) {
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
 		String taskUrl = connector.getTaskWebUrl(repositoryUrl, id);

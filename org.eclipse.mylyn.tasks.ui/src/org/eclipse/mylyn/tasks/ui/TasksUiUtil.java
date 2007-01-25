@@ -125,7 +125,7 @@ public class TasksUiUtil {
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 			if (connectorUi != null) {
-				opened = connectorUi.openRemoteTask(repository.getUrl(), taskId);
+				opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 			}
 		}
 		return opened;
@@ -163,7 +163,7 @@ public class TasksUiUtil {
 			if (connector != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
 						.getRepositoryUi(connector.getRepositoryType());
-				opened = connectorUi.openRemoteTask(repositoryUrl, taskId);
+				opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
 			}
 		}
 		if (!opened) {
