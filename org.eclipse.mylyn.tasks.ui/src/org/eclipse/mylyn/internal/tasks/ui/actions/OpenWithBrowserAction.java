@@ -46,20 +46,20 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 	}
 
 	private void runWithSelection(Object selectedObject) {
-		ITask task = null;
+		String urlString = null;
 		if (selectedObject instanceof ITask) {
-			task = (ITask) selectedObject;
+			ITask task = (ITask)selectedObject;
+			if (task != null && task.hasValidUrl()) {
+				urlString = task.getUrl();
+			}
 		} else if (selectedObject instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) selectedObject;
-			task = hit.getOrCreateCorrespondingTask();
-		}
-		String urlString = null;
-		if (task != null && task.hasValidUrl()) {
-			urlString = task.getUrl();
+			urlString = hit.getUrl();
 		} else if (selectedObject instanceof AbstractTaskContainer) {
 			AbstractTaskContainer query = (AbstractTaskContainer) selectedObject;
 			urlString = query.getUrl();
 		}
+		
 		if (urlString != null) {
 			TasksUiUtil.openBrowser(urlString);
 		}
