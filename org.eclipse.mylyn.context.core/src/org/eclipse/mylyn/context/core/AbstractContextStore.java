@@ -25,7 +25,7 @@ public abstract class AbstractContextStore {
 	private List<IContextStoreListener> listeners = new ArrayList<IContextStoreListener>();
 	
 	public abstract void init();
-	
+		
 	/**
 	 * @return 	a directory that can be written to.
 	 */
@@ -33,7 +33,8 @@ public abstract class AbstractContextStore {
 	
 	public abstract File getContextDirectory();
 	
-	public void notifyContextStoreMoved() {
+	public void contextStoreMoved() {
+		init();
 		for (IContextStoreListener listener : listeners) {
 			listener.contextStoreMoved();
 		}
@@ -47,5 +48,4 @@ public abstract class AbstractContextStore {
 		listeners.remove(listener);
 	}
 
-	
 }
