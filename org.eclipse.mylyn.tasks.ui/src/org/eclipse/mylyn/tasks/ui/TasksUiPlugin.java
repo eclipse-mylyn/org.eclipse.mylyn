@@ -336,7 +336,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
 					reloadDataDirectory(true);
-				}
+				} 
 			}
 		}
 
@@ -498,7 +498,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		// taskListSaveManager.saveTaskList(true, false);
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
-		ContextCorePlugin.getDefault().getContextStore().notifyContextStoreMoved();
+		ContextCorePlugin.getDefault().getContextStore().contextStoreMoved();
 	}
 
 	/**

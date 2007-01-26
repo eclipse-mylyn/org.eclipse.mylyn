@@ -53,6 +53,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		super.setUp();
 
 		removeFiles(new File(TasksUiPlugin.getDefault().getDataDirectory()));
+		ContextCorePlugin.getDefault().getContextStore().init();
 		
 		// Create the export wizard
 		wizard = new TaskDataExportWizard();
@@ -63,7 +64,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 		// Create test export destination directory
 		destinationDir = new File(TasksUiPlugin.getDefault().getDataDirectory() + File.separator + "TestDir");
-		if(destinationDir.exists()) {
+		if (destinationDir.exists()) {
 			removeFiles(destinationDir);
 		} else {
 			destinationDir.mkdir();
@@ -79,6 +80,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		ContextCorePlugin.getContextManager().activateContext(mockContext);
 
 		// Save the context file and check that it exists
+		assertTrue(ContextCorePlugin.getDefault().getContextStore().getContextDirectory().exists());
 		ContextCorePlugin.getContextManager().saveContext(mockContext.getHandleIdentifier());
 		File taskFile = ContextCorePlugin.getContextManager().getFileForContext(task1.getHandleIdentifier());
 		assertTrue(ContextCorePlugin.getContextManager().hasContext(task1.getHandleIdentifier()));
