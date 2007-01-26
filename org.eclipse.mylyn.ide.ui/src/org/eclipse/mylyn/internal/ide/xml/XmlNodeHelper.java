@@ -178,7 +178,7 @@ public class XmlNodeHelper {
 	// if(attrName.length() != 0 && (isWhitespace(line.charAt(cpos))))
 	// {
 	// attr = false;
-	// if(attrName.toLowerCase().equals("name"))
+	// if(attrName.toLowerCase(Locale.ENGLISH).equals("name"))
 	// {
 	// name = oldAttrVal;
 	// }

@@ -13,6 +13,8 @@
  */
 package org.eclipse.mylar.internal.ide.xml.pde;
 
+import java.util.Locale;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
@@ -95,7 +97,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						// fix a bug when there is a selection and the editor
 						// input is the manifest.mf file
 						// not the plugin.xml
-						if (fei.getFile().getFullPath().toString().toLowerCase().endsWith("/manifest.mf")) {
+						if (fei.getFile().getFullPath().toString().toLowerCase(Locale.ENGLISH).endsWith("/manifest.mf")) {
 							return;
 						}
 

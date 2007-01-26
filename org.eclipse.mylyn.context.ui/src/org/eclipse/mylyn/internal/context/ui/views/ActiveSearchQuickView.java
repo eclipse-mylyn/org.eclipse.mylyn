@@ -940,7 +940,7 @@ public class ActiveSearchQuickView {
 // if (pattern.length() == 0) {
 // stringMatcher = null;
 // } else {
-// boolean ignoreCase = pattern.toLowerCase().equals(pattern);
+// boolean ignoreCase = pattern.toLowerCase(Locale.ENGLISH).equals(pattern);
 // stringMatcher = new StringMatcher(pattern, ignoreCase, false);
 // }
 // stringMatcherUpdated();
