@@ -15,6 +15,8 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
+
 import javax.swing.text.html.HTML.Tag;
 
 /**
@@ -116,7 +118,7 @@ public class HtmlTag {
 		if (s.length() == 0)
 			throw new IllegalArgumentException("Empty tag name");
 		tagName = s;
-		tagType = tags.get(s.toUpperCase());
+		tagType = tags.get(s.toUpperCase(Locale.ENGLISH));
 		if (tagType == null) {
 			tagType = Type.UNKNOWN;
 		}
@@ -155,7 +157,7 @@ public class HtmlTag {
 	 * Sets the value of a tag's attribute.
 	 */
 	public void setAttribute(String name, String value) {
-		attributes.put(name.toLowerCase(), value);
+		attributes.put(name.toLowerCase(Locale.ENGLISH), value);
 	}
 
 	public StringBuffer getURLs() {

@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class HtmlStreamTokenizer {
 
@@ -229,7 +230,7 @@ public class HtmlStreamTokenizer {
 			for (; i < s.length() && !Character.isWhitespace(s.charAt(i)) && s.charAt(i) != '='; i++) {
 				// just move forward
 			}
-			String attributeName = s.substring(start, i).toLowerCase();
+			String attributeName = s.substring(start, i).toLowerCase(Locale.ENGLISH);
 
 			if (attributeName.equals("/")) {
 				tag.setSelfTerminating(true);

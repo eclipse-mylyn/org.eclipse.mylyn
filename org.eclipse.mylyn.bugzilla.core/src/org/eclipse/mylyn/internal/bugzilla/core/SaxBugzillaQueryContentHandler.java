@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.util.Locale;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
@@ -70,7 +72,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		characters = new StringBuffer();
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
 			case LI:
 //				hit = new BugzillaQueryHit();
@@ -94,7 +96,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 		
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 			switch (tag) {
 			case ID:
 				id = parsedText;

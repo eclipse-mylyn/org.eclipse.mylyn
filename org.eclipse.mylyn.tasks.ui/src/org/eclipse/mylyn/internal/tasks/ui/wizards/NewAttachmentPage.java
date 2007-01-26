@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.jface.wizard.IWizardPage;
@@ -184,7 +185,7 @@ public class NewAttachmentPage extends WizardPage {
 				int index = filePath.getText().lastIndexOf(".");
 				if (index > 0 && index < filePath.getText().length()) {
 					String ext = filePath.getText().substring(index + 1);
-					String type = extensions2Types.get(ext.toLowerCase());
+					String type = extensions2Types.get(ext.toLowerCase(Locale.ENGLISH));
 					if (type != null) {
 						contentTypeList.select(contentTypeIndices.get(type));
 						attachment.setContentType(type);

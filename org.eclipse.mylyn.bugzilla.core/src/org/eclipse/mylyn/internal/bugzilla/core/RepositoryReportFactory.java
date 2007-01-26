@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -39,7 +40,7 @@ public class RepositoryReportFactory extends AbstractReportFactory {
 		collectResults(contentHandler, false);
 
 		if (contentHandler.errorOccurred()) {
-			String errorResponse = contentHandler.getErrorMessage().toLowerCase();
+			String errorResponse = contentHandler.getErrorMessage().toLowerCase(Locale.ENGLISH);
 			if (errorResponse.equals(IBugzillaConstants.XML_ERROR_NOTFOUND)
 					|| errorResponse.equals(IBugzillaConstants.XML_ERROR_INVALIDBUGID)) {
 				throw new CoreException(new MylarStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,

@@ -12,6 +12,7 @@ package org.eclipse.mylar.tasks.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
@@ -53,7 +54,7 @@ public class BackgroundSaveTest extends TestCase {
 	}
 
 	public void testBackgroundSave() throws InterruptedException, IOException {
-		if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+		if (System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("linux")) {
 			System.out.println("> BackgroundSaveTest.testBackgroundSave() not run on Linux due to IO concurrency");
 		} else {
 			File file = TasksUiPlugin.getTaskListManager().getTaskListFile();

@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.util.Locale;
+
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
@@ -76,7 +78,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public boolean getIsHidden(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).isHidden();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase(Locale.ENGLISH)).isHidden();
 		} catch (IllegalArgumentException e) {
 			return false;
 		}
@@ -85,7 +87,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public String getName(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).toString();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase(Locale.ENGLISH)).toString();
 		} catch (IllegalArgumentException e) {
 			return "<unknown>";
 		}
@@ -94,7 +96,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public boolean isReadOnly(String key) {
 		try {
-			return BugzillaReportElement.valueOf(key.trim().toUpperCase()).isReadOnly();
+			return BugzillaReportElement.valueOf(key.trim().toUpperCase(Locale.ENGLISH)).isReadOnly();
 		} catch (IllegalArgumentException e) {
 			return true;
 		}

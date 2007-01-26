@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -188,58 +189,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	// @Override
-	// public void updateAttributes(final TaskRepository repository, Proxy
-	// proxySettings, IProgressMonitor monitor)
-	// throws CoreException {
-	// try {
-	// BugzillaCorePlugin.getRepositoryConfiguration(true, repository.getUrl(),
-	// proxySettings, repository
-	// .getUserName(), repository.getPassword(),
-	// repository.getCharacterEncoding());
-	// } catch (Exception e) {
-	// throw new CoreException(new Status(IStatus.ERROR,
-	// BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-	// "could not update repository configuration", e));
-	// }
-	// }
-
-	// public void updateBugAttributeOptions(TaskRepository taskRepository,
-	// RepositoryTaskData existingReport) throws IOException,
-	// KeyManagementException, GeneralSecurityException, BugzillaException,
-	// CoreException {
-	// String product =
-	// existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-	// for (RepositoryTaskAttribute attribute : existingReport.getAttributes())
-	// {
-	// BugzillaReportElement element =
-	// BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
-	// attribute.clearOptions();
-	// // List<String> optionValues =
-	// BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl,
-	// // proxySettings, userName, password,
-	// characterEncoding).getOptionValues(element, product);
-	// List<String> optionValues =
-	// this.getRepositoryConfiguration(taskRepository,
-	// false).getOptionValues(element.getKeyString(), product);
-	// if (element != BugzillaReportElement.OP_SYS && element !=
-	// BugzillaReportElement.BUG_SEVERITY
-	// && element != BugzillaReportElement.PRIORITY && element !=
-	// BugzillaReportElement.BUG_STATUS) {
-	// Collections.sort(optionValues);
-	// }
-	// if (element == BugzillaReportElement.TARGET_MILESTONE &&
-	// optionValues.isEmpty()) {
-	// existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-	// continue;
-	// }
-	// for (String option : optionValues) {
-	// attribute.addOptionValue(option, option);
-	// }
-	// }
-	//
-	// }
-
 	@Override
 	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
 		// ignore
@@ -272,7 +221,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
+			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase(Locale.ENGLISH));
 			attribute.clearOptions();
 			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
 					.getOptionValues(element, product);
@@ -444,200 +393,5 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		// newReport.attributes = attributes;
 	}
-
-	// // TODO: change to getAttributeOptions() and use whereever attribute
-	// options are required.
-	// public void updateAttributeOptions(TaskRepository taskRepository,
-	// RepositoryTaskData existingReport)
-	// throws IOException, KeyManagementException, GeneralSecurityException,
-	// BugzillaException, CoreException {
-	//
-	// RepositoryConfiguration configuration =
-	// BugzillaCorePlugin.getDefault().getRepositoryConfiguration(taskRepository,
-	// false);
-	// if (configuration == null)
-	// return;
-	// String product =
-	// existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-	// for (RepositoryTaskAttribute attribute : existingReport.getAttributes())
-	// {
-	// BugzillaReportElement element =
-	// BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
-	// attribute.clearOptions();
-	// String key = attribute.getID();
-	// if (!product.equals("")) {
-	// switch (element) {
-	// case TARGET_MILESTONE:
-	// case VERSION:
-	// case COMPONENT:
-	// key = product + "." + key;
-	// }
-	// }
-	//
-	// List<String> optionValues = configuration.getAttributeValues(key);
-	// if(optionValues.size() == 0) {
-	// optionValues = configuration.getAttributeValues(attribute.getID());
-	// }
-	//
-	// if (element != BugzillaReportElement.OP_SYS && element !=
-	// BugzillaReportElement.BUG_SEVERITY
-	// && element != BugzillaReportElement.PRIORITY && element !=
-	// BugzillaReportElement.BUG_STATUS) {
-	// Collections.sort(optionValues);
-	// }
-	// if (element == BugzillaReportElement.TARGET_MILESTONE &&
-	// optionValues.isEmpty()) {
-	// existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-	// continue;
-	// }
-	// for (String option : optionValues) {
-	// attribute.addOptionValue(option, option);
-	// }
-	// }
-	// }
-
-	// /**
-	// * Adds bug attributes to new bug model and sets defaults TODO: Make
-	// generic
-	// * and move TaskRepositoryManager
-	// */
-	// public void setupNewBugAttributes(TaskRepository taskRepository,
-	// NewBugzillaTaskData newReport) throws CoreException {
-	//
-	// newReport.removeAllAttributes();
-	//
-	// RepositoryConfiguration repositoryConfiguration =
-	// BugzillaCorePlugin.getDefault().getRepositoryConfiguration(
-	// taskRepository, false);
-	//
-	// RepositoryTaskAttribute a =
-	// BugzillaClient.makeNewAttribute(BugzillaReportElement.PRODUCT);
-	// List<String> optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.PRODUCT
-	// .getKeyString());
-	// Collections.sort(optionValues);
-	// // for (String option : optionValues) {
-	// // a.addOptionValue(option, option);
-	// // }
-	// a.setValue(newReport.getProduct());
-	// a.setReadOnly(true);
-	// newReport.addAttribute(BugzillaReportElement.PRODUCT.getKeyString(), a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.BUG_STATUS.getKeyString());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
-	// newReport.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(),
-	// a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.VERSION.getKeyString());
-	// Collections.sort(optionValues);
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// if (optionValues != null && optionValues.size() > 0) {
-	// a.setValue(optionValues.get(optionValues.size() - 1));
-	// }
-	// newReport.addAttribute(BugzillaReportElement.VERSION.getKeyString(), a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.COMPONENT);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.COMPONENT.getKeyString());
-	// Collections.sort(optionValues);
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// if (optionValues != null && optionValues.size() > 0) {
-	// a.setValue(optionValues.get(0));
-	// }
-	// newReport.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(),
-	// a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.REP_PLATFORM.getKeyString());
-	// Collections.sort(optionValues);
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// if (optionValues != null && optionValues.size() > 0) {
-	// a.setValue(optionValues.get(0));
-	// }
-	// newReport.addAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString(),
-	// a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.OP_SYS);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.OP_SYS.getKeyString());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// if (optionValues != null && optionValues.size() > 0) {
-	// a.setValue(optionValues.get(optionValues.size() - 1));
-	// }
-	// newReport.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRIORITY);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.PRIORITY.getKeyString());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// a.setValue(optionValues.get((optionValues.size() / 2)));
-	// newReport.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
-	// optionValues =
-	// repositoryConfiguration.getAttributeValues(BugzillaReportElement.BUG_SEVERITY.getKeyString());
-	// for (String option : optionValues) {
-	// a.addOptionValue(option, option);
-	// }
-	// a.setValue(optionValues.get((optionValues.size() / 2)));
-	// newReport.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(),
-	// a);
-	// // attributes.put(a.getName(), a);
-	//
-	// // a = new
-	// // RepositoryTaskAttribute(BugzillaReportElement.TARGET_MILESTONE);
-	// // optionValues =
-	// //
-	// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getTargetMilestones(
-	// // newReport.getProduct());
-	// // for (String option : optionValues) {
-	// // a.addOptionValue(option, option);
-	// // }
-	// // if(optionValues.size() > 0) {
-	// // // new bug posts will fail if target_milestone element is included
-	// // // and there are no milestones on the server
-	// // newReport.addAttribute(BugzillaReportElement.TARGET_MILESTONE, a);
-	// // }
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
-	// a.setValue("");
-	// a.setReadOnly(false);
-	// newReport.addAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString(),
-	// a);
-	// // attributes.put(a.getName(), a);
-	//
-	// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
-	// a.setValue("http://");
-	// a.setHidden(false);
-	// newReport.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(),
-	// a);
-	// // attributes.put(a.getName(), a);
-	//
-	// // newReport.attributes = attributes;
-	// }
 
 }

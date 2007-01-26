@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
@@ -79,7 +80,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 		characters = new StringBuffer();
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
 				// ignore unrecognized tags
@@ -123,7 +124,7 @@ public class SaxBugReportContentHandler extends DefaultHandler {
 
 		BugzillaReportElement tag = BugzillaReportElement.UNKNOWN;
 		try {
-			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase());
+			tag = BugzillaReportElement.valueOf(localName.trim().toUpperCase(Locale.ENGLISH));
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {
 				// ignore unrecognized tags

@@ -12,6 +12,7 @@ package org.eclipse.mylar.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskSelection;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -265,7 +266,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		// If the comment category was selected, then the comment object is
 		// not the intended selection (it is just used to help find the correct
 		// location in the editor).
-		return (data instanceof TaskComment) && !(key.toLowerCase().equals("comments"));
+		return (data instanceof TaskComment) && !(key.toLowerCase(Locale.ENGLISH).equals("comments"));
 	}
 
 	public TaskComment getComment() {

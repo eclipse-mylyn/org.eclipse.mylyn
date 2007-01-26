@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
@@ -314,7 +315,7 @@ public class BugzillaClient {
 					if (tag.getTagType() == HtmlTag.Type.A) {
 						if (tag.hasAttribute("href")) {
 							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase().contains(LOGIN_REQUIRED)) {
+							if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
 								authenticated = false;
 								return;
 							}
@@ -403,7 +404,7 @@ public class BugzillaClient {
 						HtmlTag tag = (HtmlTag) token.getValue();
 						if (tag.getTagType() == HtmlTag.Type.A) {
 							String id = tag.getAttribute("href");
-							if (id != null && id.toLowerCase().contains(LOGIN_REQUIRED)) {
+							if (id != null && id.toLowerCase(Locale.ENGLISH).contains(LOGIN_REQUIRED)) {
 								// throw new
 								// LoginException(IBugzillaConstants.INVALID_CREDENTIALS);
 								authenticated = false;
@@ -443,7 +444,7 @@ public class BugzillaClient {
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
 								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
@@ -490,7 +491,7 @@ public class BugzillaClient {
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase().contains(type)) {
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
 						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, query.getMaxHits());
@@ -739,18 +740,20 @@ public class BugzillaClient {
 				if (isTitle) {
 					// get all of the data in the title tag
 					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
 					} else if (token.getType() == Token.TAG
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
 							&& ((HtmlTag) token.getValue()).isEndTag()) {
-						if (!taskData.isNew() && (title.toLowerCase().matches(".*\\s+processed.*"))) {
+						if (!taskData.isNew() && (title.toLowerCase(Locale.ENGLISH).matches(".*\\s+processed.*"))) {
 							existingBugPosted = true;
 						} else if (taskData.isNew() && prefix != null && prefix2 != null && postfix != null
 								&& postfix2 != null && result == null) {
 							int startIndex = -1;
-							int startIndexPrefix = title.toLowerCase().indexOf(prefix.toLowerCase());
-							int startIndexPrefix2 = title.toLowerCase().indexOf(prefix2.toLowerCase());
+							int startIndexPrefix = title.toLowerCase(Locale.ENGLISH).indexOf(
+									prefix.toLowerCase(Locale.ENGLISH));
+							int startIndexPrefix2 = title.toLowerCase(Locale.ENGLISH).indexOf(
+									prefix2.toLowerCase(Locale.ENGLISH));
 
 							if (startIndexPrefix != -1 || startIndexPrefix2 != -1) {
 								if (startIndexPrefix != -1) {
@@ -758,9 +761,11 @@ public class BugzillaClient {
 								} else {
 									startIndex = startIndexPrefix2 + prefix2.length();
 								}
-								int stopIndex = title.toLowerCase().indexOf(postfix.toLowerCase(), startIndex);
+								int stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
+										postfix.toLowerCase(Locale.ENGLISH), startIndex);
 								if (stopIndex == -1)
-									stopIndex = title.toLowerCase().indexOf(postfix2.toLowerCase(), startIndex);
+									stopIndex = title.toLowerCase(Locale.ENGLISH).indexOf(
+											postfix2.toLowerCase(Locale.ENGLISH), startIndex);
 								if (stopIndex > -1) {
 									result = (title.substring(startIndex, stopIndex)).trim();
 								}
@@ -841,7 +846,8 @@ public class BugzillaClient {
 				continue;
 			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
 				String value = a.getValue();
-				// DEBUG: System.err.println(">>> "+a.getName()+" = "+a.getValue());
+				// DEBUG: System.err.println(">>> "+a.getName()+" =
+				// "+a.getValue());
 				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}
@@ -934,7 +940,7 @@ public class BugzillaClient {
 				if (isTitle) {
 					// get all of the data in the title tag
 					if (token.getType() != Token.TAG) {
-						title += ((StringBuffer) token.getValue()).toString().toLowerCase() + " ";
+						title += ((StringBuffer) token.getValue()).toString().toLowerCase(Locale.ENGLISH) + " ";
 						continue;
 					} else if (token.getType() == Token.TAG
 							&& ((HtmlTag) token.getValue()).getTagType() == HtmlTag.Type.TITLE
@@ -980,368 +986,3 @@ public class BugzillaClient {
 	}
 
 }
-
-// /**
-// * Adds bug attributes to new bug model and sets defaults
-// * TODO: Make generic and move TaskRepositoryManager
-// */
-// public static void setupNewBugAttributes(String repositoryUrl, Proxy
-// proxySettings, String userName,
-// String password, NewBugzillaTaskData newReport, String characterEncoding)
-// throws IOException,
-// KeyManagementException, GeneralSecurityException,
-// NoSuchAlgorithmException, BugzillaException {
-//
-// newReport.removeAllAttributes();
-//
-// RepositoryConfiguration repositoryConfiguration =
-// this.getRepositoryConfiguration();
-// // BugzillaCorePlugin.getRepositoryConfiguration(false,
-// // repositoryUrl, proxySettings, userName, password, characterEncoding);
-//
-// RepositoryTaskAttribute a =
-// BugzillaClient.makeNewAttribute(BugzillaReportElement.PRODUCT);
-// List<String> optionValues = repositoryConfiguration.getProducts();
-// Collections.sort(optionValues);
-// // for (String option : optionValues) {
-// // a.addOptionValue(option, option);
-// // }
-// a.setValue(newReport.getProduct());
-// a.setReadOnly(true);
-// newReport.addAttribute(BugzillaReportElement.PRODUCT.getKeyString(), a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_STATUS);
-// optionValues = repositoryConfiguration.getStatusValues();
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
-// newReport.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(),
-// a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
-// optionValues =
-// repositoryConfiguration.getVersions(newReport.getProduct());
-// Collections.sort(optionValues);
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// if (optionValues != null && optionValues.size() > 0) {
-// a.setValue(optionValues.get(optionValues.size() - 1));
-// }
-// newReport.addAttribute(BugzillaReportElement.VERSION.getKeyString(), a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.COMPONENT);
-// optionValues =
-// repositoryConfiguration.getComponents(newReport.getProduct());
-// Collections.sort(optionValues);
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// if (optionValues != null && optionValues.size() > 0) {
-// a.setValue(optionValues.get(0));
-// }
-// newReport.addAttribute(BugzillaReportElement.COMPONENT.getKeyString(),
-// a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.REP_PLATFORM);
-// optionValues = repositoryConfiguration.getPlatforms();
-// Collections.sort(optionValues);
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// if (optionValues != null && optionValues.size() > 0) {
-// a.setValue(optionValues.get(0));
-// }
-// newReport.addAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString(),
-// a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.OP_SYS);
-// optionValues = repositoryConfiguration.getOSs();
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// if (optionValues != null && optionValues.size() > 0) {
-// a.setValue(optionValues.get(optionValues.size() - 1));
-// }
-// newReport.addAttribute(BugzillaReportElement.OP_SYS.getKeyString(), a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.PRIORITY);
-// optionValues = repositoryConfiguration.getPriorities();
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// a.setValue(optionValues.get((optionValues.size() / 2)));
-// newReport.addAttribute(BugzillaReportElement.PRIORITY.getKeyString(), a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_SEVERITY);
-// optionValues = repositoryConfiguration.getSeverities();
-// for (String option : optionValues) {
-// a.addOptionValue(option, option);
-// }
-// a.setValue(optionValues.get((optionValues.size() / 2)));
-// newReport.addAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString(),
-// a);
-// // attributes.put(a.getName(), a);
-//
-// // a = new
-// // RepositoryTaskAttribute(BugzillaReportElement.TARGET_MILESTONE);
-// // optionValues =
-// //
-// BugzillaPlugin.getDefault().getProductConfiguration(serverUrl).getTargetMilestones(
-// // newReport.getProduct());
-// // for (String option : optionValues) {
-// // a.addOptionValue(option, option);
-// // }
-// // if(optionValues.size() > 0) {
-// // // new bug posts will fail if target_milestone element is included
-// // // and there are no milestones on the server
-// // newReport.addAttribute(BugzillaReportElement.TARGET_MILESTONE, a);
-// // }
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.ASSIGNED_TO);
-// a.setValue("");
-// a.setReadOnly(false);
-// newReport.addAttribute(BugzillaReportElement.ASSIGNED_TO.getKeyString(),
-// a);
-// // attributes.put(a.getName(), a);
-//
-// a = BugzillaClient.makeNewAttribute(BugzillaReportElement.BUG_FILE_LOC);
-// a.setValue("http://");
-// a.setHidden(false);
-// newReport.addAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString(),
-// a);
-// // attributes.put(a.getName(), a);
-//
-// // newReport.attributes = attributes;
-// }
-
-// public static void updateBugAttributeOptions(RepositoryTaskData
-// existingReport) throws IOException,
-// KeyManagementException, GeneralSecurityException, BugzillaException {
-// String product =
-// existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
-// for (RepositoryTaskAttribute attribute : existingReport.getAttributes())
-// {
-// BugzillaReportElement element =
-// BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase());
-// attribute.clearOptions();
-// List<String> optionValues =
-// BugzillaCorePlugin.getRepositoryConfiguration(false, repositoryUrl,
-// proxySettings, userName, password,
-// characterEncoding).getOptionValues(element, product);
-// if (element != BugzillaReportElement.OP_SYS && element !=
-// BugzillaReportElement.BUG_SEVERITY
-// && element != BugzillaReportElement.PRIORITY && element !=
-// BugzillaReportElement.BUG_STATUS) {
-// Collections.sort(optionValues);
-// }
-// if (element == BugzillaReportElement.TARGET_MILESTONE &&
-// optionValues.isEmpty()) {
-// existingReport.removeAttribute(BugzillaReportElement.TARGET_MILESTONE);
-// continue;
-// }
-// for (String option : optionValues) {
-// attribute.addOptionValue(option, option);
-// }
-// }
-//
-// }
-
-// public static void addValidOperations(RepositoryTaskData bugReport,
-// String userName) {
-// BUGZILLA_REPORT_STATUS status =
-// BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
-// switch (status) {
-// case UNCONFIRMED:
-// case REOPENED:
-// case NEW:
-// addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.accept, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent,
-// userName);
-// break;
-// case ASSIGNED:
-// addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.resolve, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.duplicate, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reassign, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reassignbycomponent,
-// userName);
-// break;
-// case RESOLVED:
-// addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.verify, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
-// break;
-// case CLOSED:
-// addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
-// break;
-// case VERIFIED:
-// addOperation(bugReport, BUGZILLA_OPERATION.none, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.reopen, userName);
-// addOperation(bugReport, BUGZILLA_OPERATION.close, userName);
-// }
-// }
-
-// public static void addOperation(RepositoryTaskData bugReport,
-// BUGZILLA_OPERATION opcode, String userName) {
-// RepositoryOperation newOperation = null;
-// switch (opcode) {
-// case none:
-// newOperation = new RepositoryOperation(opcode.toString(), "Leave as " +
-// bugReport.getStatus() + " "
-// + bugReport.getResolution());
-// newOperation.setChecked(true);
-// break;
-// case accept:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_ACCEPT);
-// break;
-// case resolve:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_RESOLVE);
-// newOperation.setUpOptions(OPERATION_OPTION_RESOLUTION);
-// for (BUGZILLA_RESOLUTION resolution : BUGZILLA_RESOLUTION.values()) {
-// newOperation.addOption(resolution.toString(), resolution.toString());
-// }
-// break;
-// case duplicate:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_DUPLICATE);
-// newOperation.setInputName(OPERATION_INPUT_DUP_ID);
-// newOperation.setInputValue("");
-// break;
-// case reassign:
-// String localUser = userName;
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_REASSIGN);
-// newOperation.setInputName(OPERATION_INPUT_ASSIGNED_TO);
-// newOperation.setInputValue(localUser);
-// break;
-// case reassignbycomponent:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_REASSIGN_DEFAULT);
-// break;
-// case reopen:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_REOPEN);
-// break;
-// case verify:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_VERIFY);
-// break;
-// case close:
-// newOperation = new RepositoryOperation(opcode.toString(),
-// OPERATION_LABEL_CLOSE);
-// break;
-// default:
-// break;
-// // MylarStatusHandler.log("Unknown bugzilla operation code recieved",
-// // BugzillaRepositoryUtil.class);
-// }
-// if (newOperation != null) {
-// bugReport.addOperation(newOperation);
-// }
-// }
-
-// public static String getBugUrl(String repositoryUrl, int id, String
-// userName, String password) {
-//
-// String url = repositoryUrl + IBugzillaConstants.POST_ARGS_SHOW_BUG + id;
-// try {
-// url = addCredentials(url, userName, password);
-// } catch (UnsupportedEncodingException e) {
-// return "";
-// }
-// return url;
-// }
-
-// /**
-// * Get the list of products
-// *
-// * @param proxySettings
-// * TODO
-// * @param encoding
-// * TODO
-// *
-// * @return The list of valid products a bug can be logged against
-// * @throws IOException
-// * LoginException Exception
-// */
-// public static List<String> getProductList(String repositoryUrl, Proxy
-// proxySettings, String userName,
-// String password, String encoding) throws IOException, LoginException,
-// Exception {
-//
-// return BugzillaCorePlugin.getRepositoryConfiguration(false,
-// repositoryUrl, proxySettings, userName, password,
-// encoding).getProducts();
-//
-// // BugzillaQueryPageParser parser = new
-// // BugzillaQueryPageParser(repository, new NullProgressMonitor());
-// // if (!parser.wasSuccessful()) {
-// // throw new RuntimeException("Couldn't get products");
-// // } else {
-// // return Arrays.asList(parser.getProductValues());
-// // }
-//
-// }
-
-// // TODO: improve and move to repository connector?
-// public static void validateCredentials(Proxy proxySettings, String
-// repositoryUrl, String encoding, String userid,
-// String password) throws IOException, BugzillaException,
-// KeyManagementException, GeneralSecurityException {
-//
-// proxySettings = proxySettings == null ? Proxy.NO_PROXY : proxySettings;
-//
-// String url = repositoryUrl + "/index.cgi?" +
-// IBugzillaConstants.POST_ARGS_LOGIN
-// + URLEncoder.encode(userid, encoding) +
-// IBugzillaConstants.POST_ARGS_PASSWORD
-// + URLEncoder.encode(password, encoding);
-//
-// // For bug#160360
-// // MylarStatusHandler.log("VALIDATING: " + url,
-// // BugzillaServerFacade.class);
-//
-// URL serverURL = new URL(url);
-// HttpURLConnection serverConnection =
-// WebClientUtil.openUrlConnection(serverURL, proxySettings, false, null,
-// null);
-// BufferedReader in = new BufferedReader(new
-// InputStreamReader(serverConnection.getInputStream()));
-// try {
-// parseHtmlError(in);
-// } catch (UnrecognizedReponseException e) {
-// return;
-// }
-// }
-
-// public static String addCredentials(String url, String encoding, String
-// userName, String password)
-// throws UnsupportedEncodingException {
-// if ((userName != null && userName.length() > 0) && (password != null &&
-// password.length() > 0)) {
-// if (encoding == null) {
-// encoding = IBugzillaConstants.ENCODING_UTF_8;
-// }
-// url += "&" + IBugzillaConstants.POST_ARGS_LOGIN +
-// URLEncoder.encode(userName, encoding)
-// + IBugzillaConstants.POST_ARGS_PASSWORD + URLEncoder.encode(password,
-// encoding);
-// }
-// return url;
-// }
