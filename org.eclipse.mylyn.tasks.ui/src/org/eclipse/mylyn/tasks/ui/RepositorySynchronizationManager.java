@@ -186,7 +186,7 @@ public class RepositorySynchronizationManager {
 
 			Set<AbstractRepositoryTask> changedTasks = null;
 			try {
-				changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(repository, repositoryTasks);
+				changedTasks = connector.getChangedSinceLastSync(repository, repositoryTasks);
 
 				if (changedTasks != null) {
 					for (AbstractRepositoryTask task : changedTasks) {

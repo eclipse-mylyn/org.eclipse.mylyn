@@ -386,7 +386,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		Set<AbstractRepositoryTask> changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(repository,
+		Set<AbstractRepositoryTask> changedTasks = connector.getChangedSinceLastSync(repository,
 				tasks);
 		assertEquals(0, changedTasks.size());
 
@@ -420,7 +420,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// bugzillaReportSubmitForm = makeExistingBugPost(task5.getTaskData());
 		// bugzillaReportSubmitForm.submitReportToRepository(connector.getClientManager().getClient(repository));
 
-		changedTasks = connector.getTaskDataHandler().getChangedSinceLastSync(repository, tasks);
+		changedTasks = connector.getChangedSinceLastSync(repository, tasks);
 		assertEquals("Changed reports expected ", 2, changedTasks.size());
 		assertTrue(tasks.containsAll(changedTasks));
 		for (AbstractRepositoryTask task : changedTasks) {

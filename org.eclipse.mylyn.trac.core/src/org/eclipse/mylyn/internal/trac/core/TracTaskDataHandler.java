@@ -13,18 +13,13 @@ package org.eclipse.mylar.internal.trac.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
@@ -32,7 +27,6 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
@@ -262,44 +256,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		return createAttribute(factory, data, attribute, values, false);
 	}
 
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException {
-		if (repository.getSyncTimeStamp() == null) {
-			return tasks;
-		}
-
-		if (!TracRepositoryConnector.hasChangedSince(repository)) {
-			// return an empty list to avoid causing all tasks to synchronized
-			return Collections.emptySet();
-		}
-
-		Date since = new Date(0);
-		try {
-			since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
-		} catch (NumberFormatException e) {
-		}
-
-		ITracClient client;
-		try {
-			client = connector.getClientManager().getRepository(repository);
-			Set<Integer> ids = client.getChangedTickets(since);
-
-			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
-			if (!ids.isEmpty()) {
-				for (AbstractRepositoryTask task : tasks) {
-					Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
-					if (ids.contains(id)) {
-						result.add(task);
-					}
-				}
-			}
-			return result;
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
-					"could not determine changed tasks", e));
-		}
-	}
-
+	
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 		try {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);

@@ -163,6 +163,17 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
+	 * Of <code>tasks</code> provided, return all that have changed since last synchronization of
+	 * <code>repository</code>
+	 * 
+	 * TODO: Add progress monitor as parameter
+	 * 
+	 * @throws CoreException
+	 */
+	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws CoreException;
+
+	/**
 	 * Attaches the associated context to <code>task</code>.
 	 * 
 	 * @return false, if operation is not supported by repository

@@ -13,7 +13,11 @@ package org.eclipse.mylar.internal.trac.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,6 +28,7 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -161,6 +166,46 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return Status.OK_STATUS;
 	}
 
+	@Override
+	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws CoreException {
+		if (repository.getSyncTimeStamp() == null) {
+			return tasks;
+		}
+
+		if (!TracRepositoryConnector.hasChangedSince(repository)) {
+			// return an empty list to avoid causing all tasks to synchronized
+			return Collections.emptySet();
+		}
+
+		Date since = new Date(0);
+		try {
+			since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
+		} catch (NumberFormatException e) {
+		}
+
+		ITracClient client;
+		try {
+			client = getClientManager().getRepository(repository);
+			Set<Integer> ids = client.getChangedTickets(since);
+
+			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
+			if (!ids.isEmpty()) {
+				for (AbstractRepositoryTask task : tasks) {
+					Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+					if (ids.contains(id)) {
+						result.add(task);
+					}
+				}
+			}
+			return result;
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
+					"could not determine changed tasks", e));
+		}
+	}
+
+	
 	@Override
 	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
 		int bugId = -1;

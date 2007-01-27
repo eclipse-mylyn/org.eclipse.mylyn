@@ -11,7 +11,9 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +33,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_KIND = "mock";
-	
+
 	public static final String REPOSITORY_URL = "http://mockrepository.com";
 
 	@Override
@@ -70,7 +72,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getRepositoryType() {		
+	public String getRepositoryType() {
 		return REPOSITORY_KIND;
 	}
 
@@ -79,7 +81,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 		return null;
 	}
-	
+
 	@Override
 	public String getTaskIdFromTaskUrl(String url) {
 		// ignore
@@ -90,13 +92,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
 		return null;
 	}
-	
+
 	@Override
 	public List<String> getSupportedVersions() {
 		// ignore
 		return null;
 	}
-	
+
 	@Override
 	public void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException {
 		// ignore
@@ -108,8 +110,15 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor, QueryHitCollector resultCollector) {
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+			QueryHitCollector resultCollector) {
 		return null;
+	}
+
+	@Override
+	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws CoreException {
+		return Collections.emptySet();
 	}
 
 }

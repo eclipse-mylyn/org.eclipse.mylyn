@@ -12,16 +12,24 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -41,6 +49,14 @@ import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
+	private static final int MAX_URL_LENGTH = 2000;
+	
+	private static final String BUG_ID = "&bug_id=";
+
+	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
+
+	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom=";
+	
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
 	private BugzillaAttachmentHandler attachmentHandler;
@@ -54,7 +70,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void init(TaskList taskList) {
 		super.init(taskList);
-		this.taskDataHandler = new BugzillaTaskDataHandler(this, taskList);
+		this.taskDataHandler = new BugzillaTaskDataHandler(this);
 		this.attachmentHandler = new BugzillaAttachmentHandler(this);
 		BugzillaCorePlugin.setConnector(this);
 	}
@@ -112,6 +128,91 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask = (AbstractRepositoryTask) task;
 		}
 		return repositoryTask;
+	}
+	
+	@Override
+	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractRepositoryTask> tasks) throws CoreException {
+		try {
+			Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
+
+			if (repository.getSyncTimeStamp() == null) {
+				return tasks;
+			}
+
+			String dateString = repository.getSyncTimeStamp();
+			if (dateString == null) {
+				dateString = "";
+			}
+			String urlQueryBase;
+			String urlQueryString;
+
+			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
+
+			urlQueryString = urlQueryBase + BUG_ID;
+
+			int queryCounter = -1;
+			Iterator<AbstractRepositoryTask> itr = tasks.iterator();
+			while (itr.hasNext()) {
+				queryCounter++;
+				ITask task = itr.next();
+				String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task
+						.getHandleIdentifier())
+						+ ",", repository.getCharacterEncoding());
+				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
+						.length()) > MAX_URL_LENGTH) {
+					queryForChanged(repository, changedTasks, urlQueryString);
+					queryCounter = 0;
+					urlQueryString = urlQueryBase + BUG_ID;
+					urlQueryString += newurlQueryString;
+				} else if (!itr.hasNext()) {
+					urlQueryString += newurlQueryString;
+					queryForChanged(repository, changedTasks, urlQueryString);
+				} else {
+					urlQueryString += newurlQueryString;
+				}
+			}
+			return changedTasks;
+		} catch (UnsupportedEncodingException e) {
+			MylarStatusHandler.fail(e, "Repository configured with unsupported encoding: "
+					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
+			return tasks;
+		}
+	}
+	
+	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
+			String urlQueryString) throws UnsupportedEncodingException, CoreException {
+		QueryHitCollector collector = new QueryHitCollector(taskList);
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", "-1",
+				taskList);
+
+		performQuery(query, repository, new NullProgressMonitor(), collector);
+		
+		for (AbstractQueryHit hit : collector.getHits()) {
+			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
+			ITask correspondingTask = taskList.getTask(handle);
+			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
+				// Hack to avoid re-syncing last task from previous
+				// synchronization
+				// This can be removed once we are getting a query timestamp
+				// from the repository rather than
+				// using the last modified stamp of the last task modified in
+				// the return hits.
+				// (or the changeddate field in the hit rdf becomes consistent,
+				// currently it doesn't return a proper modified date string)
+				if (repositoryTask.getTaskData() != null
+						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
+					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository, taskId);
+					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
+						continue;
+					}
+				}
+				changedTasks.add(repositoryTask);
+			}
+		}
 	}
 
 	@Override
