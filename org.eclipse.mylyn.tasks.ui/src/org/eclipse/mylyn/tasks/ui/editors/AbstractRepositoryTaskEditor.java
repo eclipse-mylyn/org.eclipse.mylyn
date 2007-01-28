@@ -2544,9 +2544,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					removeSections();
 					createSections();
 					// TODO: expand sections that were previously expanded
-					outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
-					outlinePage.getOutlineTreeViewer().refresh(true);
 					showBusy(false);
+					if (taskOutlineModel != null && outlinePage != null) {
+						outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
+						outlinePage.getOutlineTreeViewer().refresh(true);
+					}
 				}
 			});
 
