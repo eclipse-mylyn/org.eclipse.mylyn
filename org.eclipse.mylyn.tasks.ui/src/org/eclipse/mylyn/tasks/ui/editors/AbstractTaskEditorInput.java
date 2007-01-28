@@ -27,16 +27,18 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	final protected TaskRepository repository;
 
+	final private String handle;
+
 	private RepositoryTaskData newTaskData;
-	
+
 	private RepositoryTaskData oldTaskData;
-	
+
 	protected AbstractTaskEditorInput(TaskRepository repository, String handle) {
+		this.handle = handle;
 		this.repository = repository;
-		this.newTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(handle);		
-		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);				
+		this.refreshInput();
 	}
-	
+
 	/**
 	 * Sets the tool tip text for this editor input.
 	 * 
@@ -58,14 +60,13 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	public RepositoryTaskData getTaskData() {
 		return newTaskData;
 	}
-	
+
 	/**
 	 * returns the old task data
 	 */
 	public RepositoryTaskData getOldTaskData() {
 		return oldTaskData;
 	}
-	
 
 	public ImageDescriptor getImageDescriptor() {
 		return null;
@@ -101,5 +102,10 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	protected void setOldTaskData(RepositoryTaskData oldTaskData) {
 		this.oldTaskData = oldTaskData;
+	}
+
+	public void refreshInput() {
+		this.newTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(handle);
+		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);
 	}
 }

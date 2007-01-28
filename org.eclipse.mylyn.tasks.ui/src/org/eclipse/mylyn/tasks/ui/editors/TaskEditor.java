@@ -448,6 +448,15 @@ public class TaskEditor extends FormEditor {
 		return new FormToolkit(PlatformUI.getWorkbench().getDisplay());
 	}
 
+	/**
+	 * Update the title of the editor
+	 */
+	public void updateTitle(String name) {
+		//setContentDescription(name);
+		setPartName(name);
+		setTitleToolTip(name);
+	}
+	
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();

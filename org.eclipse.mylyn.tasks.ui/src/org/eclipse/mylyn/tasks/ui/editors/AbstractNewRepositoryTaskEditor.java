@@ -335,12 +335,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 */
 	@Override
 	protected void createActionsLayout(Composite formComposite) {
-		FormToolkit toolkit = new FormToolkit(formComposite.getDisplay());
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
+		
 		section.setText(LABEL_SECTION_ACTIONS);
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
+		
 
 		Composite buttonComposite = toolkit.createComposite(section);
 		buttonComposite.setLayout(new GridLayout(4, false));
