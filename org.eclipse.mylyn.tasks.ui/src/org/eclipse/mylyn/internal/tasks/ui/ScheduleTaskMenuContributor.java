@@ -146,8 +146,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			public void run() {
 				for (ITaskListElement element : taskListElementsToSchedule) {
 					ITask task = tasklistManager.getTaskForElement(element, true);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task,
-							TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart().getTime());
+					Calendar startNextWeek = Calendar.getInstance();
+					TasksUiPlugin.getTaskListManager().setScheduledNextWeek(startNextWeek);
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task, startNextWeek.getTime());					
 				}
 			}
 		};

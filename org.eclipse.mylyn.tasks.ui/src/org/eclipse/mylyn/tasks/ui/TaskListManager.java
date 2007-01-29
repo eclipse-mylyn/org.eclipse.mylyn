@@ -545,6 +545,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		return calendar;
 	}
 
+	public void setScheduledNextWeek(Calendar calendar) {		
+		calendar.setTimeInMillis(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart().getTimeInMillis());
+		setScheduledToday(calendar);		
+	}
+	
 	public Object[] getDateRanges() {
 		// parseFutureReminders();
 		return dateRangeContainers.toArray();
