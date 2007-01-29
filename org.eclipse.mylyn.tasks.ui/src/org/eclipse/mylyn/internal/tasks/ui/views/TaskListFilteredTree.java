@@ -140,8 +140,9 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			}
 		}
 		taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-		taskProgressBar.setToolTipText("Completed " + completeTime + " of " + (completeTime + incompleteTime)
-				+ " hours estimated for this week" + "\n(" + completeTasks + " tasks of " + totalTasks + " scheduled)");
+		taskProgressBar.setToolTipText("Workweek Progress" 
+				+ "\n     Tasks: " + completeTasks + " of " + totalTasks + " scheduled"
+				+ "\n     Hours: " + completeTime + " of " + (completeTime + incompleteTime) + " estimated");
 	}
 
 	@Override
