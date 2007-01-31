@@ -26,13 +26,14 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.junit.launcher.JUnitLaunchConfigurationConstants;
+import org.eclipse.jdt.internal.junit.launcher.ITestKind;
 import org.eclipse.jdt.internal.junit.launcher.TestKindRegistry;
+import org.eclipse.jdt.internal.junit.launcher.TestSearchResult;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -42,31 +43,35 @@ import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
  */
 public class MylarContextTestUtil {
 
-	public static void setupTestConfiguration(Set<IType> contextTestCases, ILaunchConfiguration configuration, IProgressMonitor pm)
+	public static TestSearchResult findTestTypes(ILaunchConfiguration configuration, IProgressMonitor pm)
 			throws CoreException {
-		String testKindId = TestKindRegistry.JUNIT3_TEST_KIND_ID;
+		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
+		// ITestKind testKind =
+		// TestKindRegistry.getDefault().getKind(configuration);
+		ITestKind testKind = TestKindRegistry.getDefault().getKind(TestKindRegistry.JUNIT3_TEST_KIND_ID);
 
 		IJavaProject javaProject = null;
 		for (IType type : contextTestCases) {
 			IProjectNature nature = type.getJavaProject().getProject().getNature("org.eclipse.pde.PluginNature");
 			if (nature != null) {
 				// HACK: might want another project
-				javaProject = type.getJavaProject();
+				javaProject = type.getJavaProject(); 
 			}
 		}
 
 		ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
 		if (javaProject != null) {
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProject.getElementName());
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProject.getElementName()); 
 		}
+//		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
+//		workingCopy.setAttribute(JUnitBaseLaunchConfiguration.TEST_KIND_ATTR, TestKindRegistry.JUNIT3_TEST_KIND_ID);
+		workingCopy.doSave();
 
 		// HACK: only checks first type
 		if (contextTestCases.size() > 0) {
-			testKindId = TestKindRegistry.getContainerTestKindId(contextTestCases.iterator().next());				
-			workingCopy.setAttribute(JUnitLaunchConfigurationConstants.ATTR_TEST_RUNNER_KIND, testKindId);
-			//			testKind = TestKindRegistry.getDefault().getKind(configuration);// contextTestCases.iterator().next());
+			testKind = TestKindRegistry.getDefault().getKind(configuration);// contextTestCases.iterator().next());
 		}
-		workingCopy.doSave();
+		return new TestSearchResult(contextTestCases.toArray(new IType[contextTestCases.size()]), testKind);
 	}
 
 	public static Set<IType> getTestCasesInContext() {
