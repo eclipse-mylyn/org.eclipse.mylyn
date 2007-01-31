@@ -19,30 +19,15 @@ import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
 /**
  * @author Mik Kersten
  */
-public class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
+class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
 
-	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
-
-	public static final String ACTIVITY_DELTA_ACTIVATED = "activated";
-
-	public static final String ACTIVITY_ORIGIN_ID = "org.eclipse.mylar.core";
-
-	public static final String ACTIVITY_HANDLE_ATTENTION = "attention";
-
-	public static final String ACTIVITY_HANDLE_LIFECYCLE = "lifecycle";
-
-	public static final String ACTIVITY_DELTA_STARTED = "started";
-
-	public static final String ACTIVITY_DELTA_STOPPED = "stopped";
-
-	public static final String ACTIVITY_STRUCTURE_KIND = "context";
-	
 	private TimerThread timer;
 
 	private int sleepPeriod = 60000;
@@ -60,8 +45,8 @@ public class ActivityListener implements ITimerThreadListener, IInteractionEvent
 	public void fireTimedOut() {
 		if (!isStalled) {
 			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					ACTIVITY_STRUCTURE_KIND, ACTIVITY_HANDLE_ATTENTION, ACTIVITY_ORIGIN_ID, null,
-					ACTIVITY_DELTA_DEACTIVATED, 1f));
+					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
+					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 		}
 		isStalled = true;
 	}
@@ -75,8 +60,8 @@ public class ActivityListener implements ITimerThreadListener, IInteractionEvent
 		timer.resetTimer();
 		if (isStalled) {
 			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					ACTIVITY_STRUCTURE_KIND, ACTIVITY_HANDLE_ATTENTION, ACTIVITY_ORIGIN_ID, null,
-					ACTIVITY_DELTA_ACTIVATED, 1f));
+					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
+					MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 		isStalled = false;
 	}
