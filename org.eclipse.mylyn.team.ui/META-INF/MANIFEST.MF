@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.mylar.team;singleton:=true
 Bundle-Version: 1.0.1.v20070126-1600
 Bundle-Activator: org.eclipse.mylar.team.MylarTeamPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
  org.eclipse.team.cvs.core,
