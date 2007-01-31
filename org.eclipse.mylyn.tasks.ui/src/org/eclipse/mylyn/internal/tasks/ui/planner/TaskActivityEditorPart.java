@@ -53,7 +53,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -271,37 +270,37 @@ public class TaskActivityEditorPart extends EditorPart {
 		if (startDate != null) {
 			String dateLabel = "Activity since " + format.format(startDate);
 			// DateFormat.getDateInstance(DateFormat.MEDIUM).format(reportStartDate)
-			Label startLabel = toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
-			startLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+			toolkit.createLabel(summaryContainer, dateLabel, SWT.NULL);
+//			startLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 			toolkit.createLabel(summaryContainer, "", SWT.NULL);
 		}
 
 		String numComplete = "Number completed: " + editorInput.getCompletedTasks().size();
 		numberCompleted = toolkit.createLabel(summaryContainer, numComplete, SWT.NULL);
-		numberCompleted.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		numberCompleted.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String totalCompletedTaskTime = "Total time on completed: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnCompletedTasks(), false);
 		totalTimeOnCompleted = toolkit.createLabel(summaryContainer, totalCompletedTaskTime, SWT.NULL);
-		totalTimeOnCompleted.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		totalTimeOnCompleted.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String numInProgress = "Number in progress: " + editorInput.getInProgressTasks().size();
 		numberInProgress = toolkit.createLabel(summaryContainer, numInProgress, SWT.NULL);
-		numberInProgress.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		numberInProgress.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String totalInProgressTaskTime = "Total time on incomplete: "
 				+ DateUtil.getFormattedDuration(editorInput.getTotalTimeSpentOnInProgressTasks(), false);
 		totalTimeOnIncomplete = toolkit.createLabel(summaryContainer, totalInProgressTaskTime, SWT.NULL);
-		totalTimeOnIncomplete.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		totalTimeOnIncomplete.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String spacer = "        ";
 		String totalEstimated = "Total estimatedTime time: " + editorInput.getTotalTimeEstimated() + " hours" + spacer;
 		totalEstimatedTime = toolkit.createLabel(summaryContainer, totalEstimated, SWT.NULL);
-		totalEstimatedTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		totalEstimatedTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String grandTotalTime = "Total time: " + getTotalTime();
 		totalTime = toolkit.createLabel(summaryContainer, grandTotalTime, SWT.NULL);
-		totalTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		totalTime.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 	}
 

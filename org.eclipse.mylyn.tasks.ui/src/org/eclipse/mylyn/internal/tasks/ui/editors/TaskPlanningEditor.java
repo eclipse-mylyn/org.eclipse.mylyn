@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -459,8 +458,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayout(compLayout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label l = toolkit.createLabel(container, "Summary: ");
-		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(container, "Summary: ");
+//		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		summary = toolkit.createText(container, task.getSummary(), SWT.NONE);
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		summary.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -476,8 +475,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		Label urlLabel = toolkit.createLabel(container, "Web Link:");
-		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(container, "Web Link:");
+//		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		Composite urlComposite = toolkit.createComposite(container);
 		GridLayout urlLayout = new GridLayout(2, false);
@@ -524,8 +523,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		Label label = toolkit.createLabel(container, "Status:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(container, "Status:");
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		Composite statusComposite = toolkit.createComposite(container);
 		statusComposite.setLayout(new GridLayout(2, false));
@@ -664,7 +663,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, LABEL_SCHEDULE);
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 
@@ -706,7 +705,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String creationDateString = "";
 		try {
@@ -725,7 +724,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Estimated time
 
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		estimated = new Spinner(sectionClient, SWT.NONE);
 		estimated.setSelection(task.getEstimateTimeHours());
@@ -745,7 +744,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimated.setLayoutData(estimatedDataLayout);
 
 		label = toolkit.createLabel(sectionClient, "hours ");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
@@ -756,7 +755,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String completionDateString = "";
 		if (task.isCompleted()) {
@@ -774,7 +773,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Elapsed Time
 
 		label = toolkit.createLabel(sectionClient, "Active time:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
 		Composite elapsedComposite = toolkit.createComposite(sectionClient);
@@ -917,8 +916,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayout(layout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		Label l2 = toolkit.createLabel(container, "Task context file:");
-		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(container, "Task context file:");
+//		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.NONE);

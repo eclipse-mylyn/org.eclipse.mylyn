@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -174,8 +173,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		sectionClient.setLayoutData(clientDataLayout);
 
 		// Reminder
-		Label label = toolkit.createLabel(sectionClient, "Scheduled for:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(sectionClient, "Scheduled for:");
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		scheduledForDate = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -205,8 +204,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		dummy.setLayoutData(dummyLabelDataLayout);
 
 		// Estimated time
-		label = toolkit.createLabel(sectionClient, "Estimated time:");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(sectionClient, "Estimated time:");
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		estimatedTime = new Spinner(sectionClient, SWT.NONE);
 		estimatedTime.setDigits(0);
 		estimatedTime.setMaximum(100);
@@ -217,8 +216,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		GridData estimatedDataLayout = new GridData();
 		estimatedDataLayout.widthHint = 110;
 		estimatedTime.setLayoutData(estimatedDataLayout);
-		label = toolkit.createLabel(sectionClient, "hours ");
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(sectionClient, "hours ");
+//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");

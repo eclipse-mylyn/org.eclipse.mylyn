@@ -16,12 +16,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -109,15 +107,15 @@ public class CategoryEditor extends EditorPart {
 			}
 		};
 
-		Label lblDescription = toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
-		lblDescription.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(summaryContainer, "Description: ", SWT.NULL);
+//		lblDescription.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		description = toolkit.createText(summaryContainer, input.getCategoryName(), SWT.FLAT);
 		description.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		description.setData(FormToolkit.KEY_DRAW_BORDER);
 		description.addModifyListener(modifyListener);
 
-		Label lblUrl = toolkit.createLabel(summaryContainer, "URL: ", SWT.NONE);
-		lblUrl.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		toolkit.createLabel(summaryContainer, "URL: ", SWT.NONE);
+//		lblUrl.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		url = toolkit.createText(summaryContainer, input.getUrl(), SWT.FLAT);
 		url.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
 		url.addModifyListener(modifyListener);
