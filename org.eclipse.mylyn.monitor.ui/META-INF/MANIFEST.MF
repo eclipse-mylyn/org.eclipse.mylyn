@@ -4,7 +4,6 @@ Bundle-Name: Mylar Monitor Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.monitor; singleton:=true
 Bundle-Version: 1.0.1.v20070126-1600
 Bundle-Activator: org.eclipse.mylar.monitor.MylarMonitorPlugin
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.browser,
