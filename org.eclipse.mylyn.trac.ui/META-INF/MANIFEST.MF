@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.mylar.trac.ui;singleton:=true
 Bundle-Version: 1.0.1.v20070126-1600
 Bundle-Activator: org.eclipse.mylar.internal.trac.ui.TracUiPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.core.runtime,

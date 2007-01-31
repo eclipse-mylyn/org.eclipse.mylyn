@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.mylar.bugzilla.ui; singleton:=true
 Bundle-Version: 1.0.1.v20070126-1600
 Bundle-Activator: org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,

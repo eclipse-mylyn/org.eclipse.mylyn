@@ -4,7 +4,6 @@ Bundle-Name: Bugzilla Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.bugzilla.tests
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylar.bugzilla.tests.BugzillaTestPlugin
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
