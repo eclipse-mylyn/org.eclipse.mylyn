@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.context.core.util.TimerThread;
 /**
  * @author Mik Kersten
  */
-class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
+public class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
 
 	public static final String ACTIVITY_DELTA_DEACTIVATED = "deactivated";
 
