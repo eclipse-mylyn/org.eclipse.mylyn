@@ -172,7 +172,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
 			if ((hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted()) || hit.isCompleted()) {
-				return TaskListColorsAndFonts.COLOR_TASK_COMPLETED;
+				return themeManager.getCurrentTheme().getColorRegistry().get(
+						TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 			}
 		} else if (object instanceof ITaskListElement) {
 			ITask task = getCorrespondingTask((ITaskListElement) object);
@@ -181,7 +182,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 				} else if (task.isCompleted()) {
-					return TaskListColorsAndFonts.COLOR_TASK_COMPLETED;
+					return themeManager.getCurrentTheme().getColorRegistry().get(
+							TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 				} else if (task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (task.isPastReminder()) {

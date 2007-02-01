@@ -390,6 +390,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements
 			ITableColorProvider, ITableLabelProvider {
 
+		private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		
 		public AttachmentTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {
 			super(provider, decorator);
 		}
@@ -447,7 +449,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public Color getForeground(Object element, int columnIndex) {
 			RepositoryAttachment att = (RepositoryAttachment) element;
 			if (att.isObsolete()) {
-				return TaskListColorsAndFonts.COLOR_GRAY_LIGHT;
+				return themeManager.getCurrentTheme().getColorRegistry().get(
+						TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 			}
 			return super.getForeground(element);
 		}

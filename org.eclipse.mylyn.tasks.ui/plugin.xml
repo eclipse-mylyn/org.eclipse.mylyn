@@ -493,7 +493,17 @@
            label="Tasks - Completed Today"
            value="107,169,128">  
          <description>
-            Text color for tasks completed.
+            Text color for tasks completed today.
+         </description>
+     </colorDefinition>
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasklist.ui.colors.foreground.completed"
+           isEditable="true"
+           label="Tasks - Completed"
+           value="128,128,128">  
+         <description>
+            Text color for completed tasks.
          </description>
      </colorDefinition>
      <colorDefinition

@@ -187,7 +187,9 @@ public class UiLegendDialog extends PopupDialog {
 		image.setImage(TaskListImages.getImage(TaskListImages.TASK_COMPLETED));
 		Label labelCompleted = toolkit.createLabel(sectionClient, "Completed");
 		labelCompleted.setFont(TaskListColorsAndFonts.STRIKETHROUGH);
-		labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
+//		labelCompleted.setForeground(TaskListColorsAndFonts.COLOR_TASK_COMPLETED);
+		labelCompleted.setForeground(themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_COMPLETED));
 		
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TaskListImages.getImage(TaskListImages.TASK_COMPLETED));

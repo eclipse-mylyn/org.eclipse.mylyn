@@ -26,10 +26,6 @@ public class TaskListColorsAndFonts {
 
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
-	public static final Color COLOR_GRAY_LIGHT = new Color(Display.getDefault(), 170, 170, 170);
-
-	public static final Color COLOR_TASK_COMPLETED = new Color(Display.getDefault(), 170, 170, 170);
-
 	public static final Color COLOR_TASK_ACTIVE = new Color(Display.getDefault(), 36, 22, 50);
 
 	public static final Color COLOR_LABEL_CAUTION = new Color(Display.getDefault(), 200, 10, 30);
@@ -52,6 +48,8 @@ public class TaskListColorsAndFonts {
 
 	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled";
 
+	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.completed";
+	
 	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled";
 
 	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed";
@@ -89,8 +87,6 @@ public class TaskListColorsAndFonts {
 		}
 		BACKGROUND_ARCHIVE.dispose();
 		COLOR_LABEL_CAUTION.dispose();
-		COLOR_GRAY_LIGHT.dispose();
-		COLOR_TASK_COMPLETED.dispose();
 		COLOR_TASK_ACTIVE.dispose();
 		COLOR_HYPERLINK.dispose();
 		COLOR_SPELLING_ERROR.dispose();
