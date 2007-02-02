@@ -42,7 +42,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 	private Hyperlink activeTaskLabel;
 
-	private TaskProgressBar taskProgressBar;
+	private WorkweekProgressBar taskProgressBar;
 
 	@Override
 	protected Composite createProgressComposite(Composite container) {
@@ -56,7 +56,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		progressComposite.setLayout(progressLayout);
 		progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
-		taskProgressBar = new TaskProgressBar(progressComposite);
+		taskProgressBar = new WorkweekProgressBar(progressComposite);
 		taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		updateTaskProgressBar();
 

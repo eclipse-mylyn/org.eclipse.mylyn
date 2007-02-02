@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Display;
  * 
  * @author Mik Kersten
  */
-public class TaskProgressBar extends Canvas {
+public class WorkweekProgressBar extends Canvas {
 
 	private static final int DEFAULT_HEIGHT = 5;
 
@@ -42,7 +42,7 @@ public class TaskProgressBar extends Canvas {
 	
 	private Composite parent;
 
-	public TaskProgressBar(Composite parent) {
+	public WorkweekProgressBar(Composite parent) {
 		super(parent, SWT.NONE);
 		this.parent = parent;
 

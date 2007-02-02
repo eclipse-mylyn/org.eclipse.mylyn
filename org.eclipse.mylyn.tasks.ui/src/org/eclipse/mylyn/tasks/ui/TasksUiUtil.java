@@ -247,7 +247,21 @@ public class TasksUiUtil {
 	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
-
+	
+	/**
+	 * @param task
+	 * @param pageId	the id of the page to activate after opening
+	 */
+	public static void openEditor(ITask task, String pageId) {
+		final IEditorInput editorInput = new TaskEditorInput(task, false);
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, window.getActivePage());
+		if (part instanceof TaskEditor) {
+			((TaskEditor)part).setActivePage(pageId);
+		}
+	}
+	
+	
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */

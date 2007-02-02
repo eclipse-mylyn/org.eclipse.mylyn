@@ -63,7 +63,7 @@ public class TaskListToolTipHandler {
 
 	private Label tipLabelText;
 
-	private TaskProgressBar taskProgressBar;
+	private WorkweekProgressBar taskProgressBar;
 
 	private Widget tipWidget; // widget this tooltip is hovering over
 
@@ -112,14 +112,14 @@ public class TaskListToolTipHandler {
 			progressComposite.setLayout(progressLayout);
 			progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
 
-			taskProgressBar = new TaskProgressBar(progressComposite);
+			taskProgressBar = new WorkweekProgressBar(progressComposite);
 			taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		}
 
 		return tipShell;
 	}
 
-	private String updateContainerProgressBar(TaskProgressBar taskProgressBar, Object object) {
+	private String updateContainerProgressBar(WorkweekProgressBar taskProgressBar, Object object) {
 		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
 			AbstractTaskContainer container = (AbstractTaskContainer) object;
 			int total = container.getChildren().size();
