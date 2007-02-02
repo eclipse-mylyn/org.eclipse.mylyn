@@ -17,7 +17,6 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
@@ -178,8 +177,8 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
 		} catch (RuntimeException e) {
-			MylarStatusHandler.log(e, "Unable to get status object for: " + bugReport.getStatus());
-			throw new CoreException(Status.CANCEL_STATUS);
+			MylarStatusHandler.log(e, "Unrecognized status: " + bugReport.getStatus());
+			status = BUGZILLA_REPORT_STATUS.NEW;
 		}
 		switch (status) {
 		case UNCONFIRMED:
