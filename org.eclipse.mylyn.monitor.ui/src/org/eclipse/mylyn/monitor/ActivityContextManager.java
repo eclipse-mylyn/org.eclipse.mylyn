@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.monitor;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
@@ -19,23 +22,17 @@ import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 /**
  * @author Mik Kersten
  */
-class ActivityContextManager implements IActivityTimerListener {
+public class ActivityContextManager implements IActivityTimerListener {
 
 	private AbstractUserActivityTimer userActivityTimer;
 
 	private boolean isStalled;
 
+	private Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
+	
 	public ActivityContextManager(AbstractUserActivityTimer userActivityTimer) {
 		this.userActivityTimer = userActivityTimer;
 		userActivityTimer.addListener(this);
-	}
-
-	public void start() {
-		userActivityTimer.start();
-	}
-	
-	public void stop() {
-		userActivityTimer.kill();
 	}
 	
 	public void fireActive() {
@@ -57,8 +54,24 @@ class ActivityContextManager implements IActivityTimerListener {
 		isStalled = true;
 	}
 
+	public void start() {
+		userActivityTimer.start();
+	}
+	
+	public void stop() {
+		userActivityTimer.kill();
+	}
+	
 	public void setTimeoutMillis(int millis) {
 		userActivityTimer.setTimeoutMillis(millis);
 		userActivityTimer.resetTimer();
+	}
+	
+	public void addListener(IUserAttentionListener listener) {
+		attentionListeners.add(listener);
+	}
+
+	public void removeListener(IUserAttentionListener listener) {
+		attentionListeners.remove(listener);
 	}
 }

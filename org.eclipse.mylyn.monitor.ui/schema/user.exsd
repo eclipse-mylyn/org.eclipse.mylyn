@@ -40,6 +40,11 @@
    </element>
 
    <element name="osActivityTimer">
+      <annotation>
+         <documentation>
+            Only one extension is permitted per workbench instance.  If more than one plug-in specifies this extension point, only one will be used.
+         </documentation>
+      </annotation>
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
