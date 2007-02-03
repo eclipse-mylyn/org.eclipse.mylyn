@@ -14,12 +14,8 @@ package org.eclipse.mylar.internal.context.core.util;
 /**
  * @author Mik Kersten
  */
-public interface ITimerThreadListener {
+public interface IActivityTimerListener {
 
 	public void fireTimedOut();
 
-	/**
-	 * Called every time TimerThread's sleepInterval lapses
-	 */
-	public void intervalElapsed();
 }

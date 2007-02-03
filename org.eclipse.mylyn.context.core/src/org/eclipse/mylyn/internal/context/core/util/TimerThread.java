@@ -34,7 +34,7 @@ public class TimerThread extends Thread implements Runnable {
 
 	private int elapsed = 0;
 
-	private List<ITimerThreadListener> listeners = new ArrayList<ITimerThreadListener>();
+	private List<IActivityTimerListener> listeners = new ArrayList<IActivityTimerListener>();
 
 	private boolean suspended = false;
 
@@ -49,11 +49,11 @@ public class TimerThread extends Thread implements Runnable {
 		this(millis, DEFAULT_SLEEP_INTERVAL);
 	}
 
-	public boolean addListener(ITimerThreadListener listener) {
+	public boolean addListener(IActivityTimerListener listener) {
 		return listeners.add(listener);
 	}
 
-	public boolean removeListener(ITimerThreadListener listener) {
+	public boolean removeListener(IActivityTimerListener listener) {
 		return listeners.remove(listener);
 	}
 
@@ -64,14 +64,15 @@ public class TimerThread extends Thread implements Runnable {
 				while (elapsed < timeout && !killed) {
 					elapsed += sleepInterval;
 					sleep(sleepInterval);
-					if (!suspended) {
-						for (ITimerThreadListener listener : listeners)
-							listener.intervalElapsed();
-					}
+//					if (!suspended) {
+//						for (IActivityTimerListener listener : listeners) {
+//							listener.intervalElapsed();
+//						}
+//					}
 				}
 				if (elapsed >= timeout && !killed) {
 					if (!suspended) {
-						for (ITimerThreadListener listener : listeners)
+						for (IActivityTimerListener listener : listeners)
 							listener.fireTimedOut();
 					}
 					elapsed = 0;
