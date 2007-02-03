@@ -16,6 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IInteractionEventListener;
 import org.eclipse.mylar.context.core.InteractionEvent;
@@ -52,8 +58,10 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	 */
 	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
 
-	private ActivityListener activityListener;
+	private ActivityContextManager activityListener;
 
+	private AbstractUserActivityTimer osActivityTimer = null;
+	
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
 	protected Set<IPageListener> pageListeners = new HashSet<IPageListener>();
@@ -120,10 +128,18 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 				try {
 					getWorkbench().addWindowListener(WINDOW_LISTENER);
 					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
-
 					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
-
-					activityListener = new ActivityListener(TIMEOUT_INACTIVITY_MILLIS);// INACTIVITY_TIMEOUT_MILLIS);
+					
+					new MonitorUiExtensionPointReader().initExtensions();
+					
+					AbstractUserActivityTimer activityTimer;
+					if (osActivityTimer != null) {
+						activityTimer = osActivityTimer;
+					} else {
+						activityTimer = new WorkbenchActivityTimer(TIMEOUT_INACTIVITY_MILLIS);
+					}
+					
+					activityListener = new ActivityContextManager(activityTimer);
 					ContextCorePlugin.getContextManager().addListener(activityListener);
 					activityListener.startMonitoring();
 				} catch (Exception e) {
@@ -153,7 +169,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 
 	public void setInactivityTimeout(int millis) {
 		inactivityTimeout = millis;
-		activityListener.setTimeout(millis);
+		activityListener.setTimeoutMillis(millis);
 	}
 
 	/**
@@ -250,4 +266,52 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 		return interactionListeners;
 	}
 
+	
+	class MonitorUiExtensionPointReader {
+
+		public static final String EXTENSION_ID_STUDY = "org.eclipse.mylar.monitor";
+
+		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer";
+
+		public static final String ELEMENT_CLASS = "class";
+		
+		private boolean extensionsRead = false;
+
+		@SuppressWarnings("deprecation")
+		public void initExtensions() {
+			try {
+				if (!extensionsRead) {
+					IExtensionRegistry registry = Platform.getExtensionRegistry();
+					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STUDY);
+					if (extensionPoint != null) {
+						IExtension[] extensions = extensionPoint.getExtensions();
+						for (int i = 0; i < extensions.length; i++) {
+							IConfigurationElement[] elements = extensions[i].getConfigurationElements();
+							for (int j = 0; j < elements.length; j++) {
+								if (elements[j].getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
+									readActivityTimer(elements[j]);
+								} 
+							}
+						}
+						extensionsRead = true;
+					}
+				}
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "could not read monitor extension", false);
+			}
+		}
+
+		private void readActivityTimer(IConfigurationElement element) throws CoreException {
+			try {
+				if (element.getAttribute(ELEMENT_CLASS) != null) {
+					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
+					if (activityTimer instanceof AbstractUserActivityTimer) {
+						osActivityTimer = (AbstractUserActivityTimer)activityTimer;
+					}
+				} 
+			} catch (CoreException throwable) {
+				MylarStatusHandler.log(throwable, "could not load activity timer");
+			}
+		}
+	}
 }

@@ -13,32 +13,32 @@ package org.eclipse.mylar.monitor;
 
 import java.util.List;
 
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IInteractionEventListener;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
-import org.eclipse.mylar.internal.context.core.util.TimerThread;
+import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 
 /**
  * @author Mik Kersten
  */
-class ActivityListener implements ITimerThreadListener, IInteractionEventListener, IMylarContextListener {
+class ActivityContextManager implements IActivityTimerListener, IInteractionEventListener, IMylarContextListener {
 
-	private TimerThread timer;
+	private AbstractUserActivityTimer timer;
 
-	private int sleepPeriod = 60000;
+//	private int sleepPeriod = 60000;
 
 	private boolean isStalled;
 
-	public ActivityListener(int millis) {
-		timer = new TimerThread(millis);
+	public ActivityContextManager(AbstractUserActivityTimer timer) {
+		this.timer = timer;
+//		timer = new WorkbenchActivityTimer(millis);
 		timer.addListener(this);
 		timer.start();
-		sleepPeriod = millis;
+//		sleepPeriod = millis;
 		MylarMonitorPlugin.getDefault().addInteractionListener(this);
 	}
 
@@ -49,11 +49,6 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 		}
 		isStalled = true;
-	}
-
-	public void intervalElapsed() {
-		// ignore
-
 	}
 
 	public void interactionObserved(InteractionEvent event) {
@@ -77,20 +72,25 @@ class ActivityListener implements ITimerThreadListener, IInteractionEventListene
 	public void stopMonitoring() {
 	}
 
-	public void setTimeout(int millis) {
-		timer.kill();
-		sleepPeriod = millis;
-		timer = new TimerThread(millis);
-		timer.addListener(this);
-		timer.start();
+	public void setTimeoutMillis(int millis) {
+//		timer.kill();
+//		sleepPeriod = millis;
+		timer.setTimeoutMillis(millis);
+		timer.resetTimer();
+//		timer.start();
+//		timer.resetTimer();
+//		timer = new WorkbenchActivityTimer(millis);
+//		timer.addListener(this);
+//		timer.start();
 	}
 
 	public void contextActivated(IMylarContext context) {
 		interactionObserved(null);
-		timer.kill();
-		timer = new TimerThread(sleepPeriod);
-		timer.addListener(this);
-		timer.start();
+//		timer.resetTimer();
+//		timer.kill();
+//		timer = new WorkbenchActivityTimer(sleepPeriod);
+//		timer.addListener(this);
+//		timer.start();
 	}
 
 	public void contextDeactivated(IMylarContext context) {

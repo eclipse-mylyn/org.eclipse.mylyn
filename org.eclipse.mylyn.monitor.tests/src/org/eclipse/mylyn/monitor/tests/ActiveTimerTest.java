@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.monitor.tests;
 
-import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
+import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
 import junit.framework.TestCase;
@@ -26,27 +26,19 @@ public class ActiveTimerTest extends TestCase {
 
 	private TimerThread thread;
 
-	private ITimerThreadListener listener = new ITimerThreadListener() {
+	private IActivityTimerListener listener = new IActivityTimerListener() {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
 			thread.kill();
 		}
 
-		public void intervalElapsed() {
-			// ignore
-		}
-
 	};
 
-	private ITimerThreadListener listener2 = new ITimerThreadListener() {
+	private IActivityTimerListener listener2 = new IActivityTimerListener() {
 
 		public void fireTimedOut() {
 			gotTimeOut = true;
-		}
-
-		public void intervalElapsed() {
-			// ignore
 		}
 
 	};
