@@ -68,7 +68,7 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 	/**
 	 * Called by the ActivityTimerThread Calls save in a new job
 	 */
-	public void fireTimedOut() {
+	public void fireInactive() {
 		try {
 			if (!forceSyncExec) {
 				final SaveJob job = new SaveJob("Saving Task Data", listener);
@@ -95,6 +95,10 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 			listener.saveRequested();
 			return Status.OK_STATUS;
 		}
+	}
+
+	public void fireActive() {
+		// ignore
 	}
 
 }
