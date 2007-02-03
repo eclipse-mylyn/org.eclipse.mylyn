@@ -58,7 +58,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 	 */
 	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
 
-	private ActivityContextManager activityListener;
+	private ActivityContextManager activityContextManager;
 
 	private AbstractUserActivityTimer osActivityTimer = null;
 	
@@ -136,12 +136,11 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 					if (osActivityTimer != null) {
 						activityTimer = osActivityTimer;
 					} else {
-						activityTimer = new WorkbenchActivityTimer(TIMEOUT_INACTIVITY_MILLIS);
+						activityTimer = new WorkbenchUserActivityTimer(TIMEOUT_INACTIVITY_MILLIS);
 					}
 					
-					activityListener = new ActivityContextManager(activityTimer);
-					ContextCorePlugin.getContextManager().addListener(activityListener);
-					activityListener.startMonitoring();
+					activityContextManager = new ActivityContextManager(activityTimer);
+					activityContextManager.start();
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, "Mylar Monitor start failed", false);
 				}
@@ -154,6 +153,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		INSTANCE = null;
 		try {
+			activityContextManager.stop();
 			if (getWorkbench() != null && !getWorkbench().isClosing()) {
 				getWorkbench().removeWindowListener(WINDOW_LISTENER);
 				getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
@@ -169,7 +169,7 @@ public class MylarMonitorPlugin extends AbstractUIPlugin {
 
 	public void setInactivityTimeout(int millis) {
 		inactivityTimeout = millis;
-		activityListener.setTimeoutMillis(millis);
+		activityContextManager.setTimeoutMillis(millis);
 	}
 
 	/**

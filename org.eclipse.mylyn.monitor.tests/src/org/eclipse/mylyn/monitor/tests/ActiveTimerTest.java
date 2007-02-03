@@ -28,17 +28,26 @@ public class ActiveTimerTest extends TestCase {
 
 	private IActivityTimerListener listener = new IActivityTimerListener() {
 
-		public void fireTimedOut() {
+		public void fireInactive() {
 			gotTimeOut = true;
 			thread.kill();
+		}
+
+		public void fireActive() {
+			// ignore
 		}
 
 	};
 
 	private IActivityTimerListener listener2 = new IActivityTimerListener() {
 
-		public void fireTimedOut() {
+		public void fireInactive() {
 			gotTimeOut = true;
+		}
+
+		
+		public void fireActive() {
+			// ignore
 		}
 
 	};

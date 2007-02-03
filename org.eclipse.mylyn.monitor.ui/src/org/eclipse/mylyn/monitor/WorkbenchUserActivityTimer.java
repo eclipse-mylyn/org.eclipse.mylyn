@@ -11,28 +11,49 @@
 
 package org.eclipse.mylar.monitor;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.eclipse.mylar.context.core.IInteractionEventListener;
+import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
 /**
  * @author Mik Kersten
  */
-public class WorkbenchActivityTimer extends AbstractUserActivityTimer {
+public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implements IInteractionEventListener {
 	
 	private TimerThread timerThread;
 	
-	public WorkbenchActivityTimer(int millis) {
+	private Set<IActivityTimerListener> listeners = new HashSet<IActivityTimerListener>();
+	
+	public WorkbenchUserActivityTimer(int millis) {
 		timerThread = new TimerThread(millis);
 	}
 
+	public void interactionObserved(InteractionEvent event) {
+		for (IActivityTimerListener listener : listeners) {
+			listener.fireActive();
+		}
+	}
+	
 	@Override
 	public boolean addListener(IActivityTimerListener activityListener) {
+		listeners.add(activityListener);
 		return timerThread.addListener(activityListener);
 	}
 
 	@Override
+	public void start() {
+		timerThread.start();
+		MylarMonitorPlugin.getDefault().addInteractionListener(this);
+	}
+	
+	@Override
 	public void kill() {
 		timerThread.kill();
+		MylarMonitorPlugin.getDefault().removeInteractionListener(this);
 	}
 
 	@Override
@@ -45,8 +66,11 @@ public class WorkbenchActivityTimer extends AbstractUserActivityTimer {
 		timerThread.setTimeoutMillis(millis);
 	}
 
-	@Override
-	public void start() {
-		timerThread.start();
+	public void startMonitoring() {
+		// ignore
+	}
+
+	public void stopMonitoring() {
+		// ignore
 	}
 }

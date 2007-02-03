@@ -18,6 +18,9 @@ import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
  */
 public abstract class AbstractUserActivityTimer {
 
+	/**
+	 * The listener needs to be notified of timed user activity and inactivity
+	 */
 	public abstract boolean addListener(IActivityTimerListener activityListener);
 
 	public abstract void resetTimer();

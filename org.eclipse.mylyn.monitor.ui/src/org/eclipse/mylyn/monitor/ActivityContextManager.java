@@ -11,13 +11,7 @@
 
 package org.eclipse.mylar.monitor;
 
-import java.util.List;
-
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionEventListener;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
@@ -25,34 +19,27 @@ import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 /**
  * @author Mik Kersten
  */
-class ActivityContextManager implements IActivityTimerListener, IInteractionEventListener, IMylarContextListener {
+class ActivityContextManager implements IActivityTimerListener {
 
-	private AbstractUserActivityTimer timer;
-
-//	private int sleepPeriod = 60000;
+	private AbstractUserActivityTimer userActivityTimer;
 
 	private boolean isStalled;
 
-	public ActivityContextManager(AbstractUserActivityTimer timer) {
-		this.timer = timer;
-//		timer = new WorkbenchActivityTimer(millis);
-		timer.addListener(this);
-		timer.start();
-//		sleepPeriod = millis;
-		MylarMonitorPlugin.getDefault().addInteractionListener(this);
+	public ActivityContextManager(AbstractUserActivityTimer userActivityTimer) {
+		this.userActivityTimer = userActivityTimer;
+		userActivityTimer.addListener(this);
 	}
 
-	public void fireTimedOut() {
-		if (!isStalled) {
-			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
-					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
-		}
-		isStalled = true;
+	public void start() {
+		userActivityTimer.start();
 	}
-
-	public void interactionObserved(InteractionEvent event) {
-		timer.resetTimer();
+	
+	public void stop() {
+		userActivityTimer.kill();
+	}
+	
+	public void fireActive() {
+		userActivityTimer.resetTimer();
 		if (isStalled) {
 			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
@@ -61,68 +48,17 @@ class ActivityContextManager implements IActivityTimerListener, IInteractionEven
 		isStalled = false;
 	}
 
-	public void startMonitoring() {
-	}
-
-	public void stopTimer() {
-		timer.kill();
-		MylarMonitorPlugin.getDefault().removeInteractionListener(this);
-	}
-
-	public void stopMonitoring() {
+	public void fireInactive() {
+		if (!isStalled) {
+			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
+					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+		}
+		isStalled = true;
 	}
 
 	public void setTimeoutMillis(int millis) {
-//		timer.kill();
-//		sleepPeriod = millis;
-		timer.setTimeoutMillis(millis);
-		timer.resetTimer();
-//		timer.start();
-//		timer.resetTimer();
-//		timer = new WorkbenchActivityTimer(millis);
-//		timer.addListener(this);
-//		timer.start();
-	}
-
-	public void contextActivated(IMylarContext context) {
-		interactionObserved(null);
-//		timer.resetTimer();
-//		timer.kill();
-//		timer = new WorkbenchActivityTimer(sleepPeriod);
-//		timer.addListener(this);
-//		timer.start();
-	}
-
-	public void contextDeactivated(IMylarContext context) {
-		interactionObserved(null);
-		timer.kill();
-	}
-
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
-
-	public void interestChanged(List<IMylarElement> elements) {
-		// ignore
-	}
-
-	public void elementDeleted(IMylarElement element) {
-		// ignore
-	}
-
-	public void landmarkAdded(IMylarElement element) {
-		// ignore
-	}
-
-	public void landmarkRemoved(IMylarElement element) {
-		// ignore
-	}
-
-	public void relationsChanged(IMylarElement element) {
-		// ignore
+		userActivityTimer.setTimeoutMillis(millis);
+		userActivityTimer.resetTimer();
 	}
 }
