@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
-import org.eclipse.mylar.internal.context.core.util.TimerThread;
+import org.eclipse.mylar.monitor.core.IActivityTimerListener;
+import org.eclipse.mylar.monitor.core.ActivityTimerThread;
 
 /**
  * Timer that periodically runs saveRequested() on its client as a job
@@ -31,13 +31,13 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 
 	private IBackgroundSaveListener listener = null;
 
-	private TimerThread timer = null;
+	private ActivityTimerThread timer = null;
 
 	private boolean forceSyncExec = false;
 
 	public BackgroundSaveTimer(IBackgroundSaveListener listener) {
 		this.listener = listener;
-		timer = new TimerThread(saveInterval); 
+		timer = new ActivityTimerThread(saveInterval); 
 		timer.addListener(this);
 	}
 
