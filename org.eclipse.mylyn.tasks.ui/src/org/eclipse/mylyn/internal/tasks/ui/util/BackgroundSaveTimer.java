@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.util.ITimerThreadListener;
+import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 import org.eclipse.mylar.internal.context.core.util.TimerThread;
 
 /**
@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.context.core.util.TimerThread;
  * 
  * @author Wesley Coelho
  */
-public class BackgroundSaveTimer implements ITimerThreadListener {
+public class BackgroundSaveTimer implements IActivityTimerListener {
 
 	private final static int DEFAULT_SAVE_INTERVAL = 60 * 1000;
 
@@ -95,10 +95,6 @@ public class BackgroundSaveTimer implements ITimerThreadListener {
 			listener.saveRequested();
 			return Status.OK_STATUS;
 		}
-	}
-
-	public void intervalElapsed() {
-		// ignore
 	}
 
 }
