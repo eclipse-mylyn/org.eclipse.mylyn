@@ -12,9 +12,9 @@
 package org.eclipse.mylar.monitor.workbench;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.monitor.AbstractCommandMonitor;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.ui.AbstractCommandMonitor;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -26,7 +26,7 @@ public class KeybindingCommandMonitor extends AbstractCommandMonitor {
 	@Override
 	protected void handleCommandExecution(String commandId, ExecutionEvent event) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(commandId, COMMAND_INVOKED);
-		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 }

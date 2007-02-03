@@ -11,8 +11,8 @@
 
 package org.eclipse.mylar.monitor.workbench;
 
-import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -41,25 +41,25 @@ public class WindowChangeMonitor implements IWindowListener {
 	public void windowOpened(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_OPENED);
-			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowClosed(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_CLOSED);
-			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 				WINDOW_DEACTIVATED);
-		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 				WINDOW_ACTIVATED);
-		MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	protected String getWindowOrigin(IWorkbenchWindow window) {

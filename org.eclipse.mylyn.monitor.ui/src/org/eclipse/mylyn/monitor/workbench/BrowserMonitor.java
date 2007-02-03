@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.AbstractUserInteractionMonitor;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
@@ -61,7 +61,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 			if (accept) {
 				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
 						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0);
-				MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
+				MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
 																						// move
 			}
 		}

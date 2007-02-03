@@ -12,9 +12,9 @@
 package org.eclipse.mylar.monitor.workbench;
 
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -74,7 +74,7 @@ public class MenuCommandMonitor implements Listener {
 				delta = TOOLBAR_ITEM_SELECTED;
 			}
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
-			MylarMonitorPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not log selection", false);
@@ -86,7 +86,7 @@ public class MenuCommandMonitor implements Listener {
 	 */
 	private String obfuscateValueIfContainsPath(String text) {
 		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-			return MylarMonitorPlugin.OBFUSCATED_LABEL;
+			return MylarMonitorUiPlugin.OBFUSCATED_LABEL;
 		} else {
 			return text;
 		}
