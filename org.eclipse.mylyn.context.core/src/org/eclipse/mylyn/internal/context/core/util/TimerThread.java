@@ -73,7 +73,7 @@ public class TimerThread extends Thread implements Runnable {
 				if (elapsed >= timeout && !killed) {
 					if (!suspended) {
 						for (IActivityTimerListener listener : listeners)
-							listener.fireTimedOut();
+							listener.fireInactive();
 					}
 					elapsed = 0;
 				}

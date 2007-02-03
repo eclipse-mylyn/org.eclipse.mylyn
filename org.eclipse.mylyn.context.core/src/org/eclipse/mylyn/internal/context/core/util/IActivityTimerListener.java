@@ -15,7 +15,9 @@ package org.eclipse.mylar.internal.context.core.util;
  * @author Mik Kersten
  */
 public interface IActivityTimerListener {
-
-	public void fireTimedOut();
+	
+	public void fireActive();
+	
+	public void fireInactive();
 
 }
