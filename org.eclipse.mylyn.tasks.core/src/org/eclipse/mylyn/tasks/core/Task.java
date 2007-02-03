@@ -65,8 +65,6 @@ public class Task implements ITask {
 		}
 
 		public static PriorityLevel fromString(String string) {
-			if (string == null)
-				return null;
 			if (string.equals("P1"))
 				return P1;
 			if (string.equals("P2"))
@@ -77,7 +75,7 @@ public class Task implements ITask {
 				return P4;
 			if (string.equals("P5"))
 				return P5;
-			return P3;
+			return getDefault();
 		}
 
 		public static PriorityLevel fromDescription(String string) {
@@ -93,9 +91,12 @@ public class Task implements ITask {
 				return P4;
 			if (string.equals("Very Low"))
 				return P5;
-			return null;
+			return getDefault();
 		}
 
+		public static PriorityLevel getDefault() {
+			return P3;
+		}
 	}
 
 	private boolean active = false;
@@ -108,7 +109,7 @@ public class Task implements ITask {
 
 	private String description;
 
-	private String priority = PriorityLevel.P3.toString();
+	private String priority = PriorityLevel.getDefault().toString();
 
 	private String notes = "";
 

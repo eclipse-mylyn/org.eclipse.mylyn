@@ -16,6 +16,7 @@ import java.util.Locale;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
@@ -33,13 +34,13 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	private String id;
 
 	/** The description of the bug */
-	private String description;
+	private String description = "";
 
 	/** The priority of the bug */
-	private String priority;
+	private String priority = Task.PriorityLevel.getDefault().toString();
 
 	/** The state of the bug */
-	private String state;
+	private String state = "";
 
 	private StringBuffer characters;
 

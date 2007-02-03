@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -46,5 +47,15 @@ public class TaskTest extends TestCase {
 
 		task.setUrl(null);
 		assertFalse(task.hasValidUrl());
+	}
+	
+	public void testPriorityNeverNull() {
+		Task task = new Task("handle", "label", false);
+		assertNotNull(task.getPriority());
+		
+		PriorityLevel def = PriorityLevel.getDefault();		
+		assertNotNull(def);		
+		assertEquals(def, Task.PriorityLevel.fromDescription("garbage"));
+		assertEquals(def, Task.PriorityLevel.fromString("garbage"));		
 	}
 }

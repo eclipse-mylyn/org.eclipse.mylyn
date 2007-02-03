@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
+
 
 /**
  * @author Mik Kersten
@@ -24,7 +26,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	protected String description;
 
-	protected String priority;
+	protected String priority = PriorityLevel.getDefault().toString();
 
 	protected String id;
 	
