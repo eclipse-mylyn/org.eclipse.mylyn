@@ -18,9 +18,9 @@ import java.util.Set;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 

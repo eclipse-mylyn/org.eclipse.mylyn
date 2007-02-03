@@ -13,11 +13,11 @@ package org.eclipse.mylar.internal.context.core.util;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.eclipse.mylar.context.core.InteractionEvent;
-import org.eclipse.mylar.context.core.InteractionEvent.Kind;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

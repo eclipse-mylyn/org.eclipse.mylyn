@@ -22,11 +22,11 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 

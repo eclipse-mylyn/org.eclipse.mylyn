@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.context.core;
 import java.util.*;
 
 import org.eclipse.mylar.context.core.IDegreeOfInterest;
-import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

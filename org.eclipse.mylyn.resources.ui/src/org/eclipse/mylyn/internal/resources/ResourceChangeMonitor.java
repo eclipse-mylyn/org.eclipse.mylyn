@@ -23,8 +23,8 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
 /**

@@ -23,16 +23,16 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInterestUpdater;
-import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylar.internal.resources.ui.ContextEditorManager;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -78,7 +78,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		initPreferenceDefaults();
 
 		ContextCorePlugin.getContextManager().addListener(editorManager);
-		MylarMonitorPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
+		MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 				IResourceChangeEvent.POST_CHANGE);
@@ -117,7 +117,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 			
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 			ContextCorePlugin.getContextManager().removeListener(editorManager);
-			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
+			MylarMonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar XML stop failed", false);
 		}

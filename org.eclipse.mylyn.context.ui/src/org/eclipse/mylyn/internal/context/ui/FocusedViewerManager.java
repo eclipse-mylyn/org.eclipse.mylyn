@@ -26,7 +26,7 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.workbench.AbstractPartTracker;
+import org.eclipse.mylar.monitor.ui.workbench.AbstractPartTracker;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;

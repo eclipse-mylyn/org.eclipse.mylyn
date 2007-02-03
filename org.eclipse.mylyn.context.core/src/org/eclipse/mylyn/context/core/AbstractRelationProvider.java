@@ -17,6 +17,7 @@ import org.eclipse.mylar.internal.context.core.CompositeContextElement;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.context.core.MylarContextElement;
 import org.eclipse.mylar.internal.context.core.MylarContextRelation;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

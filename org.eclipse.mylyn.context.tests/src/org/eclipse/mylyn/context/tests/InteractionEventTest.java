@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.context.tests;
 
-import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

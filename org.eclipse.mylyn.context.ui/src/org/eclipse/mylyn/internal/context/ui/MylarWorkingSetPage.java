@@ -39,7 +39,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public static final String WORKING_SET_NAME = "Mylar Task Context (for search)";
 
 	public MylarWorkingSetPage() {
-		super("org.eclipse.mylar.monitor.workingSetPage", "Mylar Task Context Working Set", ContextUiPlugin
+		super("org.eclipse.mylar.monitor.ui.workingSetPage", "Mylar Task Context Working Set", ContextUiPlugin
 				.imageDescriptorFromPlugin(ContextUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
 		setDescription("Create the Mylar Task Context working set.  It will be updated automatically to contain\n"
 				+ "all of the resources related to the active task.");

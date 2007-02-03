@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.mylar.context.core,
  org.eclipse.ui.ide,
  org.eclipse.pde.core,
- org.eclipse.mylar.monitor
+ org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylar.monitor.core
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-core-tests.jar
 Export-Package: org.eclipse.mylar.context.tests,

@@ -34,26 +34,26 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
 import org.eclipse.mylar.internal.context.ui.ColorMap;
 import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
+import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylar.internal.context.ui.Highlighter;
 import org.eclipse.mylar.internal.context.ui.HighlighterList;
-import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
 import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -273,7 +273,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			public void run() {
 				try {
 					ContextCorePlugin.getContextManager().addListener(viewerManager);
-					MylarMonitorPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+					MylarMonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
 					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
@@ -304,7 +304,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		try {
 			super.stop(context);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
-			MylarMonitorPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
+			MylarMonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 			
 			TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);

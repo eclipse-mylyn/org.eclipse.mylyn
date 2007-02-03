@@ -14,7 +14,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.internal.ide.xml.pde.PdeEditingMonitor;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -42,10 +42,10 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		super.start(context);
 		
 		pdeEditingMonitor = new PdeEditingMonitor();
-		MylarMonitorPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
+		MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(pdeEditingMonitor);
 
 		antEditingMonitor = new AntEditingMonitor();
-		MylarMonitorPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
+		MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(antEditingMonitor);
 		
 //		final IWorkbench workbench = PlatformUI.getWorkbench();
 //		workbench.getDisplay().asyncExec(new Runnable() {
@@ -68,8 +68,8 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		try {
 			super.stop(context);
 			INSTANCE = null;
-			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
-			MylarMonitorPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
+			MylarMonitorUiPlugin.getDefault().getSelectionMonitors().remove(pdeEditingMonitor);
+			MylarMonitorUiPlugin.getDefault().getSelectionMonitors().remove(antEditingMonitor);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e,
 					"Mylar IDE stop failed, Mylar may not have started properly (ensure correct Eclipse version)",

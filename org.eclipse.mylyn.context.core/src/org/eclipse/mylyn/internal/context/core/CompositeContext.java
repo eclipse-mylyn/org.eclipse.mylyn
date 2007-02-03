@@ -15,7 +15,7 @@ import java.util.*;
 
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.InteractionEvent;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * Delegates to contained contexts.
@@ -27,7 +27,7 @@ import org.eclipse.mylar.context.core.InteractionEvent;
 public class CompositeContext implements IMylarContext {
 
 	protected Map<String, MylarContext> contexts = new HashMap<String, MylarContext>();
-
+	
 	protected IMylarElement activeNode = null;
 
 	public IMylarElement addEvent(InteractionEvent event) {

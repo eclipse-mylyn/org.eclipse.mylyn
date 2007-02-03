@@ -16,8 +16,8 @@ package org.eclipse.mylar.context.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;

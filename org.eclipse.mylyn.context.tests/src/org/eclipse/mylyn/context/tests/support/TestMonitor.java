@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.AbstractUserInteractionMonitor;
+import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**

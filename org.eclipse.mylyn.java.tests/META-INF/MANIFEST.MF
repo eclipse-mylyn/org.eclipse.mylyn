@@ -31,9 +31,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.launching,
  org.eclipse.mylar.ide.tests,
  org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.monitor,
+ org.eclipse.mylar.monitor.ui,
  org.eclipse.search,
- org.eclipse.mylar.resources.tests
+ org.eclipse.mylar.resources.tests,
+ org.eclipse.mylar.monitor.core
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-java-tests.jar
 Export-Package: org.eclipse.mylar.java.tests,

@@ -13,6 +13,8 @@ package org.eclipse.mylar.context.core;
 
 import java.util.List;
 
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+
 /**
  * @author Mik Kersten
  */

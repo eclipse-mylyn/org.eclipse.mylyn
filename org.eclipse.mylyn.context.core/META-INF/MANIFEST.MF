@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.eclipse.mylar.context.core;singleton:=true
 Bundle-Version: 1.0.1.v20070201-1700
 Bundle-Activator: org.eclipse.mylar.context.core.ContextCorePlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylar.monitor.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.apache.commons.codec,

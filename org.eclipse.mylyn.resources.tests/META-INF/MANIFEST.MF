@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.java,
  org.eclipse.mylar.resources,
  org.eclipse.mylar.ide,
- org.eclipse.mylar.monitor,
+ org.eclipse.mylar.monitor.ui,
  org.eclipse.jface,
  org.eclipse.ui,
  org.eclipse.mylar.context.ui
