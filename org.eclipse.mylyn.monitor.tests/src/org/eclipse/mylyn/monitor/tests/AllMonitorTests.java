@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 public class AllMonitorTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.ui.tests");
 
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorUsageTests.suite());

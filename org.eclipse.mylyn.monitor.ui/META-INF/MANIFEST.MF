@@ -1,15 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Monitor Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.monitor;singleton:=true
+Bundle-Name: Mylar Monitor UI Plug-in
+Bundle-SymbolicName: org.eclipse.mylar.monitor.ui;singleton:=true
 Bundle-Version: 1.0.1.v20070201-1700
-Bundle-Activator: org.eclipse.mylar.monitor.MylarMonitorPlugin
+Bundle-Activator: org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.browser,
- org.eclipse.mylar.context.core
+ org.eclipse.mylar.context.core,
+ org.eclipse.mylar.monitor.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.monitor,
- org.eclipse.mylar.monitor.workbench
+Export-Package: org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylar.monitor.ui.workbench
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

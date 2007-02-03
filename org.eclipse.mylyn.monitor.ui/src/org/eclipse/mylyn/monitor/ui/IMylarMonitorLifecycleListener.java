@@ -9,19 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
-
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.ui.IWorkbenchPart;
+package org.eclipse.mylar.monitor.ui;
 
 /**
- * @author Mik Kersten
+ * @author Brian de Alwis
  */
-public class MockSelectionMonitor extends AbstractUserInteractionMonitor {
+public interface IMylarMonitorLifecycleListener {
 
-	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
-		handleElementSelection(part, selection, contributeToContext);
-	}
+	void startMonitoring();
+
+	void stopMonitoring();
+
 }

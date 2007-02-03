@@ -9,19 +9,26 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylar.monitor.ui;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
 
 /**
  * @author Mik Kersten
  */
-public class MockSelectionMonitor extends AbstractUserInteractionMonitor {
+public abstract class AbstractUserActivityTimer {
 
-	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
-		handleElementSelection(part, selection, contributeToContext);
-	}
+	/**
+	 * The listener needs to be notified of timed user activity and inactivity
+	 */
+	public abstract boolean addListener(IActivityTimerListener activityListener);
+
+	public abstract void resetTimer();
+
+	public abstract void kill();
+
+	public abstract void start();
+
+	public abstract void setTimeoutMillis(int millis);
+
 }

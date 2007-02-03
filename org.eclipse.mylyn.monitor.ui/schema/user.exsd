@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.monitor">
+<schema targetNamespace="org.eclipse.mylar.monitor.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.monitor" id="user" name="User Monitoring"/>
+         <meta.schema plugin="org.eclipse.mylar.monitor.ui" id="user" name="User Monitoring"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -52,7 +52,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.monitor.AbstractUserActivityTimer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylar.monitor.ui.AbstractUserActivityTimer"/>
                </appInfo>
             </annotation>
          </attribute>

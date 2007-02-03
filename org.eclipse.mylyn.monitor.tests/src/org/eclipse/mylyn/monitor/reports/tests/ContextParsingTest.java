@@ -18,11 +18,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactor;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 
 /**

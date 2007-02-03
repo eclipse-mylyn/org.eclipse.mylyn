@@ -24,7 +24,7 @@ import java.util.zip.ZipFile;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
-import org.eclipse.mylar.monitor.MylarMonitorPlugin;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
@@ -83,7 +83,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 	public void testCreateLargeUploadPackage() throws IOException, InterruptedException {
 
 		for (int i = 0; i < 20000; i++) {
-			MylarMonitorPlugin.getDefault().notifyInteractionObserved(mockSelection());
+			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(mockSelection());
 		}
 		testCreateUploadPackage();
 	}

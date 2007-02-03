@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllMonitorUsageTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.usage.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.ui.usage.tests");
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(FileDisplayDialogTest.class);

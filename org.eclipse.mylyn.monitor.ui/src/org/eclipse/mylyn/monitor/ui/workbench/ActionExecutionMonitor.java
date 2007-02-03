@@ -9,19 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylar.monitor.ui.workbench;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.ui.IActionExecutionListener;
+import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class MockSelectionMonitor extends AbstractUserInteractionMonitor {
+public class ActionExecutionMonitor implements IActionExecutionListener {
 
-	@Override
-	protected void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext) {
-		handleElementSelection(part, selection, contributeToContext);
+	public void actionObserved(IAction action) {
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
+		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 }
