@@ -285,4 +285,11 @@ litigation.
          version="1.0.1.v20070201-1700"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.mylar.monitor.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
