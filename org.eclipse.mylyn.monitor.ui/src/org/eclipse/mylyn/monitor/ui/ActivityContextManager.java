@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
-import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
+import org.eclipse.mylar.monitor.core.IActivityTimerListener;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**

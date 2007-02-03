@@ -14,22 +14,22 @@ package org.eclipse.mylar.monitor.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.internal.context.core.util.IActivityTimerListener;
-import org.eclipse.mylar.internal.context.core.util.TimerThread;
+import org.eclipse.mylar.monitor.core.IActivityTimerListener;
 import org.eclipse.mylar.monitor.core.IInteractionEventListener;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylar.monitor.core.ActivityTimerThread;
 
 /**
  * @author Mik Kersten
  */
 public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implements IInteractionEventListener {
 	
-	private TimerThread timerThread;
+	private ActivityTimerThread timerThread;
 	
 	private Set<IActivityTimerListener> listeners = new HashSet<IActivityTimerListener>();
 	
 	public WorkbenchUserActivityTimer(int millis) {
-		timerThread = new TimerThread(millis);
+		timerThread = new ActivityTimerThread(millis);
 	}
 
 	public void interactionObserved(InteractionEvent event) {

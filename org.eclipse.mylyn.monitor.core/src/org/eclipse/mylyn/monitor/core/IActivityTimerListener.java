@@ -9,26 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui;
-
-import org.eclipse.mylar.monitor.core.IActivityTimerListener;
+package org.eclipse.mylar.monitor.core;
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractUserActivityTimer {
-
-	/**
-	 * The listener needs to be notified of timed user activity and inactivity
-	 */
-	public abstract boolean addListener(IActivityTimerListener activityListener);
-
-	public abstract void resetTimer();
-
-	public abstract void kill();
-
-	public abstract void start();
-
-	public abstract void setTimeoutMillis(int millis);
+public interface IActivityTimerListener {
+	
+	public void fireActive();
+	
+	public void fireInactive();
 
 }
