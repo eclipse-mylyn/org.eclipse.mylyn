@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar_feature"
       label="Mylar Task List (Required)"
-      version="1.0.1.v20070201-1700"
+      version="1.0.1.v20070202-1900"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -220,19 +220,19 @@ litigation.
    <requires>
       <import plugin="org.eclipse.ui" version="3.3.0.I20061214" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar.tasks.core"/>
+      <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.mylar.context.core"/>
       <import plugin="org.eclipse.update.core"/>
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.mylar.monitor.ui"/>
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.mylar.tasks.ui"/>
-      <import plugin="org.eclipse.mylar.context.core"/>
-      <import plugin="org.eclipse.mylar.tasks.core"/>
-      <import plugin="org.eclipse.mylar.monitor.ui"/>
       <import plugin="org.eclipse.search"/>
    </requires>
 
@@ -240,56 +240,56 @@ litigation.
          id="org.eclipse.mylar.doc"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.core"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.ui"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.ui"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.core"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.web"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070201-1700"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.1.v20070202-1900"
          unpack="false"/>
 
 </feature>
