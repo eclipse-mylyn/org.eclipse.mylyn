@@ -232,7 +232,7 @@ litigation.
       <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.mylar.context.core"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
-      <import plugin="org.eclipse.mylar.monitor"/>
+      <import plugin="org.eclipse.mylar.monitor.ui"/>
       <import plugin="org.eclipse.search"/>
    </requires>
 
@@ -265,7 +265,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.mylar.monitor"
+         id="org.eclipse.mylar.monitor.ui"
          download-size="0"
          install-size="0"
          version="1.0.1.v20070201-1700"

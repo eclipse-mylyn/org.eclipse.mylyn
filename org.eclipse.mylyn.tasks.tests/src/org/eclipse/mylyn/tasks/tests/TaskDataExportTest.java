@@ -17,11 +17,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.MylarContext;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizardPage;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TaskListManager;

@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.tasks.core.ITask;
 
 /**

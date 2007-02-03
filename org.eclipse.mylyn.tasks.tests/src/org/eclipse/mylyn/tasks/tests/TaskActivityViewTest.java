@@ -17,8 +17,8 @@ import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.InteractionEvent;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
