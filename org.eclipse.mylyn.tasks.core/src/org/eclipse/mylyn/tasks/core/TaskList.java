@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 
@@ -34,7 +35,7 @@ public class TaskList {
 
 	private int lastTaskNum = 0;
 
-	private List<ITaskListChangeListener> changeListeners = new ArrayList<ITaskListChangeListener>();
+	private Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
 
 	private Map<String, ITask> tasks;
 
@@ -487,8 +488,8 @@ public class TaskList {
 	 * 
 	 * @return unmodifiable collection of ITaskActivityListeners
 	 */
-	public List<ITaskListChangeListener> getChangeListeners() {
-		return Collections.unmodifiableList(changeListeners);
+	public Set<ITaskListChangeListener> getChangeListeners() {
+		return Collections.unmodifiableSet(changeListeners);
 	}
 
 	/**

@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasks.tests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -225,7 +226,7 @@ public class TaskListUiTest extends TestCase {
 		int numListenersAfter = 0;
 
 		TaskListManager manager = TasksUiPlugin.getTaskListManager();
-		List<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
+		Set<ITaskListChangeListener> listeners = manager.getTaskList().getChangeListeners();
 		numListenersBefore = listeners.size();
 
 		// open a task in editor
