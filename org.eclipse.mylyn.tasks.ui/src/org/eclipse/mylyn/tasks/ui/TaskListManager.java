@@ -732,6 +732,9 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
+	/**
+	 * @return	if a repository task, will only return true if the user is a 
+	 */
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
 
@@ -741,8 +744,9 @@ public class TaskListManager implements IPropertyChangeListener {
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 
 				if (repository != null && repositoryTask.getOwner() != null
-						&& !repositoryTask.getOwner().equals(repository.getUserName()))
+						&& !repositoryTask.getOwner().equals(repository.getUserName())) {
 					return false;
+				}
 			}
 
 			Date completionDate = task.getCompletionDate();
