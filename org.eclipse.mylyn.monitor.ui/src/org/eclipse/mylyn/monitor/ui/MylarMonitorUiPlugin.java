@@ -61,7 +61,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 	private ActivityContextManager activityContextManager;
 
 	private AbstractUserActivityTimer osActivityTimer = null;
-	
+
 	protected Set<IPartListener> partListeners = new HashSet<IPartListener>();
 
 	protected Set<IPageListener> pageListeners = new HashSet<IPageListener>();
@@ -129,16 +129,16 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 					getWorkbench().addWindowListener(WINDOW_LISTENER);
 					shellLifecycleListener = new ShellLifecycleListener(ContextCorePlugin.getContextManager());
 					getWorkbench().getActiveWorkbenchWindow().getShell().addShellListener(shellLifecycleListener);
-					
+
 					new MonitorUiExtensionPointReader().initExtensions();
-					
+
 					AbstractUserActivityTimer activityTimer;
 					if (osActivityTimer != null) {
 						activityTimer = osActivityTimer;
 					} else {
 						activityTimer = new WorkbenchUserActivityTimer(TIMEOUT_INACTIVITY_MILLIS);
 					}
-					
+
 					activityContextManager = new ActivityContextManager(activityTimer);
 					activityContextManager.start();
 				} catch (Exception e) {
@@ -151,7 +151,6 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		INSTANCE = null;
 		try {
 			activityContextManager.stop();
 			if (getWorkbench() != null && !getWorkbench().isClosing()) {
@@ -161,6 +160,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Monitor stop failed", false);
 		}
+		INSTANCE = null;
 	}
 
 	public ShellLifecycleListener getShellLifecycleListener() {
@@ -266,7 +266,6 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 		return interactionListeners;
 	}
 
-	
 	class MonitorUiExtensionPointReader {
 
 		public static final String EXTENSION_ID_STUDY = "org.eclipse.mylar.monitor.ui";
@@ -274,7 +273,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer";
 
 		public static final String ELEMENT_CLASS = "class";
-		
+
 		private boolean extensionsRead = false;
 
 		@SuppressWarnings("deprecation")
@@ -290,7 +289,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 							for (int j = 0; j < elements.length; j++) {
 								if (elements[j].getName().compareTo(ELEMENT_ACTIVITY_TIMER) == 0) {
 									readActivityTimer(elements[j]);
-								} 
+								}
 							}
 						}
 						extensionsRead = true;
@@ -306,9 +305,9 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 				if (element.getAttribute(ELEMENT_CLASS) != null) {
 					Object activityTimer = element.createExecutableExtension(ELEMENT_CLASS);
 					if (activityTimer instanceof AbstractUserActivityTimer) {
-						osActivityTimer = (AbstractUserActivityTimer)activityTimer;
+						osActivityTimer = (AbstractUserActivityTimer) activityTimer;
 					}
-				} 
+				}
 			} catch (CoreException throwable) {
 				MylarStatusHandler.log(throwable, "could not load activity timer");
 			}
