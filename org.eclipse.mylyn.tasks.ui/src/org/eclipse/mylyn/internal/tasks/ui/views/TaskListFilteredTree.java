@@ -26,6 +26,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
@@ -43,6 +44,14 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	private Hyperlink activeTaskLabel;
 
 	private WorkweekProgressBar taskProgressBar;
+
+	private int totalTasks;
+
+	private int completeTime;
+
+	private int completeTasks;
+
+	private int incompleteTime;
 
 	@Override
 	protected Composite createProgressComposite(Composite container) {
@@ -119,10 +128,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		}
 
 		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
-		int totalTasks = tasksThisWeek.size();
-		int completeTime = 0;
-		int completeTasks = 0;
-		int incompleteTime = 0;
+		totalTasks = tasksThisWeek.size();
+		completeTime = 0;
+		completeTasks = 0;
+		incompleteTime = 0;
 		for (ITask task : tasksThisWeek) {
 			if (task.isCompleted()) {
 				completeTasks++;
@@ -139,10 +148,18 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				}
 			}
 		}
-		taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-		taskProgressBar.setToolTipText("Workweek Progress" 
-				+ "\n     Tasks: " + completeTasks + " of " + totalTasks + " scheduled"
-				+ "\n     Hours: " + completeTime + " of " + (completeTime + incompleteTime) + " estimated");
+		
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+			public void run() {
+				taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
+				taskProgressBar.setToolTipText("Workweek Progress" 
+						+ "\n     Tasks: " + completeTasks + " of " + totalTasks + " scheduled"
+						+ "\n     Hours: " + completeTime + " of " + (completeTime + incompleteTime) + " estimated");
+			}});
+		
+		
+	
 	}
 
 	@Override

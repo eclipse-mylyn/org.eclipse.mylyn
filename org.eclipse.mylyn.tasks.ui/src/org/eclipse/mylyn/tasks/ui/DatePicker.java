@@ -29,6 +29,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -186,6 +187,11 @@ public class DatePicker extends Composite {
 		return date;
 	}
 
+	public void setBackground(Color backgroundColor) {
+		dateText.setBackground(backgroundColor);
+		super.setBackground(backgroundColor);
+	}
+	
 	public void setDate(Calendar date) {
 		this.date = date;
 		updateDateText();

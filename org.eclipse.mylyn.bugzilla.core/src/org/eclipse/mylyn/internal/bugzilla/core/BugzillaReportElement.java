@@ -85,7 +85,8 @@ public enum BugzillaReportElement {
 	RDF ("used by search engine", "rdf", false),
 	INSTALLATION ("used by search engine", "installation", false),
 	BUGS ("used by search engine", "bugs", false),
-	STATUS_OPEN ("open status values", "status_open", true, true);
+	STATUS_OPEN ("open status values", "status_open", true, true), 
+	NEW_COMMENT ("new comment", "new_comment", true, false);
 	
 	private final boolean isHidden;
 	

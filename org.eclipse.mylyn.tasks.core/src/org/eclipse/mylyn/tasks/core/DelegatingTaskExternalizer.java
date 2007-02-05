@@ -452,7 +452,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	protected void readTaskData(AbstractRepositoryTask task) {
-		RepositoryTaskData data = taskDataManager.getTaskData(task.getHandleIdentifier());		
+		RepositoryTaskData data = taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());		
 //		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(task.getHandleIdentifier());		
 		task.setTaskData(data);
 		if (data != null && data.hasLocalChanges()) {

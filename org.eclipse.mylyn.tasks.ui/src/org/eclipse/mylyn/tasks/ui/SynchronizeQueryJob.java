@@ -103,7 +103,7 @@ class SynchronizeQueryJob extends Job {
 						for (AbstractQueryHit hit : collector.getHits()) {
 							if (!temp.contains(hit)
 									&& hit.getCorrespondingTask() == null
-									&& TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+									&& TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
 											hit.getHandleIdentifier()) == null) {
 								temp.add(hit);
 							}
@@ -112,15 +112,6 @@ class SynchronizeQueryJob extends Job {
 						}
 					}
 
-					// for (AbstractQueryHit hit: collector.getHits()) {
-					// if(hit.getCorrespondingTask() != null &&
-					// hit.getCorrespondingTask().getTaskData() == null &&
-					// tasks2syc.size() < 20) {
-					// tasks2syc.add(hit.getCorrespondingTask());
-					// connector.getTaskDataHandler().getTaskData(repository,
-					// hit.getHandleIdentifier());
-					// }
-					// }
 
 					if (synchTasks) {
 						repositories.add(repository);
@@ -210,7 +201,7 @@ class SynchronizeQueryJob extends Job {
 							if (hit.getCorrespondingTask() != null) {
 								hit.getCorrespondingTask().setTaskData(taskData);
 							}
-							TasksUiPlugin.getDefault().getTaskDataManager().put(taskData);
+							TasksUiPlugin.getDefault().getTaskDataManager().push(taskData);
 						}
 						monitor.worked(1);
 					}

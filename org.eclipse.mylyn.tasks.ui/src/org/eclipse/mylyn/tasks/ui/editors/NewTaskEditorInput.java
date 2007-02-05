@@ -22,7 +22,7 @@ public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
 		super(repository, taskData.getId(), "");
 		super.setOldTaskData(taskData);
-		super.setNewTaskData(taskData);
+		super.setEditableTaskData(taskData);
 	}
 
 	public String getName() {

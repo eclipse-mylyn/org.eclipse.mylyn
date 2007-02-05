@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class RepositoryTaskAttribute implements Serializable {
 
-	private static final long serialVersionUID = 6383803576644618720L;
+	private static final long serialVersionUID = 6383833576644618720L;
 
 	/**
 	 * Key for the author of a comment.
@@ -35,6 +35,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String USER_OWNER = "task.common.user.owner";
 
 	public static final String USER_CC = "task.common.user.cc";
+	
+	public static final String COMMENT_NEW = "task.common.comment.new";
 
 	public static final String COMMENT_TEXT = "task.common.comment.text";
 
@@ -236,4 +238,31 @@ public class RepositoryTaskAttribute implements Serializable {
 		return getValue();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final RepositoryTaskAttribute other = (RepositoryTaskAttribute) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		return true;
+	}
+
+	
+	
 }

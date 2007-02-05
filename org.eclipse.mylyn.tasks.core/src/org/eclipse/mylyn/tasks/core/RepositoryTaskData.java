@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
  */
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = 2304511248225227689L;
+	private static final long serialVersionUID = 2304511248225237689L;
 
 	private boolean hasLocalChanges = false;
 
@@ -39,8 +39,6 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	private String reportID;
 
 	private String repositoryURL;
-
-	protected String newComment = "";
 
 	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
@@ -239,14 +237,15 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	 * Get the new comment that is to be added to the bug
 	 */
 	public String getNewComment() {
-		return newComment;
+		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
+		return (attribute != null) ? attribute.getValue() : "";
 	}
 
 	/**
 	 * Set the new comment that will be added to the bug
 	 */
 	public void setNewComment(String newComment) {
-		this.newComment = newComment;
+		setAttributeValue(RepositoryTaskAttribute.COMMENT_NEW, newComment);
 	}
 
 	public void addComment(TaskComment taskComment) {

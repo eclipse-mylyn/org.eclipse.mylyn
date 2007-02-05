@@ -461,7 +461,7 @@ public class TaskFormPage extends FormPage {
 	}
 
 	public void markDirty(boolean dirty) {
-		isDirty = dirty;
+		isDirty = dirty;	
 		getManagedForm().dirtyStateChanged();
 		return;
 	}

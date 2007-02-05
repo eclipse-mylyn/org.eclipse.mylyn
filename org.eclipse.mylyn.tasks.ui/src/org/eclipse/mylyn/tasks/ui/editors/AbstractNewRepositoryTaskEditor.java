@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasks.ui.editors;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +28,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.ui.DatePicker;
@@ -53,6 +55,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -96,12 +99,17 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		setSite(site);
 		setInput(input);
 		editorInput = ei;
+		changedAttributes = new HashSet<RepositoryTaskAttribute>();
 		taskData = ei.getTaskData();
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData, false);
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		isDirty = false;
+		IWorkbenchSiteProgressService progressService = getProgressService();
+		if (progressService != null) {
+			progressService.showBusyForFamily(FAMILY_SUBMIT);
+		}
 	}
 
 	@Override
@@ -429,7 +437,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			}
 		});
 		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
-		submitButton.addListener(SWT.FocusIn, new GenericListener());
 	}
 
 	protected boolean prepareSubmit() {

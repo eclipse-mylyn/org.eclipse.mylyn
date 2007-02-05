@@ -31,7 +31,7 @@ public interface IMylarStatusConstants {
 
 	public final static int IO_ERROR = 5;
 
-//	public final static int NETWORK_LOGIN_ERROR = 6;
+	public final static int REPOSITORY_COLLISION = 6;
 
 	public final static int INTERNAL_ERROR = 7;
 	

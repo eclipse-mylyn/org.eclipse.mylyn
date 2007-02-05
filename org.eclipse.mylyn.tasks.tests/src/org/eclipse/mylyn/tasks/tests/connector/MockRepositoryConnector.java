@@ -12,18 +12,21 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -68,7 +71,26 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public ITaskDataHandler getTaskDataHandler() {
 		// ignore
-		return null;
+		return new ITaskDataHandler() {
+
+			public AbstractAttributeFactory getAttributeFactory() {
+				return new MockAttributeFactory();
+			}
+
+			public Date getDateForAttributeType(String attributeKey, String dateString) {
+				// ignore
+				return null;
+			}
+
+			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+				// ignore
+				return null;
+			}
+
+			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+				// ignore
+				return null;
+			}};
 	}
 
 	@Override

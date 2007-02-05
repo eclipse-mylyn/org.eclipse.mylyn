@@ -518,7 +518,8 @@ public class BugzillaClient {
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
 				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
 				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
-				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC }; // BugzillaReportElement.VOTES,
+				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC,
+				BugzillaReportElement.NEW_COMMENT };
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);
@@ -952,11 +953,9 @@ public class BugzillaClient {
 							authenticated = false;
 							throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 									IMylarStatusConstants.REPOSITORY_LOGIN_ERROR, repositoryUrl.toString(), title));
-							// } else if
-							// (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION)
-							// != -1) {
-							// throw new
-							// BugzillaException(IBugzillaConstants.ERROR_MSG_MIDAIR_COLLISION);
+						} else if (title.indexOf(IBugzillaConstants.ERROR_MIDAIR_COLLISION) != -1) {
+							throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+									IMylarStatusConstants.REPOSITORY_COLLISION, repositoryUrl.toString()));
 						} else if (title.indexOf(IBugzillaConstants.ERROR_COMMENT_REQUIRED) != -1) {
 							throw new CoreException(new MylarStatus(Status.INFO, BugzillaCorePlugin.PLUGIN_ID,
 									IMylarStatusConstants.REPOSITORY_COMMENT_REQD));

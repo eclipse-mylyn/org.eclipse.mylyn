@@ -153,11 +153,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// Modify it
 		String newCommentText = "BugzillaRepositoryClientTest.testSynchronize(): " + (new Date()).toString();
 		task.getTaskData().setNewComment(newCommentText);
-		// overwrites old fields/attributes with new content (ususually done by
+		// overwrites old fields/attributes with new content (usually done by
 		// BugEditor)
 		task.getTaskData().setHasLocalChanges(true);
 		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-		TasksUiPlugin.getDefault().getTaskDataManager().put(task.getTaskData());
+		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getTaskData());
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSyncState());
 
 		// Submit changes
@@ -386,8 +386,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		Set<AbstractRepositoryTask> changedTasks = connector.getChangedSinceLastSync(repository,
-				tasks);
+		Set<AbstractRepositoryTask> changedTasks = connector.getChangedSinceLastSync(repository, tasks);
 		assertEquals(0, changedTasks.size());
 
 		String priority4 = null;
@@ -452,12 +451,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task7.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getRepsitoryTaskData(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7"));
 		ArrayList<RepositoryTaskData> taskDataList = new ArrayList<RepositoryTaskData>();
 		taskDataList.add(task7.getTaskData());
 		TasksUiPlugin.getDefault().getTaskDataManager().remove(taskDataList);
-		assertNull(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+		assertNull(TasksUiPlugin.getDefault().getTaskDataManager().getRepsitoryTaskData(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "7"));
 
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
@@ -483,7 +482,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testTimeTracker222() throws Exception {
 		init222();
-		timeTracker(14, true);
+		timeTracker(15, true);
 	}
 
 	// We'll skip these two for now and just test 222 and 218 since
@@ -500,7 +499,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testTimeTracker218() throws Exception {
 		init218();
-		timeTracker(18, false);
+		timeTracker(20, false);
 	}
 
 	/**
@@ -560,14 +559,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			submit(task);
 		}
 
-		// assertEquals("Changed reports expected ", 1,
-		// connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
-		// tasks).size());
+		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		synchAndAssertState(tasks, RepositoryTaskSyncState.INCOMING);
-		// synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
-
-		bugtaskdata = bugtask.getTaskData();
+		bugtaskdata = bugtask.getTaskData();// TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(bugtask.getHandleIdentifier());
 
 		assertEquals(estimatedTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME
 				.getKeyString())));

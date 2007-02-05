@@ -265,7 +265,11 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 				int id = server.createTicket(ticket);
 				return id + "";
 			} else {
-				server.updateTicket(ticket, taskData.getNewComment());
+								
+				String comment = taskData.getNewComment();
+				// XXX: new comment is now an attribute
+				taskData.removeAttribute(RepositoryTaskAttribute.COMMENT_NEW);
+				server.updateTicket(ticket, comment);
 				return null;
 			}
 		} catch (Exception e) {

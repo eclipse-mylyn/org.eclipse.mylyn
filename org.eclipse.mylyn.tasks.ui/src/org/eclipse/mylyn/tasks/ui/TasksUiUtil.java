@@ -206,10 +206,10 @@ public class TasksUiUtil {
 
 				if (connector != null)
 					if (repositoryTask.getTaskData() != null
-							|| TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+							|| TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
 									repositoryTask.getHandleIdentifier()) != null) {
 						if (repositoryTask.getTaskData() == null) {
-							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(
+							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
 									repositoryTask.getHandleIdentifier()));
 						}
 						TasksUiUtil.openEditor(task, false, false);

@@ -11,7 +11,9 @@ package org.eclipse.mylar.internal.tasks.core;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 
 /**
@@ -22,10 +24,13 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
  */
 class OfflineDataStore implements Serializable {
 
-	private static final long serialVersionUID = -3909672088254980426L;
+	private static final long serialVersionUID = -3909632088254980426L;
 
 	/** Last new repository task id */
 	private int lastNewRepositoryTaskId = 0;
+
+	// Local changes to existing reports
+	private Map<String, Set<RepositoryTaskAttribute>> localEdits = new HashMap<String, Set<RepositoryTaskAttribute>>();
 
 	/** Older version of Task Data */
 	private Map<String, RepositoryTaskData> oldTaskDataMap = new HashMap<String, RepositoryTaskData>();
@@ -55,5 +60,9 @@ class OfflineDataStore implements Serializable {
 
 	public Map<String, RepositoryTaskData> getUnsubmittedTaskData() {
 		return unsubmittedTaskData;
+	}
+
+	public Map<String, Set<RepositoryTaskAttribute>> getLocalEdits() {
+		return localEdits;
 	}
 }

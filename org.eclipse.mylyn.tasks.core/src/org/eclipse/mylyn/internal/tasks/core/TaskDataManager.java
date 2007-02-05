@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,13 +19,16 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 
@@ -39,6 +44,9 @@ public class TaskDataManager {
 	private OfflineDataStore dataStore;
 
 	/** Older version of Task Data */
+	private Map<String, Set<RepositoryTaskAttribute>> localChangesMap;
+
+	/** Older version of Task Data */
 	private Map<String, RepositoryTaskData> oldTaskDataMap;
 
 	/** Newest version of the task data */
@@ -48,8 +56,9 @@ public class TaskDataManager {
 	private Map<String, RepositoryTaskData> unsubmittedTaskData;
 
 	private TaskRepositoryManager taskRepositoryManager;
-	
-	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, File file, boolean read) throws IOException, ClassNotFoundException {
+
+	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, File file, boolean read) throws IOException,
+			ClassNotFoundException {
 		this.taskRepositoryManager = taskRepositoryManager;
 		this.file = file;
 		if (file.exists() && read) {
@@ -64,6 +73,13 @@ public class TaskDataManager {
 			oldTaskDataMap = Collections.synchronizedMap(dataStore.getOldDataMap());
 		}
 		return oldTaskDataMap;
+	}
+
+	private Map<String, Set<RepositoryTaskAttribute>> getLocalChangesMap() {
+		if (localChangesMap == null) {
+			localChangesMap = Collections.synchronizedMap(dataStore.getLocalEdits());
+		}
+		return localChangesMap;
 	}
 
 	private synchronized Map<String, RepositoryTaskData> getNewDataMap() {
@@ -84,14 +100,28 @@ public class TaskDataManager {
 	 * Add a RepositoryTaskData to the offline reports file. Previously stored
 	 * taskData is held and can be retrieved via getOldTaskData()
 	 */
-	public void put(RepositoryTaskData newEntry) {
+	public void push(RepositoryTaskData newEntry) {
+		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
+		RepositoryTaskData moveToOld = getNewDataMap().get(handle);
 		synchronized (file) {
-			String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
-			RepositoryTaskData moveToOld = getNewDataMap().get(handle);
 			if (moveToOld != null) {
 				getOldDataMap().put(handle, moveToOld);
+			} else {
+				getOldDataMap().put(handle, newEntry);
 			}
 			getNewDataMap().put(handle, newEntry);
+		}
+	}
+
+	/**
+	 * Replace the recent (new) data with this copy
+	 * 
+	 * @param newData
+	 */
+	public void replace(RepositoryTaskData newData) {
+		String handle = AbstractRepositoryTask.getHandle(newData.getRepositoryUrl(), newData.getId());
+		synchronized (file) {
+			getNewDataMap().put(handle, newData);
 		}
 	}
 
@@ -130,41 +160,132 @@ public class TaskDataManager {
 		return "" + dataStore.getNextTaskId();
 	}
 
+	private Set<RepositoryTaskAttribute> getLocalChanges(String handle) {
+		Set<RepositoryTaskAttribute> localChanges;
+		synchronized (file) {
+			localChanges = getLocalChangesMap().get(handle);
+			if (localChanges != null) {
+				return Collections.unmodifiableSet(localChanges);
+			}
+		}
+		return Collections.emptySet();
+	}
+
+	/**
+	 * @return editable copy of task data with any edits applied
+	 */
+	public RepositoryTaskData getEditableCopy(String handle) {
+		RepositoryTaskData data = getRepositoryTaskData(handle);
+		RepositoryTaskData clone;
+		try {
+			clone = (RepositoryTaskData) ObjectCloner.deepCopy(data);
+			updateAttributeFactory(clone);
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Error constructing modifiable task", false);
+			return null;
+		}
+		for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
+			if (attribute == null)
+				continue;
+			RepositoryTaskAttribute existing = clone.getAttribute(attribute.getID());
+			if (existing != null) {
+				existing.clearValues();
+				List<String> options = existing.getOptions();
+
+				for (String value : attribute.getValues()) {
+					if (options.size() > 0) {
+						if (options.contains(value)) {
+							existing.addValue(value);
+						}
+					} else {
+						existing.addValue(value);
+					}
+				}
+
+			} else {
+				clone.addAttribute(attribute.getID(), attribute);
+			}
+
+		}
+
+		return clone;
+
+	}
+
+	/**
+	 * @return editable copy of task data with any edits applied
+	 */
+	public RepositoryTaskData getEditableCopy(String repositoryUrl, String taskId) {
+		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+		return getEditableCopy(handle);
+	}
+
+	public void saveEdits(String handle, Set<RepositoryTaskAttribute> attributes) {
+		synchronized (file) {
+			Set<RepositoryTaskAttribute> edits = getLocalChangesMap().get(handle);
+			if (edits == null) {
+				edits = new HashSet<RepositoryTaskAttribute>();
+				edits.addAll(attributes);
+				getLocalChangesMap().put(handle, edits);
+			} else {
+				edits.removeAll(attributes);
+				edits.addAll(attributes);
+			}
+		}
+	}
+
+	public Set<RepositoryTaskAttribute> getEdits(String handle) {
+		Set<RepositoryTaskAttribute> changes = getLocalChangesMap().get(handle);
+		if (changes == null) {
+			return Collections.emptySet();
+		} else {
+			return Collections.unmodifiableSet(changes);
+		}
+
+	}
+
+	public void discardEdits(String handle) {
+		synchronized (file) {
+			getLocalChangesMap().remove(handle);
+		}
+	}
+
 	/**
 	 * Returns the most recent copy of the task data.
+	 * 
+	 * @return offline task data, null if no data found
 	 */
-	public RepositoryTaskData getTaskData(String handle) {
+	public RepositoryTaskData getRepositoryTaskData(String handle) {
 		RepositoryTaskData data = getNewDataMap().get(handle);
 		if (data == null) {
-			data = getOldTaskData(handle);
-			if (data != null) {
-				getNewDataMap().put(handle, data);
-			}
+			data = getOldRepositoryTaskData(handle);
 		}
 		return data;
 	}
 
 	/**
 	 * Returns the most recent copy of the task data.
+	 * 
+	 * @return offline task data, null if no data found
 	 */
-	public RepositoryTaskData getTaskData(String repositoryUrl, String taskId) {
+	public RepositoryTaskData getRepsitoryTaskData(String repositoryUrl, String taskId) {
 		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		return getTaskData(handle);
+		return getRepositoryTaskData(handle);
 	}
 
 	/**
 	 * Returns the old copy if exists, null otherwise.
 	 */
-	public RepositoryTaskData getOldTaskData(String handle) {
+	public RepositoryTaskData getOldRepositoryTaskData(String handle) {
 		return getOldDataMap().get(handle);
 	}
 
 	/**
 	 * Returns the old copy if exists, null otherwise.
 	 */
-	public RepositoryTaskData getOldTaskData(String repositoryUrl, String taskId) {
+	public RepositoryTaskData getOldRepositoryTaskData(String repositoryUrl, String taskId) {
 		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		return getOldTaskData(handle);
+		return getOldRepositoryTaskData(handle);
 	}
 
 	/**
@@ -190,7 +311,7 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Public for testing
+	 * force a reset of all data maps
 	 */
 	public void clear() {
 		synchronized (file) {
@@ -198,6 +319,36 @@ public class TaskDataManager {
 			oldTaskDataMap = null;
 			newTaskDataMap = null;
 			unsubmittedTaskData = null;
+			localChangesMap = null;
+		}
+	}
+
+	/**
+	 * After deserialization process the attributeFactory needs to be reset on
+	 * each RepositoryTaskData.
+	 */
+	private void updateAttributeFactory(RepositoryTaskData taskData) {
+		if (taskData == null)
+			return;
+		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData
+				.getRepositoryKind());
+		if (connector != null && connector.getTaskDataHandler() != null) {
+			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory();
+			if (factory != null) {
+				taskData.setAttributeFactory(factory);
+			}
+		}
+	}
+
+	/**
+	 * Make both new and old the same so that no deltas will be revealed.
+	 */
+	public void clearIncoming(String handle) {
+		RepositoryTaskData newData = getNewDataMap().get(handle);
+		if (newData != null) {
+			synchronized (file) {
+				getOldDataMap().put(handle, newData);
+			}
 		}
 	}
 
@@ -219,12 +370,12 @@ public class TaskDataManager {
 				}
 			} finally {
 				if (in != null) {
-                    try {
-                      in.close();
-                    } catch(IOException e) {
-                       MylarStatusHandler.fail(e, "Could not close stream", false);
-                    }
-                }
+					try {
+						in.close();
+					} catch (IOException e) {
+						MylarStatusHandler.fail(e, "Could not close stream", false);
+					}
+				}
 			}
 		}
 	}
@@ -252,17 +403,36 @@ public class TaskDataManager {
 		}
 	}
 
-	private void updateAttributeFactory(RepositoryTaskData taskData) {
-		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(
-				taskData.getRepositoryKind());
-//		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-//				taskData.getRepositoryKind());
-		if (connector != null && connector.getTaskDataHandler() != null) {
-			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory();
-			if (factory != null) {
-				taskData.setAttributeFactory(factory);
+	// HACK: until we get proper offline storage....
+	// Reference:
+	// http://www.javaworld.com/javaworld/javatips/jw-javatip76.html?page=2
+	public static class ObjectCloner {
+
+		private ObjectCloner() {
+			// can not instantiate
+		}
+
+		static public Object deepCopy(Object oldObj) throws Exception {
+			ObjectOutputStream outputStream = null;
+			ObjectInputStream inputStream = null;
+			try {
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				outputStream = new ObjectOutputStream(byteArrayOutputStream);
+
+				outputStream.writeObject(oldObj);
+				outputStream.flush();
+				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream
+						.toByteArray());
+				inputStream = new ObjectInputStream(byteArrayInputStream);
+				return inputStream.readObject();
+			} catch (Exception e) {
+				throw (e);
+			} finally {
+				outputStream.close();
+				inputStream.close();
 			}
 		}
+
 	}
 
 }

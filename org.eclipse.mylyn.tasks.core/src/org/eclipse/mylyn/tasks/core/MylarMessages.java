@@ -33,6 +33,8 @@ public class MylarMessages extends NLS {
 	public static String repository_not_found;
 	
 	public static String repository_comment_reqd;
+	
+	public static String repository_collision;
 
 	public static String operation_cancelled;
 

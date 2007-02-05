@@ -11,7 +11,10 @@
 
 package org.eclipse.mylar.tasks.ui.editors;
 
+import java.util.Set;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -29,9 +32,11 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	final private String handle;
 
-	private RepositoryTaskData newTaskData;
+	private RepositoryTaskData editableTaskData;
 
 	private RepositoryTaskData oldTaskData;
+	
+	private Set<RepositoryTaskAttribute> oldEdits; 
 
 	protected AbstractTaskEditorInput(TaskRepository repository, String handle) {
 		this.handle = handle;
@@ -58,7 +63,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	 * returns the new task data
 	 */
 	public RepositoryTaskData getTaskData() {
-		return newTaskData;
+		return editableTaskData;
 	}
 
 	/**
@@ -68,6 +73,10 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 		return oldTaskData;
 	}
 
+	public Set<RepositoryTaskAttribute> getOldEdits() {
+		return oldEdits;
+	}
+	
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
@@ -96,8 +105,8 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 		return repository;
 	}
 
-	protected void setNewTaskData(RepositoryTaskData newTaskData) {
-		this.newTaskData = newTaskData;
+	protected void setEditableTaskData(RepositoryTaskData editableTaskData) {
+		this.editableTaskData = editableTaskData;
 	}
 
 	protected void setOldTaskData(RepositoryTaskData oldTaskData) {
@@ -105,7 +114,8 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	}
 
 	public void refreshInput() {
-		this.newTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(handle);
-		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);
+		this.editableTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(handle);
+		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldRepositoryTaskData(handle);
+		this.oldEdits = TasksUiPlugin.getDefault().getTaskDataManager().getEdits(handle);
 	}
 }
