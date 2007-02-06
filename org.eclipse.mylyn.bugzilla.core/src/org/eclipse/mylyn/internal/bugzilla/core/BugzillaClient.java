@@ -607,19 +607,19 @@ public class BugzillaClient {
 
 		try {
 			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl
-					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
+					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));			
 			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
 			// actually sending the contents.
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
 			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, sourceFile));
 
 			if (isPatch) {
