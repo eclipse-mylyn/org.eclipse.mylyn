@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -191,7 +190,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 
 		@Override
 		public void run() {
-			if (!Platform.isRunning() || ContextCorePlugin.getDefault() == null) {
+			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
 				return;
 			} else {
 				long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
