@@ -53,8 +53,8 @@ public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implem
 	
 	@Override
 	public void kill() {
-		timerThread.kill();
 		if (Platform.isRunning() && MylarMonitorUiPlugin.getDefault() != null) {
+			timerThread.kill();
 			MylarMonitorUiPlugin.getDefault().removeInteractionListener(this);
 		}
 	}
