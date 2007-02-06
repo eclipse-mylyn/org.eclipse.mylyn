@@ -119,7 +119,11 @@ public class MylarContext implements IMylarContext {
 	}
 
 	public IMylarElement get(String elementHandle) {
-		return elementMap.get(elementHandle);
+		if (elementHandle == null) {
+			return null;
+		} else {
+			return elementMap.get(elementHandle);
+		}
 	}
 
 	public List<IMylarElement> getInteresting() {
