@@ -352,8 +352,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		public void repositoryInfoChanged(final ITask task) {
 
-			// TODO: handle case where discard caused
-			// all task data to be deleted.
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 				public void run() {
@@ -392,13 +390,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							return;
 						}
 						showBusy(true);
-
-						// if(repositoryTask.getSyncState() ==
-						// RepositoryTaskSyncState.INCOMING) {
-						// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
-						// true);
-						// }
-
 						updateEditor();
 
 					}
@@ -1682,9 +1673,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					.getRepositoryConnector(taskData.getRepositoryKind());
 			offlineHandler = connector.getTaskDataHandler();
 		}
-		
+
 		boolean foundNew = false;
-		
+
 		StyledText styledText = null;
 		for (Iterator<TaskComment> it = taskData.getComments().iterator(); it.hasNext();) {
 			final TaskComment taskComment = it.next();
@@ -1763,7 +1754,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			commentStyleText.add(styledText);
 			textHash.put(taskComment, styledText);
 		}
-		if(foundNew) {
+		if (foundNew) {
 			commentsSection.setExpanded(true);
 		} else if (taskData.getComments() == null || taskData.getComments().size() == 0) {
 			commentsSection.setExpanded(false);
@@ -2628,7 +2619,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					return Status.OK_STATUS;
 				} catch (CoreException e) {
-					handleSubmitError(e);
+					return handleSubmitError(e);
 				} catch (Exception e) {
 					MylarStatusHandler.fail(e, e.getMessage(), true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

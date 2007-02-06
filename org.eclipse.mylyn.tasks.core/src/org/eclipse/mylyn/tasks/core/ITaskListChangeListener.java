@@ -19,8 +19,15 @@ package org.eclipse.mylar.tasks.core;
  */
 public interface ITaskListChangeListener {
 
+	/**
+	 * called when task changes state (incoming/outgoing/synchronizing...)
+	 */
 	public abstract void localInfoChanged(ITask task);
 
+	/**
+	 * Called when task data (repository task data or edits) have changed
+     * TODO: Extract into separate interface
+	 */
 	public abstract void repositoryInfoChanged(ITask task);
 	
 	public abstract void taskDeleted(ITask task);
@@ -39,5 +46,5 @@ public interface ITaskListChangeListener {
 	public abstract void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer);
 
 	public abstract void taskAdded(ITask task);
-	
+
 }
