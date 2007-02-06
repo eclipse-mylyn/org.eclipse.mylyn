@@ -11,6 +11,7 @@ package org.eclipse.mylar.internal.tasks.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.IStatusHandler;
 import org.eclipse.mylar.context.core.MylarStatusHandler;
@@ -50,6 +51,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 	}
 
 	public void displayStatus(final String title, final IStatus status) {
+
 		if (status.getCode() == IMylarStatusConstants.INTERNAL_ERROR) {
 			MylarStatusHandler.log(status);
 			fail(status, true);
@@ -74,14 +76,14 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 						switch (status.getSeverity()) {
 						case IStatus.CANCEL:
 						case IStatus.INFO:
-							MessageDialog.openInformation(shell, title, status.getMessage());
+							createDialog(shell, title, status.getMessage(), MessageDialog.INFORMATION).open();
 							break;
 						case IStatus.WARNING:
-							MessageDialog.openWarning(shell, title, status.getMessage());
+							createDialog(shell, title, status.getMessage(), MessageDialog.WARNING).open();
 							break;
 						case IStatus.ERROR:
 						default:
-							MessageDialog.openError(shell, title, status.getMessage());
+							createDialog(shell, title, status.getMessage(), MessageDialog.ERROR).open();
 							break;
 						}
 					}
@@ -91,4 +93,9 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 			}
 		}
 	}
+
+	private MessageDialog createDialog(Shell shell, String title, String message, int type) {
+		return new MessageDialog(shell, title, null, message, type, new String[] { IDialogConstants.OK_LABEL }, 0);
+	}
+
 }
