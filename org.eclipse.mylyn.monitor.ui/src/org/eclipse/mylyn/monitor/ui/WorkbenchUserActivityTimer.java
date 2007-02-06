@@ -14,6 +14,7 @@ package org.eclipse.mylar.monitor.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.monitor.core.IActivityTimerListener;
 import org.eclipse.mylar.monitor.core.IInteractionEventListener;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
@@ -53,7 +54,9 @@ public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implem
 	@Override
 	public void kill() {
 		timerThread.kill();
-		MylarMonitorUiPlugin.getDefault().removeInteractionListener(this);
+		if (Platform.isRunning() && MylarMonitorUiPlugin.getDefault() != null) {
+			MylarMonitorUiPlugin.getDefault().removeInteractionListener(this);
+		}
 	}
 
 	@Override
