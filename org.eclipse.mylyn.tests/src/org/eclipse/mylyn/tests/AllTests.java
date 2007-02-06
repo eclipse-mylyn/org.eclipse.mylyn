@@ -25,6 +25,7 @@ import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.resources.tests.AllResourcesTests;
 import org.eclipse.mylar.tasks.tests.AllTasksTests;
 import org.eclipse.mylar.tests.integration.AllIntegrationTests;
+import org.eclipse.mylar.tests.integration.TestingStatusNotifier;
 import org.eclipse.mylar.tests.misc.AllMiscTests;
 import org.eclipse.mylar.trac.tests.AllTracTests;
 

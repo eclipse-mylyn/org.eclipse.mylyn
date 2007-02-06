@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylar.tests.integration;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

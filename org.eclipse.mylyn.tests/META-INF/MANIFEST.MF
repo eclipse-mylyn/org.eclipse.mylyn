@@ -34,5 +34,6 @@ Require-Bundle: org.junit,
  org.eclipse.mylar.resources,
  org.eclipse.mylar.jira.tests,
  org.eclipse.mylar.trac.tests,
- org.eclipse.mylar.monitor.core
+ org.eclipse.mylar.monitor.core,
+ org.eclipse.mylar.tasks.web
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
