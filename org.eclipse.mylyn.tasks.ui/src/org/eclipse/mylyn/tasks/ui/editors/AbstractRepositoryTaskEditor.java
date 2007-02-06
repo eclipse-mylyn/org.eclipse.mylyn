@@ -1682,6 +1682,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					.getRepositoryConnector(taskData.getRepositoryKind());
 			offlineHandler = connector.getTaskDataHandler();
 		}
+		
+		boolean foundNew = false;
+		
 		StyledText styledText = null;
 		for (Iterator<TaskComment> it = taskData.getComments().iterator(); it.hasNext();) {
 			final TaskComment taskComment = it.next();
@@ -1705,6 +1708,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (commentDate != null) {
 						if (commentDate.after(calLastMod.getTime())) {
 							expandableComposite.setBackground(backgroundIncoming);
+							foundNew = true;
 						}
 						if (commentDate.equals(calLastMod.getTime()) || commentDate.after(calLastMod.getTime())) {
 							expandableComposite.setExpanded(true);
@@ -1759,7 +1763,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			commentStyleText.add(styledText);
 			textHash.put(taskComment, styledText);
 		}
-		if (taskData.getComments() == null || taskData.getComments().size() == 0) {
+		if(foundNew) {
+			commentsSection.setExpanded(true);
+		} else if (taskData.getComments() == null || taskData.getComments().size() == 0) {
 			commentsSection.setExpanded(false);
 		} else if (editorInput.getTaskData() != null && editorInput.getOldTaskData() != null) {
 			List<TaskComment> newTaskComments = editorInput.getTaskData().getComments();
