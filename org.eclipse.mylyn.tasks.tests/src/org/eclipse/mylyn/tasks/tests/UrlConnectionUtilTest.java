@@ -10,7 +10,7 @@ package org.eclipse.mylar.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.tasks.core.web.WebClientUtil;
+import org.eclipse.mylar.core.net.WebClientUtil;
 
 public class UrlConnectionUtilTest extends TestCase {
 

@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.forms,
  org.eclipse.mylar.resources.tests,
  org.eclipse.mylar.tasks.web,
- org.eclipse.mylar.monitor.core
+ org.eclipse.mylar.monitor.core,
+ org.eclipse.mylar
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
 Export-Package: org.eclipse.mylar.tasks.tests,
