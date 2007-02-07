@@ -14,7 +14,7 @@ package org.eclipse.mylar.monitor.ui;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;

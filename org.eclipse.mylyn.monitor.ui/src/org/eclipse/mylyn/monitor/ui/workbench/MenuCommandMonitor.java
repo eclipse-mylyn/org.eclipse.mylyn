@@ -12,7 +12,7 @@
 package org.eclipse.mylar.monitor.ui.workbench;
 
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
