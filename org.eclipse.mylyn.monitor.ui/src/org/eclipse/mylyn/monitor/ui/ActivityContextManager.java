@@ -41,6 +41,9 @@ public class ActivityContextManager implements IActivityTimerListener {
 			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
 					MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
+			for (IUserAttentionListener attentionListener : attentionListeners) {
+				attentionListener.userAttentionGained();
+			}
 		}
 		isStalled = false;
 	}
@@ -50,6 +53,9 @@ public class ActivityContextManager implements IActivityTimerListener {
 			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
 					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+			for (IUserAttentionListener attentionListener : attentionListeners) {
+				attentionListener.userAttentionLost();
+			}
 		}
 		isStalled = true;
 	}

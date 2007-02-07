@@ -313,4 +313,8 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 			}
 		}
 	}
+
+	public ActivityContextManager getActivityContextManager() {
+		return activityContextManager;
+	}
 }
