@@ -51,7 +51,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "failed to resolve resource edit", false);
+					MylarStatusHandler.log(t, "failed to resolve resource edit");
 				}
 			}
 		}
