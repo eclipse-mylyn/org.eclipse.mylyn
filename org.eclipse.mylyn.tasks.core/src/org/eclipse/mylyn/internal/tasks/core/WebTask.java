@@ -22,6 +22,8 @@ public class WebTask extends AbstractRepositoryTask {
 
 	// TODO: move
 	public static final String REPOSITORY_TYPE = "web";
+
+	private static final String UNKNOWN_OWNER = "<unknown>";
 	
 	private final String id;
 
@@ -63,4 +65,8 @@ public class WebTask extends AbstractRepositoryTask {
 		return null;
 	}
 
+	public String getOwner() {
+		return UNKNOWN_OWNER;
+	}
+	
 }
