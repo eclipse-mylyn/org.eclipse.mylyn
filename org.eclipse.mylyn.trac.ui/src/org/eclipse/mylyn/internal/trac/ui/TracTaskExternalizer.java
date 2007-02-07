@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.trac.ui;
 
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.TracQueryHit;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.TracTask;

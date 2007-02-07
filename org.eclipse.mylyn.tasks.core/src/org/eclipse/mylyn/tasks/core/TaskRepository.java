@@ -11,9 +11,11 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
+import java.net.Proxy.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,8 +23,9 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.web.WebClientUtil;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.update.internal.core.UpdateCore;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -390,7 +393,7 @@ public class TaskRepository {
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (useDefaultProxy()) {
-			proxy = WebClientUtil.getSystemProxy();
+			proxy = getSystemProxy();
 		} else {
 
 			String proxyHost = getProperty(PROXY_HOSTNAME);
@@ -408,5 +411,22 @@ public class TaskRepository {
 
 	public boolean useDefaultProxy() {
 		return "true".equals(getProperty(PROXY_USEDEFAULT)) || (getProperty(PROXY_HOSTNAME) == null);
+	}
+	
+	/** 
+	 * TODO: move
+	 * utility method, should use TaskRepository.getProxy() 
+	 */
+	public static Proxy getSystemProxy() {
+		Proxy proxy = Proxy.NO_PROXY;
+		if (UpdateCore.getPlugin() != null
+				&& UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
+			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
+			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
+
+			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+			proxy = new Proxy(Type.HTTP, sockAddr);
+		}
+		return proxy;
 	}
 }

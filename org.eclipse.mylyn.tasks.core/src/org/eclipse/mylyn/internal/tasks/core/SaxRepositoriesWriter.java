@@ -22,8 +22,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.util.XmlStringConverter;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;

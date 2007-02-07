@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.core;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.internal.context.core.util.XmlStringConverter;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;

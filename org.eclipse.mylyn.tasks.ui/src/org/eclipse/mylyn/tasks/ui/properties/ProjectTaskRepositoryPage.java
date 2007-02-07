@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;

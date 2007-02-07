@@ -23,7 +23,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.WebClientUtil;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
@@ -32,7 +33,7 @@ import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.core.web.WebClientUtil;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
@@ -182,7 +183,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 			setMessage("Validating server settings...");
 			setErrorMessage(null);
 			if (getUseDefaultProxy()) {
-				tempProxy = WebClientUtil.getSystemProxy();
+				tempProxy = TaskRepository.getSystemProxy();
 			} else {
 				tempProxy = WebClientUtil.getProxy(getProxyHostname(), getProxyPort(), getProxyUsername(),
 						getProxyPassword());
@@ -221,7 +222,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 			});
-			
+
 			if (version[0] != null) {
 				setBugzillaVersion(version[0]);
 			}

@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

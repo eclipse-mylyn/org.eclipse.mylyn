@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;

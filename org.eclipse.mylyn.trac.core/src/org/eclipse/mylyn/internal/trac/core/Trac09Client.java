@@ -36,7 +36,11 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylar.core.net.HtmlTag;
+import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
@@ -51,10 +55,6 @@ import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
-import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasks.core.web.HtmlTag;
-import org.eclipse.mylar.tasks.core.web.WebClientUtil;
-import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer.Token;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script

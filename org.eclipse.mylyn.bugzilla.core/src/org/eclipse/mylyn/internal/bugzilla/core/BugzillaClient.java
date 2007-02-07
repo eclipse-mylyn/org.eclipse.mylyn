@@ -49,7 +49,11 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylar.core.net.HtmlTag;
+import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.MylarStatus;
@@ -58,10 +62,6 @@ import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
-import org.eclipse.mylar.tasks.core.web.HtmlTag;
-import org.eclipse.mylar.tasks.core.web.WebClientUtil;
-import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten

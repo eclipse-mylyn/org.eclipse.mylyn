@@ -14,11 +14,11 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.web.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
