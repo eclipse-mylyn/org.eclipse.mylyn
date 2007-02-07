@@ -23,9 +23,9 @@ import java.util.zip.ZipFile;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.context.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.core.util.ZipFileUtil;
+import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
-import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
 
 /**
  * @author Mik Kersten

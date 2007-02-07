@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.mylar.context.tests.ContextTest;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.monitor.usage.core.IUsageCollector;
-import org.eclipse.mylar.monitor.usage.core.InteractionEventSummary;
+import org.eclipse.mylar.monitor.core.collection.IUsageCollector;
+import org.eclipse.mylar.monitor.core.collection.InteractionEventSummary;
+import org.eclipse.mylar.monitor.core.collection.SummaryCollector;
 import org.eclipse.mylar.monitor.usage.core.ReportGenerator;
-import org.eclipse.mylar.monitor.usage.core.collectors.SummaryCollector;
 
 /**
  * @author Mik Kersten
