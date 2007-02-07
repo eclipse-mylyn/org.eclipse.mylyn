@@ -9,27 +9,34 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.core.collection;
+package org.eclipse.mylar.internal.monitor.core.collection;
 
-import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
- * Comparator of InteractionEvents
- * 
- * @author Gail Murphy
- * 
+ * @author Mik Kersten
+ * @author Leah Findlater
  */
-public class InteractionEventComparator implements Comparator<InteractionEvent> {
+public interface IUsageCollector {
 
-	public int compare(InteractionEvent arg0, InteractionEvent arg1) {
-		if (arg0.equals(arg1)) {
-			return 0;
-		}
-		if (arg0.getDate().before(arg1.getDate())) {
-			return -1;
-		}
-		return 1;
-	}
+	public String getReportTitle();
+
+	public abstract void consumeEvent(InteractionEvent event, int userId);
+
+	/**
+	 * TODO: return report as HTML
+	 * 
+	 * @return a list corresponding to all of the lines of the report
+	 */
+	public abstract List<String> getReport();
+
+	/**
+	 * Implementors will need to generate a unique filename given the directory
+	 * in which to place the file
+	 * 
+	 * @param directory
+	 */
+	public abstract void exportAsCSVFile(String directory);
 }

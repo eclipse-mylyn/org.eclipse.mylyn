@@ -17,7 +17,7 @@ import java.util.Calendar;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.tests.support.FileTool;
-import org.eclipse.mylar.internal.monitor.usage.ui.FileDisplayDialog;
+import org.eclipse.mylar.internal.monitor.usage.FileDisplayDialog;
 import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 
 import junit.framework.TestCase;

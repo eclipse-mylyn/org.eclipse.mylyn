@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.monitor.core.collection;
+package org.eclipse.mylar.internal.monitor.core.collection;
 
 import java.io.BufferedWriter;
 import java.io.File;

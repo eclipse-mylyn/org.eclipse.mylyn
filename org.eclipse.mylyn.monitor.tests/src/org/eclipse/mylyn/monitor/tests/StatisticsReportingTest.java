@@ -24,16 +24,16 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
 import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
+import org.eclipse.mylar.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.usage.collectors.MylarUsageAnalysisCollector;
+import org.eclipse.mylar.internal.monitor.usage.collectors.MylarViewUsageCollector;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
-import org.eclipse.mylar.monitor.usage.core.ReportGenerator;
-import org.eclipse.mylar.monitor.usage.core.UsageStatisticsSummary;
-import org.eclipse.mylar.monitor.usage.core.collectors.MylarUsageAnalysisCollector;
-import org.eclipse.mylar.monitor.usage.core.collectors.MylarViewUsageCollector;
+import org.eclipse.mylar.monitor.usage.ReportGenerator;
+import org.eclipse.mylar.monitor.usage.UsageStatisticsSummary;
 
 /**
  * @author Mik Kersten
