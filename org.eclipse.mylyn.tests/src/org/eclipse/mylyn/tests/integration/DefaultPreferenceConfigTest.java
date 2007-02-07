@@ -12,7 +12,7 @@
 package org.eclipse.mylar.tests.integration;
 
 import org.eclipse.mylar.internal.monitor.usage.MylarMonitorPreferenceConstants;
-import org.eclipse.mylar.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 
 import junit.framework.TestCase;
 

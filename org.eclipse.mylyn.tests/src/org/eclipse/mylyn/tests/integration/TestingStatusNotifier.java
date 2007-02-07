@@ -15,8 +15,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.context.core.IStatusHandler;
-import org.eclipse.mylar.internal.context.core.util.DateUtil;
+import org.eclipse.mylar.core.IStatusHandler;
+import org.eclipse.mylar.internal.core.util.DateUtil;
 
 /**
  * @author Mik Kersten
