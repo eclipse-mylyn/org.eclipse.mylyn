@@ -206,6 +206,8 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	@Override
 	public void setVisible(boolean visible) {
 		if (firstView) {
+			getControl().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+			
 			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
