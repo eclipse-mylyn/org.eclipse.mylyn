@@ -21,7 +21,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.pde.core.plugin.IPluginModelBase;

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.team.AbstractCommitTemplateVariable;
 import org.eclipse.mylar.team.MylarTeamPlugin;

@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

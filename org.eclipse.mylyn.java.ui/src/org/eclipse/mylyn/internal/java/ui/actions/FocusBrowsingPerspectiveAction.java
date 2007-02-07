@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
 import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;

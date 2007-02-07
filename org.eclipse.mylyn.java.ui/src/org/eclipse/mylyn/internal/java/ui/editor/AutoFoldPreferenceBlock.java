@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.java.ui.editor;
 
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.team.AbstractActiveChangeSetProvider;
 import org.eclipse.mylar.team.AbstractContextChangeSetManager;
 import org.eclipse.mylar.team.MylarTeamPlugin;

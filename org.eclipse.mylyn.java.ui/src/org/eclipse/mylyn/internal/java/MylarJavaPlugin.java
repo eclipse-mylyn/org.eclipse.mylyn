@@ -19,7 +19,7 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;

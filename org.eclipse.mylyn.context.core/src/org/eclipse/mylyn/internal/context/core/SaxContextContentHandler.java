@@ -1,3 +1,6 @@
+
+
+
 /*******************************************************************************
  * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
@@ -8,14 +11,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.context.core.util;
+package org.eclipse.mylar.internal.context.core;
 
 import java.text.ParseException;
 import java.util.Date;
 
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;

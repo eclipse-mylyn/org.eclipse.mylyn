@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.core.util;
+package org.eclipse.mylar.internal.context.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylar.context.core.IContextReader;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;

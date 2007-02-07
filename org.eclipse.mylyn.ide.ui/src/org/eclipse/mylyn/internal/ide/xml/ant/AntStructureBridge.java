@@ -37,7 +37,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;

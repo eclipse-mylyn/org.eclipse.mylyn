@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.markers.internal.TableView;
 import org.eclipse.ui.views.markers.internal.TaskView;

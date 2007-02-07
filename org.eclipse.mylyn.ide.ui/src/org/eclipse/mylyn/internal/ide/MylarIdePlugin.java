@@ -11,7 +11,7 @@
 package org.eclipse.mylar.internal.ide;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.ant.AntEditingMonitor;
 import org.eclipse.mylar.internal.ide.xml.pde.PdeEditingMonitor;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;

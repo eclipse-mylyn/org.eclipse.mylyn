@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.markers.internal.TableView;

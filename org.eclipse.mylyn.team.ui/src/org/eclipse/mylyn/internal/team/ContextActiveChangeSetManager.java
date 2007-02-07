@@ -23,7 +23,7 @@ import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ITask;

@@ -39,7 +39,7 @@ import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
 import org.eclipse.mylar.internal.context.ui.ColorMap;

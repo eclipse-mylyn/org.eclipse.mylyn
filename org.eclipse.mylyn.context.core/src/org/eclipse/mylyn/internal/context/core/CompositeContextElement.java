@@ -18,7 +18,7 @@ import java.util.*;
 import org.eclipse.mylar.context.core.IDegreeOfInterest;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

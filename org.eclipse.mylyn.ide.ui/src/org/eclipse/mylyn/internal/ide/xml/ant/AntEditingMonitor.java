@@ -22,7 +22,7 @@ import org.eclipse.ant.internal.ui.model.AntModel;
 import org.eclipse.ant.internal.ui.model.AntProjectNode;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IEditorInput;

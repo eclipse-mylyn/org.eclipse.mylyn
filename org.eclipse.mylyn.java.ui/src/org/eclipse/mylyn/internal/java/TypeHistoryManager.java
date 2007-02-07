@@ -23,7 +23,7 @@ import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

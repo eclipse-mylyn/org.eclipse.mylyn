@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.team.LinkedTaskInfoAdapterFactory;
 import org.eclipse.mylar.internal.team.MylarTeamExtensionPointReader;
 import org.eclipse.mylar.internal.team.template.CommitTemplateManager;

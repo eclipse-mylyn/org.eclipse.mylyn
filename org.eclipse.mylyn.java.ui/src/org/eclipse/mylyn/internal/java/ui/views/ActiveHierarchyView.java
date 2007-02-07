@@ -43,7 +43,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.MylarStatusHandler;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylar.internal.context.ui.views.ActiveViewDelegatingDragAdapter;
 import org.eclipse.mylar.internal.context.ui.views.ActiveViewDropAdapter;
