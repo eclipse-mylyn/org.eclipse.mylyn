@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar_feature"
       label="Mylar Task List (Required)"
-      version="1.0.1.v20070202-1900"
+      version="1.0.1.v20070206-1500"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -240,56 +240,56 @@ litigation.
          id="org.eclipse.mylar.doc"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.core"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.ui"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.ui"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.core"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.web"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.core"
          download-size="0"
          install-size="0"
-         version="1.0.1.v20070202-1900"
+         version="1.0.1.v20070206-1500"
          unpack="false"/>
 
 </feature>
