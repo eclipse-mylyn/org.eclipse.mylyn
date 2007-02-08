@@ -125,8 +125,6 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	 */
 	public String getReporter() {
 		return getAttributeValue(RepositoryTaskAttribute.USER_REPORTER);
-		// return
-		// getAttributeValue(BugzillaReportElement.REPORTER.getKeyString());
 	}
 
 	/**
@@ -156,8 +154,6 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	 */
 	public String getSummary() {
 		return getAttributeValue(RepositoryTaskAttribute.SUMMARY);
-		// return
-		// getAttributeValue(BugzillaReportElement.SHORT_DESC.getKeyString());
 	}
 
 	public void setSummary(String summary) {
@@ -166,8 +162,6 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	public String getProduct() {
 		return getAttributeValue(RepositoryTaskAttribute.PRODUCT);
-		// return
-		// getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 	}
 
 	/**
@@ -220,17 +214,14 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	public List<String> getCC() {
 		return getAttributeValues(RepositoryTaskAttribute.USER_CC);
-		// return getAttributeValues(BugzillaReportElement.CC.getKeyString());
 	}
 
 	public void removeCC(String email) {
 		removeAttributeValue(RepositoryTaskAttribute.USER_CC, email);
-		// removeAttributeValue(BugzillaReportElement.CC.getKeyString(), email);
 	}
 
 	public String getAssignedTo() {
 		return getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED);
-		// return getAttributeValue(BugzillaReportElement.ASSIGNED_TO);
 	}
 
 	/**

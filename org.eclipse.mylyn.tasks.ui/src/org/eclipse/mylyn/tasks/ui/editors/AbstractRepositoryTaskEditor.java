@@ -1517,7 +1517,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
 		GridLayout layout = new GridLayout(2, false);
-		layout.marginRight = 5;
+		layout.marginWidth = 5;
 		peopleComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
@@ -1526,14 +1526,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-			Composite textFieldComposite = toolkit.createComposite(peopleComposite);
-			GridLayout textLayout = new GridLayout();
-			textLayout.marginWidth = 1;
-			textLayout.verticalSpacing = 0;
-			textLayout.marginHeight = 0;
-			textLayout.marginRight = 5;
-			textFieldComposite.setLayout(textLayout);
-			Text textField = createTextField(textFieldComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
+			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
 
@@ -1542,13 +1535,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			Label label = createLabel(peopleComposite, reporterAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-			Composite textFieldComposite = toolkit.createComposite(peopleComposite);
-			GridLayout textLayout = new GridLayout();
-			textLayout.marginWidth = 1;
-			textLayout.verticalSpacing = 0;
-			textLayout.marginHeight = 0;
-			textFieldComposite.setLayout(textLayout);
-			Text textField = createTextField(textFieldComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
+			Text textField = createTextField(peopleComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
 		addSelfToCC(peopleComposite);
@@ -1560,76 +1547,71 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void addCCList(Composite attributesComposite) {
 
-		// TODO: use addLabel and addText once Trac primes taskData with add_cc
-		// and has pretty name
-		Label label = toolkit.createLabel(attributesComposite, "Add CC:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		ccText = toolkit.createText(attributesComposite, taskData.getAttributeValue(RepositoryTaskAttribute.NEW_CC));
-		ccText.setFont(TEXT_FONT);
-		ccText.setEditable(true);
-		GridData ccData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		ccData.horizontalSpan = 1;
-		ccData.widthHint = 150;
-		ccText.setLayoutData(ccData);
-		// ccText.addListener(SWT.FocusIn, new GenericListener());
-		ccText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				taskData.setAttributeValue(RepositoryTaskAttribute.NEW_CC, ccText.getText());
-				attributeChanged(taskData.getAttribute(RepositoryTaskAttribute.NEW_CC));
-			}
-		});
+		RepositoryTaskAttribute addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
+		if(addCCattribute == null) {
+			// TODO: remove once TRAC is priming taskData with NEW_CC attribute
+			taskData.setAttributeValue(RepositoryTaskAttribute.NEW_CC, "");
+			addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
+		}
+		if (addCCattribute != null) {
+			Label label = createLabel(attributesComposite, addCCattribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			Text text = createTextField(attributesComposite, addCCattribute, SWT.BORDER);
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
+		}
 
-		Label ccListLabel = toolkit.createLabel(attributesComposite, "CC:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(ccListLabel);
-		ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
-		ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		ccList.setFont(TEXT_FONT);
-		GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		ccListData.horizontalSpan = 1;
-		ccListData.widthHint = 150;
-		ccListData.heightHint = 95;
-		ccList.setLayoutData(ccListData);
-		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
-			ccList.setBackground(backgroundIncoming);
-		}
-		java.util.List<String> ccs = taskData.getCC();
-		if (ccs != null) {
-			for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
-				String cc = it.next();
-				ccList.add(cc);
+		RepositoryTaskAttribute CCattribute = taskData.getAttribute(RepositoryTaskAttribute.USER_CC);
+		if (CCattribute != null) {
+			Label label = createLabel(attributesComposite, CCattribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
+			ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			ccList.setFont(TEXT_FONT);
+			GridData ccListData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			ccListData.horizontalSpan = 1;
+			ccListData.widthHint = 150;
+			ccListData.heightHint = 95;
+			ccList.setLayoutData(ccListData);
+			if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
+				ccList.setBackground(backgroundIncoming);
 			}
-		}
-		java.util.List<String> removedCCs = taskData.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
-		if (removedCCs != null) {
-			for (String item : removedCCs) {
-				int i = ccList.indexOf(item);
-				if (i != -1) {
-					ccList.select(i);
+			java.util.List<String> ccs = taskData.getCC();
+			if (ccs != null) {
+				for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
+					String cc = it.next();
+					ccList.add(cc);
 				}
 			}
-		}
-		ccList.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				markDirty(true);
-
-				for (String cc : ccList.getItems()) {
-					int index = ccList.indexOf(cc);
-					if (ccList.isSelected(index)) {
-						taskData.addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
-					} else {
-						taskData.removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+			java.util.List<String> removedCCs = taskData.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+			if (removedCCs != null) {
+				for (String item : removedCCs) {
+					int i = ccList.indexOf(item);
+					if (i != -1) {
+						ccList.select(i);
 					}
 				}
-				attributeChanged(taskData.getAttribute(RepositoryTaskAttribute.REMOVE_CC));
 			}
+			ccList.addSelectionListener(new SelectionListener() {
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-		toolkit.createLabel(attributesComposite, "");
-		label = toolkit.createLabel(attributesComposite, "(Select to remove)");
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
+				public void widgetSelected(SelectionEvent e) {
+					for (String cc : ccList.getItems()) {
+						int index = ccList.indexOf(cc);
+						if (ccList.isSelected(index)) {
+							taskData.addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+						} else {
+							taskData.removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+						}
+					}
+					attributeChanged(taskData.getAttribute(RepositoryTaskAttribute.REMOVE_CC));
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+			toolkit.createLabel(attributesComposite, "");
+			label = toolkit.createLabel(attributesComposite, "(Select to remove)");
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
+		}
 
 	}
 
@@ -1854,6 +1836,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.horizontalSpan = 3;
+		submitButtonData.widthHint = 100;
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
