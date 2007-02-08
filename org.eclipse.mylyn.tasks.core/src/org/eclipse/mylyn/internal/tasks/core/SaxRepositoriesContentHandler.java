@@ -27,7 +27,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SaxRepositoriesContentHandler extends DefaultHandler {
 
-
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
 	private Set<TaskRepository> taskRepositories = new HashSet<TaskRepository>();

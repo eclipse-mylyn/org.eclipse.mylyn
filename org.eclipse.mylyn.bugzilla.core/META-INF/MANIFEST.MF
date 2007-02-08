@@ -5,9 +5,7 @@ Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
 Bundle-Version: 1.0.1.v20070202-1900
 Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.context.core,
  org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.monitor.core,
  org.eclipse.mylar
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
