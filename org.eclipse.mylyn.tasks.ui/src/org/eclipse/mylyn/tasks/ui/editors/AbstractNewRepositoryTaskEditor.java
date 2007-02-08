@@ -116,7 +116,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void createDescriptionLayout(Composite composite) {
 		FormToolkit toolkit = this.getManagedForm().getToolkit();
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
-		section.setText(LABEL_SECTION_DESCRIPTION);
+		section.setText(getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -344,7 +344,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void createActionsLayout(Composite formComposite) {
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
 		
-		section.setText(LABEL_SECTION_ACTIONS);
+		section.setText(getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);

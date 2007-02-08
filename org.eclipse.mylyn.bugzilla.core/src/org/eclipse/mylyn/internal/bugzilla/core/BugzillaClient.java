@@ -511,7 +511,7 @@ public class BugzillaClient {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission
-		BugzillaReportElement[] reportElements = { BugzillaReportElement.BUG_STATUS, BugzillaReportElement.RESOLUTION,
+		BugzillaReportElement[] reportElements = { BugzillaReportElement.SHORT_DESC, BugzillaReportElement.BUG_STATUS, BugzillaReportElement.RESOLUTION,
 				BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM, BugzillaReportElement.PRODUCT,
 				BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT, BugzillaReportElement.VERSION,
 				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,

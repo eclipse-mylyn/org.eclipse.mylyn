@@ -65,7 +65,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	@Override
 	protected void createPeopleLayout(Composite composite) {
 		FormToolkit toolkit = getManagedForm().getToolkit();
-		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
+		Section peopleSection = createSection(composite, getSectionLabel(SECTION_NAME.PEOPLE_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
 		GridLayout layout = new GridLayout(2, false);

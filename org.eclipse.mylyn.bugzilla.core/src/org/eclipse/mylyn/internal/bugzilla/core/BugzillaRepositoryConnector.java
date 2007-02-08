@@ -391,8 +391,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		a.setValue(IBugzillaConstants.VALUE_STATUS_NEW);
 
 		newTaskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
-		// attributes.put(a.getName(), a);
 
+		
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.SHORT_DESC);		
+		newTaskData.addAttribute(BugzillaReportElement.SHORT_DESC.getKeyString(), a);
+		
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
 		optionValues = repositoryConfiguration.getVersions(newTaskData.getProduct());
 		Collections.sort(optionValues);

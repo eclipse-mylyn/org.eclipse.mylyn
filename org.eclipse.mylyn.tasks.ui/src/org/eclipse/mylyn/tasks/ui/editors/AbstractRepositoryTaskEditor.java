@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -169,7 +170,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
-	private static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	protected static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	private static final String ATTACHMENT_DEFAULT_NAME = "attachment";
 
@@ -193,22 +194,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final String HYPERLINK_TYPE_JAVA = "java";
 
-	private static final String LABEL_BUTTON_SUBMIT = "Submit to Repository";
-
-	protected static final String LABEL_SECTION_ACTIONS = "Actions";
-
-	private static final String LABEL_SECTION_ATTRIBUTES = "Attributes";
-
-	private static final String LABEL_SECTION_ATTACHMENTS = "Attachments";
-
-	protected static final String LABEL_SECTION_DESCRIPTION = "Description";
-
-	protected static final String LABEL_SECTION_COMMENTS = "Comments";
-
-	protected static final String LABEL_SECTION_NEW_COMMENT = "New Comment";
-
-	protected static final String SECTION_TITLE_PEOPLE = "People";
-
 	protected FormToolkit toolkit;
 
 	private ScrolledForm form;
@@ -229,7 +214,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
-	private static final String REASSIGN_BUG_TO = "Reassign  bug to";
+	private static final String REASSIGN_BUG_TO = "Reassign to";
+
+	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	protected final Object FAMILY_SUBMIT = new Object();
 
@@ -310,11 +297,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected boolean showAttachments = true;
 
-	protected boolean showId = true;
-	
+	protected boolean attachContext = true;
+
 	private boolean submitting = false;
 
 	private Section newCommentSection;
+
+	protected enum SECTION_NAME {
+		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
+				"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People");
+
+		private String prettyName;
+
+		public String getPrettyName() {
+			return prettyName;
+		}
+
+		SECTION_NAME(String prettyName) {
+			this.prettyName = prettyName;
+		}
+	}
 
 	private List<IRepositoryTaskAttributeListener> attributesListeners = new ArrayList<IRepositoryTaskAttributeListener>();
 
@@ -461,6 +463,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private AbstractRepositoryTask repositoryTask;
 
 	protected Set<RepositoryTaskAttribute> changedAttributes;
+
+	protected Map<SECTION_NAME, String> alternateSectionLabels = new HashMap<SECTION_NAME, String>();
 
 	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
 
@@ -734,44 +738,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		headerLayout.horizontalSpacing = 2;
 		headerInfoComposite.setLayout(headerLayout);
 
-		toolkit.createLabel(headerInfoComposite, " Status: ").setFont(TITLE_FONT);
-		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.STATUS);
-		createTextField(headerInfoComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
-
-		toolkit.createLabel(headerInfoComposite, " Priority: ").setFont(TITLE_FONT);
-		attribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
-		createTextField(headerInfoComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
-		// RepositoryTaskAttribute attribute =
-		// taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
-		// if (attribute != null) {
-		// String value = attribute.getValue() != null ? attribute.getValue() :
-		// "";
-		// attributeCombo = new CCombo(headerInfoComposite, SWT.FLAT |
-		// SWT.READ_ONLY);
-		// toolkit.adapt(attributeCombo, true, true);
-		// attributeCombo.setFont(TEXT_FONT);
-		// if (attribute.getValues() != null) {
-		//
-		// Set<String> s = attribute.getOptionValues().keySet();
-		// String[] a = s.toArray(new String[s.size()]);
-		// for (int i = 0; i < a.length; i++) {
-		// attributeCombo.add(a[i]);
-		// }
-		// if (attributeCombo.indexOf(value) != -1) {
-		// attributeCombo.select(attributeCombo.indexOf(value));
-		// }
-		// }
-		// attributeCombo.addSelectionListener(new
-		// ComboSelectionListener(attributeCombo));
-		// comboListenerMap.put(attributeCombo, attribute);
-		// attributeCombo.addListener(SWT.FocusIn, new GenericListener());
-		// }
-
-		if (showId) {
-			toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
-			toolkit.createText(headerInfoComposite, "" + taskData.getId(), SWT.FLAT | SWT.READ_ONLY);
+		RepositoryTaskAttribute statusAtribute = taskData.getAttribute(RepositoryTaskAttribute.STATUS);
+		if (statusAtribute != null) {
+			createLabel(headerInfoComposite, statusAtribute).setFont(TITLE_FONT);
+			createTextField(headerInfoComposite, statusAtribute, SWT.FLAT | SWT.READ_ONLY);
 		}
-		
+
+		RepositoryTaskAttribute priorityAttribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
+		if (priorityAttribute != null) {
+			createLabel(headerInfoComposite, priorityAttribute).setFont(TITLE_FONT);
+			createTextField(headerInfoComposite, priorityAttribute, SWT.FLAT | SWT.READ_ONLY);
+		}
+
+		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
+		toolkit.createText(headerInfoComposite, "" + taskData.getId(), SWT.FLAT | SWT.READ_ONLY);
+
 		String openedDateString = "";
 		String modifiedDateString = "";
 		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
@@ -785,10 +766,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			modifiedDateString = modified != null ? DateUtil.getFormattedDate(modified, HEADER_DATE_FORMAT) : "";
 		}
 
-		toolkit.createLabel(headerInfoComposite, " Opened: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
-		toolkit.createLabel(headerInfoComposite, " Modified: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+		RepositoryTaskAttribute creationAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_CREATION);
+		if (creationAttribute != null) {
+			createLabel(headerInfoComposite, creationAttribute).setFont(TITLE_FONT);
+			toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
+		}
+
+		RepositoryTaskAttribute modifiedAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
+		if (modifiedAttribute != null) {
+			createLabel(headerInfoComposite, modifiedAttribute).setFont(TITLE_FONT);
+			toolkit.createText(headerInfoComposite, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+		}
 	}
 
 	/**
@@ -837,13 +825,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return label;
 	}
 
+	public String getSectionLabel(SECTION_NAME labelName) {
+		String label = alternateSectionLabels.get(labelName);
+		if (label != null) {
+			return label;
+		} else {
+			return labelName.getPrettyName();
+		}
+	}
+
 	/**
 	 * Creates the attribute section, which contains most of the basic
 	 * attributes of the task (some of which are editable).
 	 */
 	protected Composite createAttributeLayout(Composite composite) {
 		String title = taskData.getLabel();
-		attributesSection = createSection(composite, LABEL_SECTION_ATTRIBUTES);
+		attributesSection = createSection(composite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
 		// Attributes Composite- this holds all the combo fields and text fields
@@ -965,25 +962,27 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
-		toolkit.createLabel(summaryComposite, "Summary:").setFont(TITLE_FONT);
-		summaryText = createTextField(summaryComposite, taskData.getAttribute(RepositoryTaskAttribute.SUMMARY),
-				SWT.FLAT);
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-		Font summaryFont = themeManager.getCurrentTheme().getFontRegistry()
-				.get(TaskListColorsAndFonts.TASK_EDITOR_FONT);
-		summaryText.setFont(summaryFont);
+		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+		if (attribute != null) {
+			Label summaryLabel = createLabel(summaryComposite, attribute);
+			summaryLabel.setFont(TITLE_FONT);
+			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
+			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
+					TaskListColorsAndFonts.TASK_EDITOR_FONT);
+			summaryText.setFont(summaryFont);
 
-		GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
-
-		summaryText.addListener(SWT.KeyUp, new SummaryListener());
+			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
+			summaryText.addListener(SWT.KeyUp, new SummaryListener());
+		}
 		toolkit.paintBordersFor(summaryComposite);
 	}
 
 	protected void createAttachmentLayout(Composite composite) {
 
 		// TODO: expand to show new attachments
-		Section section = createSection(composite, LABEL_SECTION_ATTACHMENTS + " (" + taskData.getAttachments().size()
-				+ ")");
+		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ATTACHMENTS_SECTION));
+		section.setText(section.getText() + " (" + taskData.getAttachments().size() + ")");
 		section.setExpanded(false);
 		final Composite attachmentsComposite = toolkit.createComposite(section);
 		attachmentsComposite.setLayout(new GridLayout(1, false));
@@ -1420,7 +1419,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// }
 
 	protected void createDescriptionLayout(Composite composite) {
-		descriptionSection = createSection(composite, LABEL_SECTION_DESCRIPTION);
+		descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
 		final Composite sectionComposite = toolkit.createComposite(descriptionSection);
 		descriptionSection.setClient(sectionComposite);
 		GridLayout addCommentsLayout = new GridLayout();
@@ -1514,7 +1513,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createPeopleLayout(Composite composite) {
-		Section peopleSection = createSection(composite, SECTION_TITLE_PEOPLE);
+		Section peopleSection = createSection(composite, getSectionLabel(SECTION_NAME.PEOPLE_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(peopleSection);
 		Composite peopleComposite = toolkit.createComposite(peopleSection);
 		GridLayout layout = new GridLayout(2, false);
@@ -1522,34 +1521,37 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		peopleComposite.setLayout(layout);
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
-		Label label = toolkit.createLabel(peopleComposite, "Assigned to:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
-		GridLayout textLayout = new GridLayout();
-		textLayout.marginWidth = 1;
-		textLayout.verticalSpacing = 0;
-		textLayout.marginHeight = 0;
-		textLayout.marginRight = 5;
-		textFieldComposite.setLayout(textLayout);
-		Text textField = createTextField(textFieldComposite, taskData
-				.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT | SWT.READ_ONLY);
+		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+		if (assignedAttribute != null) {
 
-		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+			Label label = createLabel(peopleComposite, assignedAttribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			Composite textFieldComposite = toolkit.createComposite(peopleComposite);
+			GridLayout textLayout = new GridLayout();
+			textLayout.marginWidth = 1;
+			textLayout.verticalSpacing = 0;
+			textLayout.marginHeight = 0;
+			textLayout.marginRight = 5;
+			textFieldComposite.setLayout(textLayout);
+			Text textField = createTextField(textFieldComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+		}
 
-		label = toolkit.createLabel(peopleComposite, "Reporter:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
-		textFieldComposite = toolkit.createComposite(peopleComposite);
-		textLayout = new GridLayout();
-		textLayout.marginWidth = 1;
-		textLayout.verticalSpacing = 0;
-		textLayout.marginHeight = 0;
-		textFieldComposite.setLayout(textLayout);
-		textField = createTextField(textFieldComposite, taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER),
-				SWT.FLAT | SWT.READ_ONLY);
+		RepositoryTaskAttribute reporterAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_REPORTER);
+		if (reporterAttribute != null) {
 
-		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+			Label label = createLabel(peopleComposite, reporterAttribute);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			Composite textFieldComposite = toolkit.createComposite(peopleComposite);
+			GridLayout textLayout = new GridLayout();
+			textLayout.marginWidth = 1;
+			textLayout.verticalSpacing = 0;
+			textLayout.marginHeight = 0;
+			textFieldComposite.setLayout(textLayout);
+			Text textField = createTextField(textFieldComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
+			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
+		}
 		addSelfToCC(peopleComposite);
-
 		addCCList(peopleComposite);
 		getManagedForm().getToolkit().paintBordersFor(peopleComposite);
 		peopleSection.setClient(peopleComposite);
@@ -1638,14 +1640,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							LABEL_SECTION_DESCRIPTION, true, taskData.getSummary()))));
+							getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true, taskData.getSummary()))));
 		}
 	}
 
 	protected void createCommentLayout(Composite composite) {
-
-		commentsSection = createSection(composite, LABEL_SECTION_COMMENTS + " (" + taskData.getComments().size() + ")");
-
+		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
+		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
 		ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
 		toolkit.adapt(hyperlink, true, true);
 		hyperlink.setBackground(null);
@@ -1773,7 +1774,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
-		newCommentSection = createSection(composite, LABEL_SECTION_NEW_COMMENT);
+		newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 
 		Composite newCommentsComposite = toolkit.createComposite(newCommentSection);
 		newCommentsComposite.setLayout(new GridLayout());
@@ -1816,7 +1817,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * bottom of the editor to allow actions to be performed on the bug.
 	 */
 	protected void createActionsLayout(Composite composite) {
-		Section section = createSection(composite, LABEL_SECTION_ACTIONS);
+		Section section = createSection(composite, getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
 		Composite buttonComposite = toolkit.createComposite(section);
 		GridLayout buttonLayout = new GridLayout();
@@ -1834,15 +1835,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// section.addExpansionListener(new IExpansionListener() {
-		// public void expansionStateChanging(ExpansionEvent e) {
-		// form.reflow(true);
-		// }
-		//
-		// public void expansionStateChanged(ExpansionEvent e) {
-		// form.reflow(true);
-		// }
-		// });
 		return section;
 	}
 
@@ -1856,7 +1848,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void addActionButtons(Composite buttonComposite) {
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
-		if (task != null) {
+		if (attachContext && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);

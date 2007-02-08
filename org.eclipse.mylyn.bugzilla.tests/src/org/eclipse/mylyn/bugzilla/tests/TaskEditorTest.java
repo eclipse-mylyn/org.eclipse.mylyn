@@ -13,6 +13,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -60,7 +61,7 @@ public class TaskEditorTest extends TestCase {
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNew(true);
-		
+		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
