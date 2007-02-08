@@ -149,9 +149,9 @@ public class TaskListNotificationPopup extends PopupDialog {
 		section.setTextClient(buttonsComposite);
 		buttonsComposite.setLayout(new RowLayout());
 		buttonsComposite.setBackground(section.getTitleBarBackground());
-		final ImageHyperlink closeHyperlink = toolkit.createImageHyperlink(buttonsComposite, SWT.NONE);
-		// closeHyperlink.setBackgroundMode(SWT.INHERIT_FORCE);
-		closeHyperlink.setBackground(section.getTitleBarBackground());
+		final ImageHyperlink closeHyperlink = new ImageHyperlink(buttonsComposite, SWT.NONE);
+		toolkit.adapt(closeHyperlink, true, true);
+		closeHyperlink.setBackground(null);
 		closeHyperlink.setImage(TaskListImages.getImage(TaskListImages.NOTIFICATION_CLOSE));
 		closeHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
