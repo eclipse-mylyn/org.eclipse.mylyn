@@ -94,13 +94,14 @@ public class XmlStringConverter {
 			return '\'';
 		} else if (s.equals("amp")) {
 			return '&';
-		} else if (s.equals("x0D")) {
+		} else if (s.equals("#x0D")) {
 			return '\r';
-		} else if (s.equals("x0A")) {
+		} else if (s.equals("#x0A")) {
 			return '\n';
-		} else if (s.equals("x09")) {
+		} else if (s.equals("#x09")) {
 			return '\u0009';
 		}
 		return 0;
 	}
+
 }

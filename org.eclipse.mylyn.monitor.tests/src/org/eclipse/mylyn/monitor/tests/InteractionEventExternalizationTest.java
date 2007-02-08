@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.mylar.context.tests.AbstractContextTest;
+import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.usage.MylarMonitorPreferenceConstants;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
@@ -29,6 +30,19 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 
 	private static final String PATH = "test-log.xml";
 
+	public void testXmlStringConversion() {
+		String testStrings[] = {
+				"single",
+				"simple string with spaces",
+				"<embedded-xml>",
+				"<more complicated=\"xml\"><example with='comp:licated'/></more>",
+				"<embedded>\rcarriage-returns\nnewlines\tand tabs"
+		};
+		for(String s : testStrings) {
+			assertEquals(s, XmlStringConverter.convertXmlToString(XmlStringConverter.convertToXmlString(s)));
+		}
+	}
+	
 	public void testManualExternalization() throws IOException {
 		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
 
