@@ -12,6 +12,9 @@
 
    <element name="extension">
       <complexType>
+         <sequence>
+            <element ref="osActivityTimer"/>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
