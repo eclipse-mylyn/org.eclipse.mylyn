@@ -310,6 +310,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected boolean showAttachments = true;
 
+	protected boolean showId = true;
+	
 	private boolean submitting = false;
 
 	private Section newCommentSection;
@@ -639,7 +641,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (parentEditor != null) {
 			parentEditor.notifyTaskChanged();
 		}
-
 	}
 
 	protected abstract void validateInput();
@@ -766,9 +767,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// attributeCombo.addListener(SWT.FocusIn, new GenericListener());
 		// }
 
-		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, "" + taskData.getId(), SWT.FLAT | SWT.READ_ONLY);
-
+		if (showId) {
+			toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
+			toolkit.createText(headerInfoComposite, "" + taskData.getId(), SWT.FLAT | SWT.READ_ONLY);
+		}
+		
 		String openedDateString = "";
 		String modifiedDateString = "";
 		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
