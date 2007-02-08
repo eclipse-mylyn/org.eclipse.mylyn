@@ -449,8 +449,7 @@ public class BugzillaClient {
 								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
-								.getResponseBodyAsStream(), characterEncoding);
-						method.getResponseCharSet();
+								.getResponseBodyAsStream(), characterEncoding);						
 						reportFactory.populateReport(taskData);
 						return taskData;
 					}

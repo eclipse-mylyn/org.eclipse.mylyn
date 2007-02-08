@@ -62,7 +62,7 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		case REPOSITORY_NOT_FOUND:
 			return MylarMessages.bind(MylarMessages.repository_not_found, this.errorMessage);
 		case REPOSITORY_ERROR:
-			return MylarMessages.bind(MylarMessages.repository_error, this.errorMessage);
+			return MylarMessages.bind(MylarMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
 		case IO_ERROR:
 			String string1 = getException().getClass().getSimpleName();
 			String string2 = getException().getMessage();

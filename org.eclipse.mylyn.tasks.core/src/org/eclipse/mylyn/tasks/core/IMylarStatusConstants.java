@@ -17,6 +17,9 @@ package org.eclipse.mylar.tasks.core;
  */
 public interface IMylarStatusConstants {
 
+	/**
+	 * requires construction with repositoryUrl and error message
+	 */
 	public final static int REPOSITORY_ERROR = 1;
 
 	/**
