@@ -132,7 +132,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 
 					new MonitorUiExtensionPointReader().initExtensions();
 
-					AbstractUserActivityTimer activityTimer;
+					AbstractUserActivityTimer activityTimer = null;
 					if (osActivityTimer != null) {
 						activityTimer = osActivityTimer;
 					} else {
@@ -268,7 +268,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 
 	class MonitorUiExtensionPointReader {
 
-		public static final String EXTENSION_ID_STUDY = "org.eclipse.mylar.monitor.ui";
+		public static final String EXTENSION_ID_USER = "org.eclipse.mylar.monitor.ui.user";
 
 		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer";
 
@@ -281,7 +281,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 			try {
 				if (!extensionsRead) {
 					IExtensionRegistry registry = Platform.getExtensionRegistry();
-					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_STUDY);
+					IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_ID_USER);
 					if (extensionPoint != null) {
 						IExtension[] extensions = extensionPoint.getExtensions();
 						for (int i = 0; i < extensions.length; i++) {

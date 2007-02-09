@@ -29,18 +29,19 @@ public class ActivityContextManager implements IActivityTimerListener {
 	private boolean isStalled;
 
 	private Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
-	
+
 	public ActivityContextManager(AbstractUserActivityTimer userActivityTimer) {
 		this.userActivityTimer = userActivityTimer;
 		userActivityTimer.addListener(this);
 	}
-	
+
 	public void fireActive() {
 		userActivityTimer.resetTimer();
 		if (isStalled) {
-			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
-					MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
+			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
+							MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID,
+							null, MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionGained();
 			}
@@ -50,9 +51,10 @@ public class ActivityContextManager implements IActivityTimerListener {
 
 	public void fireInactive() {
 		if (!isStalled) {
-			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
-					 MylarContextManager.ACTIVITY_STRUCTURE_KIND,  MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
-					MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
+					new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
+							MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID,
+							null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 			for (IUserAttentionListener attentionListener : attentionListeners) {
 				attentionListener.userAttentionLost();
 			}
@@ -63,16 +65,16 @@ public class ActivityContextManager implements IActivityTimerListener {
 	public void start() {
 		userActivityTimer.start();
 	}
-	
+
 	public void stop() {
 		userActivityTimer.kill();
 	}
-	
+
 	public void setTimeoutMillis(int millis) {
 		userActivityTimer.setTimeoutMillis(millis);
 		userActivityTimer.resetTimer();
 	}
-	
+
 	public void addListener(IUserAttentionListener listener) {
 		attentionListeners.add(listener);
 	}

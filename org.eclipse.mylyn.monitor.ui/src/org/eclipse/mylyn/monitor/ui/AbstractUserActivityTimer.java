@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.monitor.ui;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 import org.eclipse.mylar.monitor.core.IActivityTimerListener;
 
 /**
@@ -18,10 +21,18 @@ import org.eclipse.mylar.monitor.core.IActivityTimerListener;
  */
 public abstract class AbstractUserActivityTimer {
 
+	private Set<IActivityTimerListener> listeners = new CopyOnWriteArraySet<IActivityTimerListener>();
+
 	/**
 	 * The listener needs to be notified of timed user activity and inactivity
 	 */
-	public abstract boolean addListener(IActivityTimerListener activityListener);
+	public void addListener(IActivityTimerListener activityListener) {
+		listeners.add(activityListener);
+	}
+
+	public void removeListener(IActivityTimerListener activityListener) {
+		listeners.remove(activityListener);
+	}
 
 	public abstract void resetTimer();
 
@@ -30,5 +41,17 @@ public abstract class AbstractUserActivityTimer {
 	public abstract void start();
 
 	public abstract void setTimeoutMillis(int millis);
+
+	public void fireActive() {
+		for (IActivityTimerListener listener : listeners) {
+			listener.fireActive();
+		}
+	}
+
+	public void fireInactive() {
+		for (IActivityTimerListener listener : listeners) {
+			listener.fireInactive();
+		}
+	}
 
 }

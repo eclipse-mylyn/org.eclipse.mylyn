@@ -11,38 +11,31 @@
 
 package org.eclipse.mylar.monitor.ui;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylar.monitor.core.ActivityTimerThread;
 import org.eclipse.mylar.monitor.core.IActivityTimerListener;
 import org.eclipse.mylar.monitor.core.IInteractionEventListener;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.core.ActivityTimerThread;
 
 /**
  * @author Mik Kersten
  */
 public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implements IInteractionEventListener {
-	
+
 	private ActivityTimerThread timerThread;
-	
-	private Set<IActivityTimerListener> listeners = new HashSet<IActivityTimerListener>();
-	
+
 	public WorkbenchUserActivityTimer(int millis) {
 		timerThread = new ActivityTimerThread(millis);
 	}
 
 	public void interactionObserved(InteractionEvent event) {
-		for (IActivityTimerListener listener : listeners) {
-			listener.fireActive();
-		}
+		fireActive();
 	}
-	
+
 	@Override
-	public boolean addListener(IActivityTimerListener activityListener) {
-		listeners.add(activityListener);
-		return timerThread.addListener(activityListener);
+	public void addListener(IActivityTimerListener activityListener) {
+		super.addListener(activityListener);
+		timerThread.addListener(activityListener);
 	}
 
 	@Override
@@ -50,7 +43,7 @@ public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implem
 		timerThread.start();
 		MylarMonitorUiPlugin.getDefault().addInteractionListener(this);
 	}
-	
+
 	@Override
 	public void kill() {
 		if (Platform.isRunning() && MylarMonitorUiPlugin.getDefault() != null) {
