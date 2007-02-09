@@ -2621,7 +2621,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * If existing task editor, update contents in place
 	 */
-	private void updateEditor() {
+	protected void updateEditor() {
 		if (!this.isDisposed) {
 			changedAttributes.clear();
 			commentStyleText.clear();
