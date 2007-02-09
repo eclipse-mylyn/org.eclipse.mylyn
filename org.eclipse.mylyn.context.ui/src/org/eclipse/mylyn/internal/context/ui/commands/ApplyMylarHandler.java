@@ -28,7 +28,6 @@ public class ApplyMylarHandler extends AbstractHandler {
 
 	private AbstractFocusViewAction applyAction = null;
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Object returnValue = Boolean.FALSE;
 		String viewId = event.getParameter(PARAMETER_VIEW_ID);
