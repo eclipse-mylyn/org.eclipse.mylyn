@@ -45,11 +45,21 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
-	public static final String REQUIRED_REVISION = "1188";
+	public static final String REQUIRED_REVISION = "1735";
+
+	public static final int REQUIRED_MAJOR = 0;
+
+	public static final int REQUIRED_MINOR = 1;
+
+	private static final int NO_SUCH_METHOD_ERROR = 1;
 
 	private XmlRpcClient xmlrpc;
 
 	private TracHttpClientTransportFactory factory;
+
+	private int majorAPIVersion = -1;
+
+	private int minorAPIVersion = -1;
 
 	public TracXmlRpcClient(URL url, Version version, String username, String password, Proxy proxy) {
 		super(url, version, username, password, proxy);
@@ -99,14 +109,18 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			return xmlrpc.execute(method, parameters);
 		} catch (TracHttpException e) {
 			if (e.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				throw new TracLoginException();				
+				throw new TracLoginException();
 			} else if (e.code == HttpURLConnection.HTTP_FORBIDDEN) {
 				throw new TracPermissionDeniedException();
 			} else {
 				throw new TracException(e);
 			}
 		} catch (XmlRpcException e) {
-			throw new TracRemoteException(e);
+			if (e.code == NO_SUCH_METHOD_ERROR) {
+				throw new TracNoSuchMethodException(e);
+			} else {
+				throw new TracRemoteException(e);
+			}
 		} catch (Exception e) {
 			throw new TracException(e);
 		}
@@ -148,27 +162,32 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	}
 
 	public void validate() throws TracException {
-		Object[] result = (Object[]) call("system.listMethods");
-		boolean hasGetTicket = false, hasQuery = false, isRecentRevision = false;
-		for (Object methodName : result) {
-			if ("ticket.get".equals(methodName)) {
-				hasGetTicket = true;
-			}
-			if ("ticket.query".equals(methodName)) {
-				hasQuery = true;
-			}
-			if ("ticket.getRecentChanges".equals(methodName)) {
-				// this call was added in rev. 1188
-				isRecentRevision = true;
-			}
-
-			if (hasGetTicket && hasQuery && isRecentRevision) {
-				return;
-			}
+		try {
+			Object[] result = (Object[]) call("system.getAPIVersion");
+			majorAPIVersion = (Integer) result[0];
+			minorAPIVersion = (Integer) result[1];
+		} catch (TracNoSuchMethodException e) {
+			throw new TracException(
+					"Required API calls are missing, please update your Trac XML-RPC Plugin to revision "
+							+ REQUIRED_REVISION + " or later");
 		}
 
-		throw new TracException("Required API calls are missing, please update your Trac XML-RPC Plugin to revision "
-				+ REQUIRED_REVISION + " or later");
+		if (!isAPIVersionOrHigher(REQUIRED_MAJOR, REQUIRED_MINOR)) {
+			throw new TracException("The API version " + majorAPIVersion + "." + minorAPIVersion
+					+ " is unsupported, please update your Trac XML-RPC Plugin to revision " + REQUIRED_REVISION
+					+ " or later");
+		}
+	}
+
+	private void updateAPIVersion() throws TracException {
+		if (majorAPIVersion == -1 || minorAPIVersion == -1) {
+			validate();
+		}
+	}
+
+	private boolean isAPIVersionOrHigher(int major, int minor) throws TracException {
+		updateAPIVersion();
+		return (majorAPIVersion > major || (majorAPIVersion == major && minorAPIVersion >= minor));
 	}
 
 	public TracTicket getTicket(int id) throws TracException {
@@ -434,12 +453,22 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		if (summary == null || description == null) {
 			throw new InvalidTicketException();
 		}
-		return (Integer) call("ticket.create", summary, description, attributes);
+		if (isAPIVersionOrHigher(0, 2)) {
+			return (Integer) call("ticket.create", summary, description, attributes, true);
+		} else {
+			return (Integer) call("ticket.create", summary, description, attributes);
+		}
 	}
 
 	public void updateTicket(TracTicket ticket, String comment) throws TracException {
+		updateAPIVersion();
+
 		Map<String, String> attributes = ticket.getValues();
-		call("ticket.update", ticket.getId(), comment, attributes);
+		if (isAPIVersionOrHigher(0, 2)) {
+			call("ticket.update", ticket.getId(), comment, attributes, true);
+		} else {
+			call("ticket.update", ticket.getId(), comment, attributes);
+		}
 	}
 
 	public Set<Integer> getChangedTickets(Date since) throws TracException {
