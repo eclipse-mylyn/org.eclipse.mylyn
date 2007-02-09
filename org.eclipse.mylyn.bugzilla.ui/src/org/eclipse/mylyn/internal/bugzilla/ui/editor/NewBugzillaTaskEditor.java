@@ -83,7 +83,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		textLayout.marginRight = 5;
 		textFieldComposite.setLayout(textLayout);
 		Text textField = createTextField(textFieldComposite, taskData
-				.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT);
+				.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT | SWT.BORDER);
 
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		peopleSection.setClient(peopleComposite);
