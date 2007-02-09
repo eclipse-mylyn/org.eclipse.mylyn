@@ -22,21 +22,6 @@ import javax.net.ssl.X509TrustManager;
  */
 public class TrustAllTrustManager implements X509TrustManager {
 	
-	// seems to be no purpose
-	public boolean checkClientTrusted(java.security.cert.X509Certificate[] chain) {
-		return true;
-	}
-
-	// seems to be no purpose
-	public boolean isServerTrusted(java.security.cert.X509Certificate[] chain) {
-		return true;
-	}
-
-	// seems to be no purpose
-	public boolean isClientTrusted(java.security.cert.X509Certificate[] chain) {
-		return true;
-	}
-
 	public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 		return null;
 	}

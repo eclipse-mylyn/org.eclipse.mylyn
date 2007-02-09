@@ -41,6 +41,7 @@ public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 	private Proxy proxy;
 
 	public SslProtocolSocketFactory(Proxy proxy) {
+		super();
 		this.proxy = proxy;
 	}
 

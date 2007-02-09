@@ -34,7 +34,7 @@ public class WebClientUtil {
 
 	// private static final int COM_TIME_OUT = 30000;
 
-	//public static final String ENCODING_GZIP = "gzip";
+	// public static final String ENCODING_GZIP = "gzip";
 
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
@@ -111,16 +111,22 @@ public class WebClientUtil {
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
-		//System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-		//System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-		//System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-		//System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
-		//System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
+		// System.setProperty("org.apache.commons.logging.Log",
+		// "org.apache.commons.logging.impl.SimpleLog");
+		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
+		// "true");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
+		// "debug");
 
-
-		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings) && !WebClientUtil.repositoryUsesHttps(repositoryUrl) && proxySettings.address() instanceof InetSocketAddress) {
+		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
+				&& !WebClientUtil.repositoryUsesHttps(repositoryUrl)
+				&& proxySettings.address() instanceof InetSocketAddress) {
 			InetSocketAddress address = (InetSocketAddress) proxySettings.address();
-			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());			
+			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
 			if (proxySettings instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
 				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
@@ -129,7 +135,7 @@ public class WebClientUtil {
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 			}
 		}
-		
+
 		if (user != null && password != null) {
 			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil
 					.getPort(repositoryUrl), AuthScope.ANY_REALM);
@@ -141,6 +147,7 @@ public class WebClientUtil {
 					.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
+			Protocol.registerProtocol("https", acceptAllSsl);
 		} else {
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl));
