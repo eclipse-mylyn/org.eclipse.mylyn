@@ -23,7 +23,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AddTaskRepositoryHandler extends AbstractHandler {
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		String param = event.getParameter("org.eclipse.mylar.tasks.command.taskRepositoryId");
 		NewRepositoryWizard wizard = new NewRepositoryWizard(param);
