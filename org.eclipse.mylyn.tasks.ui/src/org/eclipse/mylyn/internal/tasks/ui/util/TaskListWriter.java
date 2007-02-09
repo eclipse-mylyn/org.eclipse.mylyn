@@ -58,8 +58,6 @@ import org.xml.sax.SAXException;
  * @author Rob Elves
  */
 public class TaskListWriter {
-	// Last number given to new local task
-	public static final String ATTRIBUTE_LAST_NUM = "LastNum";
 
 	public static final String ATTRIBUTE_VERSION = "Version";
 
@@ -76,7 +74,7 @@ public class TaskListWriter {
 	private DelegatingTaskExternalizer delagatingExternalizer;
 
 	private List<Node> orphanedTaskNodes = new ArrayList<Node>();
-	
+
 	private List<Node> orphanedQueryNodes = new ArrayList<Node>();
 
 	private String readVersion = "";
@@ -86,12 +84,11 @@ public class TaskListWriter {
 	public TaskListWriter() {
 		this.delagatingExternalizer = new DelegatingTaskExternalizer();
 	}
-	
 
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		delagatingExternalizer.init(taskDataManager);
 	}
-	
+
 	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.externalizers = externalizers;
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
@@ -111,7 +108,6 @@ public class TaskListWriter {
 
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
-		root.setAttribute(ATTRIBUTE_LAST_NUM, "" + taskList.getLastTaskNum());
 
 		// create the categories
 		for (AbstractTaskContainer category : taskList.getCategories()) {
@@ -143,7 +139,7 @@ public class TaskListWriter {
 		for (ITask task : taskList.getAllTasks()) {
 			createTaskElement(doc, root, task);
 		}
-	
+
 		// Persist orphaned tasks...
 		for (Node orphanedTaskNode : orphanedTaskNodes) {
 			Node tempNode = doc.importNode(orphanedTaskNode, true);
@@ -151,7 +147,7 @@ public class TaskListWriter {
 				root.appendChild(tempNode);
 			}
 		}
-		
+
 		// Persist orphaned queries....
 		for (Node orphanedQueryNode : orphanedQueryNodes) {
 			Node tempNode = doc.importNode(orphanedQueryNode, true);
@@ -175,8 +171,8 @@ public class TaskListWriter {
 				}
 			}
 			if (element == null) {// &&
-									// delagatingExternalizer.canCreateElementFor(task))
-									// {
+				// delagatingExternalizer.canCreateElementFor(task))
+				// {
 				delagatingExternalizer.createTaskElement(task, doc, root);
 			} else if (element == null) {
 				MylarStatusHandler.log("Did not externalize: " + task, this);
@@ -260,10 +256,7 @@ public class TaskListWriter {
 			}
 			Element root = doc.getDocumentElement();
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
-			String lastNum = root.getAttribute(ATTRIBUTE_LAST_NUM);
-			if (lastNum != null && !lastNum.equals("")) {
-				taskList.setLastTaskNum(Integer.parseInt(lastNum));
-			}
+
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
 				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
 			} else {
@@ -332,7 +325,7 @@ public class TaskListWriter {
 									break;
 								}
 							}
-							if(!wasRead) {
+							if (!wasRead) {
 								orphanedQueryNodes.add(child);
 							}
 						}
@@ -341,12 +334,12 @@ public class TaskListWriter {
 					}
 				}
 
-				// Migration 0.7.0.1 -> 0.8.0
-				// last task number field wasn't in tasklist.xml
-				if (lastNum == null || lastNum.equals("")) {
-					int largest = taskList.findLargestTaskHandle();
-					taskList.setLastTaskNum(largest);
-				}
+				// bug#173710 - task number incorrect resulting in invalid task
+				// list
+				// Doing count each time
+				int largest = taskList.findLargestTaskHandle();
+				taskList.setLastTaskNum(largest);
+
 			}
 		} catch (Exception e) {
 			handleException(inFile, null, e);

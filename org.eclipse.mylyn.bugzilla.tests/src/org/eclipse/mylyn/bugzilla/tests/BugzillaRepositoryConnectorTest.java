@@ -380,8 +380,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(5, Integer.parseInt(task5.getTaskData().getId()));
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
-		tasks.add(task4);// 2006-11-28 14:32:59
-		tasks.add(task5);// 2006-11-28 14:33:06
+		tasks.add(task4);
+		tasks.add(task5);
+		
+		// Precondition for test passing is that task5's modification data is AFTER
+		// task4's
 
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
