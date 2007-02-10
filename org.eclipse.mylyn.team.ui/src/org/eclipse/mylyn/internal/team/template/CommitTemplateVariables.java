@@ -199,7 +199,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask)task).getIdLabel();
+				return ((AbstractRepositoryTask)task).getIdentifyingLabel();
 //				return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
 			} else {
 				return null;
@@ -231,7 +231,7 @@ public class CommitTemplateVariables {
 	public static class TaskURL extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			return task.getUrl();
+			return task.getTaskUrl();
 		}
 	}
 

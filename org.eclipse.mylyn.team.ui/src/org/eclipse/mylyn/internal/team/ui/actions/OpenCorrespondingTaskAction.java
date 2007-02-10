@@ -25,6 +25,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenRepositoryTask;
@@ -179,16 +180,16 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		if (task == null) {
 			if (taskId != null && repositoryUrl != null) {
 				// XXX fix this hack (jira ids don't work here)
-				if (!taskId.contains(AbstractRepositoryTask.HANDLE_DELIM)) {
-					String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
+//					String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
 				for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 					if (currTask instanceof AbstractRepositoryTask) {
-						String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
+						String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
 						if (taskFullUrl.equals(currUrl)) {
 							return new LinkedTaskInfo(currTask);
 						}
