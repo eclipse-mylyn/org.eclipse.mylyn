@@ -22,7 +22,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
@@ -112,19 +111,19 @@ public class ChangeDataDirTest extends TestCase {
 
 	// TODO: delete? using lastOpened date wrong
 	public void testBugzillaTaskMove() {
-		String handle = AbstractRepositoryTask.getHandle("server", 1);
-		BugzillaTask bugzillaTask = new BugzillaTask(handle, "bug1", true);
+//		String handle = AbstractRepositoryTask.getHandle("server", 1);
+		BugzillaTask bugzillaTask = new BugzillaTask("server", "1", "bug1", true);
 		String refreshDate = (new Date()).toString();
 		bugzillaTask.setLastSyncDateStamp(refreshDate);
 		addBugzillaTask(bugzillaTask);
-		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask(handle);
+		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask("server", "1");
 		assertNotNull(readTaskBeforeMove);
 		assertEquals(refreshDate, readTaskBeforeMove.getLastSyncDateStamp());
 
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 
-		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask(handle);
+		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask("server", "1");
 		assertNotNull(readTaskAfterMove);
 		assertEquals(refreshDate, readTaskAfterMove.getLastSyncDateStamp());
 	}
