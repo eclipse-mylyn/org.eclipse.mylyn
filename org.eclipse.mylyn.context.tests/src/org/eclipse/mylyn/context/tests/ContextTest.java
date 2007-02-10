@@ -47,9 +47,7 @@ public class ContextTest extends AbstractContextTest {
 
 	public void testReset() {
 		context.parseEvent(mockSelection());
-		// ContextCorePlugin.getContextManager().contextDeleted(taskId, taskId);
 		context.reset();
-		// ContextCorePlugin.getContextManager().contextActivated(taskId, taskId);
 
 		assertNull(context.getActiveNode());
 
