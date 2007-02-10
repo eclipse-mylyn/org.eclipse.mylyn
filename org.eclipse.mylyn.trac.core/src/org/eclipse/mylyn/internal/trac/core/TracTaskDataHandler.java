@@ -217,6 +217,9 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			createAttribute(factory, data, Attribute.REPORTER);
 		}
 
+		if (existingTask) {
+			createAttribute(factory, data, Attribute.NEW_CC);
+		}
 		createAttribute(factory, data, Attribute.CC);
 		createAttribute(factory, data, Attribute.KEYWORDS);
 

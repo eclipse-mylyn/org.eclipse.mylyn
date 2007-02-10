@@ -39,6 +39,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		ID(Key.ID, "<used by search engine>", null, true),
 		KEYWORDS(Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS),
 		MILESTONE(Key.MILESTONE, "Milestone:", null),
+		NEW_CC(RepositoryTaskAttribute.NEW_CC, "Add CC:"),
 		OWNER(Key.OWNER, "Assigned to:", RepositoryTaskAttribute.USER_ASSIGNED, true, true),
 		PRIORITY(Key.PRIORITY, "Priority:", null),
 		REPORTER(Key.REPORTER, "Reporter:", RepositoryTaskAttribute.USER_REPORTER, true, true),
@@ -60,8 +61,8 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 
 		private final String taskKey;
 
-		Attribute(Key key, String prettyName, String taskKey, boolean hidden, boolean readonly) {		
-			this.tracKey = key.getKey();
+		Attribute(String tracKey, String prettyName, String taskKey, boolean hidden, boolean readonly) {		
+			this.tracKey = tracKey;
 			this.taskKey = taskKey;
 			this.prettyName = prettyName;
 			this.isHidden = hidden;
@@ -73,14 +74,25 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 			}
 		}
 
+		Attribute(Key key, String prettyName, String taskKey, boolean hidden, boolean readonly) {		
+			this(key.getKey(), prettyName, taskKey, hidden, readonly);
+		}
+
 		Attribute(Key key, String prettyName, String taskKey, boolean hidden) {		
-			this(key, prettyName, taskKey, hidden, false);
+			this(key.getKey(), prettyName, taskKey, hidden, false);
 		}
 		
 		Attribute(Key key, String prettyName, String taskKey) {		
-			this(key, prettyName, taskKey, false, false);
+			this(key.getKey(), prettyName, taskKey, false, false);
 		}
 
+		/**
+		 * This is for Mylar attributes that do not map to Trac attributes.
+		 */
+		Attribute(String taskKey, String prettyName) {
+			this(taskKey, prettyName, taskKey, false, false);
+		}
+		
 		public String getTaskKey() {
 			return taskKey;
 		}
