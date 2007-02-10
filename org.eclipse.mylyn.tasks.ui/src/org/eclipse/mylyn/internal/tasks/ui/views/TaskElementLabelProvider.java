@@ -115,7 +115,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (hit.getIdLabel() != null) {
 					return hit.getIdLabel() + NO_SUMMARY_AVAILABLE;
 				} else {
-					return hit.getId() + NO_SUMMARY_AVAILABLE;
+					return hit.getTaskId() + NO_SUMMARY_AVAILABLE;
 				}
 			} else if (!pattern.matcher(hit.getSummary()).matches() && hit.getIdLabel() != null
 					&& !hit.getIdLabel().equals("")) {

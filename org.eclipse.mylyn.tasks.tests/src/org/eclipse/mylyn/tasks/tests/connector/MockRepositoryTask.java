@@ -27,7 +27,6 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 	public MockRepositoryTask(String repositoryUrl, String taskId) {
 		super(repositoryUrl, taskId, "label for " + taskId, true);
 	}
-
 	
 	@Override
 	public String getRepositoryKind() {

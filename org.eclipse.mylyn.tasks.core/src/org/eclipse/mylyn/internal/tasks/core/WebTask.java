@@ -25,7 +25,7 @@ public class WebTask extends AbstractRepositoryTask {
 
 	private static final String UNKNOWN_OWNER = "<unknown>";
 	
-//	private final String id;
+//	private final String taskId;
 
 	private final String taskPrefix;
 
@@ -35,7 +35,7 @@ public class WebTask extends AbstractRepositoryTask {
 
 	public WebTask(String id, String label, String taskPrefix, String repositoryUrl, String repsitoryType) {
 		super(repositoryUrl, id, label, false);
-//		this.id = id;
+//		this.id = taskId;
 		this.taskPrefix = taskPrefix;
 		this.repositoryUrl = repositoryUrl;
 		this.repsitoryType = repsitoryType;

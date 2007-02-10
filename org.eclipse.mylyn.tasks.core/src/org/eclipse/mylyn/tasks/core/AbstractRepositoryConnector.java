@@ -72,7 +72,7 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
-	 * @param id
+	 * @param taskId
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
 	 * @return null if task could not be created
 	 * @throws CoreException

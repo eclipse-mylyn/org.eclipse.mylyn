@@ -21,7 +21,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiUtil;
  */
 public class BugzillaHyperLink implements IHyperlink {
 
-	private static final String SHOW_BUG_CGI = "/show_bug.cgi?id=";
+	private static final String SHOW_BUG_CGI = "/show_bug.cgi?taskId=";
 
 	private IRegion region;
 
@@ -57,7 +57,7 @@ public class BugzillaHyperLink implements IHyperlink {
 			TasksUiUtil.openRepositoryTask(repositoryUrl, id, repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG
 					+ id);
 			// OpenBugzillaReportJob job = new
-			// OpenBugzillaReportJob(repository.getUrl(), id);
+			// OpenBugzillaReportJob(repository.getUrl(), taskId);
 			// IProgressService service =
 			// PlatformUI.getWorkbench().getProgressService();
 			// try {

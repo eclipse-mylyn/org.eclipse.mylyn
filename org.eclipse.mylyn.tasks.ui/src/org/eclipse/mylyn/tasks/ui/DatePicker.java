@@ -40,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Temporary date picker from patch posted to:
- * https://bugs.eclipse.org/bugs/show_bug.cgi?id=19945
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=19945
  * 
  * see bug# 19945
  * 

@@ -151,7 +151,7 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * @return Get the next available temporary id. This id is given to new
+	 * @return Get the next available temporary taskId. This taskId is given to new
 	 *         unsubmitted repository tasks. Incremented each time this method
 	 *         is called.
 	 */

@@ -213,7 +213,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			throws PartInitException {
 		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
 		
-		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getId(), repositoryHit.getUrl());
+		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
 	}
 
 	@Override

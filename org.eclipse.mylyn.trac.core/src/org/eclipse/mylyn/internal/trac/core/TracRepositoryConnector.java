@@ -127,7 +127,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
-//			String id = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+//			String taskId = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
 			try {
 				ITracClient connection = getClientManager().getRepository(repository);
 				TracTicket ticket = connection.getTicket(Integer.parseInt(repositoryTask.getTaskId()));

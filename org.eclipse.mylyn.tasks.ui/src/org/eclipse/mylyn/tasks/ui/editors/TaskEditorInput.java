@@ -119,7 +119,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	}
 
 	/**
-	 * @return Returns the id.
+	 * @return Returns the taskId.
 	 */
 	public String getId() {
 		return id;

@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.trac.ui;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.trac.core.TracQueryHit;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.TracTask;
@@ -73,23 +72,23 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throws TaskExternalizationException {
 
 		Element element = (Element) node;
-		String handle;
-		String label;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			handle = element.getAttribute(KEY_HANDLE);
-		} else {
-			throw new TaskExternalizationException("Handle not stored for task");
-		}
-		if (element.hasAttribute(KEY_LABEL)) {
-			label = element.getAttribute(KEY_LABEL);
-		} else {
-			throw new TaskExternalizationException("Description not stored for task");
-		}
-
-		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+//		String handle;
+//		String label;
+//		if (element.hasAttribute(KEY_HANDLE)) {
+//			handle = element.getAttribute(KEY_HANDLE);
+//		} else {
+//			throw new TaskExternalizationException("Handle not stored for task");
+//		}
+//		if (element.hasAttribute(KEY_LABEL)) {
+//			label = element.getAttribute(KEY_LABEL);
+//		} else {
+//			throw new TaskExternalizationException("Description not stored for task");
+//		}
+//
+//		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+//		String id = RepositoryTaskHandleUtil.getTaskId(handle);
 		
-		TracTask task = new TracTask(repositoryUrl, taskId, label, false);
+		TracTask task = new TracTask(null, null, null, false);
 		readTaskInfo(task, taskList, element, parent, category);
 		return task;
 	}
@@ -197,18 +196,8 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
-
-		String handle;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			handle = element.getAttribute(KEY_HANDLE);
-		} else {
-			throw new TaskExternalizationException("Handle not stored for bug report");
-		}
-
-		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
 		
-		TracQueryHit hit = new TracQueryHit(taskList, repositoryUrl, "", taskId);
+		TracQueryHit hit = new TracQueryHit(taskList, null, "", null);
 		// TODO move to DelegationTaskExternalizer
 		if (element.hasAttribute(KEY_COMPLETE)
 				&& element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {

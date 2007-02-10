@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
@@ -108,23 +107,23 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
-		String handle;
-		String label;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			handle = element.getAttribute(KEY_HANDLE);
-		} else {
-			throw new TaskExternalizationException("Handle not stored for bug report");
-		}
-		if (element.hasAttribute(KEY_LABEL)) {
-			label = element.getAttribute(KEY_LABEL);
-		} else {
-			throw new TaskExternalizationException("Description not stored for bug report");
-		}
+//		String handle;
+//		String label;
+//		if (element.hasAttribute(KEY_HANDLE)) {
+//			handle = element.getAttribute(KEY_HANDLE);
+//		} else {
+//			throw new TaskExternalizationException("Handle not stored for bug report");
+//		}
+//		if (element.hasAttribute(KEY_LABEL)) {
+//			label = element.getAttribute(KEY_LABEL);
+//		} else {
+//			throw new TaskExternalizationException("Description not stored for bug report");
+//		}
+//		
+//		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+//		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
 		
-		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
-		
-		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, label, false);
+		BugzillaTask task = new BugzillaTask(null, null, null, false);
 		super.readTaskInfo(task, taskList, element, parent, category);
 
 		return task;
@@ -139,23 +138,21 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
 		Element element = (Element) node;
-		String handle;
-		String status;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			handle = element.getAttribute(KEY_HANDLE);
-		} else {
-			throw new TaskExternalizationException("Handle not stored for bug report");
-		}
+//		String handle;
+//		if (element.hasAttribute(KEY_HANDLE)) {
+//			handle = element.getAttribute(KEY_HANDLE);
+//		} else {
+//			throw new TaskExternalizationException("Handle not stored for bug report");
+//		}
 
-		status = STATUS_NEW;
+		String status = STATUS_NEW;
 		if (element.hasAttribute(KEY_COMPLETE)) {
 			status = element.getAttribute(KEY_COMPLETE);
 			if (status.equals(VAL_TRUE)) {
 				status = STATUS_RESO;
 			}
 		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, "", "", query.getRepositoryUrl(), RepositoryTaskHandleUtil
-				.getTaskId(handle), null, status);
+		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, "", "", query.getRepositoryUrl(), null, null, status);
 		readQueryHitInfo(hit, taskList, query, element);
 	}
 

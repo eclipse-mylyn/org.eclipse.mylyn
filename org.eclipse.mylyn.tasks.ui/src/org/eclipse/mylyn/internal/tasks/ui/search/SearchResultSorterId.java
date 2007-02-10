@@ -16,14 +16,14 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
- * Sorts search results (AbstractQueryHit) by id.
+ * Sorts search results (AbstractQueryHit) by taskId.
  */
 public class SearchResultSorterId extends ViewerSorter {
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the
-	 * first bug's id is less than, equal to, or greater than the second bug's
-	 * id.
+	 * first bug's taskId is less than, equal to, or greater than the second bug's
+	 * taskId.
 	 * <p>
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer,
@@ -32,15 +32,15 @@ public class SearchResultSorterId extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
-			// cast the object and get its bug id
+			// cast the object and get its bug taskId
 			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
-			Integer id1 = Integer.parseInt(entry1.getId());
+			Integer id1 = Integer.parseInt(entry1.getTaskId());
 
-			// cast the other object and get its bug id
+			// cast the other object and get its bug taskId
 			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
-			Integer id2 = Integer.parseInt(entry2.getId());
+			Integer id2 = Integer.parseInt(entry2.getTaskId());
 
-			// if neither is null, compare the bug id's
+			// if neither is null, compare the bug taskId's
 			if (id1 != null && id2 != null) {
 				return id1.compareTo(id2);
 			}
@@ -65,7 +65,7 @@ public class SearchResultSorterId extends ViewerSorter {
 	public int category(Object element) {
 		try {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
-			return Integer.parseInt(hit.getId());
+			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore
 		}

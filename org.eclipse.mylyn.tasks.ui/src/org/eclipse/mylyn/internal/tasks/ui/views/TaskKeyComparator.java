@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Eugene Kuleshov (https://bugs.eclipse.org/bugs/show_bug.cgi?id=129511)
+ * @author Eugene Kuleshov (https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=129511)
  */
 public class TaskKeyComparator implements Comparator<String> {
 

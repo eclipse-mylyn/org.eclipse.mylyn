@@ -203,9 +203,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
-		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getId());
-		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getId());
-		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getId());
+		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
+		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getTaskId());
+		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getTaskId());
 	}
 
 	public void testUpdateTaskDetails() throws InvalidTicketException {

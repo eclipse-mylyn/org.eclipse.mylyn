@@ -65,7 +65,7 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 	}
 
 	/**
-	 * Selected a repository, so try to obtain the task using id
+	 * Selected a repository, so try to obtain the task using taskId
 	 */
 	private void openRemoteTask(RemoteTaskSelectionDialog dlg) {
 		String[] selectedIds = dlg.getSelectedIds();

@@ -20,7 +20,7 @@ import org.eclipse.mylar.tasks.core.TaskComment;
 public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 
 	/**
-	 * The id of the Bugzilla object that the selection was on.
+	 * The taskId of the Bugzilla object that the selection was on.
 	 */
 	protected String id;
 
@@ -42,8 +42,8 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * contents or comment.
 	 * 
-	 * @param id
-	 *            The id of the Bugzilla object that the selection was on.
+	 * @param taskId
+	 *            The taskId of the Bugzilla object that the selection was on.
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 */
@@ -55,8 +55,8 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * comment.
 	 * 
-	 * @param id
-	 *            The id of the Bugzilla object that the selection was on.
+	 * @param taskId
+	 *            The taskId of the Bugzilla object that the selection was on.
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 * @param contents
@@ -71,8 +71,8 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied
 	 * contents.
 	 * 
-	 * @param id
-	 *            The id of the Bugzilla object that the selection was on.
+	 * @param taskId
+	 *            The taskId of the Bugzilla object that the selection was on.
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 * @param taskComment
@@ -87,8 +87,8 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	/**
 	 * Creates a new <code>RepositoryTaskSelection</code>.
 	 * 
-	 * @param id
-	 *            The id of the Bugzilla object that the selection was on.
+	 * @param taskId
+	 *            The taskId of the Bugzilla object that the selection was on.
 	 * @param server
 	 *            The server of the Bugzilla object that the selection was on.
 	 * @param contents

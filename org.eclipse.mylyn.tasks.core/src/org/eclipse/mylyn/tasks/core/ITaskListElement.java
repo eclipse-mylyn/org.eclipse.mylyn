@@ -22,7 +22,7 @@ public interface ITaskListElement extends Comparable<ITaskListElement> {
 
 	public abstract String getHandleIdentifier();
 
-//	public abstract void setHandleIdentifier(String id);
+//	public abstract void setHandleIdentifier(String taskId);
 
 }
 

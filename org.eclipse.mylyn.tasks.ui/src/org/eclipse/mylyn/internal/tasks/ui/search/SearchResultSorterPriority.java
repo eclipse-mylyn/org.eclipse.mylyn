@@ -76,7 +76,7 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	public int category(Object element) {
 		try {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
-			return Integer.parseInt(hit.getId());
+			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore if there is a problem
 		}

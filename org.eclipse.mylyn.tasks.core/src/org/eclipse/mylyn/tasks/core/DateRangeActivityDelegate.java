@@ -213,8 +213,8 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setEstimatedTimeHours(estimated);
 	}
 
-//	public void setHandleIdentifier(String id) {
-//		task.setHandleIdentifier(id);
+//	public void setHandleIdentifier(String taskId) {
+//		task.setHandleIdentifier(taskId);
 //	}
 
 	public void setKind(String kind) {

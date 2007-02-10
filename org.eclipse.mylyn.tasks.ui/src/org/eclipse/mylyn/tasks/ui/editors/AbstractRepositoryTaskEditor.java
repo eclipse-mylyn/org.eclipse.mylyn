@@ -1713,7 +1713,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=165803
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
 			expandableComposite.setData(replyLink);
 
 			expandableComposite.setLayout(new GridLayout());
@@ -2085,7 +2085,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// due to a bug in SWT's ExpandableComposite.
 					// 165803: Expandable bars should expand when clicking
 					// anywhere
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=165803
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
 					if (ex.getData() != null && ex.getData() instanceof ImageHyperlink) {
 						((ImageHyperlink) ex.getData()).setVisible(true);
 					}

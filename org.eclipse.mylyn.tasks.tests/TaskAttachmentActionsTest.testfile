@@ -1,11 +1,120 @@
-public class BugzillaContextLabelProvider extends AbstractContextLabelProvider {
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>Locate attachment</title>
 
-	@Override
-	protected Image getImage(IMylarElement node) {
-		return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
-	}
 
-	@Override
-	protected Image getImage(IMylarRelation edge) {
-		return MylarImages.getImage(MylarBugsPlugin.EDGE_REF_BUGZILLA);
-	}
+<link rel="Top" href="http://mylar.eclipse.org/bugs222/">
+
+    
+
+    <script type="text/javascript">
+  <!--
+  
+  function initHelp() {}
+  // -->
+  </script>
+
+    <link href="skins/standard/global.css" rel="stylesheet" type="text/css">
+    <link href="skins/custom/global.css" rel="stylesheet" type="text/css">
+
+
+
+    
+
+  </head>
+
+
+
+  <body onload="document.forms['choose-id'].id.focus()"
+        class="mylar-eclipse-org-bugs222">
+
+
+<div id="banner">
+    <div class="intro"></div>
+      <p id="banner-name">
+        <span>This is Bugzilla</span>
+      </p>
+      <p id="banner-version">
+        <a href="http://www.bugzilla.org/"><span>Bugzilla</span></a>
+        <span>Version 2.22.1</span>
+      </p>
+    <div class="outro"></div>
+    </div>
+
+<div id="header">
+    <h1>Locate attachment</h1>
+
+
+</div>
+
+<form name="choose-id" method="get" action="attachment.cgi">
+  <p>Access an attachment by entering its ID into the form below:</p>
+  <p>Attachment ID: <input name="id" size="6">
+  <button name="action" value="edit">&nbsp;Edit&nbsp;</button>
+  <button name="action" value="view">View</button>
+  </p>
+</form>
+
+<form method="get" action="show_bug.cgi">
+  <p>Or, access it from the list of attachments in its associated bug report:</p>
+  <p>Bug ID: <input name="id" size="6">
+  <input type="submit" name="action" value="View">
+  </p>
+</form>
+<div id="footer">
+  <div class="intro"></div>
+
+
+
+
+<div id="useful-links">
+  <div id="links-actions">
+    <div class="label">Actions:</div>
+    <div class="links">
+        <a href="./">Home</a> | 
+        <a href="enter_bug.cgi">New</a> | 
+        <a href="query.cgi">Search</a> |
+        
+        <form action="buglist.cgi" method="get"
+              onsubmit="if (this.quicksearch.value == '')
+                        { alert('Please enter one or more search terms first.');
+                          return false; } return true;">
+            <input class="txt" type="text" name="quicksearch">
+            <input class="btn" type="submit" value="Find">
+        </form> |
+        
+        <a href="report.cgi">Reports</a> 
+        
+          | <a href="request.cgi">Requests</a>
+              
+        
+              | <a href="createaccount.cgi">New&nbsp;Account</a>
+            | <a href="index.cgi?GoAheadAndLogIn=1">Log&nbsp;In</a>
+    </div>
+  </div>
+      
+    
+
+    
+    
+  <div id="links-saved">
+    <div class="label">
+    </div>
+    <div class="links">
+
+    </div>
+  </div>
+
+  
+
+
+  
+</div>
+
+  <div class="outro"></div>
+</div>
+
+</body>
+</html>

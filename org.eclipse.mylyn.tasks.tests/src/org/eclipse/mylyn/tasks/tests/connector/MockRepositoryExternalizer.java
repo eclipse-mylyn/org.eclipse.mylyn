@@ -13,8 +13,12 @@ package org.eclipse.mylar.tasks.tests.connector;
 
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.TaskExternalizationException;
+import org.eclipse.mylar.tasks.core.TaskList;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -22,6 +26,8 @@ import org.w3c.dom.Node;
  */
 public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 
+	private static final String KEY_MOCK = "Mock";
+	
 	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
 		return query instanceof MockRepositoryQuery;
@@ -53,8 +59,18 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public boolean canReadTask(Node node) {
-		return false;
+	public String getTaskTagName() {
+		return KEY_MOCK;
+	}
+	
+	@Override
+	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
+			throws TaskExternalizationException {
+
+		Element element = (Element) node;
+		MockRepositoryTask task = new MockRepositoryTask(null);
+		readTaskInfo(task, taskList, element, parent, category);
+		return task;
 	}
 
 }

@@ -411,7 +411,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	// task = taskEditorInput.getTask();
 	// if (task == null) {
 	// MessageDialog.openError(parent.getShell(), "No such task", "No task
-	// exists with this id");
+	// exists with this taskId");
 	// return null;
 	// }
 	//

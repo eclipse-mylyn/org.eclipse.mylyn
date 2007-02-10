@@ -26,7 +26,7 @@ class OfflineDataStore implements Serializable {
 
 	private static final long serialVersionUID = -3909632088254980426L;
 
-	/** Last new repository task id */
+	/** Last new repository task taskId */
 	private int lastNewRepositoryTaskId = 0;
 
 	// Local changes to existing reports

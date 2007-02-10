@@ -31,7 +31,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 
 	public static final String LABEL_NEW_COMMENT = "New Comment";
 
-	/** The id of the Bugzilla object that the selection was on. */
+	/** The taskId of the Bugzilla object that the selection was on. */
 	protected String id;
 
 	/** The server of the Bugzilla object that the selection was on. */
@@ -59,8 +59,8 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 	/**
 	 * Creates a new <code>RepositoryTaskOutlineNode</code>.
 	 * 
-	 * @param id
-	 *            The id of the bug this outline is for.
+	 * @param taskId
+	 *            The taskId of the bug this outline is for.
 	 * @param server
 	 *            The server of the bug this outline is for.
 	 * @param key

@@ -62,7 +62,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	}
 
 	/**
-	 * @return The id of the bug for this editor input.
+	 * @return The taskId of the bug for this editor input.
 	 */
 	public String getId() {
 		return id;

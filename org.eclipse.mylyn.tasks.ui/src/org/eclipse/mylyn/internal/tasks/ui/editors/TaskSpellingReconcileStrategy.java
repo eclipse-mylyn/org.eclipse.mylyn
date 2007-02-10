@@ -110,7 +110,7 @@ public class TaskSpellingReconcileStrategy implements IReconcilerExtension, IRec
 		}
 	}
 
-	/** The id of the problem */
+	/** The taskId of the problem */
 	public static final int SPELLING_PROBLEM_ID = 0x80000000;
 
 	/** The document to operate on. */

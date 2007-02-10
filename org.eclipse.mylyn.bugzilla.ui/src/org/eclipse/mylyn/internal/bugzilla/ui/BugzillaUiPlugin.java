@@ -48,7 +48,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 	public static final String EDITOR_PAGE_CONTEXT = BugzillaUiPlugin.PLUGIN_ID + ".bugzillaEditorContext";
 
 	// The is's for hit markers used in the label provider and sorters
-	public static final String HIT_MARKER_ATTR_ID = "id";
+	public static final String HIT_MARKER_ATTR_ID = "taskId";
 
 	public static final String HIT_MARKER_ATTR_REPOSITORY = "repository";
 

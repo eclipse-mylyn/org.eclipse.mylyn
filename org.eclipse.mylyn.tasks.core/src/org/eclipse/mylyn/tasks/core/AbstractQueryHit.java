@@ -29,7 +29,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	protected String priority = PriorityLevel.getDefault().toString();
 
-	protected String id;
+	protected String taskId;
 	
 	private boolean completed = false;
 
@@ -41,7 +41,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.taskList = taskList;
 		this.repositoryUrl = repositoryUrl;
 		this.description = description;
-		this.id = id;
+		this.taskId = id;
 	}
 
 	public AbstractRepositoryQuery getParent() {
@@ -113,15 +113,15 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		if (task != null) {
 			return task.getHandleIdentifier();
 		}
-		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, id);
+		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 	}
 
 	/**
 	 * @return Unique identifier for this task on the corresponding server, must
 	 *         be robust to changing attributes on the task.
 	 */
-	public String getId() {
-		return id;
+	public String getTaskId() {
+		return taskId;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	 *         override to return null if no such ID exists.
 	 */
 	public String getIdLabel() {
-		return getId();
+		return getTaskId();
 	}
 
 	public boolean isNotified() {
@@ -182,6 +182,12 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	}
 
 	public int compareTo(ITaskListElement taskListElement) {
-		return this.id.compareTo(((AbstractQueryHit)taskListElement).id);
+		return this.taskId.compareTo(((AbstractQueryHit)taskListElement).taskId);
+	}
+
+	
+	@Deprecated
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 }

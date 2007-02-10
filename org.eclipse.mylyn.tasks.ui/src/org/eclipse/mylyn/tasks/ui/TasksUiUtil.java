@@ -131,7 +131,7 @@ public class TasksUiUtil {
 	}
 
 	/**
-	 * Either pass in a repository and id, or fullUrl, or all of them
+	 * Either pass in a repository and taskId, or fullUrl, or all of them
 	 */
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
@@ -249,7 +249,7 @@ public class TasksUiUtil {
 	
 	/**
 	 * @param task
-	 * @param pageId	the id of the page to activate after opening
+	 * @param pageId	the taskId of the page to activate after opening
 	 */
 	public static void openEditor(ITask task, String pageId) {
 		final IEditorInput editorInput = new TaskEditorInput(task, false);
@@ -295,7 +295,7 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "Open for editor failed: " + input + ", id: " + editorId, true);
+			MylarStatusHandler.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
 		}
 		return null;
 	}

@@ -190,7 +190,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		
 		for (AbstractQueryHit hit : collector.getHits()) {
 //			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
-			ITask correspondingTask = taskList.getTask(repository.getUrl(), hit.getId());
+			ITask correspondingTask = taskList.getTask(repository.getUrl(), hit.getTaskId());
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
 				// Hack to avoid re-syncing last task from previous

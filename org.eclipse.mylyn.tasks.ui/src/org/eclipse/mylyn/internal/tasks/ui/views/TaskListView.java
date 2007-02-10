@@ -1151,14 +1151,14 @@ public class TaskListView extends ViewPart {
 	}
 
 	/**
-	 * Recursive function that checks for the occurrence of a certain task id.
+	 * Recursive function that checks for the occurrence of a certain task taskId.
 	 * All children of the supplied node will be checked.
 	 * 
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
-	 *            The id that is being searched for.
-	 * @return <code>true</code> if the id was found in the node or any of its
+	 *            The taskId that is being searched for.
+	 * @return <code>true</code> if the taskId was found in the node or any of its
 	 *         children
 	 */
 	protected boolean lookForId(String taskId) {

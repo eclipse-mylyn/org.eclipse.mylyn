@@ -262,7 +262,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Summary/id contains: ");
+		label.setText("Summary/taskId contains: ");
 		gd = new GridData(GridData.BEGINNING);
 		gd.horizontalSpan = 1;
 		label.setLayoutData(gd);
@@ -1242,7 +1242,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	// --------------- Configuration handling --------------
 
-	// Dialog store id constants
+	// Dialog store taskId constants
 	protected final static String PAGE_NAME = "BugzillaSearchPage"; //$NON-NLS-1$
 
 	private static final String STORE_PRODUCT_ID = PAGE_NAME + ".PRODUCT";

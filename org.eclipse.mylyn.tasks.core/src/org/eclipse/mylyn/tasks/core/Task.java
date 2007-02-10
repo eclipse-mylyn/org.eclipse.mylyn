@@ -155,8 +155,8 @@ public class Task implements ITask {
 		return handleIdentifier;
 	}
 
-//	public void setHandleIdentifier(String id) {
-//		this.handleIdentifier = id;
+//	public void setHandleIdentifier(String taskId) {
+//		this.handleIdentifier = taskId;
 //	}
 
 	public ITask getParent() {

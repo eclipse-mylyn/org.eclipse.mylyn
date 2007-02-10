@@ -21,7 +21,7 @@ public class ContentOutlineTools {
 	public static final String OFFLINE_SERVER_DEFAULT = "[local]";
 
 	/**
-	 * Returns a unique handle for the bugzilla selection. Contains the bug id,
+	 * Returns a unique handle for the bugzilla selection. Contains the bug taskId,
 	 * the bug server, and (if applicable) the comment number.
 	 * 
 	 * @param taskSelection
@@ -57,8 +57,8 @@ public class ContentOutlineTools {
 //		return getHandle(taskData.getRepositoryUrl(), taskData.getId());
 //	}
 //
-//	public static String getHandle(String server, String id) {
-//		return server + ";" + id;
+//	public static String getHandle(String server, String taskId) {
+//		return server + ";" + taskId;
 //	}
 
 //	public static String getName(RepositoryTaskData taskData) {

@@ -191,7 +191,7 @@ class SynchronizeQueryJob extends Job {
 							return Status.CANCEL_STATUS;
 						RepositoryTaskData taskData;
 						try {
-							taskData = handler.getTaskData(repository, hit.getId());
+							taskData = handler.getTaskData(repository, hit.getTaskId());
 						} catch (Throwable e) {
 							// ignore failures
 							monitor.worked(1);

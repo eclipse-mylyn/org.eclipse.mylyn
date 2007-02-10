@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
 
 /**
- * @author Eugene Kuleshov https://bugs.eclipse.org/bugs/show_bug.cgi?id=129511
+ * @author Eugene Kuleshov https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=129511
  * @author Mik Kersten
  */
 public class TaskKeyComparatorTest extends TestCase {

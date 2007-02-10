@@ -30,14 +30,14 @@ public class TracQueryHit extends AbstractQueryHit {
 
 	@Override
 	protected AbstractRepositoryTask createTask() {
-		TracTask newTask = new TracTask(this.getRepositoryUrl(), this.getId(), getSummary(), true);
+		TracTask newTask = new TracTask(this.getRepositoryUrl(), this.getTaskId(), getSummary(), true);
 		newTask.setPriority(priority);
 		return newTask;
 	}
 
 	@Override
 	public String getUrl() {
-		return getRepositoryUrl() + ITracClient.TICKET_URL + getId();
+		return getRepositoryUrl() + ITracClient.TICKET_URL + getTaskId();
 	}
 
 }

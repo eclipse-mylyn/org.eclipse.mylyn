@@ -53,7 +53,6 @@ public class RepositoryTaskHandleTest extends TestCase {
 
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
-//		String handle = AbstractRepositoryTask.getHandle(repository, id);
 		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124", true);
 		assertEquals(repository, bugTask.getRepositoryUrl());
 

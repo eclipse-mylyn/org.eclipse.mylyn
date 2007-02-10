@@ -354,8 +354,8 @@
 //			if (descriptors.length > 0) {
 //				int[] objList = new int[descriptors.length];
 //				for (int nX = 0; nX < descriptors.length; nX++) {
-//					String id = descriptors[nX].getID();
-//					objList[nX] = BugzillaPlugin.getDefault().getOfflineReports().find(Integer.valueOf(id).intValue());
+//					String taskId = descriptors[nX].getID();
+//					objList[nX] = BugzillaPlugin.getDefault().getOfflineReports().find(Integer.valueOf(taskId).intValue());
 //				}
 //				table.setSelection(objList);
 //			}
@@ -382,9 +382,9 @@
 //			Object o = itr.next();
 //			if (o instanceof IBugzillaBug) {
 //				IBugzillaBug entry = (IBugzillaBug) o;
-//				Integer id = entry.getId();
+//				Integer taskId = entry.getId();
 //				if (!entry.isLocallyCreated()) {
-//					Ids.add(id);
+//					Ids.add(taskId);
 //				}
 //			}
 //		}
@@ -490,14 +490,14 @@
 //				// If this bug has not been saved offline before, add it to the
 //				// file.
 //				else {
-//					// If there is already an offline report with the same id,
+//					// If there is already an offline report with the same taskId,
 //					// don't save this report.
 //					// int index = -1;
 //					// if ((index = file.find(bug.getId())) >= 0) {
 //					// removeReport(getOfflineBugs().get(index));
 //					// MessageDialog.openInformation(null, "Bug's Id is already
 //					// used.", "There is already a bug saved offline with an
-//					// identical id.");
+//					// identical taskId.");
 //					// return;
 //					// }
 //					try {

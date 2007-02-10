@@ -51,7 +51,6 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected IStatus status = null;
 
 	public AbstractRepositoryTask(String repositoryUrl, String taskId, String label, boolean newTask) {
-//		super(getHandle(repositoryUrl, taskId), label, newTask);
 		super(null, label, newTask);
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
@@ -194,6 +193,11 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public final void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	@Deprecated
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
 }

@@ -38,12 +38,12 @@ public class WebQueryHit extends AbstractQueryHit {
 
 	@Override
 	protected AbstractRepositoryTask createTask() {
-		return new WebTask(id, description, taskPrefix, repositoryUrl, WebTask.REPOSITORY_TYPE);
+		return new WebTask(taskId, description, taskPrefix, repositoryUrl, WebTask.REPOSITORY_TYPE);
 	}
 	
 	@Override
 	public String getHandleIdentifier() {
-		return taskPrefix + getId();
+		return taskPrefix + getTaskId();
 	}
 
 	public String getTaskPrefix() {

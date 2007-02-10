@@ -130,13 +130,13 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 // }
 // } catch (NumberFormatException nfe) {
 // MessageDialog.openError(null, IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-// "Could not create bug id, no valid id");
+// "Could not create bug taskId, no valid taskId");
 // return false;
 // }
 // // if (!validId) {
 // // MessageDialog.openError(null,
 // // IBugzillaConstants.TITLE_MESSAGE_DIALOG,
-// // "Could not create bug id, no valid id");
+// // "Could not create bug taskId, no valid taskId");
 // // return false;
 // // }
 //

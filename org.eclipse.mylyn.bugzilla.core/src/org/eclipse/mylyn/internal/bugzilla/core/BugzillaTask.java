@@ -41,13 +41,13 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-		this(hit.getRepositoryUrl(), hit.getId(), hit.getSummary(), newTask);
+		this(hit.getRepositoryUrl(), hit.getTaskId(), hit.getSummary(), newTask);
 		setPriority(hit.getPriority());
 		initTaskUrl(taskId);
 	}
 
 	private void initTaskUrl(String taskId) {
-//		String id = RepositoryTaskHandleUtil.getTaskId(getHandleIdentifier());
+//		String taskId = RepositoryTaskHandleUtil.getTaskId(getHandleIdentifier());
 //		String repositoryUrl = getRepositoryUrl();
 		try {
 			String url = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(taskId));
@@ -86,7 +86,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public String toString() {
-		return "bugzilla report id: " + getHandleIdentifier();
+		return "bugzilla report taskId: " + getHandleIdentifier();
 	}
 
 //	@Override

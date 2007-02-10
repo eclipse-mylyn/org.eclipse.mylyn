@@ -99,8 +99,8 @@ public class TaskList {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
 					tasks.remove(repositoryTask.getHandleIdentifier());
-//					String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-//					String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
+//					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+//					String newHandle = AbstractRepositoryTask.getHandle(newUrl, taskId);
 //					repositoryTask.setHandleIdentifier(newHandle);
 					repositoryTask.setRepositoryUrl(newRepositoryUrl);
 					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);

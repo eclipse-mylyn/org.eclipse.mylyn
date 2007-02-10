@@ -438,8 +438,6 @@ public class BugzillaClient {
 		GetMethod method = null;
 		try {
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
-			// System.err.println(method.getResponseCharSet());
-			// System.err.println(method.getResponseBodyAsString());
 			RepositoryTaskData taskData = null;
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
