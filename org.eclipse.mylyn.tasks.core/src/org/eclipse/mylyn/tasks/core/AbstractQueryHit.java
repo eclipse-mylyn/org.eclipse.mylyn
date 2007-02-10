@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 
 
@@ -112,7 +113,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		if (task != null) {
 			return task.getHandleIdentifier();
 		}
-		return AbstractRepositoryTask.getHandle(repositoryUrl, id);
+		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, id);
 	}
 
 	/**

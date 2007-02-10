@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -39,10 +39,10 @@ public class RepositoryTaskHandleTest extends TestCase {
 	public void testInvalidHandle() {
 //		MockRepositoryTask task = new MockRepositoryTask()
 		String url = "http://foo";
-		assertEquals(url + "-" + "abc", AbstractRepositoryTask.getHandle(url, "abc"));
+		assertEquals(url + "-" + "abc", RepositoryTaskHandleUtil.getHandle(url, "abc"));
 		Exception caught = null;
 		try {
-			AbstractRepositoryTask.getHandle(url, "a-23");
+			RepositoryTaskHandleUtil.getHandle(url, "a-23");
 		} catch (Exception e) {
 			caught = e;
 		}
@@ -53,8 +53,8 @@ public class RepositoryTaskHandleTest extends TestCase {
 
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
-		String handle = AbstractRepositoryTask.getHandle(repository, id);
-		BugzillaTask bugTask = new BugzillaTask(handle, "label 124", true);
+//		String handle = AbstractRepositoryTask.getHandle(repository, id);
+		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124", true);
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
 		manager.getTaskList().moveToRoot(bugTask);

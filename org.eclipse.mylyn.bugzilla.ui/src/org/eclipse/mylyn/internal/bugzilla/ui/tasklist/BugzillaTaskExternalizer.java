@@ -14,8 +14,8 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -120,9 +120,13 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		} else {
 			throw new TaskExternalizationException("Description not stored for bug report");
 		}
-		BugzillaTask task = new BugzillaTask(handle, label, false);
+		
+		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+		
+		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, label, false);
 		super.readTaskInfo(task, taskList, element, parent, category);
-				
+
 		return task;
 	}
 
@@ -150,7 +154,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				status = STATUS_RESO;
 			}
 		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, "", "", query.getRepositoryUrl(), AbstractRepositoryTask
+		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, "", "", query.getRepositoryUrl(), RepositoryTaskHandleUtil
 				.getTaskId(handle), null, status);
 		readQueryHitInfo(hit, taskList, query, element);
 	}

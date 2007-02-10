@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.ui.editors;
 
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -29,7 +30,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
 	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl) {
 		super(repository, handle);
-		this.id = AbstractRepositoryTask.getTaskId(handle);
+		this.id = RepositoryTaskHandleUtil.getTaskId(handle);
 		this.url = taskUrl;		
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof AbstractRepositoryTask) {
@@ -43,7 +44,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 		
 	public String getName() {
 		if(repositoryTask != null) {
-			String idLabel = repositoryTask.getIdLabel();
+			String idLabel = repositoryTask.getIdentifyingLabel();
 			
 			String label = "";
 			if (idLabel != null) {

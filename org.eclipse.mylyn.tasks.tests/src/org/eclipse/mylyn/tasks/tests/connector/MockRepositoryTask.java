@@ -20,10 +20,15 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 	
 	private String ownerId;
 	
-	public MockRepositoryTask(String handle) {
-		super(handle, "label for " + handle, true);
+	public MockRepositoryTask(String taskId) {
+		super(MockRepositoryConnector.REPOSITORY_URL, taskId, "label for " + taskId, true);
 	}
 
+	public MockRepositoryTask(String repositoryUrl, String taskId) {
+		super(repositoryUrl, taskId, "label for " + taskId, true);
+	}
+
+	
 	@Override
 	public String getRepositoryKind() {
 		return "mock";

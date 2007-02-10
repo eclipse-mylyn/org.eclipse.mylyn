@@ -70,7 +70,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			decorate(correspondingTask, decoration);
 		} else if (element instanceof ITask) {
-			String url = ((ITask) element).getUrl();
+			String url = ((ITask) element).getTaskUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
 				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			}

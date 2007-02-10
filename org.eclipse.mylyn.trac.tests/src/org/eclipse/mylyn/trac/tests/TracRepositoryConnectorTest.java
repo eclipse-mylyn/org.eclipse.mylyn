@@ -43,7 +43,6 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -137,7 +136,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
-		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
+		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getTaskUrl());
 
 		try {
 			task = connector.createTaskFromExistingKey(repository, "does not exist");
@@ -218,13 +217,13 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
-		TracTask task = new TracTask(AbstractRepositoryTask.getHandle(Constants.TEST_TRAC_010_URL, 123), "desc", true);
-		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
+		TracTask task = new TracTask(Constants.TEST_TRAC_010_URL, ""+123, "desc", true);
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getTaskUrl());
 		assertEquals("desc", task.getSummary());
 		
 		connector.updateTaskDetails(task, ticket, false);
-		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
-		assertEquals("123", task.getIdLabel());
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getTaskUrl());
+		assertEquals("123", task.getIdentifyingLabel());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
 		assertEquals("mytype", task.getTaskKind());
@@ -236,11 +235,11 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracTicket ticket = new TracTicket(456);
 		ticket.putBuiltinValue(Key.SUMMARY, "mysummary");
 
-		TracTask task = new TracTask(AbstractRepositoryTask.getHandle(Constants.TEST_TRAC_010_URL, 456), "desc", true);
+		TracTask task = new TracTask(Constants.TEST_TRAC_010_URL, ""+456, "desc", true);
 
 		connector.updateTaskDetails(task, ticket, false);
-		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
-		assertEquals("456", task.getIdLabel());
+		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getTaskUrl());
+		assertEquals("456", task.getIdentifyingLabel());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
 		assertEquals(null, task.getTaskKind());

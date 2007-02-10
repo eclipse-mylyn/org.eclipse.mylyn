@@ -114,7 +114,7 @@ public class TaskListStandaloneTest extends TestCase {
 		externalizers.add(new BugzillaTaskExternalizer());
 		// make some tasks
 		// save them
-		BugzillaTask task = new BugzillaTask("http://bugs-1", "1", true);
+		BugzillaTask task = new BugzillaTask("http://bugs", "1", "1", true);
 		manager.getTaskList().addTask(task);
 		manager.saveTaskList();
 

@@ -86,7 +86,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
 			String description, File file, String contentType, boolean isPatch) throws CoreException {
 		try {
-			String bugId = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+			String bugId = task.getTaskId();
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			client.postAttachment(bugId, comment, description, file, contentType, isPatch);
 		} catch (IOException e) {

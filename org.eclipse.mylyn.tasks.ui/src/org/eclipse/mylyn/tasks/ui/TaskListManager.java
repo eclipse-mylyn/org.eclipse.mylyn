@@ -36,6 +36,7 @@ import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -582,12 +583,12 @@ public class TaskListManager implements IPropertyChangeListener {
 					try {
 						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
 								MylarContextManager.CONTEXT_FILENAME_ENCODING);
-						int delimIndex = storedHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
+						int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
 						if (delimIndex != -1) {
 							String storedUrl = storedHandle.substring(0, delimIndex);
 							if (oldUrl.equals(storedUrl)) {
-								String id = AbstractRepositoryTask.getTaskId(storedHandle);
-								String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
+								String id = RepositoryTaskHandleUtil.getTaskId(storedHandle);
+								String newHandle = RepositoryTaskHandleUtil.getHandle(newUrl, id);
 								File newFile = ContextCorePlugin.getContextManager().getFileForContext(newHandle);
 								file.renameTo(newFile);
 							}

@@ -117,8 +117,7 @@ public class TasksUiUtil {
 
 	public static boolean openRepositoryTask(TaskRepository repository, String taskId) {
 		boolean opened = false;
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				AbstractRepositoryTask.getHandle(repository.getUrl(), taskId));
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
 		if (task != null) {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
@@ -138,14 +137,14 @@ public class TasksUiUtil {
 		boolean opened = false;
 		ITask task = null;
 		if (taskId != null) {
-			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+//			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null) {
 			// search for it
 			for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 				if (currTask instanceof AbstractRepositoryTask) {
-					String currUrl = ((AbstractRepositoryTask) currTask).getUrl();
+					String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
 					if (currUrl != null && !currUrl.equals("") && currUrl.equals(fullUrl)) {
 						task = currTask;
 						break;

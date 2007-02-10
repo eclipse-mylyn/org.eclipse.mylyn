@@ -41,9 +41,9 @@ public interface ITask extends ITaskListElement {
 
 	public abstract boolean hasValidUrl();
 
-	public abstract void setUrl(String url);
+	public abstract void setTaskUrl(String url);
 
-	public abstract String getUrl();
+	public abstract String getTaskUrl();
 
 	public abstract String getNotes();
 

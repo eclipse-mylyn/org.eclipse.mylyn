@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -83,9 +83,10 @@ public class OpenRepositoryTaskJob extends Job {
 				RepositoryTaskData downloadedTaskData = null;
 				downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
 				if (downloadedTaskData != null) {
-					TasksUiPlugin.getDefault().getTaskDataManager().push(downloadedTaskData);
+					TasksUiPlugin.getDefault().getTaskDataManager().push(RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskId), 
+							downloadedTaskData);
 				}
-				openEditor(repository, AbstractRepositoryTask.getHandle(repository.getUrl(), taskId),
+				openEditor(repository, RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskId),
 						downloadedTaskData);
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

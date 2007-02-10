@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.tasks.ui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -277,11 +276,11 @@ public class RepositorySynchronizationManager {
 				TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 				dataManager.discardEdits(repositoryTask.getHandleIdentifier());
 				// push twice so we don't see our own changes
-				TasksUiPlugin.getDefault().getTaskDataManager().push(newTaskData);
+				TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			} else if (checkHasIncoming(repositoryTask, newTaskData)) {
 				status = RepositoryTaskSyncState.CONFLICT;
 			}
-			TasksUiPlugin.getDefault().getTaskDataManager().push(newTaskData);
+			TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			break;
 
 		case CONFLICT:
@@ -289,14 +288,14 @@ public class RepositorySynchronizationManager {
 		case INCOMING:
 			// only most recent incoming will be displayed if two
 			// sequential incoming's /conflicts happen
-			TasksUiPlugin.getDefault().getTaskDataManager().replace(newTaskData);
+			TasksUiPlugin.getDefault().getTaskDataManager().replace(repositoryTask.getHandleIdentifier(), newTaskData);
 			repositoryTask.setNotified(false);
 			break;
 		case SYNCHRONIZED:
 			if (checkHasIncoming(repositoryTask, newTaskData)) {
 				status = RepositoryTaskSyncState.INCOMING;
 			}
-			TasksUiPlugin.getDefault().getTaskDataManager().push(newTaskData);
+			TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			break;
 		}
 
@@ -366,15 +365,6 @@ public class RepositorySynchronizationManager {
 		// return true;
 	}
 
-	/** non-final for testing purposes */
-	protected void removeOfflineTaskData(RepositoryTaskData bug) {
-		if (bug == null)
-			return;
-
-		ArrayList<RepositoryTaskData> bugList = new ArrayList<RepositoryTaskData>();
-		bugList.add(bug);
-		TasksUiPlugin.getDefault().getTaskDataManager().remove(bugList);
-	}
 
 	/**
 	 * @param repositoryTask -

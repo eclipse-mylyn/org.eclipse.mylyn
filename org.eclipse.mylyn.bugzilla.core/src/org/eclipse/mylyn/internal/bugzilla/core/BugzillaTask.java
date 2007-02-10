@@ -31,28 +31,28 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	private static SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(COMMENT_FORMAT);
 
-	public BugzillaTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+	public BugzillaTask(String repositoryUrl, String id, String label, boolean newTask) {
+		super(repositoryUrl, id, label, newTask);
 		if (newTask) {
 			setSyncState(RepositoryTaskSyncState.INCOMING);
 		}
 		isDirty = false;
-		initFromHandle();
+		initTaskUrl(taskId);
 	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-		this(hit.getHandleIdentifier(), hit.getSummary(), newTask);
+		this(hit.getRepositoryUrl(), hit.getId(), hit.getSummary(), newTask);
 		setPriority(hit.getPriority());
-		initFromHandle();
+		initTaskUrl(taskId);
 	}
 
-	private void initFromHandle() {
-		String id = AbstractRepositoryTask.getTaskId(getHandleIdentifier());
-		String repositoryUrl = getRepositoryUrl();
+	private void initTaskUrl(String taskId) {
+//		String id = RepositoryTaskHandleUtil.getTaskId(getHandleIdentifier());
+//		String repositoryUrl = getRepositoryUrl();
 		try {
-			String url = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(id));
+			String url = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(taskId));
 			if (url != null) {
-				super.setUrl(url);
+				super.setTaskUrl(url);
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Task initialization failed due to malformed id or URL: "
@@ -89,17 +89,19 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return "bugzilla report id: " + getHandleIdentifier();
 	}
 
-	@Override
-	public String getUrl() {
-		// fix for bug 103537 - should login automatically, but dont want to
-		// show the login info in the query string
-		try {
-			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
-					.parseInt(AbstractRepositoryTask.getTaskId(handleIdentifier)));
-		} catch (NumberFormatException nfe) {
-			return super.getUrl();
-		}
-	}
+//	@Override
+//	public String getUrl() {
+//		// fix for bug 103537 - should login automatically, but dont want to
+//		// show the login info in the query string
+//		try {
+////			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
+////					.parseInt(RepositoryTaskHandleUtil.getTaskId(handleIdentifier)));
+//			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
+//					.parseInt(RepositoryTaskHandleUtil.));
+//		} catch (NumberFormatException nfe) {
+//			return super.getUrl();
+//		}
+//	}
 
 	@Override
 	public boolean isCompleted() {

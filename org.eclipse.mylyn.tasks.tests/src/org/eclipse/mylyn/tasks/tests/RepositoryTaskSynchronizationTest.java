@@ -306,10 +306,10 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		AbstractRepositoryTask task = primeTaskAndRepository(RepositoryTaskSyncState.SYNCHRONIZED,
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		RepositoryTaskData taskData1 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");		
-		TasksUiPlugin.getDefault().getTaskDataManager().push(taskData1);
+		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), taskData1);
 		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
 		taskData2.setNewComment("new comment");
-		TasksUiPlugin.getDefault().getTaskDataManager().push(taskData2);
+		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), taskData2);
 		
 		List<ITaskListElement> tasks = new ArrayList<ITaskListElement>();
 		tasks.add(task);

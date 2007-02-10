@@ -37,7 +37,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_KIND = "mock";
 
-	public static final String REPOSITORY_URL = "http://mockrepository.com";
+	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {

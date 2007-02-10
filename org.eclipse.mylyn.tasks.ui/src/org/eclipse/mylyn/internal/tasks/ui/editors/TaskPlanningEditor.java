@@ -233,7 +233,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task, label);
 
 			// TODO: refactor mutation into TaskList?
-			task.setUrl(issueReportURL.getText());
+			task.setTaskUrl(issueReportURL.getText());
 			String priorityDescription = priorityCombo.getItem(priorityCombo.getSelectionIndex());
 			PriorityLevel level = PriorityLevel.fromDescription(priorityDescription);
 			if (level != null) {
@@ -485,7 +485,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		GridData urlGridData = new GridData(GridData.FILL_HORIZONTAL);
 		urlComposite.setLayoutData(urlGridData);
 
-		issueReportURL = toolkit.createText(urlComposite, task.getUrl(), SWT.NONE);
+		issueReportURL = toolkit.createText(urlComposite, task.getTaskUrl(), SWT.NONE);
 		GridData gridLayout = new GridData(GridData.FILL_HORIZONTAL);
 		issueReportURL.setLayoutData(gridLayout);
 

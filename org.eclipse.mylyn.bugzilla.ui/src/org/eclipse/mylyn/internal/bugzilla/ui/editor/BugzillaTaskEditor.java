@@ -26,7 +26,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -284,8 +283,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				Hyperlink hyperlink = toolkit.createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
-				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						AbstractRepositoryTask.getHandle(repository.getUrl(), bugId));
+				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), bugId);
 				if (task != null) {
 					hyperlink.setToolTipText(task.getSummary());
 				}

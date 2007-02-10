@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.trac.ui;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.trac.core.TracQueryHit;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.TracTask;
@@ -85,7 +86,10 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for task");
 		}
 
-		TracTask task = new TracTask(handle, label, false);
+		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+		
+		TracTask task = new TracTask(repositoryUrl, taskId, label, false);
 		readTaskInfo(task, taskList, element, parent, category);
 		return task;
 	}
@@ -201,7 +205,10 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 
-		TracQueryHit hit = new TracQueryHit(taskList, handle);
+		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+		
+		TracQueryHit hit = new TracQueryHit(taskList, repositoryUrl, "", taskId);
 		// TODO move to DelegationTaskExternalizer
 		if (element.hasAttribute(KEY_COMPLETE)
 				&& element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {

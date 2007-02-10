@@ -188,8 +188,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_ACTIVE, VAL_FALSE);
 		}
 
-		if (task.getUrl() != null) {
-			node.setAttribute(KEY_ISSUEURL, task.getUrl());
+		if (task.getTaskUrl() != null) {
+			node.setAttribute(KEY_ISSUEURL, task.getTaskUrl());
 		}
 		node.setAttribute(KEY_NOTES, task.getNotes());
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
@@ -357,9 +357,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.setActive(false);
 		}
 		if (element.hasAttribute(KEY_ISSUEURL)) {
-			task.setUrl(element.getAttribute(KEY_ISSUEURL));
+			task.setTaskUrl(element.getAttribute(KEY_ISSUEURL));
 		} else {
-			task.setUrl("");
+			task.setTaskUrl("");
 		}
 		if (element.hasAttribute(KEY_NOTES)) {
 			task.setNotes(element.getAttribute(KEY_NOTES));

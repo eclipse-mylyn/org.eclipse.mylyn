@@ -50,7 +50,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		if (selectedObject instanceof ITask) {
 			ITask task = (ITask)selectedObject;
 			if (task != null && task.hasValidUrl()) {
-				urlString = task.getUrl();
+				urlString = task.getTaskUrl();
 			}
 		} else if (selectedObject instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) selectedObject;

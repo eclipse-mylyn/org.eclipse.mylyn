@@ -69,7 +69,7 @@ public class TaskListDnDTest extends TestCase {
 		Set<ITask> tasks = manager.getTaskList().getRootTasks();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
-		assertEquals(url, tasks.iterator().next().getUrl());
+		assertEquals(url, tasks.iterator().next().getTaskUrl());
 
 		// TODO: Failing due to asynchronous retrieval of title from url
 		// assertEquals(title, tasks.get(0).getDescription(false));

@@ -127,10 +127,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
-			String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+//			String id = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
 			try {
 				ITracClient connection = getClientManager().getRepository(repository);
-				TracTicket ticket = connection.getTicket(Integer.parseInt(id));
+				TracTicket ticket = connection.getTicket(Integer.parseInt(repositoryTask.getTaskId()));
 				updateTaskDetails((TracTask) repositoryTask, ticket, false);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e));
@@ -192,7 +192,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
 			if (!ids.isEmpty()) {
 				for (AbstractRepositoryTask task : tasks) {
-					Integer id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+					Integer id = Integer.parseInt(task.getTaskId());
 					if (ids.contains(id)) {
 						result.add(task);
 					}
@@ -207,34 +207,33 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
-		int bugId = -1;
+	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String taskId) throws CoreException {
+		int taskIdInt = -1;
 		try {
-			bugId = Integer.parseInt(id);
+			taskIdInt = Integer.parseInt(taskId);
 		} catch (NumberFormatException e) {
 			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
-						"Invalid ticket id: " + id, e));
+						"Invalid ticket id: " + taskId, e));
 		}
 		
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
-		
+//		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		TracTask task;
-		ITask existingTask = taskList.getTask(handle);
+		ITask existingTask = taskList.getTask(repository.getUrl(), taskId);
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
-			RepositoryTaskData taskData = taskDataHandler.downloadTaskData(repository, bugId);
+			RepositoryTaskData taskData = taskDataHandler.downloadTaskData(repository, taskIdInt);
 			if (taskData != null) {
-				task = new TracTask(handle, getTicketDescription(taskData), true);
+				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(taskData), true);
 				task.setTaskData(taskData);
 				taskList.addTask(task);
 			} else {
 				// repository does not support XML-RPC, fall back to web access
 				try {
 					ITracClient connection = getClientManager().getRepository(repository);
-					TracTicket ticket = connection.getTicket(Integer.parseInt(id));
+					TracTicket ticket = connection.getTicket(taskIdInt);
 
-					task = new TracTask(handle, getTicketDescription(ticket), true);
+					task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket), true);
 					updateTaskDetails(task, ticket, false);
 					taskList.addTask(task);
 				} catch (Exception e) {
@@ -256,13 +255,14 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return clientManager;
 	}
 
-	public TracTask createTask(TracTicket ticket, String handleIdentifier) {
+	public TracTask createTask(TracTicket ticket, String repositoryUrl, String taskId) {
 		TracTask task;
-		ITask existingTask = taskList.getTask(handleIdentifier);
+//		String handleIdentifier = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+		ITask existingTask = taskList.getTask(repositoryUrl, taskId);
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
-			task = new TracTask(handleIdentifier, getTicketDescription(ticket), true);
+			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket), true);
 			taskList.addTask(task);
 		}
 		return task;

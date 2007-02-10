@@ -69,12 +69,12 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			}
 			if (task != null) {
 				if (task instanceof AbstractRepositoryTask) {
-					text += ((AbstractRepositoryTask)task).getIdLabel() + ": ";
+					text += ((AbstractRepositoryTask)task).getIdentifyingLabel() + ": ";
 				}
 				
 				text += task.getSummary();
 				if (task.hasValidUrl()) {
-					text += "\n" + task.getUrl();
+					text += "\n" + task.getTaskUrl();
 				} 
 			} else {
 				text += ((AbstractQueryHit)object).getSummary();

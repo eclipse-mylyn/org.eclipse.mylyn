@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
  * TODO: some asymetry left between query containers and other task containers
@@ -91,26 +92,33 @@ public class TaskList {
 		}
 	}
 
-	public void refactorRepositoryUrl(Object oldUrl, String newUrl) {
+	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
+		// TODO: update mappings in offline task data, will currently lose them
 		for (ITask task : tasks.values()) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-				if (oldUrl.equals(AbstractRepositoryTask.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
+				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
 					tasks.remove(repositoryTask.getHandleIdentifier());
-					String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-					String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
-					repositoryTask.setHandleIdentifier(newHandle);
-					tasks.put(newHandle, repositoryTask);
+//					String id = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
+//					String newHandle = AbstractRepositoryTask.getHandle(newUrl, id);
+//					repositoryTask.setHandleIdentifier(newHandle);
+					repositoryTask.setRepositoryUrl(newRepositoryUrl);
+					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
+					
+					String taskUrl = repositoryTask.getTaskUrl();
+					if (taskUrl.startsWith(oldRepositoryUrl)) {
+						repositoryTask.setTaskUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
+					}
 				}
 			}
 		}
 
 		for (AbstractRepositoryQuery query : queries.values()) {
-			if (query.getRepositoryUrl().equals(oldUrl)) {
-				query.setRepositoryUrl(newUrl);
+			if (query.getRepositoryUrl().equals(oldRepositoryUrl)) {
+				query.setRepositoryUrl(newRepositoryUrl);
 				for (AbstractQueryHit hit : query.getHits()) {
 					queryHits.remove(hit.getHandleIdentifier());
-					hit.setRepositoryUrl(newUrl);
+					hit.setRepositoryUrl(newRepositoryUrl);
 					queryHits.put(hit.getHandleIdentifier(), hit);
 				}
 				for (ITaskListChangeListener listener : changeListeners) {
@@ -374,6 +382,8 @@ public class TaskList {
 	}
 
 	/**
+	 * TODO: consider removing, if everything becomes a repository task
+	 * 
 	 * @return	null if no such task.
 	 */
 	public ITask getTask(String handleIdentifier) {
@@ -384,6 +394,19 @@ public class TaskList {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public AbstractRepositoryTask getTask(String repositoryUrl, String taskId) {
+		String handle = RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
+		ITask task = getTask(handle);
+		if (task instanceof AbstractRepositoryTask) {
+			return (AbstractRepositoryTask)task;
+		} else {
+			return null;
+		}
+	}
+	
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories.values()) {
 			if (cat instanceof AbstractTaskContainer) {

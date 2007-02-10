@@ -135,7 +135,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 					return false;
 				}
 				AbstractRepositoryTask task = (AbstractRepositoryTask) element;
-				String taskId = task.getIdLabel();
+				String taskId = task.getIdentifyingLabel();
 				for (String id : selectedIds) {
 					if (id.equals(taskId)) {
 						return true;

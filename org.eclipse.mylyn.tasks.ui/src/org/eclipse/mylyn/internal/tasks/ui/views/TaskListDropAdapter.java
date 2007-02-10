@@ -180,7 +180,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		}
 
 		newTask.setPriority(Task.PriorityLevel.P3.toString());
-		newTask.setUrl(url);
+		newTask.setTaskUrl(url);
 
 		// NOTE: setting boolean param as false so that we go directly to the
 		// browser tab as with a previously-created task

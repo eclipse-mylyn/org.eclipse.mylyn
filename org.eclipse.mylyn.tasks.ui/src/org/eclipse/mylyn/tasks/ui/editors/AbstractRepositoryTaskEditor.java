@@ -1246,7 +1246,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Attach File...", SWT.PUSH);
 
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+				repository.getUrl(), taskData.getId());
 		if (task == null) {
 			addAttachmentButton.setEnabled(false);
 		}
@@ -1258,7 +1258,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			public void widgetSelected(SelectionEvent e) {
 				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+						repository.getUrl(), taskData.getId());
 				if (!(task instanceof AbstractRepositoryTask)) {
 					// Should not happen
 					return;
@@ -1367,7 +1367,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (textTransfer.isSupportedType(event.currentDataType)) {
 					String text = (String) event.data;
 					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-							AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+							repository.getUrl(), taskData.getId());
 					if (!(task instanceof AbstractRepositoryTask)) {
 						// Should not happen
 						return;
@@ -1383,7 +1383,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					String[] files = (String[]) event.data;
 					if (files.length > 0) {
 						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-								AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+								repository.getUrl(), taskData.getId());
 						if (!(task instanceof AbstractRepositoryTask)) {
 							// Should not happen
 							return;
@@ -1548,7 +1548,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void addCCList(Composite attributesComposite) {
 
 		RepositoryTaskAttribute addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
-		if(addCCattribute == null) {
+		if (addCCattribute == null) {
 			// TODO: remove once TRAC is priming taskData with NEW_CC attribute
 			taskData.setAttributeValue(RepositoryTaskAttribute.NEW_CC, "");
 			addCCattribute = taskData.getAttribute(RepositoryTaskAttribute.NEW_CC);
@@ -1829,7 +1829,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+				repository.getUrl(), taskData.getId());
 		if (attachContext && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2552,7 +2552,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 					} else {
 						modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList()
-								.getTask(AbstractRepositoryTask.getHandle(repository.getUrl(), taskData.getId()));
+								.getTask(repository.getUrl(), taskData.getId());
 					}
 
 					// Attach context if required

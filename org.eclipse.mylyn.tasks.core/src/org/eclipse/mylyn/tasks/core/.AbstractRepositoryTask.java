@@ -11,10 +11,9 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.util.Date;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
  * Virtual proxy for a repository task.
@@ -24,12 +23,12 @@ import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
  */
 public abstract class AbstractRepositoryTask extends Task {
 
-	private static final String CONTEXT_HANDLE_DELIM = "-";
-
-	private static final String MISSING_REPOSITORY_HANDLE = "norepository" + CONTEXT_HANDLE_DELIM;
-
 	/** The last time this task's bug report was in a synchronized (read?) state. */
 	protected String lastSynchronizedDateStamp;
+
+	protected String repositoryUrl;
+
+	protected String taskId;
 
 	protected transient RepositoryTaskData taskData;
 
@@ -49,14 +48,21 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 
-	public static final String HANDLE_DELIM = "-";
-
 	protected IStatus status = null;
-	
-	public AbstractRepositoryTask(String handle, String label, boolean newTask) {
-		super(handle, label, newTask);
+
+	public AbstractRepositoryTask(String repositoryUrl, String taskId, String label, boolean newTask) {
+//		super(getHandle(repositoryUrl, taskId), label, newTask);
+		super(null, label, newTask);
+		this.repositoryUrl = repositoryUrl;
+		this.taskId = taskId;
 	}
 
+	@Override
+	public final String getHandleIdentifier() {
+		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
+	}
+
+	
 	@Override
 	public abstract String getRepositoryKind();
 
@@ -80,22 +86,21 @@ public abstract class AbstractRepositoryTask extends Task {
 		return syncState;
 	}
 
-	public String getRepositoryUrl() {
-		return AbstractRepositoryTask.getRepositoryUrl(getHandleIdentifier());
-	}
-
+	/**
+	 * TODO: remove
+	 */
 	@Override
-	public boolean isLocal() {
+	public final boolean isLocal() {
 		return false;
 	}
 
-	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {
-		Date timeNow = new Date();
-		if (lastRefresh == null)
-			lastRefresh = new Date();
-		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
-		return timeDifference;
-	}
+//	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {
+//		Date timeNow = new Date();
+//		if (lastRefresh == null)
+//			lastRefresh = new Date();
+//		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
+//		return timeDifference;
+//	}
 
 	public boolean isSynchronizing() {
 		return currentlySynchronizing;
@@ -106,44 +111,12 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	/**
-	 * Human readable identifier for this task.  Override if different than ID, can return
-	 * null if no such label exists.
+	 * Human readable identifier for this task. Override if different than ID,
+	 * can return null if no such label exists.
 	 */
-	public String getIdLabel() {
-		return getTaskId(handleIdentifier);
-	}
-	
-	public static String getTaskId(String taskHandle) {
-		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
-		if (index != -1) {
-			String id = taskHandle.substring(index + 1);
-			return id;
-		}
-		return null;
-	}
-
-	public static String getRepositoryUrl(String taskHandle) {
-		int index = taskHandle.lastIndexOf(AbstractRepositoryTask.HANDLE_DELIM);
-		String url = null;
-		if (index != -1) {
-			url = taskHandle.substring(0, index);
-		}
-		return url;
-	}
-
-	public static String getHandle(String repositoryUrl, String taskId) {
-		if (repositoryUrl == null) {
-			return MISSING_REPOSITORY_HANDLE + taskId;
-		} else if (taskId.contains(CONTEXT_HANDLE_DELIM)) {
-			throw new RuntimeException("invalid handle for task, can not contain: " + CONTEXT_HANDLE_DELIM + ", was: "
-					+ taskId);
-		} else {
-			return repositoryUrl + CONTEXT_HANDLE_DELIM + taskId;
-		}
-	}
-
-	public static String getHandle(String repositoryUrl, int taskId) {
-		return AbstractRepositoryTask.getHandle(repositoryUrl, "" + taskId);
+	public String getIdentifyingLabel() {
+		return taskId;
+//		return RepositoryTaskHandleUtil.getTaskId(handleIdentifier);
 	}
 
 	public boolean isDirty() {
@@ -181,31 +154,46 @@ public abstract class AbstractRepositoryTask extends Task {
 			return "<unknown>";
 		}
 	}
-	
+
 	public IStatus getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(IStatus status) {
 		this.status = status;
 	}
-	
-	/**
-	 * Need to update URL since it is derived from handle identifier.
-	 */
-	@Override
-	public void setHandleIdentifier(String newHandleIdentifier) {
-		String oldHandleIdentifier = getHandleIdentifier();
-		String url = getUrl();
-		if (oldHandleIdentifier != null && url != null) {
-			String oldRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(oldHandleIdentifier);
-			String newRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(newHandleIdentifier);
 
-			if (url.startsWith(oldRepositoryUrl)) {
-				setUrl(newRepositoryUrl + url.substring(oldRepositoryUrl.length()));
-			}
-		}		
-		super.setHandleIdentifier(newHandleIdentifier);		
-	}
+//	/**
+//	 * Need to update URL since it is derived from handle identifier.
+//	 */
+//	@Override
+//	public void setHandleIdentifier(String newHandleIdentifier) {
+//		String oldHandleIdentifier = getHandleIdentifier();
+//		String url = getUrl();
+//		if (oldHandleIdentifier != null && url != null) {
+//			String oldRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(oldHandleIdentifier);
+//			String newRepositoryUrl = AbstractRepositoryTask.getRepositoryUrl(newHandleIdentifier);
+//
+//			if (url.startsWith(oldRepositoryUrl)) {
+//				setUrl(newRepositoryUrl + url.substring(oldRepositoryUrl.length()));
+//			}
+//		}
+//		super.setHandleIdentifier(newHandleIdentifier);
+//	}
+
 	
+	public final String getTaskId() {
+		return taskId;
+	}
+
+	public final String getRepositoryUrl() {
+		// return
+		// AbstractRepositoryTask.getRepositoryUrl(getHandleIdentifier());
+		return repositoryUrl;
+	}
+
+	public final void setRepositoryUrl(String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
+	}
+
 }

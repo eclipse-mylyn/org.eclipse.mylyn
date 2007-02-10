@@ -201,7 +201,7 @@ class SynchronizeQueryJob extends Job {
 							if (hit.getCorrespondingTask() != null) {
 								hit.getCorrespondingTask().setTaskData(taskData);
 							}
-							TasksUiPlugin.getDefault().getTaskDataManager().push(taskData);
+							TasksUiPlugin.getDefault().getTaskDataManager().push(hit.getHandleIdentifier(), taskData);
 						}
 						monitor.worked(1);
 					}

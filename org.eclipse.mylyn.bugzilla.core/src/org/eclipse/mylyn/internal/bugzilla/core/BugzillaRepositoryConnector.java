@@ -113,14 +113,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return null;
 		}
 
-		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
-		ITask task = taskList.getTask(handle);
+//		String handle = AbstractRepositoryTask.getHandle();
+		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
 		if (task == null) {
 			RepositoryTaskData taskData = null;
 			taskData = taskDataHandler.getTaskData(repository, id);
 			if (taskData != null) {
-				repositoryTask = new BugzillaTask(handle, taskData.getId() + ": " + taskData.getDescription(), true);
+				repositoryTask = new BugzillaTask(repository.getUrl(), ""+bugId, taskData.getId() + ": " + taskData.getDescription(), true);
 				repositoryTask.setTaskData(taskData);
 				taskList.addTask(repositoryTask);
 			}
@@ -156,9 +156,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			Iterator<AbstractRepositoryTask> itr = tasks.iterator();
 			while (itr.hasNext()) {
 				queryCounter++;
-				ITask task = itr.next();
-				String newurlQueryString = URLEncoder.encode(AbstractRepositoryTask.getTaskId(task
-						.getHandleIdentifier())
+				AbstractRepositoryTask task = itr.next();
+				String newurlQueryString = URLEncoder.encode(task.getTaskId()
 						+ ",", repository.getCharacterEncoding());
 				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
 						.length()) > MAX_URL_LENGTH) {
@@ -190,8 +189,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		performQuery(query, repository, new NullProgressMonitor(), collector);
 		
 		for (AbstractQueryHit hit : collector.getHits()) {
-			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
-			ITask correspondingTask = taskList.getTask(handle);
+//			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
+			ITask correspondingTask = taskList.getTask(repository.getUrl(), hit.getId());
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
 				// Hack to avoid re-syncing last task from previous
@@ -204,8 +203,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// currently it doesn't return a proper modified date string)
 				if (repositoryTask.getTaskData() != null
 						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
-					String taskId = AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository, taskId);
+//					String taskId = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository, repositoryTask.getTaskId());
 					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}

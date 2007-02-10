@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -76,7 +77,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			switch (columnIndex) {			
 			case 2:
 				if(task instanceof AbstractRepositoryTask) {
-					return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())+": "+task.getSummary();
+					return RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier())+": "+task.getSummary();
 				} else {
 					return task.getSummary();
 				}

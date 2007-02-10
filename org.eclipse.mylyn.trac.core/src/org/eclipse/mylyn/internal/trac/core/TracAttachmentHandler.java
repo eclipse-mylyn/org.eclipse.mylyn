@@ -63,7 +63,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 
 		try {
 			ITracClient client = connector.getClientManager().getRepository(repository);
-			int id = Integer.parseInt(AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()));
+			int id = Integer.parseInt(task.getTaskId());
 			byte[] data = readData(file); 
 			client.putAttachmentData(id, file.getName(), description, data);
 			if (comment != null && comment.length() > 0) {

@@ -24,13 +24,13 @@ public class TracQueryHit extends AbstractQueryHit {
 		super(taskList, repositoryUrl, description, id);
 	}
 
-	public TracQueryHit(TaskList taskList, String handle) {
-		super(taskList, AbstractRepositoryTask.getRepositoryUrl(handle), "", AbstractRepositoryTask.getTaskId(handle));
-	} 
+//	public TracQueryHit(TaskList taskList, String handle) {
+//		super(taskList, RepositoryTaskHandleUtil.getRepositoryUrl(handle), "", RepositoryTaskHandleUtil.getTaskId(handle));
+//	} 
 
 	@Override
 	protected AbstractRepositoryTask createTask() {
-		TracTask newTask = new TracTask(getHandleIdentifier(), getSummary(), true);
+		TracTask newTask = new TracTask(this.getRepositoryUrl(), this.getId(), getSummary(), true);
 		newTask.setPriority(priority);
 		return newTask;
 	}

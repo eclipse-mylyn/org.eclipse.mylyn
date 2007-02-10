@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -125,14 +126,14 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (object instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) object;
 			if (task.getSummary() == null) {
-				if (task.getIdLabel() != null) {
-					return task.getIdLabel() + NO_SUMMARY_AVAILABLE;
+				if (task.getIdentifyingLabel() != null) {
+					return task.getIdentifyingLabel() + NO_SUMMARY_AVAILABLE;
 				} else {
-					return AbstractRepositoryTask.getTaskId(task.getHandleIdentifier()) + NO_SUMMARY_AVAILABLE;
+					return RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier()) + NO_SUMMARY_AVAILABLE;
 				}
 			} else if (!pattern.matcher(task.getSummary()).matches()) {
-				if (task.getIdLabel() != null) {
-					return task.getIdLabel() + ": " + task.getSummary();
+				if (task.getIdentifyingLabel() != null) {
+					return task.getIdentifyingLabel() + ": " + task.getSummary();
 				} else {
 					return task.getSummary();
 				}

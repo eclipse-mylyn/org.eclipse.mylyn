@@ -93,7 +93,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 	
 	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(),
+		BugzillaTask task1 = new BugzillaTask("repo", "1",
 				"bugzillatask 1", true);
 		manager.getTaskList().moveToRoot(task1);
 
@@ -133,7 +133,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedBugzillaTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
+		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1",
 				true);
 		manager.getTaskList().moveToRoot(task1);
 		BugzillaTestUtil.setBugTaskCompleted(task1, true);
@@ -157,7 +157,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedBugzillaTasksInQueryRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1",
+		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1",
 				true);
 		manager.getTaskList().moveToRoot(task1);
 		BugzillaTestUtil.setBugTaskCompleted(task1, false);

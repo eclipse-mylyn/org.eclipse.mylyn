@@ -177,10 +177,10 @@ public class TaskEditor extends FormEditor {
 		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 			url = ((RepositoryTaskEditorInput) getEditorInput()).getUrl();
 			if (url == null) {
-				url = task.getUrl();
+				url = task.getTaskUrl();
 			}
-		} else if (task != null && task.getUrl().length() > 9) {
-			url = task.getUrl();
+		} else if (task != null && task.getTaskUrl().length() > 9) {
+			url = task.getTaskUrl();
 		}
 		return url;
 	}

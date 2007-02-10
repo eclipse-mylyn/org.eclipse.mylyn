@@ -18,8 +18,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
@@ -58,9 +58,9 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testHandles() {
 		String url = "http://foo.bar";
 		String id = "123";
-		String handle = AbstractRepositoryTask.getHandle(url, id);
-		assertEquals(url, AbstractRepositoryTask.getRepositoryUrl(handle));
-		assertEquals(id, AbstractRepositoryTask.getTaskId(handle));
+		String handle = RepositoryTaskHandleUtil.getHandle(url, id);
+		assertEquals(url, RepositoryTaskHandleUtil.getRepositoryUrl(handle));
+		assertEquals(id, RepositoryTaskHandleUtil.getTaskId(handle));
 //		assertEquals(123, AbstractRepositoryTask.getTaskIdAsInt(handle));
 	}
 

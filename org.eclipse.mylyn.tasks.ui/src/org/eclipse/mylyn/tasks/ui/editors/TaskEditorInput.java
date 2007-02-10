@@ -14,6 +14,7 @@
 package org.eclipse.mylar.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -45,7 +46,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private void init(ITask task) {
 		this.task = task;
-		id = AbstractRepositoryTask.getTaskId(task.getHandleIdentifier());
+		id = RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier());
 		label = truncateDescription(task.getSummary());
 	}
 
@@ -130,7 +131,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	public String getLabel() {
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-			String idLabel = repositoryTask.getIdLabel();
+			String idLabel = repositoryTask.getIdentifyingLabel();
 			
 			label = "";
 			if (idLabel != null) {

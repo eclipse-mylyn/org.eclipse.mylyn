@@ -161,8 +161,8 @@ public class DateRangeActivityDelegate implements ITask {
 		return task.getScheduledForDate();
 	}
 
-	public String getUrl() {
-		return task.getUrl();
+	public String getTaskUrl() {
+		return task.getTaskUrl();
 	}
 
 	public boolean hasBeenReminded() {
@@ -213,9 +213,9 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setEstimatedTimeHours(estimated);
 	}
 
-	public void setHandleIdentifier(String id) {
-		task.setHandleIdentifier(id);
-	}
+//	public void setHandleIdentifier(String id) {
+//		task.setHandleIdentifier(id);
+//	}
 
 	public void setKind(String kind) {
 		task.setKind(kind);
@@ -241,8 +241,8 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setScheduledForDate(date);
 	}
 
-	public void setUrl(String url) {
-		task.setUrl(url);
+	public void setTaskUrl(String url) {
+		task.setTaskUrl(url);
 	}
 	
 	public int compareTo(ITaskListElement taskListElement) {

@@ -27,7 +27,6 @@ import java.util.Set;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -100,16 +99,16 @@ public class TaskDataManager {
 	 * Add a RepositoryTaskData to the offline reports file. Previously stored
 	 * taskData is held and can be retrieved via getOldTaskData()
 	 */
-	public void push(RepositoryTaskData newEntry) {
-		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
-		RepositoryTaskData moveToOld = getNewDataMap().get(handle);
+	public void push(String taskHandle, RepositoryTaskData newEntry) {
+//		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
+		RepositoryTaskData moveToOld = getNewDataMap().get(taskHandle);
 		synchronized (file) {
 			if (moveToOld != null) {
-				getOldDataMap().put(handle, moveToOld);
+				getOldDataMap().put(taskHandle, moveToOld);
 			} else {
-				getOldDataMap().put(handle, newEntry);
+				getOldDataMap().put(taskHandle, newEntry);
 			}
-			getNewDataMap().put(handle, newEntry);
+			getNewDataMap().put(taskHandle, newEntry);
 		}
 	}
 
@@ -118,8 +117,8 @@ public class TaskDataManager {
 	 * 
 	 * @param newData
 	 */
-	public void replace(RepositoryTaskData newData) {
-		String handle = AbstractRepositoryTask.getHandle(newData.getRepositoryUrl(), newData.getId());
+	public void replace(String handle, RepositoryTaskData newData) {
+//		String handle = AbstractRepositoryTask.getHandle(newData.getRepositoryUrl(), newData.getId());
 		synchronized (file) {
 			getNewDataMap().put(handle, newData);
 		}
@@ -128,8 +127,8 @@ public class TaskDataManager {
 	/**
 	 * Add an unsubmitted RepositoryTaskData to the offline reports file.
 	 */
-	public void putUnsubmitted(RepositoryTaskData newEntry) {
-		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
+	public void putUnsubmitted(String handle, RepositoryTaskData newEntry) {
+//		String handle = AbstractRepositoryTask.getHandle(newEntry.getRepositoryUrl(), newEntry.getId());
 		synchronized (file) {
 			getUnsubmittedTaskData().put(handle, newEntry);
 		}
@@ -212,13 +211,13 @@ public class TaskDataManager {
 
 	}
 
-	/**
-	 * @return editable copy of task data with any edits applied
-	 */
-	public RepositoryTaskData getEditableCopy(String repositoryUrl, String taskId) {
-		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		return getEditableCopy(handle);
-	}
+//	/**
+//	 * @return editable copy of task data with any edits applied
+//	 */
+//	public RepositoryTaskData getEditableCopy(String handle) {
+//		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+//		return getEditableCopy(handle);
+//	}
 
 	public void saveEdits(String handle, Set<RepositoryTaskAttribute> attributes) {
 		synchronized (file) {
@@ -263,15 +262,15 @@ public class TaskDataManager {
 		return data;
 	}
 
-	/**
-	 * Returns the most recent copy of the task data.
-	 * 
-	 * @return offline task data, null if no data found
-	 */
-	public RepositoryTaskData getRepsitoryTaskData(String repositoryUrl, String taskId) {
-		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		return getRepositoryTaskData(handle);
-	}
+//	/**
+//	 * Returns the most recent copy of the task data.
+//	 * 
+//	 * @return offline task data, null if no data found
+//	 */
+//	public RepositoryTaskData getRepsitoryTaskData(String repositoryUrl, String taskId) {
+//		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+//		return getRepositoryTaskData(handle);
+//	}
 
 	/**
 	 * Returns the old copy if exists, null otherwise.
@@ -280,13 +279,13 @@ public class TaskDataManager {
 		return getOldDataMap().get(handle);
 	}
 
-	/**
-	 * Returns the old copy if exists, null otherwise.
-	 */
-	public RepositoryTaskData getOldRepositoryTaskData(String repositoryUrl, String taskId) {
-		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		return getOldRepositoryTaskData(handle);
-	}
+//	/**
+//	 * Returns the old copy if exists, null otherwise.
+//	 */
+//	public RepositoryTaskData getOldRepositoryTaskData(String repositoryUrl, String taskId) {
+//		String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+//		return getOldRepositoryTaskData(handle);
+//	}
 
 	/**
 	 * Remove some bugs from the offline reports list
@@ -294,17 +293,16 @@ public class TaskDataManager {
 	 * @param indicesToRemove
 	 *            An array of the indicies of the bugs to be removed
 	 */
-	public void remove(List<RepositoryTaskData> dataToRemove) {
+	public void remove(List<String> handlesToRemove) {
 		synchronized (file) {
-			for (RepositoryTaskData repositoryTaskData : dataToRemove) {
-				remove(repositoryTaskData);
+			for (String handle: handlesToRemove) {
+				remove(handle);
 			}
 		}
 	}
 
-	public void remove(RepositoryTaskData taskData) {
+	public void remove(String handle) {
 		synchronized (file) {
-			String handle = AbstractRepositoryTask.getHandle(taskData.getRepositoryUrl(), taskData.getId());
 			getNewDataMap().remove(handle);
 			getOldDataMap().remove(handle);
 		}

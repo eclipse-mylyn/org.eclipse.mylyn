@@ -99,9 +99,9 @@ public class Task implements ITask {
 		}
 	}
 
+	private String handleIdentifier = "-1";
+	
 	private boolean active = false;
-
-	protected String handleIdentifier = "-1";
 
 	private boolean category = false;
 
@@ -117,7 +117,7 @@ public class Task implements ITask {
 
 	private boolean completed;
 
-	private String url = "";
+	private String taskUrl = "";
 
 	private AbstractTaskContainer parentCategory = null;
 
@@ -155,9 +155,9 @@ public class Task implements ITask {
 		return handleIdentifier;
 	}
 
-	public void setHandleIdentifier(String id) {
-		this.handleIdentifier = id;
-	}
+//	public void setHandleIdentifier(String id) {
+//		this.handleIdentifier = id;
+//	}
 
 	public ITask getParent() {
 		return parent;
@@ -221,12 +221,12 @@ public class Task implements ITask {
 		this.priority = priority;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setTaskUrl(String url) {
+		this.taskUrl = url;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getTaskUrl() {
+		return taskUrl;
 	}
 
 	public String getNotes() {
@@ -341,7 +341,7 @@ public class Task implements ITask {
 	}
 
 	public boolean hasValidUrl() {
-		String taskUrl = getUrl();
+		String taskUrl = getTaskUrl();
 		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://")) {
 			try {
 				new URL(taskUrl);
