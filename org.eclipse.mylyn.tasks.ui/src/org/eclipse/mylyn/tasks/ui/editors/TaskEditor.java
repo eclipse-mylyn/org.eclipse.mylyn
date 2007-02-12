@@ -54,8 +54,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class TaskEditor extends FormEditor {
 
-	// private static final String TASK_INFO_PAGE_LABEL = "Planning";
-
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
 	protected ITask task;
@@ -124,8 +122,7 @@ public class TaskEditor extends FormEditor {
 
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
-				// if (!(task instanceof AbstractRepositoryTask) ||
-				// openWithBrowser) {
+
 				if (openWithBrowser) {
 					setActivePage(index);
 				}

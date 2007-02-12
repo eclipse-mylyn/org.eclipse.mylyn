@@ -54,9 +54,6 @@ import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
-	// private BugzillaAttachmentHandler attachmentHandler = new
-	// BugzillaAttachmentHandler();
-
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		BugzillaTask badId = (BugzillaTask) connector.createTaskFromExistingKey(repository, "bad-id");
@@ -141,11 +138,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 
 		// Get the task
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "1");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "3");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
+		int numComments = task.getTaskData().getComments().size();
 		// (The initial local copy from server)
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSyncState());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
@@ -185,6 +183,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(task.getTaskData());
 		assertEquals(task.getTaskData().getId(), bugReport.getId());
 
+		
+		assertEquals(newCommentText, task.getTaskData().getComments().get(numComments).getText());
 		// TODO: Test that comment was appended
 		// ArrayList<Comment> comments = task.getTaskData().getComments();
 		// assertNotNull(comments);
@@ -283,7 +283,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	public void testAttachToExistingReport() throws Exception {
 		init222();
-		int bugId = 32;
+		int bugId = 33;
 		String taskNumber = "" + bugId;
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);

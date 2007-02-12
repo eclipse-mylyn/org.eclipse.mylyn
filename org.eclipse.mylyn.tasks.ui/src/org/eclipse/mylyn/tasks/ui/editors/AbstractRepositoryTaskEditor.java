@@ -2619,6 +2619,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
+	 * @since 2.0
 	 * If existing task editor, update contents in place
 	 */
 	protected void updateEditor() {
