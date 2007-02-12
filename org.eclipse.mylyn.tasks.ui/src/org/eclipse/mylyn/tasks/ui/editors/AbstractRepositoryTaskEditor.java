@@ -1245,8 +1245,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Attach File...", SWT.PUSH);
 
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				repository.getUrl(), taskData.getId());
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (task == null) {
 			addAttachmentButton.setEnabled(false);
 		}
@@ -1257,8 +1256,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						repository.getUrl(), taskData.getId());
+				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+						taskData.getId());
 				if (!(task instanceof AbstractRepositoryTask)) {
 					// Should not happen
 					return;
@@ -1366,8 +1365,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			public void drop(DropTargetEvent event) {
 				if (textTransfer.isSupportedType(event.currentDataType)) {
 					String text = (String) event.data;
-					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-							repository.getUrl(), taskData.getId());
+					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+							taskData.getId());
 					if (!(task instanceof AbstractRepositoryTask)) {
 						// Should not happen
 						return;
@@ -1382,8 +1381,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (fileTransfer.isSupportedType(event.currentDataType)) {
 					String[] files = (String[]) event.data;
 					if (files.length > 0) {
-						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-								repository.getUrl(), taskData.getId());
+						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+								taskData.getId());
 						if (!(task instanceof AbstractRepositoryTask)) {
 							// Should not happen
 							return;
@@ -1492,6 +1491,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				CommentQuoter quoter = new CommentQuoter();
 				strBuilder.append(quoter.quote(commentBody));
 				newCommentTextViewer.getDocument().set(strBuilder.toString());
+				RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.COMMENT_NEW);
+				if (attribute != null) {
+					attribute.setValue(strBuilder.toString());
+					attributeChanged(attribute);
+				}
 				selectNewComment();
 				newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
 			}
@@ -1828,8 +1832,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 *            Composite to add the buttons to.
 	 */
 	protected void addActionButtons(Composite buttonComposite) {
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-				repository.getUrl(), taskData.getId());
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (attachContext && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2619,8 +2622,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * @since 2.0
-	 * If existing task editor, update contents in place
+	 * @since 2.0 If existing task editor, update contents in place
 	 */
 	protected void updateEditor() {
 		if (!this.isDisposed) {
