@@ -54,8 +54,6 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class TaskListManagerTest extends TestCase {
 
-	private static final String MOCK_REPOSITORY_URL = "http://mock.repository";
-
 	private TaskListManager manager;
 
 	private TaskRepository repository;
@@ -67,7 +65,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 
-		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MOCK_REPOSITORY_URL);
+		repository = new TaskRepository(MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
@@ -236,6 +234,8 @@ public class TaskListManagerTest extends TestCase {
 		task.setCompletionDate(new Date());
 		assertTrue(manager.isCompletedToday(task));
 
+		
+		
 		MockRepositoryTask mockTask = new MockRepositoryTask("1");
 		manager.getTaskList().addTask(mockTask);
 		mockTask.setCompleted(true);
@@ -634,7 +634,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testQueryHitHasParent() {
 		TaskList taskList = manager.getTaskList();
 
-		MockQueryHit hit1 = new MockQueryHit(taskList, MOCK_REPOSITORY_URL, "description1", "1");
+		MockQueryHit hit1 = new MockQueryHit(taskList, MockRepositoryConnector.REPOSITORY_URL, "description1", "1");
 		assertNull(hit1.getParent());
 		MockRepositoryQuery query1 = new MockRepositoryQuery("query1", manager.getTaskList());
 		query1.addHit(hit1);
