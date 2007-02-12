@@ -400,7 +400,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 				.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			createLabel(timeComposite, attribute);
-			estimateText = createTextField(timeComposite, attribute, SWT.BORDER);
+			estimateText = createTextField(timeComposite, attribute, SWT.FLAT);
 			estimateText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		}
 
@@ -419,7 +419,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null) {
 
 			createLabel(timeComposite, attribute);
-			Text actualText = createTextField(timeComposite, attribute, SWT.BORDER);
+			Text actualText = createTextField(timeComposite, attribute, SWT.FLAT);
 			actualText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 			actualText.setEditable(false);
 		}
@@ -445,7 +445,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		attribute = this.taskData.getAttribute(BugzillaReportElement.REMAINING_TIME.getKeyString());
 		if (attribute != null) {
 			createLabel(timeComposite, attribute);
-			createTextField(timeComposite, attribute, SWT.BORDER);
+			createTextField(timeComposite, attribute, SWT.FLAT);
 		}
 
 		attribute = this.taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString());
@@ -495,7 +495,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
 		// toolkit.createText(attributesComposite, keywords)
-		keywordsText = createTextField(attributesComposite, attribute, SWT.NONE);
+		keywordsText = createTextField(attributesComposite, attribute, SWT.FLAT);
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
 		// keywordsText.setForeground(foreground);
