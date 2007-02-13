@@ -10,5 +10,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylar.internal.bugzilla.core
+Export-Package: org.eclipse.mylar.internal.bugzilla.core,
+ org.eclipse.mylar.internal.bugzilla.core.history
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

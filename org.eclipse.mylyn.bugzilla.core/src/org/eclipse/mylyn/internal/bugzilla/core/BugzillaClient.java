@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.security.auth.login.LoginException;
+
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -54,6 +56,8 @@ import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
 import org.eclipse.mylar.core.net.HtmlTag;
 import org.eclipse.mylar.core.net.WebClientUtil;
 import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylar.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
+import org.eclipse.mylar.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.MylarStatus;
@@ -447,8 +451,9 @@ public class BugzillaClient {
 								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
-								.getResponseBodyAsStream(), characterEncoding);						
+								.getResponseBodyAsStream(), characterEncoding);
 						reportFactory.populateReport(taskData);
+
 						return taskData;
 					}
 				}
@@ -509,14 +514,14 @@ public class BugzillaClient {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
 		// stream but need to be present for bug submission
-		BugzillaReportElement[] reportElements = { BugzillaReportElement.SHORT_DESC, BugzillaReportElement.BUG_STATUS, BugzillaReportElement.RESOLUTION,
-				BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM, BugzillaReportElement.PRODUCT,
-				BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT, BugzillaReportElement.VERSION,
-				BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY, BugzillaReportElement.ASSIGNED_TO,
-				BugzillaReportElement.TARGET_MILESTONE, BugzillaReportElement.REPORTER,
-				BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED, BugzillaReportElement.BUG_FILE_LOC,
-				BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS, BugzillaReportElement.CC,
-				BugzillaReportElement.NEW_COMMENT, BugzillaReportElement.QA_CONTACT };
+		BugzillaReportElement[] reportElements = { BugzillaReportElement.SHORT_DESC, BugzillaReportElement.BUG_STATUS,
+				BugzillaReportElement.RESOLUTION, BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM,
+				BugzillaReportElement.PRODUCT, BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT,
+				BugzillaReportElement.VERSION, BugzillaReportElement.PRIORITY, BugzillaReportElement.BUG_SEVERITY,
+				BugzillaReportElement.ASSIGNED_TO, BugzillaReportElement.TARGET_MILESTONE,
+				BugzillaReportElement.REPORTER, BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED,
+				BugzillaReportElement.BUG_FILE_LOC, BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS,
+				BugzillaReportElement.CC, BugzillaReportElement.NEW_COMMENT, BugzillaReportElement.QA_CONTACT };
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);
@@ -604,7 +609,7 @@ public class BugzillaClient {
 
 		try {
 			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl
-					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));			
+					+ IBugzillaConstants.URL_POST_ATTACHMENT_UPLOAD));
 			// This option causes the client to first
 			// check
 			// with the server to see if it will in fact receive the post before
@@ -979,6 +984,41 @@ public class BugzillaClient {
 					IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from " + repositoryUrl.toString()
 							+ "."));
 		}
+	}
+
+	public TaskHistory getHistory(String taskId) throws IOException, CoreException {
+		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
+		if (!authenticated && hasAuthenticationCredentials()) {
+			authenticate();
+		}
+		GetMethod method = null;
+		try {
+			String url = repositoryUrl + IBugzillaConstants.SHOW_ACTIVITY + taskId;
+			method = getConnect(url);
+			if (method != null) {
+				BugzillaTaskHistoryParser parser = new BugzillaTaskHistoryParser(method.getResponseBodyAsStream(),
+						characterEncoding);
+				try {
+					return parser.retrieveHistory();
+				} catch (LoginException e) {
+					authenticated = false;
+					throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+							IMylarStatusConstants.REPOSITORY_LOGIN_ERROR, repositoryUrl.toString(),
+							IBugzillaConstants.INVALID_CREDENTIALS));
+				} catch (ParseException e) {
+					authenticated = false;
+					throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+							IMylarStatusConstants.INTERNAL_ERROR, "Unable to parse response from "
+									+ repositoryUrl.toString() + "."));
+				}
+			}
+
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
+		return null;
 	}
 
 }

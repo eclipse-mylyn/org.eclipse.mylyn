@@ -238,4 +238,6 @@ public interface IBugzillaConstants {
 
 	public static final String CHANGES_SUBMITTED = "changes submitted";
 
+	public static final String SHOW_ACTIVITY = "/show_activity.cgi?id=";
+
 }

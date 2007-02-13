@@ -50,13 +50,13 @@ import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final int MAX_URL_LENGTH = 2000;
-	
+
 	private static final String BUG_ID = "&bug_id=";
 
 	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
 
 	private static final String CHANGED_BUGS_CGI_QUERY = "/buglist.cgi?query_format=advanced&chfieldfrom=";
-	
+
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-2.22)";
 
 	private BugzillaAttachmentHandler attachmentHandler;
@@ -113,14 +113,15 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return null;
 		}
 
-//		String handle = AbstractRepositoryTask.getHandle();
+		// String handle = AbstractRepositoryTask.getHandle();
 		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
 		if (task == null) {
 			RepositoryTaskData taskData = null;
 			taskData = taskDataHandler.getTaskData(repository, id);
 			if (taskData != null) {
-				repositoryTask = new BugzillaTask(repository.getUrl(), ""+bugId, taskData.getId() + ": " + taskData.getDescription(), true);
+				repositoryTask = new BugzillaTask(repository.getUrl(), "" + bugId, taskData.getId() + ": "
+						+ taskData.getDescription(), true);
 				repositoryTask.setTaskData(taskData);
 				taskList.addTask(repositoryTask);
 			}
@@ -129,7 +130,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 		return repositoryTask;
 	}
-	
+
 	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws CoreException {
@@ -157,8 +158,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			while (itr.hasNext()) {
 				queryCounter++;
 				AbstractRepositoryTask task = itr.next();
-				String newurlQueryString = URLEncoder.encode(task.getTaskId()
-						+ ",", repository.getCharacterEncoding());
+				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
 						.length()) > MAX_URL_LENGTH) {
 					queryForChanged(repository, changedTasks, urlQueryString);
@@ -179,7 +179,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return tasks;
 		}
 	}
-	
+
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList);
@@ -187,9 +187,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				taskList);
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);
-		
+
 		for (AbstractQueryHit hit : collector.getHits()) {
-//			String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), hit.getId());
+			// String handle =
+			// AbstractRepositoryTask.getHandle(repository.getUrl(),
+			// hit.getId());
 			ITask correspondingTask = taskList.getTask(repository.getUrl(), hit.getTaskId());
 			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
@@ -203,8 +205,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// currently it doesn't return a proper modified date string)
 				if (repositoryTask.getTaskData() != null
 						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
-//					String taskId = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository, repositoryTask.getTaskId());
+					// String taskId =
+					// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository,
+							repositoryTask.getTaskId());
 					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
 						continue;
 					}
@@ -321,7 +325,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase(Locale.ENGLISH));
+			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase(
+					Locale.ENGLISH));
 			attribute.clearOptions();
 			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)
 					.getOptionValues(element, product);
@@ -391,10 +396,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		newTaskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), a);
 
-		
-		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.SHORT_DESC);		
+		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.SHORT_DESC);
 		newTaskData.addAttribute(BugzillaReportElement.SHORT_DESC.getKeyString(), a);
-		
+
 		a = BugzillaClient.makeNewAttribute(BugzillaReportElement.VERSION);
 		optionValues = repositoryConfiguration.getVersions(newTaskData.getProduct());
 		Collections.sort(optionValues);
