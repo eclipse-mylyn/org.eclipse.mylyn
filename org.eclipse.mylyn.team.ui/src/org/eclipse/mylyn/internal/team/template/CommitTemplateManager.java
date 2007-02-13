@@ -33,7 +33,7 @@ public class CommitTemplateManager {
 
 	private static final String ATTR_CLASS = "class";
 
-	private static final String ATTR_DESCRIPTION = "description";
+	private static final String ATTR_DESCRIPTION = "summary";
 
 	private static final String ATTR_RECOGNIZED_KEYWORD = "recognizedKeyword";
 
