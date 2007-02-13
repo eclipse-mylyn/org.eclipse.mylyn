@@ -54,7 +54,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	public static final String HIT_MARKER_ATTR_HREF = "href";
 
-	public static final String HIT_MARKER_ATTR_DESC = "description";
+	public static final String HIT_MARKER_ATTR_DESC = "summary";
 
 	public static final String HIT_MARKER_ATTR_LABEL = "label";
 

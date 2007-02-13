@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
@@ -22,7 +23,6 @@ import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @author Mik Kersten
@@ -60,7 +60,6 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	@Override
 	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
-		boolean hasCaughtException = false;
 		Element element = (Element) node;
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(element.getAttribute(KEY_REPOSITORY_URL), element
 				.getAttribute(KEY_QUERY_STRING), element.getAttribute(KEY_NAME), element
@@ -71,21 +70,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		if (element.getAttribute(KEY_LAST_REFRESH) != null && !element.getAttribute(KEY_LAST_REFRESH).equals("")) {
 			query.setLastRefreshTimeStamp(element.getAttribute(KEY_LAST_REFRESH));
 		}
-
-		NodeList list = node.getChildNodes();
-		for (int i = 0; i < list.getLength(); i++) {
-			Node child = list.item(i);
-			try {
-				readQueryHit(child, taskList, query);
-			} catch (TaskExternalizationException e) {
-				hasCaughtException = true;
-			}
-		}
-		if (hasCaughtException) {
-			throw new TaskExternalizationException("Failed to load all tasks");
-		} else {
-			return query;
-		}
+		return query;
 	}
 
 	@Override
@@ -104,28 +89,9 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
+	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
-		Element element = (Element) node;
-//		String handle;
-//		String label;
-//		if (element.hasAttribute(KEY_HANDLE)) {
-//			handle = element.getAttribute(KEY_HANDLE);
-//		} else {
-//			throw new TaskExternalizationException("Handle not stored for bug report");
-//		}
-//		if (element.hasAttribute(KEY_LABEL)) {
-//			label = element.getAttribute(KEY_LABEL);
-//		} else {
-//			throw new TaskExternalizationException("Description not stored for bug report");
-//		}
-//		
-//		String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-//		String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
-		
-		BugzillaTask task = new BugzillaTask(null, null, null, false);
-		super.readTaskInfo(task, taskList, element, parent, category);
-
+		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary, false);
 		return task;
 	}
 
@@ -135,16 +101,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public void readQueryHit(Node node, TaskList taskList, AbstractRepositoryQuery query)
+	public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
-		Element element = (Element) node;
-//		String handle;
-//		if (element.hasAttribute(KEY_HANDLE)) {
-//			handle = element.getAttribute(KEY_HANDLE);
-//		} else {
-//			throw new TaskExternalizationException("Handle not stored for bug report");
-//		}
-
 		String status = STATUS_NEW;
 		if (element.hasAttribute(KEY_COMPLETE)) {
 			status = element.getAttribute(KEY_COMPLETE);
@@ -152,8 +110,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 				status = STATUS_RESO;
 			}
 		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, "", "", query.getRepositoryUrl(), null, null, status);
-		readQueryHitInfo(hit, taskList, query, element);
+		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, summary, "", repositoryUrl, taskId, null, status);
+		return hit;
 	}
 
 	@Override

@@ -117,7 +117,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 			summaryText.setFocus();
 			return;
 		} else if (descriptionTextViewer.getTextWidget().getText().equals("")) {
-			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please proved a detailed description with new reports");
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please proved a detailed summary with new reports");
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
