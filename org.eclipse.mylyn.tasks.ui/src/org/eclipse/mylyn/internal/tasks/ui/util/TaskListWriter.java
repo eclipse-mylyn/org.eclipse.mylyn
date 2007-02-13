@@ -278,24 +278,28 @@ public class TaskListWriter {
 				for (int i = 0; i < list.getLength(); i++) {
 					Node child = list.item(i);
 					try {
-						boolean wasRead = false;
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
 								&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
-							for (ITaskListExternalizer externalizer : externalizers) {
-								if (!wasRead && externalizer.canReadTask(child)) {
-									externalizer.readTask(child, taskList, null, null);
-									wasRead = true;
-								}
-							}
-
-							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
-								delagatingExternalizer.readTask(child, taskList, null, null);
-								wasRead = true;
-							}
-
-							if (!wasRead) {
+							
+							ITask task = delagatingExternalizer.readTask(child, taskList, null, null);
+							if (task == null) {
 								orphanedTaskNodes.add(child);
 							}
+							
+//							boolean wasRead = false;
+//							for (ITaskListExternalizer externalizer : externalizers) {
+//								if (!wasRead && externalizer.canReadTask(child)) {
+//									externalizer.createTask(child, taskList, null, null);
+//									wasRead = true;
+//								}
+//							}
+//							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
+//								delagatingExternalizer.createTask(child, taskList, null, null);
+//								wasRead = true;
+//							}
+//							if (!wasRead) {
+//								orphanedTaskNodes.add(child);
+//							}
 						}
 					} catch (Exception e) {
 						// TODO: Save orphans here too?
@@ -321,6 +325,15 @@ public class TaskListWriter {
 									if (query != null) {
 										wasRead = true;
 										taskList.internalAddQuery(query);
+									}
+									NodeList queryChildren = child.getChildNodes();
+									for (int ii = 0; i < queryChildren.getLength(); ii++) {
+										Node queryNode = queryChildren.item(ii);
+										try {
+											delagatingExternalizer.readQueryHit((Element)queryNode, taskList, query);
+										} catch (TaskExternalizationException e) {
+											hasCaughtException = true;
+										}
 									}
 									break;
 								}

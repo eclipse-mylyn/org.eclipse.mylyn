@@ -33,9 +33,11 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String STATUS_NEW = "NEW";
 
-	private static final String TAG_BUGZILLA_QUERY_HIT = "Bugzilla" + KEY_QUERY_HIT;
+	private static final String TAG_BUGZILLA = "Bugzilla";
+	
+	private static final String TAG_BUGZILLA_QUERY_HIT = TAG_BUGZILLA + KEY_QUERY_HIT;
 
-	private static final String TAG_BUGZILLA_QUERY = "Bugzilla" + KEY_QUERY;
+	private static final String TAG_BUGZILLA_QUERY = TAG_BUGZILLA + KEY_QUERY;
 
 	private static final String TAG_BUGZILLA_CUSTOM_QUERY = "BugzillaCustom" + KEY_QUERY;
 

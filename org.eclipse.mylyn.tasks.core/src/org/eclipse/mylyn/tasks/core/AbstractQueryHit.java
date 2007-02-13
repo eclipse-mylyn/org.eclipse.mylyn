@@ -25,7 +25,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	protected String repositoryUrl;
 
-	protected String description;
+	protected String summary;
 
 	protected String priority = PriorityLevel.getDefault().toString();
 
@@ -37,11 +37,11 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 
 	private AbstractRepositoryQuery parent;
 
-	protected AbstractQueryHit(TaskList taskList, String repositoryUrl, String description, String id) {
+	protected AbstractQueryHit(TaskList taskList, String repositoryUrl, String description, String taskId) {
 		this.taskList = taskList;
 		this.repositoryUrl = repositoryUrl;
-		this.description = description;
-		this.taskId = id;
+		this.summary = description;
+		this.taskId = taskId;
 	}
 
 	public AbstractRepositoryQuery getParent() {
@@ -64,7 +64,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		if (task != null) {
 			return task.getSummary();
 		} else {
-			return description;
+			return summary;
 		}
 	}
 	
@@ -109,7 +109,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.completed = completed;
 	}
 	
-	public String getHandleIdentifier() {
+	public final String getHandleIdentifier() {
 		if (task != null) {
 			return task.getHandleIdentifier();
 		}
@@ -173,8 +173,8 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		this.priority = priority;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setSummary(String description) {
+		this.summary = description;
 	}
 
 	public void setHandleIdentifier(String id) {

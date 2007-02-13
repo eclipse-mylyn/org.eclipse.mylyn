@@ -110,7 +110,7 @@ public class BugzillaQueryTest extends TestCase {
 		QueryHitCollector collector = new QueryHitCollector(new TaskList());
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "description",
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "summary",
 				"-1", taskList);
 		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 		assertEquals(2, collector.getHits().size());

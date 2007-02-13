@@ -1620,7 +1620,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * A listener for selection of the description field.
+	 * A listener for selection of the summary field.
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {

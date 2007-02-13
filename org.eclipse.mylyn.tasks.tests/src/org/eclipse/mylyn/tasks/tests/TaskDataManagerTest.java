@@ -271,12 +271,9 @@ public class TaskDataManagerTest extends TestCase {
 	// offlineTaskDataManager.put(taskData);
 	// offlineTaskDataManager.put(taskData);
 	// }
-	// System.err.println("done Building");
 	// offlineTaskDataManager.save();
-	// System.err.println("Saved");
 	// File file =
 	// TasksUiPlugin.getDefault().getOfflineReportsFilePath().toFile();
-	// System.err.println(file.length());
 	// offlineTaskDataManager.clear();
 	// offlineTaskDataManager.readOfflineData();
 	// assertNotNull(offlineTaskDataManager.getOldTaskData(AbstractRepositoryTask.getHandle(

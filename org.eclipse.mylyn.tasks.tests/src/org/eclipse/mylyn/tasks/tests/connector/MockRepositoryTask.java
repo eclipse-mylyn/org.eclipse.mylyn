@@ -21,11 +21,15 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 	private String ownerId;
 	
 	public MockRepositoryTask(String taskId) {
-		super(MockRepositoryConnector.REPOSITORY_URL, taskId, "label for " + taskId, true);
+		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId, true);
 	}
 
 	public MockRepositoryTask(String repositoryUrl, String taskId) {
-		super(repositoryUrl, taskId, "label for " + taskId, true);
+		super(repositoryUrl, taskId, taskId, true);
+	}
+	
+	public MockRepositoryTask(String repositoryUrl, String taskId, String summary) {
+		super(repositoryUrl, taskId, summary, true);
 	}
 	
 	@Override
@@ -44,6 +48,11 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 		} else {
 			return ownerId;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return super.getHandleIdentifier();
 	}
 
 }

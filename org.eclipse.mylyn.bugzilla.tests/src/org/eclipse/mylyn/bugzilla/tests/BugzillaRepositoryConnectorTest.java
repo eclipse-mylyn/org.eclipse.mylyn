@@ -212,13 +212,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testUniqueTaskObjects() {
 		init222();
 		String repositoryURL = "repositoryURL";
-		BugzillaQueryHit hit1 = new BugzillaQueryHit(taskList, "description", "P1", repositoryURL, "1", null, "status");
+		BugzillaQueryHit hit1 = new BugzillaQueryHit(taskList, "summary", "P1", repositoryURL, "1", null, "status");
 		ITask task1 = hit1.getOrCreateCorrespondingTask();
 		assertNotNull(task1);
 		// taskList.renameTask(task1, "testing");
 		// task1.setDescription("testing");
 
-		BugzillaQueryHit hit1Twin = new BugzillaQueryHit(taskList, "description", "P1", repositoryURL, "1", null,
+		BugzillaQueryHit hit1Twin = new BugzillaQueryHit(taskList, "summary", "P1", repositoryURL, "1", null,
 				"status");
 		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
 		assertEquals(task1.getSummary(), task2.getSummary());
@@ -319,7 +319,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		} catch (Exception e) {
 		}
 		// attachmentHandler.uploadAttachment(repository, task, comment,
-		// description, file, contentType, isPatch, proxySettings)
+		// summary, file, contentType, isPatch, proxySettings)
 		// assertFalse(attachmentHandler.uploadAttachment(attachment,
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));

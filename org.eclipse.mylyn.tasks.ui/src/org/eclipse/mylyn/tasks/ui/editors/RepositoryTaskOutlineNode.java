@@ -236,7 +236,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		RepositoryTaskOutlineNode comments = null;
 		for (Iterator<TaskComment> iter = bug.getComments().iterator(); iter.hasNext();) {
 			TaskComment taskComment = iter.next();
-			// first comment is the bug description
+			// first comment is the bug summary
 			if(taskComment.getNumber() == 0) continue;
 			if (comments == null) {
 				comments = new RepositoryTaskOutlineNode(bugId, bugServer, LABEL_COMMENTS, taskComment, bug

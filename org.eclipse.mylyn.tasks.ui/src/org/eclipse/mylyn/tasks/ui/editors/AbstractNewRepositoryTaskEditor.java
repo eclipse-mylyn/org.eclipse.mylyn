@@ -75,7 +75,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
-	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
+	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the summary text.\nDuplicate search currently only supports stack trace matching.";
 
 	protected Button searchForDuplicates;
 
@@ -302,7 +302,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	/**
-	 * A listener for selection of the description textbox.
+	 * A listener for selection of the summary textbox.
 	 */
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
@@ -460,7 +460,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openInformation(AbstractNewRepositoryTaskEditor.this.getSite().getShell(),
-							ERROR_CREATING_BUG_REPORT, "A description must be provided with new reports.");
+							ERROR_CREATING_BUG_REPORT, "A summary must be provided with new reports.");
 					descriptionTextViewer.getTextWidget().setFocus();
 					submitButton.setEnabled(true);
 					showBusy(false);

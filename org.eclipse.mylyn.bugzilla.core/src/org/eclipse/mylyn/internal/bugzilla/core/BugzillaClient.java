@@ -103,8 +103,6 @@ public class BugzillaClient {
 
 	private static final String KEY_SHORT_DESC = "short_desc";
 
-	// /////////////////////
-
 	// Pages with this string in the html occurr when login is required
 	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 

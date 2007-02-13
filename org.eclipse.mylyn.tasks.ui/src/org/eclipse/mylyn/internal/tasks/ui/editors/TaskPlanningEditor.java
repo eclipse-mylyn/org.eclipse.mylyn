@@ -380,10 +380,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 	// editorComposite.setLayout(new GridLayout());
 	// editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 	// createContent(editorComposite, toolkit);
-	// if (description != null &&
-	// NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(description.getText())) {
-	// description.setSelection(0);
-	// description.setFocus();
+	// if (summary != null &&
+	// NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
+	// summary.setSelection(0);
+	// summary.setFocus();
 	// }
 	// }
 

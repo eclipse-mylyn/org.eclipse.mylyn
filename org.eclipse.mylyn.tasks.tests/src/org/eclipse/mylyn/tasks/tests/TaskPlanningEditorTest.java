@@ -31,9 +31,9 @@ public class TaskPlanningEditorTest extends TestCase {
 
 	private static final String MOCK_HANDLE = "handle";
 
-	private static final String DESCRIPTION = "description";
+	private static final String DESCRIPTION = "summary";
 
-	private static final String NEW_DESCRIPTION = "new description";
+	private static final String NEW_DESCRIPTION = "new summary";
 
 	@Override
 	protected void setUp() throws Exception {

@@ -156,7 +156,7 @@ public class TaskListStandaloneTest extends TestCase {
 		externalizers.add(new BugzillaTaskExternalizer());
 		// make a query
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"http://queryurl", "description", "-1", TasksUiPlugin.getTaskListManager().getTaskList());
+				"http://queryurl", "summary", "-1", TasksUiPlugin.getTaskListManager().getTaskList());
 
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();

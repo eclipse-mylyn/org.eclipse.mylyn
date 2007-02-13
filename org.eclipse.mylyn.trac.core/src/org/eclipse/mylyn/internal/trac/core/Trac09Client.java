@@ -197,7 +197,7 @@ public class Trac09Client extends AbstractTracClient {
 							}
 						}
 					}
-					// TODO parse description
+					// TODO parse summary
 				}
 			}
 

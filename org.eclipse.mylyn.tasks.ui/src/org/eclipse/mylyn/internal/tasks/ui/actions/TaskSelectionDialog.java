@@ -218,7 +218,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 					return taskHistory.indexOf(t1) - taskHistory.indexOf(t2);
 				}
 
-				// Both are not in task history; sort by description...
+				// Both are not in task history; sort by summary...
 				return labelProvider.getText(e1).compareTo(labelProvider.getText(e2));
 			}
 

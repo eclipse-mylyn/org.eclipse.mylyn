@@ -248,4 +248,8 @@ public class DateRangeActivityDelegate implements ITask {
 	public int compareTo(ITaskListElement taskListElement) {
 		return task.toString().compareTo(((Task)taskListElement).toString());
 	}
+
+	public void setDescription(String description) {
+		task.setDescription(description);
+	}
 }

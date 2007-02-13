@@ -97,7 +97,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 				hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 			}
 		}		
-		// Always replace even if exists (may have new description etc.) 
+		// Always replace even if exists (may have new summary etc.) 
 		taskList.addQueryHit(hit);
 		
 		// TODO: this is meaningless since only one hit object exists now

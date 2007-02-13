@@ -194,7 +194,7 @@ public class TracXmlRpcTest extends TestCase {
 		int completed = (int) (System.currentTimeMillis() / 1000);
 
 		Map<String, Object> attributes = new Hashtable<String, Object>();
-		attributes.put("description", "description");
+		attributes.put("summary", "summary");
 		attributes.put("due", due);
 		attributes.put("completed", completed);
 
@@ -239,10 +239,10 @@ public class TracXmlRpcTest extends TestCase {
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("type", "task");
 		attributes.put("status", "closed");
-		int id = createTicket("summary", "description", attributes);
+		int id = createTicket("summary", "summary", attributes);
 
 		attributes.put("summary", "summary");
-		attributes.put("description", "description");
+		attributes.put("summary", "summary");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
 		assertTicketHasAttributes(attributes, id, ticket);
@@ -268,20 +268,20 @@ public class TracXmlRpcTest extends TestCase {
 		int id = createTicket("summary‰÷‹", "ﬂﬂﬂ", attributes);
 
 		attributes.put("summary", "summary‰÷‹");
-		attributes.put("description", "ﬂﬂﬂ");
+		attributes.put("summary", "ﬂﬂﬂ");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
 		assertTicketHasAttributes(attributes, id, ticket);
 	}
 
 	public void testUpdateTicket() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id = createTicket("summary", "summary", new Hashtable<String, Object>());
 
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "changed");
 		call("ticket.update", id, "my comment", attributes);
 
-		attributes.put("description", "description");
+		attributes.put("summary", "summary");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
 		Map<?, ?> values = (Map<?, ?>) ticket[3];
@@ -293,7 +293,7 @@ public class TracXmlRpcTest extends TestCase {
 	public void testTicketCustomFields() throws XmlRpcException, IOException {
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("custom_text_field", "myvalue");
-		int id = createTicket("summary", "description", attributes);
+		int id = createTicket("summary", "summary", attributes);
 
 		// check for default values
 		attributes.put("custom_checkbox_field", "1");
@@ -317,7 +317,7 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testGetChangeLog() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id = createTicket("summary", "summary", new Hashtable<String, Object>());
 
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "changed");
@@ -344,20 +344,20 @@ public class TracXmlRpcTest extends TestCase {
 		Object[] ticket = (Object[]) ((Object[]) ret[0])[0];
 		Map<String, Object> attributes = new Hashtable<String, Object>();
 		attributes.put("summary", "summary1");
-		attributes.put("description", "description1");
+		attributes.put("summary", "description1");
 		assertTicketHasAttributes(attributes, id1, ticket);
 
 		ticket = (Object[]) ((Object[]) ret[1])[0];
 		attributes.clear();
 		attributes.put("summary", "summary2");
-		attributes.put("description", "description2");
+		attributes.put("summary", "description2");
 		assertTicketHasAttributes(attributes, id2, ticket);
 	}
 
 	public void testAttachment() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id = createTicket("summary", "summary", new Hashtable<String, Object>());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "summary", "data".getBytes(),
 				true);
 		// the returned filename may differ, since another ticket may have an
 		// attachment named "attach.txt"
@@ -367,7 +367,7 @@ public class TracXmlRpcTest extends TestCase {
 		assertEquals(1, ret.length);
 		Object[] attachment = (Object[]) ret[0];
 		assertEquals("attach.txt", attachment[0]);
-		assertEquals("description", attachment[1]);
+		assertEquals("summary", attachment[1]);
 		assertEquals(4, attachment[2]);
 		// date
 		assertEquals(username, attachment[4]);
@@ -393,7 +393,7 @@ public class TracXmlRpcTest extends TestCase {
 		data = new String(bytes);
 		assertEquals("newdata", data);
 
-		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+		String filename3 = (String) call("ticket.putAttachment", id, "attach.txt", "summary", "data".getBytes(),
 				false);
 		assertFalse("attach.txt".equals(filename3));
 		ret = (Object[]) call("ticket.listAttachments", id);
@@ -401,9 +401,9 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testDeleteAttachment() throws XmlRpcException, IOException {
-		int id = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id = createTicket("summary", "summary", new Hashtable<String, Object>());
 
-		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "description", "data".getBytes(),
+		String filename = (String) call("ticket.putAttachment", id, "attach.txt", "summary", "data".getBytes(),
 				true);
 
 		Object[] ret = (Object[]) call("ticket.listAttachments", id);
@@ -416,12 +416,12 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testDuplicateAttachment() throws XmlRpcException, IOException {
-		int id1 = createTicket("summary", "description", new Hashtable<String, Object>());
-		int id2 = createTicket("summary", "description", new Hashtable<String, Object>());
+		int id1 = createTicket("summary", "summary", new Hashtable<String, Object>());
+		int id2 = createTicket("summary", "summary", new Hashtable<String, Object>());
 
-		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "description", "data".getBytes(),
+		String filename1 = (String) call("ticket.putAttachment", id1, "attach.txt", "summary", "data".getBytes(),
 				true);
-		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "description", "data2".getBytes(),
+		String filename2 = (String) call("ticket.putAttachment", id2, "attach.txt", "summary", "data2".getBytes(),
 				true);
 		assertEquals("attach.txt", filename1);
 		assertEquals(filename1, filename2);
@@ -441,8 +441,8 @@ public class TracXmlRpcTest extends TestCase {
 			call("ticket.delete", (Integer) id);
 		}
 
-		int id1 = createTicket("foobarsum1", "description", new Hashtable<String, Object>());
-		int id2 = createTicket("foobaz sum2", "description", new Hashtable<String, Object>());
+		int id1 = createTicket("foobarsum1", "summary", new Hashtable<String, Object>());
+		int id2 = createTicket("foobaz sum2", "summary", new Hashtable<String, Object>());
 		int id3 = createTicket("foobarbaz3", "foobarbaz description3", new Hashtable<String, Object>());
 
 		ret = (Object[]) call("ticket.query", "summary=foobarsum1|foobaz sum2");
@@ -458,13 +458,13 @@ public class TracXmlRpcTest extends TestCase {
 		ret = (Object[]) call("ticket.query", "summary~=bar|baz");
 		assertEquals(3, ret.length);
 
-		ret = (Object[]) call("ticket.query", "description~=foobarbaz description3");
+		ret = (Object[]) call("ticket.query", "summary~=foobarbaz description3");
 		assertEquals(1, ret.length);
 		assertEquals(id3, ret[0]);
 	}
 
 	public void testQueryAll() throws XmlRpcException, IOException {
-		int id = createTicket("foo", "description", new Hashtable<String, Object>());
+		int id = createTicket("foo", "summary", new Hashtable<String, Object>());
 
 		Object[] ret = (Object[]) call("ticket.query", "order=id");
 		assertTrue(ret.length > 0);
@@ -492,15 +492,15 @@ public class TracXmlRpcTest extends TestCase {
 	}
 
 	public void testVersions() throws XmlRpcException, IOException {
-		internalTestComponent("ticket.version", "time", Integer.class, "description", String.class);
+		internalTestComponent("ticket.version", "time", Integer.class, "summary", String.class);
 	}
 
 	public void testComponents() throws XmlRpcException, IOException {
-		internalTestComponent("ticket.component", "owner", String.class, "description", String.class);
+		internalTestComponent("ticket.component", "owner", String.class, "summary", String.class);
 	}
 
 	public void testMilestones() throws XmlRpcException, IOException {
-		internalTestComponent("ticket.milestone", "due", Integer.class, "completed", Integer.class, "description",
+		internalTestComponent("ticket.milestone", "due", Integer.class, "completed", Integer.class, "summary",
 				String.class);
 	}
 

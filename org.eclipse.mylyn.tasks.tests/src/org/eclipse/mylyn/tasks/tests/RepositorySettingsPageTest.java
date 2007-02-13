@@ -130,7 +130,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		private Composite parent;
 
 		public MockRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
-			super("title", "description", repositoryUi);
+			super("title", "summary", repositoryUi);
 		}
 
 		@Override

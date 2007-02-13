@@ -63,7 +63,7 @@ public class CategoryEditorInput implements IEditorInput {
 
 	public void setCategoryName(String description) {
 		TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(category, description);
-//		category.setDescription(description);
+//		category.setDescription(summary);
 	}
 	
 	public void setUrl(String url) {

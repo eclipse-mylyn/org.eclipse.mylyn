@@ -49,7 +49,7 @@ public class BugzillaTaskTest extends TestCase {
 	}
 
 	public void testCompletionDate() throws Exception {
-		BugzillaTask task = new BugzillaTask("repo", "1", "description", true);
+		BugzillaTask task = new BugzillaTask("repo", "1", "summary", true);
 		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
 		task.setTaskData(report);

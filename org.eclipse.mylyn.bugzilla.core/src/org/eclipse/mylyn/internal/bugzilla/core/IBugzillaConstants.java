@@ -48,7 +48,7 @@ public interface IBugzillaConstants {
 	
 	public static final String POST_INPUT_COMMENT = "comment";
 
-	public static final String POST_INPUT_DESCRIPTION = "description";
+	public static final String POST_INPUT_DESCRIPTION = "summary";
 	
 	public static final String POST_INPUT_DATA = "data";
 	

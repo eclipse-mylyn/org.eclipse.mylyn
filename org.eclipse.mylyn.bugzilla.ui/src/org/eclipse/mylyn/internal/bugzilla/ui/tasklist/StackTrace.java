@@ -86,7 +86,7 @@ public class StackTrace {
 	 * Get the Comment that this stack trace came from
 	 * 
 	 * @return Returns the Comment if it was a comment else a String if it was
-	 *         the description
+	 *         the summary
 	 */
 	public Object getComment() {
 		return comment;

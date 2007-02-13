@@ -112,8 +112,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_REMINDED = "Reminded";
 
-	// public static final String LABEL_AUTOMATIC = "<automatic>";
-
 	/**
 	 * This element holds the date stamp recorded upon last transition to a
 	 * synchronized state.
@@ -259,18 +257,20 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		NodeList list = node.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {
 			Node child = list.item(i);
-			boolean read = false;
 			try {
-				for (ITaskListExternalizer externalizer : delegateExternalizers) {
-					// LEGACY: categories used to contain tasks
-					if (externalizer.canReadTask(child)) {
-						externalizer.readTask(child, taskList, category, null);
-						read = true;
-					}
-				}
-				if (!read && canReadTask(child)) {
-					category.add(readTask(child, taskList, category, null));
-				}
+				// LEGACY: categories used to contain tasks?
+				category.add(readTask(child, taskList, category, null));
+//				boolean read = false;
+//				for (ITaskListExternalizer externalizer : delegateExternalizers) {
+//					// LEGACY: categories used to contain tasks
+//					if (externalizer.canReadTask(child)) {
+//						externalizer.createTask(child, taskList, category, null);
+//						read = true;
+//					}
+//				}
+//				if (!read && canReadTask(child)) {
+//					category.add(createTask(child, taskList, category, null));
+//				}
 			} catch (Throwable t) {
 				hasCaughtException = true;
 			}
@@ -280,54 +280,67 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 	}
 
+	/**
+	 * First tries to use a delegate externalizer to read, if none available, reads itself.
+	 */
+	public final ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
+		ITask task = null;
+		String taskId = null;
+		String repositoryUrl = null;
+		String summary = "";
+		boolean alreadyRead = false;
+		
+		Element element = (Element)node;
+		if (element.hasAttribute(KEY_HANDLE)) {
+			String handle = element.getAttribute(KEY_HANDLE);
+			repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+			taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+		} else {
+			throw new TaskExternalizationException("Handle not stored for repository task");
+		}
+		if (element.hasAttribute(KEY_LABEL)) {
+			summary = element.getAttribute(KEY_LABEL);
+		} 
+		
+		for (ITaskListExternalizer externalizer : delegateExternalizers) {
+			if (!alreadyRead && externalizer.canReadTask(node)) {
+				task = externalizer.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
+				alreadyRead = true;
+			}
+		}
+
+		if (!alreadyRead && this.canReadTask(node)) {
+			task = this.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
+			alreadyRead = true;
+		}
+		if (task != null) {
+			readTaskInfo(task, taskList, element, parent, category);
+		}
+		return task;
+	}	
+	
 	public boolean canReadTask(Node node) {
 		return node.getNodeName().equals(getTaskTagName());
 	}
 
-	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
+	/**
+	 * Override for connector-specific implementation
+	 */
+	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
-		Element element = (Element) node;
 		String handle;
-		String label;
 		if (element.hasAttribute(KEY_HANDLE)) {
 			handle = element.getAttribute(KEY_HANDLE);
 		} else {
 			throw new TaskExternalizationException("Handle not stored for task");
 		}
-		if (element.hasAttribute(KEY_LABEL)) {
-			label = element.getAttribute(KEY_LABEL);
-		} else {
-			label = "Description was corrupted in stored tasklist";
-		}
-
-		Task task = new Task(handle, label, false);
-		readTaskInfo(task, taskList, element, parent, category);
+		Task task = new Task(handle, summary, false);
 		return task;
 	}
 
-	protected void readTaskInfo(ITask task, TaskList taskList, Element element, ITask parent,
+	private void readTaskInfo(ITask task, TaskList taskList, Element element, ITask parent,
 			AbstractTaskContainer legacyCategory) throws TaskExternalizationException {
-
-		// TODO: move this
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
-			if (element.hasAttribute(KEY_HANDLE)) {
-				String handle = element.getAttribute(KEY_HANDLE);
-				String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
-				String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
-				abstractTask.setRepositoryUrl(repositoryUrl);
-				abstractTask.setTaskId(taskId);
-			} else {
-				throw new TaskExternalizationException("Handle not stored for repository task");
-			}
-			if (element.hasAttribute(KEY_LABEL)) {
-				String label = element.getAttribute(KEY_LABEL);
-				abstractTask.setDescription(label);
-			} else {
-				throw new TaskExternalizationException("Label not stored for repository task");
-			}
-		}
-
+		
 		String categoryHandle = null;
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			categoryHandle = element.getAttribute(KEY_CATEGORY);
@@ -423,6 +436,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
 			abstractTask.setCurrentlySynchronizing(false);
+			
+			if (element.hasAttribute(KEY_REPOSITORY_URL)) {
+				abstractTask.setRepositoryUrl(element.getAttribute(KEY_REPOSITORY_URL));
+			} else {
+				throw new TaskExternalizationException("Repository URL not stored for repository task");
+			}
+			
 			if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
 				abstractTask.setLastSyncDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 			}
@@ -465,6 +485,25 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.addSubTask(readTask(child, taskList, null, task));
 		}
 	}
+
+//	/**
+//	 * @return	task ID, or null if not found
+//	 */
+//	protected void readLegacyHandleFormat(ITask task, Element element) throws TaskExternalizationException {
+//		if (task instanceof AbstractRepositoryTask) {
+//			AbstractRepositoryTask abstractTask = (AbstractRepositoryTask) task;
+//			
+//			if (element.hasAttribute(KEY_HANDLE)) {
+//				String handle = element.getAttribute(KEY_HANDLE);
+//				String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+//				String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+//				abstractTask.setRepositoryUrl(repositoryUrl);
+//				abstractTask.setTaskId(taskId);
+//			} else {
+//				throw new TaskExternalizationException("Handle not stored for repository task");
+//			}
+//		}
+//	}
 
 	protected void readTaskData(AbstractRepositoryTask task) {
 		RepositoryTaskData data = taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());
@@ -571,40 +610,66 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 		parent.appendChild(node);
 		return node;
-		// return null;
 	}
 
 	public boolean canReadQueryHit(Node node) {
 		return false;
 	}
-
-	public void readQueryHit(Node node, TaskList tlist, AbstractRepositoryQuery query)
-			throws TaskExternalizationException {
-		// doesn't know how to read a query hit
+	
+	public final void readQueryHit(Element element, TaskList taskList, AbstractRepositoryQuery query)
+		throws TaskExternalizationException {
+		AbstractQueryHit hit = null;
+		String summary = "";
+		if (element.hasAttribute(KEY_NAME)) {
+			summary = element.getAttribute(KEY_NAME);
+		}
+		
+		if (element.hasAttribute(KEY_HANDLE)) {
+			String handle = element.getAttribute(KEY_HANDLE);
+			String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(handle);
+			String taskId = RepositoryTaskHandleUtil.getTaskId(handle);
+			for (ITaskListExternalizer externalizer : delegateExternalizers) {
+				if (externalizer.canReadQueryHit((Node)element)) {
+					hit = externalizer.createQueryHit(repositoryUrl, taskId, summary, element, taskList, query);
+					break;
+				}
+			}		
+		} else {
+			throw new TaskExternalizationException("Handle not stored for repository task");
+		}
+		
+		if (hit != null) {
+			readQueryHitInfo(hit, taskList, query, element);
+		}
+	}
+	
+	/**
+	 * Subclasses should override.
+	 */
+	public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractRepositoryQuery query)
+		throws TaskExternalizationException {
+		// no default hit reading behavior
+		return null;
 	}
 
-	public void readQueryHitInfo(AbstractQueryHit hit, TaskList taskList, AbstractRepositoryQuery query, Element element)
+	private void readQueryHitInfo(AbstractQueryHit hit, TaskList taskList, AbstractRepositoryQuery query, Element element)
 			throws TaskExternalizationException {
-		if (element.hasAttribute(KEY_NAME)) {
-			hit.setDescription(element.getAttribute(KEY_NAME));
-		}
 		if (element.hasAttribute(KEY_PRIORITY)) {
 			hit.setPriority(element.getAttribute(KEY_PRIORITY));
 		}
 
+		if (element.hasAttribute(KEY_COMPLETE)
+				&& element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {
+			hit.setCompleted(true);
+		} else {
+			hit.setCompleted(false);
+		}
+		
 		if (element.hasAttribute(KEY_NOTIFIED_INCOMING)
 				&& element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
 			hit.setNotified(true);
 		} else {
 			hit.setNotified(false);
-		}
-
-		if (element.hasAttribute(KEY_HANDLE)) {
-			String handle = element.getAttribute(KEY_HANDLE);
-			hit.setRepositoryUrl(RepositoryTaskHandleUtil.getRepositoryUrl(handle));
-			hit.setTaskId(RepositoryTaskHandleUtil.getTaskId(handle));
-		} else {
-			throw new TaskExternalizationException("Handle not stored for bug report");
 		}
 
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());

@@ -47,8 +47,6 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	}
 
 	private void initTaskUrl(String taskId) {
-//		String taskId = RepositoryTaskHandleUtil.getTaskId(getHandleIdentifier());
-//		String repositoryUrl = getRepositoryUrl();
 		try {
 			String url = BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(taskId));
 			if (url != null) {

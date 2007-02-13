@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListener {
 
-	public static final String LABEL_TITLE = "Retrieving description from URL";
+	public static final String LABEL_TITLE = "Retrieving summary from URL";
 
 	private final static long MAX_WAIT_TIME_MILLIS = 1000 * 10; // (10 Seconds)
 

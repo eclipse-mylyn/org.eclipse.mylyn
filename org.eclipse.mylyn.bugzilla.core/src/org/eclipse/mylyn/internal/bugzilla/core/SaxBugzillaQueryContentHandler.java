@@ -33,7 +33,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	/** The bug id */
 	private String id;
 
-	/** The description of the bug */
+	/** The summary of the bug */
 	private String description = "";
 
 	/** The priority of the bug */

@@ -113,7 +113,7 @@ public abstract class AbstractTaskContainer implements ITaskListElement {
 	}
 	
 	/**
-	 * The handle for most containers is their description.  Override to specify a
+	 * The handle for most containers is their summary.  Override to specify a
 	 * different natural ordering.
 	 */
 	public int compareTo(ITaskListElement taskListElement) {

@@ -95,7 +95,7 @@ public abstract class AbstractRepositoryConnector {
 			IProgressMonitor monitor, QueryHitCollector resultCollector);
 
 	/**
-	 * The connector's description i.e. "JIRA (supports 3.3.1 and later)"
+	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
 	 */
 	public abstract String getLabel();
 

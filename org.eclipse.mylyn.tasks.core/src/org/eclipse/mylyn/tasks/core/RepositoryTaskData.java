@@ -259,7 +259,7 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	public RepositoryTaskAttribute getDescriptionAttribute() {
 		RepositoryTaskAttribute attribute = getAttribute(RepositoryTaskAttribute.DESCRIPTION);
 		// TODO: Remove the following after 1.0 release as we now just have a
-		// description attribute
+		// summary attribute
 		if (attribute == null) {
 			List<TaskComment> coms = this.getComments();
 			if (coms != null && coms.size() > 0) {

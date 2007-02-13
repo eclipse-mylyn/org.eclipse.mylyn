@@ -31,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskEditorTest extends TestCase {
 
-	private static final String DESCRIPTION = "description";
+	private static final String DESCRIPTION = "summary";
 
 	@Override
 	protected void setUp() throws Exception {

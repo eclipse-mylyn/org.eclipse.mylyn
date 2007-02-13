@@ -29,7 +29,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 	@Override
 	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
-		TracSearchFilter filter = new TracSearchFilter("description");
+		TracSearchFilter filter = new TracSearchFilter("summary");
 		filter.setOperator(CompareOperator.CONTAINS);
 		filter.addValue(searchString);
 

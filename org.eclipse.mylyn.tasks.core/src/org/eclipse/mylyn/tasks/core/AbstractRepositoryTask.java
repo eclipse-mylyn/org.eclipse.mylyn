@@ -50,8 +50,9 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	protected IStatus status = null;
 
-	public AbstractRepositoryTask(String repositoryUrl, String taskId, String label, boolean newTask) {
-		super(null, label, newTask);
+	public AbstractRepositoryTask(String repositoryUrl, String taskId, String summary, boolean newTask) {
+		// NOTE: Repository tasks specify their own handle format.
+		super(null, summary, newTask);
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 	}
@@ -93,14 +94,6 @@ public abstract class AbstractRepositoryTask extends Task {
 		return false;
 	}
 
-//	public static long getLastRefreshTimeInMinutes(Date lastRefresh) {
-//		Date timeNow = new Date();
-//		if (lastRefresh == null)
-//			lastRefresh = new Date();
-//		long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) / 60000;
-//		return timeDifference;
-//	}
-
 	public boolean isSynchronizing() {
 		return currentlySynchronizing;
 	}
@@ -115,7 +108,6 @@ public abstract class AbstractRepositoryTask extends Task {
 	 */
 	public String getIdentifyingLabel() {
 		return taskId;
-//		return RepositoryTaskHandleUtil.getTaskId(handleIdentifier);
 	}
 
 	public boolean isDirty() {

@@ -17,7 +17,7 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 
 /**
- * Sorts search results by description.
+ * Sorts search results by summary.
  * 
  * @author Rob Elves
  */
@@ -27,8 +27,8 @@ public class SearchResultSorterDescription extends ViewerSorter {
 
 	/**
 	 * Returns a negative, zero, or positive number depending on whether the
-	 * first bug's description goes before, is the same as, or goes after the
-	 * second element's description.
+	 * first bug's summary goes before, is the same as, or goes after the
+	 * second element's summary.
 	 * <p>
 	 * 
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer,

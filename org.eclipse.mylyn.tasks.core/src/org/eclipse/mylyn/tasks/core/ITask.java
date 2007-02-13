@@ -85,4 +85,6 @@ public interface ITask extends ITaskListElement {
 	public abstract void setReminded(boolean reminded);
 
 	public abstract boolean isPastReminder();
+
+	public abstract void setDescription(String attribute);
 }

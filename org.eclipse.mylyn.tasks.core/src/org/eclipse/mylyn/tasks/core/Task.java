@@ -107,7 +107,7 @@ public class Task implements ITask {
 
 	private boolean hasReminded = false;
 
-	private String description;
+	private String summary;
 
 	private String priority = PriorityLevel.getDefault().toString();
 
@@ -140,12 +140,12 @@ public class Task implements ITask {
 
 	@Override
 	public String toString() {
-		return description;
+		return summary;
 	}
 
-	public Task(String handle, String label, boolean newTask) {
+	public Task(String handle, String summary, boolean newTask) {
 		this.handleIdentifier = handle;
-		this.description = label;
+		this.summary = summary;
 		if (newTask) {
 			creationDate = new Date();
 		}
@@ -154,10 +154,6 @@ public class Task implements ITask {
 	public String getHandleIdentifier() {
 		return handleIdentifier;
 	}
-
-//	public void setHandleIdentifier(String taskId) {
-//		this.handleIdentifier = taskId;
-//	}
 
 	public ITask getParent() {
 		return parent;
@@ -221,6 +217,9 @@ public class Task implements ITask {
 		this.priority = priority;
 	}
 
+	/**
+	 * TODO: consider removing
+	 */
 	public void setTaskUrl(String url) {
 		this.taskUrl = url;
 	}
@@ -282,7 +281,7 @@ public class Task implements ITask {
 	}
 
 	public String getSummary() {
-		return description;
+		return summary;
 	}
 
 	public boolean isLocal() {
@@ -319,8 +318,8 @@ public class Task implements ITask {
 		this.creationDate = date;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String summary) {
+		this.summary = summary;
 	}
 
 	public void setCompletionDate(Date completionDate) {
@@ -366,6 +365,6 @@ public class Task implements ITask {
 	}
 
 	public int compareTo(ITaskListElement taskListElement) {
-		return description.compareTo(((Task)taskListElement).description);
+		return summary.compareTo(((Task)taskListElement).summary);
 	}
 }

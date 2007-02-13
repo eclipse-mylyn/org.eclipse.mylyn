@@ -79,6 +79,7 @@ public class TaskListManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().saveTaskList();
 		TasksUiPlugin.getRepositoryManager().removeRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
 	}
 
 	public void testUniqueTaskID() {
@@ -115,6 +116,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
 		manager.getTaskList().deleteTask(task);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 
@@ -736,9 +738,9 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSyncState());
 
 		manager.getTaskList().reset();
-		MockQueryHit hit1 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "description", "1");
-		MockQueryHit hit2 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "description", "2");
-		MockRepositoryQuery query = new MockRepositoryQuery("description", manager.getTaskList());
+		MockQueryHit hit1 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "summary", "1");
+		MockQueryHit hit2 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "summary", "2");
+		MockRepositoryQuery query = new MockRepositoryQuery("summary", manager.getTaskList());
 		query.addHit(hit1);
 		query.addHit(hit2);
 
@@ -772,9 +774,9 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(RepositoryTaskSyncState.INCOMING, task2.getSyncState());
 
 		manager.getTaskList().reset();
-		MockQueryHit hit1 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "description", "1");
-		MockQueryHit hit2 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "description", "2");
-		MockRepositoryQuery query = new MockRepositoryQuery("description", manager.getTaskList());
+		MockQueryHit hit1 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "summary", "1");
+		MockQueryHit hit2 = new MockQueryHit(manager.getTaskList(), repositoryUrl, "summary", "2");
+		MockRepositoryQuery query = new MockRepositoryQuery("summary", manager.getTaskList());
 		query.addHit(hit1);
 		query.addHit(hit2);
 

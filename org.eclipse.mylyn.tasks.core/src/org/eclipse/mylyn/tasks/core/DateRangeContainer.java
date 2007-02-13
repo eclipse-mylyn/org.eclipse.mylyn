@@ -71,7 +71,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		startDate.setTime(time);
 		endDate = new GregorianCalendar();
 		endDate.setTime(time2);
-		// this.description = description;
+		// this.description = summary;
 	}
 
 	public boolean includes(Calendar cal) {
@@ -198,7 +198,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	/**
-	 * The handle for most containers is their description.  Override to specify a
+	 * The handle for most containers is their summary.  Override to specify a
 	 * different natural ordering.
 	 */
 	@Override

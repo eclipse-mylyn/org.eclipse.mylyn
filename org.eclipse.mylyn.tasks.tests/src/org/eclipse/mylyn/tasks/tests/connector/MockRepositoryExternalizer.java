@@ -64,12 +64,9 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 	}
 	
 	@Override
-	public ITask readTask(Node node, TaskList taskList, AbstractTaskContainer category, ITask parent)
+	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
-
-		Element element = (Element) node;
-		MockRepositoryTask task = new MockRepositoryTask(null);
-		readTaskInfo(task, taskList, element, parent, category);
+		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, taskId, summary);
 		return task;
 	}
 

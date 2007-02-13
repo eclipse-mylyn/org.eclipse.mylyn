@@ -103,7 +103,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	// report.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 	// assertEquals("Windows",
 	// report.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
-	// // first comment (#0) is the description so this value is always 1
+	// // first comment (#0) is the summary so this value is always 1
 	// // greater
 	// // than what is shown on the report ui
 	// assertEquals(3, report.getComments().size());
