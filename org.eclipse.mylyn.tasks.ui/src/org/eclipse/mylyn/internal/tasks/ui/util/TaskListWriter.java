@@ -285,21 +285,6 @@ public class TaskListWriter {
 							if (task == null) {
 								orphanedTaskNodes.add(child);
 							}
-							
-//							boolean wasRead = false;
-//							for (ITaskListExternalizer externalizer : externalizers) {
-//								if (!wasRead && externalizer.canReadTask(child)) {
-//									externalizer.createTask(child, taskList, null, null);
-//									wasRead = true;
-//								}
-//							}
-//							if (!wasRead && delagatingExternalizer.canReadTask(child)) {
-//								delagatingExternalizer.createTask(child, taskList, null, null);
-//								wasRead = true;
-//							}
-//							if (!wasRead) {
-//								orphanedTaskNodes.add(child);
-//							}
 						}
 					} catch (Exception e) {
 						// TODO: Save orphans here too?
@@ -327,7 +312,7 @@ public class TaskListWriter {
 										taskList.internalAddQuery(query);
 									}
 									NodeList queryChildren = child.getChildNodes();
-									for (int ii = 0; i < queryChildren.getLength(); ii++) {
+									for (int ii = 0; ii < queryChildren.getLength(); ii++) {
 										Node queryNode = queryChildren.item(ii);
 										try {
 											delagatingExternalizer.readQueryHit((Element)queryNode, taskList, query);
@@ -451,6 +436,7 @@ public class TaskListWriter {
 		if (child == null) {
 			MylarStatusHandler.log(e, ITasksUiConstants.MESSAGE_RESTORE);
 		} else {
+			e.printStackTrace(); // in case logging plug-in has not yet started
 			MylarStatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}
 	}
