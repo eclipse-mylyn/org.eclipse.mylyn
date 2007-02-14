@@ -42,7 +42,7 @@ public class TracStatus extends Status implements IMylarStatusConstants {
 	 */
 	public String getMessage() {
 		String message = super.getMessage();
-		if (message != null) {
+		if (message != null && !"".equals(message)) {
 			return message;
 		}
 

@@ -85,6 +85,8 @@ public class TracCorePlugin extends Plugin {
 	public static TracStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
 			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.REPOSITORY_LOGIN_ERROR);
+		} else if (e instanceof TracPermissionDeniedException) {
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.PERMISSION_DENIED_ERROR);
 		} else if (e instanceof TracException) {
 			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, e.getMessage());
 		} else if (e instanceof ClassCastException) {
