@@ -25,7 +25,7 @@ public class TracQueryHitTest extends TestCase {
 
 	public void testAttributes() {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		TracQueryHit hit = new TracQueryHit(taskList, "url", "summary", "123");
+		TracQueryHit hit = new TracQueryHit(taskList, "url", "description", "123");
 		hit.setPriority("P1");
 		hit.setCompleted(true);
 		

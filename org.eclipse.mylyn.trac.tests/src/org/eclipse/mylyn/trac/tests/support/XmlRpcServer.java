@@ -340,11 +340,11 @@ public class XmlRpcServer {
 	}
 
 	public ModelEnum ticketComponent(String id) throws Exception {
-		return new ModelEnum("ticket.component", id, "owner", "summary");
+		return new ModelEnum("ticket.component", id, "owner", "description");
 	}
 
 	public ModelEnum ticketMilestone(String id) throws Exception {
-		return new ModelEnum("ticket.milestone", id, "due", "completed", "summary");
+		return new ModelEnum("ticket.milestone", id, "due", "completed", "description");
 	}
 
 	public TicketEnum ticketPriority(String id) throws Exception {
@@ -364,7 +364,7 @@ public class XmlRpcServer {
 	}
 
 	public ModelEnum ticketVersion(String id) throws Exception {
-		return new ModelEnum("ticket.version", id, "time", "summary");
+		return new ModelEnum("ticket.version", id, "time", "description");
 	}
 
 }

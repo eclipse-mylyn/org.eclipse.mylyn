@@ -148,7 +148,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		summaryField = new TextSearchField("summary");
 		summaryField.createControls(control, "Summary");
 
-		descriptionField = new TextSearchField("summary");
+		descriptionField = new TextSearchField("description");
 		descriptionField.createControls(control, "Description");
 
 		keywordsField = new TextSearchField("keywords");

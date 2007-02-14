@@ -364,7 +364,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	private TracComponent parseComponent(Map<?, ?> result) {
 		TracComponent component = new TracComponent((String) result.get("name"));
 		component.setOwner((String) result.get("owner"));
-		component.setDescription((String) result.get("summary"));
+		component.setDescription((String) result.get("description"));
 		return component;
 	}
 
@@ -372,14 +372,14 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		TracMilestone milestone = new TracMilestone((String) result.get("name"));
 		milestone.setCompleted(TracUtils.parseDate((Integer) result.get("completed")));
 		milestone.setDue(TracUtils.parseDate((Integer) result.get("due")));
-		milestone.setDescription((String) result.get("summary"));
+		milestone.setDescription((String) result.get("description"));
 		return milestone;
 	}
 
 	private TracVersion parseVersion(Map<?, ?> result) {
 		TracVersion version = new TracVersion((String) result.get("name"));
 		version.setTime(TracUtils.parseDate((Integer) result.get("time")));
-		version.setDescription((String) result.get("summary"));
+		version.setDescription((String) result.get("description"));
 		return version;
 	}
 

@@ -189,7 +189,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		search.setOrderBy("id");
 
 		String queryUrl = url + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "summary", tasklist);
+		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description", tasklist);
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<AbstractQueryHit> result = new ArrayList<AbstractQueryHit>();
