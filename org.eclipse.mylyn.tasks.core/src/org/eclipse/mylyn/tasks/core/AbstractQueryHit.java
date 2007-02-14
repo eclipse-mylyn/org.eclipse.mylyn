@@ -128,7 +128,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	 * @return An ID that can be presented to the user for identifying the task,
 	 *         override to return null if no such ID exists.
 	 */
-	public String getIdLabel() {
+	public String getIdentifyingLabel() {
 		return getTaskId();
 	}
 

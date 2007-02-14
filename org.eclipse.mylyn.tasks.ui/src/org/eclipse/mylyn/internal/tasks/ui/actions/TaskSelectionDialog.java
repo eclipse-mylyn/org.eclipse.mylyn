@@ -27,10 +27,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -84,14 +84,17 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 				return TasksUiPlugin.getTaskListManager().getTaskActivationHistory().getPreviousTasks().contains(
 						element);
 			}
-			if (element instanceof ITask) {
-				ITask task = (ITask) element;
-				String taskString = RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier()) + ": "
-						+ task.getSummary();
+			if (element instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+				String taskString = repositoryTask.getIdentifyingLabel() + ": "
+						+ repositoryTask.getSummary();
+				return pattern.matcher(taskString).find();
+			} else if (element instanceof ITask) {
+				String taskString = ((ITask) element).getSummary();
 				return pattern.matcher(taskString).find();
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String taskString = hit.getIdLabel() + ": " + hit.getSummary();
+				String taskString = hit.getIdentifyingLabel() + ": " + hit.getSummary();
 				return pattern.matcher(taskString).find();
 			}
 			return false;

@@ -14,7 +14,6 @@
 package org.eclipse.mylar.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -33,21 +32,14 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private ITask task;
 
-	private String id;
-
-	private String label;
+	private String summary;
 
 	private boolean newTask = false;
 
 	public TaskEditorInput(ITask task, boolean newTask) {
 		this.newTask = newTask;
-		init(task);
-	}
-
-	private void init(ITask task) {
 		this.task = task;
-		id = RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier());
-		label = truncateDescription(task.getSummary());
+		summary = truncateDescription(task.getSummary());
 	}
 
 	private String truncateDescription(String description) {
@@ -95,7 +87,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @see org.eclipse.ui.IEditorInput#getToolTipText()
 	 */
 	public String getToolTipText() {
-		return label;
+		return summary;
 	}
 
 	/*
@@ -119,13 +111,6 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	}
 
 	/**
-	 * @return Returns the taskId.
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
 	 * @return Returns the label.
 	 */
 	public String getLabel() {
@@ -133,15 +118,15 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
 			String idLabel = repositoryTask.getIdentifyingLabel();
 			
-			label = "";
+			summary = "";
 			if (idLabel != null) {
-				label += idLabel + ": ";
+				summary += idLabel + ": ";
 			}
-			label += truncateDescription(task.getSummary());
+			summary += truncateDescription(task.getSummary());
 		} else if (task != null){
-			label = truncateDescription(task.getSummary());
+			summary = truncateDescription(task.getSummary());
 		} 
-		return label;
+		return summary;
 	}
 
 	@Override

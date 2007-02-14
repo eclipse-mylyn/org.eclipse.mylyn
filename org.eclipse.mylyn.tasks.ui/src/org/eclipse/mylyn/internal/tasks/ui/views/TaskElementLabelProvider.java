@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -112,14 +111,14 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (object instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
 			if (hit.getSummary() == null) {
-				if (hit.getIdLabel() != null) {
-					return hit.getIdLabel() + NO_SUMMARY_AVAILABLE;
+				if (hit.getIdentifyingLabel() != null) {
+					return hit.getIdentifyingLabel() + NO_SUMMARY_AVAILABLE;
 				} else {
 					return hit.getTaskId() + NO_SUMMARY_AVAILABLE;
 				}
-			} else if (!pattern.matcher(hit.getSummary()).matches() && hit.getIdLabel() != null
-					&& !hit.getIdLabel().equals("")) {
-				return hit.getIdLabel() + ": " + hit.getSummary();
+			} else if (!pattern.matcher(hit.getSummary()).matches() && hit.getIdentifyingLabel() != null
+					&& !hit.getIdentifyingLabel().equals("")) {
+				return hit.getIdentifyingLabel() + ": " + hit.getSummary();
 			} else {
 				return hit.getSummary();
 			}
@@ -129,7 +128,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (task.getIdentifyingLabel() != null) {
 					return task.getIdentifyingLabel() + NO_SUMMARY_AVAILABLE;
 				} else {
-					return RepositoryTaskHandleUtil.getTaskId(task.getHandleIdentifier()) + NO_SUMMARY_AVAILABLE;
+					return task.getTaskId() + NO_SUMMARY_AVAILABLE;
 				}
 			} else if (!pattern.matcher(task.getSummary()).matches()) {
 				if (task.getIdentifyingLabel() != null) {

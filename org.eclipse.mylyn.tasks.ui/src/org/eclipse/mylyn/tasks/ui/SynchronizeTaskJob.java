@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -117,7 +116,7 @@ class SynchronizeTaskJob extends Job {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
 			ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 			if (taskDataHandler != null) {
-				String taskId = RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+				String taskId = repositoryTask.getTaskId();
 				RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
 
 				if (downloadedTaskData != null) {

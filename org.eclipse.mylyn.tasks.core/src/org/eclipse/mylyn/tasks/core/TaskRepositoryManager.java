@@ -27,7 +27,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
 
 /**
@@ -176,7 +175,7 @@ public class TaskRepositoryManager {
 		if (activeTasks.size() == 1) {
 			ITask activeTask = activeTasks.get(0);
 			if (activeTask instanceof AbstractRepositoryTask) {
-				String repositoryUrl = RepositoryTaskHandleUtil.getRepositoryUrl(activeTask.getHandleIdentifier());
+				String repositoryUrl = ((AbstractRepositoryTask)activeTask).getRepositoryUrl();
 				for (TaskRepository repository : getRepositories(repositoryKind)) {
 					if (repository.getUrl().equals(repositoryUrl)) {
 						return repository;

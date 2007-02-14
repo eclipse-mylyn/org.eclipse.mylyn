@@ -111,7 +111,7 @@ public class TaskListTableSorter extends ViewerSorter {
 			if (task1 != null && task1.getIdentifyingLabel() != null) {
 				summary = task1.getIdentifyingLabel() + ": " + summary;
 			} else {
-				summary = ((AbstractQueryHit)element).getIdLabel() + ": " + summary;
+				summary = ((AbstractQueryHit)element).getIdentifyingLabel() + ": " + summary;
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task1 = (AbstractRepositoryTask)element;

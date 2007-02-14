@@ -11,8 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.core;
 
-
-
 /**
  * @author Mik Kersten
  */

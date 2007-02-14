@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.ui.editors;
 
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -22,15 +21,15 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
-	protected String id;
+	protected String taskId;
 
 	protected String url;
 
 	protected AbstractRepositoryTask repositoryTask = null;
 
-	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl) {
+	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl, String taskId) {
 		super(repository, handle);
-		this.id = RepositoryTaskHandleUtil.getTaskId(handle);
+		this.taskId = taskId;
 		this.url = taskUrl;		
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof AbstractRepositoryTask) {
@@ -54,8 +53,8 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 			return label;			
 		} else if (getTaskData() != null && getTaskData().getLabel() != null) {
 			return getTaskData().getId()+": "+getTaskData().getLabel();
-		} else if (id != null) {
-			return id;
+		} else if (taskId != null) {
+			return taskId;
 		} else {
 			return "<unknown>";
 		}
@@ -65,7 +64,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	 * @return The taskId of the bug for this editor input.
 	 */
 	public String getId() {
-		return id;
+		return taskId;
 	}
 
 	@Override
