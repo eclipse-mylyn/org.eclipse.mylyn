@@ -750,9 +750,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			createTextField(headerInfoComposite, priorityAttribute, SWT.FLAT | SWT.READ_ONLY);
 		}
 
-		toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
-		toolkit.createText(headerInfoComposite, "" + taskData.getId(), SWT.FLAT | SWT.READ_ONLY);
-
+		if (repositoryTask != null) {
+			toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
+			toolkit.createText(headerInfoComposite, repositoryTask.getIdentifyingLabel(), SWT.FLAT | SWT.READ_ONLY);
+		}
+		
 		String openedDateString = "";
 		String modifiedDateString = "";
 		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
