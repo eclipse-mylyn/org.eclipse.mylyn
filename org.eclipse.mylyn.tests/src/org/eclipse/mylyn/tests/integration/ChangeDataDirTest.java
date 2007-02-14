@@ -125,6 +125,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask("server", "1");
 		assertNotNull(readTaskAfterMove);
+		assertEquals("bug1", readTaskAfterMove.getSummary());
 		assertEquals(refreshDate, readTaskAfterMove.getLastSyncDateStamp());
 	}
 
