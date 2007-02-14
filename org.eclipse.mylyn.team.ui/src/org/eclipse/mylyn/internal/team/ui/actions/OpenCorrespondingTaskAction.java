@@ -43,6 +43,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ObjectPluginAction;
 
@@ -305,13 +306,17 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 			}
 
-			boolean openDialog = MessageDialog.openQuestion(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-					ITasksUiConstants.TITLE_DIALOG,
-					"Unable to match task. Open Repository Task dialog?");
-			if (openDialog) {
-				new OpenRepositoryTask().run(null);
-			}
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					boolean openDialog = MessageDialog.openQuestion(window.getShell(), ITasksUiConstants.TITLE_DIALOG,
+							"Unable to match task. Open Repository Task dialog?");
+					if (openDialog) {
+						new OpenRepositoryTask().run(null);
+					}
+				}
+			});
+			
 			return Status.OK_STATUS;
 		}
 	}
