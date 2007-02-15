@@ -137,7 +137,8 @@ public class TasksUiUtil {
 		boolean opened = false;
 		ITask task = null;
 		if (taskId != null) {
-//			String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+			// String handle = AbstractRepositoryTask.getHandle(repositoryUrl,
+			// taskId);
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null) {
@@ -208,10 +209,10 @@ public class TasksUiUtil {
 							|| TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
 									repositoryTask.getHandleIdentifier()) != null) {
 						if (repositoryTask.getTaskData() == null) {
-							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
-									repositoryTask.getHandleIdentifier()));
+							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager()
+									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
 						}
-						TasksUiUtil.openEditor(task, false, false);
+						TasksUiUtil.openEditor(task, true, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
@@ -246,21 +247,21 @@ public class TasksUiUtil {
 	public static void openEditor(final ITask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
-	
+
 	/**
 	 * @param task
-	 * @param pageId	the taskId of the page to activate after opening
+	 * @param pageId
+	 *            the taskId of the page to activate after opening
 	 */
 	public static void openEditor(ITask task, String pageId) {
 		final IEditorInput editorInput = new TaskEditorInput(task, false);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, window.getActivePage());
 		if (part instanceof TaskEditor) {
-			((TaskEditor)part).setActivePage(pageId);
+			((TaskEditor) part).setActivePage(pageId);
 		}
 	}
-	
-	
+
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
@@ -287,6 +288,8 @@ public class TasksUiUtil {
 			if (window != null) {
 				IWorkbenchPage page = window.getActivePage();
 				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			} else {
+				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
 		}
 	}
@@ -336,7 +339,7 @@ public class TasksUiUtil {
 					flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
 							| WorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
-				
+
 				String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
 				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
 				browser.openURL(new URL(url));
