@@ -58,7 +58,7 @@
       <hyperlinkDetector            
             class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"
             id="org.eclipse.mylar.bugzilla.ui.bugzillataskhyperlink"
-            name="Bugzilla Task"
+            name="Mylar Task"
             targetId="org.eclipse.jdt.ui.javaCode">
       </hyperlinkDetector>
    </extension>
