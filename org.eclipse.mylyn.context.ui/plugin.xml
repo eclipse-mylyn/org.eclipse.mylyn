@@ -16,10 +16,12 @@
             contentType="meta/task"/>
    </extension>   
  
+ <!--
  	<extension
          point="org.eclipse.mylar.tasks.ui.editors">
       	<editorFactory class="org.eclipse.mylar.internal.context.ui.editors.ContextEdtiorFactory"/>
    	</extension>
+ -->
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
