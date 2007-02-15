@@ -407,6 +407,24 @@ public class TaskList {
 		}
 	}
 	
+	/**
+	 * Searches for a task whose URL matches
+	 * 
+	 * @return	first task with a matching URL.
+	 * @since 2.0
+	 */
+	public AbstractRepositoryTask getRepositoryTask(String taskUrl) {
+		for (ITask currTask : tasks.values()) {
+			if (currTask instanceof AbstractRepositoryTask) {
+				String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
+				if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
+					return (AbstractRepositoryTask)currTask;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
 		for (AbstractTaskContainer cat : categories.values()) {
 			if (cat instanceof AbstractTaskContainer) {

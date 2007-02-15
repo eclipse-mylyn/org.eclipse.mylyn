@@ -137,21 +137,10 @@ public class TasksUiUtil {
 		boolean opened = false;
 		ITask task = null;
 		if (taskId != null) {
-			// String handle = AbstractRepositoryTask.getHandle(repositoryUrl,
-			// taskId);
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 		if (task == null) {
-			// search for it
-			for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
-				if (currTask instanceof AbstractRepositoryTask) {
-					String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
-					if (currUrl != null && !currUrl.equals("") && currUrl.equals(fullUrl)) {
-						task = currTask;
-						break;
-					}
-				}
-			}
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
 		}
 
 		if (task != null) {

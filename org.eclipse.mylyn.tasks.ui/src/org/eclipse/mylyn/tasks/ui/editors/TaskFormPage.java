@@ -234,46 +234,6 @@ public class TaskFormPage extends FormPage {
 		return false;
 	}
 
-	// protected Text addTextBox(Composite composite, String text, int style) {
-	// if (actionContributor == null) {
-	// actionContributor = ((TaskEditor) getEditor()).getContributor();
-	// }
-	//
-	// final Text textBox =
-	// this.getManagedForm().getToolkit().createText(composite, text);
-	// textBox.addFocusListener(new FocusListener() {
-	//
-	// public void focusGained(FocusEvent e) {
-	//
-	// //
-	// actionContributor.registerGlobalHandlers(getEditorSite().getActionBars());
-	//
-	// actionContributor.updateSelectableActions(null);
-	//
-	// }
-	//
-	// public void focusLost(FocusEvent e) {
-	// textBox.setSelection(0, 0);
-	// //
-	// actionContributor.unregisterGlobalHandlers(getEditorSite().getActionBars());
-	//
-	// }
-	// });
-	//
-	// textBox.addKeyListener(new KeyListener() {
-	//
-	// public void keyPressed(KeyEvent e) {
-	// // ignore
-	//
-	// }
-	//
-	// public void keyReleased(KeyEvent e) {
-	// actionContributor.updateSelectableActions(null);
-	// }
-	// });
-	// return textBox;
-	// }
-
 	/**
 	 * Text viewer generally used for displaying non-editable text. No
 	 * annotation model or spell checking support. Supports cut/copy/paste/etc..

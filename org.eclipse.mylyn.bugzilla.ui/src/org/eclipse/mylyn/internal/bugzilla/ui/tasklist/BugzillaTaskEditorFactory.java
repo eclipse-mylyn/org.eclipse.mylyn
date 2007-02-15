@@ -56,7 +56,6 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 					BugzillaCorePlugin.REPOSITORY_KIND, bugzillaTask.getRepositoryUrl());
 			BugzillaTaskEditorInput input = new BugzillaTaskEditorInput(repository, bugzillaTask, true);
 			return input;
-
 		}
 		return null;
 	}
