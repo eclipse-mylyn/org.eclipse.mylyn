@@ -1212,8 +1212,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			 */
 			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent e) {
+					
+					if(e.getSelection().isEmpty()) {
+						return;
+					}
+					
 					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection())
 							.getFirstElement());
+					
 					popupMenu.removeAll();
 					popupMenu.add(openMenu);
 					openMenu.removeAll();
