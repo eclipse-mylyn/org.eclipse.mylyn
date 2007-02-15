@@ -299,9 +299,9 @@ public class RepositorySynchronizationManager {
 			break;
 		}
 
-		if (status == RepositoryTaskSyncState.SYNCHRONIZED || repositoryTask.getLastSyncDateStamp() == null) {
-			repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
-		}
+//		if (/*status == RepositoryTaskSyncState.SYNCHRONIZED || */repositoryTask.getLastSyncDateStamp() == null) {
+//			repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
+//		}
 
 		repositoryTask.setTaskData(newTaskData);
 		repositoryTask.setSyncState(status);
@@ -376,7 +376,7 @@ public class RepositorySynchronizationManager {
 		if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
 			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
-				// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(repositoryTask.getHandleIdentifier());
+				TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(repositoryTask.getHandleIdentifier());
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);

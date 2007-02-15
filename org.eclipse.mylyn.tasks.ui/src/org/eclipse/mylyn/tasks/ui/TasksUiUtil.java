@@ -201,7 +201,7 @@ public class TasksUiUtil {
 							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager()
 									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
 						}
-						TasksUiUtil.openEditor(task, true, false);
+						TasksUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
@@ -212,9 +212,9 @@ public class TasksUiUtil {
 										// Mark read here too so that hits get
 										// marked as read upon opening
 										// TODO: if synch job failed, don't mark
-										// read
-										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+										// read										
 										TasksUiUtil.openEditor(task, false);
+										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 									}
 								});
 						if (refreshJob == null) {

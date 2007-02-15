@@ -370,11 +370,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 									"Changed - " + repositoryTask.getSummary(),
 									"Editor will refresh with new incoming changes.");
 
-							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
-
 							updateContents();
-							TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(
-									repositoryTask.getHandleIdentifier());
+							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
+							// true);
+							// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(
+							// repositoryTask.getHandleIdentifier());
 						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
 								&& !taskData.hasLocalChanges()) {
 							submitting = false;
@@ -755,7 +755,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			toolkit.createLabel(headerInfoComposite, "  ID: ").setFont(TITLE_FONT);
 			toolkit.createText(headerInfoComposite, id, SWT.FLAT | SWT.READ_ONLY);
 		}
-		
+
 		String openedDateString = "";
 		String modifiedDateString = "";
 		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
@@ -1212,14 +1212,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			 */
 			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent e) {
-					
-					if(e.getSelection().isEmpty()) {
+
+					if (e.getSelection().isEmpty()) {
 						return;
 					}
-					
+
 					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection())
 							.getFirstElement());
-					
+
 					popupMenu.removeAll();
 					popupMenu.add(openMenu);
 					openMenu.removeAll();
@@ -1661,17 +1661,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		addCommentsLayout.numColumns = 1;
 		addCommentsComposite.setLayout(addCommentsLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(addCommentsComposite);
-		AbstractRepositoryTask repositoryTask = null;
-		ITaskDataHandler offlineHandler = null;
-		IEditorInput input = this.getEditorInput();
-		if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
-			repositoryTask = existingInput.getRepositoryTask();
-
-			AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(taskData.getRepositoryKind());
-			offlineHandler = connector.getTaskDataHandler();
-		}
 
 		boolean foundNew = false;
 
@@ -1682,32 +1671,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			// Expand new comments
-			if (repositoryTask != null && offlineHandler != null) {
-				Date lastModDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
-						repositoryTask.getLastSyncDateStamp());
-
-				if (lastModDate != null) {
-					// reduce granularity to minutes
-					Calendar calLastMod = Calendar.getInstance();
-					calLastMod.setTimeInMillis(lastModDate.getTime());
-					calLastMod.set(Calendar.SECOND, 0);
-
-					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
-							taskComment.getCreated());
-					if (commentDate != null) {
-						if (commentDate.after(calLastMod.getTime())) {
-							expandableComposite.setBackground(backgroundIncoming);
-							foundNew = true;
-						}
-						if (commentDate.equals(calLastMod.getTime()) || commentDate.after(calLastMod.getTime())) {
-							expandableComposite.setExpanded(true);
-						}
-					}
-				}
-			} else if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null && !it.hasNext()) {
-				// no task data (query hit?) so expand last comment
+			
+			if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null) {
+				// hit? Expose all comments
 				expandableComposite.setExpanded(true);
+				foundNew = true;
+			} else if (isNewComment(taskComment)) {
+				expandableComposite.setBackground(backgroundIncoming);
+				expandableComposite.setExpanded(true);
+				foundNew = true;
 			}
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
@@ -1765,6 +1737,53 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			} else {
 				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
 			}
+		}
+	}
+
+	private boolean isNewComment(TaskComment comment) {
+		RepositoryTaskData oldTaskData = editorInput.getOldTaskData();
+		if (oldTaskData == null) {
+			// TODO: ever get here? Dead code?
+			if (repositoryTask != null) {
+				if (repositoryTask.getLastSyncDateStamp() == null) {
+					// new hit
+					return true;
+				}
+				AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin
+						.getRepositoryManager().getRepositoryConnector(taskData.getRepositoryKind());
+				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+				if (offlineHandler != null) {
+
+					Date lastSyncDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+							repositoryTask.getLastSyncDateStamp());
+
+					if (lastSyncDate != null) {
+
+						// reduce granularity to minutes
+						Calendar calLastMod = Calendar.getInstance();
+						calLastMod.setTimeInMillis(lastSyncDate.getTime());
+						calLastMod.set(Calendar.SECOND, 0);
+						// System.err.println(">>> "+calLastMod.toString());
+						// 2007-02-15 15:23:09
+						Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+								comment.getCreated());
+						if (commentDate != null) {
+							if (commentDate.after(calLastMod.getTime())) {
+								return true;
+								// expandableComposite.setBackground(backgroundIncoming);
+								// foundNew = true;
+							}
+							// if (commentDate.equals(calLastMod.getTime()) ||
+							// commentDate.after(calLastMod.getTime())) {
+							// expandableComposite.setExpanded(true);
+							// }
+						}
+					}
+				}
+			}
+			return false;
+		} else {
+			return (comment.getNumber() > oldTaskData.getComments().size());
 		}
 	}
 
@@ -2660,6 +2679,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (taskOutlineModel != null && outlinePage != null) {
 						outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
 						outlinePage.getOutlineTreeViewer().refresh(true);
+					}
+					if (repositoryTask != null) {
+						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 					}
 				}
 			});
