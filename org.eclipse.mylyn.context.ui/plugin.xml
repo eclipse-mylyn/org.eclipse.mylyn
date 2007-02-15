@@ -9,12 +9,17 @@
       <structureBridge 
       		class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
    </extension>
-   <extension
+   <extension 
          point="org.eclipse.mylar.context.ui.bridges">
       <uiBridge
             class="org.eclipse.mylar.internal.context.ui.TaskUiBridge"
             contentType="meta/task"/>
    </extension>   
+ 
+ 	<extension
+         point="org.eclipse.mylar.tasks.ui.editors">
+      	<editorFactory class="org.eclipse.mylar.internal.context.ui.editors.ContextEdtiorFactory"/>
+   	</extension>
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
