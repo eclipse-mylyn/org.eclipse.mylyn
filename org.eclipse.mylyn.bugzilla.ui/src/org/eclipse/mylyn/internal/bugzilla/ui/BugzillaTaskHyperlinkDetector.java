@@ -11,19 +11,25 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTextViewer;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
  */
-public class BugzillaTaskHyperlinkDetector implements IHyperlinkDetector {
+public class BugzillaTaskHyperlinkDetector extends AbstractHyperlinkDetector {
+	// IHyperlinkDetector
 
 	private TaskRepository repository;
 
@@ -31,16 +37,28 @@ public class BugzillaTaskHyperlinkDetector implements IHyperlinkDetector {
 		if (region == null || textViewer == null)
 			return null;
 
-		if (!(textViewer instanceof RepositoryTextViewer))
-			return null;
+		if (textViewer instanceof RepositoryTextViewer) {
+			// Get repository from repository text viewer
+			RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
 
-		RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
+			repository = viewer.getRepository();
 
-		repository = viewer.getRepository();
+			if (repository == null)
+				return null;
 
-		if (repository == null)
-			return null;
-
+		} else {
+			// Get repository from files associated project -> repository mapping
+			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+			IEditorInput input = part.getEditorInput();
+			IResource resource = (IResource) input.getAdapter(IResource.class);
+			if (resource != null) {
+				repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+				if (repository == null) {
+					return null;
+				}
+			}
+		}
+		
 		IDocument document = textViewer.getDocument();
 
 		int offset = region.getOffset();

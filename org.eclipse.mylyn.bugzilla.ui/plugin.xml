@@ -53,4 +53,13 @@
 		 </description>
       </decorator>
    </extension>
+   <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector            
+            class="org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector"
+            id="org.eclipse.mylar.bugzilla.ui.bugzillataskhyperlink"
+            name="Bugzilla Task"
+            targetId="org.eclipse.jdt.ui.javaCode">
+      </hyperlinkDetector>
+   </extension>
 </plugin>
