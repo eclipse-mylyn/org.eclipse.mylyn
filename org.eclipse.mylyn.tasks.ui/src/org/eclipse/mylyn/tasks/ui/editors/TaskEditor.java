@@ -283,19 +283,21 @@ public class TaskEditor extends FormEditor {
 		return;
 	}
 
-//	@Override
-//	public void setFocus() {
-//		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
-//			IFormPage page = this.getPages()[this.getActivePage()];
-//			if (page != null) {
-//				page.setFocus();
-//			}
-//		} else if(this.getActivePage() == browserPageIndex && webBrowser != null) {
-//			webBrowser.setFocus();
-//		}
-//	}
+	// @Override
+	// public void setFocus() {
+	// if (this.getActivePage() > -1 && this.getActivePage() !=
+	// browserPageIndex) {
+	// IFormPage page = this.getPages()[this.getActivePage()];
+	// if (page != null) {
+	// page.setFocus();
+	// }
+	// } else if(this.getActivePage() == browserPageIndex && webBrowser != null)
+	// {
+	// webBrowser.setFocus();
+	// }
+	// }
 
-	public void setFocusOfActivePage() { 
+	public void setFocusOfActivePage() {
 		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
 			IFormPage page = this.getPages()[this.getActivePage()];
 			if (page != null) {
@@ -305,7 +307,7 @@ public class TaskEditor extends FormEditor {
 			webBrowser.setFocus();
 		}
 	}
-	
+
 	public Browser getWebBrowser() {
 		return webBrowser;
 	}
@@ -315,8 +317,10 @@ public class TaskEditor extends FormEditor {
 	}
 
 	public void displayInBrowser(String url) {
-		webBrowser.setUrl(url);
-		revealBrowser();
+		if (webBrowser != null) {
+			webBrowser.setUrl(url);
+			revealBrowser();
+		}
 	}
 
 	@Override
@@ -449,11 +453,11 @@ public class TaskEditor extends FormEditor {
 	 * Update the title of the editor
 	 */
 	public void updateTitle(String name) {
-		//setContentDescription(name);
+		// setContentDescription(name);
 		setPartName(name);
 		setTitleToolTip(name);
 	}
-	
+
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();
