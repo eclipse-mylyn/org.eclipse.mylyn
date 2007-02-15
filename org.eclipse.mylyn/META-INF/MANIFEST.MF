@@ -42,3 +42,5 @@ Export-Package: org.apache.commons.codec,
  org.eclipse.mylar.core.net,
  org.eclipse.mylar.internal.core,
  org.eclipse.mylar.internal.core.util
+Eclipse-LazyStart: true
+Bundle-Activator: org.eclipse.mylar.internal.core.MylarCorePlugin
