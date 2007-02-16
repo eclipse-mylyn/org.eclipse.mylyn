@@ -273,8 +273,6 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				info = reconsile(info);
 				final ITask task = info.getTask();
 				if (task != null) {
-					// XXX which one to use?
-					// TaskUiUtil.openEditor(info.getTask(), false);
 					TasksUiUtil.refreshAndOpenTaskListElement(task);
 					return Status.OK_STATUS;
 				}
