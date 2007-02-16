@@ -152,10 +152,14 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		try {
-			activityContextManager.stop();
-			if (getWorkbench() != null && !getWorkbench().isClosing()) {
-				getWorkbench().removeWindowListener(WINDOW_LISTENER);
-				getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
+			if (Platform.isRunning()) {
+				if (activityContextManager != null) {
+					activityContextManager.stop();
+				}
+				if (getWorkbench() != null && !getWorkbench().isClosing()) {
+					getWorkbench().removeWindowListener(WINDOW_LISTENER);
+					getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
+				}
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Monitor stop failed", false);
