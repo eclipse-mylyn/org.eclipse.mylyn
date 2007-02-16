@@ -41,23 +41,24 @@ public class TaskRevision implements Comparable<TaskRevision> {
 	public static TaskRevision createEvent(String type, String change) {
 		TaskRevision event = new TaskRevision();
 
+		event.setWhat(type);
+		
 		if (STATUS.equals(type)) {
-			return new StatusEvent(StatusType.convert(change));
+			event = new StatusEvent(StatusType.convert(change));
 		}
 
 		if (RESOLUTION.equals(type)) {
-			return new ResolutionEvent(ResolutionType.convert(change));
+			event = new ResolutionEvent(ResolutionType.convert(change));
 		}
 
 		if (ASSIGNMENT.equals(type)) {
-			return new AssignmentEvent(change);
+			event = new AssignmentEvent(change);
 		}
 
 		if (type.contains(ATTACHMENT) && type.contains("Flag")) {
-			return new AttachmentEvent(AttachmentEvent.parseId(type), AttachmentEvent.parseFlags(change));
+			event = new AttachmentEvent(AttachmentEvent.parseId(type), AttachmentEvent.parseFlags(change));
 		}
 
-		event.setWhat(type);
 		event.setAdded(change);
 		return event;
 	}
