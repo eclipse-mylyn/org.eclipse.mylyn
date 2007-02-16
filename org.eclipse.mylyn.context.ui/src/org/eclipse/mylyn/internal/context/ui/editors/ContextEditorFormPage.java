@@ -11,20 +11,31 @@
 
 package org.eclipse.mylar.internal.context.ui.editors;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -40,6 +51,8 @@ import org.eclipse.ui.navigator.INavigatorContentExtension;
  * @author Mik Kersten
  */
 public class ContextEditorFormPage extends FormPage {
+
+	private static final String LABEL = "Task Context Editor";
 
 	private static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context";
 
@@ -95,6 +108,8 @@ public class ContextEditorFormPage extends FormPage {
 		}
 		
 	};
+
+	private RemoveFromContextAction removeFromContextAction;
 	
 	public ContextEditorFormPage(FormEditor editor, String id, String title) {
 		super(editor, id, title);
@@ -103,14 +118,14 @@ public class ContextEditorFormPage extends FormPage {
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
-//		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
+		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
 //		task = ((ContextEditorInput)getEditorInput()).getTask();
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		
 		form.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
-		form.setText("Task Context");
+		form.setText(LABEL);
 		toolkit.decorateFormHeading(form.getForm());
 
 		form.getBody().setLayout(new GridLayout(2, false));
@@ -123,9 +138,8 @@ public class ContextEditorFormPage extends FormPage {
 	@Override
 	public void dispose() {
 		super.dispose();
-		ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(commonViewer, this);
-
-//		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
+//		ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(commonViewer, this);
+		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
 	private void createControlsSection(Composite composite) {
@@ -163,28 +177,33 @@ public class ContextEditorFormPage extends FormPage {
 	public void createViewer(Composite aParent) {
 
 		commonViewer = createCommonViewer(aParent);	
-//		commonViewer.addFilter(new InterestFilter());
+		commonViewer.addFilter(new ScalableInterestFilter());
 
 		try {
 			commonViewer.getControl().setRedraw(false);
 			
 			INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById("org.eclipse.jdt.java.ui.javaContent");
-			System.err.println(">>>>>> " + javaContent);
-			
-			
-//			INavigatorFilterService filterService = commonViewer
-//					.getNavigatorContentService().getFilterService();
-//			ViewerFilter[] visibleFilters = filterService.getVisibleFilters(true);
-//			for (int i = 0; i < visibleFilters.length; i++) {
-//				commonViewer.addFilter(visibleFilters[i]);
+			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
+
+			// TODO: find a sane way of doing this, should be:
+//			if (javaContent.getContentProvider() != null) {
+//				JavaNavigatorContentProvider java = (JavaNavigatorContentProvider)javaContent.getContentProvider();
+//				java.setIsFlatLayout(true);
 //			}
-	
-//			commonViewer.setSorter(new CommonViewerSorter());
+			try {
+				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
+				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
+				method.invoke(treeContentProvider, new Object[] { true } );
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "couldn't set flat layout on Java content provider");
+			}
+			
 			commonViewer.setInput(getSite().getPage().getInput()); 
 			getSite().setSelectionProvider(commonViewer);
-//			commonViewer.expandAll();
-//			commonViewer.addFilter(new InterestFilter());
-			ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(commonViewer, this);
+//			ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(commonViewer, this);
+			makeContextMenuActions();
+			hookContextMenu();
+			commonViewer.expandAll();
 		} finally { 
 			commonViewer.getControl().setRedraw(true);
 		}
@@ -196,6 +215,29 @@ public class ContextEditorFormPage extends FormPage {
 		return viewer;
 	}
 	
+	private void makeContextMenuActions() {
+		removeFromContextAction = new RemoveFromContextAction();
+		commonViewer.addSelectionChangedListener(removeFromContextAction);
+	}
+	
+	private void hookContextMenu() {
+		MenuManager menuManager = new MenuManager("#PopupMenu");
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
+		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
+		commonViewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuManager, commonViewer);
+	}
+	
+	protected void fillContextMenu(IMenuManager manager) {
+		manager.add(removeFromContextAction);
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
+
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();

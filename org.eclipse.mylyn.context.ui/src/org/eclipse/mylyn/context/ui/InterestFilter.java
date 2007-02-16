@@ -86,16 +86,20 @@ public class InterestFilter extends ViewerFilter {
 				}
 			}
 			if (element != null) {
-				if (element.getInterest().isPredicted()) {
-					return false;
-				} else {
-					return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
-				}
+				return isInteresting(element);
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
 		}
 		return false;
+	}
+
+	protected boolean isInteresting(IMylarElement element) {
+		if (element.getInterest().isPredicted()) {
+			return false;
+		} else {
+			return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+		}
 	}
 
 	private boolean isTemporarilyUnfiltered(Object parent) {
