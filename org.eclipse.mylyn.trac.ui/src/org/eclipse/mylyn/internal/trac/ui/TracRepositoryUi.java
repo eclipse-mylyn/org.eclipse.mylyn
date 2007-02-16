@@ -21,6 +21,7 @@ import org.eclipse.mylar.internal.trac.ui.wizard.NewTracTaskWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -32,6 +33,10 @@ import org.eclipse.mylar.tasks.ui.wizards.NewWebTaskWizard;
  */
 public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 
+	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+		return "Ticket";
+	}
+	
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new TracRepositorySettingsPage(this);

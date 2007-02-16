@@ -18,6 +18,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
@@ -29,6 +30,10 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
  */
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 
+	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+		return "Bug";
+	}
+	
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new BugzillaRepositorySettingsPage(this);

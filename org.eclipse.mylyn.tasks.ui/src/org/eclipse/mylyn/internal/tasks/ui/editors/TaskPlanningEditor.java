@@ -88,7 +88,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final String NO_TIME_ELAPSED = "0 seconds";
 
-	private static final String LABEL_OVERVIEW = "Task Info";
+//	private static final String LABEL_OVERVIEW = "Task Info";
 
 	private static final String LABEL_NOTES = "Notes";
 
@@ -286,7 +286,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		form.setText(task.getSummary());
 		form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
 		toolkit.decorateFormHeading(form.getForm());
 		
@@ -294,8 +293,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// try {
-		if (!(task instanceof AbstractRepositoryTask)) {
+		if (task instanceof AbstractRepositoryTask) {
+			form.setText("Planning");
+		} else {
 			createSummarySection(editorComposite);
+			form.setText("Task: " + task.getSummary());
 		}
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);
@@ -321,35 +323,17 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	private void createSummarySection(Composite parent) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText(LABEL_OVERVIEW);
-		section.setExpanded(true);
-
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		section.addExpansionListener(new IExpansionListener() {
-			public void expansionStateChanging(ExpansionEvent e) {
-				form.reflow(true);
-			}
-
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-
-		Composite container = toolkit.createComposite(section);
-		section.setClient(container);
+		Composite container = toolkit.createComposite(parent);
 		GridLayout compLayout = new GridLayout();
 		compLayout.numColumns = 2;
 		container.setLayout(compLayout);
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		toolkit.createLabel(container, "Summary: ");
-//		l.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		summary = toolkit.createText(container, task.getSummary(), SWT.NONE);
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		summary.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData summaryGridData = new GridData(GridData.FILL_HORIZONTAL);
+		summaryGridData.horizontalSpan = 2;
+		summary.setLayoutData(summaryGridData);
 		toolkit.paintBordersFor(container);
 		
 		if (task instanceof AbstractRepositoryTask) {
@@ -362,59 +346,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		toolkit.createLabel(container, "Web Link:");
-//		urlLabel.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-
-		Composite urlComposite = toolkit.createComposite(container);
-		GridLayout urlLayout = new GridLayout(2, false);
-		urlLayout.marginWidth = 1;
-		urlComposite.setLayout(urlLayout);
-		GridData urlGridData = new GridData(GridData.FILL_HORIZONTAL);
-		urlComposite.setLayoutData(urlGridData);
-
-		issueReportURL = toolkit.createText(urlComposite, task.getTaskUrl(), SWT.NONE);
-		GridData gridLayout = new GridData(GridData.FILL_HORIZONTAL);
-		issueReportURL.setLayoutData(gridLayout);
-
-		if (task instanceof AbstractRepositoryTask) {
-			issueReportURL.setEditable(false);
-		} else {
-			issueReportURL.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					markDirty(true);
-				}
-			});
-		}
-
-		getDescButton = toolkit.createButton(urlComposite, "Get Description", SWT.PUSH);
-		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-		toolkit.paintBordersFor(urlComposite);
-		setButtonStatus();
-
-		issueReportURL.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {
-				setButtonStatus();
-			}
-
-			public void keyReleased(KeyEvent e) {
-				setButtonStatus();
-			}
-		});
-
-		getDescButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				retrieveTaskDescription(issueReportURL.getText());
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-
 		toolkit.createLabel(container, "Status:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-
 		Composite statusComposite = toolkit.createComposite(container);
-		statusComposite.setLayout(new GridLayout(2, false));
+		statusComposite.setLayout(new GridLayout(6, false));
 
 		priorityCombo = new Combo(statusComposite, SWT.READ_ONLY);
 
@@ -475,6 +409,47 @@ public class TaskPlanningEditor extends TaskFormPage {
 				}
 			});
 		}
+		
+		toolkit.createLabel(statusComposite, "URL:");
+		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.NONE);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(issueReportURL);
+//		GridData gridLayout = new GridData(GridData.FILL_HORIZONTAL);
+//		gridLayout.grabExcessVerticalSpace = true;
+//		issueReportURL.setLayoutData(gridLayout);
+
+		if (task instanceof AbstractRepositoryTask) {
+			issueReportURL.setEditable(false);
+		} else {
+			issueReportURL.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					markDirty(true);
+				}
+			});
+		}
+
+		getDescButton = toolkit.createButton(statusComposite, "Get Description", SWT.PUSH);
+		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		toolkit.paintBordersFor(container);
+		setButtonStatus();
+
+		issueReportURL.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				setButtonStatus();
+			}
+
+			public void keyReleased(KeyEvent e) {
+				setButtonStatus();
+			}
+		});
+
+		getDescButton.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				retrieveTaskDescription(issueReportURL.getText());
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 	}
 
 	/**

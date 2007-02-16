@@ -17,6 +17,7 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
@@ -33,6 +34,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractRepositoryConnectorUi {
 	
+	private static final String LABEL_TASK_DEFAULT = "Task";
+
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
@@ -51,6 +54,13 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract boolean hasRichEditor();
 			
 	public abstract boolean hasSearchPage();
+	
+	/**
+	 * @param repositoryTask can be null
+	 */
+	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+		return LABEL_TASK_DEFAULT;
+	}
 	
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
 		try {
