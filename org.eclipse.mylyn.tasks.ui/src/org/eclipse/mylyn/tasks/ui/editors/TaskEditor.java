@@ -406,10 +406,8 @@ public class TaskEditor extends FormEditor {
 									setPartName(label);
 								}
 								setPageText(index, factory.getTitle());
-								
+								selectedIndex = index;
 							} 
-							// TODO: move
-							selectedIndex = index;
 						}
 
 						// HACK: overwrites if multiple present
