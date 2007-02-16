@@ -217,7 +217,7 @@ public class ContextEditorFormPage extends FormPage {
 		attachImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task instanceof AbstractRepositoryTask);
 		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
-		attachHyperlink.setEnabled(false);
+		attachHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {

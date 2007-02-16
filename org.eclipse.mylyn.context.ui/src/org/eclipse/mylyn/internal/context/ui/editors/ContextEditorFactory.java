@@ -14,8 +14,9 @@ package org.eclipse.mylar.internal.context.ui.editors;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -34,7 +35,12 @@ public class ContextEditorFactory implements ITaskEditorFactory {
 	 * Works for any kind of task
 	 */
 	public boolean canCreateEditorFor(IEditorInput input) {
-		return !(input instanceof NewTaskEditorInput);
+		if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput)input;
+			return repositoryTaskEditorInput.getRepositoryTask() != null;
+		} else {
+			return input instanceof TaskEditorInput;
+		}
 	}
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
