@@ -26,11 +26,15 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
+import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -139,7 +143,7 @@ public class ContextEditorFormPage extends FormPage {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		
-		form.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		form.setImage(TaskListImages.getImage(TaskListImages.TASK_ACTIVE_CENTERED));
 		form.setText(LABEL);
 		toolkit.decorateFormHeading(form.getForm());
 
@@ -164,22 +168,22 @@ public class ContextEditorFormPage extends FormPage {
 		section.setText("Actions");
 		
 		section.setLayout(new GridLayout());	
-		GridData sectionGridData = new GridData(GridData.FILL_BOTH);
-//		sectionGridData.widthHint = 80;
+		GridData sectionGridData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		sectionGridData.widthHint = 80;
 		section.setLayoutData(sectionGridData);
 		
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-//		section.setLayout(new FillLayout());
 		sectionClient.setLayout(new GridLayout(2, false));
-		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+		sectionClient.setLayoutData(new GridData());
 
 		Label label = toolkit.createLabel(sectionClient, "");
 		label.setImage(TaskListImages.getImage(TaskListImages.FILTER));
 		
-		doiScale = new Scale(sectionClient, SWT.NONE);
+		doiScale = new Scale(sectionClient, SWT.FLAT);
 		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
-		scaleGridData.heightHint = 20;	
+		scaleGridData.heightHint = 36;	
+		scaleGridData.widthHint = 80;
 		doiScale.setLayoutData(scaleGridData);
 		doiScale.setPageIncrement(1);
 		doiScale.setSelection(0);
@@ -209,13 +213,34 @@ public class ContextEditorFormPage extends FormPage {
 		});
 		
 		Label attachImage = toolkit.createLabel(sectionClient, "");
-		attachImage.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
-		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context", SWT.NONE);
-		attachHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
+		attachImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_ATTACH));
+		attachImage.setEnabled(task instanceof AbstractRepositoryTask);
+		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
+		attachHyperlink.setEnabled(false);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
 				new ContextAttachAction().run((AbstractRepositoryTask)task);
+			}
+			
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore	
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}			
+		});
+
+		Label retrieveImage = toolkit.createLabel(sectionClient, "");
+		retrieveImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
+		retrieveImage.setEnabled(task instanceof AbstractRepositoryTask);
+		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
+		retrieveHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
+		retrieveHyperlink.addMouseListener(new MouseListener() {
+
+			public void mouseUp(MouseEvent e) {
+				new ContextRetrieveAction().run((AbstractRepositoryTask)task);
 			}
 			
 			public void mouseDoubleClick(MouseEvent e) {
@@ -232,7 +257,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	protected void setFilterThreshold() {
 		int setting = doiScale.getSelection();
-		int threshold = (setting+2) * setting;
+		int threshold = (setting+1) * setting;
 		
 		interestFilter.setThreshold(threshold);
 		commonViewer.refresh();
@@ -249,7 +274,26 @@ public class ContextEditorFormPage extends FormPage {
 		section.setClient(sectionClient);
 		sectionClient.setLayout(new FillLayout());
 		
-		createViewer(sectionClient);
+		
+		if (task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
+			createViewer(sectionClient);
+		} else {
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Active task to edit context", SWT.NONE);
+			retrieveHyperlink.addMouseListener(new MouseListener() {
+
+				public void mouseUp(MouseEvent e) {
+					new TaskActivateAction().run(task);
+				}
+				
+				public void mouseDoubleClick(MouseEvent e) {
+					// ignore	
+				}
+
+				public void mouseDown(MouseEvent e) {
+					// ignore
+				}			
+			});
+		}
 		
 		section.setExpanded(true);
 	}

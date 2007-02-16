@@ -34,6 +34,10 @@ public class ContextUiImages {
 	
 	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
+	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
+
+	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
+		
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
 
 	public static final ImageDescriptor MYLAR_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
