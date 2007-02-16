@@ -56,7 +56,9 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 
 	public void resume() {
 		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
-		TaskListView.getFromActivePerspective().indicatePaused(false);
+		if (TaskListView.getFromActivePerspective() != null) {
+			TaskListView.getFromActivePerspective().indicatePaused(false);
+		}
 	}
 
 	public void contextActivated(IMylarContext context) {
