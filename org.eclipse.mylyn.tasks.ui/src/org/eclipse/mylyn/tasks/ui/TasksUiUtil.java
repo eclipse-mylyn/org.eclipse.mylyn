@@ -136,11 +136,12 @@ public class TasksUiUtil {
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
 		ITask task = null;
-		if (taskId != null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
-		}
-		if (task == null) {
+		// TODO: move, must current be first due to JIRA Connector use of key
+		if (fullUrl != null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
+		}
+		if (task == null && taskId != null) {
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 
 		if (task != null) {
@@ -201,14 +202,19 @@ public class TasksUiUtil {
 							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager()
 									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
 						}
-
 						TasksUiUtil.openEditor(task, true, false);
+						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
 									@Override
 									public void done(IJobChangeEvent event) {
+										// Mark read here too so that hits get
+										// marked as read upon opening
+										// TODO: if synch job failed, don't mark
+										// read
+										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 										TasksUiUtil.openEditor(task, false);
 									}
 								});
@@ -264,22 +270,14 @@ public class TasksUiUtil {
 							TaskEditor taskEditor = (TaskEditor) part;
 							taskEditor.setFocusOfActivePage();
 						}
-						if (task instanceof AbstractRepositoryTask) {
-							TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
-						}
 					}
 				}
 			});
 		} else {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
-				final IWorkbenchPage page = window.getActivePage();
-				if (page != null) {					
-					openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
-					if (task instanceof AbstractRepositoryTask) {
-						TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
-					}
-				}
+				IWorkbenchPage page = window.getActivePage();
+				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 			} else {
 				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
