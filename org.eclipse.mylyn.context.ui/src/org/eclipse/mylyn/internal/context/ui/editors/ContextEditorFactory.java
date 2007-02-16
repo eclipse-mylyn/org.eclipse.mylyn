@@ -14,6 +14,7 @@ package org.eclipse.mylar.internal.context.ui.editors;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -21,19 +22,19 @@ import org.eclipse.ui.IEditorPart;
 /**
  * @author Mik Kersten
  */
-public class ContextEdtiorFactory implements ITaskEditorFactory {
+public class ContextEditorFactory implements ITaskEditorFactory {
 
 	private static final String LABEL = "Context";
 
 	public boolean canCreateEditorFor(ITask task) {
-		return ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
+		return task != null && ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
 	/**
 	 * Works for any kind of task
 	 */
 	public boolean canCreateEditorFor(IEditorInput input) {
-		return true;
+		return !(input instanceof NewTaskEditorInput);
 	}
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
