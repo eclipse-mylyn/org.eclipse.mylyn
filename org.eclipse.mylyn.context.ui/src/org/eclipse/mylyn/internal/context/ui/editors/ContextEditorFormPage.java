@@ -86,7 +86,7 @@ public class ContextEditorFormPage extends FormPage {
 	private IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
 		private void refresh() {
-			if (!commonViewer.getTree().isDisposed()) {
+			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
 				commonViewer.refresh();
 				commonViewer.expandAll();
 			}
@@ -188,7 +188,7 @@ public class ContextEditorFormPage extends FormPage {
 		doiScale.setPageIncrement(1);
 		doiScale.setSelection(0);
 		doiScale.setMinimum(0);
-		doiScale.setMaximum(8);
+		doiScale.setMaximum(10);
 		doiScale.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setFilterThreshold();
@@ -257,7 +257,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	protected void setFilterThreshold() {
 		int setting = doiScale.getSelection();
-		int threshold = (setting+1) * setting;
+		int threshold = setting * setting * setting;
 		
 		interestFilter.setThreshold(threshold);
 		commonViewer.refresh();
