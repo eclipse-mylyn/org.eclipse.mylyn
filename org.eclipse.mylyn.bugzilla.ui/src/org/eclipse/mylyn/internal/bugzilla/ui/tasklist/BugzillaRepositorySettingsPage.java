@@ -51,6 +51,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
+	private static final String LABEL_SHORT_LOGINS = "Local users enabled:";
+
 	public static final String LABEL_AUTOMATIC_VERSION = "Automatic (Use Validate Settings)";
 
 	private static final String TITLE = "Bugzilla Repository Settings";
@@ -128,7 +130,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
 		
 		Label shortLoginLabel = new Label(parent, SWT.NONE);
-		shortLoginLabel.setText("Short logins enabled on repository:");		
+		shortLoginLabel.setText(LABEL_SHORT_LOGINS);		
 		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);		
 		cleanQAContact.setSelection(shortLogin);
 		
