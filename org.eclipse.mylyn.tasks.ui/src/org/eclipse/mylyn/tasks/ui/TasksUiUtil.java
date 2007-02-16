@@ -203,18 +203,12 @@ public class TasksUiUtil {
 									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
 						}
 						TasksUiUtil.openEditor(task, true, false);
-						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
 					} else {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
 									@Override
 									public void done(IJobChangeEvent event) {
-										// Mark read here too so that hits get
-										// marked as read upon opening
-										// TODO: if synch job failed, don't mark
-										// read
-										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 										TasksUiUtil.openEditor(task, false);
 									}
 								});
@@ -270,6 +264,9 @@ public class TasksUiUtil {
 							TaskEditor taskEditor = (TaskEditor) part;
 							taskEditor.setFocusOfActivePage();
 						}
+						if (task instanceof AbstractRepositoryTask) {
+							TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
+						}
 					}
 				}
 			});
@@ -278,6 +275,9 @@ public class TasksUiUtil {
 			if (window != null) {
 				IWorkbenchPage page = window.getActivePage();
 				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+				if (task instanceof AbstractRepositoryTask) {
+					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
+				}
 			} else {
 				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
