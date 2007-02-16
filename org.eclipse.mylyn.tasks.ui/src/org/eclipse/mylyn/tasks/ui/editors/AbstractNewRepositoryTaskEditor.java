@@ -190,11 +190,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		createPlanningLayout(comp);
 	}
 
-	protected void createPlanningLayout(Composite comp) {
-		FormToolkit toolkit = this.getManagedForm().getToolkit();
-
-		Section section = toolkit.createSection(comp, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Personal Planning");
+	protected void createPlanningLayout(Composite comp) {		
+		Section section = createSection(comp,"Personal Planning");
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.setExpanded(true);
@@ -254,13 +251,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		estimatedTime.setLayoutData(estimatedDataLayout);
 		toolkit.createLabel(sectionClient, "hours ");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
-
-		// 1 Blank column
-		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
-		GridData blankLabl2Layout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-		blankLabl2Layout.horizontalSpan = 1;
-		blankLabl2Layout.widthHint = 25;
-		blankLabel2.setLayoutData(blankLabl2Layout);
 
 		toolkit.paintBordersFor(sectionClient);
 	}
