@@ -52,11 +52,12 @@ public class ContextAttachAction implements IViewActionDelegate {
 	public void run(IAction action) {
 		if (task == null) {
 			return;
+		} else {
+			run(task);
 		}
+	}
 
-//		if (!connector.validate(repository)) {
-//			return;
-//		}
+	public void run(AbstractRepositoryTask task) {
 		if (task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "Task must be synchronized before attaching context");

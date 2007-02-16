@@ -26,8 +26,11 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -37,6 +40,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -45,6 +49,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -71,6 +76,8 @@ public class ContextEditorFormPage extends FormPage {
 	private ScalableInterestFilter interestFilter = new ScalableInterestFilter();
 		
 	private Scale doiScale;
+	
+	private ITask task;
 	
 	private IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
@@ -127,7 +134,7 @@ public class ContextEditorFormPage extends FormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
-//		task = ((ContextEditorInput)getEditorInput()).getTask();
+		task = ((ContextEditorInput)getEditorInput()).getTask();
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
@@ -156,29 +163,31 @@ public class ContextEditorFormPage extends FormPage {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText("Actions");
 		
-		section.setLayout(new GridLayout());
-		section.setLayoutData(new GridData(GridData.FILL_BOTH));		
+		section.setLayout(new GridLayout());	
+		GridData sectionGridData = new GridData(GridData.FILL_BOTH);
+//		sectionGridData.widthHint = 80;
+		section.setLayoutData(sectionGridData);
 		
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
-		section.setLayout(new FillLayout());
-		sectionClient.setLayout(new GridLayout());
+//		section.setLayout(new FillLayout());
+		sectionClient.setLayout(new GridLayout(2, false));
 		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		toolkit.createLabel(sectionClient, "Interest Filter Threshold");
-				
+		Label label = toolkit.createLabel(sectionClient, "");
+		label.setImage(TaskListImages.getImage(TaskListImages.FILTER));
+		
 		doiScale = new Scale(sectionClient, SWT.NONE);
 		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
 		scaleGridData.heightHint = 20;	
 		doiScale.setLayoutData(scaleGridData);
-		doiScale.setPageIncrement(20);
+		doiScale.setPageIncrement(1);
 		doiScale.setSelection(0);
-		doiScale.setMinimum(-100);
-		doiScale.setMaximum(+100);
+		doiScale.setMinimum(0);
+		doiScale.setMaximum(8);
 		doiScale.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				interestFilter.setThreshold(doiScale.getSelection());
-				commonViewer.refresh();
+				setFilterThreshold();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -195,21 +204,39 @@ public class ContextEditorFormPage extends FormPage {
 			}
 
 			public void mouseUp(MouseEvent e) {
-				interestFilter.setThreshold(doiScale.getSelection());
-				commonViewer.refresh();
+				setFilterThreshold();
 			}
 		});
 		
-		section.setExpanded(true);
+		Label attachImage = toolkit.createLabel(sectionClient, "");
+		attachImage.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context", SWT.NONE);
+		attachHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
+		attachHyperlink.addMouseListener(new MouseListener() {
+
+			public void mouseUp(MouseEvent e) {
+				new ContextAttachAction().run((AbstractRepositoryTask)task);
+			}
+			
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore	
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}			
+		});
 		
+		section.setExpanded(true);
 	}
 
-	private float scaleDoiSelection(int selection) {
-		int value = selection;
-		int scaledValue = (-1) * (value - 6);
-		if (scaledValue < 0)
-			scaledValue = 0;
-		return scaledValue;
+	protected void setFilterThreshold() {
+		int setting = doiScale.getSelection();
+		int threshold = (setting+2) * setting;
+		
+		interestFilter.setThreshold(threshold);
+		commonViewer.refresh();
+		commonViewer.expandAll();
 	}
 	
 	private void createDisplaySection(Composite composite) {
