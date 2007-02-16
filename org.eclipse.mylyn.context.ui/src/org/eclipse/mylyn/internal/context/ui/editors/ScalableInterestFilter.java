@@ -17,11 +17,25 @@ import org.eclipse.mylar.context.ui.InterestFilter;
 /**
  * @author Mik Kersten
  */
+/**
+ * @author Mik Kersten
+ */
 public class ScalableInterestFilter extends InterestFilter {
 
+	private float threshold = 0;
+	
 	@Override
 	protected boolean isInteresting(IMylarElement element) {
-		return element.getInterest().getValue() != 0;
+		if (element.getInterest().getValue() == 0) {
+			// TOD: parametrize default value
+			return false;
+		} else {
+			return element.getInterest().getValue() > threshold;
+		}
+	}
+
+	public void setThreshold(float threshold) {
+		this.threshold = threshold;
 	}
 
 }

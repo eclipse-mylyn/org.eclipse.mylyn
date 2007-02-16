@@ -25,16 +25,20 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -64,8 +68,10 @@ public class ContextEditorFormPage extends FormPage {
 	
 	private RemoveFromContextAction removeFromContextAction;
 
-	private InterestFilter interestFilter = new ScalableInterestFilter();
+	private ScalableInterestFilter interestFilter = new ScalableInterestFilter();
 		
+	private Scale doiScale;
+	
 	private IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
 		private void refresh() {
@@ -133,7 +139,7 @@ public class ContextEditorFormPage extends FormPage {
 		form.getBody().setLayout(new GridLayout(2, false));
 		form.getBody().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		createControlsSection(form.getBody());
+		createActionsSection(form.getBody());
 		createDisplaySection(form.getBody());
 		
 		form.reflow(true);
@@ -146,9 +152,9 @@ public class ContextEditorFormPage extends FormPage {
 		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
 
-	private void createControlsSection(Composite composite) {
+	private void createActionsSection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Controls");
+		section.setText("Actions");
 		
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));		
@@ -159,13 +165,56 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient.setLayout(new GridLayout());
 		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		toolkit.createLabel(sectionClient, "Highlight");
+		toolkit.createLabel(sectionClient, "Interest Filter Threshold");
+				
+		doiScale = new Scale(sectionClient, SWT.NONE);
+		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
+		scaleGridData.heightHint = 20;	
+		doiScale.setLayoutData(scaleGridData);
+		doiScale.setPageIncrement(20);
+		doiScale.setSelection(0);
+		doiScale.setMinimum(-100);
+		doiScale.setMaximum(+100);
+		doiScale.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				interestFilter.setThreshold(doiScale.getSelection());
+				commonViewer.refresh();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// don't care about default selection
+			}
+		});
+		doiScale.addMouseListener(new MouseListener() {
+			public void mouseDoubleClick(MouseEvent e) {
+				// don't care about double click
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// don't care about mouse down
+			}
+
+			public void mouseUp(MouseEvent e) {
+				interestFilter.setThreshold(doiScale.getSelection());
+				commonViewer.refresh();
+			}
+		});
+		
 		section.setExpanded(true);
+		
 	}
 
+	private float scaleDoiSelection(int selection) {
+		int value = selection;
+		int scaledValue = (-1) * (value - 6);
+		if (scaledValue < 0)
+			scaledValue = 0;
+		return scaledValue;
+	}
+	
 	private void createDisplaySection(Composite composite) {
 		Section section = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
-		section.setText("Display");
+		section.setText("Elements");
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 				
