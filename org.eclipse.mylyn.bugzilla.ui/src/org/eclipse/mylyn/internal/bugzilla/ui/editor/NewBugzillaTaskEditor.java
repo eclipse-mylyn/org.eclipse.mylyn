@@ -74,13 +74,13 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(peopleComposite);
 
 		Label label = toolkit.createLabel(peopleComposite, "Assign to:");
-		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
 		GridLayout textLayout = new GridLayout();
-		textLayout.marginWidth = 1;
-		textLayout.verticalSpacing = 0;
-		textLayout.marginHeight = 0;
-		textLayout.marginRight = 5;
+//		textLayout.marginWidth = 1;
+//		textLayout.verticalSpacing = 0;
+//		textLayout.marginHeight = 0;
+//		textLayout.marginRight = 5;
 		textFieldComposite.setLayout(textLayout);
 		Text textField = createTextField(textFieldComposite, taskData
 				.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT);
