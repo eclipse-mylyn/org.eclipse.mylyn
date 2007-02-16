@@ -24,6 +24,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -39,6 +40,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -56,6 +58,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * An editor used to view a locally created bug that does not yet exist on a
@@ -148,6 +151,31 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
+	protected void addSummaryText(Composite attributesComposite) {
+
+		Composite summaryComposite = toolkit.createComposite(attributesComposite);
+		GridLayout summaryLayout = new GridLayout(2, false);
+		summaryLayout.verticalSpacing = 0;
+		summaryLayout.marginHeight = 2;
+		summaryComposite.setLayout(summaryLayout);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+
+		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+		if (attribute != null) {
+			createLabel(summaryComposite, attribute);
+			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
+			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
+					TaskListColorsAndFonts.TASK_EDITOR_FONT);
+			summaryText.setFont(summaryFont);
+
+			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
+			summaryText.addListener(SWT.KeyUp, new SummaryListener());
+		}
+		toolkit.paintBordersFor(summaryComposite);
+	}
+
+	@Override
 	protected void createAttachmentLayout(Composite comp) {
 		// currently can't attach while creating new bug
 	}
@@ -182,7 +210,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		// Reminder
 		toolkit.createLabel(sectionClient, "Scheduled for:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		scheduledForDate = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -213,7 +241,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		// Estimated time
 		toolkit.createLabel(sectionClient, "Estimated time:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		estimatedTime = new Spinner(sectionClient, SWT.NONE);
 		estimatedTime.setDigits(0);
 		estimatedTime.setMaximum(100);
@@ -225,7 +253,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		estimatedDataLayout.widthHint = 110;
 		estimatedTime.setLayoutData(estimatedDataLayout);
 		toolkit.createLabel(sectionClient, "hours ");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
@@ -343,19 +371,17 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	@Override
 	protected void createActionsLayout(Composite formComposite) {
 		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
-		
+
 		section.setText(getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
-		
 
 		Composite buttonComposite = toolkit.createComposite(section);
 		buttonComposite.setLayout(new GridLayout(4, false));
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		section.setClient(buttonComposite);
-		
-		
+
 		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
@@ -385,13 +411,11 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			}
 
 		});
-		
-		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(categoryChooser);
-		
-		
-		addActionButtons(buttonComposite);
 
-		
+		GridDataFactory.fillDefaults().hint(DEFAULT_FIELD_WIDTH, SWT.DEFAULT).span(3, SWT.DEFAULT).applyTo(
+				categoryChooser);
+
+		addActionButtons(buttonComposite);
 
 		toolkit.paintBordersFor(buttonComposite);
 	}
