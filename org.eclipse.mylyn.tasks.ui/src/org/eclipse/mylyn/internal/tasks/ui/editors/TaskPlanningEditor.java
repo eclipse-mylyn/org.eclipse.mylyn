@@ -349,6 +349,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.createLabel(container, "Status:");
 		Composite statusComposite = toolkit.createComposite(container);
 		statusComposite.setLayout(new GridLayout(6, false));
+		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		priorityCombo = new Combo(statusComposite, SWT.READ_ONLY);
 
@@ -413,9 +414,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.createLabel(statusComposite, "URL:");
 		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.NONE);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(issueReportURL);
-//		GridData gridLayout = new GridData(GridData.FILL_HORIZONTAL);
-//		gridLayout.grabExcessVerticalSpace = true;
-//		issueReportURL.setLayoutData(gridLayout);
 
 		if (task instanceof AbstractRepositoryTask) {
 			issueReportURL.setEditable(false);
