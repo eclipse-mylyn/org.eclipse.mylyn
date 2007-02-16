@@ -1671,7 +1671,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			
 			if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null) {
 				// hit? Expose all comments
 				expandableComposite.setExpanded(true);
@@ -1741,50 +1740,41 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	private boolean isNewComment(TaskComment comment) {
-		RepositoryTaskData oldTaskData = editorInput.getOldTaskData();
-		if (oldTaskData == null) {
-			// TODO: ever get here? Dead code?
-			if (repositoryTask != null) {
-				if (repositoryTask.getLastSyncDateStamp() == null) {
-					// new hit
-					return true;
-				}
-				AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin
-						.getRepositoryManager().getRepositoryConnector(taskData.getRepositoryKind());
-				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
-				if (offlineHandler != null) {
 
-					Date lastSyncDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
-							repositoryTask.getLastSyncDateStamp());
+		if (repositoryTask != null) {
+			if (repositoryTask.getLastSyncDateStamp() == null) {
+				// new hit
+				return true;
+			}
+			AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
+					.getRepositoryConnector(taskData.getRepositoryKind());
+			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+			if (offlineHandler != null) {
 
-					if (lastSyncDate != null) {
+				Date lastSyncDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+						repositoryTask.getLastSyncDateStamp());
 
-						// reduce granularity to minutes
-						Calendar calLastMod = Calendar.getInstance();
-						calLastMod.setTimeInMillis(lastSyncDate.getTime());
-						calLastMod.set(Calendar.SECOND, 0);
-						// System.err.println(">>> "+calLastMod.toString());
-						// 2007-02-15 15:23:09
-						Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
-								comment.getCreated());
-						if (commentDate != null) {
-							if (commentDate.after(calLastMod.getTime())) {
-								return true;
-								// expandableComposite.setBackground(backgroundIncoming);
-								// foundNew = true;
-							}
-							// if (commentDate.equals(calLastMod.getTime()) ||
-							// commentDate.after(calLastMod.getTime())) {
-							// expandableComposite.setExpanded(true);
-							// }
+				if (lastSyncDate != null) {
+
+					// reduce granularity to minutes
+					Calendar calLastMod = Calendar.getInstance();
+					calLastMod.setTimeInMillis(lastSyncDate.getTime());
+					calLastMod.set(Calendar.SECOND, 0);
+
+					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+							comment.getCreated());
+					if (commentDate != null) {
+						if (commentDate.after(calLastMod.getTime())) {
+							return true;
 						}
 					}
 				}
 			}
-			return false;
-		} else {
-			return (comment.getNumber() > oldTaskData.getComments().size());
 		}
+		return false;
+
+		// Simple test (will not reveal new comments if offline data was lost
+		// return (comment.getNumber() > oldTaskData.getComments().size());
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
