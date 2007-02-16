@@ -42,6 +42,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
@@ -466,7 +467,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Set<RepositoryTaskAttribute> changedAttributes;
 
 	protected Map<SECTION_NAME, String> alternateSectionLabels = new HashMap<SECTION_NAME, String>();
-
+	
 	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
 
 		public Color getBackground(Object element) {
@@ -682,10 +683,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
 
-		form.setImage(TaskListImages.getImage(TaskListImages.REPOSITORY));
+		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repository.getKind());
+		ImageDescriptor imageDescriptor = TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay, false, false);
+		form.setImage(TaskListImages.getImage(imageDescriptor));
 		
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-		String kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
+		String kindLabel = "";
+		if (connectorUi != null) {
+			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
+		}
 		String idLabel = "";
 		if (repositoryTask != null) {
 			idLabel = repositoryTask.getIdentifyingLabel();
@@ -693,7 +699,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			idLabel = taskData.getId();
 		}
 		
-		form.setText(kindLabel + ": " + idLabel);
+		form.setText(kindLabel + " " + idLabel);
 		toolkit.decorateFormHeading(form.getForm());
 		
 		editorComposite = form.getBody();
@@ -709,9 +715,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createSections();
 		getSite().getPage().addSelectionListener(selectionListener);
 		getSite().setSelectionProvider(selectionProvider);
-		// if (this.addCommentsTextBox != null) {
-		// registerDropListener(this.addCommentsTextBox);
-		// }
 		if (summaryText != null) {
 			summaryText.setFocus();
 		}
