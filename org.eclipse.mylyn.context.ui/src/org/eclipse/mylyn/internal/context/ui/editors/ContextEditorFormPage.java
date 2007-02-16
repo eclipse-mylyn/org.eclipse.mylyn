@@ -28,6 +28,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
+import org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
@@ -241,6 +242,24 @@ public class ContextEditorFormPage extends FormPage {
 
 			public void mouseUp(MouseEvent e) {
 				new ContextRetrieveAction().run((AbstractRepositoryTask)task);
+			}
+			
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore	
+			}
+
+			public void mouseDown(MouseEvent e) {
+				// ignore
+			}			
+		});
+
+		Label copyImage = toolkit.createLabel(sectionClient, "");
+		copyImage .setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_COPY));
+		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, "Copy Context to...", SWT.NONE);
+		copyHyperlink.addMouseListener(new MouseListener() {
+
+			public void mouseUp(MouseEvent e) {
+				new ContextCopyAction().run(task);
 			}
 			
 			public void mouseDoubleClick(MouseEvent e) {

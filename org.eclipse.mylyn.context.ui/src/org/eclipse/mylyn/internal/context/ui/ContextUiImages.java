@@ -37,7 +37,9 @@ public class ContextUiImages {
 	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
 
 	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
-		
+	
+	public static final ImageDescriptor CONTEXT_COPY = create(T_ELCL, "context-transfer.gif");
+	
 	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
 
 	public static final ImageDescriptor MYLAR_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
