@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
@@ -45,6 +46,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -390,12 +392,12 @@ public class TaskEditor extends FormEditor {
 						IEditorPart editor = factory.createEditor(this, getEditorInput());
 						IEditorInput input = task != null ? factory.createEditorInput(task) : getEditorInput();
 						if (editor != null && input != null) {
+							FormPage taskEditor = (FormPage) editor;
+							// repositoryTaskEditor.setParentEditor(this);
+							editor.init(getEditorSite(), input);
+							taskEditor.createPartControl(getContainer());
+							index = addPage(taskEditor);
 							if (editor instanceof AbstractRepositoryTaskEditor) {
-								TaskFormPage repositoryTaskEditor = (TaskFormPage) editor;
-								// repositoryTaskEditor.setParentEditor(this);
-								editor.init(getEditorSite(), input);
-								repositoryTaskEditor.createPartControl(getContainer());
-								index = addPage(repositoryTaskEditor);
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
 									setPartName(existingInput.getName());
@@ -403,11 +405,11 @@ public class TaskEditor extends FormEditor {
 									String label = ((NewTaskEditorInput) getEditorInput()).getName();
 									setPartName(label);
 								}
-							} else {
-								index = addPage(editor, input);
-							}
+								setPageText(index, factory.getTitle());
+								
+							} 
+							// TODO: move
 							selectedIndex = index;
-							setPageText(index++, factory.getTitle());
 						}
 
 						// HACK: overwrites if multiple present
@@ -462,7 +464,7 @@ public class TaskEditor extends FormEditor {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
 			return getSite().getSelectionProvider().getSelection();
 		} else {
-			return null;
+			return StructuredSelection.EMPTY;
 		}
 	}
 }

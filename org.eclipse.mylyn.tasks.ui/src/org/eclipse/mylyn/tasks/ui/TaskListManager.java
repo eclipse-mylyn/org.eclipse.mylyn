@@ -671,7 +671,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		try {
 			taskList.setActive(task, true);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
-				listener.taskActivated(task);
+				try {
+					listener.taskActivated(task);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "task activity listener failed: " + listener, false);
+				}
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not activate task", false);

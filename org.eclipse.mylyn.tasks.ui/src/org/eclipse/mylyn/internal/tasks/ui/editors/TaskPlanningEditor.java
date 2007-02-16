@@ -22,6 +22,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
@@ -251,25 +252,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 		task.setEstimatedTimeHours(estimated.getSelection());
 		if (datePicker != null && datePicker.getDate() != null) {
 			TasksUiPlugin.getTaskListManager().setScheduledFor(task, datePicker.getDate().getTime());
-			// task.setReminderDate(scheduledForDate.getDate().getTime());
 		} else {
-			// task.setReminderDate(null);
 			TasksUiPlugin.getTaskListManager().setScheduledFor(task, null);
 		}
 
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
 		if (parentEditor != null) {
 			parentEditor.notifyTaskChanged();
 		}
-
-		// Method not implemented yet
-		// task.setStatus(statusCombo.getItem(statusCombo.getSelectionIndex()));
-
-		// MylarTaskListPlugin.getTaskListManager().setStatus(task,
-		// statusCombo.getItem(statusCombo.getSelectionIndex()));
-
-		// refreshTaskListView(task);
-
 		markDirty(false);
 	}
 
@@ -277,18 +266,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void doSaveAs() {
 		// don't support saving as
 	}
-
-	// @SuppressWarnings("deprecation")
-	// @Override
-	// public void init(IEditorSite site, IEditorInput input) {
-	// // if (!(input instanceof TaskEditorInput)) {
-	// // throw new PartInitException("Invalid Input: Must be TaskEditorInput");
-	// // }
-	// setSite(site);
-	// setInput(input);
-	// editorInput = (TaskEditorInput) input;
-	// setPartName(editorInput.getLabel());
-	// }
 
 	@Override
 	public boolean isDirty() {
@@ -310,7 +287,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 		form.setText(task.getSummary());
-
+		form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
+		toolkit.decorateFormHeading(form.getForm());
+		
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -320,72 +299,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		}
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);
-//		createResourcesSection(editorComposite);
-		// } catch (SWTException e) {
-		// MylarStatusHandler.log(e, "content failed");
-		// }
+
 		if (summary != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
 			summary.setSelection(0, summary.getText().length());
 			summary.setFocus();
 		} else if (summary != null) {			
 			summary.setFocus();
 		}
-
-		// createContextMenu();
-//		summary.setFocus();
-//		summary.setSelection(0, summary.getText().length());
 	}
-
-	// protected void createContextMenu() {
-	//		
-	// contextMenuManager = new MenuManager(CONTEXT_MENU_ID);
-	// contextMenuManager.setRemoveAllWhenShown(true);
-	// contextMenuManager.addMenuListener(new IMenuListener() {
-	// public void menuAboutToShow(IMenuManager manager) {
-	// manager.add(cutAction);
-	// manager.add(copyAction);
-	// manager.add(pasteAction);
-	// // Clipboard clipboard = new Clipboard(comp.getDisplay());
-	// // TextTransfer textTransfer = TextTransfer.getInstance();
-	// // String textData = (String)
-	// // clipboard.getContents(textTransfer);
-	// // if (textData != null) {
-	// // pasteAction.setEnabled(true);
-	// // } else {
-	// // pasteAction.setEnabled(false);
-	// // }
-	//
-	// // if (currentSelectedText == null ||
-	// currentSelectedText.getSelectionText().length() == 0) {
-	// // copyAction.setEnabled(false);
-	// // } else {
-	// // copyAction.setEnabled(true);
-	// // }
-	// // manager.add(revealAllAction);
-	// manager.add(new Separator());
-	// manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-	// }
-	// });
-	// // getSite().registerContextMenu(CONTEXT_MENU_ID, contextMenuManager,
-	// // getSite().getSelectionProvider());
-	// }
-
-	// @Override
-	// public void createPartControl(Composite parent) {
-	// FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-	// form = toolkit.createScrolledForm(parent);
-	// form.setText(task.getDescription());
-	//
-	// editorComposite = form.getBody();
-	// editorComposite.setLayout(new GridLayout());
-	// editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-	// createContent(editorComposite, toolkit);
-	// if (summary != null &&
-	// NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
-	// summary.setSelection(0);
-	// summary.setFocus();
-	// }
-	// }
 
 	@Override
 	public void setFocus() {
@@ -399,44 +320,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		return form;
 	}
 
-	// public void setTask(ITask task) throws Exception {
-	// if (task == null)
-	// throw new Exception("ITask object is null.");
-	// this.task = task;
-	// }
-
-	// private Composite createContent(Composite parent, FormToolkit toolkit) {
-	// TaskEditorInput taskEditorInput = (TaskEditorInput) getEditorInput();
-	//
-	// task = taskEditorInput.getTask();
-	// if (task == null) {
-	// MessageDialog.openError(parent.getShell(), "No such task", "No task
-	// exists with this taskId");
-	// return null;
-	// }
-	//
-	// try {
-	// if (!(task instanceof AbstractRepositoryTask)) {
-	// createSummarySection(parent, toolkit);
-	// }
-	// createPlanningSection(parent, toolkit);
-	// createNotesSection(parent, toolkit);
-	// // // createRelatedLinksSection(parent, toolkit);
-	// createResourcesSection(parent, toolkit);
-	// } catch (SWTException e) {
-	// MylarStatusHandler.log(e, "content failed");
-	// }
-	// return null;
-	// }
-
 	private void createSummarySection(Composite parent) {
 		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | Section.TWISTIE);
 		section.setText(LABEL_OVERVIEW);
 		section.setExpanded(true);
-		// if (task instanceof AbstractRepositoryTask) {
-		// section.setDescription("To modify these fields use the repository
-		// editor.");
-		// }
 
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -464,7 +351,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		summary.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		toolkit.paintBordersFor(container);
-
+		
 		if (task instanceof AbstractRepositoryTask) {
 			summary.setEnabled(false);
 		} else {
@@ -588,8 +475,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 				}
 			});
 		}
-		// statusCombo.setEnabled(false);
-
 	}
 
 	/**
