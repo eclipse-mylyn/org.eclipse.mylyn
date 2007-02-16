@@ -201,6 +201,8 @@ public class TasksUiUtil {
 							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager()
 									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
 						}
+						// Open editor synchronously so that editor first opens
+						// THEN marked read followed by sync.
 						TasksUiUtil.openEditor(task, false, false);
 						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
@@ -212,7 +214,7 @@ public class TasksUiUtil {
 										// Mark read here too so that hits get
 										// marked as read upon opening
 										// TODO: if synch job failed, don't mark
-										// read										
+										// read
 										TasksUiUtil.openEditor(task, false);
 										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 									}
@@ -275,8 +277,14 @@ public class TasksUiUtil {
 		} else {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
-				IWorkbenchPage page = window.getActivePage();
-				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+				final IWorkbenchPage page = window.getActivePage();
+				if (page != null) {
+					PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+						}
+					});
+				}
 			} else {
 				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
