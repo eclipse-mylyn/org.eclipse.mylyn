@@ -77,10 +77,12 @@ public class BugzillaTaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		int offsetInLine = offset - lineInfo.getOffset();
 
-		IHyperlink[] links = BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), offsetInLine, line, lineInfo
+		if (repository != null) {
+			return BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), offsetInLine, line, lineInfo
 				.getOffset());
-
-		return links;
+		} else {
+			return null;
+		}
 
 	}
 
