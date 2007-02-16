@@ -190,14 +190,22 @@ public class BugzillaClient {
 
 	private String htAuthPass;
 
+	private Map<String, String> configParameters;
+
 	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
 			String characterEncoding) {
+		this(url, username, password, htAuthUser, htAuthPass, characterEncoding, new HashMap<String, String>());
+	}
+
+	public BugzillaClient(URL url, String username, String password, String htAuthUser, String htAuthPass,
+			String characterEncoding, Map<String, String> configParameters) {
 		this.username = username;
 		this.password = password;
 		this.repositoryUrl = url;
 		this.htAuthUser = htAuthUser;
 		this.htAuthPass = htAuthPass;
 		this.characterEncoding = characterEncoding;
+		this.configParameters = configParameters;
 	}
 
 	public void validate() throws IOException, CoreException {
@@ -812,6 +820,9 @@ public class BugzillaClient {
 				value = a.getValue();
 				if (value == null)
 					continue;
+
+				cleanQAContact(a);
+
 				fields.put(a.getID(), new NameValuePair(a.getID(), value));
 			}
 		}
@@ -827,6 +838,20 @@ public class BugzillaClient {
 
 		return fields.values().toArray(new NameValuePair[fields.size()]);
 
+	}
+
+	private void cleanQAContact(RepositoryTaskAttribute a) {
+		if (a.getID().equals(BugzillaReportElement.QA_CONTACT.getKeyString())) {
+			if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
+				if (a.getValue() != null && a.getValue().length() > 0) {
+					int atIndex = a.getValue().indexOf("@");
+					if (atIndex != -1) {
+						String newValue = a.getValue().substring(0, atIndex);
+						a.setValue(newValue);
+					}
+				}
+			}
+		}
 	}
 
 	private NameValuePair[] getPairsForExisting(RepositoryTaskData model) {
@@ -846,9 +871,8 @@ public class BugzillaClient {
 					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
 			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
-				String value = a.getValue();
-				// DEBUG: System.err.println(">>> "+a.getName()+" =
-				// "+a.getValue());
+				cleanQAContact(a);
+				String value = a.getValue();				
 				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}

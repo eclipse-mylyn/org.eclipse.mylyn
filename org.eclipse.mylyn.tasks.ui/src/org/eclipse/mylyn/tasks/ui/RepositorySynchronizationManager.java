@@ -387,6 +387,11 @@ public class RepositorySynchronizationManager {
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
+		}else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
+			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
+				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
+				//TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(repositoryTask.getHandleIdentifier());
+			}
 		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);

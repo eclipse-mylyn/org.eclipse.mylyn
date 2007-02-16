@@ -40,6 +40,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -57,6 +58,8 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 	private static final String DESCRIPTION = "Example: https://bugs.eclipse.org/bugs (do not include index.cgi)";
 
 	protected Combo repositoryVersionCombo;
+
+	private Button cleanQAContact;
 
 	public BugzillaRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 		super(TITLE, DESCRIPTION, repositoryUi);
@@ -120,6 +123,17 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				// ignore
 			}
 		});
+		
+		
+		boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+		
+		Label shortLoginLabel = new Label(parent, SWT.NONE);
+		shortLoginLabel.setText("Short logins enabled on repository:");		
+		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);		
+		cleanQAContact.setSelection(shortLogin);
+		
+		
+		
 	}
 
 	public void setBugzillaVersion(String version) {
@@ -150,6 +164,11 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		}
 	}
 
+	@Override
+	public void updateProperties(TaskRepository repository) {
+		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN, String.valueOf(cleanQAContact.getSelection()));		
+	}
+	
 	@Override
 	public boolean isPageComplete() {
 		return super.isPageComplete();
