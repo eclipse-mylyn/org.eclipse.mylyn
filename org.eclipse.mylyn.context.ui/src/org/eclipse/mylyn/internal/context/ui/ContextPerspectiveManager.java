@@ -27,24 +27,32 @@ import org.eclipse.ui.WorkbenchException;
 public class ContextPerspectiveManager implements ITaskActivityListener {
 
 	public void taskActivated(ITask task) {
-		IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getPerspective();
-		ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
-		
-		String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
-		showPerspective(perspectiveId);
-	}
-	
-	public void taskDeactivated(ITask task) {
-		if (PlatformUI.isWorkbenchRunning()
-				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+		try {
 			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.getPerspective();
-			ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
-	
-			String previousPerspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(null);
-			showPerspective(previousPerspectiveId);
+			ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
+
+			String perspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(task);
+			showPerspective(perspectiveId);
+		} catch (Exception e) {
+			// ignore, perspective may not have been saved, e.g. due to crash
+		}
+	}
+
+	public void taskDeactivated(ITask task) {
+		try {
+			if (PlatformUI.isWorkbenchRunning()
+					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+							ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
+				IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().getPerspective();
+				ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
+
+				String previousPerspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(null);
+				showPerspective(previousPerspectiveId);
+			}
+		} catch (Exception e) {
+			// ignore, perspective may not have been saved, e.g. due to crash
 		}
 	}
 
@@ -61,7 +69,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener {
 			}
 		}
 	}
-	
+
 	public void activityChanged(DateRangeContainer week) {
 		// ignore
 	}

@@ -16,12 +16,10 @@
             contentType="meta/task"/>
    </extension>   
  
- <!--
  	<extension
          point="org.eclipse.mylar.tasks.ui.editors">
       	<editorFactory class="org.eclipse.mylar.internal.context.ui.editors.ContextEdtiorFactory"/>
    	</extension>
- -->
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
@@ -108,14 +106,14 @@
               menubarPath="context"
               tooltip="Clear Context">
         </action>
-  <action
-        class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
-        icon="icons/elcl16/context-transfer.gif"
-        id="org.eclipse.mylar.context.ui.action.copy.context.to"
-        label="Copy Context to..."
-        menubarPath="context"
-        tooltip="Copy Context to...">
-  </action>
+  		<action
+        	class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
+        	icon="icons/elcl16/context-transfer.gif"
+        	id="org.eclipse.mylar.context.ui.action.copy.context.to"
+        	label="Copy Context to..."
+        	menubarPath="context"
+        	tooltip="Copy Context to...">
+  		</action>
 	 </objectContribution>
      <objectContribution
            adaptable="false"
@@ -197,8 +195,20 @@
             id="org.eclipse.mylar.context.keywords"/>
    </extension>
  
-  <!--  MARKER STUFF -->
-  
+	<!-- ==================== Common Navigator ==================== -->
+	
+    <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding 
+             viewerId="org.eclipse.mylar.context.ui.navigator.context">
+          <includes>
+       	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
+          </includes>
+       </viewerContentBinding>
+   </extension>	
+ 
+	<!-- ==================== Markers ==================== -->
+	
     <extension point="org.eclipse.ui.ide.markerImageProviders">
     <imageprovider 
   		markertype="org.eclipse.mylar.ui.landmark" 

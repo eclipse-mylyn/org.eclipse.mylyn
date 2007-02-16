@@ -48,7 +48,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 
 	private Map<StructuredViewer, BrowseFilteredListener> listenerMap = new HashMap<StructuredViewer, BrowseFilteredListener>();
 
-	private Map<IViewPart, StructuredViewer> partToViewerMap = new HashMap<IViewPart, StructuredViewer>();
+	private Map<IWorkbenchPart, StructuredViewer> partToViewerMap = new HashMap<IWorkbenchPart, StructuredViewer>();
 
 	/**
 	 * For testing.
@@ -98,7 +98,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
 
-	public void addManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
+	public void addManagedViewer(StructuredViewer viewer, IWorkbenchPart viewPart) {
 		if (!managedViewers.contains(viewer)) {
 			managedViewers.add(viewer);
 			partToViewerMap.put(viewPart, viewer);
@@ -109,7 +109,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	public void removeManagedViewer(StructuredViewer viewer, IViewPart viewPart) {
+	public void removeManagedViewer(StructuredViewer viewer, IWorkbenchPart viewPart) {
 		managedViewers.remove(viewer);
 		partToViewerMap.remove(viewPart);
 		BrowseFilteredListener listener = listenerMap.get(viewer);

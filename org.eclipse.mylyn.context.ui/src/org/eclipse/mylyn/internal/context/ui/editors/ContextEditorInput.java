@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.context.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -19,6 +20,12 @@ import org.eclipse.ui.IPersistableElement;
  * @author Mik Kersten
  */
 public class ContextEditorInput implements IEditorInput {
+
+	private ITask task;
+
+	public ContextEditorInput(ITask task) {
+		this.task = task;
+	}
 
 	public boolean exists() {
 		return false;
@@ -43,6 +50,10 @@ public class ContextEditorInput implements IEditorInput {
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		return null;
+	}
+
+	public ITask getTask() {
+		return task;
 	}
 
 }

@@ -42,7 +42,7 @@ public class ContextEdtiorFactory implements ITaskEditorFactory {
 	}
 
 	public IEditorInput createEditorInput(ITask task) {
-		return new ContextEditorInput();
+		return new ContextEditorInput(task);
 	}
 
 	public String getTitle() {
@@ -52,5 +52,5 @@ public class ContextEdtiorFactory implements ITaskEditorFactory {
 	public boolean providesOutline() {
 		return false;
 	}
-
+	
 }
