@@ -62,6 +62,10 @@ public class ContextEditorFormPage extends FormPage {
 	
 	private CommonViewer commonViewer;
 	
+	private RemoveFromContextAction removeFromContextAction;
+
+	private InterestFilter interestFilter = new ScalableInterestFilter();
+		
 	private IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
 		private void refresh() {
@@ -109,8 +113,6 @@ public class ContextEditorFormPage extends FormPage {
 		
 	};
 
-	private RemoveFromContextAction removeFromContextAction;
-	
 	public ContextEditorFormPage(FormEditor editor, String id, String title) {
 		super(editor, id, title);
 	}
@@ -133,6 +135,8 @@ public class ContextEditorFormPage extends FormPage {
 		
 		createControlsSection(form.getBody());
 		createDisplaySection(form.getBody());
+		
+		form.reflow(true);
 	}
 	
 	@Override
@@ -177,7 +181,7 @@ public class ContextEditorFormPage extends FormPage {
 	public void createViewer(Composite aParent) {
 
 		commonViewer = createCommonViewer(aParent);	
-		commonViewer.addFilter(new ScalableInterestFilter());
+		commonViewer.addFilter(interestFilter);
 
 		try {
 			commonViewer.getControl().setRedraw(false);
@@ -216,7 +220,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 	
 	private void makeContextMenuActions() {
-		removeFromContextAction = new RemoveFromContextAction();
+		removeFromContextAction = new RemoveFromContextAction(commonViewer, interestFilter);
 		commonViewer.addSelectionChangedListener(removeFromContextAction);
 	}
 	

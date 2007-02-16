@@ -350,9 +350,6 @@ public class MylarContextManager {
 			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
 					.getContentType(node.getHandleIdentifier()), parentHandle,
 					SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
-//			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
-//					.getContentType(node.getHandleIdentifier()), bridge.getParentHandle(node.getHandleIdentifier()),
-//					SOURCE_ID_MODEL_PROPAGATION, CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
 			IMylarElement previous = currentContext.get(propagationEvent.getStructureHandle());
 			if (previous != null && previous.getInterest() != null) {
 				previousInterest = previous.getInterest().getValue();
