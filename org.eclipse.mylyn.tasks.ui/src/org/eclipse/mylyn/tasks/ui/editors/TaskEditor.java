@@ -406,9 +406,8 @@ public class TaskEditor extends FormEditor {
 									setPartName(label);
 								}
 								setPageText(index, factory.getTitle());
-//								selectedIndex = index;
+								selectedIndex = index;
 							} 
-							selectedIndex = index;
 						}
 
 						// HACK: overwrites if multiple present
