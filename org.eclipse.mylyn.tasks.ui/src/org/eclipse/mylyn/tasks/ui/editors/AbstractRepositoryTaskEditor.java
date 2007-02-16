@@ -2531,6 +2531,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void showBusy(boolean busy) {
+		form.setBusy(busy);
 		if (busy) {
 			setEnabledState(editorComposite, false);
 			// regularCursor = form.getCursor();

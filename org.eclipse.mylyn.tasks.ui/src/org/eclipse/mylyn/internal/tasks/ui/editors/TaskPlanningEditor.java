@@ -78,7 +78,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
 	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on in Eclipse.\n Inactivity timeout is "
-			+ MylarMonitorUiPlugin.getDefault().getInactivityTimeout()/(60*1000) + " minutes.";
+			+ MylarMonitorUiPlugin.getDefault().getInactivityTimeout() / (60 * 1000) + " minutes.";
 
 	public static final String LABEL_INCOMPLETE = "Incomplete";
 
@@ -88,7 +88,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final String NO_TIME_ELAPSED = "0 seconds";
 
-//	private static final String LABEL_OVERVIEW = "Task Info";
+	// private static final String LABEL_OVERVIEW = "Task Info";
 
 	private static final String LABEL_NOTES = "Notes";
 
@@ -135,7 +135,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 							updateTaskData(updateTask);
 						}
-						
+
 					});
 				}
 			}
@@ -224,8 +224,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			endDate.setText(getTaskDateString(updateTask));
 		}
 	}
-	
-	
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		if (!(task instanceof AbstractRepositoryTask)) {
@@ -288,7 +287,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit = managedForm.getToolkit();
 		form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
 		toolkit.decorateFormHeading(form.getForm());
-		
+
 		editorComposite = form.getBody();
 		editorComposite.setLayout(new GridLayout());
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -305,15 +304,15 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (summary != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
 			summary.setSelection(0, summary.getText().length());
 			summary.setFocus();
-		} else if (summary != null) {			
+		} else if (summary != null) {
 			summary.setFocus();
 		}
 	}
 
 	@Override
 	public void setFocus() {
-		//form.setFocus();
-		if(summary != null && !summary.isDisposed()) {
+		// form.setFocus();
+		if (summary != null && !summary.isDisposed()) {
 			summary.setFocus();
 		}
 	}
@@ -335,7 +334,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		summaryGridData.horizontalSpan = 2;
 		summary.setLayoutData(summaryGridData);
 		toolkit.paintBordersFor(container);
-		
+
 		if (task instanceof AbstractRepositoryTask) {
 			summary.setEnabled(false);
 		} else {
@@ -410,7 +409,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				}
 			});
 		}
-		
+
 		toolkit.createLabel(statusComposite, "URL:");
 		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.NONE);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(issueReportURL);
@@ -521,7 +520,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, LABEL_SCHEDULE);
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 
@@ -563,7 +562,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String creationDateString = "";
 		try {
@@ -582,7 +581,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Estimated time
 
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		estimated = new Spinner(sectionClient, SWT.NONE);
 		estimated.setSelection(task.getEstimateTimeHours());
@@ -602,7 +601,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimated.setLayoutData(estimatedDataLayout);
 
 		label = toolkit.createLabel(sectionClient, "hours ");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
@@ -613,7 +612,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
 		String completionDateString = "";
 		if (task.isCompleted()) {
@@ -631,13 +630,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Elapsed Time
 
 		label = toolkit.createLabel(sectionClient, "Active time:");
-//		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
 		Composite elapsedComposite = toolkit.createComposite(sectionClient);
 		GridLayout elapsedLayout = new GridLayout();
 		elapsedLayout.numColumns = 2;
-		elapsedLayout.marginWidth = 1;
+		elapsedLayout.marginWidth = 0;
+		elapsedLayout.marginHeight = 1;
 		elapsedLayout.makeColumnsEqualWidth = false;
 		elapsedComposite.setLayout(elapsedLayout);
 		GridData elapsedCompositeGridData = new GridData();
@@ -646,7 +646,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		String elapsedTimeString = NO_TIME_ELAPSED;
 		try {
-			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task), true);
+			elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task),
+					true);
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
@@ -655,9 +656,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		final Text elapsedTimeText = toolkit.createText(elapsedComposite, elapsedTimeString, SWT.NONE);
 		GridData td = new GridData(GridData.FILL_HORIZONTAL);
-		td.widthHint = 110;
+		td.widthHint = 120;
 		elapsedTimeText.setLayoutData(td);
-		elapsedTimeText.setEditable(false);		
+		elapsedTimeText.setEditable(false);
 
 		// Refresh Button
 		Button timeRefresh = toolkit.createButton(elapsedComposite, "Refresh", SWT.PUSH | SWT.CENTER);
@@ -667,7 +668,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				String elapsedTimeString = NO_TIME_ELAPSED;
 				try {
-					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager().getElapsedTime(task), true);
+					elapsedTimeString = DateUtil.getFormattedDuration(TasksUiPlugin.getTaskListManager()
+							.getElapsedTime(task), true);
 					if (elapsedTimeString.equals("")) {
 						elapsedTimeString = NO_TIME_ELAPSED;
 					}
@@ -730,7 +732,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// getSite().getSelectionProvider().setSelection(commentViewer.getSelection());
 		//				
 		// }});
-		
+
 		toolkit.paintBordersFor(container);
 	}
 
@@ -775,7 +777,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		toolkit.createLabel(container, "Task context file:");
-//		l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		// l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.NONE);
@@ -815,7 +817,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public String getDescription() {
 		return this.summary.getText();
 	}
-	
+
 	/** for testing */
 	public String getFormTitle() {
 		return form.getText();
