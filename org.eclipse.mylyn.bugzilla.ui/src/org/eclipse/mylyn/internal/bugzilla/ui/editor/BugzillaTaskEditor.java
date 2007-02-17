@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -115,17 +116,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected void createCustomAttributeLayout(Composite composite) {
-		// FormToolkit toolkit = getManagedForm().getToolkit();
 
 		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
-		if (attribute != null && !attribute.isReadOnly()) {
-			Label label;
-			if (hasOutgoingChange(attribute)) {
-				label = toolkit.createLabel(composite, "*" + BugzillaReportElement.DEPENDSON.toString());
-			} else {
-				label = toolkit.createLabel(composite, BugzillaReportElement.DEPENDSON.toString());
-			}
-
+		if (attribute != null && !attribute.isReadOnly()) {			
+			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Composite textFieldComposite = toolkit.createComposite(composite);
 			GridLayout textLayout = new GridLayout();
@@ -144,12 +138,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		attribute = this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
-			Label label;
-			if (hasOutgoingChange(attribute)) {
-				label = toolkit.createLabel(composite, "*" + BugzillaReportElement.BLOCKED.toString());
-			} else {
-				label = toolkit.createLabel(composite, BugzillaReportElement.BLOCKED.toString());
-			}
+			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Composite textFieldComposite = toolkit.createComposite(composite);
 			GridLayout textLayout = new GridLayout();
@@ -218,12 +207,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		attribute = this.taskData.getAttribute(BugzillaReportElement.BUG_FILE_LOC.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
-			Label label;
-			if (hasOutgoingChange(attribute)) {
-				label = toolkit.createLabel(composite, "*" + BugzillaReportElement.BUG_FILE_LOC.toString());
-			} else {
-				label = toolkit.createLabel(composite, BugzillaReportElement.BUG_FILE_LOC.toString());
-			}
+			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text urlField = createTextField(composite, attribute, SWT.FLAT);
 			GridDataFactory.fillDefaults().hint(135, SWT.DEFAULT).applyTo(urlField);
@@ -268,7 +252,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	private void addBugHyperlinks(Composite composite, String key) {
-		FormToolkit toolkit = getManagedForm().getToolkit();
 		Composite hyperlinksComposite = toolkit.createComposite(composite);
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.marginBottom = 0;
@@ -490,8 +473,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute == null)
 			return;
 		String keywords = attribute.getValue();
-		FormToolkit toolkit = getManagedForm().getToolkit();
-		Label label = toolkit.createLabel(attributesComposite, "Keywords:");
+		Label label = createLabel(attributesComposite, attribute);
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
 		// toolkit.createText(attributesComposite, keywords)
@@ -552,8 +534,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected void addVoting(Composite attributesComposite) {
-		FormToolkit toolkit = getManagedForm().getToolkit();
 		Label label = toolkit.createLabel(attributesComposite, "Votes:");
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite votingComposite = toolkit.createComposite(attributesComposite);
 		GridLayout layout = new GridLayout(3, false);

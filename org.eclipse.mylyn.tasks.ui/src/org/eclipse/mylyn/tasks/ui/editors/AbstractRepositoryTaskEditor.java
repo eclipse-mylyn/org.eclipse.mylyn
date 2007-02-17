@@ -765,23 +765,23 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		headerLayout.horizontalSpacing = 6;
 		headerInfoComposite.setLayout(headerLayout);
 
+		
+		
 		RepositoryTaskAttribute statusAtribute = taskData.getAttribute(RepositoryTaskAttribute.STATUS);
-		if (statusAtribute != null) {
-			createLabel(headerInfoComposite, statusAtribute);// .setFont(TITLE_FONT);
-			createTextField(headerInfoComposite, statusAtribute, SWT.NONE | SWT.READ_ONLY);
-		}
+		addNameValue(headerInfoComposite, statusAtribute);
 
 		RepositoryTaskAttribute priorityAttribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
-		if (priorityAttribute != null) {
-			createLabel(headerInfoComposite, priorityAttribute);// .setFont(TITLE_FONT);
-			createTextField(headerInfoComposite, priorityAttribute, SWT.NONE | SWT.READ_ONLY);
-		}
+		addNameValue(headerInfoComposite, priorityAttribute);
 
 		String idLabel = (repositoryTask != null) ? repositoryTask.getIdentifyingLabel() : taskData.getId();
 		if (idLabel != null) {
-			toolkit.createLabel(headerInfoComposite, "ID:");// .setFont(TITLE_FONT);
-			toolkit.createText(headerInfoComposite, idLabel, SWT.FLAT | SWT.READ_ONLY);
+			
+			Composite nameValue = toolkit.createComposite(headerInfoComposite);
+			nameValue.setLayout(new GridLayout(2, false));
+			toolkit.createLabel(nameValue, "ID:");// .setFont(TITLE_FONT);
+			toolkit.createText(nameValue, idLabel, SWT.FLAT | SWT.READ_ONLY);
 		}
+		
 
 		String openedDateString = "";
 		String modifiedDateString = "";
@@ -798,14 +798,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		RepositoryTaskAttribute creationAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_CREATION);
 		if (creationAttribute != null) {
-			createLabel(headerInfoComposite, creationAttribute);// .setFont(TITLE_FONT);
-			toolkit.createText(headerInfoComposite, openedDateString, SWT.FLAT | SWT.READ_ONLY);
+			Composite nameValue = toolkit.createComposite(headerInfoComposite);
+			nameValue.setLayout(new GridLayout(2, false));
+			createLabel(nameValue, creationAttribute);
+			toolkit.createText(nameValue, openedDateString, SWT.FLAT | SWT.READ_ONLY);
 		}
 
 		RepositoryTaskAttribute modifiedAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-		if (modifiedAttribute != null) {
-			createLabel(headerInfoComposite, modifiedAttribute);// .setFont(TITLE_FONT);
-			toolkit.createText(headerInfoComposite, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+		if (modifiedAttribute != null) {			
+			Composite nameValue = toolkit.createComposite(headerInfoComposite);
+			nameValue.setLayout(new GridLayout(2, false));
+			createLabel(nameValue, modifiedAttribute);
+			toolkit.createText(nameValue, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);			
 		}
 
 		if (getActivityUrl() != null) {
@@ -822,6 +826,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 			// GridDataFactory.fillDefaults().span(1,
 			// SWT.DEFAULT).align(SWT.RIGHT, SWT.DEFAULT).applyTo(hyperlink);
+		}
+	}
+	
+	private void addNameValue(Composite parent, RepositoryTaskAttribute attribute) {
+		Composite nameValue = toolkit.createComposite(parent);
+		nameValue.setLayout(new GridLayout(2, false));
+		if (attribute != null) {
+			createLabel(nameValue, attribute);// .setFont(TITLE_FONT);
+			createTextField(nameValue, attribute, SWT.NONE | SWT.READ_ONLY);
 		}
 	}
 
@@ -867,6 +880,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		} else {
 			label = toolkit.createLabel(composite, attribute.getName());
 		}
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
 		return label;
 	}
 
@@ -905,7 +919,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		int currentCol = 1;
 
 		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
-			String name = attribute.getName();
 			String value = "";
 			value = checkText(attribute.getValue());
 			if (attribute.isHidden())
@@ -921,10 +934,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			data.horizontalIndent = HORZ_INDENT;
 
 			if (attribute.hasOptions() && !attribute.isReadOnly()) {
-				if (hasOutgoingChange(attribute)) {
-					name = "*" + name;
-				}
-				Label label = toolkit.createLabel(attributesComposite, name);
+				Label label = createLabel(attributesComposite, attribute);
 				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
@@ -945,7 +955,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				comboListenerMap.put(attributeCombo, attribute);
 				currentCol += 2;
 			} else {
-				Label label = toolkit.createLabel(attributesComposite, name);
+				Label label = createLabel(attributesComposite, attribute);
 				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 				Composite textFieldComposite = toolkit.createComposite(attributesComposite);
 				GridLayout textLayout = new GridLayout();
@@ -1723,7 +1733,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				foundNew = true;
 			}
 
-			expandableComposite	.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
 					+ taskComment.getCreated());
@@ -2012,7 +2022,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	@Override
-	public void dispose() {		
+	public void dispose() {
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
@@ -2024,8 +2034,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// Must discard these unsaved changes
 			TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
 			repositoryTask.setDirty(false);
-		}	
-		
+		}
+
 		super.dispose();
 	}
 
