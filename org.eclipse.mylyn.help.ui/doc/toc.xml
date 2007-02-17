@@ -3,6 +3,7 @@
 
 <toc label="Mylar"> 
 	<topic label="Overview" href="doc/overview.html"/>
+	<!--
 	<topic label="New &amp; Noteworthy" href="doc/new.html"/>
 	<anchor id="concepts"/>
 	<anchor id="tasklist"/>
@@ -10,7 +11,6 @@
 	<anchor id="xml"/>
 	<anchor id="bugzilla"/>
 	<anchor id="monitor"/>
-	<!--
 	<topic label="For Developers" href="doc/developer/index.html">
 		<topic label="Release Notes" href="doc/developer/changes.html"/>
 	</topic>
