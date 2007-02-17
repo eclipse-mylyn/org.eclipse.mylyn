@@ -143,6 +143,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RetargetAction;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -1722,6 +1723,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				foundNew = true;
 			}
 
+			expandableComposite	.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
 					+ taskComment.getCreated());
 
@@ -2009,7 +2012,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose() {		
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASKLIST_CHANGE_LISTENER);
 		getSite().getPage().removeSelectionListener(selectionListener);
 		if (waitCursor != null) {
@@ -2021,7 +2024,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// Must discard these unsaved changes
 			TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
 			repositoryTask.setDirty(false);
-		}
+		}	
+		toolkit.dispose();
 		super.dispose();
 	}
 
