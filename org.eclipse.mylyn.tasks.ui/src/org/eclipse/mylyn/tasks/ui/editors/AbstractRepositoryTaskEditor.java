@@ -467,7 +467,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Set<RepositoryTaskAttribute> changedAttributes;
 
 	protected Map<SECTION_NAME, String> alternateSectionLabels = new HashMap<SECTION_NAME, String>();
-	
+
+	private String kindLabel;
+
 	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
 
 		public Color getBackground(Object element) {
@@ -684,11 +686,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		registerDropListener(form);
 
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repository.getKind());
-		ImageDescriptor imageDescriptor = TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay, false, false);
+		ImageDescriptor imageDescriptor = TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay, false,
+				false);
 		form.setImage(TaskListImages.getImage(imageDescriptor));
-		
+
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-		String kindLabel = "";
+		kindLabel = "";
 		if (connectorUi != null) {
 			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
 		}
@@ -805,7 +808,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		if (getActivityUrl() != null) {
-			Hyperlink hyperlink = toolkit.createHyperlink(headerInfoComposite, "Past activity", SWT.NONE);
+			String linkName = kindLabel + " History";
+			Hyperlink hyperlink = toolkit.createHyperlink(headerInfoComposite, linkName, SWT.NONE);
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -1898,8 +1902,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
 
-		toolkit.createLabel(buttonComposite, "    ");		
-		
+		toolkit.createLabel(buttonComposite, "    ");
+
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (attachContext && task != null) {
 			addAttachContextButton(buttonComposite, task);
