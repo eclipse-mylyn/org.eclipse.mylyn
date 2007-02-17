@@ -384,7 +384,7 @@ public class TaskEditor extends FormEditor {
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());
 			}
-
+			
 			int selectedIndex = index;
 			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
 				if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(getEditorInput())) {

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -28,30 +29,38 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.SubActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
@@ -156,10 +165,28 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			addClipboardActions(manager);
 		}
 
-		if (editor.getTaskEditorInput() == null)
+		if (editor.getTaskEditorInput() == null) {
+			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
+			List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+			Collections.sort(categories);
+			for (final AbstractTaskContainer category : categories) {
+				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
+					Action action = new Action() {
+						@Override
+						public void run() {
+							moveToCategory(category);
+						}
+					};
+					String text = category.getSummary();
+					action.setText(text);
+					action.setImageDescriptor(TaskListImages.CATEGORY);
+					subMenuManager.add(action);
+				}
+			}
+			manager.add(subMenuManager);
 			return;
+		}
 		final ITask task = editor.getTaskEditorInput().getTask();
-
 		if (task == null) {
 			return;
 		} else {
@@ -232,6 +259,21 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
+	private void moveToCategory(AbstractTaskContainer category) {
+		IEditorInput input =  getEditor().getEditorInput();
+		if (input instanceof RepositoryTaskEditorInput) {
+			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput)input;
+			final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
+			final AddExistingTaskJob job = new AddExistingTaskJob(repositoryTaskEditorInput.getRepository(), repositoryTaskEditorInput.getId(), category);
+			job.schedule();
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					svc.showInDialog(getEditor().getSite().getShell(), job);
+				}
+			});
+		}
+	}
+	
 	public void updateSelectableActions(ISelection selection) {
 		if (editor != null) {
 			cutAction.selectionChanged(selection);
