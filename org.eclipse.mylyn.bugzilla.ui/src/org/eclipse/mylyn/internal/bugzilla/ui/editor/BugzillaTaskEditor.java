@@ -387,7 +387,9 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			estimateText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		}
 
-		toolkit.createLabel(timeComposite, "Current Estimate:");
+		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+		
 		Text currentEstimate = toolkit.createText(timeComposite,
 				""
 						+ (Float.parseFloat(taskData
