@@ -100,7 +100,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	public void restoreEditor(IMylarElement document) {
 		IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(document, false);
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (resource instanceof IFile && resource.exists()) {
+		if (activePage != null && resource instanceof IFile && resource.exists()) {
 			try {
 				IDE.openEditor(activePage, (IFile) resource, false);
 			} catch (PartInitException e) {
