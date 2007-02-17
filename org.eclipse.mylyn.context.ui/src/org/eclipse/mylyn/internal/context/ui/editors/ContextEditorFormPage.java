@@ -297,7 +297,7 @@ public class ContextEditorFormPage extends FormPage {
 		if (task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
 			createViewer(sectionClient);
 		} else {
-			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Active task to edit context", SWT.NONE);
+			Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Activate task to edit context", SWT.NONE);
 			retrieveHyperlink.addMouseListener(new MouseListener() {
 
 				public void mouseUp(MouseEvent e) {
