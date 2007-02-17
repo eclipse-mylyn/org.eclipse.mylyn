@@ -2025,7 +2025,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
 			repositoryTask.setDirty(false);
 		}	
-		toolkit.dispose();
+		
 		super.dispose();
 	}
 
@@ -2341,7 +2341,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void addRadioButtons(Composite buttonComposite) {
-		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 		int i = 0;
 		Button selected = null;
 		radios = new Button[taskData.getOperations().size()];
