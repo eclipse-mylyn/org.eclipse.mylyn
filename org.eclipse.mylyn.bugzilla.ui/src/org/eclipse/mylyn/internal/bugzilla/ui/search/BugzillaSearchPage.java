@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.search;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -101,7 +99,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	private static final String[] emailRoleValues = { "emailassigned_to1", "emailreporter1", "emailcc1",
 			"emaillongdesc1" };
 
-	//protected IPreferenceStore prefs = BugzillaUiPlugin.getDefault().getPreferenceStore();
+	// protected IPreferenceStore prefs =
+	// BugzillaUiPlugin.getDefault().getPreferenceStore();
 
 	protected String maxHits;
 
@@ -895,7 +894,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
 		getPatternData(commentPattern, commentOperation, previousCommentPatterns);
 		getPatternData(this.emailPattern, emailOperation, previousEmailPatterns);
-		
+
 		String summaryText = summaryPattern.getText();
 		BugzillaUiPlugin.getDefault().getPreferenceStore().setValue(IBugzillaConstants.MOST_RECENT_QUERY, summaryText);
 
@@ -1191,7 +1190,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		selected = severity.getSelectionIndices();
 		for (int i = 0; i < selected.length; i++) {
-			sb.append("&bug_severity=");			
+			sb.append("&bug_severity=");
 			sb.append(URLEncoder.encode(severity.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
@@ -1354,27 +1353,16 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					repository.getKind());
 
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {			
-					if(monitor == null) {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					if (monitor == null) {
 						monitor = new NullProgressMonitor();
 					}
 					try {
 						monitor.beginTask("Updating search options...", IProgressMonitor.UNKNOWN);
-						connector.updateAttributes(repository, monitor);					
+						connector.updateAttributes(repository, monitor);
 						BugzillaUiPlugin.updateQueryOptions(repository, monitor);
-					} catch (CoreException ce) {
-						if (ce.getStatus().getException() instanceof GeneralSecurityException) {
-							MylarStatusHandler.fail(ce,
-									"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
-											+ "Please ensure proper configuration in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
-											+ ". ", true);
-						} else if (ce.getStatus().getException() instanceof IOException) {
-							MylarStatusHandler.fail(ce, "Connection Error, please ensure proper configuration in "
-									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
-						} else {
-							MylarStatusHandler.fail(ce, "Error updating repository attributes for "
-									+ repository.getUrl(), true);
-						}						
+					} catch (final CoreException ce) {
+						MylarStatusHandler.displayStatus("Update failed", ce.getStatus());
 					} finally {
 						monitor.done();
 					}
