@@ -125,17 +125,16 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				// ignore
 			}
 		});
-		
-		
-		boolean shortLogin = Boolean.parseBoolean(repository.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
-		
+
 		Label shortLoginLabel = new Label(parent, SWT.NONE);
-		shortLoginLabel.setText(LABEL_SHORT_LOGINS);		
-		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);		
-		cleanQAContact.setSelection(shortLogin);
-		
-		
-		
+		shortLoginLabel.setText(LABEL_SHORT_LOGINS);
+		cleanQAContact = new Button(parent, SWT.CHECK | SWT.LEFT);
+		if (repository != null) {
+			boolean shortLogin = Boolean.parseBoolean(repository
+					.getProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN));
+			cleanQAContact.setSelection(shortLogin);
+		}
+
 	}
 
 	public void setBugzillaVersion(String version) {
@@ -168,9 +167,10 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 	@Override
 	public void updateProperties(TaskRepository repository) {
-		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN, String.valueOf(cleanQAContact.getSelection()));		
+		repository.setProperty(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN, String.valueOf(cleanQAContact
+				.getSelection()));
 	}
-	
+
 	@Override
 	public boolean isPageComplete() {
 		return super.isPageComplete();
