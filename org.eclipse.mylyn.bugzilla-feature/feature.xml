@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.bugzilla_feature"
       label="Mylar Connector: Bugzilla"
-      version="2.0.0.v20070216-1630"
+      version="2.0.0.v20070216"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -220,7 +220,7 @@ litigation.
    <requires>
       <import plugin="org.eclipse.core.runtime" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
-      <import plugin="org.eclipse.mylar" version="2.0.0.v20070216-1630" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar" version="2.0.0.v20070216" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="0.0.0" match="greaterOrEqual"/>
@@ -237,21 +237,21 @@ litigation.
       <import plugin="org.eclipse.mylar.bugzilla.core"/>
       <import plugin="org.eclipse.mylar.context.core"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
-      <import feature="org.eclipse.mylar_feature" version="2.0.0.v20070216-1630" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="2.0.0.v20070216" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070216-1630"
+         version="2.0.0.v20070216"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.bugzilla.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070216-1630"
+         version="2.0.0.v20070216"
          unpack="false"/>
 
 </feature>

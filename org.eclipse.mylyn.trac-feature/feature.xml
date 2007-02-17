@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar.trac_feature"
       label="Mylar Connector: Trac"
-      version="2.0.0.v20070216-1630"
+      version="2.0.0.v20070216"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -222,12 +222,12 @@ litigation.
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.search"/>
-      <import feature="org.eclipse.mylar_feature" version="2.0.0.v20070216-1630" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylar_feature" version="2.0.0.v20070216" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.context.core"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
       <import plugin="org.eclipse.mylar.trac.core"/>
-      <import plugin="org.eclipse.mylar" version="2.0.0.v20070216-1630" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylar" version="2.0.0.v20070216" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.monitor.core"/>
    </requires>
 
@@ -235,14 +235,14 @@ litigation.
          id="org.eclipse.mylar.trac.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070216-1630"
+         version="2.0.0.v20070216"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.trac.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070216-1630"
+         version="2.0.0.v20070216"
          unpack="false"/>
 
 </feature>
