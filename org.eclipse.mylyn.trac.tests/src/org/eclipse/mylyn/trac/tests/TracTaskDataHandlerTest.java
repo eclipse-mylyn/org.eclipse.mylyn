@@ -16,6 +16,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
@@ -36,7 +37,7 @@ import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
 /**
  * @author Steffen Pingel
  */
-public class TracOfflineTaskHandlerTest extends TestCase {
+public class TracTaskDataHandlerTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
@@ -46,7 +47,7 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 
 	private TestData data;
 
-	public TracOfflineTaskHandlerTest() {
+	public TracTaskDataHandlerTest() {
 	}
 
 	@Override
@@ -128,5 +129,14 @@ public class TracOfflineTaskHandlerTest extends TestCase {
 		result = connector.getChangedSinceLastSync(repository, tasks);		
 		assertEquals(tasks, result);
 	}
+	
+	public void testNonNumericTaskId() {
+		try {
+			connector.getTaskDataHandler().getTaskData(repository, "abc");
+			fail("Expected CoreException");
+		} catch (CoreException e) {
+		}
+	}
+	
 
 }

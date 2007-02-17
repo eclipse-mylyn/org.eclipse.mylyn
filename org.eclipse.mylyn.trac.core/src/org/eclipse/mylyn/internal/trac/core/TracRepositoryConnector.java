@@ -208,13 +208,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	
 	@Override
 	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String taskId) throws CoreException {
-		int taskIdInt = -1;
-		try {
-			taskIdInt = Integer.parseInt(taskId);
-		} catch (NumberFormatException e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
-						"Invalid ticket id: " + taskId, e));
-		}
+		int taskIdInt = getTicketId(taskId);
 		
 //		String handle = AbstractRepositoryTask.getHandle(repository.getUrl(), bugId);
 		TracTask task;
@@ -242,6 +236,15 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 		return task;
+	}
+
+	public static int getTicketId(String taskId) throws CoreException {
+		try {
+			return Integer.parseInt(taskId);
+		} catch (NumberFormatException e) {
+			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
+						"Invalid ticket id: " + taskId, e));
+		}
 	}
 
 	public synchronized TracClientManager getClientManager() {

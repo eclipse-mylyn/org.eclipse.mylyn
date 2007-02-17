@@ -51,8 +51,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 	}
 
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
-		int id = Integer.parseInt(taskId);
-		return downloadTaskData(repository, id);
+		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId));
 	}
 
 	public RepositoryTaskData downloadTaskData(TaskRepository repository, int id) throws CoreException {
