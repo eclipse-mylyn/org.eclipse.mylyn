@@ -388,7 +388,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		
 		Text currentEstimate = toolkit.createText(timeComposite,
 				""
@@ -537,7 +537,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	protected void addVoting(Composite attributesComposite) {
 		Label label = toolkit.createLabel(attributesComposite, "Votes:");
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		Composite votingComposite = toolkit.createComposite(attributesComposite);
 		GridLayout layout = new GridLayout(3, false);

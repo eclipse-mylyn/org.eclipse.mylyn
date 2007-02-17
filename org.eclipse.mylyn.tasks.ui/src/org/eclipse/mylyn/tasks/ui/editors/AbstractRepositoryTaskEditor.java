@@ -880,7 +880,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		} else {
 			label = toolkit.createLabel(composite, attribute.getName());
 		}
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		return label;
 	}
 
@@ -1733,7 +1733,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				foundNew = true;
 			}
 
-			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
 					+ taskComment.getCreated());

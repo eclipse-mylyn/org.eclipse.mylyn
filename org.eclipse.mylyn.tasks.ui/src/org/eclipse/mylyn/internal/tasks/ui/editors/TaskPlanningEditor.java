@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -345,7 +346,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		toolkit.createLabel(container, "Status:");
+		toolkit.createLabel(container, "Status:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));;
 		Composite statusComposite = toolkit.createComposite(container);
 		statusComposite.setLayout(new GridLayout(6, false));
 		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -410,8 +411,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		toolkit.createLabel(statusComposite, "URL:");
-		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.NONE);
+		Label label = toolkit.createLabel(statusComposite, "URL:");
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.FLAT);
 		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(issueReportURL);
 
 		if (task instanceof AbstractRepositoryTask) {
@@ -447,6 +449,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+		toolkit.paintBordersFor(statusComposite);
 	}
 
 	/**
@@ -520,7 +523,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Reminder
 		Label label = toolkit.createLabel(sectionClient, LABEL_SCHEDULE);
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		datePicker = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 
@@ -562,7 +565,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Creation date
 		label = toolkit.createLabel(sectionClient, "Creation date:");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		String creationDateString = "";
 		try {
@@ -581,7 +584,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Estimated time
 
 		label = toolkit.createLabel(sectionClient, "Estimated time:");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		estimated = new Spinner(sectionClient, SWT.NONE);
 		estimated.setSelection(task.getEstimateTimeHours());
@@ -601,7 +604,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimated.setLayoutData(estimatedDataLayout);
 
 		label = toolkit.createLabel(sectionClient, "hours ");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		// 1 Blank column
 		Label blankLabel2 = toolkit.createLabel(sectionClient, "");
@@ -612,7 +615,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Completion date
 		label = toolkit.createLabel(sectionClient, "Completion date:");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		String completionDateString = "";
 		if (task.isCompleted()) {
@@ -630,7 +633,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		// Elapsed Time
 
 		label = toolkit.createLabel(sectionClient, "Active time:");
-		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
 		Composite elapsedComposite = toolkit.createComposite(sectionClient);
@@ -777,7 +780,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		toolkit.createLabel(container, "Task context file:");
-		// l2.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		File contextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		if (contextFile != null) {
 			pathText = toolkit.createText(container, contextFile.getAbsolutePath(), SWT.NONE);
