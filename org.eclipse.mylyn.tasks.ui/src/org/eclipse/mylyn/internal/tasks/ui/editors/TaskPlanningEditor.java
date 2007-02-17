@@ -414,7 +414,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Label label = toolkit.createLabel(statusComposite, "URL:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		issueReportURL = toolkit.createText(statusComposite, task.getTaskUrl(), SWT.FLAT);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, false).applyTo(issueReportURL);
+		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		if (task instanceof AbstractRepositoryTask) {
 			issueReportURL.setEditable(false);
