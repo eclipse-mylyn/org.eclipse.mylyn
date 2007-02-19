@@ -697,13 +697,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
 		}
 		String idLabel = "";
+
 		if (repositoryTask != null) {
 			idLabel = repositoryTask.getIdentifyingLabel();
 		} else {
 			idLabel = taskData.getId();
 		}
 
-		form.setText(kindLabel + " " + idLabel);
+		if (taskData.isNew()) {
+			form.setText("New "+kindLabel);
+		} else {
+			form.setText(kindLabel + " " + idLabel);
+		}
+		
 		toolkit.decorateFormHeading(form.getForm());
 
 		editorComposite = form.getBody();
@@ -765,8 +771,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		headerLayout.horizontalSpacing = 6;
 		headerInfoComposite.setLayout(headerLayout);
 
-		
-		
 		RepositoryTaskAttribute statusAtribute = taskData.getAttribute(RepositoryTaskAttribute.STATUS);
 		addNameValue(headerInfoComposite, statusAtribute);
 
@@ -775,13 +779,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		String idLabel = (repositoryTask != null) ? repositoryTask.getIdentifyingLabel() : taskData.getId();
 		if (idLabel != null) {
-			
+
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);
 			nameValue.setLayout(new GridLayout(2, false));
 			toolkit.createLabel(nameValue, "ID:");// .setFont(TITLE_FONT);
 			toolkit.createText(nameValue, idLabel, SWT.FLAT | SWT.READ_ONLY);
 		}
-		
 
 		String openedDateString = "";
 		String modifiedDateString = "";
@@ -805,11 +808,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		RepositoryTaskAttribute modifiedAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
-		if (modifiedAttribute != null) {			
+		if (modifiedAttribute != null) {
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);
 			nameValue.setLayout(new GridLayout(2, false));
 			createLabel(nameValue, modifiedAttribute);
-			toolkit.createText(nameValue, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);			
+			toolkit.createText(nameValue, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
 		}
 
 		if (getActivityUrl() != null) {
@@ -828,7 +831,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// SWT.DEFAULT).align(SWT.RIGHT, SWT.DEFAULT).applyTo(hyperlink);
 		}
 	}
-	
+
 	private void addNameValue(Composite parent, RepositoryTaskAttribute attribute) {
 		Composite nameValue = toolkit.createComposite(parent);
 		nameValue.setLayout(new GridLayout(2, false));
