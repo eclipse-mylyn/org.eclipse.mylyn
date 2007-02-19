@@ -70,6 +70,9 @@ public class Trac09Client extends AbstractTracClient {
 
 	public Trac09Client(URL url, Version version, String username, String password, Proxy proxy) {
 		super(url, version, username, password, proxy);
+		
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNNECT_TIMEOUT);
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(SOCKET_TIMEOUT);
 	}
 
 	private GetMethod connect(String serverURL) throws TracException {

@@ -77,7 +77,9 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setServerURL(getXmlRpcUrl());
 		config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 		config.setContentLengthOptional(false);
-
+		config.setConnectionTimeout(CONNNECT_TIMEOUT);
+		config.setReplyTimeout(SOCKET_TIMEOUT);
+		
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
 
