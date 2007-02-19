@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.core;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Mik Kersten
@@ -35,5 +36,7 @@ public interface ITaskDataHandler {
 	public Date getDateForAttributeType(String attributeKey, String dateString);
 
 	public AbstractAttributeFactory getAttributeFactory();
+
+	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor) throws CoreException;
 
 }

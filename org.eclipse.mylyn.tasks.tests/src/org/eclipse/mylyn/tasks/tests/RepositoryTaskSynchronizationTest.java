@@ -19,6 +19,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.tasks.ui.actions.DiscardOutgoingAction;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -353,6 +354,12 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 			// ignore
 			return null;
+		}
+
+		public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
+				throws CoreException {
+			// ignore
+			return false;
 		}
 
 	}

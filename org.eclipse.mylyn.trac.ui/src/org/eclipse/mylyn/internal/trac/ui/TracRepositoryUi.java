@@ -17,7 +17,6 @@ import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.NewTracTaskWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -25,6 +24,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylar.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylar.tasks.ui.wizards.NewWebTaskWizard;
 
 /**
@@ -60,7 +60,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository repository) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
-			return new NewTracTaskWizard(repository);
+			return new NewTaskWizard(repository);
 		} else {
 			return new NewWebTaskWizard(repository, repository.getUrl() + ITracClient.NEW_TICKET_URL);
 		}

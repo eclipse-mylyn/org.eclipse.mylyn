@@ -148,7 +148,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof TaskRepository) {
 					setSelectedNode(new CustomWizardNode((TaskRepository) selection.getFirstElement()));
-					setPageComplete(true);
+					setPageComplete(true);					
 				}
 				setPageComplete(false);
 			}
@@ -170,6 +170,25 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 	protected abstract IWizard createWizard(TaskRepository taskRepository);
 
+	@Override
+	public boolean canFlipToNextPage() {
+		return getSelectedNode() != null && getNextPage() != null;
+	}
+	
+	public boolean canFinish() {
+		return getSelectedNode() != null && getNextPage() == null;
+	}
+
+	public boolean performFinish() {
+		if (getSelectedNode() == null || getNextPage() != null) {
+			// finish event will get forwarded to nested wizard
+			// by container
+			return false;
+		}
+		
+		return getSelectedNode().getWizard().performFinish();
+	}
+	
 	private class CustomWizardNode implements IWizardNode {
 
 		private final TaskRepository repository;
@@ -193,6 +212,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		public IWizard getWizard() {
 			if (wizard == null) {
 				wizard = SelectRepositoryPage.this.createWizard(repository);
+				wizard.setContainer(getContainer());
 			}
 
 			return wizard;
@@ -222,4 +242,5 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		}
 
 	}
+
 }

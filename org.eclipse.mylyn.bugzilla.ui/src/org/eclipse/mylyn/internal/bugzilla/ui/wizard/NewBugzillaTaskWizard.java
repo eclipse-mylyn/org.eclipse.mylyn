@@ -96,7 +96,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			return true;
 		} catch (Exception e) {
 			productPage.applyToStatusLine(new Status(IStatus.ERROR, "not_used", 0,
-					"Problem occured retrieving repository configuration from " + repository.getUrl(), null));
+					"Problem occurred retrieving repository configuration from " + repository.getUrl(), null));
 		}
 		return false;
 	}

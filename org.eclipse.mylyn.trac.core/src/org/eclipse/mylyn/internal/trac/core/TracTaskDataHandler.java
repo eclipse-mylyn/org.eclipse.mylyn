@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
@@ -276,6 +277,18 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			}
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e));
+		}
+	}
+
+	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
+			throws CoreException {
+		try {
+			ITracClient client = connector.getClientManager().getRepository(repository);
+			client.updateAttributes(new NullProgressMonitor(), false);
+			createDefaultAttributes(attributeFactory, data, client, false);
+			return true;
+		} catch (Exception e) {
+			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
 	}
 

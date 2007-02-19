@@ -90,6 +90,12 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 				// ignore
 				return null;
+			}
+
+			public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data,
+					IProgressMonitor monitor) throws CoreException {
+				// ignore
+				return false;
 			}};
 	}
 

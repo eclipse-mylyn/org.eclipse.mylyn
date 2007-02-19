@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
@@ -264,6 +265,12 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		if (newOperation != null) {
 			bugReport.addOperation(newOperation);
 		}
+	}
+
+	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor)
+			throws CoreException {
+		// Bugzilla needs a product to create task data
+		return false;
 	}
 
 }
