@@ -218,7 +218,7 @@ litigation.
    </url>
 
    <requires>
-      <import plugin="org.eclipse.ui" version="3.3.0.I20070209" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.3.0.I20070208" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.mylar.tasks.core"/>
       <import plugin="org.eclipse.mylar.tasks.ui"/>
