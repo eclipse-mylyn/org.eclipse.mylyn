@@ -77,10 +77,6 @@ public interface ITracClient {
 
 	public static final String DEFAULT_USERNAME = "anonymous";
 
-	public static final int CONNNECT_TIMEOUT = 30000;
-	
-	public static final int SOCKET_TIMEOUT = 10000;
-
 	/**
 	 * Gets ticket with <code>id</code> from repository.
 	 * 

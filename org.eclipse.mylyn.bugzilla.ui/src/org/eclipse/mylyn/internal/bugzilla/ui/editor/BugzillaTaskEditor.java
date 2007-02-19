@@ -559,7 +559,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		votesText.setEditable(false);
 
-		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes for this bug", SWT.NONE);
+		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes", SWT.NONE);
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -571,7 +571,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 
-		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote for this bug", SWT.NONE);
+		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote", SWT.NONE);
 		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {

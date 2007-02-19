@@ -19,6 +19,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.core.net.WebClientUtil;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
@@ -77,8 +78,8 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setServerURL(getXmlRpcUrl());
 		config.setTimeZone(TimeZone.getTimeZone(ITracClient.TIME_ZONE));
 		config.setContentLengthOptional(false);
-		config.setConnectionTimeout(CONNNECT_TIMEOUT);
-		config.setReplyTimeout(SOCKET_TIMEOUT);
+		config.setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+		config.setReplyTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);

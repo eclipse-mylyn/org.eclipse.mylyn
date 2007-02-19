@@ -108,7 +108,7 @@ public class BugzillaClient {
 
 	private static final int MAX_RETRY = 2;
 
-	private static final int CONNECT_TIMEOUT = 60000;
+	// private static final int CONNECT_TIMEOUT = 60000;
 
 	private static final String VALUE_CONTENTTYPEMETHOD_MANUAL = "manual";
 
@@ -252,8 +252,8 @@ public class BugzillaClient {
 				getMethod.setQueryString(requestURL.substring(requestURL.indexOf(QUERY_DELIMITER)));
 			}
 
-			httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
-			httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+			// httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
+			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
@@ -370,7 +370,7 @@ public class BugzillaClient {
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
-		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 		method.setFollowRedirects(false);
 
 		try {
@@ -683,8 +683,8 @@ public class BugzillaClient {
 		}
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
-		httpClient.getHttpConnectionManager().getParams().setSoTimeout(CONNECT_TIMEOUT);
-		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
+		// httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
+		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
@@ -872,7 +872,7 @@ public class BugzillaClient {
 				continue;
 			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
 				cleanQAContact(a);
-				String value = a.getValue();				
+				String value = a.getValue();
 				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}
