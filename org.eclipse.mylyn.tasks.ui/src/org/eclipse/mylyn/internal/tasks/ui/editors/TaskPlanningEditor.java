@@ -39,6 +39,7 @@ import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -49,7 +50,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -113,9 +113,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Text issueReportURL;
 
-	private Combo priorityCombo;
+	private CCombo priorityCombo;
 
-	private Combo statusCombo;
+	private CCombo statusCombo;
 
 	private TextViewer noteEditor;
 
@@ -351,8 +351,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		statusComposite.setLayout(new GridLayout(6, false));
 		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		priorityCombo = new Combo(statusComposite, SWT.FLAT);
-
+		priorityCombo = new CCombo(statusComposite, SWT.FLAT);
+		priorityCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		
 		// Populate the combo box with priority levels
 		for (String priorityLevel : TaskListView.PRIORITY_LEVEL_DESCRIPTIONS) {
 			priorityCombo.add(priorityLevel);
@@ -381,8 +382,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		statusCombo = new Combo(statusComposite, SWT.FLAT);
-
+		statusCombo = new CCombo(statusComposite, SWT.FLAT);
+		statusCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		
 		statusCombo.add(LABEL_COMPLETE);
 		statusCombo.add(LABEL_INCOMPLETE);
 		if (task.isCompleted()) {

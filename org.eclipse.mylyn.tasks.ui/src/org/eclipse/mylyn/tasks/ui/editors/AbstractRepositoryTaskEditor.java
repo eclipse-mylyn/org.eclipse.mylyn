@@ -942,7 +942,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
 				attributeCombo.setFont(TEXT_FONT);
-
+				attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 				if (hasChanged(attribute)) {
 					attributeCombo.setBackground(backgroundIncoming);
 				}
