@@ -17,6 +17,8 @@ import java.util.StringTokenizer;
 
 public class TestProxy implements Runnable {
 
+	public static final String NOT_FOUND = "HTTP/1.1 404 Not Found";
+
 	private int listenPort;
 
 	private Message request;
@@ -197,6 +199,11 @@ public class TestProxy implements Runnable {
 			}
 			sb.append("\n");
 			return sb.toString();
+		}
+
+		public String getMethod() {
+			int i = request.indexOf(" ");
+			return (i != -1) ? request.substring(0, i) : request;
 		}
 		
 	}
