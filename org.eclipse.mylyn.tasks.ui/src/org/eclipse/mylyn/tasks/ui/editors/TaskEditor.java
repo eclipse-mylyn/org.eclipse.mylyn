@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -322,6 +323,8 @@ public class TaskEditor extends FormEditor {
 		if (webBrowser != null) {
 			webBrowser.setUrl(url);
 			revealBrowser();
+		} else {
+			TasksUiUtil.openBrowser(url);
 		}
 	}
 
