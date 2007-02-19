@@ -346,12 +346,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		toolkit.createLabel(container, "Status:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));;
+		toolkit.createLabel(container, "Status:").setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		Composite statusComposite = toolkit.createComposite(container);
 		statusComposite.setLayout(new GridLayout(6, false));
 		statusComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		priorityCombo = new Combo(statusComposite, SWT.READ_ONLY);
+		priorityCombo = new Combo(statusComposite, SWT.FLAT);
 
 		// Populate the combo box with priority levels
 		for (String priorityLevel : TaskListView.PRIORITY_LEVEL_DESCRIPTIONS) {
@@ -381,7 +381,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		statusCombo = new Combo(statusComposite, SWT.READ_ONLY);
+		statusCombo = new Combo(statusComposite, SWT.FLAT);
 
 		statusCombo.add(LABEL_COMPLETE);
 		statusCombo.add(LABEL_INCOMPLETE);
@@ -426,7 +426,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		getDescButton = toolkit.createButton(statusComposite, "Get Description", SWT.PUSH);
+		getDescButton = toolkit.createButton(statusComposite, "Get Description", SWT.FLAT | SWT.PUSH);
 		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		toolkit.paintBordersFor(container);
 		setButtonStatus();

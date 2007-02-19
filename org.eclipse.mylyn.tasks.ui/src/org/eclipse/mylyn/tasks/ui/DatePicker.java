@@ -89,7 +89,7 @@ public class DatePicker extends Composite {
 		gridLayout.makeColumnsEqualWidth = false;
 		this.setLayout(gridLayout);
 
-		dateText = new Text(this, SWT.NONE);
+		dateText = new Text(this, SWT.FLAT);
 
 		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
 		dateTextGridData.widthHint = 110;
@@ -133,7 +133,7 @@ public class DatePicker extends Composite {
 			}
 		});
 
-		pickButton = new Button(this, SWT.ARROW | SWT.DOWN);
+		pickButton = new Button(this, SWT.FLAT | SWT.ARROW | SWT.DOWN);
 		GridData pickButtonGridData = new org.eclipse.swt.layout.GridData();
 		pickButtonGridData.horizontalAlignment = org.eclipse.swt.layout.GridData.END;
 		pickButton.setLayoutData(pickButtonGridData);
