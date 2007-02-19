@@ -28,13 +28,13 @@ import org.apache.commons.httpclient.protocol.Protocol;
  */
 public class WebClientUtil {
 
+	public static final int CONNNECT_TIMEOUT = 30000;
+
+	public static final int SOCKET_TIMEOUT = 10000;
+
 	private static final int HTTP_PORT = 80;
 
 	private static final int HTTPS_PORT = 443;
-
-	// private static final int COM_TIME_OUT = 30000;
-
-	// public static final String ENCODING_GZIP = "gzip";
 
 	public static void initCommonsLoggingSettings() {
 		// TODO: move?
@@ -107,8 +107,6 @@ public class WebClientUtil {
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
-		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
-
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
 		// System.setProperty("org.apache.commons.logging.Log",
@@ -122,6 +120,11 @@ public class WebClientUtil {
 		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
 		// "debug");
 
+		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
+		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
+		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+		
+		
 		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
 				&& !WebClientUtil.repositoryUsesHttps(repositoryUrl)
 				&& proxySettings.address() instanceof InetSocketAddress) {
