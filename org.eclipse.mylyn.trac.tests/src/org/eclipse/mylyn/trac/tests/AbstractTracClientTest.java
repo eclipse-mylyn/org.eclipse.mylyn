@@ -59,8 +59,12 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 
 	public ITracClient connect(String url) throws Exception {
+		return connect(url, Proxy.NO_PROXY);
+	}
+
+	public ITracClient connect(String url, Proxy proxy) throws Exception {
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
-		return connect(url, credentials.username, credentials.password);
+		return connect(url, credentials.username, credentials.password, proxy);
 	}
 
 	public ITracClient connect(String url, String username, String password) throws Exception {
