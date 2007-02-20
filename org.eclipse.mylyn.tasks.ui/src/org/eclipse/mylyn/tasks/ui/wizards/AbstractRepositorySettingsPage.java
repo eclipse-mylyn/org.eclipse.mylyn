@@ -11,12 +11,18 @@
 
 package org.eclipse.mylar.tasks.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -49,6 +55,7 @@ import org.eclipse.ui.forms.widgets.Section;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
@@ -64,6 +71,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String URL_PREFIX_HTTP = "http://";
 
+	protected static final String INVALID_REPOSITORY_URL = "Repository url is invalid.";
+	
+	protected static final String INVALID_LOGIN = "Unable to authenticate with repository. Login credentials invalid.";
+	
 	protected AbstractRepositoryConnector connector;
 
 	protected StringFieldEditor repositoryLabelEditor;
@@ -116,6 +127,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private boolean needsHttpAuth;
 
+	private boolean needsValidation;
+	
 	private Composite container;
 
 	private Composite httpAuthComp;
@@ -164,6 +177,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setNeedsEncoding(true);
 		setNeedsTimeZone(true);
 		setNeedsProxy(true);
+		setNeedsValidation(true);
 	}
 
 	public void createControl(Composite parent) {
@@ -459,17 +473,19 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			addProxySection();
 		}
 
-		validateServerButton = new Button(container, SWT.PUSH);
-		GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
-		validateServerButton.setText("Validate Settings");
-		validateServerButton.addSelectionListener(new SelectionAdapter() {
+		if (needsValidation()) {
+			validateServerButton = new Button(container, SWT.PUSH);
+			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
+			validateServerButton.setText("Validate Settings");
+			validateServerButton.addSelectionListener(new SelectionAdapter() {
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				validateSettings();
-			}
-		});
-
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					validateSettings();
+				}
+			});
+		}
+		
 		setControl(container);
 	}
 
@@ -694,8 +710,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	protected abstract void createAdditionalControls(Composite parent);
-
-	protected abstract void validateSettings();
 
 	protected abstract boolean isValidUrl(String name);
 
@@ -964,6 +978,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		this.needsAnonymousLogin = needsAnonymousLogin;
 	}
 
+	public void setNeedsValidation(boolean needsValidation) {
+		this.needsValidation = needsValidation;
+	}
+	
+	public boolean needsValidation() {
+		return needsValidation;
+	}
+	
 	public void updateProperties(TaskRepository repository) {
 		// none
 	}
@@ -982,4 +1004,89 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void setPassword(String pass) {
 		repositoryPasswordEditor.setStringValue(pass);
 	}
+	
+	protected void validateSettings() {
+		final Validator validator = getValidator(createTaskRepository());
+		if (validator == null) {
+			return;
+		}
+
+		try {			
+			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
+					try {
+						validator.run(monitor);
+						if (validator.getStatus() == null) {
+							validator.setStatus(Status.OK_STATUS);
+						}
+					} catch (CoreException e) {
+						validator.setStatus(e.getStatus());
+					} catch (Exception e) {
+						throw new InvocationTargetException(e);
+					} finally {
+						monitor.done();
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			MylarStatusHandler.fail(e.getCause(), "Internal error validating repository", true);
+			return;
+		} catch (InterruptedException e) {
+			// canceled
+			return;
+		}
+
+		applyValidatorResult(validator);
+		getWizard().getContainer().updateButtons();
+	}
+
+	protected void applyValidatorResult(Validator validator) {
+		IStatus status = validator.getStatus();
+		String message = status.getMessage();
+		if (message == null || message.length() == 0)
+			message = null;
+		switch (status.getSeverity()) {
+		case IStatus.OK:
+			if (status == Status.OK_STATUS) {
+				if (getUserName().length() > 0) {
+					message = "Authentication credentials are valid.";
+				} else {
+					message = "Repository is valid.";
+				}				
+			}
+			setMessage(message, WizardPage.INFORMATION);
+			break;
+		case IStatus.INFO:
+			setMessage(message, WizardPage.INFORMATION);
+			break;			
+		case IStatus.WARNING:
+			setMessage(message, WizardPage.WARNING);
+			break;
+		default:
+			setMessage(message, WizardPage.ERROR);
+			break;
+		}
+		setErrorMessage(null);
+	}
+
+	protected abstract Validator getValidator(TaskRepository repository);
+	
+	// public for testing
+	public abstract class Validator {
+
+		private IStatus status;
+		
+		public abstract void run(IProgressMonitor monitor) throws CoreException;
+		
+		public IStatus getStatus() {
+			return status;
+		}
+		
+		public void setStatus(IStatus status) {
+			this.status = status;
+		}
+		
+	}
+	
 }

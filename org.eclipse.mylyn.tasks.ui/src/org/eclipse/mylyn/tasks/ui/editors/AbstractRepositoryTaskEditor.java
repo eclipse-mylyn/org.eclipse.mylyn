@@ -704,12 +704,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			idLabel = taskData.getId();
 		}
 
+		 
+//		 Label label = toolkit.createLabel(form.getForm().getHead(), "TEST");
+//		 form.setHeadClient(label);
+		 
+		 
 		if (taskData.isNew()) {
-			form.setText("New "+kindLabel);
+			form.setText("New " + kindLabel);
 		} else {
 			form.setText(kindLabel + " " + idLabel);
 		}
-		
+
 		toolkit.decorateFormHeading(form.getForm());
 
 		editorComposite = form.getBody();

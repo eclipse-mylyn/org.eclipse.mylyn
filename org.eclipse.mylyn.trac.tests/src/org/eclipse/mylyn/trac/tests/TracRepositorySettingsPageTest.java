@@ -13,12 +13,13 @@ package org.eclipse.mylar.trac.tests;
 
 import java.net.Proxy;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.ui.TracRepositoryUi;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage.Validator;
+import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -30,7 +31,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 
 	private TracRepositoryUi connector;
 	private TracRepositorySettingsPage page;
-	private Validator validator;
+	private TracValidator validator;
 
 	public TracRepositorySettingsPageTest() {
 		super(null);
@@ -61,7 +62,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		page.setUserId(username);
 		page.setPassword(password);
 		page.setTracVersion(version);
-		validator = page.new Validator();
+		validator = page.new TracValidator(page.createTaskRepository(), version);
 		return null;
 	}
 	
@@ -69,7 +70,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		version = Version.XML_RPC;
 		connect010();
 
-		validator.run();
+		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
 		assertNull(validator.getStatus());
 	}
@@ -78,7 +79,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		version = Version.TRAC_0_9;
 		connect010();
 
-		validator.run();
+		validator.run(new NullProgressMonitor());
 		assertNull(validator.getResult());
 		assertNull(validator.getStatus());
 	}
@@ -87,7 +88,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		version = null;
 		connect010();
 
-		validator.run();
+		validator.run(new NullProgressMonitor());
 		assertEquals(Version.XML_RPC, validator.getResult());
 		assertNull(validator.getStatus());
 	}
@@ -96,7 +97,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 		version = null;
 		connect(Constants.TEST_TRAC_010_URL, "", "");
 
-		validator.run();
+		validator.run(new NullProgressMonitor());
 		assertEquals(Version.TRAC_0_9, validator.getResult());
 		assertNotNull(validator.getStatus());
 	}

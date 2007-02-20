@@ -164,6 +164,12 @@ public class RepositorySettingsPageTest extends TestCase {
 		Composite getParent() {
 			return parent;
 		}
+
+		@Override
+		protected Validator getValidator(TaskRepository repository) {
+			// ignore
+			return null;
+		}
 	}
 
 }

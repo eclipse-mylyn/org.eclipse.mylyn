@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.trac.core;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -91,6 +93,8 @@ public class TracCorePlugin extends Plugin {
 			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, e.getMessage());
 		} else if (e instanceof ClassCastException) {
 			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, "Unexpected server response: " + e.getMessage(), e);
+		} else if (e instanceof MalformedURLException) {
+			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, "Repository URL is invalid", e);
 		} else {
 			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.INTERNAL_ERROR, "Unexpected error", e);
 		}
