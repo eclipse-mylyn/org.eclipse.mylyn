@@ -704,11 +704,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			idLabel = taskData.getId();
 		}
 
-		 
-//		 Label label = toolkit.createLabel(form.getForm().getHead(), "TEST");
-//		 form.setHeadClient(label);
-		 
-		 
 		if (taskData.isNew()) {
 			form.setText("New " + kindLabel);
 		} else {
@@ -1774,7 +1769,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI | SWT.WRAP);
+			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI
+					| SWT.WRAP);
 			// viewer.getControl().setBackground(new
 			// Color(expandableComposite.getDisplay(), 123, 34, 155));
 			styledText = viewer.getTextWidget();
@@ -2731,11 +2727,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * the form during refresh
 	 */
 	private void setNullMenu(Composite comp) {
-		comp.setMenu(null);
-		for (Control child : comp.getChildren()) {
-			child.setMenu(null);
-			if (child instanceof Composite) {
-				setNullMenu((Composite) child);
+		if (!comp.isDisposed()) {
+			comp.setMenu(null);
+			for (Control child : comp.getChildren()) {
+				child.setMenu(null);
+				if (child instanceof Composite) {
+					setNullMenu((Composite) child);
+				}
 			}
 		}
 	}
