@@ -17,6 +17,7 @@ import java.net.Proxy.Type;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpClientParams;
@@ -123,8 +124,7 @@ public class WebClientUtil {
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
-		
-		
+
 		if (proxySettings != null && !Proxy.NO_PROXY.equals(proxySettings)
 				&& !WebClientUtil.repositoryUsesHttps(repositoryUrl)
 				&& proxySettings.address() instanceof InetSocketAddress) {
@@ -132,8 +132,7 @@ public class WebClientUtil {
 			client.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()), address.getPort());
 			if (proxySettings instanceof AuthenticatedProxy) {
 				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxySettings;
-				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
-						.getPassword());
+				Credentials credentials = getCredentials(authProxy, address);
 				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
 				client.getState().setProxyCredentials(proxyAuthScope, credentials);
 			}
@@ -154,6 +153,17 @@ public class WebClientUtil {
 		} else {
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl));
+		}
+	}
+
+	public static Credentials getCredentials(AuthenticatedProxy authProxy, InetSocketAddress address) {
+		String username = authProxy.getUserName();
+		int i = username.indexOf("\\");
+		if (i > 0 && i < username.length() - 1) {
+			return new NTCredentials(username.substring(i + 1), authProxy.getPassword(), address.getHostName(), username
+					.substring(0, i));
+		} else {
+			return new UsernamePasswordCredentials(username, authProxy.getPassword());
 		}
 	}
 
