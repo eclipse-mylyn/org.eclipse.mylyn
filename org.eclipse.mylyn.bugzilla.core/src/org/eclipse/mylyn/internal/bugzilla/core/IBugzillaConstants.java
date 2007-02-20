@@ -242,4 +242,6 @@ public interface IBugzillaConstants {
 	
 	public static final String REPOSITORY_SETTING_SHORT_LOGIN = "bugzilla.shortLoginEnabled";
 
+	public static final String BUGZILLA_TASK_KIND = "Bug";
+
 }

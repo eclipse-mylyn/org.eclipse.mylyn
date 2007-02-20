@@ -64,10 +64,14 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getSummary();
 		} else {
 			if (isSynchronizing()) {
-				//return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": <synchronizing>";
+				// return
+				// AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":
+				// <synchronizing>";
 				return "<synchronizing>";
 			} else {
-				//return AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ": ";
+				// return
+				// AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":
+				// ";
 				return "";
 			}
 		}
@@ -75,11 +79,15 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	@Override
 	public String getTaskKind() {
-		if (taskData != null && taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()) != null) {
-			return taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
-		} else {
-			return null;
-		}
+		return IBugzillaConstants.BUGZILLA_TASK_KIND;
+		// if (taskData != null &&
+		// taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString())
+		// != null) {
+		// return
+		// taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
+		// } else {
+		// return null;
+		// }
 	}
 
 	@Override
@@ -87,19 +95,20 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		return "bugzilla report taskId: " + getHandleIdentifier();
 	}
 
-//	@Override
-//	public String getUrl() {
-//		// fix for bug 103537 - should login automatically, but dont want to
-//		// show the login info in the query string
-//		try {
-////			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
-////					.parseInt(RepositoryTaskHandleUtil.getTaskId(handleIdentifier)));
-//			return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
-//					.parseInt(RepositoryTaskHandleUtil.));
-//		} catch (NumberFormatException nfe) {
-//			return super.getUrl();
-//		}
-//	}
+	// @Override
+	// public String getUrl() {
+	// // fix for bug 103537 - should login automatically, but dont want to
+	// // show the login info in the query string
+	// try {
+	// // return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(),
+	// Integer
+	// // .parseInt(RepositoryTaskHandleUtil.getTaskId(handleIdentifier)));
+	// return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
+	// .parseInt(RepositoryTaskHandleUtil.));
+	// } catch (NumberFormatException nfe) {
+	// return super.getUrl();
+	// }
+	// }
 
 	@Override
 	public boolean isCompleted() {
@@ -134,7 +143,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 				}
 			}
 		} catch (Exception e) {
-			//MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
+			// MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
 			return null;
 		}
 		return super.getCompletionDate();

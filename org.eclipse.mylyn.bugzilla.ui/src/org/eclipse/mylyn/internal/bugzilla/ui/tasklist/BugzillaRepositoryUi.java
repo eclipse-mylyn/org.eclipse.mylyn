@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -31,7 +32,7 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
-		return "Bug";
+		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
 	
 	@Override
