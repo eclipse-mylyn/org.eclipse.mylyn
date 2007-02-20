@@ -1768,13 +1768,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Composite ecComposite = toolkit.createComposite(expandableComposite);
 			GridLayout ecLayout = new GridLayout();
 			ecLayout.marginHeight = 0;
-			ecLayout.marginBottom = 10;
+			ecLayout.marginBottom = 3;
 			ecLayout.marginLeft = 10;
 			ecComposite.setLayout(ecLayout);
 			ecComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			expandableComposite.setClient(ecComposite);
 
-			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText(), SWT.MULTI | SWT.WRAP);
+			TextViewer viewer = addTextViewer(repository, ecComposite, taskComment.getText().trim(), SWT.MULTI | SWT.WRAP);
 			// viewer.getControl().setBackground(new
 			// Color(expandableComposite.getDisplay(), 123, 34, 155));
 			styledText = viewer.getTextWidget();
