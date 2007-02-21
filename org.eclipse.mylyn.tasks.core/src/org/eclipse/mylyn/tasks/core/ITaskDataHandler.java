@@ -30,6 +30,9 @@ public interface ITaskDataHandler {
 
 	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind);
 	
+	/**
+	 * Initialize a new task data object with default attributes and values
+	 */
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor) throws CoreException;
 
 }
