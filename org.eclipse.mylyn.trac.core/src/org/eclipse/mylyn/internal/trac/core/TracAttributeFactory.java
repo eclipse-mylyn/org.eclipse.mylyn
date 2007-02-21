@@ -11,10 +11,12 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 
@@ -148,6 +150,21 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 
 	static boolean isInternalAttribute(String id) {
 		return RepositoryTaskAttribute.COMMENT_NEW.equals(id) || RepositoryTaskAttribute.REMOVE_CC.equals(id) || RepositoryTaskAttribute.NEW_CC.equals(id) || RepositoryTaskAttribute.ADD_SELF_CC.equals(id);
+	}
+	
+	public Date getDateForAttributeType(String attributeKey, String dateString) {
+		if (dateString == null || dateString.length() == 0) {
+			return null;
+		}
+
+		try {
+			String mappedKey = mapCommonAttributeKey(attributeKey);
+			if (mappedKey.equals(Attribute.TIME.getTracKey()) || mappedKey.equals(Attribute.CHANGE_TIME.getTracKey())) {
+				return TracUtils.parseDate(Integer.valueOf(dateString));
+			}
+		} catch (Exception e) {
+		}
+		return null;
 	}
 
 }

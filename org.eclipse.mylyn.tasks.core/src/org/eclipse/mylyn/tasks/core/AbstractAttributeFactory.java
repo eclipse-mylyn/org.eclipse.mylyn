@@ -12,6 +12,7 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -33,4 +34,9 @@ public abstract class AbstractAttributeFactory implements Serializable {
 	public abstract String getName(String key);
 		
 	public abstract boolean isReadOnly(String key);
+	
+	/**
+	 * @return null if date cannot be parsed
+	 */
+	public abstract Date getDateForAttributeType(String attributeKey, String dateString);
 }

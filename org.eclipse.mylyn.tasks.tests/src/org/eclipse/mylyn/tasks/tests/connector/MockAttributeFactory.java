@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
+import java.util.Date;
+
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 
 
@@ -40,6 +42,11 @@ public class MockAttributeFactory extends AbstractAttributeFactory {
 	@Override
 	public String mapCommonAttributeKey(String key) {
 		return key;
+	}
+	
+	public Date getDateForAttributeType(String attributeKey, String dateString) {
+		// ignore
+		return null;
 	}
 
 }
