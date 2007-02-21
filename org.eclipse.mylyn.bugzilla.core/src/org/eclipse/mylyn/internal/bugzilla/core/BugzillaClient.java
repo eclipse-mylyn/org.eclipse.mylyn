@@ -65,6 +65,7 @@ import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
@@ -454,7 +455,7 @@ public class BugzillaClient {
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id);
+								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id, Task.DEFAULT_TASK_KIND);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
 								.getResponseBodyAsStream(), characterEncoding);

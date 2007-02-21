@@ -25,6 +25,8 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 public class Task implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
+	
+	public static final String DEFAULT_TASK_KIND = "task";
 
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
@@ -136,7 +138,8 @@ public class Task implements ITask {
 
 	private Set<ITask> children = new HashSet<ITask>();
 
-	protected String kind;
+	protected String kind = DEFAULT_TASK_KIND;
+
 
 	@Override
 	public String toString() {

@@ -33,6 +33,7 @@ import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -63,7 +64,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 
 		try {
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getUrl(), id + "");
+					repository.getUrl(), id + "", Task.DEFAULT_TASK_KIND);
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(new NullProgressMonitor(), false);
 			TracTicket ticket = client.getTicket(id);
@@ -75,7 +76,8 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		}
 	}
 
-	public AbstractAttributeFactory getAttributeFactory() {
+	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
+		// we don't care about the repository information right now
 		return attributeFactory;
 	}
 

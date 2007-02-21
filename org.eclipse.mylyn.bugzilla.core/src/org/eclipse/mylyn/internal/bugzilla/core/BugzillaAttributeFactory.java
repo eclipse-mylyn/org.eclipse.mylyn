@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.core;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
@@ -22,6 +24,22 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
  */
 public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 
+	private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm";
+
+	private static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
+
+	private static final String delta_ts_format = DATE_FORMAT_2;
+
+	private static final String creation_ts_format = DATE_FORMAT_1;
+
+	/**
+	 * public for testing Bugzilla 2.18 uses DATE_FORMAT_1 but later versions
+	 * use DATE_FORMAT_2 Using lowest common denominator DATE_FORMAT_1
+	 */
+	public static final String comment_creation_ts_format = DATE_FORMAT_1;
+
+	private static final String attachment_creation_ts_format = DATE_FORMAT_1;
+	
 	private static final long serialVersionUID = 5087501781682994759L;
 
 	@Override
@@ -101,6 +119,31 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.valueOf(key.trim().toUpperCase(Locale.ENGLISH)).isReadOnly();
 		} catch (IllegalArgumentException e) {
 			return true;
+		}
+	}
+	
+	public Date getDateForAttributeType(String attributeKey, String dateString) {
+		if (dateString == null || dateString.equals("")) {
+			return null;
+		}
+		try {
+			String mappedKey = mapCommonAttributeKey(attributeKey);
+			Date parsedDate = null;
+			if (mappedKey.equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+				parsedDate = new SimpleDateFormat(delta_ts_format).parse(dateString);
+			} else if (mappedKey.equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+				parsedDate = new SimpleDateFormat(creation_ts_format).parse(dateString);
+			} else if (mappedKey.equals(BugzillaReportElement.BUG_WHEN.getKeyString())) {
+				parsedDate = new SimpleDateFormat(comment_creation_ts_format).parse(dateString);
+			} else if (mappedKey.equals(BugzillaReportElement.DATE.getKeyString())) {
+				parsedDate = new SimpleDateFormat(attachment_creation_ts_format).parse(dateString);
+			}
+			return parsedDate;
+		} catch (Exception e) {
+			return null;
+			// throw new CoreException(new Status(IStatus.ERROR,
+			// BugzillaPlugin.PLUGIN_ID, 0,
+			// "Error parsing date string: " + dateString, e));
 		}
 	}
 

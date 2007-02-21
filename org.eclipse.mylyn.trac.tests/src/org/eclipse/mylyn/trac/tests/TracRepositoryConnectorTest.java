@@ -45,6 +45,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -242,7 +243,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("456", task.getIdentifyingLabel());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
-		assertEquals(null, task.getTaskKind());
+		assertEquals(Task.DEFAULT_TASK_KIND, task.getTaskKind());
 	}
 
 	public void testUpdateAttributesWeb096() throws Exception {
