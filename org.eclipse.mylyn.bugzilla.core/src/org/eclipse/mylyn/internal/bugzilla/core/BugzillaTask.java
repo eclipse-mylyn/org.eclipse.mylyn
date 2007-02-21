@@ -80,35 +80,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 	@Override
 	public String getTaskKind() {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
-		// if (taskData != null &&
-		// taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString())
-		// != null) {
-		// return
-		// taskData.getAttribute(BugzillaReportElement.BUG_SEVERITY.getKeyString()).getValue();
-		// } else {
-		// return null;
-		// }
 	}
 
 	@Override
 	public String toString() {
 		return "bugzilla report taskId: " + getHandleIdentifier();
 	}
-
-	// @Override
-	// public String getUrl() {
-	// // fix for bug 103537 - should login automatically, but dont want to
-	// // show the login info in the query string
-	// try {
-	// // return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(),
-	// Integer
-	// // .parseInt(RepositoryTaskHandleUtil.getTaskId(handleIdentifier)));
-	// return BugzillaClient.getBugUrlWithoutLogin(getRepositoryUrl(), Integer
-	// .parseInt(RepositoryTaskHandleUtil.));
-	// } catch (NumberFormatException nfe) {
-	// return super.getUrl();
-	// }
-	// }
 
 	@Override
 	public boolean isCompleted() {
