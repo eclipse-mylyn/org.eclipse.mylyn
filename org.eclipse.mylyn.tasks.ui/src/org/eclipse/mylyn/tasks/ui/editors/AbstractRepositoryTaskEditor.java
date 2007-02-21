@@ -773,6 +773,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		RepositoryTaskAttribute statusAtribute = taskData.getAttribute(RepositoryTaskAttribute.STATUS);
 		addNameValue(headerInfoComposite, statusAtribute);
+		toolkit.paintBordersFor(headerInfoComposite);
 
 		RepositoryTaskAttribute priorityAttribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
 		addNameValue(headerInfoComposite, priorityAttribute);
@@ -782,8 +783,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);
 			nameValue.setLayout(new GridLayout(2, false));
-			toolkit.createLabel(nameValue, "ID:");// .setFont(TITLE_FONT);
-			toolkit.createText(nameValue, idLabel, SWT.FLAT | SWT.READ_ONLY);
+			Label label = toolkit.createLabel(nameValue, "ID:");// .setFont(TITLE_FONT);
+			label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+			//toolkit.createText(nameValue, idLabel, SWT.FLAT | SWT.READ_ONLY);
+			Text text = new Text(nameValue, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(text, true, true);			
+			text.setText(idLabel);
 		}
 
 		String openedDateString = "";
@@ -804,7 +809,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);
 			nameValue.setLayout(new GridLayout(2, false));
 			createLabel(nameValue, creationAttribute);
-			toolkit.createText(nameValue, openedDateString, SWT.FLAT | SWT.READ_ONLY);
+			//toolkit.createText(nameValue, openedDateString, SWT.FLAT | SWT.READ_ONLY);
+			Text text = new Text(nameValue, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(text, true, true);
+			text.setText(openedDateString);
 		}
 
 		RepositoryTaskAttribute modifiedAttribute = taskData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
@@ -812,7 +820,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);
 			nameValue.setLayout(new GridLayout(2, false));
 			createLabel(nameValue, modifiedAttribute);
-			toolkit.createText(nameValue, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+			//toolkit.createText(nameValue, modifiedDateString, SWT.FLAT | SWT.READ_ONLY);
+			Text text = new Text(nameValue, SWT.FLAT | SWT.READ_ONLY);
+			toolkit.adapt(text, true, true);
+			text.setText(modifiedDateString);
 		}
 
 		if (getActivityUrl() != null) {
@@ -836,8 +847,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Composite nameValue = toolkit.createComposite(parent);
 		nameValue.setLayout(new GridLayout(2, false));
 		if (attribute != null) {
-			createLabel(nameValue, attribute);// .setFont(TITLE_FONT);
-			createTextField(nameValue, attribute, SWT.NONE | SWT.READ_ONLY);
+			createLabel(nameValue, attribute);
+			createTextField(nameValue, attribute, SWT.FLAT | SWT.READ_ONLY);
 		}
 	}
 
@@ -857,7 +868,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		} else {
 			value = attribute.getValue();
 		}
-		text = toolkit.createText(composite, value, style);
+		if((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
+			text = new Text(composite, style);
+			toolkit.adapt(text, true, true);
+			text.setText(value);
+		} else {
+			text = toolkit.createText(composite, value, style);
+		}
+		
+		
 		if (attribute != null && !attribute.isReadOnly()) {
 			text.setData(attribute);
 			text.addModifyListener(new ModifyListener() {
@@ -971,7 +990,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				if (attribute.isReadOnly()) {
 					final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
-					text.setLayoutData(textData);
+					text.setLayoutData(textData);					
 				} else {
 					final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT);
 					// text.setFont(COMMENT_FONT);

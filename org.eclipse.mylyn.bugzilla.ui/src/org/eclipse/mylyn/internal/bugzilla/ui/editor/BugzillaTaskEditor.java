@@ -479,7 +479,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 
 		// toolkit.createText(attributesComposite, keywords)
-		keywordsText = createTextField(attributesComposite, attribute, SWT.FLAT);
+		keywordsText = createTextField(attributesComposite, attribute, SWT.FLAT | SWT.READ_ONLY);
 		keywordsText.setFont(TEXT_FONT);
 		keywordsText.setEditable(false);
 		// keywordsText.setForeground(foreground);
@@ -544,18 +544,17 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		votingComposite.setLayout(layout);
-		// GridDataFactory.fillDefaults().span(2, 1).applyTo(votingComposite);
+		
 		RepositoryTaskAttribute votesAttribute = taskData.getAttribute(BugzillaReportElement.VOTES.getKeyString());
-		// String voteValue = votesAttribute != null ? votesAttribute.getValue()
-		// : "0";
-		votesText = createTextField(votingComposite, votesAttribute, SWT.FLAT);
+		
+		votesText = createTextField(votingComposite, votesAttribute, SWT.FLAT | SWT.READ_ONLY);
 		votesText.setFont(TEXT_FONT);
 
 		if (votesAttribute != null && hasChanged(votesAttribute)) {
 			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 			Color backgroundIncoming = themeManager.getCurrentTheme().getColorRegistry().get(
 					TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-			keywordsText.setBackground(backgroundIncoming);
+			votesText.setBackground(backgroundIncoming);
 		}
 		votesText.setEditable(false);
 
