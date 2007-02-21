@@ -26,7 +26,7 @@ public class AttributeContainer implements Serializable {
 
 	public static final String ERROR_NO_ATTRIBUTE_FACTORY = "Attribute factory not available.";
 
-	private static final long serialVersionUID = 3533078709450471836L;
+	private static final long serialVersionUID = 3538078709450471836L;
 
 	/** The keys for the report attributes */
 	private ArrayList<String> attributeKeys;
@@ -144,6 +144,10 @@ public class AttributeContainer implements Serializable {
 			returnValue = attrib.getValues();
 		}
 		return returnValue;
+	}
+	
+	public AbstractAttributeFactory getAttributeFactory(){
+		return attributeFactory;
 	}
 
 }

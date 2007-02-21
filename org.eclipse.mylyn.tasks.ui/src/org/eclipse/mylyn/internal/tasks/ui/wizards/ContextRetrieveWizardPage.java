@@ -96,9 +96,9 @@ public class ContextRetrieveWizardPage extends WizardPage {
 			Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 
 				public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
-					Date created1 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+					Date created1 = task.getTaskData().getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
 							attachment1.getDateCreated());
-					Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+					Date created2 = task.getTaskData().getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
 							attachment2.getDateCreated());
 					if (created1 != null && created2 != null) {
 						return created1.compareTo(created2);

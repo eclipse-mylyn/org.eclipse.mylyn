@@ -13,7 +13,6 @@ package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -28,17 +27,19 @@ import java.util.StringTokenizer;
  */
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = 2304511248225237689L;
+	private static final long serialVersionUID = 2304501248225237689L;
 
 	private boolean hasLocalChanges = false;
 
 	private boolean isNew = false;
 
-	public static final String VAL_STATUS_NEW = "NEW";
-
 	private String reportID;
 
 	private String repositoryURL;
+	
+	private String repositoryKind;
+	
+	private String taskKind;
 
 	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
@@ -50,25 +51,12 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/** The repositoryOperations that can be done on the report */
 	protected List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
-	/** The bugs valid keywords */
-	protected List<String> validKeywords;
-
-	/** Description of the bug */
-	protected String description;
-
-	/** Creation timestamp */
-	protected Date created;
-
-	/** Modification timestamp */
-	protected Date lastModified = null;
-
-	protected String repositoryKind;
-
-	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
+	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id, String taskKind) {
 		super(factory);
 		this.reportID = id;
 		this.repositoryKind = repositoryKind;
 		this.repositoryURL = repositoryURL;
+		this.taskKind = taskKind;
 	}
 
 	public String getLabel() {
@@ -325,6 +313,10 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		for (RepositoryAttachment attachment : attachments) {
 			attachment.setAttributeFactory(factory);
 		}
+	}
+
+	public String getTaskKind() {
+		return taskKind;
 	}
 
 }

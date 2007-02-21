@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -73,15 +72,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 		return new ITaskDataHandler() {
 
-			public AbstractAttributeFactory getAttributeFactory() {
+			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
+				// we don't care about the repository information right now
 				return new MockAttributeFactory();
 			}
-
-			public Date getDateForAttributeType(String attributeKey, String dateString) {
-				// ignore
-				return null;
-			}
-
+			
 			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
 				// ignore
 				return null;

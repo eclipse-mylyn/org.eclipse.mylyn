@@ -296,7 +296,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							if (connector != null) {
 								ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 								if (offlineHandler != null && repositoryTask.getTaskData().getLastModified() != null) {
-									Date modified = offlineHandler.getDateForAttributeType(
+									Date modified = repositoryTask.getTaskData().getAttributeFactory().getDateForAttributeType(
 											RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getTaskData()
 													.getLastModified());
 									notification.setDate(modified);
@@ -382,16 +382,22 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskRepositoryManager = new TaskRepositoryManager(taskListManager.getTaskList());
 			synchronizationManager = new RepositorySynchronizationManager();
 
+			
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
+			
+			// The repositories need to be read before the tasks so that the getAttributeFactory 
+			// can use the repository to get the information it needs
+			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			
 			readOfflineReports();
 			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
 				if (externalizer instanceof DelegatingTaskExternalizer) {
 					((DelegatingTaskExternalizer) externalizer).init(offlineTaskManager);
 				}
 			}
-			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			
 			taskListWriter.setTaskDataManager(offlineTaskManager);
 			
 			// NOTE: task list must be read before Task List view can be initialized

@@ -331,7 +331,7 @@ public class TaskDataManager {
 		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData
 				.getRepositoryKind());
 		if (connector != null && connector.getTaskDataHandler() != null) {
-			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory();
+			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 			if (factory != null) {
 				taskData.setAttributeFactory(factory);
 			}

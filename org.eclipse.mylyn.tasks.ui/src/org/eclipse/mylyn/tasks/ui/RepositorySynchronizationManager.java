@@ -203,7 +203,7 @@ public class RepositorySynchronizationManager {
 
 							if (connector.getTaskDataHandler() != null && task.getTaskData() != null
 									&& task.getTaskData().getLastModified() != null) {
-								taskModifiedDate = connector.getTaskDataHandler().getDateForAttributeType(
+								taskModifiedDate = task.getTaskData().getAttributeFactory().getDateForAttributeType(
 										RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
 							} else {
 								continue;

@@ -25,12 +25,12 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin;
 
 /**
@@ -67,7 +67,7 @@ public class BugzillaTestUtil {
 
 	public static void setBugTaskCompleted(BugzillaTask bugzillaTask, boolean completed) {
 		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
-				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1");
+				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1", Task.DEFAULT_TASK_KIND);
 		bugzillaTask.setTaskData(report);
 		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
 				.getKeyString());
@@ -76,11 +76,11 @@ public class BugzillaTestUtil {
 			TaskComment taskComment = new TaskComment(new BugzillaAttributeFactory(), 1);
 			RepositoryTaskAttribute attribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_WHEN
 					.getKeyString());
-			attribute.setValue(new SimpleDateFormat(BugzillaTaskDataHandler.comment_creation_ts_format).format(new Date()));
+			attribute.setValue(new SimpleDateFormat(BugzillaAttributeFactory.comment_creation_ts_format).format(new Date()));
 			taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
 			report.addComment(taskComment);
 		} else {
-			resolvedAttribute.setValue(RepositoryTaskData.VAL_STATUS_NEW);
+			resolvedAttribute.setValue("NEW");
 		}
 
 		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);

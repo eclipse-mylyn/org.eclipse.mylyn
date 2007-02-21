@@ -8,10 +8,7 @@
 
 package org.eclipse.mylar.tasks.tests;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +24,7 @@ import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
@@ -69,7 +67,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	public void testHasIncoming() {
 		AbstractRepositoryTask task = new MockRepositoryTask(HANDLE1);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(),
-				URL1, "1");
+				URL1, "1", Task.DEFAULT_TASK_KIND);
 		// assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task,
 		// taskData));
 		task.setLastSyncDateStamp("never");
@@ -104,7 +102,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// and again...
 
 		RepositoryTaskData taskData3 = new RepositoryTaskData(new MockAttributeFactory(),
-				connector.getRepositoryType(), URL1, "1");
+				connector.getRepositoryType(), URL1, "1", Task.DEFAULT_TASK_KIND);
 		taskData3.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_3);
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, taskData3, false);
 		// last modified stamp not updated until user synchronizes (newdata ==
@@ -306,9 +304,9 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	public void testClearOutgoing() {
 		AbstractRepositoryTask task = primeTaskAndRepository(RepositoryTaskSyncState.SYNCHRONIZED,
 				RepositoryTaskSyncState.SYNCHRONIZED);
-		RepositoryTaskData taskData1 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");		
+		RepositoryTaskData taskData1 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1", Task.DEFAULT_TASK_KIND);		
 		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), taskData1);
-		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
+		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1", Task.DEFAULT_TASK_KIND);
 		taskData2.setNewComment("new comment");
 		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), taskData2);
 		
@@ -323,22 +321,10 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	
 	private class TestOfflineTaskHandler implements ITaskDataHandler {
 
-		private final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 
-		private final SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_2);
-
-		public AbstractAttributeFactory getAttributeFactory() {
+		public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
 			// ignore
 			return null;
-		}
-
-		public Date getDateForAttributeType(String attributeKey, String dateString) {
-
-			try {
-				return format.parse(dateString);
-			} catch (ParseException e) {
-				return null;
-			}
 		}
 
 		public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
@@ -361,6 +347,20 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			// ignore
 			return false;
 		}
+		
+//		private final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
+//
+//		private final SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_2);
+//
+//		
+//		public Date getDateForAttributeType(String attributeKey, String dateString) {
+//
+//			try {
+//				return format.parse(dateString);
+//			} catch (ParseException e) {
+//				return null;
+//			}
+//		}
 
 	}
 
@@ -394,13 +394,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		RepositoryTaskData taskData = null;
 		AbstractRepositoryTask task = new MockRepositoryTask(HANDLE1);
 
-		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
+		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1", Task.DEFAULT_TASK_KIND);
 		taskData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_1);
 		task.setLastSyncDateStamp(DATE_STAMP_1);
 		task.setTaskData(taskData);
 		task.setSyncState(localState);
 
-		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
+		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1", Task.DEFAULT_TASK_KIND);
 
 		switch (remoteState) {
 		case CONFLICT:

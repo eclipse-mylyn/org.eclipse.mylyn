@@ -704,7 +704,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			idLabel = taskData.getId();
 		}
 
-		if (taskData.isNew()) {
+		if (taskData != null && taskData.isNew()) {
 			form.setText("New " + kindLabel);
 		} else {
 			form.setText(kindLabel + " " + idLabel);
@@ -790,11 +790,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String modifiedDateString = "";
 		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
 		if (taskDataManager != null) {
-			Date created = taskDataManager.getDateForAttributeType(RepositoryTaskAttribute.DATE_CREATION, taskData
+			Date created = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.DATE_CREATION, taskData
 					.getCreated());
 			openedDateString = created != null ? DateUtil.getFormattedDate(created, HEADER_DATE_FORMAT) : "";
 
-			Date modified = taskDataManager.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData
+			Date modified = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED, taskData
 					.getLastModified());
 			modifiedDateString = modified != null ? DateUtil.getFormattedDate(modified, HEADER_DATE_FORMAT) : "";
 		}
@@ -1074,9 +1074,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					public int compare(Viewer viewer, Object e1, Object e2) {
 						RepositoryAttachment attachment1 = (RepositoryAttachment) e1;
 						RepositoryAttachment attachment2 = (RepositoryAttachment) e2;
-						Date created1 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+						Date created1 = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
 								attachment1.getDateCreated());
-						Date created2 = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+						Date created2 = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
 								attachment2.getDateCreated());
 						if (created1 != null && created2 != null) {
 							return created1.compareTo(created2);
@@ -1809,7 +1809,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 
-				Date lastSyncDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
+				Date lastSyncDate = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
 						repositoryTask.getLastSyncDateStamp());
 
 				if (lastSyncDate != null) {
@@ -1819,7 +1819,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					calLastMod.setTimeInMillis(lastSyncDate.getTime());
 					calLastMod.set(Calendar.SECOND, 0);
 
-					Date commentDate = offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
+					Date commentDate = taskData.getAttributeFactory().getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
 							comment.getCreated());
 					if (commentDate != null) {
 						if (commentDate.after(calLastMod.getTime())) {

@@ -19,9 +19,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -66,8 +68,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			return false;
 		}
 
-		final RepositoryTaskData taskData = new RepositoryTaskData(taskDataHandler.getAttributeFactory(), taskRepository.getKind(),
-				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
+		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), Task.DEFAULT_TASK_KIND);
+		
+		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getKind(),
+				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 		taskData.setNew(true);
 
 		try {
