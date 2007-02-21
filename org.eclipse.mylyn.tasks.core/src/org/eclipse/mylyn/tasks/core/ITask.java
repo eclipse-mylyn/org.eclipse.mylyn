@@ -79,6 +79,10 @@ public interface ITask extends ITaskListElement {
 	public abstract void setScheduledForDate(Date date);
 
 	public abstract Date getScheduledForDate();
+	
+	public abstract void setDueDate(Date date);
+	
+	public abstract Date getDueDate();
 
 	public abstract boolean hasBeenReminded();
 

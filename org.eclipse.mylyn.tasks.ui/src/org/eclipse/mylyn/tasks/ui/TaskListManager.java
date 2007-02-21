@@ -837,6 +837,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		parseFutureReminders();
 		taskList.notifyLocalInfoChanged(task);
 	}
+	
+	public void setDueDate(ITask task, Date dueDate) {
+		task.setDueDate(dueDate);
+		taskList.notifyLocalInfoChanged(task);
+	}	
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)

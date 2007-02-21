@@ -25,7 +25,7 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 public class Task implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
-	
+
 	public static final String DEFAULT_TASK_KIND = "task";
 
 	public enum PriorityLevel {
@@ -81,7 +81,7 @@ public class Task implements ITask {
 		}
 
 		public static PriorityLevel fromDescription(String string) {
-			if (string == null)    
+			if (string == null)
 				return null;
 			if (string.equals("Very High"))
 				return P1;
@@ -102,7 +102,7 @@ public class Task implements ITask {
 	}
 
 	private String handleIdentifier = "-1";
-	
+
 	private boolean active = false;
 
 	private boolean category = false;
@@ -131,6 +131,8 @@ public class Task implements ITask {
 
 	private Date scheduledForDate = null;
 
+	private Date dueDate = null;
+
 	/**
 	 * @return null if root
 	 */
@@ -139,7 +141,6 @@ public class Task implements ITask {
 	private Set<ITask> children = new HashSet<ITask>();
 
 	protected String kind = DEFAULT_TASK_KIND;
-
 
 	@Override
 	public String toString() {
@@ -368,6 +369,14 @@ public class Task implements ITask {
 	}
 
 	public int compareTo(ITaskListElement taskListElement) {
-		return summary.compareTo(((Task)taskListElement).summary);
+		return summary.compareTo(((Task) taskListElement).summary);
+	}
+
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date date) {
+		this.dueDate = date;
 	}
 }

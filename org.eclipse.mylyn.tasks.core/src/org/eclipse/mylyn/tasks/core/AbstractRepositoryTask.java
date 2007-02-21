@@ -25,7 +25,7 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	/** The last time this task's bug report was in a synchronized (read?) state. */
 	protected String lastSynchronizedDateStamp;
-
+  
 	protected String repositoryUrl;
 
 	protected String taskId;

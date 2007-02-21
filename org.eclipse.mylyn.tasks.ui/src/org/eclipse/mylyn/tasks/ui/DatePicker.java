@@ -90,9 +90,8 @@ public class DatePicker extends Composite {
 		this.setLayout(gridLayout);
 
 		dateText = new Text(this, SWT.FLAT);
-
 		GridData dateTextGridData = new org.eclipse.swt.layout.GridData();
-		dateTextGridData.widthHint = 110;
+		dateTextGridData.widthHint = 135;
 		dateTextGridData.horizontalAlignment = GridData.FILL;
 
 		dateText.setLayoutData(dateTextGridData);
@@ -284,4 +283,5 @@ public class DatePicker extends Composite {
 		pickButton.setEnabled(enabled);
 		super.setEnabled(enabled);
 	}
+
 }

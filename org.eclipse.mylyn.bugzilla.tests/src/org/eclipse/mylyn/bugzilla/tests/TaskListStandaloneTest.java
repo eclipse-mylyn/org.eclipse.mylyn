@@ -57,6 +57,23 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.saveTaskList();
 		super.tearDown();
 	}
+	
+	public void testDueDateExternalization() {
+		ITask task = new Task("1", "task 1", true);
+		Date dueDate = new Date();
+		task.setDueDate(dueDate);
+		manager.getTaskList().moveToRoot(task);
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		
+		manager.saveTaskList();
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		Set<ITask> readList = manager.getTaskList().getRootTasks();
+		ITask readTask = readList.iterator().next();
+		assertTrue(readTask.getSummary().equals("task 1"));
+		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
+	}
 
 	public void testPastReminder() {
 		ITask task = new Task("1", "1", true);

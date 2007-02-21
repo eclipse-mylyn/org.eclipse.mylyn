@@ -252,4 +252,12 @@ public class DateRangeActivityDelegate implements ITask {
 	public void setDescription(String description) {
 		task.setDescription(description);
 	}
+
+	public Date getDueDate() {
+		return task.getDueDate();
+	}
+
+	public void setDueDate(Date date) {
+		task.setDueDate(date);		
+	}
 }
