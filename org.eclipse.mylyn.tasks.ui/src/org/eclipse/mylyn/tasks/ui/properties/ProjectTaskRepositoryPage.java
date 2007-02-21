@@ -104,7 +104,6 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		listViewer.setInput(project.getWorkspace());
 
 		TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(project, true);
-
 		if (repository != null) {
 			listViewer.setCheckedElements(new Object[] { repository });
 		}
@@ -118,6 +117,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 				modified = true;
 			}
 		});
+		listViewer.getControl().setEnabled(TasksUiPlugin.getDefault().canSetRepositoryForResource(project));
 
 		final AddRepositoryAction action = new AddRepositoryAction();
 
@@ -167,7 +167,10 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		if (listViewer.getCheckedElements().length > 0) {
 			TaskRepository selectedRepository = (TaskRepository) listViewer.getCheckedElements()[0];
 			try {
-				TasksUiPlugin.getDefault().setRepositoryForResource(project, selectedRepository);
+				TasksUiPlugin plugin = TasksUiPlugin.getDefault();
+				if(plugin.canSetRepositoryForResource(project)) {
+					plugin.setRepositoryForResource(project, selectedRepository);
+				}
 			} catch (CoreException e) {
 				MylarStatusHandler.fail(e, "Unable to associate project with task repository", true);
 			}
