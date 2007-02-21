@@ -11,6 +11,9 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -52,7 +55,14 @@ public class SelectRepositoryClientPage extends WizardPage {
 		}
 
 		public Object[] getElements(Object parent) {
-			return TasksUiPlugin.getRepositoryManager().getRepositoryConnectors().toArray();
+			List<AbstractRepositoryConnector> userManagedRepositories = new ArrayList<AbstractRepositoryConnector>();
+			for(AbstractRepositoryConnector connector: TasksUiPlugin.getRepositoryManager().getRepositoryConnectors()){
+				if(connector.isUserManaged()){
+					userManagedRepositories.add(connector);
+				}
+			}
+			
+			return userManagedRepositories.toArray();
 		}
 	}
 

@@ -12,14 +12,15 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class EditRepositoryPropertiesAction extends BaseSelectionListenerAction {
+public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction {
 
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.properties";
 
@@ -31,7 +32,18 @@ public class EditRepositoryPropertiesAction extends BaseSelectionListenerAction 
 
 	@Override
 	protected boolean updateSelection(IStructuredSelection selection) {
-		return selection != null && !selection.isEmpty();
+		if(selection != null && !selection.isEmpty()){
+			Object selectedObject = selection.getFirstElement();
+			if(selectedObject instanceof TaskRepository){
+				TaskRepository taskRepository = (TaskRepository) selectedObject;
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getKind());
+				if(connector.isUserManaged()){
+					return true;
+				}
+				return false;
+			}
+		}
+		return false;
 	}
 	
 	@Override

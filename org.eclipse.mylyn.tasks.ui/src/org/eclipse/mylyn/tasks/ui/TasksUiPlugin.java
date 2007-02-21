@@ -68,6 +68,7 @@ import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -384,13 +385,29 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// NOTE: initializing extensions in start(..) has caused race
 			// conditions previously
 			TasksUiExtensionReader.initStartupExtensions(taskListWriter);
+			
+			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			
+			// add the automatically created templates
+			for(AbstractRepositoryConnector connector: taskRepositoryManager.getRepositoryConnectors()){
+				for(RepositoryTemplate template: connector.getTemplates()){
+					if(template.addAutomatically){
+						TaskRepository taskRepository = taskRepositoryManager.getRepository(connector.getRepositoryType(), template.repositoryUrl);
+						if(taskRepository == null){
+							taskRepository = new TaskRepository(connector.getRepositoryType(), template.repositoryUrl, template.version);
+							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+						}
+					}
+				}
+			}
+			
 			readOfflineReports();
 			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
 				if (externalizer instanceof DelegatingTaskExternalizer) {
 					((DelegatingTaskExternalizer) externalizer).init(offlineTaskManager);
 				}
 			}
-			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
+			
 			taskListWriter.setTaskDataManager(offlineTaskManager);
 			
 			// NOTE: task list must be read before Task List view can be initialized

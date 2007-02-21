@@ -43,6 +43,8 @@ public abstract class AbstractRepositoryConnector {
 
 	protected TaskList taskList;
 
+	private boolean userManaged = true;
+
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
@@ -267,5 +269,13 @@ public abstract class AbstractRepositoryConnector {
 	 * TODO: remove?
 	 */
 	public abstract void updateAttributes(TaskRepository repository, IProgressMonitor monitor) throws CoreException;
+
+	public void setUserManaged(boolean userManaged) {
+		this.userManaged  = userManaged;	
+	}
+	
+	public boolean isUserManaged(){
+		return userManaged;
+	}
 
 }

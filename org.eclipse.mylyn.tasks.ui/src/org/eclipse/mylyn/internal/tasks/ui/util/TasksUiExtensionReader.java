@@ -71,6 +71,8 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
 	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
+	
+	public static final String ATTR_USER_MANAGED = "userManaged";
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider";
 	
@@ -240,7 +242,15 @@ public class TasksUiExtensionReader {
 			Object type = element.getAttribute(ELMNT_TYPE);
 			Object connectorCore = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
-				TasksUiPlugin.getRepositoryManager().addRepositoryConnector((AbstractRepositoryConnector) connectorCore);
+				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
+				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
+				
+				String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
+				if(userManagedString != null){
+					boolean userManaged = Boolean.parseBoolean(userManagedString);
+					repositoryConnector.setUserManaged(userManaged);					
+				}
+				
 			} else {
 				MylarStatusHandler.log("could not not load connector core: " + connectorCore, null);
 			}

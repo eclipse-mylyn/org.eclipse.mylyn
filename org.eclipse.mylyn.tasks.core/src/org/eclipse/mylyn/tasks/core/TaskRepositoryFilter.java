@@ -36,6 +36,12 @@ public interface TaskRepositoryFilter {
 			return connector.canCreateTaskFromKey(repository);
 		}
 	};
+	
+	public static TaskRepositoryFilter IS_USER_MANAGED = new TaskRepositoryFilter(){
+		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
+			return connector.isUserManaged();
+		}
+	};
 
 	boolean accept(TaskRepository repository, AbstractRepositoryConnector connector);
 
