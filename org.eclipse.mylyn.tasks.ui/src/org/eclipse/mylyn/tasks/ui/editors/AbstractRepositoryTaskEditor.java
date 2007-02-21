@@ -2403,6 +2403,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				radioData.widthHint = RADIO_OPTION_WIDTH;
 				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
 				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
+				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 				toolkit.adapt(radioOptions[i], true, true);
 				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
 				// SWT.V_SCROLL | SWT.READ_ONLY);
