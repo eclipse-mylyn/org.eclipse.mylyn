@@ -171,6 +171,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
+	private static final String LABEL_REPLY = "reply";
+
 	public static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
 	protected static final String HEADER_DATE_FORMAT = "yyyy-MM-dd HH:mm";
@@ -1769,7 +1771,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), expandableComposite, taskComment
 					.getText());
 			replyLink.setVisible(expandableComposite.isExpanded());
-
+			replyLink.setToolTipText(LABEL_REPLY);
+			
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
