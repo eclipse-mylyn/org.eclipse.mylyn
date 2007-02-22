@@ -69,7 +69,7 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE);
 
-	public static final ImageDescriptor TASK_REPOSITORY_HISOTRY = createSize(create(T_TOOL, "task-repository-history.gif"), SIZE);
+	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = createSize(create(T_TOOL, "task-repository-history.gif"), SIZE);
 	
 	public static final ImageDescriptor TASK_REPOSITORY_NOTES = createSize(create(T_TOOL, "task-repository-notes.gif"), SIZE);
 

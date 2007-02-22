@@ -834,7 +834,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ImageHyperlink hyperlink = toolkit.createImageHyperlink(headerInfoComposite, SWT.NONE);
 			hyperlink.setText(linkName);
 			hyperlink.setToolTipText(kindLabel + " "+LABEL_HISTORY);
-			hyperlink.setImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_HISOTRY));
+			hyperlink.setImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_HISTORY));
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
