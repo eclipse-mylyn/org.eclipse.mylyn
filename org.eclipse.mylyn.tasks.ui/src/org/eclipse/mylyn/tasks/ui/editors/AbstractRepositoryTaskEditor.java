@@ -2631,14 +2631,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								.getTask(repository.getUrl(), taskData.getId());
 					}
 
-					// Attach context if required
-					if (attachContext) {
-						attachContext(modifiedTask);
-					}
-
 					// Synchronization accounting...
 					if (modifiedTask != null) {
-
+						// Attach context if required
+						if (attachContext) {
+							attachContext(modifiedTask);
+						}
 						submitting = true;
 						modifiedTask.getTaskData().setHasLocalChanges(true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
@@ -2646,10 +2644,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 									@Override
 									public void done(IJobChangeEvent event) {
-
-										// if (!isNew) {
-										// updateEditor();
-										// } else {
+										
 										if (isNew) {
 											close();
 											TasksUiPlugin.getSynchronizationManager().setTaskRead(modifiedTask, true);
