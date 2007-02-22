@@ -705,7 +705,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		} catch (Throwable t) {
 			MylarStatusHandler
 					.log(t,
-							"Could not restore offline repository tasks file, creating new one, likely cause is format update.");
+							"Recreating offline task cache due to format update.");
 			boolean deleted = offlineReportsPath.toFile().delete();
 			if (!deleted) {
 				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
