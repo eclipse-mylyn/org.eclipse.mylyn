@@ -100,7 +100,7 @@ public class DatePicker extends Composite {
 
 			public void keyPressed(KeyEvent e) {
 				// key listener used because setting of date picker text causes
-				// modify litener to fire which results in perpetual dirty
+				// modify listener to fire which results in perpetual dirty
 				// editor
 				notifyPickerListeners();
 			}
@@ -253,9 +253,10 @@ public class DatePicker extends Composite {
 		if (!canceled) {
 			this.date = selectedDate != null ? selectedDate : null;
 			updateDateText();
+			notifyPickerListeners();
 		}
 
-		notifyPickerListeners();
+		
 		pickButton.setEnabled(true);
 		dateText.setEnabled(true);
 	}
