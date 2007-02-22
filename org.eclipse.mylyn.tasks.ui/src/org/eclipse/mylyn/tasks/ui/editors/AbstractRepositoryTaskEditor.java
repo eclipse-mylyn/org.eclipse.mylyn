@@ -1561,6 +1561,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		final ImageHyperlink replyLink = new ImageHyperlink(section, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
 		replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
+		replyLink.setToolTipText(LABEL_REPLY);
 		// no need for the background - transparency will take care of it
 		replyLink.setBackground(null);
 		// replyLink.setBackground(section.getTitleBarGradientBackground());
@@ -1770,8 +1771,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), expandableComposite, taskComment
 					.getText());
-			replyLink.setVisible(expandableComposite.isExpanded());
-			replyLink.setToolTipText(LABEL_REPLY);
+			replyLink.setVisible(expandableComposite.isExpanded());			
 			
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
@@ -2607,8 +2607,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void submitToRepository() {
 		submitButton.setEnabled(false);
 		showBusy(true);
-
-		// updateEditor();
 		updateTask();
 		if (isDirty()) {
 			runSaveJob();
