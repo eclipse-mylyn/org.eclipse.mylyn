@@ -61,9 +61,12 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -104,8 +107,6 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private Composite editorComposite;
 
 	protected static final String CONTEXT_MENU_ID = "#MylarPlanningEditor";
-
-	private Button removeReminder;
 
 	private Text pathText;
 
@@ -477,12 +478,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.adapt(dueDatePicker, true, true);
 		toolkit.paintBordersFor(nameValueComp);
-		Button clearDueDate = toolkit.createButton(nameValueComp, "", SWT.PUSH | SWT.CENTER);
-		clearDueDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
 
-		clearDueDate.addSelectionListener(new SelectionAdapter() {
+		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		clearDueDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
+		clearDueDate.setToolTipText("clear");
+		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
+
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void linkActivated(HyperlinkEvent e) {
 				dueDatePicker.setDate(null);
 				TaskPlanningEditor.this.markDirty(true);
 			}
@@ -490,7 +493,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		String completionDateString = "";
 		if (task.isCompleted()) {
-			completionDateString = getTaskDateString(task);			
+			completionDateString = getTaskDateString(task);
 		}
 		endDate = addNameValueComp(statusComposite, "Completed:", completionDateString, SWT.FLAT | SWT.READ_ONLY);
 		// URL
@@ -641,17 +644,21 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.adapt(datePicker, true, true);
 		toolkit.paintBordersFor(nameValueComp);
 
-		removeReminder = toolkit.createButton(nameValueComp, "", SWT.PUSH | SWT.CENTER);
-		removeReminder.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
-		removeReminder.addSelectionListener(new SelectionAdapter() {
+		
+		
+		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		clearScheduledDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
+		clearScheduledDate.setToolTipText("clear");
+		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
+
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void linkActivated(HyperlinkEvent e) {
 				datePicker.setDate(null);
 				task.setReminded(false);
 				TaskPlanningEditor.this.markDirty(true);
 			}
 		});
-
+		
 		// Estimated time
 		nameValueComp = makeComposite(sectionClient, 3);
 		label = toolkit.createLabel(nameValueComp, "Estimated time:");
