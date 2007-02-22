@@ -71,8 +71,13 @@ public class MylarContext implements IMylarContext {
 	 * Propagations and predictions are not added as edges
 	 */
 	private IMylarElement parseInteractionEvent(InteractionEvent event) {
-		if (event.getKind().isUserEvent())
+		if (event.getStructureHandle() == null) {
+			return null;
+		}
+		
+		if (event.getKind().isUserEvent()) {
 			numUserEvents++;
+		}
 		MylarContextElement node = elementMap.get(event.getStructureHandle());
 		if (node == null) {
 			node = new MylarContextElement(event.getStructureKind(), event.getStructureHandle(), this);
