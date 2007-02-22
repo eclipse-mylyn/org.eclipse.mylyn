@@ -206,7 +206,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected TaskRepository repository;
 
-	public static final int RADIO_OPTION_WIDTH = 150;
+	public static final int RADIO_OPTION_WIDTH = 120;
 
 	protected Display display;
 
@@ -2406,20 +2406,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				radioData.horizontalSpan = 1;
 				radioData.heightHint = 20;
 				radioData.widthHint = RADIO_OPTION_WIDTH;
-				// radioOptions[i] = new Combo(buttonComposite, SWT.NULL);
 				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 				radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 				toolkit.adapt(radioOptions[i], true, true);
-				// radioOptions[i] = new Combo(buttonComposite, SWT.MULTI |
-				// SWT.V_SCROLL | SWT.READ_ONLY);
-				// radioOptions[i].setData(FormToolkit.KEY_DRAW_BORDER,
-				// FormToolkit.TEXT_BORDER);
-				// radioOptions[i] = new Combo(buttonComposite,
-				// SWT.NO_BACKGROUND | SWT.MULTI | SWT.V_SCROLL
-				// | SWT.READ_ONLY);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
-				// radioOptions[i].setBackground(background);
 
 				Object[] a = o.getOptionNames().toArray();
 				Arrays.sort(a);
@@ -2431,15 +2422,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			} else if (o.isInput()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 				radioData.horizontalSpan = 1;
-				radioData.widthHint = 120;
+				radioData.widthHint = RADIO_OPTION_WIDTH - 10;
 
-				// TODO: add condition for if opName = reassign to...
 				String assignmentValue = "";
 				if (opName.equals(REASSIGN_BUG_TO)) {
 					assignmentValue = repository.getUserName();
 				}
-				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);// ,
-				// SWT.SINGLE);
+				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
 				// radioOptions[i].setBackground(background);

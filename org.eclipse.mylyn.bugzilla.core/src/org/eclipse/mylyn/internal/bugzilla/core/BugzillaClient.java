@@ -104,10 +104,10 @@ public class BugzillaClient {
 
 	private static final String KEY_SHORT_DESC = "short_desc";
 
-	// Pages with this string in the html occurr when login is required
+	// Pages with this string in the html occur when login is required
 	private static final String LOGIN_REQUIRED = "goaheadandlogin=1";
 
-	private static final int MAX_RETRY = 2;
+	private static final int MAX_RETRY = 3;
 
 	// private static final int CONNECT_TIMEOUT = 60000;
 
@@ -156,7 +156,7 @@ public class BugzillaClient {
 
 	// Adapted from
 	// http://jakarta.apache.org/commons/httpclient/exception-handling.html
-	private HttpMethodRetryHandler retryHandler = new HttpMethodRetryHandler() {
+	private class BugzillaRetryHandler implements HttpMethodRetryHandler {
 		public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
 			if (executionCount >= MAX_RETRY) {
 				// Do not retry if over max retry count
@@ -262,7 +262,7 @@ public class BugzillaClient {
 			// authentication
 			// getMethod.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 
-			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
+			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 			getMethod.setDoAuthentication(true);
 
 			int code;
@@ -370,7 +370,7 @@ public class BugzillaClient {
 		method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		method.setRequestBody(formData);
 		method.setDoAuthentication(true);
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 		method.setFollowRedirects(false);
 
@@ -686,7 +686,7 @@ public class BugzillaClient {
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
 		// httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
-		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryHandler);
+		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
 		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
