@@ -152,7 +152,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -170,6 +169,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Steffen Pingel
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
+
+	private static final String LABEL_HISTORY = "History";
 
 	private static final String LABEL_REPLY = "reply";
 
@@ -829,8 +830,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		if (getActivityUrl() != null) {
-			String linkName = kindLabel + " History";
-			Hyperlink hyperlink = toolkit.createHyperlink(headerInfoComposite, linkName, SWT.NONE);
+			String linkName = LABEL_HISTORY;
+			ImageHyperlink hyperlink = toolkit.createImageHyperlink(headerInfoComposite, SWT.NONE);
+			hyperlink.setText(linkName);
+			hyperlink.setToolTipText(kindLabel + " "+LABEL_HISTORY);
+			hyperlink.setImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_HISOTRY));
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -840,8 +844,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				}
 			});
-			// GridDataFactory.fillDefaults().span(1,
-			// SWT.DEFAULT).align(SWT.RIGHT, SWT.DEFAULT).applyTo(hyperlink);
 		}
 	}
 
