@@ -24,6 +24,8 @@ public class Constants {
 
 	public static final String TEST_TRAC_010_DIGEST_AUTH_URL = "http://mylar.eclipse.org/trac010digest";
 
+	public static final String TEST_TRAC_011_URL = "http://mylar.eclipse.org/trac011";
+	
 	public static final String TEST_TRAC_INVALID_URL = "http://mylar.eclipse.org/doesnotexist";
 
 }

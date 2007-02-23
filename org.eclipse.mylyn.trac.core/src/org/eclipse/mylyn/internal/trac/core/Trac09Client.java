@@ -305,20 +305,36 @@ public class Trac09Client extends AbstractTracClient {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
 					ITracClient.CHARSET));
+
+			boolean inFooter = false;
+			boolean valid = false;
+			String version = null;
+			
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
 					HtmlTag tag = (HtmlTag) token.getValue();
-					if (tag.getTagType() == HtmlTag.Type.A) {
+					if (tag.getTagType() == HtmlTag.Type.DIV) {
+						String id = tag.getAttribute("id");
+						inFooter = !tag.isEndTag() && "footer".equals(id);
+					} else  if (tag.getTagType() == HtmlTag.Type.STRONG && inFooter) {
+						version = getText(tokenizer);
+					} else if (tag.getTagType() == HtmlTag.Type.A) {
 						String id = tag.getAttribute("id");
 						if ("tracpowered".equals(id)) {
-							return;
+							valid = true;
 						}
 					}
 				}
 			}
 
-			throw new TracException("Not a valid Trac repository");
+			if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) {
+				throw new TracException("The Trac version " + version + " is unsupported. Please use version 0.9.x or 0.10.x.");
+			}
+			
+			if (!valid) {
+				throw new TracException("Not a valid Trac repository");
+			}
 		} catch (IOException e) {
 			throw new TracException(e);
 		} catch (ParseException e) {

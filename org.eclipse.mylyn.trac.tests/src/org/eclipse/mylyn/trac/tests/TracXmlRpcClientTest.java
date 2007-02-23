@@ -31,6 +31,10 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		super(Version.XML_RPC);
 	}
 
+	public void testValidate011() throws Exception {
+		validate(Constants.TEST_TRAC_011_URL);
+	}
+
 	public void testValidateFailNoAuth() throws Exception {
 		connect(Constants.TEST_TRAC_010_URL, "", "");
 		try {

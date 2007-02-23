@@ -32,6 +32,13 @@ public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 		validate(Constants.TEST_TRAC_096_URL);
 	}
 
+	public void testValidate011() throws Exception {
+		try {
+			validate(Constants.TEST_TRAC_011_URL);
+		} catch (TracException e) {
+		}
+	}
+
 	public void testValidateAnyPage() throws Exception {
 		connect("http://mylar.eclipse.org/");
 		try {

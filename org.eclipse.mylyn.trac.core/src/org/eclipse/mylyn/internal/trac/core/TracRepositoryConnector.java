@@ -46,7 +46,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
  */
 public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
-	private final static String CLIENT_LABEL = "Trac (supports 0.9 and later or XML-RPC)";
+	private final static String CLIENT_LABEL = "Trac (supports 0.9 or 0.10 through Web and XML-RPC)";
 
 	private List<String> supportedVersions;
 

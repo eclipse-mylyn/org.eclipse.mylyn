@@ -46,7 +46,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	public static final String XMLRPC_URL = "/xmlrpc";
 
-	public static final String REQUIRED_REVISION = "1735";
+	public static final String REQUIRED_REVISION = "1950";
 
 	public static final int REQUIRED_MAJOR = 0;
 

@@ -201,7 +201,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			} catch (TracException e) {
 				String message = "No Trac repository found at url";
 				if (e.getMessage() != null) {
-					message += ": " + e.getCause().getMessage();
+					message += ": " + e.getMessage();
 				}
 				throw new CoreException(new TracStatus(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, message));
 			}

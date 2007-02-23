@@ -37,7 +37,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 public interface ITracClient {
 
 	public enum Version {
-		TRAC_0_9, XML_RPC;
+		XML_RPC, TRAC_0_9;
 
 		public static Version fromVersion(String version) {
 			try {
@@ -51,7 +51,7 @@ public interface ITracClient {
 		public String toString() {
 			switch (this) {
 			case TRAC_0_9:
-				return "Trac 0.9 and later";
+				return "Web (Trac 0.9 or 0.10)";
 			case XML_RPC:
 				return "XML-RPC Plugin (Rev. " + TracXmlRpcClient.REQUIRED_REVISION + ")";
 			default:
