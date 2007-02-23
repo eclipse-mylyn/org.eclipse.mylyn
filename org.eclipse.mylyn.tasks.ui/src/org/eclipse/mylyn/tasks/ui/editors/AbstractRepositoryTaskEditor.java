@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -731,7 +732,31 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (summaryText != null) {
 			summaryText.setFocus();
 		}
+		addHeaderControls();
 	}
+	
+	
+	protected void addHeaderControls() {
+		ControlContribution repositoryLabelControl = new ControlContribution("TaskEditorHeader") { //$NON-NLS-1$
+			protected Control createControl(Composite parent) {
+				Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
+				text.setFont(TITLE_FONT);
+				text.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				String label = repository.getRepositoryLabel();
+				if(label.equals("") && repository.getUrl().indexOf("//") != -1){
+					label = repository.getUrl().substring((repository.getUrl().indexOf("//") + 2));
+				} else {
+					label = repository.getUrl();
+				}
+				text.setText(label);
+				text.setBackground(null);
+				return text;
+			}
+		};
+		form.getToolBarManager().add(repositoryLabelControl);
+		form.getToolBarManager().update(true);
+	}
+	
 
 	protected void createSections() {
 		createReportHeaderLayout(editorComposite);
