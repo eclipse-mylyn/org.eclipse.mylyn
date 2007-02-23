@@ -15,12 +15,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import org.eclipse.core.runtime.PlatformObject;
 
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeActivityDelegate implements ITask {
+public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 
 	private ITask task = null;
 
@@ -213,9 +214,9 @@ public class DateRangeActivityDelegate implements ITask {
 		task.setEstimatedTimeHours(estimated);
 	}
 
-//	public void setHandleIdentifier(String taskId) {
-//		task.setHandleIdentifier(taskId);
-//	}
+	// public void setHandleIdentifier(String taskId) {
+	// task.setHandleIdentifier(taskId);
+	// }
 
 	public void setKind(String kind) {
 		task.setKind(kind);
@@ -244,9 +245,9 @@ public class DateRangeActivityDelegate implements ITask {
 	public void setTaskUrl(String url) {
 		task.setTaskUrl(url);
 	}
-	
+
 	public int compareTo(ITaskListElement taskListElement) {
-		return task.toString().compareTo(((Task)taskListElement).toString());
+		return task.toString().compareTo(((Task) taskListElement).toString());
 	}
 
 	public void setDescription(String description) {

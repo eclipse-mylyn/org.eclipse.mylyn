@@ -48,6 +48,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Mik Kersten
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
+	
+	public static final String ID = "org.eclipse.mylar.tasks.ui.core.search.page";
 
 	private static final String PAGE_KEY = "page";
 

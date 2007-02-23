@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
-
 
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractQueryHit implements ITaskListElement {
+public abstract class AbstractQueryHit extends PlatformObject implements ITaskListElement {
 
 	protected TaskList taskList;
 
@@ -30,7 +30,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	protected String priority = PriorityLevel.getDefault().toString();
 
 	protected String taskId;
-	
+
 	private boolean completed = false;
 
 	private boolean isNotified = false;
@@ -67,7 +67,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 			return summary;
 		}
 	}
-	
+
 	public AbstractRepositoryTask getOrCreateCorrespondingTask() {
 		if (taskList == null) {
 			return null;
@@ -77,15 +77,15 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		if (existingTask instanceof AbstractRepositoryTask) {
 			this.task = (AbstractRepositoryTask) existingTask;
 		} else {
-			task = createTask();			
+			task = createTask();
 			task.setCompleted(completed);
 			taskList.addTask(task);
 		}
 		return task;
 	}
-	
+
 	protected abstract AbstractRepositoryTask createTask();
-	
+
 	/**
 	 * @return null if there is no corresponding task
 	 */
@@ -104,11 +104,11 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 			return completed;
 		}
 	}
-	
+
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
 	}
-	
+
 	public final String getHandleIdentifier() {
 		if (task != null) {
 			return task.getHandleIdentifier();
@@ -148,7 +148,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 		AbstractQueryHit hit = (AbstractQueryHit) obj;
 		return hit.getHandleIdentifier().equals(this.getHandleIdentifier());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return this.getHandleIdentifier().hashCode();
@@ -168,7 +168,7 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 			return priority;
 		}
 	}
-	
+
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
@@ -182,10 +182,9 @@ public abstract class AbstractQueryHit implements ITaskListElement {
 	}
 
 	public int compareTo(ITaskListElement taskListElement) {
-		return this.taskId.compareTo(((AbstractQueryHit)taskListElement).taskId);
+		return this.taskId.compareTo(((AbstractQueryHit) taskListElement).taskId);
 	}
 
-	
 	@Deprecated
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;

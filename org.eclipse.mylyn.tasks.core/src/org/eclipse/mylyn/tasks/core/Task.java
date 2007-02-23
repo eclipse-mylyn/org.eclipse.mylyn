@@ -17,12 +17,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class Task implements ITask {
+public class Task extends PlatformObject implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
 
