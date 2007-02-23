@@ -58,6 +58,10 @@ public abstract class AbstractTracClientTest extends TestCase {
 		return connect(Constants.TEST_TRAC_010_DIGEST_AUTH_URL);
 	}
 
+	public ITracClient connect011() throws Exception {
+		return connect(Constants.TEST_TRAC_011_URL);
+	}
+
 	public ITracClient connect(String url) throws Exception {
 		return connect(url, Proxy.NO_PROXY);
 	}

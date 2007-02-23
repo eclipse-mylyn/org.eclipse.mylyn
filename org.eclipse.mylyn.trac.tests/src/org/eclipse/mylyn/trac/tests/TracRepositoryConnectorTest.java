@@ -116,8 +116,18 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(null, connector.getRepositoryUrlFromTaskUrl("http://host/repo/ticket-2342"));
 	}
 
+	public void testCreateTaskFromExistingKeyXmlRpc011() throws CoreException {
+		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		createTaskFromExistingKey();
+	}
+
 	public void testCreateTaskFromExistingKeyXmlRpc010() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		createTaskFromExistingKey();
+	}
+
+	public void testCreateTaskFromExistingKeyTracWeb011() throws CoreException {
+		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		createTaskFromExistingKey();
 	}
 
@@ -169,8 +179,16 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Version.XML_RPC, client.getVersion());
 	}
 
+//	public void testPerformQueryXmlRpc011() {
+//		performQuery(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
+//	}
+
 	public void testPerformQueryXmlRpc010() {
 		performQuery(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+	}
+
+	public void testPerformQueryWeb011() {
+		performQuery(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 	}
 
 	public void testPerformQueryWeb010() {
@@ -246,13 +264,23 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Task.DEFAULT_TASK_KIND, task.getTaskKind());
 	}
 
-	public void testUpdateAttributesWeb096() throws Exception {
-		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+	public void testUpdateAttributesWeb011() throws Exception {
+		init(Constants.TEST_TRAC_011_URL, Version.TRAC_0_9);
 		updateAttributes();
 	}
 
 	public void testUpdateAttributesWeb010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		updateAttributes();
+	}
+
+	public void testUpdateAttributesWeb096() throws Exception {
+		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		updateAttributes();
+	}
+
+	public void testUpdateAttributesXmlRpc011() throws Exception {
+		init(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
 		updateAttributes();
 	}
 
@@ -276,7 +304,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("2.0", versions[1].getName());
 	}
 
-	public void testContext010() throws Exception {
+	public void testContextXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
@@ -297,7 +325,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		//assertTrue(connector.retrieveContext(repository, task, attachment, TasksUiPlugin.getDefault().getProxySettings(), TasksUiPlugin.getDefault().getDataDirectory()));
 	}
 
-	public void testContext096() throws Exception {
+	public void testContextWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 

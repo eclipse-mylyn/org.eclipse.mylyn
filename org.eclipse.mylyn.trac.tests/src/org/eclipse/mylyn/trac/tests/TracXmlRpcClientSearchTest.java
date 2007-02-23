@@ -28,7 +28,17 @@ public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 		super(Version.XML_RPC);
 	}
 
-	public void testSearchValidateTicket() throws Exception {
+	public void testSearchValidateTicket010() throws Exception {
+		connect010();
+		searchValidateTicket();
+	}
+	
+//	public void testSearchValidateTicket011() throws Exception {
+//		connect011();
+//		searchValidateTicket();		
+//	}
+	
+	public void searchValidateTicket() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("summary", "summary1");
 		List<TracTicket> result = new ArrayList<TracTicket>();

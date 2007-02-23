@@ -47,8 +47,6 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 
 		data = TestFixture.init010();
 		tickets = data.tickets;
-
-		connect010();
 	}
 
 	@Override
@@ -68,7 +66,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		}
 	}
 
-	public void testGetTicket() throws Exception {
+	public void testGetTicket010() throws Exception {
+		connect010();
+		getTickets();
+	}
+
+//	public void testGetTicket011() throws Exception {
+//		connect011();
+//		getTickets();
+//	}
+
+	private void getTickets() throws Exception {
 		TracTicket ticket = repository.getTicket(tickets.get(0).getId());
 		assertTicketEquals(tickets.get(0), ticket);
 
@@ -76,7 +84,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertTicketEquals(tickets.get(1), ticket);
 	}
 
-	public void testGetTicketInvalidId() throws Exception {
+	public void testGetTicketInvalidId010() throws Exception {
+		connect010();
+		getTicketInvalidId();
+	}
+
+	public void testGetTicketInvalidId011() throws Exception {
+		connect011();
+		getTicketInvalidId();
+	}
+
+	private void getTicketInvalidId() throws Exception {
 		try {
 			repository.getTicket(Integer.MAX_VALUE);
 			fail("Expected TracException");
@@ -84,7 +102,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		}
 	}
 
-	public void testGetTicketUmlaute() throws Exception {
+	public void testGetTicketUmlaute010() throws Exception {
+		connect010();
+		getTicketUmlaute();
+	}
+
+//	public void testGetTicketUmlaute011() throws Exception {
+//		connect011();
+//		getTicketUmlaute();
+//	}
+
+	private void getTicketUmlaute() throws Exception {
 		TracTicket ticket = repository.getTicket(data.htmlEntitiesTicketId);
 		assertEquals("test html entities: \u00E4\u00F6\u00FC", ticket.getValue(Key.SUMMARY));
 		if (version == Version.XML_RPC) {
@@ -94,14 +122,34 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		}
 	}
 
-	public void testSearchAll() throws Exception {
+	public void testSearchAll010() throws Exception {
+		connect010();
+		searchAll();
+	}
+
+//	public void testSearchAll011() throws Exception {
+//		connect011();
+//		searchAll();
+//	}
+
+	private void searchAll() throws Exception {
 		TracSearch search = new TracSearch();
 		List<TracTicket> result = new ArrayList<TracTicket>();
 		repository.search(search, result);
 		assertEquals(tickets.size(), result.size());
 	}
 
-	public void testSearchEmpty() throws Exception {
+	public void testSearchEmpty010() throws Exception {
+		connect010();
+		searchEmpty();		
+	}
+
+//	public void testSearchEmpty011() throws Exception {
+//		connect011();
+//		searchEmpty();
+//	}
+
+	private void searchEmpty() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "does not exist");
 		List<TracTicket> result = new ArrayList<TracTicket>();
@@ -109,7 +157,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertEquals(0, result.size());
 	}
 
-	public void testSearchMilestone1() throws Exception {
+	public void testSearchMilestone1010() throws Exception {
+		connect010();
+		searchMilestone1();
+	}
+
+//	public void testSearchMilestone1011() throws Exception {
+//		connect011();
+//		searchMilestone1();
+//	}
+
+	private void searchMilestone1() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
 		List<TracTicket> result = new ArrayList<TracTicket>();
@@ -118,7 +176,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertTicketEquals(tickets.get(0), result.get(0));
 	}
 
-	public void testSearchMilestone2() throws Exception {
+	public void testSearchMilestone2010() throws Exception {
+		connect010();
+		searchMilestone2();
+	}
+
+//	public void testSearchMilestone2011() throws Exception {
+//		connect011();
+//		searchMilestone2();
+//	}
+
+	private void searchMilestone2() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("milestone", "milestone2");
@@ -131,7 +199,17 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		assertTicketEquals(tickets.get(2), result.get(2));
 	}
 
-	public void testSearchExactMatch() throws Exception {
+	public void testSearchExactMatch010() throws Exception {
+		connect010();
+		searchExactMatch();
+	}
+	
+//	public void testSearchExactMatch011() throws Exception {
+//		connect011();
+//		searchExactMatch();
+//	}
+	
+	private void searchExactMatch() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
 		search.addFilter("summary", "summary1");

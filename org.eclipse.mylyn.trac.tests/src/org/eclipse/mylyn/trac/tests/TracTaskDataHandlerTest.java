@@ -94,6 +94,15 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		getChangedSinceLastSync();
+	}
+
+//	public void testGetChangedSinceLastSyncXmlRpc011() throws Exception {
+//		init(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
+//		getChangedSinceLastSync();
+//	}
+
+	private void getChangedSinceLastSync() throws Exception {
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());

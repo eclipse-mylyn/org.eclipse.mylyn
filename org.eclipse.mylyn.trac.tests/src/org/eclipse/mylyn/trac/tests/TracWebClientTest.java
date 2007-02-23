@@ -66,7 +66,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 		updateAttributes();
 	}
 
-	public void updateAttributes() throws TracException {
+	private void updateAttributes() throws TracException {
 		assertNull(repository.getMilestones());
 		repository.updateAttributes(new NullProgressMonitor(), true);
 		TracVersion[] versions = repository.getVersions();

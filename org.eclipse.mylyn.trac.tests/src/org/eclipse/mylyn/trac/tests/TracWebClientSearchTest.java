@@ -28,7 +28,17 @@ public class TracWebClientSearchTest extends AbstractTracClientSearchTest {
 	}
 
 	// TODO move this test to AbstracTracClientTest when bug 162094 is resolved
-	public void testSearchMilestoneAmpersand() throws Exception {
+	public void testSearchMilestoneAmpersand010() throws Exception {
+		connect010();
+		searchMilestoneAmpersand();
+	}
+
+	public void testSearchMilestoneAmpersand011() throws Exception {
+		connect011();
+		searchMilestoneAmpersand();
+	}
+
+	private void searchMilestoneAmpersand() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "mile&stone");
 		search.setOrderBy("id");
