@@ -19,7 +19,7 @@ import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.Trac09Client;
+import org.eclipse.mylar.internal.trac.core.TracWebClient;
 import org.eclipse.mylar.internal.trac.core.TracClientFactory;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
@@ -34,9 +34,9 @@ public class TracClientFactoryTest extends TestCase {
 	public void testCreateClient() throws Exception {
 		ITracClient client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9, "user",
 				"password", Proxy.NO_PROXY);
-		assertTrue(client instanceof Trac09Client);
+		assertTrue(client instanceof TracWebClient);
 		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_SSL_URL, Version.TRAC_0_9, "user", "password", Proxy.NO_PROXY);
-		assertTrue(client instanceof Trac09Client);
+		assertTrue(client instanceof TracWebClient);
 
 		client = TracClientFactory.createClient(Constants.TEST_TRAC_010_URL, Version.XML_RPC, "user", "password", Proxy.NO_PROXY);
 		assertTrue(client instanceof TracXmlRpcClient);

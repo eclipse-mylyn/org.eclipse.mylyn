@@ -21,9 +21,9 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 /**
  * @author Steffen Pingel
  */
-public class Trac09ClientSearchTest extends AbstractTracClientSearchTest {
+public class TracWebClientSearchTest extends AbstractTracClientSearchTest {
 
-	public Trac09ClientSearchTest() {
+	public TracWebClientSearchTest() {
 		super(Version.TRAC_0_9);
 	}
 

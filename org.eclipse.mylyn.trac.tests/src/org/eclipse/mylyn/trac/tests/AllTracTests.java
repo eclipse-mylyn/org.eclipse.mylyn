@@ -30,8 +30,8 @@ public class AllTracTests {
 		suite.addTestSuite(TracTicketTest.class);
 		suite.addTestSuite(TracXmlRpcClientTest.class);
 		suite.addTestSuite(TracXmlRpcClientSearchTest.class);
-		suite.addTestSuite(Trac09ClientTest.class);
-		suite.addTestSuite(Trac09ClientSearchTest.class);
+		suite.addTestSuite(TracWebClientTest.class);
+		suite.addTestSuite(TracWebClientSearchTest.class);
 		suite.addTestSuite(TracClientFactoryTest.class);
 		suite.addTestSuite(TracRepositoryConnectorTest.class);
 		suite.addTestSuite(TracQueryTest.class);

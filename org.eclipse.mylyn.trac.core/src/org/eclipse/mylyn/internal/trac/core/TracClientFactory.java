@@ -27,7 +27,7 @@ public class TracClientFactory {
 		URL url = new URL(location);
 
 		if (version == Version.TRAC_0_9) {
-			return new Trac09Client(url, version, username, password, proxy);
+			return new TracWebClient(url, version, username, password, proxy);
 		} else if (version == Version.XML_RPC) {
 			return new TracXmlRpcClient(url, version, username, password, proxy);
 		}
@@ -51,7 +51,7 @@ public class TracClientFactory {
 			return Version.XML_RPC;
 		} catch (TracException e) {
 			try {
-				ITracClient repository = new Trac09Client(url, Version.TRAC_0_9, username, password, proxy);
+				ITracClient repository = new TracWebClient(url, Version.TRAC_0_9, username, password, proxy);
 				repository.validate();
 				return Version.TRAC_0_9;
 			} catch (TracLoginException e2) {

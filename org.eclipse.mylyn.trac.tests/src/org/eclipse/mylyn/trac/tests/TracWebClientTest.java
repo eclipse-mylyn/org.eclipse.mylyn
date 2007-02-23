@@ -22,9 +22,9 @@ import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 /**
  * @author Steffen Pingel
  */
-public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
+public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 
-	public Trac09ClientTest() {
+	public TracWebClientTest() {
 		super(Version.TRAC_0_9);
 	}
 
