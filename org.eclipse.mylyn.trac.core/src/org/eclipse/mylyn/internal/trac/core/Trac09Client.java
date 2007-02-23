@@ -14,6 +14,8 @@ package org.eclipse.mylar.internal.trac.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -330,6 +332,170 @@ public class Trac09Client extends AbstractTracClient {
 	public void updateAttributes(IProgressMonitor monitor) throws TracException {
 		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
 
+		GetMethod method = connect(repositoryUrl + ITracClient.CUSTOM_QUERY_URL);
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					ITracClient.CHARSET));
+			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
+			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
+				}
+
+				if (token.getType() == Token.TAG) {
+					HtmlTag tag = (HtmlTag) token.getValue();
+					if (tag.getTagType() == HtmlTag.Type.SCRIPT) {
+						String text = getText(tokenizer).trim();
+						if (text.startsWith("var properties=")) {
+							parseAttributes(text);
+						}
+					}
+				}
+			}
+			
+			addResolutionAndStatus();
+		} catch (IOException e) {
+			throw new TracException(e);
+		} catch (ParseException e) {
+			throw new TracException(e);
+		} finally {
+			method.releaseConnection();
+		}
+	}
+
+	enum AttributeState { INIT, IN_LIST, IN_ATTRIBUTE_KEY, IN_ATTRIBUTE_VALUE, IN_ATTRIBUTE_VALUE_LIST };
+	
+	/** 
+	 * Parses the JavaScript code from the query page to extract repository configuration.
+	 */
+	private void parseAttributes(String text) throws IOException {
+		StreamTokenizer t = new StreamTokenizer(new StringReader(text));
+		t.quoteChar('"');
+
+		AttributeFactory attributeFactory = null;
+		String attributeType = null;
+		
+		AttributeState state = AttributeState.INIT;
+		int tokenType;
+		while ((tokenType = t.nextToken()) != StreamTokenizer.TT_EOF) {
+			switch (tokenType) {
+			case StreamTokenizer.TT_WORD:
+				if (state == AttributeState.IN_LIST) {
+					if ("component".equals(t.sval)) {
+						data.components = new ArrayList<TracComponent>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.components.add(new TracComponent(value));
+							}							
+						};
+					} else if ("milestone".equals(t.sval)) {
+						data.milestones = new ArrayList<TracMilestone>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.milestones.add(new TracMilestone(value));
+							}							
+						};
+					} else if ("priority".equals(t.sval)) {
+						data.priorities = new ArrayList<TracPriority>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.priorities.add(new TracPriority(value, data.priorities.size() + 1));
+							}							
+						};
+					} else if ("resolution".equals(t.sval)) {
+						data.ticketResolutions = new ArrayList<TracTicketResolution>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.ticketResolutions.add(new TracTicketResolution(value, data.ticketResolutions.size() + 1));
+							}							
+						};
+					} else if ("severity".equals(t.sval)) {
+						data.severities = new ArrayList<TracSeverity>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.severities.add(new TracSeverity(value, data.severities.size() + 1));
+							}							
+						};
+					} else if ("status".equals(t.sval)) {
+						data.ticketStatus = new ArrayList<TracTicketStatus>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.ticketStatus.add(new TracTicketStatus(value, data.ticketStatus.size() + 1));
+							}							
+						};
+					} else if ("type".equals(t.sval)) {
+						data.ticketTypes = new ArrayList<TracTicketType>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.ticketTypes.add(new TracTicketType(value, data.ticketTypes.size() + 1));
+							}							
+						};
+					} else if ("version".equals(t.sval)) {
+						data.versions = new ArrayList<TracVersion>();
+						attributeFactory = new AttributeFactory() {
+							public void addAttribute(String value) {
+								data.versions.add(new TracVersion(value));
+							}							
+						};
+					} else {
+						attributeFactory = null;
+					}
+				} else if (state == AttributeState.IN_ATTRIBUTE_KEY) {
+					attributeType = t.sval;
+				}
+				break;
+			case '"':
+				if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST && "options".equals(attributeType)) {
+					if (attributeFactory != null) {
+						attributeFactory.addAttribute(t.sval);
+					}
+				}
+				break;
+			case ':':
+				if (state == AttributeState.IN_ATTRIBUTE_KEY) {
+					state = AttributeState.IN_ATTRIBUTE_VALUE;
+				}
+				break;
+			case ',':
+				if (state == AttributeState.IN_ATTRIBUTE_VALUE) {
+					state = AttributeState.IN_ATTRIBUTE_KEY;
+				}
+				break;
+			case '[':
+				if (state == AttributeState.IN_ATTRIBUTE_VALUE) {
+					state = AttributeState.IN_ATTRIBUTE_VALUE_LIST;
+				}
+				break;
+			case ']':
+				if (state == AttributeState.IN_ATTRIBUTE_VALUE_LIST) {
+					state = AttributeState.IN_ATTRIBUTE_VALUE;
+				}
+				break;
+			case '{':
+				if (state == AttributeState.INIT) {
+					state = AttributeState.IN_LIST;
+				} else if (state == AttributeState.IN_LIST) {
+					state = AttributeState.IN_ATTRIBUTE_KEY;
+				} else {
+					throw new IOException("Error parsing attributes: unexpected token '{'");
+				}
+				break;
+			case '}':
+				if (state == AttributeState.IN_ATTRIBUTE_KEY || state == AttributeState.IN_ATTRIBUTE_VALUE) {
+					state = AttributeState.IN_LIST;
+				} else if (state == AttributeState.IN_LIST) {
+					state = AttributeState.INIT;
+				} else {
+					throw new IOException("Error parsing attributes: unexpected token '}'");
+				}
+				break;				
+			}
+		}
+	}
+
+	public void updateAttributesNewTicketPage(IProgressMonitor monitor) throws TracException {
+		monitor.beginTask("Updating attributes", IProgressMonitor.UNKNOWN);
+
 		GetMethod method = connect(repositoryUrl + ITracClient.NEW_TICKET_URL);
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
@@ -385,18 +551,7 @@ public class Trac09Client extends AbstractTracClient {
 				}
 			}
 
-			data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
-			data.ticketResolutions.add(new TracTicketResolution("fixed", 1));
-			data.ticketResolutions.add(new TracTicketResolution("invalid", 2));
-			data.ticketResolutions.add(new TracTicketResolution("wontfix", 3));
-			data.ticketResolutions.add(new TracTicketResolution("duplicate", 4));
-			data.ticketResolutions.add(new TracTicketResolution("worksforme", 5));
-
-			data.ticketStatus = new ArrayList<TracTicketStatus>(4);
-			data.ticketStatus.add(new TracTicketStatus("new", 1));
-			data.ticketStatus.add(new TracTicketStatus("assigned", 2));
-			data.ticketStatus.add(new TracTicketStatus("reopened", 3));
-			data.ticketStatus.add(new TracTicketStatus("closed", 4));
+			addResolutionAndStatus();
 		} catch (IOException e) {
 			throw new TracException(e);
 		} catch (ParseException e) {
@@ -404,6 +559,21 @@ public class Trac09Client extends AbstractTracClient {
 		} finally {
 			method.releaseConnection();
 		}
+	}
+
+	private void addResolutionAndStatus() {
+		data.ticketResolutions = new ArrayList<TracTicketResolution>(5);
+		data.ticketResolutions.add(new TracTicketResolution("fixed", 1));
+		data.ticketResolutions.add(new TracTicketResolution("invalid", 2));
+		data.ticketResolutions.add(new TracTicketResolution("wontfix", 3));
+		data.ticketResolutions.add(new TracTicketResolution("duplicate", 4));
+		data.ticketResolutions.add(new TracTicketResolution("worksforme", 5));
+
+		data.ticketStatus = new ArrayList<TracTicketStatus>(4);
+		data.ticketStatus.add(new TracTicketStatus("new", 1));
+		data.ticketStatus.add(new TracTicketStatus("assigned", 2));
+		data.ticketStatus.add(new TracTicketStatus("reopened", 3));
+		data.ticketStatus.add(new TracTicketStatus("closed", 4));
 	}
 
 	private List<String> getOptionValues(HtmlStreamTokenizer tokenizer) throws IOException, ParseException {
@@ -477,4 +647,10 @@ public class Trac09Client extends AbstractTracClient {
 		return null;
 	}
 
+	private interface AttributeFactory {
+		
+		void addAttribute(String value);
+		
+	}
+	
 }

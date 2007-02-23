@@ -49,8 +49,17 @@ public class Trac09ClientTest extends AbstractTracClientRepositoryTest {
 		repository.validate();
 	}
 
-	public void testUpdateAttributes() throws Exception {
-		connect010();
+	public void testUpdateAttributesAnonymous096() throws Exception {
+		connect(Constants.TEST_TRAC_096_URL, "", "");
+		updateAttributes();
+	}
+	
+	public void testUpdateAttributesAnonymous010() throws Exception {
+		connect(Constants.TEST_TRAC_010_URL, "", "");
+		updateAttributes();
+	}
+
+	public void updateAttributes() throws TracException {
 		assertNull(repository.getMilestones());
 		repository.updateAttributes(new NullProgressMonitor(), true);
 		TracVersion[] versions = repository.getVersions();

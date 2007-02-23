@@ -72,6 +72,8 @@ public interface ITracClient {
 	public static final String TICKET_URL = "/ticket/";
 
 	public static final String NEW_TICKET_URL = "/newticket";
+	
+	public static final String CUSTOM_QUERY_URL = "/query";
 
 	public static final String TICKET_ATTACHMENT_URL = "/attachment/ticket/";
 
