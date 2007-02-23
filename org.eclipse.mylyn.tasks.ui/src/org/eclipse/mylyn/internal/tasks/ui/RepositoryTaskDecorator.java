@@ -62,17 +62,24 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				} else {
 					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 				}
-			} 
+			}
 			if (task.isSynchronizing()) {
 				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+			}
+			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isDue(task)) {
+				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			decorate(correspondingTask, decoration);
 		} else if (element instanceof ITask) {
-			String url = ((ITask) element).getTaskUrl();
+			ITask task = (ITask) element;
+			String url = task.getTaskUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
 				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
+			}
+			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isDue(task)) {
+				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository) element).getKind());

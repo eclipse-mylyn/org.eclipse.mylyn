@@ -841,7 +841,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void setDueDate(ITask task, Date dueDate) {
 		task.setDueDate(dueDate);
 		taskList.notifyLocalInfoChanged(task);
-	}	
+	}
+	
+	/**
+	 * @return true if task due date != null and has past
+	 */
+	public boolean isDue(ITask task) {
+		return (task.getDueDate() != null && new Date().after(task.getDueDate()));
+	}
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
