@@ -315,7 +315,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		createNotesSection(editorComposite);
 
 		if (summary != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
-			// summary.setSelection(0, summary.getText().length());
+			summary.setSelection(0, summary.getText().length());
 			summary.setFocus();
 		} else if (summary != null) {
 			summary.setFocus();
@@ -359,7 +359,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		GridLayout summaryLayout = new GridLayout(2, false);
 		summaryLayout.verticalSpacing = 0;
 		summaryLayout.marginHeight = 0;
-		summaryLayout.marginLeft = 5;
+		//summaryLayout.marginLeft = 5;
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
@@ -378,6 +378,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 				}
 			});
 		}
+		toolkit.paintBordersFor(summaryComposite);
 
 		Composite statusComposite = toolkit.createComposite(parent);
 		GridLayout compLayout = new GridLayout(7, false);
