@@ -173,7 +173,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String LABEL_HISTORY = "History";
 
-	private static final String LABEL_REPLY = "reply";
+	private static final String LABEL_REPLY = "Reply";
 
 	public static final String LABEL_JOB_SUBMIT = "Submitting to repository";
 
