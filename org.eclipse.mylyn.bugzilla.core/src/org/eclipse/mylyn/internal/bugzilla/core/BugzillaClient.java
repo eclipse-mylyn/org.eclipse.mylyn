@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
@@ -30,16 +29,14 @@ import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
-import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
@@ -156,37 +153,57 @@ public class BugzillaClient {
 
 	// Adapted from
 	// http://jakarta.apache.org/commons/httpclient/exception-handling.html
-	private class BugzillaRetryHandler implements HttpMethodRetryHandler {
-		public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
-			if (executionCount >= MAX_RETRY) {
-				// Do not retry if over max retry count
-				return false;
-			}
-			int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
-			if (exception instanceof ConnectTimeoutException) {
-				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+//	private class BugzillaRetryHandler implements HttpMethodRetryHandler {
+//		public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
+//			if (executionCount >= MAX_RETRY) {
+//				// Do not retry if over max retry count
+//				return false;
+//			}
+//			int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
+//			if (exception instanceof ConnectTimeoutException) {
+//				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+//				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+//				return true;
+//			}
+//			if (exception instanceof SocketTimeoutException) {
+//				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
+//				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
+//				return true;
+//			}
+//			if (exception instanceof NoHttpResponseException) {
+//				System.err.println(">>> NoHttpResponseException "+new Date().toString());
+//				// Retry if the server dropped connection on us
+//				return true;
+//			}
+//			if (!method.isRequestSent()) {
+//				System.err.println(">>> Request not fully sent. "+new Date().toString());
+//				// Retry if the request has not been sent fully or
+//				// if it's OK to retry methods that have been sent
+//				return true;
+//			}
+//			// otherwise do not retry
+//			return false;
+//		}
+//	};
+
+	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
+		public BugzillaRetryHandler() {
+			super(MAX_RETRY, false);
+		}
+
+		@Override
+		public boolean retryMethod(HttpMethod method, IOException exception, int executionCount) {
+			if(super.retryMethod(method, exception, executionCount)) {
+				int soTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
+				httpClient.getHttpConnectionManager().getParams().setSoTimeout(soTimeout * 2);
+				int connectTimeout = httpClient.getHttpConnectionManager().getParams().getConnectionTimeout();
+				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(connectTimeout * 2);
 				return true;
 			}
-			if (exception instanceof SocketTimeoutException) {
-				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
-				return true;
-			}
-			if (exception instanceof NoHttpResponseException) {
-				// Retry if the server dropped connection on us
-				return true;
-			}
-			if (!method.isRequestSent()) {
-				// Retry if the request has not been sent fully or
-				// if it's OK to retry methods that have been sent
-				return true;
-			}
-			// otherwise do not retry
 			return false;
 		}
-	};
-
+	}
+	
 	private String htAuthUser;
 
 	private String htAuthPass;

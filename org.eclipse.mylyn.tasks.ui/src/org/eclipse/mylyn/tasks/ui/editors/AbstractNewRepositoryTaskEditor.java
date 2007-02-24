@@ -164,7 +164,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (attribute != null) {
 			createLabel(summaryComposite, attribute);
 			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
-			attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+			summaryText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
 					TaskListColorsAndFonts.TASK_EDITOR_FONT);
