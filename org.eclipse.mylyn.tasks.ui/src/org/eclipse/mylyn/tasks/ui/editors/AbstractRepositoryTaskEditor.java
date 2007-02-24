@@ -475,6 +475,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private String kindLabel;
 
+	private Menu menu;
+
 	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
 
 		public Color getBackground(Object element) {
@@ -781,7 +783,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void removeSections() {
-		setNullMenu(editorComposite);
+		menu = editorComposite.getMenu();
+		setMenu(editorComposite, null);
 		for (Control control : editorComposite.getChildren()) {
 			control.dispose();
 		}
@@ -892,7 +895,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style) {
 		final Text text;
 		String value;
-		if (attribute == null) {
+		if (attribute == null || attribute.getValue() == null) {
 			value = "";
 		} else {
 			value = attribute.getValue();
@@ -2731,9 +2734,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					updateEditorTitle();
+					menu = editorComposite.getMenu();
 					removeSections();
+					editorComposite.setMenu(menu);
 					createSections();
 					markDirty(false);
+					
 					showBusy(false);
 					AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
 							AbstractRepositoryTaskEditor.this.getId());
@@ -2758,13 +2764,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Used to prevent form menu from being disposed when disposing elements on
 	 * the form during refresh
 	 */
-	private void setNullMenu(Composite comp) {
+	private void setMenu(Composite comp, Menu menu) {
 		if (!comp.isDisposed()) {
 			comp.setMenu(null);
 			for (Control child : comp.getChildren()) {
 				child.setMenu(null);
 				if (child instanceof Composite) {
-					setNullMenu((Composite) child);
+					setMenu((Composite) child, menu);
 				}
 			}
 		}
