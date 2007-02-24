@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IAlwaysIntersting;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -58,7 +59,9 @@ public class InterestFilter extends ViewerFilter {
 			}
 
 			IMylarElement element = null;
-			if (object instanceof IMylarElement) {
+			if (object instanceof IAlwaysIntersting) {
+				return true;
+			} else if (object instanceof IMylarElement) {
 				element = (IMylarElement) object;
 			} else {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
