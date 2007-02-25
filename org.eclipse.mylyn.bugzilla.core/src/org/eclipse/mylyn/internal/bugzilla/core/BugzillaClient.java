@@ -151,41 +151,6 @@ public class BugzillaClient {
 
 	private HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 
-	// Adapted from
-	// http://jakarta.apache.org/commons/httpclient/exception-handling.html
-//	private class BugzillaRetryHandler implements HttpMethodRetryHandler {
-//		public boolean retryMethod(final HttpMethod method, final IOException exception, int executionCount) {
-//			if (executionCount >= MAX_RETRY) {
-//				// Do not retry if over max retry count
-//				return false;
-//			}
-//			int currentTimeout = httpClient.getHttpConnectionManager().getParams().getSoTimeout();
-//			if (exception instanceof ConnectTimeoutException) {
-//				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-//				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
-//				return true;
-//			}
-//			if (exception instanceof SocketTimeoutException) {
-//				httpClient.getHttpConnectionManager().getParams().setSoTimeout(currentTimeout * 2);
-//				httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(currentTimeout * 2);
-//				return true;
-//			}
-//			if (exception instanceof NoHttpResponseException) {
-//				System.err.println(">>> NoHttpResponseException "+new Date().toString());
-//				// Retry if the server dropped connection on us
-//				return true;
-//			}
-//			if (!method.isRequestSent()) {
-//				System.err.println(">>> Request not fully sent. "+new Date().toString());
-//				// Retry if the request has not been sent fully or
-//				// if it's OK to retry methods that have been sent
-//				return true;
-//			}
-//			// otherwise do not retry
-//			return false;
-//		}
-//	};
-
 	private class BugzillaRetryHandler extends DefaultHttpMethodRetryHandler {
 		public BugzillaRetryHandler() {
 			super(MAX_RETRY, false);
