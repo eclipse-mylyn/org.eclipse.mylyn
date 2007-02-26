@@ -358,7 +358,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		Composite summaryComposite = toolkit.createComposite(parent);
 		GridLayout summaryLayout = new GridLayout(2, false);
 		summaryLayout.verticalSpacing = 0;
-		summaryLayout.marginHeight = 0;
+		summaryLayout.marginHeight = 2;
 		//summaryLayout.marginLeft = 5;
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
