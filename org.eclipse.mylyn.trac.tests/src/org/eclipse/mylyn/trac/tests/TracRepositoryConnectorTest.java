@@ -242,7 +242,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		
 		connector.updateTaskDetails(task, ticket, false);
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getTaskUrl());
-		assertEquals("123", task.getIdentifyingLabel());
+		assertEquals("123", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
 		assertEquals("mytype", task.getTaskKind());
@@ -258,7 +258,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 		connector.updateTaskDetails(task, ticket, false);
 		assertEquals(Constants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getTaskUrl());
-		assertEquals("456", task.getIdentifyingLabel());
+		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
 		assertEquals(Task.DEFAULT_TASK_KIND, task.getTaskKind());

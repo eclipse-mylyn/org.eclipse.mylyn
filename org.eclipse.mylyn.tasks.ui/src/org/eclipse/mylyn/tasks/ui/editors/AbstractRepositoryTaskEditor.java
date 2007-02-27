@@ -705,7 +705,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		String idLabel = "";
 
 		if (repositoryTask != null) {
-			idLabel = repositoryTask.getIdentifyingLabel();
+			idLabel = repositoryTask.getTaskKey();
 		} else {
 			idLabel = taskData.getId();
 		}
@@ -811,7 +811,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		RepositoryTaskAttribute priorityAttribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
 		addNameValue(headerInfoComposite, priorityAttribute);
 
-		String idLabel = (repositoryTask != null) ? repositoryTask.getIdentifyingLabel() : taskData.getId();
+		String idLabel = (repositoryTask != null) ? repositoryTask.getTaskKey() : taskData.getId();
 		if (idLabel != null) {
 
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);

@@ -116,7 +116,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	public String getLabel() {
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-			String idLabel = repositoryTask.getIdentifyingLabel();
+			String idLabel = repositoryTask.getTaskKey();
 			
 			summary = "";
 			if (idLabel != null) {

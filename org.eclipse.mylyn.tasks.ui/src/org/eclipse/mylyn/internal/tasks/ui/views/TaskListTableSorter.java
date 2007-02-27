@@ -108,15 +108,15 @@ public class TaskListTableSorter extends ViewerSorter {
 		
 		if (element instanceof AbstractQueryHit) {
 			AbstractRepositoryTask task1 = ((AbstractQueryHit)element).getCorrespondingTask();
-			if (task1 != null && task1.getIdentifyingLabel() != null) {
-				summary = task1.getIdentifyingLabel() + ": " + summary;
+			if (task1 != null && task1.getTaskKey() != null) {
+				summary = task1.getTaskKey() + ": " + summary;
 			} else {
 				summary = ((AbstractQueryHit)element).getIdentifyingLabel() + ": " + summary;
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task1 = (AbstractRepositoryTask)element;
-			if (task1.getIdentifyingLabel() != null) {
-				summary = task1.getIdentifyingLabel() + ": " + summary;
+			if (task1.getTaskKey() != null) {
+				summary = task1.getTaskKey() + ": " + summary;
 			}
 		}
 		return summary;

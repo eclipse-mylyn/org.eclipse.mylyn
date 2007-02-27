@@ -29,7 +29,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected String repositoryUrl;
 
 	protected String taskId;
-
+	
 	protected transient RepositoryTaskData taskData;
 
 	protected boolean currentlySynchronizing;
@@ -102,14 +102,6 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.currentlySynchronizing = currentlySychronizing;
 	}
 
-	/**
-	 * Human readable identifier for this task. Override if different than ID,
-	 * can return null if no such label exists.
-	 */
-	public String getIdentifyingLabel() {
-		return taskId;
-	}
-
 	public boolean isDirty() {
 		return isDirty;
 	}
@@ -164,5 +156,14 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	public final void setRepositoryUrl(String repositoryUrl) {
 		this.repositoryUrl = repositoryUrl;
+	}
+
+	/**
+	 * User identifiable key for the task to be used in UI facilities such as 
+	 * label displays and hyperlinked references.  Can return the same as the ID
+	 * (e.g. in the case of Bugzilla).  Can return null if no such label exists.
+	 */
+	public String getTaskKey() {
+		return taskId;
 	}
 }

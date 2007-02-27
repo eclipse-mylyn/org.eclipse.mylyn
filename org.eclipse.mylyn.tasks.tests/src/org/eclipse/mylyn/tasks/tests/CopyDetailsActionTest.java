@@ -21,7 +21,7 @@ public class CopyDetailsActionTest extends TestCase {
 	public void testIdLabelIncluded() {
 		MockRepositoryTask task = new MockRepositoryTask("123");		
 		String text = CopyTaskDetailsAction.getTextForTask(task);
-		assertTrue(text.startsWith(task.getIdentifyingLabel()));
+		assertTrue(text.startsWith(task.getTaskKey()));
 	}
 	
 }

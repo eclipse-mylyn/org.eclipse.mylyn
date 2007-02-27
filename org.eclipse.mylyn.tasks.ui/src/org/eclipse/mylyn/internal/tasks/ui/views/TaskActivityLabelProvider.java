@@ -76,7 +76,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 			switch (columnIndex) {			
 			case 2:
 				if(task instanceof AbstractRepositoryTask) {
-					return ((AbstractRepositoryTask)task).getIdentifyingLabel() +": " + task.getSummary();
+					return ((AbstractRepositoryTask)task).getTaskKey() +": " + task.getSummary();
 				} else {
 					return task.getSummary();
 				}

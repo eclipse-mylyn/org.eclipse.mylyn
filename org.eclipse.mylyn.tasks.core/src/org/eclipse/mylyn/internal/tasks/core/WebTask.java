@@ -25,26 +25,17 @@ public class WebTask extends AbstractRepositoryTask {
 
 	private static final String UNKNOWN_OWNER = "<unknown>";
 	
-//	private final String taskId;
-
 	private final String taskPrefix;
 
-//	private final String repositoryUrl;
-	
 	private final String repsitoryType;
 
 	public WebTask(String id, String label, String taskPrefix, String repositoryUrl, String repsitoryType) {
 		super(repositoryUrl, id, label, false);
-//		this.id = taskId;
 		this.taskPrefix = taskPrefix;
 		this.repositoryUrl = repositoryUrl;
 		this.repsitoryType = repsitoryType;
 		setTaskUrl(taskPrefix + id);
 	}
-
-//	public String getId() {
-//		return this.id;
-//	}
 	
 	public String getTaskPrefix() {
 		return this.taskPrefix;
@@ -55,13 +46,8 @@ public class WebTask extends AbstractRepositoryTask {
 		return repsitoryType;
 	}
 	
-//	@Override
-//	public String getRepositoryUrl() {
-//		return repositoryUrl;
-//	}
-	
 	@Override
-	public String getIdentifyingLabel() {
+	public String getTaskKey() {
 		return null;
 	}
 
