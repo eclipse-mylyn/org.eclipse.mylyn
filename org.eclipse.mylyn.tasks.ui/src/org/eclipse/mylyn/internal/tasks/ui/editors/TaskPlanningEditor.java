@@ -77,6 +77,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
+	private static final String CLEAR = "Clear";
+
 	private static final String LABEL_DUE = "Due:";
 
 	public static final String PLANNING_EDITOR_ID = "org.eclipse.mylar.editors.planning";
@@ -301,7 +303,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
-		editorLayout.verticalSpacing = 0;
+		editorLayout.verticalSpacing = 3;
 		editorComposite.setLayout(editorLayout);
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// try {
@@ -326,7 +328,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	public void setFocus() {
 		// form.setFocus();
 		if (summary != null && !summary.isDisposed()) {
-			summary.setFocus();
+			summary.setFocus();			
 		}
 	}
 
@@ -356,18 +358,16 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		// Summary
 		Composite summaryComposite = toolkit.createComposite(parent);
-		GridLayout summaryLayout = new GridLayout(2, false);
-		summaryLayout.verticalSpacing = 0;
+		GridLayout summaryLayout = new GridLayout();
+		summaryLayout.verticalSpacing = 2;
 		summaryLayout.marginHeight = 2;
-		//summaryLayout.marginLeft = 5;
+		summaryLayout.marginLeft = 5;
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
-		summary = toolkit.createText(summaryComposite, task.getSummary(), SWT.NONE);
+		summary = toolkit.createText(summaryComposite, task.getSummary(), SWT.LEFT | SWT.FLAT);
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		GridData summaryGridData = new GridData(GridData.FILL_HORIZONTAL);
-		summaryGridData.horizontalSpan = 7;
-		summary.setLayoutData(summaryGridData);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(summary);		
 
 		if (task instanceof AbstractRepositoryTask) {
 			summary.setEnabled(false);
@@ -456,42 +456,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			MylarStatusHandler.fail(e, "Could not format creation date", true);
 		}
 		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
-
-		nameValueComp = makeComposite(statusComposite, 3);
-		Label label = toolkit.createLabel(nameValueComp, LABEL_DUE);
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
-		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
-
-		Calendar calendar = Calendar.getInstance();
-		if (task.getDueDate() != null) {
-			calendar.setTime(task.getDueDate());
-			dueDatePicker.setDate(calendar);
-		}
-
-		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent arg0) {
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
-		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		toolkit.adapt(dueDatePicker, true, true);
-		toolkit.paintBordersFor(nameValueComp);
-
-		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearDueDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
-		clearDueDate.setToolTipText("clear");
-		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				dueDatePicker.setDate(null);
-				TaskPlanningEditor.this.markDirty(true);
-			}
-		});
-
+		
 		String completionDateString = "";
 		if (task.isCompleted()) {
 			completionDateString = getTaskDateString(task);
@@ -506,7 +471,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		urlComposite.setLayout(urlLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(urlComposite);
 
-		label = toolkit.createLabel(urlComposite, "URL:");
+		Label label = toolkit.createLabel(urlComposite, "URL:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		issueReportURL = toolkit.createText(urlComposite, task.getTaskUrl(), SWT.FLAT);
 		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -649,7 +614,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
 		clearScheduledDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
-		clearScheduledDate.setToolTipText("clear");
+		clearScheduledDate.setToolTipText(CLEAR);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
 
 			@Override
@@ -660,9 +625,45 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 		
-		// Estimated time
 		nameValueComp = makeComposite(sectionClient, 3);
-		label = toolkit.createLabel(nameValueComp, "Estimated time:");
+		label = toolkit.createLabel(nameValueComp, LABEL_DUE);
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+
+		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
+
+		calendar = Calendar.getInstance();
+		if (task.getDueDate() != null) {
+			calendar.setTime(task.getDueDate());
+			dueDatePicker.setDate(calendar);
+		}
+
+		dueDatePicker.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		dueDatePicker.addPickerSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				TaskPlanningEditor.this.markDirty(true);
+			}
+		});
+
+		dueDatePicker.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		toolkit.adapt(dueDatePicker, true, true);
+		toolkit.paintBordersFor(nameValueComp);
+
+		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
+		clearDueDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
+		clearDueDate.setToolTipText(CLEAR);
+		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
+
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				dueDatePicker.setDate(null);
+				TaskPlanningEditor.this.markDirty(true);
+			}
+		});
+
+		
+		// Estimated time
+		nameValueComp = makeComposite(sectionClient, 2);
+		label = toolkit.createLabel(nameValueComp, "Estimated hours:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 		estimated = new Spinner(nameValueComp, SWT.NONE);
@@ -684,14 +685,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		estimatedDataLayout.widthHint = 30;
 		estimated.setLayoutData(estimatedDataLayout);
 
-		label = toolkit.createLabel(nameValueComp, "hours ");
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-
 		// Active Time
 		nameValueComp = makeComposite(sectionClient, 3);
 		// GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT,
 		// SWT.DEFAULT).applyTo(nameValueComp);
-		label = toolkit.createLabel(nameValueComp, "Active time:");
+		label = toolkit.createLabel(nameValueComp, "Active:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		label.setToolTipText(DESCRIPTION_ESTIMATED);
 
