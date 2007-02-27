@@ -214,6 +214,10 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		});
 
+		if (!task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
+			doiScale.setEnabled(false);
+		}
+		
 		Label attachImage = toolkit.createLabel(sectionClient, "");
 		attachImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task instanceof AbstractRepositoryTask);
