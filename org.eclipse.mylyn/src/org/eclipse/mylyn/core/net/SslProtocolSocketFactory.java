@@ -27,14 +27,14 @@ import org.apache.commons.httpclient.ProxyClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Nathan Hapke
  * @author Rob Elves
  */
-public class SslProtocolSocketFactory implements ProtocolSocketFactory {
+public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
 	private SSLContext sslContext;
 
@@ -102,6 +102,11 @@ public class SslProtocolSocketFactory implements ProtocolSocketFactory {
 		socket.bind(new InetSocketAddress(clientHost, clientPort));
 		socket.connect(new InetSocketAddress(remoteHost, remotePort), params.getConnectionTimeout());
 		return socket;
+	}
+
+	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
+			UnknownHostException {
+		return getSslContext().getSocketFactory().createSocket(socket, host, port, autoClose);
 	}
 
 }

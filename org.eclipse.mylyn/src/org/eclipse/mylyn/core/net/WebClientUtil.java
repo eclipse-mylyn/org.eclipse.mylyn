@@ -104,7 +104,8 @@ public class WebClientUtil {
 			return repositoryUrl.substring(requestPath);
 		}
 	}
-
+	
+	@SuppressWarnings("deprecation")
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
@@ -143,8 +144,8 @@ public class WebClientUtil {
 					.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
 		}
-
-		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {
+		
+		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {			
 			Protocol acceptAllSsl = new Protocol("https", new SslProtocolSocketFactory(proxySettings), WebClientUtil
 					.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
