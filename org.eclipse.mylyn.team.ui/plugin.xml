@@ -228,10 +228,6 @@
              description="Provides the description of a Mylar task."
              recognizedKeyword="task.description"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskHandle"
-             description="Provides the handle of a Mylar task."
-             recognizedKeyword="task.handle"/>
-       <templateVariable
              class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskId"
              description="Provides the ID of a Mylar task."
              recognizedKeyword="task.id"/>
