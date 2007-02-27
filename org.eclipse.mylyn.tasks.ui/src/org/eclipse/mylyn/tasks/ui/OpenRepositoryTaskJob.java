@@ -86,7 +86,7 @@ public class OpenRepositoryTaskJob extends Job {
 					TasksUiPlugin.getDefault().getTaskDataManager().push(RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskId), 
 							downloadedTaskData);
 				}
-				openEditor(repository, RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskId), taskId, downloadedTaskData);
+				openEditor(repository, downloadedTaskData);
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -106,15 +106,13 @@ public class OpenRepositoryTaskJob extends Job {
 		return new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 
-	private void openEditor(final TaskRepository repository, final String handle, final String taskId, final RepositoryTaskData taskData) {
+	private void openEditor(final TaskRepository repository, final RepositoryTaskData taskData) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (taskData == null) {
 					TasksUiUtil.openBrowser(taskUrl);
 				} else {
-					// AbstractTaskEditorInput editorInput = new
-					// RepositoryTaskEditorInput(taskUrl, repository, taskData,
-					// null);
+					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskData.getId());
 					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, handle, taskUrl, taskId);
 					TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
 				}

@@ -124,7 +124,11 @@ public class TasksUiUtil {
 		} else {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 			if (connectorUi != null) {
-				opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
+				try {
+					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
+				} catch (Exception e) {
+					MylarStatusHandler.log(e, "Internal error while opening repository task");
+				}
 			}
 		}
 		return opened;
