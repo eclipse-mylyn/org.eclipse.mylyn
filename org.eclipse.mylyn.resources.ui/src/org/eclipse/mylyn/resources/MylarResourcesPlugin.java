@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
@@ -127,9 +128,9 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
 	}
 
-	public List<IResource> getInterestingResources() {
+	public List<IResource> getInterestingResources(IMylarContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		List<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments();
+		List<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
 		for (IMylarElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {

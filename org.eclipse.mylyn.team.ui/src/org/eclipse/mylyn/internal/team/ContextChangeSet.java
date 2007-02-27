@@ -23,6 +23,7 @@ import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
@@ -169,7 +170,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 		if (Platform.isRunning() && MylarResourcesPlugin.getDefault() != null && task.isActive()) {
 			// TODO: if super is always managed correctly should remove
 			// following line
-			allResources.addAll(MylarResourcesPlugin.getDefault().getInterestingResources());
+			allResources.addAll(MylarResourcesPlugin.getDefault().getInterestingResources(ContextCorePlugin.getContextManager().getActiveContext()));
 		}
 		return new ArrayList<IResource>(allResources);
 	}

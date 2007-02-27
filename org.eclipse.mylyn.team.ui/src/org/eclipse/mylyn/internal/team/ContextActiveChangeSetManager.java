@@ -171,7 +171,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources();
+					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources(context);
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
 					activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
