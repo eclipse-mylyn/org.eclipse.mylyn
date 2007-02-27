@@ -320,7 +320,7 @@ public class MylarContextManager {
 	private void propegateInterestToParents(InteractionEvent.Kind kind, IMylarElement node, float previousInterest,
 			float decayOffset, int level, List<IMylarElement> interestDelta) {
 
-		if (level > MAX_PROPAGATION || node == null || node.getInterest().getValue() <= 0) {
+		if (level > MAX_PROPAGATION || node == null || node.getHandleIdentifier() == null || node.getInterest().getValue() <= 0) {
 			return;
 		}
 
