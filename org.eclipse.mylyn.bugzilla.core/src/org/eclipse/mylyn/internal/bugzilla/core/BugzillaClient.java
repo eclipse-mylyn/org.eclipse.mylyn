@@ -664,10 +664,14 @@ public class BugzillaClient {
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
 		}
+	
 		PostMethod postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString() + formUrl));
 		postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
-		// httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
-		// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+		
+		// Up the timout on sockets for posts
+		// Bug#175054
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.CONNNECT_TIMEOUT);
+		
 		postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
 		postMethod.setRequestBody(formData);
 		postMethod.setDoAuthentication(true);
