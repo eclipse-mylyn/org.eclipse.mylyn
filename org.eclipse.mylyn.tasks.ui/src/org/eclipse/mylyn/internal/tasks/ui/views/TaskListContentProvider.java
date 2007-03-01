@@ -38,7 +38,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	protected final TaskListView view;
 
-	private final String providerLabel = "Query / Category";
+	private final String providerLabel = "Containers";
 
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;

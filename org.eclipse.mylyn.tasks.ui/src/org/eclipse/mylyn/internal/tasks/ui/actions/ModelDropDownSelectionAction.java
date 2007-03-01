@@ -36,8 +36,8 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 		super();
 		this.view = view;
 		setMenuCreator(this);
-		setText("Task List model");
-		setToolTipText("Chose alternate Task List model");
+		setText("Change presentation");
+		setToolTipText("Change Task List mode");
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TaskListImages.TASKLIST_MODE);
@@ -56,14 +56,7 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 
 	@Override
 	public void run() {
-
-		// if (taskHistory.hasPrevious()) {
-		// ITask previousTask = taskHistory.getPreviousTask();
-		// new TaskActivateAction().run(previousTask);
-		// setButtonStatus();
-		// view.refreshAndFocus(false);
-		// TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
-		// }
+		// ignore for now
 	}
 
 	public void dispose() {
@@ -91,38 +84,19 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 		return dropDownMenu;
 	}
 
-	public class ModelSelectionAction extends Action {
+	private class ModelSelectionAction extends Action {
 
 		private TaskListContentProvider provider;
 
 		public ModelSelectionAction(TaskListContentProvider provider) {
 			this.provider = provider;
 			setText(provider.getLabel());
-			// String taskDescription = task.getSummary();
-			// if (taskDescription.length() > MAX_LABEL_LENGTH) {
-			// taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH
-			// - 3) + "...";
-			// }
-			// setText(taskDescription);
-			// setEnabled(true);
-			// setToolTipText(task.getSummary());
-			// Image image = labelProvider.getImage(task);
-			// setImageDescriptor(ImageDescriptor.createFromImage(image));
 		}
 
 		@Override
 		public void run() {
 			view.getViewer().setContentProvider(provider);
-			view.refreshAndFocus(false);
-			// if (targetTask.isActive()) {
-			// return;
-			// }
-			// new TaskActivateAction().run(targetTask);
-			// // taskHistory.navigatedToTask(targetTask);
-			// taskHistory.addTask(targetTask);
-			// setButtonStatus();
-			// view.refreshAndFocus(false);
-			// TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
+			view.refreshAndFocus(view.isFocusedMode());
 		}
 	}
 

@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.ui.TaskListManager;
  */
 public class TaskActivityContentProvider extends TaskListContentProvider {
 
-	private static final String LABEL_ACTIVITY = "Activity";
+	private static final String LABEL_ACTIVITY = "Dates";
 
 	private TaskListManager taskListManager;
 

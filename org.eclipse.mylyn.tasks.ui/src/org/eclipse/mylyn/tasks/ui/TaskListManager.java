@@ -476,25 +476,25 @@ public class TaskListManager implements IPropertyChangeListener {
 			String summary = "<unknown>";
 			switch (dayStart.get(Calendar.DAY_OF_WEEK)) {
 			case Calendar.MONDAY:
-				summary = "MONDAY";
+				summary = "Monday";
 				break;
 			case Calendar.TUESDAY:
-				summary = "TUESDAY";
+				summary = "Tuesday";
 				break;
 			case Calendar.WEDNESDAY:
-				summary = "WEDNESDAY";
+				summary = "Wednesday";
 				break;
 			case Calendar.THURSDAY:
-				summary = "THURSDAY";
+				summary = "Thursday";
 				break;
 			case Calendar.FRIDAY:
-				summary = "FRIDAY";
+				summary = "Friday";
 				break;
 			case Calendar.SATURDAY:
-				summary = "SATURDAY";
+				summary = "Saturday";
 				break;
 			case Calendar.SUNDAY:
-				summary = "SUNDAY";
+				summary = "Sunday";
 				break;
 			}
 			DateRangeContainer day = new DateRangeContainer(dayStart, dayEnd, summary, taskList);
