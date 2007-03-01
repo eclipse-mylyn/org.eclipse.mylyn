@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -86,6 +87,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
+		viewer.setSorter(new TaskRepositoriesSorter());
 		viewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
