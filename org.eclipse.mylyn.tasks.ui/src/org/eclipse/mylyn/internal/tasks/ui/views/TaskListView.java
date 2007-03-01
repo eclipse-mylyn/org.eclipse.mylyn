@@ -923,9 +923,9 @@ public class TaskListView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
+		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));		
+		manager.add(modelDropDownSelectionAction);
 		manager.add(previousTaskAction);
-		manager.add(modelDropDownSelectionAction);		
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
