@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core.history;
 
+import java.io.Serializable;
+
 
 /**
  * @author John Anvik
  */
-public class TaskRevision implements Comparable<TaskRevision> {
+public class TaskRevision implements Comparable<TaskRevision>, Serializable {
+
+	private static final long serialVersionUID = 7739060501945994522L;
 
 	protected final static String STATUS = "Status";
 

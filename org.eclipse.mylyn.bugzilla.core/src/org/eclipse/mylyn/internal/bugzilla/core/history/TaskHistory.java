@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.core.history;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -19,7 +20,9 @@ import java.util.List;
 /**
  * @author John Anvik 
  */
-public class TaskHistory implements Iterable<TaskRevision> {
+public class TaskHistory implements Iterable<TaskRevision>, Serializable {
+
+	private static final long serialVersionUID = 1724420130243724426L;
 
 	private final List<StatusEvent> statusEvents;
 

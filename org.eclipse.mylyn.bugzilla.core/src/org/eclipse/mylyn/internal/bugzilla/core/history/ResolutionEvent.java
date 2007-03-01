@@ -15,8 +15,8 @@ package org.eclipse.mylar.internal.bugzilla.core.history;
  */
 public class ResolutionEvent extends TaskRevision {
 
-	private static final long serialVersionUID = 3258693199936631348L;
-
+	private static final long serialVersionUID = 6609447743555687524L;
+	
 	private final ResolutionType type;
 
 	public ResolutionEvent(ResolutionType type) {

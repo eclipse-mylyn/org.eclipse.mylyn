@@ -10,6 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.bugzilla.tests.headless;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.eclipse.mylar.bugzilla.tests.AbstractBugzillaTest;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
@@ -30,12 +38,16 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 
 	private BugzillaRepositoryConnector connector;
 
+	private static final String HISTORY_FILE_NAME = "storedHistory.history";
+
+	private static final String REPORT_ID = "1";
+
 	public void setUp() throws Exception {
 		super.setUp();
 		connector = new BugzillaRepositoryConnector();
 		connector.init(new TaskList());
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		
+
 		Credentials credentials = MylarTestUtils.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
@@ -86,7 +98,7 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 	public void testResolutionEvent() throws Exception {
 		BugzillaClient client = connector.getClientManager().getClient(repository);
 		assertNotNull(client);
-		TaskHistory history = client.getHistory("1");
+		TaskHistory history = client.getHistory(REPORT_ID);
 		assertNotNull(history);
 
 		ResolutionEvent resolutionChange = history.getResolutionEvents().get(0);
@@ -95,5 +107,57 @@ public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 		assertEquals("", resolutionChange.getRemoved());
 		assertEquals("FIXED", resolutionChange.getAdded());
 		assertEquals("Resolution", resolutionChange.getWhat());
+	}
+
+	public void testStoredHistory() throws Exception {
+		BugzillaClient client = connector.getClientManager().getClient(repository);
+		assertNotNull(client);
+		TaskHistory history = client.getHistory(REPORT_ID);
+		assertNotNull(history);
+		storeHistory(history);
+
+		history = getStoredHistory();
+
+		assertEquals(1, history.getAssignmentEvents().size());
+		assertEquals(2, history.getStatusEvents().size());
+		assertEquals(1, history.getResolutionEvents().size());
+		assertEquals(12, history.getOtherEvents().size());
+
+		// Remove file
+		File storedHistoryFile = new File(HISTORY_FILE_NAME);
+		assertTrue(storedHistoryFile.delete());
+	}
+
+	private void storeHistory(TaskHistory history) {
+		File saveFile = new File(HISTORY_FILE_NAME);
+		saveFile.deleteOnExit();
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile));
+			out.writeObject(history);
+			out.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Can't write to: " + saveFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private TaskHistory getStoredHistory() {
+		File file = new File(HISTORY_FILE_NAME);
+		try {
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			TaskHistory history = (TaskHistory) in.readObject();
+			in.close();
+			return history;
+		} catch (FileNotFoundException e) {
+			System.err.println("Can't find: " + file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// Should never happen
+		return null;
 	}
 }

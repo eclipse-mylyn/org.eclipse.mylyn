@@ -57,7 +57,6 @@ public class BugzillaTaskHistoryParser {
 		String title = "";
 
 		for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
-
 			// make sure that bugzilla doesn't want us to login
 			if (token.getType() == Token.TAG && ((HtmlTag) (token.getValue())).getTagType() == HtmlTag.Type.TITLE
 					&& !((HtmlTag) (token.getValue())).isEndTag()) {

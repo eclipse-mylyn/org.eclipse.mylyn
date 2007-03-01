@@ -15,6 +15,8 @@ package org.eclipse.mylar.internal.bugzilla.core.history;
  */
 public class StatusEvent extends TaskRevision {
 
+	private static final long serialVersionUID = 245446279981920435L;
+	
 	private final StatusType type;
 
 	public StatusEvent(StatusType type) {
