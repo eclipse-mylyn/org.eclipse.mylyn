@@ -36,7 +36,16 @@ import org.eclipse.mylar.core.MylarStatusHandler;
  */
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
-	private SSLContext sslContext;
+	private static SSLContext sslContext;
+
+	static {
+		try {
+			sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(null, new TrustManager[] { new TrustAllTrustManager() }, null);
+		} catch (Exception e) {
+			MylarStatusHandler.log(e, "Could not initialize SSL context");
+		}
+	}
 
 	private Proxy proxy;
 
@@ -45,14 +54,9 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 		this.proxy = proxy;
 	}
 
-	private SSLContext getSslContext() {
+	private SSLContext getSslContext() throws IOException {
 		if (sslContext == null) {
-			try {
-				sslContext = SSLContext.getInstance("SSL");
-				sslContext.init(null, new TrustManager[] { new TrustAllTrustManager() }, null);
-			} catch (Exception e) {
-				MylarStatusHandler.log(e, "could not get SSL context");
-			}
+			throw new IOException("Could not initialize SSL context");
 		}
 		return sslContext;
 	}
