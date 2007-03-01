@@ -16,6 +16,7 @@ import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -30,6 +31,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean select(Object object) {
 		try {
+			if (object instanceof DateRangeContainer) {				
+					DateRangeContainer dateRangeTaskContainer = (DateRangeContainer) object;
+					return(TasksUiPlugin.getTaskListManager().isWeekDay(dateRangeTaskContainer));// || dateRangeTaskContainer.isFuture()				
+			} 
 			if (object instanceof ITask || object instanceof AbstractQueryHit) {
 				ITask task = null;
 				if (object instanceof ITask) {
