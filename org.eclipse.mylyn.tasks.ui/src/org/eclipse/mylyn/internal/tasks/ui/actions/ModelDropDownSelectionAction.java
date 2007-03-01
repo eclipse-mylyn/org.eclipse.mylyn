@@ -1,0 +1,129 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.mylar.internal.tasks.ui.actions;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListContentProvider;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+
+/**
+ * @author Rob Elves
+ */
+public class ModelDropDownSelectionAction extends Action implements IMenuCreator {
+
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.modelselection";
+
+	private TaskListView view;
+
+	protected Menu dropDownMenu = null;
+
+	private TaskListContentProvider[] contentProviders;
+
+	public ModelDropDownSelectionAction(TaskListView view, TaskListContentProvider[] contentProviders) {
+		super();
+		this.view = view;
+		setMenuCreator(this);
+		setText("Task List model");
+		setToolTipText("Chose alternate Task List model");
+		setId(ID);
+		setEnabled(true);
+		setImageDescriptor(TaskListImages.TASKLIST_MODE);
+		this.contentProviders = contentProviders;
+	}
+
+	protected void addActionsToMenu() {
+		for (TaskListContentProvider provider : contentProviders) {
+			ModelSelectionAction action = new ModelSelectionAction(provider);
+			ActionContributionItem item = new ActionContributionItem(action);
+			action.setText(provider.getLabel());
+			action.setChecked(view.getViewer().getContentProvider().equals(provider));
+			item.fill(dropDownMenu, -1);
+		}
+	}
+
+	@Override
+	public void run() {
+
+		// if (taskHistory.hasPrevious()) {
+		// ITask previousTask = taskHistory.getPreviousTask();
+		// new TaskActivateAction().run(previousTask);
+		// setButtonStatus();
+		// view.refreshAndFocus(false);
+		// TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
+		// }
+	}
+
+	public void dispose() {
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+			dropDownMenu = null;
+		}
+	}
+
+	public Menu getMenu(Control parent) {
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+		}
+		dropDownMenu = new Menu(parent);
+		addActionsToMenu();
+		return dropDownMenu;
+	}
+
+	public Menu getMenu(Menu parent) {
+		if (dropDownMenu != null) {
+			dropDownMenu.dispose();
+		}
+		dropDownMenu = new Menu(parent);
+		addActionsToMenu();
+		return dropDownMenu;
+	}
+
+	public class ModelSelectionAction extends Action {
+
+		private TaskListContentProvider provider;
+
+		public ModelSelectionAction(TaskListContentProvider provider) {
+			this.provider = provider;
+			setText(provider.getLabel());
+			// String taskDescription = task.getSummary();
+			// if (taskDescription.length() > MAX_LABEL_LENGTH) {
+			// taskDescription = taskDescription.subSequence(0, MAX_LABEL_LENGTH
+			// - 3) + "...";
+			// }
+			// setText(taskDescription);
+			// setEnabled(true);
+			// setToolTipText(task.getSummary());
+			// Image image = labelProvider.getImage(task);
+			// setImageDescriptor(ImageDescriptor.createFromImage(image));
+		}
+
+		@Override
+		public void run() {
+			view.getViewer().setContentProvider(provider);
+			view.refreshAndFocus(false);
+			// if (targetTask.isActive()) {
+			// return;
+			// }
+			// new TaskActivateAction().run(targetTask);
+			// // taskHistory.navigatedToTask(targetTask);
+			// taskHistory.addTask(targetTask);
+			// setButtonStatus();
+			// view.refreshAndFocus(false);
+			// TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
+		}
+	}
+
+}

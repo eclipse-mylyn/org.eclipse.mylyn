@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.tests;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -46,6 +47,14 @@ public class TaskActivityViewTest extends TestCase {
 //		MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		super.tearDown();
+	}
+	
+	
+	// TODO: Test scheduling into day bins
+	public void testDaysOfWeek() {		
+		List<DateRangeContainer> days = TasksUiPlugin.getTaskListManager().getActivityWeekDays();
+		assertNotNull(days);		
+		assertEquals(7, days.size());		
 	}
 
 	public void testDateRangeContainer() {
@@ -173,7 +182,8 @@ public class TaskActivityViewTest extends TestCase {
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event5);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event6);
-		assertEquals(1, futureActivity.getChildren().size());
+		// No longer adding activity to future bins (days of week, next week, or future)
+		assertEquals(0, futureActivity.getChildren().size());
 
 		// test Next week activity
 		DateRangeContainer activityNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
@@ -189,7 +199,8 @@ public class TaskActivityViewTest extends TestCase {
 
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event7);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event8);
-		assertEquals(1, activityNextWeek.getChildren().size());
+		// No longer adding activity to future bins (days of week, next week, or future)
+		assertEquals(0, activityNextWeek.getChildren().size());
 
 		// test Previous week activity
 		DateRangeContainer activityPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();

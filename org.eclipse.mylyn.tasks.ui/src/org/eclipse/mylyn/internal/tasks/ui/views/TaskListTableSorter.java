@@ -19,6 +19,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
@@ -56,6 +57,15 @@ public class TaskListTableSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
+		if (o1 instanceof DateRangeContainer) {
+			if (o2 instanceof DateRangeContainer) {
+				DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
+				DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
+				return -1*dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+			} else {
+				return -1;
+			}
+		} 
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
 		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {

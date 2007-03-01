@@ -102,7 +102,7 @@ public class TaskActivityView extends ViewPart {
 
 	private TreeViewer treeViewer;
 
-	private TaskActivityContentProvider taskActivityTableContentProvider;
+	private TaskActivityViewContentProvider taskActivityTableContentProvider;
 
 	private IThemeManager themeManager;
 
@@ -272,7 +272,7 @@ public class TaskActivityView extends ViewPart {
 
 		sorter = new TaskActivityViewSorter();
 		getViewer().setSorter(sorter);
-		taskActivityTableContentProvider = new TaskActivityContentProvider(TasksUiPlugin.getTaskListManager());
+		taskActivityTableContentProvider = new TaskActivityViewContentProvider(TasksUiPlugin.getTaskListManager());
 
 		getViewer().setContentProvider(taskActivityTableContentProvider);
 		getViewer().setLabelProvider(taskHistoryTreeLabelProvider);

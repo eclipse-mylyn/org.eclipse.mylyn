@@ -146,9 +146,9 @@ public class TaskActivityViewSorter extends ViewerSorter {
 			if (o2 instanceof DateRangeContainer) {
 				DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
 				DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
-				return dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+				return -1*dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 			} else {
-				return 1;
+				return -1;
 			}
 		} else if (o1 instanceof ITask) {
 			if (o2 instanceof AbstractTaskContainer) {

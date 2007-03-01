@@ -156,6 +156,8 @@ public class TaskListImages {
 	public static final ImageDescriptor NAVIGATE_PREVIOUS = create(T_TOOL, "navigate-previous.gif");
 
 	public static final ImageDescriptor NAVIGATE_NEXT = create(T_TOOL, "navigate-next.gif");
+	
+	public static final ImageDescriptor TASKLIST_MODE = create(T_TOOL, "tasklist-mode.gif");
 
 	public static final ImageDescriptor COPY = create(T_TOOL, "copy.png");
 

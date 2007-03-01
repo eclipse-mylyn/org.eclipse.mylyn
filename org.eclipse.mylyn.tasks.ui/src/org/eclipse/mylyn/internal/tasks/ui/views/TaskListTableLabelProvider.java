@@ -29,6 +29,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
@@ -83,7 +84,9 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof AbstractTaskContainer) {
+			if (element instanceof DateRangeContainer) {
+				return TaskListImages.getImage(TaskListImages.CALENDAR);
+			} else if (element instanceof AbstractTaskContainer) {
 				return super.getImage(element);
 			} else {
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);

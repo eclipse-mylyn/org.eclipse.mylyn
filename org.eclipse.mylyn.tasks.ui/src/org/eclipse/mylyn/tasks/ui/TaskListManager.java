@@ -98,11 +98,13 @@ public class TaskListManager implements IPropertyChangeListener {
 	public static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours", "4 Hours",
 			"5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
 
+	private DateRangeContainer activityPreviousWeek;
+
 	private DateRangeContainer activityThisWeek;
 
-	private DateRangeContainer activityNextWeek;
+	private List<DateRangeContainer> activityWeekDays = new ArrayList<DateRangeContainer>();
 
-	private DateRangeContainer activityPreviousWeek;
+	private DateRangeContainer activityNextWeek;
 
 	private DateRangeContainer activityFuture;
 
@@ -273,6 +275,9 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void parseFutureReminders() {
 		activityFuture.clear();
 		activityNextWeek.clear();
+		for (DateRangeContainer day: activityWeekDays) {
+			day.clear();
+		}
 		HashSet<ITask> toRemove = new HashSet<ITask>();
 		toRemove.addAll(activityThisWeek.getChildren());
 		for (ITask activity : toRemove) {
@@ -292,6 +297,9 @@ public class TaskListManager implements IPropertyChangeListener {
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		tempCalendar.setFirstDayOfWeek(startDay);
 		for (ITask task : tasksWithReminders) {
+			if(task instanceof DateRangeActivityDelegate) {
+				task = ((DateRangeActivityDelegate)task).getCorrespondingTask();
+			}
 			if (task.getScheduledForDate() != null) {
 				tempCalendar.setTime(task.getScheduledForDate());
 				if (activityNextWeek.includes(tempCalendar)) {
@@ -303,6 +311,13 @@ public class TaskListManager implements IPropertyChangeListener {
 				} else if (activityThisWeek.includes(tempCalendar) && !activityThisWeek.getChildren().contains(task)) {
 					activityThisWeek.addTask(new DateRangeActivityDelegate(activityThisWeek, task, tempCalendar,
 							tempCalendar));
+				}
+				
+				for (DateRangeContainer day: activityWeekDays) {
+					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
+						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar,
+								tempCalendar));
+					}
 				}
 			}
 		}
@@ -341,8 +356,13 @@ public class TaskListManager implements IPropertyChangeListener {
 					isInactive = false;
 					totalInactive += event.getDate().getTime() - startInactive;
 				}
-				for (DateRangeContainer week : dateRangeContainers) {
-					if (week.includes(currentTaskStart)) {
+				
+				Set<DateRangeContainer> rangeSet = new HashSet<DateRangeContainer>();
+				rangeSet.addAll(dateRangeContainers);
+				rangeSet.add(activityThisWeek);
+				
+				for (DateRangeContainer week : rangeSet) {
+					if (week.includes(currentTaskStart) && (!isWeekDay(week) && !week.isFuture())) {
 						if (currentTask != null) {
 							// add to date range 'bin'
 							DateRangeActivityDelegate delegate = new DateRangeActivityDelegate(week, currentTask,
@@ -363,6 +383,7 @@ public class TaskListManager implements IPropertyChangeListener {
 						}
 					}
 				}
+				
 				currentTask = null;
 				currentHandle = "";
 				totalInactive = 0;
@@ -426,6 +447,61 @@ public class TaskListManager implements IPropertyChangeListener {
 		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 				TaskListPreferenceConstants.PLANNING_ENDHOUR);
 
+		activityWeekDays.clear();
+		for (int x = startDay; x < (startDay + 7); x++) {
+			GregorianCalendar dayStart = new GregorianCalendar();
+			GregorianCalendar dayEnd = new GregorianCalendar();
+			dayStart.setFirstDayOfWeek(startDay);
+			dayEnd.setFirstDayOfWeek(startDay);
+			if (x > 7) {
+				dayStart.set(Calendar.DAY_OF_WEEK, x % 7);
+				dayEnd.set(Calendar.DAY_OF_WEEK, x % 7);
+			} else {
+				dayStart.set(Calendar.DAY_OF_WEEK, x);
+				dayEnd.set(Calendar.DAY_OF_WEEK, x);
+			}
+
+			dayStart.set(Calendar.HOUR_OF_DAY, 0);
+			dayStart.set(Calendar.MINUTE, 0);
+			dayStart.set(Calendar.SECOND, 0);
+			dayStart.set(Calendar.MILLISECOND, 0);
+			dayStart.getTime();
+
+			dayEnd.set(Calendar.HOUR_OF_DAY, dayEnd.getMaximum(Calendar.HOUR_OF_DAY));
+			dayEnd.set(Calendar.MINUTE, dayEnd.getMaximum(Calendar.MINUTE));
+			dayEnd.set(Calendar.SECOND, dayEnd.getMaximum(Calendar.SECOND));
+			dayEnd.set(Calendar.MILLISECOND, dayEnd.getMaximum(Calendar.MILLISECOND));
+			dayEnd.getTime();
+
+			String summary = "<unknown>";
+			switch (dayStart.get(Calendar.DAY_OF_WEEK)) {
+			case Calendar.MONDAY:
+				summary = "MONDAY";
+				break;
+			case Calendar.TUESDAY:
+				summary = "TUESDAY";
+				break;
+			case Calendar.WEDNESDAY:
+				summary = "WEDNESDAY";
+				break;
+			case Calendar.THURSDAY:
+				summary = "THURSDAY";
+				break;
+			case Calendar.FRIDAY:
+				summary = "FRIDAY";
+				break;
+			case Calendar.SATURDAY:
+				summary = "SATURDAY";
+				break;
+			case Calendar.SUNDAY:
+				summary = "SUNDAY";
+				break;
+			}
+			DateRangeContainer day = new DateRangeContainer(dayStart, dayEnd, summary, taskList);
+			activityWeekDays.add(day);
+			dateRangeContainers.add(day);
+		}
+
 		GregorianCalendar currentBegin = new GregorianCalendar();
 		currentBegin.setFirstDayOfWeek(startDay);
 		currentBegin.setTime(startTime);
@@ -435,7 +511,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		currentEnd.setTime(startTime);
 		snapToEndOfWeek(currentEnd);
 		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK, taskList);
-		dateRangeContainers.add(activityThisWeek);
+		// dateRangeContainers.add(activityThisWeek);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
 		previousStart.setFirstDayOfWeek(startDay);
@@ -546,14 +622,16 @@ public class TaskListManager implements IPropertyChangeListener {
 		return calendar;
 	}
 
-	public void setScheduledNextWeek(Calendar calendar) {		
+	public void setScheduledNextWeek(Calendar calendar) {
 		calendar.setTimeInMillis(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart().getTimeInMillis());
-		setScheduledToday(calendar);		
+		setScheduledToday(calendar);
 	}
-	
-	public Object[] getDateRanges() {
+
+	public List<DateRangeContainer> getDateRanges() {
 		// parseFutureReminders();
-		return dateRangeContainers.toArray();
+		// return dateRangeContainers.toArray(new
+		// ITaskListElement[dateRangeContainers.size()]);
+		return dateRangeContainers;
 	}
 
 	/**
@@ -574,7 +652,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 
-		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(), WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
+		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(),
+				WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (dataDir.exists() && dataDir.isDirectory()) {
 			for (File file : dataDir.listFiles()) {
 				int dotIndex = file.getName().lastIndexOf(".xml");
@@ -738,7 +817,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	/**
-	 * @return	if a repository task, will only return true if the user is a 
+	 * @return if a repository task, will only return true if the user is a
 	 */
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
@@ -832,17 +911,18 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (reminderDate == null) {
 			tasksWithReminders.remove(task);
 		} else {
+			tasksWithReminders.remove(task);
 			tasksWithReminders.add(task);
 		}
-		parseFutureReminders();
+		parseFutureReminders();		
 		taskList.notifyLocalInfoChanged(task);
 	}
-	
+
 	public void setDueDate(ITask task, Date dueDate) {
 		task.setDueDate(dueDate);
 		taskList.notifyLocalInfoChanged(task);
 	}
-	
+
 	/**
 	 * @return true if task due date != null and has past
 	 */
@@ -936,5 +1016,13 @@ public class TaskListManager implements IPropertyChangeListener {
 	protected void setTaskListSaveManager(TaskListSaveManager taskListSaveManager) {
 		this.taskListSaveManager = taskListSaveManager;
 		this.taskList.addChangeListener(taskListSaveManager);
+	}
+
+	public List<DateRangeContainer> getActivityWeekDays() {
+		return activityWeekDays;
+	}
+
+	public boolean isWeekDay(DateRangeContainer dateRangeTaskContainer) {
+		return activityWeekDays.contains(dateRangeTaskContainer);
 	}
 }
