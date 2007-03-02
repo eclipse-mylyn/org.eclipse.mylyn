@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class ModelDropDownSelectionAction extends Action implements IMenuCreator {
 
+	private static final String LABEL_NAME = "Task List Mode";
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.modelselection";
 
 	private TaskListView view;
@@ -36,8 +38,8 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 		super();
 		this.view = view;
 		setMenuCreator(this);
-		setText("Change presentation");
-		setToolTipText("Change Task List mode");
+		setText(LABEL_NAME);
+		setToolTipText(LABEL_NAME);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TaskListImages.TASKLIST_MODE);
