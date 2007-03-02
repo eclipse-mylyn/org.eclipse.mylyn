@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -307,7 +308,11 @@ public class TaskListView extends ViewPart {
 		public void localInfoChanged(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					refresh(task);
+					if(getTasklistMode().equals(TaskActivityContentProvider.ID)) {
+						refresh(null);
+					} else {					
+						refresh(task);
+					}
 				}
 			});
 			if (task.isActive()) {
@@ -1501,5 +1506,13 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;	
+	}
+	
+	private String getTasklistMode() {
+		IContentProvider provider = TaskListView.this.getViewer().getContentProvider();
+		if(provider instanceof TaskListContentProvider) {
+			return ((TaskListContentProvider)provider).getId();
+		}
+		return null;
 	}
 }

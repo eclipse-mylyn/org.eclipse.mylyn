@@ -915,7 +915,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithReminders.add(task);
 		}
 		parseFutureReminders();		
-		taskList.notifyLocalInfoChanged(task);
+		taskList.notifyLocalInfoChanged(task);		
 	}
 
 	public void setDueDate(ITask task, Date dueDate) {

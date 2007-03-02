@@ -24,6 +24,8 @@ import org.eclipse.mylar.tasks.ui.TaskListManager;
  */
 public class TaskActivityContentProvider extends TaskListContentProvider {
 
+	public static final String ID = "tasklist.mode.scheduled";
+	
 	private static final String LABEL_ACTIVITY = "Scheduled";
 
 	private TaskListManager taskListManager;
@@ -31,6 +33,7 @@ public class TaskActivityContentProvider extends TaskListContentProvider {
 	public TaskActivityContentProvider(TaskListView view, TaskListManager taskActivityManager) {
 		super(view);
 		this.taskListManager = taskActivityManager;
+		this.id = ID;
 	}
 
 	public Object[] getElements(Object parent) {
