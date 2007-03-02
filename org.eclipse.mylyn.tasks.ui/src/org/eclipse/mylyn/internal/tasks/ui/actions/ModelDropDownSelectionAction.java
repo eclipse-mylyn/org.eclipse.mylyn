@@ -58,7 +58,7 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 
 	@Override
 	public void run() {
-		// ignore for now
+		// ignore
 	}
 
 	public void dispose() {
@@ -97,8 +97,13 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 
 		@Override
 		public void run() {
-			view.getViewer().setContentProvider(provider);
-			view.refreshAndFocus(view.isFocusedMode());
+			try {
+				view.getViewer().getControl().setRedraw(false);
+				view.getViewer().setContentProvider(provider);
+				view.refreshAndFocus(view.isFocusedMode());
+			} finally {
+				view.getViewer().getControl().setRedraw(true);
+			}
 		}
 	}
 
