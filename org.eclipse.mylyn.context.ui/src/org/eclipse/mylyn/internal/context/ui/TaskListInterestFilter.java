@@ -75,6 +75,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return super.shouldAlwaysShow(task) || hasChanges(task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| (isInterestingForThisWeek(task) && !task.isCompleted())
+				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
 //				|| isCurrentlySelectedInEditor(task);
 	}
