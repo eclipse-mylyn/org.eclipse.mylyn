@@ -66,7 +66,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			if (task.isSynchronizing()) {
 				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
 			}
-			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isDue(task)) {
+			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
 				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
@@ -78,7 +78,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
 				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			}
-			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isDue(task)) {
+			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
 				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof TaskRepository) {

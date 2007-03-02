@@ -926,7 +926,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * @return true if task due date != null and has past
 	 */
-	public boolean isDue(ITask task) {
+	public boolean isOverdue(ITask task) {
 		return (task.getDueDate() != null && new Date().after(task.getDueDate()));
 	}
 
