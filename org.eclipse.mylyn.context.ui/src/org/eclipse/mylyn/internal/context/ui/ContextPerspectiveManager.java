@@ -14,12 +14,12 @@ package org.eclipse.mylar.internal.context.ui;
 import java.util.List;
 
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 
 /**
  * @author Mik Kersten
@@ -62,10 +62,13 @@ public class ContextPerspectiveManager implements ITaskActivityListener {
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
 			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(false);
 				PlatformUI.getWorkbench().showPerspective(perspectiveId,
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-			} catch (WorkbenchException e) {
-				// ignore
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()); 
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "failed to toggle perspective", false);
+			} finally {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(true);
 			}
 		}
 	}
