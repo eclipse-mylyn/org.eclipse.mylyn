@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Menu;
  */
 public class ModelDropDownSelectionAction extends Action implements IMenuCreator {
 
-	private static final String LABEL_NAME = "Task List Mode";
+	private static final String LABEL_NAME = "Task Presentation";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.modelselection";
 
