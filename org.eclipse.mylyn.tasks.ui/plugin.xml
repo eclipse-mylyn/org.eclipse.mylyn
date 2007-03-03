@@ -721,6 +721,16 @@
              id="org.eclipse.mylar.tasks.ui.defaultRepositoryLinkProvider">
        </linkProvider>
     </extension>
+    <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.mylar.tasks.core.ITaskListElement"
+            class="org.eclipse.mylar.tasks.ui.search.SearchScoreComputerAdapterFactory">
+         <adapter
+               type="org.eclipse.search.ui.ISearchPageScoreComputer">
+         </adapter>
+      </factory>
+   </extension>
   
 </plugin>
 
