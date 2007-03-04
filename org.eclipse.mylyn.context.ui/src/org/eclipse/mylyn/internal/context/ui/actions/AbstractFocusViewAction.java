@@ -262,14 +262,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 	}
 
-	/**
-	 * @return filters that should not be removed when the interest filter is
-	 *         installed
-	 */
-	private Set<String> getPreservedFilterIds() {
-		return ContextUiPlugin.getDefault().getPreservedFilterIds(viewPart.getSite().getId());
-	}
-	
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
 			MylarStatusHandler.log("The viewer to install InterestFilter is null", this);
@@ -282,9 +274,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
+			
 			if (viewPart != null && manageFilters) {
 				Set<Class<?>> excludedFilters = getPreservedFilterClasses();
-				
 				for (ViewerFilter filter : previousFilters.get(viewer)) {
 					if (!excludedFilters.contains(filter.getClass())) {
 						try {
