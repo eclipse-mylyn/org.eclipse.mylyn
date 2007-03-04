@@ -1659,7 +1659,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (reporterAttribute != null) {
 
 			Label label = createLabel(peopleComposite, reporterAttribute);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, reporterAttribute, SWT.FLAT | SWT.READ_ONLY);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
@@ -1680,7 +1680,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		if (addCCattribute != null) {
 			Label label = createLabel(attributesComposite, addCCattribute);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
 		}
@@ -1688,7 +1688,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		RepositoryTaskAttribute CCattribute = taskData.getAttribute(RepositoryTaskAttribute.USER_CC);
 		if (CCattribute != null) {
 			Label label = createLabel(attributesComposite, CCattribute);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(label);
 			ccList = new org.eclipse.swt.widgets.List(attributesComposite, SWT.MULTI | SWT.V_SCROLL);// SWT.BORDER
 			ccList.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			ccList.setFont(TEXT_FONT);
@@ -1735,7 +1735,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 			toolkit.createLabel(attributesComposite, "");
 			label = toolkit.createLabel(attributesComposite, "(Select to remove)");
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(label);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label);
 		}
 
 	}

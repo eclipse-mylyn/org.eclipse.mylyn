@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -141,13 +140,6 @@ public class TaskEditor extends FormEditor {
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		if (this.getEditorInput() instanceof NewTaskEditorInput) {
-			MessageDialog.openWarning(this.getSite().getShell(), "Operation not supported",
-					"Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.");
-			monitor.setCanceled(true);
-			return;
-		}
-
 		for (IFormPage page : getPages()) {
 			if (page.isDirty()) {
 				page.doSave(monitor);

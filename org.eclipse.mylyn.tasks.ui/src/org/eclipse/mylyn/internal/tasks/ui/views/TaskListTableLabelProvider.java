@@ -130,10 +130,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					image = TaskListImages.STATUS_NORMAL_CONFLICT;
 				}
-				if (repositoryTask.getStatus() != null) {
-					if (image == null) {
-						image = TaskListImages.STATUS_NORMAL;
-					}
+				if (image == null && repositoryTask.getStatus() != null) {
 					return TaskListImages.getImage(TaskListImages.STATUS_WARNING);
 				} else if (image != null) {
 					return TaskListImages.getImage(image);

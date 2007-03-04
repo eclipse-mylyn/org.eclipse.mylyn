@@ -19,6 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -191,8 +193,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		createPlanningLayout(comp);
 	}
 
-	protected void createPlanningLayout(Composite comp) {		
-		Section section = createSection(comp,"Personal Planning");
+	protected void createPlanningLayout(Composite comp) {
+		Section section = createSection(comp, "Personal Planning");
 		section.setLayout(new GridLayout());
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.setExpanded(true);
@@ -540,4 +542,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	protected abstract SearchHitCollector getDuplicateSearchCollector(String description);
 
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		new MessageDialog(null, "Operation not supported", null, "Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.", MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
+		monitor.setCanceled(true);
+		return;
+	}
 }
