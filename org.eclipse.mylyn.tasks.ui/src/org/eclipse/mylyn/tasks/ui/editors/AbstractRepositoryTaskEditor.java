@@ -712,8 +712,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData != null && taskData.isNew()) {
 			form.setText("New " + kindLabel);
-		} else {
+		} else if(idLabel != null){
 			form.setText(kindLabel + " " + idLabel);
+		} else {
+			form.setText(kindLabel);
 		}
 
 		toolkit.decorateFormHeading(form.getForm());
