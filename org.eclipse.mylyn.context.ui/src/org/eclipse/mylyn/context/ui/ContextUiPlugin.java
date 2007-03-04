@@ -109,8 +109,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private Map<AbstractContextUiBridge, String> activeSearchLabels = new HashMap<AbstractContextUiBridge, String>();
 
-	private Map<String, Set<Class<?>>> preservedFilters = new HashMap<String, Set<Class<?>>>();
+	private Map<String, Set<Class<?>>> preservedFilterClasses = new HashMap<String, Set<Class<?>>>();
 
+	private Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
+	
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
 		public Color getHighlightColor(ITask task) {
 			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
@@ -552,6 +554,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public static final String ELEMENT_VIEW_ID = "viewId";
 
+		public static final String ELEMENT_ID = "id";		
+		
 		public static final String ELEMENT_FILTER = "filter";
 
 		public static final String ELEMENT_CLASS = "class";
@@ -612,7 +616,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						Object filterClass = child.createExecutableExtension(UiExtensionPointReader.ELEMENT_CLASS);
 						ContextUiPlugin.getDefault().addPreservedFilterClass(viewId, (ViewerFilter) filterClass);
 					} catch (Exception e) {
-						MylarStatusHandler.log(e, "Could not load filter");
+						String filterId = child.getAttribute(ELEMENT_ID);
+						ContextUiPlugin.getDefault().addPreservedFilterId(viewId, filterId);
 					}
 				}
 			}
@@ -742,20 +747,38 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			MylarStatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
-
+	
 	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
-		Set<Class<?>> preservedList = preservedFilters.get(viewId);
+		Set<Class<?>> preservedList = preservedFilterClasses.get(viewId);
 		if (preservedList == null) {
 			preservedList = new HashSet<Class<?>>();
-			preservedFilters.put(viewId, preservedList);
+			preservedFilterClasses.put(viewId, preservedList);
 		}
 		preservedList.add(filter.getClass());
 	}
 
-	public Set<Class<?>> getPreservedFilterClasses(String id) {
+	public Set<Class<?>> getPreservedFilterClasses(String viewId) {
 		UiExtensionPointReader.initExtensions();
-		if (preservedFilters.containsKey(id)) {
-			return preservedFilters.get(id);
+		if (preservedFilterClasses.containsKey(viewId)) {
+			return preservedFilterClasses.get(viewId);
+		} else {
+			return Collections.emptySet();
+		}
+	}
+
+	public void addPreservedFilterId(String viewId, String filterId) {
+		Set<String> preservedList = preservedFilterIds.get(viewId);
+		if (preservedList == null) {
+			preservedList = new HashSet<String>();
+			preservedFilterIds.put(viewId, preservedList);
+		}
+		preservedList.add(filterId);
+	}
+	
+	public Set<String> getPreservedFilterIds(String viewId) {
+		UiExtensionPointReader.initExtensions();
+		if (preservedFilterIds.containsKey(viewId)) {
+			return preservedFilterIds.get(viewId);
 		} else {
 			return Collections.emptySet();
 		}
