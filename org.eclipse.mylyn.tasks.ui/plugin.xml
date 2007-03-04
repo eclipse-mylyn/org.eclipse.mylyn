@@ -553,7 +553,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.eclipse.mylar.internal.tasks.ui.PlanningPerspectiveFactory"
-            icon="icons/eview16/task-activity.gif"
+            icon="icons/etool16/calendar.gif"
             id="org.eclipse.mylar.tasklist.ui.perspectives.planning"
             name="Planning"/>
    </extension>
