@@ -56,6 +56,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicketType;
 import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
 
 /**
@@ -247,14 +248,14 @@ public class TracWebClient extends AbstractTracClient {
 							if (fields[i] == Key.ID) {
 								ticket.setId(Integer.parseInt(t.nextToken()));
 							} else if (fields[i] == Key.TIME) {
-								ticket.setCreated(Integer.parseInt(t.nextToken()));
+								ticket.setCreated(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
 							} else if (fields[i] == Key.CHANGE_TIME) {
-								ticket.setLastChanged(Integer.parseInt(t.nextToken()));
+								ticket.setLastChanged(TracUtils.parseDate(Integer.parseInt(t.nextToken())));
 							} else {
 								ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
 							}
 						} catch (NumberFormatException e) {
-							MylarStatusHandler.log(e, "Error parsing repsonse: " + line);
+							MylarStatusHandler.log(e, "Error parsing response: " + line);
 						}
 					}
 				}

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
-import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 
 /**
  * Represents a Trac ticket as it is retrieved from a Trac repository.
@@ -173,16 +172,16 @@ public class TracTicket {
 		return true;
 	}
 
-	public void setCreated(int created) {
-		this.created = TracUtils.parseDate(created);
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	public void setLastChanged(int lastChanged) {
-		this.lastChanged = TracUtils.parseDate(lastChanged);
+	public void setLastChanged(Date lastChanged) {
+		this.lastChanged = lastChanged;
 	}
 
 	public void addComment(TracComment comment) {

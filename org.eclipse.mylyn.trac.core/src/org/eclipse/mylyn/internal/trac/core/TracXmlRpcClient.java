@@ -80,7 +80,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		config.setContentLengthOptional(false);
 		config.setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 		config.setReplyTimeout(WebClientUtil.SOCKET_TIMEOUT);
-		
+
 		xmlrpc = new XmlRpcClient();
 		xmlrpc.setConfig(config);
 
@@ -219,14 +219,14 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		TracAttachment attachment = new TracAttachment((String) entry[0]);
 		attachment.setDescription((String) entry[1]);
 		attachment.setSize((Integer) entry[2]);
-		attachment.setCreated(TracUtils.parseDate((Integer) entry[3]));
+		attachment.setCreated(parseDate(entry[3]));
 		attachment.setAuthor((String) entry[4]);
 		return attachment;
 	}
 
 	private TracComment parseChangeLogEntry(Object[] entry) {
 		TracComment comment = new TracComment();
-		comment.setCreated(TracUtils.parseDate((Integer) entry[0]));
+		comment.setCreated(parseDate(entry[0]));
 		comment.setAuthor((String) entry[1]);
 		comment.setField((String) entry[2]);
 		comment.setOldValue((String) entry[3]);
@@ -273,13 +273,22 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	private TracTicket parseTicket(Object[] ticketResult) throws InvalidTicketException {
 		TracTicket ticket = new TracTicket((Integer) ticketResult[0]);
-		ticket.setCreated((Integer) ticketResult[1]);
-		ticket.setLastChanged((Integer) ticketResult[2]);
+		ticket.setCreated(parseDate(ticketResult[1]));
+		ticket.setLastChanged(parseDate(ticketResult[2]));
 		Map<?, ?> attributes = (Map<?, ?>) ticketResult[3];
 		for (Object key : attributes.keySet()) {
 			ticket.putValue(key.toString(), attributes.get(key).toString());
 		}
 		return ticket;
+	}
+
+	private Date parseDate(Object object) {
+		if (object instanceof Date) {
+			return (Date) object;
+		} else if (object instanceof Integer) {
+			return TracUtils.parseDate((Integer) object);
+		}
+		throw new ClassCastException("Unexpected object type for date: " + object.getClass());
 	}
 
 	@Override
@@ -373,15 +382,15 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	private TracMilestone parseMilestone(Map<?, ?> result) {
 		TracMilestone milestone = new TracMilestone((String) result.get("name"));
-		milestone.setCompleted(TracUtils.parseDate((Integer) result.get("completed")));
-		milestone.setDue(TracUtils.parseDate((Integer) result.get("due")));
+		milestone.setCompleted(parseDate(result.get("completed")));
+		milestone.setDue(parseDate(result.get("due")));
 		milestone.setDescription((String) result.get("description"));
 		return milestone;
 	}
 
 	private TracVersion parseVersion(Map<?, ?> result) {
 		TracVersion version = new TracVersion((String) result.get("name"));
-		version.setTime(TracUtils.parseDate((Integer) result.get("time")));
+		version.setTime(parseDate(result.get("time")));
 		version.setDescription((String) result.get("description"));
 		return version;
 	}

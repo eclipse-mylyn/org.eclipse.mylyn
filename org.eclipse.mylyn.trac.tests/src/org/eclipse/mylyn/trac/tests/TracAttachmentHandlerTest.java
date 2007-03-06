@@ -84,8 +84,16 @@ public class TracAttachmentHandlerTest extends TestCase {
 		attachmentHandler = connector.getAttachmentHandler();
 	}
 
-	public void testDownloadAttachmentXmlRpc() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+	public void testDownloadAttachmentXmlRpc010() throws Exception {
+		downloadAttachmentXmlRpc(Constants.TEST_TRAC_010_URL);
+	}
+
+	public void testDownloadAttachmentXmlRpc011() throws Exception {
+		downloadAttachmentXmlRpc(Constants.TEST_TRAC_011_URL);
+	}
+	
+	private void downloadAttachmentXmlRpc(String url) throws Exception {
+		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getTaskData().getAttachments().size() > 0);
@@ -104,8 +112,16 @@ public class TracAttachmentHandlerTest extends TestCase {
 		}
 	}
 
-	public void testGetAttachmentDataXmlRpc() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+	public void testGetAttachmentDataXmlRpc010() throws Exception {
+		getAttachmentDataXmlRpc(Constants.TEST_TRAC_010_URL);
+	}
+	
+	public void testGetAttachmentDataXmlRpc011() throws Exception {
+		getAttachmentDataXmlRpc(Constants.TEST_TRAC_011_URL);
+	}
+
+	private void getAttachmentDataXmlRpc(String url) throws Exception {
+		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getTaskData().getAttachments().size() > 0);
@@ -113,8 +129,16 @@ public class TracAttachmentHandlerTest extends TestCase {
 		assertEquals("Mylar\n", new String(result));
 	}
 
-	public void testUploadAttachmentXmlRpc() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+	public void testUploadAttachmentXmlRpc010() throws Exception {
+		uploadAttachmentXmlRpc(Constants.TEST_TRAC_010_URL);
+	}
+	
+	public void testUploadAttachmentXmlRpc011() throws Exception {
+		uploadAttachmentXmlRpc(Constants.TEST_TRAC_011_URL);
+	}
+	
+	private void uploadAttachmentXmlRpc(String url) throws Exception {
+		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();

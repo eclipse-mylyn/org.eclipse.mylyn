@@ -179,9 +179,9 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals(Version.XML_RPC, client.getVersion());
 	}
 
-//	public void testPerformQueryXmlRpc011() {
-//		performQuery(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
-//	}
+	public void testPerformQueryXmlRpc011() {
+		performQuery(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
+	}
 
 	public void testPerformQueryXmlRpc010() {
 		performQuery(Constants.TEST_TRAC_010_URL, Version.XML_RPC);

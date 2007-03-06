@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 
 /**
  * @author Steffen Pingel
@@ -55,13 +56,13 @@ public class TracTicketTest extends TestCase {
 
 	public void testSetCreated() throws InvalidTicketException {
 		TracTicket ticket = new TracTicket(1);
-		ticket.setCreated(0);
+		ticket.setCreated(TracUtils.parseDate(0));
 		assertEquals(TimeZone.getTimeZone("GMT").getOffset(0) * 1000, ticket.getCreated().getTime());
 
 		Date date = new Date();
 		Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		utc.setTime(date);
-		ticket.setCreated((int) (utc.getTimeInMillis() / 1000));
+		ticket.setCreated(TracUtils.parseDate((int) (utc.getTimeInMillis() / 1000)));
 
 		assertEquals(date.getTime() / 1000, ticket.getCreated().getTime() / 1000);
 	}

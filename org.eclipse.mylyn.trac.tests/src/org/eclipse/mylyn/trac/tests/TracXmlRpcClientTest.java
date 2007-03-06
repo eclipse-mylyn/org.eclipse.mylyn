@@ -53,8 +53,17 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 		}
 	}
 
-	public void testUpdateAttributes() throws Exception {
+	public void testUpdateAttributes010() throws Exception {
 		connect010();
+		updateAttributes();
+	}
+
+	public void testUpdateAttributes011() throws Exception {
+		connect011();
+		updateAttributes();
+	}
+
+	public void updateAttributes() throws Exception {
 		assertNull(repository.getMilestones());
 		repository.updateAttributes(new NullProgressMonitor(), true);
 		TracVersion[] versions = repository.getVersions();

@@ -33,10 +33,10 @@ public class TracXmlRpcClientSearchTest extends AbstractTracClientSearchTest {
 		searchValidateTicket();
 	}
 	
-//	public void testSearchValidateTicket011() throws Exception {
-//		connect011();
-//		searchValidateTicket();		
-//	}
+	public void testSearchValidateTicket011() throws Exception {
+		connect011();
+		searchValidateTicket();		
+	}
 	
 	public void searchValidateTicket() throws Exception {
 		TracSearch search = new TracSearch();

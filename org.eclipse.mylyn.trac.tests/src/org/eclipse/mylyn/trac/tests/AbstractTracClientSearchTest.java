@@ -127,10 +127,10 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		searchAll();
 	}
 
-//	public void testSearchAll011() throws Exception {
-//		connect011();
-//		searchAll();
-//	}
+	public void testSearchAll011() throws Exception {
+		connect011();
+		searchAll();
+	}
 
 	private void searchAll() throws Exception {
 		TracSearch search = new TracSearch();
@@ -144,10 +144,10 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		searchEmpty();		
 	}
 
-//	public void testSearchEmpty011() throws Exception {
-//		connect011();
-//		searchEmpty();
-//	}
+	public void testSearchEmpty011() throws Exception {
+		connect011();
+		searchEmpty();
+	}
 
 	private void searchEmpty() throws Exception {
 		TracSearch search = new TracSearch();
@@ -162,10 +162,10 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		searchMilestone1();
 	}
 
-//	public void testSearchMilestone1011() throws Exception {
-//		connect011();
-//		searchMilestone1();
-//	}
+	public void testSearchMilestone1011() throws Exception {
+		connect011();
+		searchMilestone1();
+	}
 
 	private void searchMilestone1() throws Exception {
 		TracSearch search = new TracSearch();
@@ -181,10 +181,10 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		searchMilestone2();
 	}
 
-//	public void testSearchMilestone2011() throws Exception {
-//		connect011();
-//		searchMilestone2();
-//	}
+	public void testSearchMilestone2011() throws Exception {
+		connect011();
+		searchMilestone2();
+	}
 
 	private void searchMilestone2() throws Exception {
 		TracSearch search = new TracSearch();
@@ -204,10 +204,10 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		searchExactMatch();
 	}
 	
-//	public void testSearchExactMatch011() throws Exception {
-//		connect011();
-//		searchExactMatch();
-//	}
+	public void testSearchExactMatch011() throws Exception {
+		connect011();
+		searchExactMatch();
+	}
 	
 	private void searchExactMatch() throws Exception {
 		TracSearch search = new TracSearch();
