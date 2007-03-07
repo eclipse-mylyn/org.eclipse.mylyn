@@ -149,9 +149,11 @@ public interface ITracClient {
 
 	TracVersion[] getVersions();
 
-	byte[] getAttachmentData(int id, String filename) throws TracException;
+	byte[] getAttachmentData(int ticketId, String filename) throws TracException;
 
-	void putAttachmentData(int id, String name, String description, byte[] data) throws TracException;
+	void putAttachmentData(int ticketId, String name, String description, byte[] data) throws TracException;
+
+	void deleteAttachment(int ticketId, String filename) throws TracException;
 
 	/**
 	 * @return the id of the created ticket

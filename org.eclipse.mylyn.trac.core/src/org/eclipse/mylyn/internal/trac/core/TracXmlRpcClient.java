@@ -450,6 +450,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		call("ticket.putAttachment", ticketId, filename, description, data, true);
 	}
 
+	public void deleteAttachment(int ticketId, String filename) throws TracException {
+		call("ticket.deleteAttachment", ticketId, filename);		
+	}
+	
 	private class TicketAttributeResult {
 
 		String name;
@@ -512,4 +516,5 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			}
 		}
 	}
+
 }

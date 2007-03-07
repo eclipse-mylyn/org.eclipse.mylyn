@@ -652,6 +652,10 @@ public class TracWebClient extends AbstractTracClient {
 		throw new TracException("Unsupported operation");
 	}
 
+	public void deleteAttachment(int ticketId, String filename) throws TracException {
+		throw new TracException("Unsupported operation");
+	}
+	
 	public int createTicket(TracTicket ticket) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
@@ -669,5 +673,5 @@ public class TracWebClient extends AbstractTracClient {
 		void addAttribute(String value);
 		
 	}
-	
+
 }
