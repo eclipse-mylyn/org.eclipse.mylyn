@@ -39,8 +39,15 @@ public abstract class AbstractTracClientTest extends TestCase {
 
 	public Version version;
 
-	public AbstractTracClientTest(Version version) {
+	private PrivilegeLevel level;
+
+	public AbstractTracClientTest(Version version, PrivilegeLevel level) {
 		this.version = version;
+		this.level = level;
+	}
+
+	public AbstractTracClientTest(Version version) {
+		this(version, PrivilegeLevel.USER);
 	}
 
 	public AbstractTracClientTest() {
@@ -67,7 +74,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 
 	public ITracClient connect(String url, Proxy proxy) throws Exception {
-		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		Credentials credentials = MylarTestUtils.readCredentials(level);
 		return connect(url, credentials.username, credentials.password, proxy);
 	}
 
