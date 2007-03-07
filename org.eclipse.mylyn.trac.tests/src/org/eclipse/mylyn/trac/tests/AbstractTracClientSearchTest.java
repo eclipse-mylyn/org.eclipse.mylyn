@@ -71,10 +71,15 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		getTickets();
 	}
 
-//	public void testGetTicket011() throws Exception {
-//		connect011();
-//		getTickets();
-//	}
+	public void testGetTicket011() throws Exception {
+		if (version == Version.TRAC_0_9) {
+			// XXX need to fix bug 175211
+			return;
+		}
+		
+		connect011();
+		getTickets();
+	}
 
 	private void getTickets() throws Exception {
 		TracTicket ticket = repository.getTicket(tickets.get(0).getId());
@@ -107,10 +112,15 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		getTicketUmlaute();
 	}
 
-//	public void testGetTicketUmlaute011() throws Exception {
-//		connect011();
-//		getTicketUmlaute();
-//	}
+	public void testGetTicketUmlaute011() throws Exception {
+		if (version == Version.TRAC_0_9) {
+			// XXX need to fix bug 175211
+			return;
+		}
+
+		connect011();
+		getTicketUmlaute();
+	}
 
 	private void getTicketUmlaute() throws Exception {
 		TracTicket ticket = repository.getTicket(data.htmlEntitiesTicketId);
@@ -141,7 +151,7 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 
 	public void testSearchEmpty010() throws Exception {
 		connect010();
-		searchEmpty();		
+		searchEmpty();
 	}
 
 	public void testSearchEmpty011() throws Exception {
@@ -203,12 +213,12 @@ public abstract class AbstractTracClientSearchTest extends AbstractTracClientTes
 		connect010();
 		searchExactMatch();
 	}
-	
+
 	public void testSearchExactMatch011() throws Exception {
 		connect011();
 		searchExactMatch();
 	}
-	
+
 	private void searchExactMatch() throws Exception {
 		TracSearch search = new TracSearch();
 		search.addFilter("milestone", "milestone1");
