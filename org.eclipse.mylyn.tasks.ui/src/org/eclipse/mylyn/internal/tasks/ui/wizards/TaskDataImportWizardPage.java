@@ -204,7 +204,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	private void addBackupFileView(Composite composite) {
 		backupFilesTable = new Table(composite, SWT.BORDER);
-		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(backupFilesTable);
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).grab(true, true).applyTo(backupFilesTable);
 
 		TableColumn filenameColumn = new TableColumn(backupFilesTable, SWT.LEFT);
 		filenameColumn.setWidth(200);
