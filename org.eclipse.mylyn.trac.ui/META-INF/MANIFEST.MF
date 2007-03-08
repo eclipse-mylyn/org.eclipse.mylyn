@@ -13,7 +13,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.tasks.core,
  org.eclipse.search,
  org.eclipse.mylar.trac.core,
- org.eclipse.mylar
+ org.eclipse.mylar,
+ org.eclipse.ui.editors,
+ org.eclipse.jface.text,
+ org.eclipse.core.resources,
+ org.eclipse.ui.workbench.texteditor
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylar.internal.trac.ui,
  org.eclipse.mylar.internal.trac.ui.editor,

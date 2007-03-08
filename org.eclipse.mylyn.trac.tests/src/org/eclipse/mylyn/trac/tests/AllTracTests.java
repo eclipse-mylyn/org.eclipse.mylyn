@@ -14,6 +14,8 @@ package org.eclipse.mylar.trac.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.mylar.internal.trac.ui.TracHyperlinkDetectorTest;
+
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
@@ -44,6 +46,7 @@ public class AllTracTests {
 		suite.addTestSuite(TracQueryHitTest.class);
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
+		suite.addTestSuite(TracHyperlinkDetectorTest.class);
 		// $JUnit-END$
 		return suite;
 	}
