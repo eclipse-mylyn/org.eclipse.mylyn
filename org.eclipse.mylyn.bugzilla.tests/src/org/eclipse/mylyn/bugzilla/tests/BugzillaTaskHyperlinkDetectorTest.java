@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaTaskHyperlinkDetector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTextViewer;
@@ -51,7 +52,7 @@ public class BugzillaTaskHyperlinkDetectorTest extends TestCase {
 	
 	private BugzillaTaskHyperlinkDetector detector = new BugzillaTaskHyperlinkDetector();
 
-	private TaskRepository dummyRepository = new TaskRepository("repository_kind", "repository_url");
+	private TaskRepository dummyRepository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "repository_url");
 
 	private RepositoryTextViewer viewer = new RepositoryTextViewer(dummyRepository, new Shell(), SWT.NONE);
 

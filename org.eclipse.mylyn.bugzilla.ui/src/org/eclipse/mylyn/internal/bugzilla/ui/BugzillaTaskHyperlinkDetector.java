@@ -11,79 +11,79 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTextViewer;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.mylar.tasks.ui.editors.AbstractTaskHyperlinkDetector;
 
 /**
  * @author Rob Elves
  */
-public class BugzillaTaskHyperlinkDetector extends AbstractHyperlinkDetector {
-	// IHyperlinkDetector
+public class BugzillaTaskHyperlinkDetector extends AbstractTaskHyperlinkDetector {
 
-	private TaskRepository repository;
+	private static final int TASK_NUM_GROUP = 3;
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		if (region == null || textViewer == null)
-			return null;
+	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
 
-		if (textViewer instanceof RepositoryTextViewer) {
-			// Get repository from repository text viewer
-			RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
+	private static final Pattern PATTERN = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
 
-			repository = viewer.getRepository();
+	@Override
+	protected IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
+		ArrayList<IHyperlink> hyperlinksFound = new ArrayList<IHyperlink>();
 
-			if (repository == null)
-				return null;
-
-		} else {
-			// Get repository from files associated project -> repository mapping
-			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-			IEditorInput input = part.getEditorInput();
-			IResource resource = (IResource) input.getAdapter(IResource.class);
-			if (resource != null) {
-				repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-				if (repository == null) {
-					return null;
-				}
+		Matcher m = PATTERN.matcher(text);
+		while (m.find()) {
+			if (lineOffset >= m.start() && lineOffset <= m.end()) {
+				IHyperlink link = extractHyperlink(repository.getUrl(), regionOffset, m);
+				if (link != null)
+					hyperlinksFound.add(link);
 			}
 		}
-		
-		IDocument document = textViewer.getDocument();
 
-		int offset = region.getOffset();
-
-		if (document == null)
-			return null;
-
-		IRegion lineInfo;
-		String line;
-		try {
-			lineInfo = document.getLineInformationOfOffset(offset);
-			line = document.get(lineInfo.getOffset(), lineInfo.getLength());
-		} catch (BadLocationException ex) {
-			return null;
+		if (hyperlinksFound.size() > 0) {
+			return hyperlinksFound.toArray(new IHyperlink[1]);
 		}
+		return null;
+	}
 
-		int offsetInLine = offset - lineInfo.getOffset();
+	private static IHyperlink extractHyperlink(String repositoryUrl, int regionOffset, Matcher m) {
 
-		if (repository != null) {
-			return BugzillaHyperlinkUtil.findBugHyperlinks(repository.getUrl(), offsetInLine, line, lineInfo
-				.getOffset());
+		int start = -1;
+
+		if (m.group().startsWith("duplicate")) {
+			start = m.start() + m.group().indexOf(m.group(TASK_NUM_GROUP));
 		} else {
-			return null;
+			start = m.start();
 		}
 
+		int end = m.end();
+
+		if (end == -1)
+			end = m.group().length();
+
+		try {
+
+			String bugId = m.group(TASK_NUM_GROUP).trim();
+			start += regionOffset;
+			end += regionOffset;
+
+			IRegion sregion = new Region(start, end - start);
+			return new BugzillaHyperLink(sregion, bugId, repositoryUrl);
+
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	@Override
+	protected String getTargetID() {
+		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 }

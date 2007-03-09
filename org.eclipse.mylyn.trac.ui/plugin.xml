@@ -39,7 +39,7 @@
       <hyperlinkDetector
             class="org.eclipse.mylar.internal.trac.ui.TracHyperlinkDetector"
             id="org.eclipse.mylar.jira.ui.hyperlinkdetector"
-            name="Mylar Task"
+            name="Mylar Task - Trac"
             targetId="org.eclipse.jdt.ui.javaCode">
       </hyperlinkDetector>
    </extension>
