@@ -21,6 +21,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTextViewer;
@@ -35,7 +36,7 @@ public class TracHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	Pattern taskPattern = Pattern.compile("#(\\d*)");
 
-	Pattern wikiPattern = Pattern.compile("\\[wiki:([^\\]*])\\]", Pattern.CASE_INSENSITIVE | Pattern.DOTALL
+	Pattern wikiPattern = Pattern.compile("\\[wiki:([^\\]]*)\\]", Pattern.CASE_INSENSITIVE | Pattern.DOTALL
 			| Pattern.MULTILINE);
 
 	public TracHyperlinkDetector() {
@@ -113,6 +114,16 @@ public class TracHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 		}
 
+		m = wikiPattern.matcher(text);
+		while (m.find()) {
+			String id = m.group(1);
+			if (lineOffset >= m.start() && lineOffset <= m.end()) {
+				IRegion linkRegion = new Region(regionOffset + m.start(), m.end() - m.start());
+				links.add(new WebHyperlink(linkRegion, repository.getUrl() + 
+						ITracClient.WIKI_URL + id));
+			}
+		}
+				
 		return links.isEmpty() ? null : links.toArray(new IHyperlink[0]);
 	}
 

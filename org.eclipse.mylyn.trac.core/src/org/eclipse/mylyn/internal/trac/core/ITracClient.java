@@ -79,6 +79,8 @@ public interface ITracClient {
 
 	public static final String DEFAULT_USERNAME = "anonymous";
 
+	public static final String WIKI_URL = "/wiki/";
+
 	/**
 	 * Gets ticket with <code>id</code> from repository.
 	 * 
