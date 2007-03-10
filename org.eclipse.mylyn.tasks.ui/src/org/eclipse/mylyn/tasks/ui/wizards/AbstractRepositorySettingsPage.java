@@ -72,9 +72,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected static final String URL_PREFIX_HTTP = "http://";
 
 	protected static final String INVALID_REPOSITORY_URL = "Repository url is invalid.";
-	
+
 	protected static final String INVALID_LOGIN = "Unable to authenticate with repository. Login credentials invalid.";
-	
+
 	protected AbstractRepositoryConnector connector;
 
 	protected StringFieldEditor repositoryLabelEditor;
@@ -128,7 +128,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	private boolean needsHttpAuth;
 
 	private boolean needsValidation;
-	
+
 	private Composite container;
 
 	private Composite httpAuthComp;
@@ -248,6 +248,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 
+			if (repository != null) {
+				anonymousButton.setSelection(repository.isAnonymous());
+			}
 			// Label anonymousLabel = new Label(container, SWT.NONE);
 			// anonymousLabel.setText("");
 		}
@@ -259,7 +262,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			originalUrl = repository.getUrl();
 			oldUsername = repository.getUserName();
 			oldPassword = repository.getPassword();
-		
+
 			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
 				oldHttpAuthUserId = repository.getHttpUser();
 				oldHttpAuthPassword = repository.getHttpPassword();
@@ -485,7 +488,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 		}
-		
+
 		setControl(container);
 	}
 
@@ -799,7 +802,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public boolean isAnonymousAccess() {
-		return "".equals(getUserName()) && "".equals(getPassword());
+		if (anonymousButton != null) {
+			return anonymousButton.getSelection();
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -907,10 +914,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				getCharacterEncoding(), "");
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());
-
-		//repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME, getHttpAuthUserId());
-		//repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD, getHttpAuthPassword());
-		if(getHttpAuthUserId().length()>0 && getHttpAuthPassword().length()>0) {
+		if (needsAnonymousLogin()) {
+			repository.setAnonymous(anonymousButton.getSelection());
+		}
+		// repository.setProperty(TaskRepository.AUTH_HTTP_USERNAME,
+		// getHttpAuthUserId());
+		// repository.setProperty(TaskRepository.AUTH_HTTP_PASSWORD,
+		// getHttpAuthPassword());
+		if (getHttpAuthUserId().length() > 0 && getHttpAuthPassword().length() > 0) {
 			repository.setHttpAuthenticationCredentials(getHttpAuthUserId(), getHttpAuthPassword());
 		}
 
@@ -981,11 +992,11 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void setNeedsValidation(boolean needsValidation) {
 		this.needsValidation = needsValidation;
 	}
-	
+
 	public boolean needsValidation() {
 		return needsValidation;
 	}
-	
+
 	public void updateProperties(TaskRepository repository) {
 		// none
 	}
@@ -1004,14 +1015,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	public void setPassword(String pass) {
 		repositoryPasswordEditor.setStringValue(pass);
 	}
-	
+
 	protected void validateSettings() {
 		final Validator validator = getValidator(createTaskRepository());
 		if (validator == null) {
 			return;
 		}
 
-		try {			
+		try {
 			getWizard().getContainer().run(true, false, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					monitor.beginTask("Validating server settings", IProgressMonitor.UNKNOWN);
@@ -1053,13 +1064,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					message = "Authentication credentials are valid.";
 				} else {
 					message = "Repository is valid.";
-				}				
+				}
 			}
 			setMessage(message, WizardPage.INFORMATION);
 			break;
 		case IStatus.INFO:
 			setMessage(message, WizardPage.INFORMATION);
-			break;			
+			break;
 		case IStatus.WARNING:
 			setMessage(message, WizardPage.WARNING);
 			break;
@@ -1071,22 +1082,22 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	protected abstract Validator getValidator(TaskRepository repository);
-	
+
 	// public for testing
 	public abstract class Validator {
 
 		private IStatus status;
-		
+
 		public abstract void run(IProgressMonitor monitor) throws CoreException;
-		
+
 		public IStatus getStatus() {
 			return status;
 		}
-		
+
 		public void setStatus(IStatus status) {
 			this.status = status;
 		}
-		
+
 	}
-	
+
 }

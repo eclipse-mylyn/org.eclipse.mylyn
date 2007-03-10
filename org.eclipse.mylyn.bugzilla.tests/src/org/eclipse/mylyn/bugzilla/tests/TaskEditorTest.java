@@ -10,7 +10,6 @@ package org.eclipse.mylar.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -44,8 +43,8 @@ public class TaskEditorTest extends TestCase {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		TasksUiPlugin.getTaskListManager().saveTaskList(); 
-//		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		// TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 		super.tearDown();
 	}
 
@@ -59,8 +58,9 @@ public class TaskEditorTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_222_URL);
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
+				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
+						.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 		model.setNew(true);
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
@@ -76,7 +76,7 @@ public class TaskEditorTest extends TestCase {
 		// ensure we have access without exceptions
 		editor.setDescriptionText(desc);
 		editor.setSummaryText(summary);
-		editor.doSave(new NullProgressMonitor());
+		// editor.doSave(new NullProgressMonitor());
 	}
 
 }

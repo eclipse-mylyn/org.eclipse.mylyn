@@ -86,7 +86,7 @@ class SynchronizeQueryJob extends Job {
 				repositoryQuery.setStatus(new MylarStatus(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
 						IMylarStatusConstants.REPOSITORY_NOT_FOUND, repositoryQuery.getRepositoryUrl()));
 			} else {
-
+				
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
 				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 

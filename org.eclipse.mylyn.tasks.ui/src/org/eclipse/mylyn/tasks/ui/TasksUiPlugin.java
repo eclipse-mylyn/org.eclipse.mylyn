@@ -29,10 +29,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.WebClientUtil;
@@ -57,6 +59,7 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -76,6 +79,7 @@ import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -456,6 +460,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						if (repositoriesView != null) {
 							repositoriesView.getViewer().refresh();
 						}
+						checkForCredentials();
 					} catch (Exception e) {
 						MylarStatusHandler.fail(e, "Mylar Tasks UI start failed", false);
 					}
@@ -472,6 +477,33 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	
+	private void checkForCredentials() {
+		for (TaskRepository repository: taskRepositoryManager.getAllRepositories()) {
+			if(!repository.isAnonymous() && ("".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
+				try {
+					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);					
+					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+					if (wizard != null && shell != null && !shell.isDisposed()) {
+						WizardDialog dialog = new WizardDialog(shell, wizard);
+						dialog.create();
+						//dialog.setTitle("Repository Credentials Missing");
+						dialog.setErrorMessage("Authentication credentials missing.");
+						dialog.setBlockOnOpen(true);
+						if (dialog.open() == Dialog.CANCEL) {
+							dialog.close();
+							return;
+						}
+					}
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, e.getMessage(), true);
+				}
+			}
+		}
+	}
+
+	
+	
 	public void earlyStartup() {
 		// ignore
 	}
@@ -531,6 +563,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		getTaskListManager().setTaskListFile(new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
 		getTaskListManager().readExistingOrCreateNewList();
 		getTaskListManager().parseTaskActivityInteractionHistory();
+		checkForCredentials();
 	}
 
 	@Override

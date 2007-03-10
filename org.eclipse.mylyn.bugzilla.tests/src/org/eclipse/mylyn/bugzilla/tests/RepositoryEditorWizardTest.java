@@ -47,7 +47,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = MylarTestUtils.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
-
+		repository.setAnonymous(false);
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
@@ -61,7 +61,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		// BugzillaClient client =
 		// BugzillaClientFactory.createClient(page.getServerUrl(),
 		// page.getUserName(), page.getPassword(), page.getHttpAuthUserId(),
-		// page.getHttpAuthPassword(), page.getCharacterEncoding());
+		// page.getHttpAuthPassword(), page.getCharacterEncoding());		
 		page.setPassword("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page

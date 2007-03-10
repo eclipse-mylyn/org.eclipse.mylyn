@@ -52,6 +52,8 @@ public class TaskRepository {
 	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
+	
+	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylar.tasklist.repositories.anonymous";
 
 	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylar.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
 
@@ -428,5 +430,13 @@ public class TaskRepository {
 			proxy = new Proxy(Type.HTTP, sockAddr);
 		}
 		return proxy;
+	}
+
+	public void setAnonymous(boolean b) {
+		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
+	}
+	
+	public boolean isAnonymous() {
+		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
 	}
 }

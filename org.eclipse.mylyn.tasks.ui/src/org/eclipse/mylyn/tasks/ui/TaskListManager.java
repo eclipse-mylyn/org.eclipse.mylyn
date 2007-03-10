@@ -275,7 +275,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void parseFutureReminders() {
 		activityFuture.clear();
 		activityNextWeek.clear();
-		for (DateRangeContainer day: activityWeekDays) {
+		for (DateRangeContainer day : activityWeekDays) {
 			day.clear();
 		}
 		HashSet<ITask> toRemove = new HashSet<ITask>();
@@ -297,8 +297,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		tempCalendar.setFirstDayOfWeek(startDay);
 		for (ITask task : tasksWithReminders) {
-			if(task instanceof DateRangeActivityDelegate) {
-				task = ((DateRangeActivityDelegate)task).getCorrespondingTask();
+			if (task instanceof DateRangeActivityDelegate) {
+				task = ((DateRangeActivityDelegate) task).getCorrespondingTask();
 			}
 			if (task.getScheduledForDate() != null) {
 				tempCalendar.setTime(task.getScheduledForDate());
@@ -312,11 +312,10 @@ public class TaskListManager implements IPropertyChangeListener {
 					activityThisWeek.addTask(new DateRangeActivityDelegate(activityThisWeek, task, tempCalendar,
 							tempCalendar));
 				}
-				
-				for (DateRangeContainer day: activityWeekDays) {
+
+				for (DateRangeContainer day : activityWeekDays) {
 					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar,
-								tempCalendar));
+						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar));
 					}
 				}
 			}
@@ -356,11 +355,11 @@ public class TaskListManager implements IPropertyChangeListener {
 					isInactive = false;
 					totalInactive += event.getDate().getTime() - startInactive;
 				}
-				
+
 				Set<DateRangeContainer> rangeSet = new HashSet<DateRangeContainer>();
 				rangeSet.addAll(dateRangeContainers);
 				rangeSet.add(activityThisWeek);
-				
+
 				for (DateRangeContainer week : rangeSet) {
 					if (week.includes(currentTaskStart) && (!isWeekDay(week) && !week.isFuture())) {
 						if (currentTask != null) {
@@ -383,7 +382,7 @@ public class TaskListManager implements IPropertyChangeListener {
 						}
 					}
 				}
-				
+
 				currentTask = null;
 				currentHandle = "";
 				totalInactive = 0;
@@ -914,8 +913,8 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithReminders.remove(task);
 			tasksWithReminders.add(task);
 		}
-		parseFutureReminders();		
-		taskList.notifyLocalInfoChanged(task);		
+		parseFutureReminders();
+		taskList.notifyLocalInfoChanged(task);
 	}
 
 	public void setDueDate(ITask task, Date dueDate) {

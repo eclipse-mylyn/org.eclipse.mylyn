@@ -130,12 +130,14 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setCharacterEncoding(encoding);
 		repository1.setTimeZoneId(fakeTimeZone);
 		repository1.setSyncTimeStamp(dateString);
+		repository1.setAnonymous(true);
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
+		assertTrue(temp.isAnonymous());		
 		assertEquals(encoding, temp.getCharacterEncoding());
 		assertEquals(fakeTimeZone, temp.getTimeZoneId());
 		assertEquals(dateString, temp.getSyncTimeStamp());

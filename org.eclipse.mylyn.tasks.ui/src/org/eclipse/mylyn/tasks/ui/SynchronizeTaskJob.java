@@ -112,7 +112,7 @@ class SynchronizeTaskJob extends Job {
 								+ repositoryTask.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 								+ ".", null));
 			}
-
+			
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
 			ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 			if (taskDataHandler != null) {
@@ -120,8 +120,8 @@ class SynchronizeTaskJob extends Job {
 				RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
 
 				if (downloadedTaskData != null) {
-					if (TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask,
-							downloadedTaskData, forceSync)) {
+					if (TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData,
+							forceSync)) {
 
 						TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 

@@ -62,7 +62,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setCharacterEncoding(abstractRepositorySettingsPage.getCharacterEncoding());
 			repository.setAuthenticationCredentials(abstractRepositorySettingsPage.getUserName(), abstractRepositorySettingsPage.getPassword());			
 			repository.setRepositoryLabel(abstractRepositorySettingsPage.getRepositoryLabel());
-			
+			repository.setAnonymous(abstractRepositorySettingsPage.isAnonymousAccess());
 			repository.setHttpAuthenticationCredentials(abstractRepositorySettingsPage.getHttpAuthUserId(),
 					abstractRepositorySettingsPage.getHttpAuthPassword());
 			
