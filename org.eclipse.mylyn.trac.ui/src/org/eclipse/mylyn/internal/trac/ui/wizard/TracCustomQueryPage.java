@@ -137,7 +137,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		control.setLayoutData(gd);
 		GridLayout layout = new GridLayout(4, false);
-		if (isSearchPage()) {
+		if (inSearchContainer()) {
 			layout.marginWidth = 0;
 			layout.marginHeight = 0;
 		}
@@ -383,17 +383,13 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	private void initializePage() {
 		updateAttributesFromRepository(false);
 		boolean restored = (query != null);
-		if (isSearchPage()) {
+		if (inSearchContainer()) {
 			restored |= restoreWidgetValues();
 		}
 		// initialize with default values
 		if (!restored) {
 			statusField.selectItems(DEFAULT_STATUS_SELECTION);
 		}
-	}
-
-	private boolean isSearchPage() {
-		return scontainer != null;
 	}
 
 	private boolean hasAttributes() {
@@ -516,7 +512,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public boolean performAction() {
-		if (isSearchPage()) {
+		if (inSearchContainer()) {
 			saveWidgetValues();
 		}
 
