@@ -20,6 +20,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskHyperlink;
 import org.eclipse.mylar.tasks.ui.editors.AbstractTaskHyperlinkDetector;
 
 /**
@@ -40,7 +41,7 @@ public class BugzillaTaskHyperlinkDetector extends AbstractTaskHyperlinkDetector
 		Matcher m = PATTERN.matcher(text);
 		while (m.find()) {
 			if (lineOffset >= m.start() && lineOffset <= m.end()) {
-				IHyperlink link = extractHyperlink(repository.getUrl(), regionOffset, m);
+				IHyperlink link = extractHyperlink(repository, regionOffset, m);
 				if (link != null)
 					hyperlinksFound.add(link);
 			}
@@ -52,7 +53,7 @@ public class BugzillaTaskHyperlinkDetector extends AbstractTaskHyperlinkDetector
 		return null;
 	}
 
-	private static IHyperlink extractHyperlink(String repositoryUrl, int regionOffset, Matcher m) {
+	private static IHyperlink extractHyperlink(TaskRepository repository, int regionOffset, Matcher m) {
 
 		int start = -1;
 
@@ -74,7 +75,7 @@ public class BugzillaTaskHyperlinkDetector extends AbstractTaskHyperlinkDetector
 			end += regionOffset;
 
 			IRegion sregion = new Region(start, end - start);
-			return new BugzillaHyperLink(sregion, bugId, repositoryUrl);
+			return new TaskHyperlink(sregion, repository, bugId);
 
 		} catch (NumberFormatException e) {
 			return null;

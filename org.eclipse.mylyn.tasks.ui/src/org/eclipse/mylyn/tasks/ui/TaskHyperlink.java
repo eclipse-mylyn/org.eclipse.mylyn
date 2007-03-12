@@ -8,24 +8,29 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylar.tasks.ui;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
+ * @author Eugene Kuleshov
  * @author Steffen Pingel
  */
-public class WebHyperlink implements IHyperlink {
+public class TaskHyperlink implements IHyperlink {
 
 	private final IRegion region;
-	
-	private String url;
 
-	public WebHyperlink(IRegion region, String url) {
+	private final TaskRepository repository;
+
+	private final String key;
+
+	public TaskHyperlink(IRegion region, TaskRepository repository, String key) {
 		this.region = region;
-		this.url = url;
+		this.repository = repository;
+		this.key = key;
 	}
 
 	public IRegion getHyperlinkRegion() {
@@ -37,15 +42,15 @@ public class WebHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return "Open URL " + url;
+		return "Open Task " + key;
 	}
 
 	public void open() {
-		TasksUiUtil.openBrowser(url);
-	}
-
-	public String getURLString() {
-		return url;
+		if (repository != null) {
+			TasksUiUtil.openRepositoryTask(repository, key);
+		} else {
+			MessageDialog.openError(null, "Mylar", "Could not determine repository for report");
+		}
 	}
 
 }

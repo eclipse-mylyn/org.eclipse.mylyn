@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.WebHyperlink;
 
 public class TracHyperlinkDetectorTest extends TestCase {
 

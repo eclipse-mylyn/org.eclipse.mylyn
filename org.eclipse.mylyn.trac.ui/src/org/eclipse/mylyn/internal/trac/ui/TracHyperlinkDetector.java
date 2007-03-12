@@ -19,6 +19,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskHyperlink;
+import org.eclipse.mylar.tasks.ui.WebHyperlink;
 import org.eclipse.mylar.tasks.ui.editors.AbstractTaskHyperlinkDetector;
 
 /**
