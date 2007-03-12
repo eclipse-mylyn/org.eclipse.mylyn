@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
@@ -99,13 +100,13 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 
 		repositoryVersionCombo.add(LABEL_AUTOMATIC_VERSION);
 
-		for (String version : getConnector().getSupportedVersions()) {
-			repositoryVersionCombo.add(version);
+		for (BugzillaServerVersion version : BugzillaServerVersion.values()) {
+			repositoryVersionCombo.add(version.toString());
 		}
 		if (repository != null && repositoryVersionCombo.indexOf(repository.getVersion()) >= 0) {
 			repositoryVersionCombo.select(repositoryVersionCombo.indexOf(repository.getVersion()));
 		} else {
-			int defaultIndex = getConnector().getSupportedVersions().size() - 1;
+			int defaultIndex = repositoryVersionCombo.getItemCount() - 1;
 			repositoryVersionCombo.select(defaultIndex);
 			setVersion(repositoryVersionCombo.getItem(defaultIndex));
 		}

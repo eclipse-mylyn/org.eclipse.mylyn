@@ -14,7 +14,6 @@ package org.eclipse.mylar.tasks.core;
 import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -36,8 +35,6 @@ public abstract class AbstractRepositoryConnector {
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
 	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-
-	protected List<String> supportedVersions;
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
@@ -105,8 +102,6 @@ public abstract class AbstractRepositoryConnector {
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
 	public abstract String getRepositoryType();
-
-	public abstract List<String> getSupportedVersions();
 
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on

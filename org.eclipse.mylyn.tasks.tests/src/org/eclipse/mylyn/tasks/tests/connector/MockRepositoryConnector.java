@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -113,12 +112,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
-		return null;
-	}
-
-	@Override
-	public List<String> getSupportedVersions() {
-		// ignore
 		return null;
 	}
 

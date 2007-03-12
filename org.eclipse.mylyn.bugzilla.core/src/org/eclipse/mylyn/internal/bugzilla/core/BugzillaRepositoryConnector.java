@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -226,17 +224,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		return true;
-	}
-
-	@Override
-	public List<String> getSupportedVersions() {
-		if (supportedVersions == null) {
-			supportedVersions = new ArrayList<String>();
-			for (BugzillaServerVersion version : BugzillaServerVersion.values()) {
-				supportedVersions.add(version.toString());
-			}
-		}
-		return supportedVersions;
 	}
 
 	@Override

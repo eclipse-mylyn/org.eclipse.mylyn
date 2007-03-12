@@ -48,8 +48,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final static String CLIENT_LABEL = "Trac (supports 0.9 or 0.10 through Web and XML-RPC)";
 
-	private List<String> supportedVersions;
-
 	private TracClientManager clientManager;
 
 	private TracTaskDataHandler taskDataHandler = new TracTaskDataHandler(this);
@@ -100,18 +98,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
 		return repositoryUrl + ITracClient.TICKET_URL + taskId;
-	}
-
-	
-	@Override
-	public List<String> getSupportedVersions() {
-		if (supportedVersions == null) {
-			supportedVersions = new ArrayList<String>();
-			for (Version version : Version.values()) {
-				supportedVersions.add(version.toString());
-			}
-		}
-		return supportedVersions;
 	}
 
 	@Override
