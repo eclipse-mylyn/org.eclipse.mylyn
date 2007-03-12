@@ -246,6 +246,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		IStatus queryStatus = Status.OK_STATUS;
 		try {
 			BugzillaClient client = getClientManager().getClient(repository);
+			resultCollector.clear();
 			client.getSearchHits(query, resultCollector, taskList);
 			// XXX: HACK in case of ip change bugzilla can return 0 hits
 			// due to invalid authorization token, forcing relogin fixes

@@ -112,5 +112,9 @@ public class QueryHitCollector {
 	public List<AbstractQueryHit> getHits() {
 		return results;
 	}
+	
+	public void clear() {
+		results.clear();
+	}
 
 }
