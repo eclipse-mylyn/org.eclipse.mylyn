@@ -199,7 +199,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 
 	private void createYearSpinner(Composite composite) {
 		Composite yearComposite = new Composite(composite, SWT.NONE);
-		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.DEFAULT).applyTo(yearComposite);
+		GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(yearComposite);
 		yearComposite.setLayout(new GridLayout(2, false));
 		org.eclipse.swt.widgets.Label yearLabel = new org.eclipse.swt.widgets.Label(yearComposite, SWT.NONE);
 		yearLabel.setText("Year: ");

@@ -341,7 +341,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (needsEncoding()) {
 			Label encodingLabel = new Label(container, SWT.HORIZONTAL);
 			encodingLabel.setText("Character Encoding:");
-			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).applyTo(encodingLabel);
+			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).applyTo(encodingLabel);
 
 			Composite encodingContainer = new Composite(container, SWT.NONE);
 			GridLayout gridLayout = new GridLayout(2, false);
@@ -430,7 +430,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite.setClient(httpAuthComp);
 
 			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
+			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
 
 			httpAuthButton.setText("Enabled");
 			httpAuthButton.addSelectionListener(new SelectionListener() {
@@ -521,7 +521,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyExpComposite.setClient(proxyAuthComp);
 
 		systemProxyButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
+		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
 
 		systemProxyButton.setText("Use Install/Update settings (default)");
 
@@ -564,7 +564,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// ************* PROXY AUTHENTICATION **************
 
 		proxyAuthButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.DEFAULT).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
+		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
 
 		proxyAuthButton.setText("Enable proxy authentication");
 		proxyAuthButton.addSelectionListener(new SelectionListener() {

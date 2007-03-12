@@ -1650,7 +1650,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (assignedAttribute != null) {
 
 			Label label = createLabel(peopleComposite, assignedAttribute);
-			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.DEFAULT).applyTo(label);
+			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		}
