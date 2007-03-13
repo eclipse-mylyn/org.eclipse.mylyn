@@ -44,6 +44,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
@@ -77,9 +78,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
-	
+
 	private AttachFileAction attachFileAction = new AttachFileAction();
-	
+
 	private GlobalAction cutAction;
 
 	private GlobalAction undoAction;
@@ -91,7 +92,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private GlobalAction pasteAction;
 
 	private GlobalAction selectAllAction;
-	
+
 	public TaskEditorActionContributor() {
 
 		cutAction = new GlobalAction(ActionFactory.CUT.getId());
@@ -117,7 +118,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		copyAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		copyAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 		copyAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.COPY);
-		
+
 		undoAction = new GlobalAction(ActionFactory.UNDO.getId());
 		undoAction.setText(WorkbenchMessages.Workbench_undo);
 		undoAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
@@ -165,9 +166,10 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			addClipboardActions(manager);
 		}
 
-		if (editor.getTaskEditorInput() == null) {
+		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+			List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin
+					.getTaskListManager().getTaskList().getCategories());
 			Collections.sort(categories);
 			for (final AbstractTaskContainer category : categories) {
 				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
@@ -185,23 +187,27 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			}
 			manager.add(subMenuManager);
 			return;
+
+		} else if (editor.getEditorInput() instanceof NewTaskEditorInput) {
+			return;
 		}
+
 		final ITask task = editor.getTaskEditorInput().getTask();
 		if (task == null) {
 			return;
 		} else {
 			// TODO: refactor
 			IStructuredSelection selection = new StructuredSelection(task);
-			
+
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
 			attachFileAction.selectionChanged(selection);
-			
+
 			manager.add(openWithBrowserAction);
 			if (task instanceof AbstractRepositoryTask) {
 				manager.add(attachFileAction);
-			}			
-			
+			}
+
 			if (task.isActive()) {
 				manager.add(new TaskDeactivateAction() {
 					@Override
@@ -222,7 +228,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			manager.add(new Separator());
 
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
-				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(menuPath)) {
+				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
+						menuPath)) {
 					List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
 					selectedElements.add(task);
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
@@ -260,11 +267,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	}
 
 	private void moveToCategory(AbstractTaskContainer category) {
-		IEditorInput input =  getEditor().getEditorInput();
+		IEditorInput input = getEditor().getEditorInput();
 		if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput)input;
+			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput) input;
 			final IProgressService svc = PlatformUI.getWorkbench().getProgressService();
-			final AddExistingTaskJob job = new AddExistingTaskJob(repositoryTaskEditorInput.getRepository(), repositoryTaskEditorInput.getId(), category);
+			final AddExistingTaskJob job = new AddExistingTaskJob(repositoryTaskEditorInput.getRepository(),
+					repositoryTaskEditorInput.getId(), category);
 			job.schedule();
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -273,7 +281,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			});
 		}
 	}
-	
+
 	public void updateSelectableActions(ISelection selection) {
 		if (editor != null) {
 			cutAction.selectionChanged(selection);
