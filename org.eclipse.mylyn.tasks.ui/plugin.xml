@@ -731,6 +731,15 @@
          </adapter>
       </factory>
    </extension>
+        <extension
+         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+      <hyperlinkDetector            
+            class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
+            id="org.eclipse.mylar.jira.ui.hyperlinkdetector"
+            name="Mylar Task"
+            targetId="org.eclipse.jdt.ui.javaCode">
+      </hyperlinkDetector>
+   </extension>
   
 </plugin>
 

@@ -19,6 +19,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -28,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDetector {
+public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null) {
@@ -39,8 +40,9 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 		if (repository == null) {
 			return null;
 		}
-		
-		if(getTargetID() == null || !repository.getKind().equals(getTargetID())) {
+
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+		if (connectorUi == null) {
 			return null;
 		}
 
@@ -58,13 +60,9 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 			return null;
 		}
 
-		return findHyperlinks(repository, line, region.getOffset() - lineInfo.getOffset(), lineInfo.getOffset());
+		return connectorUi.findHyperlinks(repository, line, region.getOffset() - lineInfo.getOffset(), lineInfo
+				.getOffset());
 	}
-
-	/**
-	 * @return repository kind associated with this hyperlink detector
-	 */
-	protected abstract String getTargetID();
 
 	private TaskRepository getRepository(ITextViewer textViewer) {
 		if (textViewer instanceof RepositoryTextViewer) {
@@ -80,7 +78,4 @@ public abstract class AbstractTaskHyperlinkDetector extends AbstractHyperlinkDet
 		}
 		return null;
 	}
-
-	protected abstract IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset,
-			int regionOffset);
 }

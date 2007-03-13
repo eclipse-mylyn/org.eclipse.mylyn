@@ -9,6 +9,7 @@
 package org.eclipse.mylar.tasks.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -126,6 +127,10 @@ public abstract class AbstractRepositoryConnectorUi {
 		job.schedule();
 
 		return true;
+	}
+	
+	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
+		return new IHyperlink[0];
 	}
 
 }

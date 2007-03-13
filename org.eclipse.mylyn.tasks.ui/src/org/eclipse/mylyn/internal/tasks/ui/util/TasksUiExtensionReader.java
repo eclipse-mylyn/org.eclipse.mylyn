@@ -159,6 +159,7 @@ public class TasksUiExtensionReader {
 					if (elements[j].getName().equals(ELMNT_EDITOR_FACTORY)) {
 						readEditorFactory(elements[j]);
 					} else if (elements[j].getName().equals(ELMNT_HYPERLINK_DETECTOR)) {
+						// TODO:remove
 						readHyperlinkDetector(elements[j]);
 					}
 				}
