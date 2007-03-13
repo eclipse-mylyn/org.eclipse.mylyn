@@ -726,17 +726,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		if (taskData == null) {
-			toolkit.createLabel(editorComposite, "Task data not available, please synchronize and reopen.");
-			return;
+			GridLayout warningLayout = new GridLayout(2, false);			
+			Composite warningComposite = toolkit.createComposite(editorComposite);
+			warningComposite.setLayout(warningLayout);
+			Label warning = toolkit.createLabel(warningComposite, "");
+			warning.setImage(TaskListImages.getImage(TaskListImages.WARNING));
+			toolkit.createLabel(warningComposite, "Task data not available. If connected, synchronize the task and reopen.");
+		} else {
+			createSections();
+			getSite().getPage().addSelectionListener(selectionListener);
+			getSite().setSelectionProvider(selectionProvider);
+			if (summaryText != null) {
+				summaryText.setFocus();
+			}
+			addHeaderControls();
 		}
-
-		createSections();
-		getSite().getPage().addSelectionListener(selectionListener);
-		getSite().setSelectionProvider(selectionProvider);
-		if (summaryText != null) {
-			summaryText.setFocus();
-		}
-		addHeaderControls();
 	}
 
 	protected void addHeaderControls() {

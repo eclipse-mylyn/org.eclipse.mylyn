@@ -63,6 +63,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor FILTER = create(T_TOOL, "view-filter.gif");
 	
+	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
+	
 	public static final ImageDescriptor TASK = createSize(create(T_TOOL, "task.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_COMPLETED = createSize(create(T_TOOL, "task-completed.gif"), SIZE);
