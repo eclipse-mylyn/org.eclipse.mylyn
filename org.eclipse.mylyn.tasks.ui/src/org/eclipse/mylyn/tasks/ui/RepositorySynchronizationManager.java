@@ -9,7 +9,6 @@
 package org.eclipse.mylar.tasks.ui;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -196,28 +195,8 @@ public class RepositorySynchronizationManager {
 						if (!Platform.isRunning() || TasksUiPlugin.getRepositoryManager() == null) {
 							return;
 						}
-						Date mostRecent = new Date(0);
-						String mostRecentTimeStamp = repository.getSyncTimeStamp();
-						for (AbstractRepositoryTask task : changedTasks) {
-							Date taskModifiedDate;
-
-							if (connector.getTaskDataHandler() != null && task.getTaskData() != null
-									&& task.getTaskData().getLastModified() != null) {
-								taskModifiedDate = task.getTaskData().getAttributeFactory().getDateForAttributeType(
-										RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
-							} else {
-								continue;
-							}
-
-							if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
-								mostRecent = taskModifiedDate;
-								mostRecentTimeStamp = task.getTaskData().getLastModified();
-							}
-						}
-						// TODO: Get actual time stamp of query from
-						// repository rather
-						// than above hack
-						TasksUiPlugin.getRepositoryManager().setSyncTime(repository, mostRecentTimeStamp,
+						TasksUiPlugin.getRepositoryManager().setSyncTime(repository,
+								connector.getLastSyncTimestamp(repository, changedTasks),
 								TasksUiPlugin.getDefault().getRepositoriesFilePath());
 					}
 				});
@@ -239,8 +218,10 @@ public class RepositorySynchronizationManager {
 	};
 
 	/**
-	 * @param repositoryTask task that changed
-	 * @param modifiedAttributes attributes that have changed during edit session
+	 * @param repositoryTask
+	 *            task that changed
+	 * @param modifiedAttributes
+	 *            attributes that have changed during edit session
 	 */
 	public synchronized void saveOutgoing(AbstractRepositoryTask repositoryTask,
 			Set<RepositoryTaskAttribute> modifiedAttributes) {
@@ -299,9 +280,10 @@ public class RepositorySynchronizationManager {
 			break;
 		}
 
-//		if (/*status == RepositoryTaskSyncState.SYNCHRONIZED || */repositoryTask.getLastSyncDateStamp() == null) {
-//			repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
-//		}
+		// if (/*status == RepositoryTaskSyncState.SYNCHRONIZED ||
+		// */repositoryTask.getLastSyncDateStamp() == null) {
+		// repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
+		// }
 
 		repositoryTask.setTaskData(newTaskData);
 		repositoryTask.setSyncState(status);
@@ -365,7 +347,6 @@ public class RepositorySynchronizationManager {
 		// return true;
 	}
 
-
 	/**
 	 * @param repositoryTask -
 	 *            repository task to mark as read or unread
@@ -387,10 +368,10 @@ public class RepositorySynchronizationManager {
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
-		}else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
+		} else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			if (repositoryTask.getTaskData() != null && repositoryTask.getTaskData().getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(repositoryTask.getTaskData().getLastModified());
-				//TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(repositoryTask.getHandleIdentifier());
+				// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(repositoryTask.getHandleIdentifier());
 			}
 		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
