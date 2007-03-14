@@ -436,7 +436,7 @@ public class TaskRepository {
 		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
 	}
 	
-	public boolean isAnonymous() {
+	public boolean isAnonymous() {				
 		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
 	}
 }
