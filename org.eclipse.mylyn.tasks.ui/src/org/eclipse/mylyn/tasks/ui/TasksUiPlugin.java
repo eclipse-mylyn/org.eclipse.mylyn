@@ -400,6 +400,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						if(taskRepository == null){
 							taskRepository = new TaskRepository(connector.getRepositoryType(), template.repositoryUrl, template.version);
 							taskRepository.setRepositoryLabel(template.label);
+							taskRepository.setAnonymous(true);
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
 						}
 					}

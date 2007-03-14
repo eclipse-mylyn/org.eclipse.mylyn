@@ -80,6 +80,15 @@ public class TaskRepositoryManager {
 		}
 	}
 
+	public boolean hasUserManagedRepositoryConnectors() {
+		for (AbstractRepositoryConnector connector : repositoryConnectors.values()) {
+			if (connector.isUserManaged()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void addRepository(TaskRepository repository, String repositoryFilePath) {
 		Set<TaskRepository> repositories;
 		if (!repositoryMap.containsKey(repository.getKind())) {

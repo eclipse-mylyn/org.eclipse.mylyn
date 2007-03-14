@@ -120,6 +120,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 		Button button = new Button(composite, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
+		button.setEnabled(action.isEnabled());
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

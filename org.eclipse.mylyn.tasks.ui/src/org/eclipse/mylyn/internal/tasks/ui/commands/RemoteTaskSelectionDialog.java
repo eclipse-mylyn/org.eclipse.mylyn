@@ -201,6 +201,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		Button addRepositoryButton = new Button(repositoriesComposite, SWT.NONE);
 		addRepositoryButton.setText("&Add...");
+		addRepositoryButton.setEnabled(TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors());
 		addRepositoryButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

@@ -123,6 +123,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		Button button = new Button(container, SWT.NONE);
 		button.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		button.setText(AddRepositoryAction.TITLE);
+		button.setEnabled(action.isEnabled());
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
