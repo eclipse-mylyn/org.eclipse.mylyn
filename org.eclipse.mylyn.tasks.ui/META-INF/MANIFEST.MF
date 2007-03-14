@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.search,
  org.eclipse.mylar.monitor.core,
- org.eclipse.mylar
+ org.eclipse.mylar,
+ org.eclipse.ui.net
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylar.internal.tasks.ui,

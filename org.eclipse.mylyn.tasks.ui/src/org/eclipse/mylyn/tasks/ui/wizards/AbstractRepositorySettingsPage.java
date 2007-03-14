@@ -341,7 +341,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		if (needsEncoding()) {
 			Label encodingLabel = new Label(container, SWT.HORIZONTAL);
 			encodingLabel.setText("Character Encoding:");
-			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).applyTo(encodingLabel);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(encodingLabel);
 
 			Composite encodingContainer = new Composite(container, SWT.NONE);
 			GridLayout gridLayout = new GridLayout(2, false);
@@ -430,7 +430,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite.setClient(httpAuthComp);
 
 			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
-			GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
+			GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(httpAuthButton);
 
 			httpAuthButton.setText("Enabled");
 			httpAuthButton.addSelectionListener(new SelectionListener() {
@@ -521,10 +521,28 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyExpComposite.setClient(proxyAuthComp);
 
 		systemProxyButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
 
-		systemProxyButton.setText("Use Install/Update settings (default)");
+		systemProxyButton.setText("Use global Network Connections preference settings");
 
+//		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(proxyAuthComp, "Change", SWT.NULL);
+//		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
+//
+//			public void linkActivated(HyperlinkEvent e) {
+//				ProxyPreferencePage page = new ProxyPreferencePage();
+//				page.init(PlatformUI.getWorkbench());
+//				TasksUiUtil.showPreferencePage(TasksUiUtil.PREFS_PAGE_ID_NET_PROXY, page);
+//			}
+//
+//			public void linkEntered(HyperlinkEvent e) {
+//				// ignore
+//			}
+//
+//			public void linkExited(HyperlinkEvent e) {
+//				// ignore
+//			}
+//		});		
+		
 		systemProxyButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setUseDefaultProxy(systemProxyButton.getSelection());
@@ -564,7 +582,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// ************* PROXY AUTHENTICATION **************
 
 		proxyAuthButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.TOP, SWT.CENTER).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(proxyAuthButton);
 
 		proxyAuthButton.setText("Enable proxy authentication");
 		proxyAuthButton.addSelectionListener(new SelectionListener() {
