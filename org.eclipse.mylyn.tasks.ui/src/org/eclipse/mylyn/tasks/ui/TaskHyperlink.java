@@ -25,29 +25,33 @@ public class TaskHyperlink implements IHyperlink {
 
 	private final TaskRepository repository;
 
-	private final String key;
+	private final String taskId;
 
-	public TaskHyperlink(IRegion region, TaskRepository repository, String key) {
+	public TaskHyperlink(IRegion region, TaskRepository repository, String taskId) {
 		this.region = region;
 		this.repository = repository;
-		this.key = key;
+		this.taskId = taskId;
 	}
 
 	public IRegion getHyperlinkRegion() {
 		return region;
 	}
 
+	public String getTaskId() {
+		return taskId;
+	}
+	
 	public String getTypeLabel() {
 		return null;
 	}
 
 	public String getHyperlinkText() {
-		return "Open Task " + key;
+		return "Open Task " + taskId;
 	}
 
 	public void open() {
 		if (repository != null) {
-			TasksUiUtil.openRepositoryTask(repository, key);
+			TasksUiUtil.openRepositoryTask(repository, taskId);
 		} else {
 			MessageDialog.openError(null, "Mylar", "Could not determine repository for report");
 		}
