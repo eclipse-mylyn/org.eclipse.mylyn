@@ -317,7 +317,9 @@ public class BugzillaProductPage extends WizardPage {
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaTask) {
 			BugzillaTask task = (BugzillaTask) element;
-			products.add(task.getTaskData().getProduct());
+			if (task.getTaskData() != null) {
+				products.add(task.getTaskData().getProduct());
+			}
 		} else {
 			BugzillaRepositoryQuery query = null;
 			if (element instanceof BugzillaRepositoryQuery) {
