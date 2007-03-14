@@ -19,6 +19,9 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Mik Kersten
  */
@@ -38,9 +41,12 @@ public class OpenTaskListElementAction extends Action {
 	@Override
 	public void run() {
 		ISelection selection = viewer.getSelection();
-		Object element = ((IStructuredSelection) selection).getFirstElement();
-		if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-			TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement)element);	
+		List<?> list = ((IStructuredSelection) selection).toList();
+		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
+			Object element = (Object) iterator.next();
+			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
+				TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) element);
+			}
 		}
 	}
 }
