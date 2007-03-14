@@ -260,22 +260,6 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //		}
 //	}
 
-	private void displayError(final String serverUrl, Throwable e) {
-		IStatus status;
-		if (e instanceof MalformedURLException) {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
-					"Server URL is invalid.");
-		} else if (e instanceof CoreException) {
-			status = ((CoreException) e).getStatus();
-		} else if (e instanceof IOException) {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.IO_ERROR,
-					serverUrl, e.getMessage());
-		} else {
-			status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
-					serverUrl, e.getMessage());
-		}
-		MylarStatusHandler.displayStatus("Validation failed", status);
-	}
 
 	@Override
 	protected Validator getValidator(TaskRepository repository) {
@@ -356,6 +340,25 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 //				}
 //				MylarStatusHandler.displayStatus("Validation failed", status);
 			}
+		}
+		
+
+		private void displayError(final String serverUrl, Throwable e) {
+			IStatus status;
+			if (e instanceof MalformedURLException) {
+				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+						"Server URL is invalid.");
+			} else if (e instanceof CoreException) {
+				status = ((CoreException) e).getStatus();
+			} else if (e instanceof IOException) {
+				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.IO_ERROR,
+						serverUrl, e.getMessage());
+			} else {
+				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+						serverUrl, e.getMessage());
+			}
+			MylarStatusHandler.displayStatus("Validation failed", status);
+			setStatus(status);
 		}
 
 		public void validate(IProgressMonitor monitor) throws IOException, CoreException {
