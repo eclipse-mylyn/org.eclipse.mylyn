@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2007 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,25 +7,22 @@
  *
  * Contributors:
  *     University Of British Columbia - initial API and implementation
+ *     IBM Corporation - Bug 177320 Pending changes to internal class UpdateCore will break Tasks/Core
  *******************************************************************************/
 
 package org.eclipse.mylar.tasks.core;
 
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
+import java.net.*;
 import java.net.Proxy.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
+import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.update.internal.core.UpdateCore;
+import org.eclipse.mylar.internal.tasks.core.Activator;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -52,7 +49,7 @@ public class TaskRepository {
 	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
 
 	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
-	
+
 	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylar.tasklist.repositories.anonymous";
 
 	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylar.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
@@ -85,7 +82,7 @@ public class TaskRepository {
 	private static Map<String, Map<String, String>> credentials = new HashMap<String, Map<String, String>>();
 
 	private boolean isCachedUserName;
-	
+
 	private String cachedUserName;
 
 	static {
@@ -174,11 +171,11 @@ public class TaskRepository {
 	public String getProxyPassword() {
 		return getAuthInfo(PROXY_PASSWORD);
 	}
-	
+
 	public String getHttpUser() {
 		return getAuthInfo(AUTH_HTTP_USERNAME);
 	}
-	
+
 	public String getHttpPassword() {
 		return getAuthInfo(AUTH_HTTP_PASSWORD);
 	}
@@ -211,7 +208,7 @@ public class TaskRepository {
 		}
 		addAuthInfo(map);
 	}
-	
+
 	public void flushAuthenticationCredentials() {
 		synchronized (LOCK) {
 			try {
@@ -308,7 +305,7 @@ public class TaskRepository {
 	}
 
 	/**
-	 * @return	"<unknown>" if kind is unknown
+	 * @return "<unknown>" if kind is unknown
 	 */
 	public String getKind() {
 		String kind = properties.get(IRepositoryConstants.PROPERTY_KIND);
@@ -414,20 +411,25 @@ public class TaskRepository {
 	public boolean useDefaultProxy() {
 		return "true".equals(getProperty(PROXY_USEDEFAULT)) || (getProperty(PROXY_HOSTNAME) == null);
 	}
-	
-	/** 
-	 * TODO: move
-	 * utility method, should use TaskRepository.getProxy() 
+
+	/**
+	 * TODO: move utility method, should use TaskRepository.getProxy()
 	 */
 	public static Proxy getSystemProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		if (UpdateCore.getPlugin() != null
-				&& UpdateCore.getPlugin().getPluginPreferences().getBoolean(UpdateCore.HTTP_PROXY_ENABLE)) {
-			String proxyHost = UpdateCore.getPlugin().getPluginPreferences().getString(UpdateCore.HTTP_PROXY_HOST);
-			int proxyPort = UpdateCore.getPlugin().getPluginPreferences().getInt(UpdateCore.HTTP_PROXY_PORT);
+		IProxyService service = Activator.getInstance().getProxyService();
+		if (service != null && service.isProxiesEnabled()) {
+			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
+			if (data.getHost() != null) {
+				String proxyHost = data.getHost();
+				int proxyPort = data.getPort();
+				// Change the IProxyData default port to the Java default port
+				if (proxyPort == -1)
+					proxyPort = 0;
 
-			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-			proxy = new Proxy(Type.HTTP, sockAddr);
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				proxy = new Proxy(Type.HTTP, sockAddr);
+			}
 		}
 		return proxy;
 	}
@@ -435,7 +437,7 @@ public class TaskRepository {
 	public void setAnonymous(boolean b) {
 		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
 	}
-	
+
 	public boolean isAnonymous() {				
 		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
 	}

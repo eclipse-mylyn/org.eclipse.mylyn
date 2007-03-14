@@ -9,6 +9,8 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylar.context.core,
  org.eclipse.update.core,
- org.eclipse.mylar
+ org.eclipse.mylar,
+ org.eclipse.core.net;bundle-version="[1.0.0,2.0.0)"
 Export-Package: org.eclipse.mylar.internal.tasks.core,
  org.eclipse.mylar.tasks.core
+Bundle-Activator: org.eclipse.mylar.internal.tasks.core.Activator
