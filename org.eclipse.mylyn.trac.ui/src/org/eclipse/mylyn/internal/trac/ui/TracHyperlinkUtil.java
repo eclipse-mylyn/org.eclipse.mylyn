@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.internal.trac.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TaskHyperlink;
@@ -25,7 +28,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern ticketPattern = Pattern.compile("(ticket:|#)(\\d+)");
 
-	static Pattern commentPattern = Pattern.compile("commen:ticket:(\\d+):(\\d+)");
+	static Pattern commentPattern = Pattern.compile("comment:ticket:(\\d+):(\\d+)");
 
 	static Pattern reportPattern1 = Pattern.compile("report:(\\d+)");
 
@@ -41,6 +44,10 @@ public class TracHyperlinkUtil {
 
 	static Pattern revisionLogPattern3 = Pattern.compile("log:(\\w+)?@(\\d+):(\\d+)");
 
+	static Pattern diffPattern1 = Pattern.compile("diff:@(\\d+):(\\d+)");
+	
+	static Pattern diffPattern2 = Pattern.compile("diff:([\\w\\./-]+)(@(\\d+))?//([\\w\\./-]+)(@(\\d+))?");
+
 	static Pattern wikiPattern1 = Pattern.compile("wiki:(\\w+)");
 
 	static Pattern wikiPattern2 = Pattern.compile("[A-Z][a-z0-9]+[A-Z]\\w*");
@@ -49,7 +56,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern attachmentPattern = Pattern.compile("attachment:ticket:(\\d+):([\\w\\.]+)");
 
-	static Pattern filesPattern = Pattern.compile("source:([\\w\\.\\/]+)(@(\\d+)(#L(\\d+))?)?");
+	static Pattern filesPattern = Pattern.compile("source:([\\w\\./]+)(@(\\d+)(#L(\\d+))?)?");
 
 	/**
 	 * <ul>
@@ -111,32 +118,6 @@ public class TracHyperlinkUtil {
 			}
 		}
 
-		m = changesetPattern1.matcher(text);
-		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
-				String rev = m.group(2);
-				String branch = m.group(3);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
-				if (branch != null) {
-					url += branch;
-				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
-			}
-		}
-
-		m = changesetPattern2.matcher(text);
-		while (m.find()) {
-			if (isInRegion(lineOffset, m)) {
-				String rev = m.group(1);
-				String branch = m.group(2);
-				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
-				if (branch != null) {
-					url += branch;
-				}
-				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
-			}
-		}
-
 		m = revisionLogPattern1.matcher(text);
 		while (m.find()) {
 			if (isInRegion(lineOffset, m)) {
@@ -174,7 +155,67 @@ public class TracHyperlinkUtil {
 			}
 		}
 
-		// TODO diff pattern
+		m = changesetPattern1.matcher(text);
+		while (m.find()) {
+			if (isInRegion(lineOffset, m)) {
+				String rev = m.group(2);
+				String branch = m.group(3);
+				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
+				if (branch != null) {
+					url += branch;
+				}
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+			}
+		}
+
+		m = changesetPattern2.matcher(text);
+		while (m.find()) {
+			if (isInRegion(lineOffset, m)) {
+				String rev = m.group(1);
+				String branch = m.group(2);
+				String url = repository.getUrl() + ITracClient.CHANGESET_URL + rev;
+				if (branch != null) {
+					url += branch;
+				}
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+			}
+		}
+
+		m = diffPattern1.matcher(text);
+		while (m.find()) {
+			if (isInRegion(lineOffset, m)) {
+				String old_rev = m.group(1);
+				String new_rev = m.group(2);
+				String url = repository.getUrl() + ITracClient.CHANGESET_URL;
+				url += "?new=" + new_rev + "&old=" + old_rev;
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+			}
+		}
+
+		m = diffPattern2.matcher(text);
+		while (m.find()) {
+			if (isInRegion(lineOffset, m)) {
+				String old_path = m.group(1);
+				String old_rev = m.group(3);
+				String new_path = m.group(4);
+				String new_rev = m.group(6);
+				String url = repository.getUrl() + ITracClient.CHANGESET_URL;
+				try {
+					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
+					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					MylarStatusHandler.fail(e, "Unexpected exception", false);
+					continue;
+				}
+				if (new_rev != null) {
+					url += "&new=" + new_rev;
+				}
+				if (old_rev != null) {
+					url += "&old=" + old_rev;
+				}
+				links.add(new WebHyperlink(determineRegion(regionOffset, m), url));
+			}
+		}
 
 		m = wikiPattern1.matcher(text);
 		while (m.find()) {
