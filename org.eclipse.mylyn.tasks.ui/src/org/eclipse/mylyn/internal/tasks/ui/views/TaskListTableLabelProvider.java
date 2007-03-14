@@ -54,10 +54,10 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	 * @param view
 	 *            can be null
 	 */
-	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBacground,
+	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground,
 			TaskListView view) {
 		super(provider, decorator);
-		this.categoryBackgroundColor = parentBacground;
+		this.categoryBackgroundColor = parentBackground;
 		this.view = view;
 	}
 
