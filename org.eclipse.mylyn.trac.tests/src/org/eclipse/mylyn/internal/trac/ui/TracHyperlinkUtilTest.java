@@ -22,6 +22,14 @@ public class TracHyperlinkUtilTest extends TestCase {
 		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, "http://localhost");
 	}
 
+	public void testFindHyperlinksComment() {
+		IHyperlink[] links = TracHyperlinkUtil.findHyperlinks(repository, "comment:ticket:12:34", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals(new Region(0, 20), links[0].getHyperlinkRegion());
+		assertEquals("12", ((TaskHyperlink)links[0]).getTaskId());
+	}
+
 	public void testFindHyperlinksTicket() {
 		IHyperlink[] links = TracHyperlinkUtil.findHyperlinks(repository, "#11", 0, 0);
 		assertNotNull(links);
@@ -83,23 +91,40 @@ public class TracHyperlinkUtilTest extends TestCase {
 	public void testFindHyperlinksRevisionLog() {
 		IHyperlink[] links = TracHyperlinkUtil.findHyperlinks(repository, "r123:456", 0, 0);
 		assertEquals(2, links.length);
-		assertEquals(new Region(0, 8), links[1].getHyperlinkRegion());
-		assertEquals("http://localhost/log/?rev=123&stop_rev=456", ((WebHyperlink) links[1]).getURLString());
+		assertEquals("http://localhost/log/?rev=123&stop_rev=456", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(new Region(0, 8), links[0].getHyperlinkRegion());
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "[123:456]", 0, 0);
 		assertEquals(1, links.length);
-		assertEquals(new Region(0, 9), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/log/?rev=123&stop_rev=456", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(new Region(0, 9), links[0].getHyperlinkRegion());
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "log:@123:456", 0, 0);
 		assertEquals(1, links.length);
-		assertEquals(new Region(0, 12), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/log/?rev=123&stop_rev=456", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(new Region(0, 12), links[0].getHyperlinkRegion());
 
 		links = TracHyperlinkUtil.findHyperlinks(repository, "log:trunk@123:456", 0, 0);
 		assertEquals(1, links.length);
-		assertEquals(new Region(0, 17), links[0].getHyperlinkRegion());
 		assertEquals("http://localhost/log/trunk?rev=123&stop_rev=456", ((WebHyperlink) links[0]).getURLString());
+		assertEquals(new Region(0, 17), links[0].getHyperlinkRegion());
+	}
+
+	public void testFindHyperlinksDiff() {
+		IHyperlink[] links = TracHyperlinkUtil.findHyperlinks(repository, "diff:@123:456", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/changeset/?new=456&old=123", ((WebHyperlink) links[0]).getURLString());
+
+		links = TracHyperlinkUtil.findHyperlinks(repository, "diff:trunk/trac@3538//sandbox/vc-refactoring/trac@3539", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/changeset/?new_path=sandbox%2Fvc-refactoring%2Ftrac&old_path=trunk%2Ftrac&new=3539&old=3538", ((WebHyperlink) links[0]).getURLString());
+
+		links = TracHyperlinkUtil.findHyperlinks(repository, "diff:tags/trac-0.9.2/wiki-default//tags/trac-0.9.3/wiki-default", 0, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/changeset/?new_path=tags%2Ftrac-0.9.3%2Fwiki-default&old_path=tags%2Ftrac-0.9.2%2Fwiki-default", ((WebHyperlink) links[0]).getURLString());
 	}
 
 	public void testFindHyperlinksWiki() {
