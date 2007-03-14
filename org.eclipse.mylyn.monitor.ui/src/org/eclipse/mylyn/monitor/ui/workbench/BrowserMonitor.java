@@ -85,8 +85,9 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 	public void partClosed(IWorkbenchPart part) {
 		if (part instanceof WebBrowserEditor) {
 			Browser browser = getBrowser((WebBrowserEditor) part);
-			if (browser != null)
+			if (browser != null && !browser.isDisposed()) {
 				browser.removeLocationListener(urlTrackingListener);
+			}
 		}
 	}
 
