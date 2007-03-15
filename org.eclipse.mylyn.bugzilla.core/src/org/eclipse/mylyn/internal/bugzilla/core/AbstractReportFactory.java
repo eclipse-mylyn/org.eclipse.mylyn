@@ -124,34 +124,37 @@ public class AbstractReportFactory {
 
 	// Copy and remove control characters other than \n and \r
 	private void copyAndCleanByteStream(InputStream in, OutputStream out) throws IOException {
+		try {
+			if (in != null && out != null) {
+				BufferedInputStream inBuffered = new BufferedInputStream(in);
 
-		if (in != null && out != null) {
-			BufferedInputStream inBuffered = new BufferedInputStream(in);
+				int bufferSize = 1000;
+				byte[] buffer = new byte[bufferSize];
 
-			int bufferSize = 1000;
-			byte[] buffer = new byte[bufferSize];
+				int readCount;
 
-			int readCount;
+				BufferedOutputStream outStream = new BufferedOutputStream(out);
 
-			BufferedOutputStream outStream = new BufferedOutputStream(out);
+				while ((readCount = inBuffered.read(buffer)) != -1) {
+					for (int x = 0; x < readCount; x++) {
 
-			while ((readCount = inBuffered.read(buffer)) != -1) {
-				for (int x = 0; x < readCount; x++) {
-
-					if (!Character.isISOControl(buffer[x])) {
-						outStream.write(buffer[x]);
-					} else if (buffer[x] == '\n' || buffer[x] == '\r') {
-						outStream.write(buffer[x]);
+						if (!Character.isISOControl(buffer[x])) {
+							outStream.write(buffer[x]);
+						} else if (buffer[x] == '\n' || buffer[x] == '\r') {
+							outStream.write(buffer[x]);
+						}
 					}
+					// if (readCount < bufferSize) {
+					// outStream.write(buffer, 0, readCount);
+					// } else {
+					// outStream.write(buffer);
+					// }
 				}
-				// if (readCount < bufferSize) {
-				// outStream.write(buffer, 0, readCount);
-				// } else {
-				// outStream.write(buffer);
-				// }
+				outStream.flush();
+				outStream.close();
+
 			}
-			outStream.flush();
-			outStream.close();
+		} finally {
 			in.close();
 		}
 
