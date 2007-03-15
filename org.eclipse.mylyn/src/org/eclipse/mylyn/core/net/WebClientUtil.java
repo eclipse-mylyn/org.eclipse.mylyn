@@ -104,23 +104,18 @@ public class WebClientUtil {
 			return repositoryUrl.substring(requestPath);
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void setupHttpClient(HttpClient client, Proxy proxySettings, String repositoryUrl, String user,
 			String password) {
 
 		// Note: The following debug code requires http commons-logging and
 		// commons-logging-api jars
-		// System.setProperty("org.apache.commons.logging.Log",
-		// "org.apache.commons.logging.impl.SimpleLog");
-		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
-		// "true");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
-		// "debug");
-		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
-		// "debug");
+//		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+//		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+//		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+//		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
+//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
 
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
@@ -144,8 +139,8 @@ public class WebClientUtil {
 					.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
 		}
-		
-		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {			
+
+		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {
 			Protocol acceptAllSsl = new Protocol("https", new SslProtocolSocketFactory(proxySettings), WebClientUtil
 					.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
@@ -161,8 +156,8 @@ public class WebClientUtil {
 		String username = authProxy.getUserName();
 		int i = username.indexOf("\\");
 		if (i > 0 && i < username.length() - 1) {
-			return new NTCredentials(username.substring(i + 1), authProxy.getPassword(), address.getHostName(), username
-					.substring(0, i));
+			return new NTCredentials(username.substring(i + 1), authProxy.getPassword(), address.getHostName(),
+					username.substring(0, i));
 		} else {
 			return new UsernamePasswordCredentials(username, authProxy.getPassword());
 		}
