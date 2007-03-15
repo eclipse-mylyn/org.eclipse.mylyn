@@ -8,13 +8,16 @@
 
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.hyperlink.DefaultHyperlinkPresenter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
-import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -32,7 +35,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 
@@ -86,11 +89,9 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		IHyperlinkDetector[] detectors = { new TaskHyperlinkDetector(), new URLHyperlinkDetector() };
-		return detectors;
-//		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
-//		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
-//		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
+		List<IHyperlinkDetector> detectors = new ArrayList<IHyperlinkDetector>();
+		detectors.addAll(Arrays.asList(TasksUiPlugin.getDefault().getTaskHyperlinkDetectors()));
+		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
 	@Override

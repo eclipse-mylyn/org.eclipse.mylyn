@@ -713,7 +713,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return initialized;
 	}
 
-	// TODO: remove
 	public IHyperlinkDetector[] getTaskHyperlinkDetectors() {
 		return hyperlinkDetectors.toArray(new IHyperlinkDetector[1]);
 	}

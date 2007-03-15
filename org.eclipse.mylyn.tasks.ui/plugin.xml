@@ -183,8 +183,15 @@
           contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
           icon="icons/eview16/task-list.gif"
           id="org.eclipse.mylar.tasklist.ui.planner.editor"
-          name="Task Planner"/>                      
+          name="Task Planner"/>     
   </extension>
+  
+  	<extension
+          point="org.eclipse.mylar.tasks.ui.editors">
+       <hyperlinkDetector
+             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
+             id="org.eclipse.mylar.java.hyperlink.detector.tasks"/>
+    </extension>
   
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
