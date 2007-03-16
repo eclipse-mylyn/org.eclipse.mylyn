@@ -64,7 +64,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		}
 		logger.stopMonitoring();
 
-		File infile = new File(PATH);
+		File infile = new File(PATH);		
 		List<InteractionEvent> readEvents = logger.getHistoryFromFile(infile);
 		for (int i = 0; i < events.size(); i++) {
 			// NOTE: shouldn't use toString(), but get timezone failures
@@ -72,6 +72,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 //			assertEquals(events.get(i), readEvents.get(i));
 		}
 
+		infile.delete();
 		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
 	}
 }
