@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -255,6 +256,10 @@ public class TaskListView extends ViewPart {
 	private TaskListTableSorter tableSorter;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
+	
+	private final static int MAX_SELECTION_HISTORY_SIZE = 10;
+	
+	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(MAX_SELECTION_HISTORY_SIZE);
 
 	/**
 	 * True if the view should indicate that interaction monitoring is paused
@@ -1441,7 +1446,12 @@ public class TaskListView extends ViewPart {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-		getViewer().setSelection(new StructuredSelection(task), true);
+		
+		saveSelection();
+
+		IStructuredSelection selection = restoreSelection(task);
+		getViewer().setSelection(selection, true);
+		
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;
 		if (getViewer().getSelection().isEmpty()
@@ -1455,6 +1465,33 @@ public class TaskListView extends ViewPart {
 				MylarStatusHandler.log(e, "Failed to expand Task List");
 			}
 		}
+	}
+
+	private void saveSelection() {
+		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		if (!selection.isEmpty()) {
+			if (selection.getFirstElement() instanceof ITaskListElement) {
+				// make sure the new selection is inserted at the end of the list
+				String handle = ((ITaskListElement) selection.getFirstElement()).getHandleIdentifier();
+				lastSelectionByTaskHandle.remove(handle);
+				lastSelectionByTaskHandle.put(handle, selection);
+
+				if (lastSelectionByTaskHandle.size() > MAX_SELECTION_HISTORY_SIZE) {
+					Iterator<String> it = lastSelectionByTaskHandle.keySet().iterator();
+					it.next();
+					it.remove();
+				}
+			}
+		}
+	}
+
+	private IStructuredSelection restoreSelection(ITaskListElement task) {
+		IStructuredSelection selection = lastSelectionByTaskHandle.get(task.getHandleIdentifier());
+		if (selection != null) {
+			return selection;
+		} else {
+			return new StructuredSelection(task);
+		}		
 	}
 
 	/**
