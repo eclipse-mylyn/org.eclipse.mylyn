@@ -116,11 +116,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		AbstractRepositoryTask repositoryTask = null;
 		if (task == null) {
 			RepositoryTaskData taskData = null;
-			taskData = taskDataHandler.getTaskData(repository, id);
+			taskData = taskDataHandler.getTaskData(repository, id);			
 			if (taskData != null) {
 				repositoryTask = new BugzillaTask(repository.getUrl(), "" + bugId, taskData.getId() + ": "
 						+ taskData.getDescription(), true);
-				repositoryTask.setTaskData(taskData);
+				repositoryTask.setTaskData(taskData);				
 				taskList.addTask(repositoryTask);
 			}
 		} else if (task instanceof AbstractRepositoryTask) {

@@ -12,7 +12,6 @@ package org.eclipse.mylar.tasks.ui.editors;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -42,7 +41,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
@@ -157,7 +155,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
@@ -2672,7 +2669,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						// Attach context if required
 						if (attachContext) {
-							attachContext(modifiedTask);
+							connector.attachContext(repository, modifiedTask, "");
 						}
 						submitting = true;
 						modifiedTask.getTaskData().setHasLocalChanges(true);
@@ -2787,30 +2784,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected IJobChangeListener getSubmitJobListener() {
 		return null;
-	}
-
-	protected void attachContext(final AbstractRepositoryTask modifiedTask) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				IProgressService ps = PlatformUI.getWorkbench().getProgressService();
-				try {
-					ps.busyCursorWhile(new IRunnableWithProgress() {
-						public void run(IProgressMonitor pm) {
-							try {
-								// TODO: pass progress monitor to handler
-								connector.attachContext(repository, modifiedTask, "");
-							} catch (Exception e) {
-								MylarStatusHandler.fail(e, "Failed to attach task context.\n\n" + e.getMessage(), true);
-							}
-						}
-					});
-				} catch (InvocationTargetException e) {
-					MylarStatusHandler.fail(e.getCause(), "Failed to attach task context.\n\n" + e.getMessage(), true);
-				} catch (InterruptedException ignore) {
-				}
-			}
-		});
-
 	}
 
 	protected AbstractTaskContainer getCategory() {

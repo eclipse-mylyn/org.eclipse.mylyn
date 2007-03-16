@@ -103,8 +103,13 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-
+		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), task.getTaskData());
+		// if (task.getTaskData() == null) {
+		// System.err.println(">>> getting data");
+		// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+		// task, true, null);
+		// }
+		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 		assertTrue(task.isDownloaded());
