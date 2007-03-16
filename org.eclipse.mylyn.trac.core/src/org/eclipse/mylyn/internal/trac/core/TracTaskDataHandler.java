@@ -21,6 +21,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
@@ -249,7 +250,11 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			//attr.addOption("False", "0");
 			attr.addOption("1", "1");
 			attr.addOption("0", "0");
-		} else {
+			
+			if (field.getDefaultValue() != null) {
+				attr.setValue(field.getDefaultValue());	
+			}
+		} else if (field.getType() == TracTicketField.Type.SELECT || field.getType() == TracTicketField.Type.RADIO) {
 			String[] values = field.getOptions();
 			if (values != null && values.length > 0) {
 				if (field.isOptional()) {
@@ -258,10 +263,22 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 				for (int i = 0; i < values.length; i++) {
 					attr.addOption(values[i].toString(), values[i].toString());
 				}
+				
+				if (field.getDefaultValue() != null) {
+					try {
+						int index = Integer.parseInt(field.getDefaultValue());
+						if (index > 0 && index < values.length) {
+							attr.setValue(values[index]);
+						}
+					} catch (NumberFormatException e) {
+						MylarStatusHandler.fail(e, "Invalid default value '" + field.getDefaultValue() + "' for custom field '" + field.getName() + "'", false);
+					}
+				}
 			}
-		}
-		if (field.getDefaultValue() != null) {
-			attr.setValue(field.getDefaultValue());
+		} else {
+			if (field.getDefaultValue() != null) {
+				attr.setValue(field.getDefaultValue());	
+			}
 		}
 		data.addAttribute(attr.getID(), attr);
 	}
