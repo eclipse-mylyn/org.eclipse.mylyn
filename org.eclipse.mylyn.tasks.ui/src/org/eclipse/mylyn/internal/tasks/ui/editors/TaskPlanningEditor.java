@@ -367,7 +367,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		summary = toolkit.createText(summaryComposite, task.getSummary(), SWT.LEFT | SWT.FLAT);
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(summary);		
+		GridDataFactory.fillDefaults().minSize(100, SWT.DEFAULT).grab(true, false).applyTo(summary);		
 
 		if (task instanceof AbstractRepositoryTask) {
 			summary.setEnabled(false);
