@@ -199,6 +199,17 @@ public class CommitTemplateVariables {
 		}
 	}
 
+	public static class TaskKey extends AbstractCommitTemplateVariable {
+		@Override
+		public String getValue(ITask task) {
+			if (task instanceof AbstractRepositoryTask) {
+				return ((AbstractRepositoryTask)task).getTaskKey();
+			} else {
+				return null;
+			}
+		}
+	}
+
 	public static class TaskNotes extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {

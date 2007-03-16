@@ -232,6 +232,10 @@
              description="Provides the ID of a Mylar task."
              recognizedKeyword="task.id"/>
        <templateVariable
+             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskKey"
+             description="Provides the key of a Mylar task, for most repositories this is equals to the ID."
+             recognizedKeyword="task.key"/>
+       <templateVariable
              class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskKeywords"
              description="Provides the comma separated keyword list of a Mylar task, if available."
              recognizedKeyword="task.keywords"/>
