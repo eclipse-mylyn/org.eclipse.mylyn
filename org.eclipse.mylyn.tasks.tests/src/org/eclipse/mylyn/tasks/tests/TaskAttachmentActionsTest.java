@@ -70,7 +70,7 @@ public class TaskAttachmentActionsTest extends TestCase {
 		action.setDestinationFilePath(localFile);
 		action.run();
 
-		File file = new File(localFile);
+		File file = new File(localFile);		
 		assertTrue(file.exists());
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -80,6 +80,7 @@ public class TaskAttachmentActionsTest extends TestCase {
 		}
 
 		assertEquals(lineCount, lines);
+		file.delete();
 	}
 
 }
