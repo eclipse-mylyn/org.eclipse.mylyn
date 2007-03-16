@@ -111,11 +111,11 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	private boolean firstTime = true;
 
-	private UserSearchField ownerField;
-
-	private UserSearchField reporterField;
-
-	private UserSearchField ccField;
+	// private UserSearchField ownerField;
+	//
+	// private UserSearchField reporterField;
+	//
+	// private UserSearchField ccField;
 
 	public TracCustomQueryPage(TaskRepository repository, AbstractRepositoryQuery query) {
 		super(TITLE);
@@ -224,35 +224,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	}
 
 	protected void createUserGroup(Composite control) {
-		TextSearchField userField = new TextSearchField(null);
-		userField.createControls(control, "User");
-
-		Composite radioGroup = new Composite(control, SWT.NONE);
-		radioGroup.setLayout(new GridLayout(3, false));
-
-		ownerField = new UserSearchField("owner", userField);
-		ownerField.createControls(radioGroup, "Owner");
-
-		reporterField = new UserSearchField("reporter", userField);
-		reporterField.createControls(radioGroup, "Reporter");
-
-		ccField = new UserSearchField("cc", userField);
-		ccField.createControls(radioGroup, "CC");
-
-		// select first control by default
-		setUserGroupSelection(ownerField);
+		UserSearchField userField = new UserSearchField();
+		userField.createControls(control);
 	}
 
-	/**
-	 * Selects a user radio button and make sure only a single radio button is
-	 * selected at a time.
-	 */
-	protected void setUserGroupSelection(UserSearchField searchField) {
-		ownerField.getRadioButton().setSelection(searchField == ownerField);
-		reporterField.getRadioButton().setSelection(searchField == reporterField);
-		ccField.getRadioButton().setSelection(searchField == ccField);
-	}
-	
 	/**
 	 * Creates the area for selection on product attributes
 	 * component/version/milestone.
@@ -560,7 +535,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			}
 		}
 
-		public String getFieldName() {
+		 public String getFieldName() {
 			return fieldName;
 		}
 
@@ -586,8 +561,10 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		}
 
 		public void createControls(Composite parent, String labelText) {
-			label = new Label(parent, SWT.LEFT);
-			label.setText(labelText);
+			if (labelText != null) {
+				label = new Label(parent, SWT.LEFT);
+				label.setText(labelText);
+			}
 
 			conditionCombo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 			for (CompareOperator op : compareOperators) {
@@ -734,37 +711,73 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 		private TextSearchField textField;
 
-		private Button radioButton;
+		private Combo userCombo;
 
-		public UserSearchField(String fieldName, TextSearchField textField) {
-			super(fieldName);
+		public UserSearchField() {
+			super(null);
 
-			this.textField = textField;
+			textField = new TextSearchField(null);
+
+			new UserSelectionSearchField("owner", 0);
+
+			new UserSelectionSearchField("reporter", 1);
+
+			new UserSelectionSearchField("cc", 2);
 		}
 
-		public Button getRadioButton() {
-			return radioButton;
-		}
-		
-		public void createControls(Composite parent, String labelText) {
-			radioButton = new Button(parent, SWT.RADIO);
-			radioButton.setText(labelText);
+		public void createControls(Composite parent) {
+			userCombo = new Combo(parent, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+			userCombo.add("Owner");
+			userCombo.add("Reporter");
+			userCombo.add("CC");
+			userCombo.select(0);
+
+			textField.createControls(parent, null);
 		}
 
 		@Override
 		public TracSearchFilter getFilter() {
-			if (radioButton.getSelection()) {
-				textField.setFieldName(fieldName);
-				return textField.getFilter();
-			}
 			return null;
 		}
 
 		@Override
 		public void setFilter(TracSearchFilter filter) {
-			textField.setFieldName(fieldName);
-			textField.setFilter(filter);
-			setUserGroupSelection(this);
+		}
+
+		private void setSelection(int index) {
+			userCombo.select(index);
+		}
+
+		private int getSelection() {
+			return userCombo.getSelectionIndex();
+		}
+
+		class UserSelectionSearchField extends SearchField {
+
+			private int index;
+
+			public UserSelectionSearchField(String fieldName, int index) {
+				super(fieldName);
+
+				this.index = index;
+			}
+
+			@Override
+			public TracSearchFilter getFilter() {
+				if (index == getSelection()) {
+					textField.setFieldName(fieldName);
+					return textField.getFilter();
+				}
+				return null;
+			}
+
+			@Override
+			public void setFilter(TracSearchFilter filter) {
+				textField.setFieldName(fieldName);
+				textField.setFilter(filter);
+				setSelection(index);
+			}
+
 		}
 
 	}
