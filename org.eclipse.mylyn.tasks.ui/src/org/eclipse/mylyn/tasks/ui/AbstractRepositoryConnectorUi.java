@@ -15,6 +15,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -54,6 +55,16 @@ public abstract class AbstractRepositoryConnectorUi {
 		
 	public abstract boolean hasRichEditor();
 			
+	/**
+	 * Override to return a custom task editor ID.  If overriding this method the 
+	 * connector becomes responsible for showing the additional pages handled
+	 * by the default task editor.  As of Mylar 2.0M2 these are the Planning and 
+	 * Context pages.
+	 */
+	public String getTaskEditorId(AbstractRepositoryTask repositoryTask) {
+		return TaskListPreferenceConstants.TASK_EDITOR_ID;
+	}
+	
 	public abstract boolean hasSearchPage();
 	
 	/**
@@ -133,4 +144,5 @@ public abstract class AbstractRepositoryConnectorUi {
 		return new IHyperlink[0];
 	}
 
+	
 }

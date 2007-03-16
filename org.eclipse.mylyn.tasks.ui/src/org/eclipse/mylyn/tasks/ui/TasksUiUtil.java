@@ -238,6 +238,19 @@ public class TasksUiUtil {
 		openEditor(task, true, newTask);
 	}
 
+	private static String getTaskEditorId(final ITask task) {
+		String taskEditorId = TaskListPreferenceConstants.TASK_EDITOR_ID;
+		if (task instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
+			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
+			if (customTaskEditorId != null) {
+				taskEditorId = customTaskEditorId;
+			}
+		}
+		return taskEditorId;
+	}
+
 	/**
 	 * @param task
 	 * @param pageId
@@ -246,7 +259,7 @@ public class TasksUiUtil {
 	public static void openEditor(ITask task, String pageId) {
 		final IEditorInput editorInput = new TaskEditorInput(task, false);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, window.getActivePage());
+		IEditorPart part = openEditor(editorInput, getTaskEditorId(task), window.getActivePage());
 		if (part instanceof TaskEditor) {
 			((TaskEditor) part).setActivePage(pageId);
 		}
@@ -257,6 +270,8 @@ public class TasksUiUtil {
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 
+		final String taskEditorId= getTaskEditorId(task);
+
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
 		if (asyncExec) {
@@ -265,7 +280,7 @@ public class TasksUiUtil {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window != null) {
 						IWorkbenchPage page = window.getActivePage();
-						IEditorPart part = openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+						IEditorPart part = openEditor(editorInput, taskEditorId, page);
 						if (newTask && part instanceof TaskEditor) {
 							TaskEditor taskEditor = (TaskEditor) part;
 							taskEditor.setFocusOfActivePage();
@@ -280,7 +295,7 @@ public class TasksUiUtil {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
 				IWorkbenchPage page = window.getActivePage();
-				openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+				openEditor(editorInput, taskEditorId, page);
 				if (task instanceof AbstractRepositoryTask) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
 				}
