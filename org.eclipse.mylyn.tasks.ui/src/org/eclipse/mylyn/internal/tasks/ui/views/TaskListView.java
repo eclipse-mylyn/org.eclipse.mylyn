@@ -105,10 +105,18 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
@@ -169,9 +177,9 @@ public class TaskListView extends ViewPart {
 	private boolean focusedMode = false;
 
 	private TaskListContentProvider taskListContentProvider;
-	
+
 	private TaskActivityContentProvider taskActivityContentProvider;
-	
+
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -215,7 +223,7 @@ public class TaskListView extends ViewPart {
 	private PriorityDropDownAction filterOnPriority;
 
 	private PreviousTaskDropDownAction previousTaskAction;
-	
+
 	private ModelDropDownSelectionAction modelDropDownSelectionAction;
 
 	static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
@@ -310,7 +318,7 @@ public class TaskListView extends ViewPart {
 				public void run() {
 					if(getTasklistMode().equals(TaskActivityContentProvider.ID)) {
 						refresh(null);
-					} else {					
+					} else {
 						refresh(task);
 					}
 				}
@@ -392,7 +400,7 @@ public class TaskListView extends ViewPart {
 						refresh(null);
 					} else {
 						refresh(container);
-					} 
+					}
 				}
 			});
 		}
@@ -852,6 +860,40 @@ public class TaskListView extends ViewPart {
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText("");
 
+		getViewer().getTree().addListener(SWT.EraseItem, new Listener() {
+			public void handleEvent(Event event) {
+				if (event.item.getData() instanceof AbstractTaskContainer) {
+					Scrollable scrollable = (Scrollable) event.widget;
+					GC gc = event.gc;
+
+					Rectangle area = scrollable.getClientArea();
+					Rectangle rect = event.getBounds();
+
+					/* Paint the selection beyond the end of last column */
+					expandRegion(event, scrollable, gc, area);
+
+					/* Draw Gradient Rectangle */
+					Color oldForeground = gc.getForeground();
+					Color oldBackground = gc.getBackground();
+
+					/* Gradient */
+					gc.setForeground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_START);
+					gc.setBackground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_BG);
+					gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
+
+					/* Bottom Line */
+					gc.setForeground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_END);
+					gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
+
+					gc.setForeground(oldForeground);
+					gc.setBackground(oldBackground);
+
+					/* Mark as Background being handled */
+					event.detail &= ~SWT.BACKGROUND;
+				}
+			}
+		});
+
 		initDragAndDrop(parent);
 		expandToActiveTasks();
 		restoreState();
@@ -861,6 +903,25 @@ public class TaskListView extends ViewPart {
 			updateDescription(activeTasks.get(0));
 		}
 		getSite().setSelectionProvider(getViewer());
+	}
+
+	private void expandRegion(Event event, Scrollable scrollable, GC gc, Rectangle area) {
+		int columnCount;
+		if (scrollable instanceof Table)
+			columnCount = ((Table) scrollable).getColumnCount();
+		else
+			columnCount = ((Tree) scrollable).getColumnCount();
+
+		if (event.index == columnCount - 1 || columnCount == 0) {
+			int width = area.x + area.width - event.x;
+			if (width > 0) {
+				Region region = new Region();
+				gc.getClipping(region);
+				region.add(event.x, event.y, width, event.height);
+				gc.setClipping(region);
+				region.dispose();
+			}
+		}
 	}
 
 	private void initDragAndDrop(Composite parent) {
@@ -918,7 +979,7 @@ public class TaskListView extends ViewPart {
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
+
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				filterOnPriority.updateCheckedState();
@@ -928,7 +989,7 @@ public class TaskListView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));		
+		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(modelDropDownSelectionAction);
 		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
@@ -1144,12 +1205,12 @@ public class TaskListView extends ViewPart {
 				.getTaskActivationHistory());
 		TaskListContentProvider[] providers = {taskListContentProvider, taskActivityContentProvider};
 		modelDropDownSelectionAction = new ModelDropDownSelectionAction(this, providers);
-		
+
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
 //		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
 //		copyDetailsAction.selectionChanged((StructuredSelection) getViewer().getSelection());
-//		
+//
 	}
 
 	// public void toggleNextAction(boolean enable) {
@@ -1170,7 +1231,7 @@ public class TaskListView extends ViewPart {
 	/**
 	 * Recursive function that checks for the occurrence of a certain task taskId.
 	 * All children of the supplied node will be checked.
-	 * 
+	 *
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
@@ -1505,9 +1566,9 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
-		this.focusedMode = focusedMode;	
+		this.focusedMode = focusedMode;
 	}
-	
+
 	private String getTasklistMode() {
 		IContentProvider provider = TaskListView.this.getViewer().getContentProvider();
 		if(provider instanceof TaskListContentProvider) {

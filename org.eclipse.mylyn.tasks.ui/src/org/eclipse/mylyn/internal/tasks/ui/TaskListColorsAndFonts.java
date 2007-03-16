@@ -17,12 +17,27 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Mik Kersten
  */
 public class TaskListColorsAndFonts {
+
+	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.incoming.background";
+
+	public static final String THEME_COLOR_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
+
+	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue";
+
+	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled";
+
+	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.completed";
+
+	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled";
+
+	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed";
 
 	public static final Color BACKGROUND_ARCHIVE = new Color(Display.getDefault(), 225, 226, 246);
 
@@ -34,25 +49,17 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
+	public static final Color COLOR_CATEGORY_GRADIENT_START = new Color(Display.getDefault(), new RGB(247, 247, 247));
+
+	public static final Color COLOR_CATEGORY_GRADIENT_BG = new Color(Display.getDefault(), new RGB(220, 220, 220));
+
+	public static final Color COLOR_CATEGORY_GRADIENT_END = new Color(Display.getDefault(), new RGB(205, 205, 205));
+
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
 
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
 	public static Font STRIKETHROUGH;
-
-	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.incoming.background";
-
-	public static final String THEME_COLOR_TASKLIST_CATEGORY = "org.eclipse.mylar.tasklist.ui.colors.background.category";
-
-	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue";
-
-	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled";
-
-	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.completed";
-	
-	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled";
-
-	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed";
 
 	static {
 		Font defaultFont = JFaceResources.getFontRegistry().get(JFaceResources.DEFAULT_FONT);
@@ -90,6 +97,10 @@ public class TaskListColorsAndFonts {
 		COLOR_TASK_ACTIVE.dispose();
 		COLOR_HYPERLINK.dispose();
 		COLOR_SPELLING_ERROR.dispose();
+		
+		COLOR_CATEGORY_GRADIENT_START.dispose();
+		COLOR_CATEGORY_GRADIENT_BG.dispose();
+		COLOR_CATEGORY_GRADIENT_END.dispose();
 	}
 
 	public static boolean isTaskListTheme(String property) {
