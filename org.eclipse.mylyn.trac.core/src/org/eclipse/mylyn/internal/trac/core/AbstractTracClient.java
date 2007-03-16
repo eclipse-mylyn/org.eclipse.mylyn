@@ -16,6 +16,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSeverity;
@@ -73,6 +74,10 @@ public abstract class AbstractTracClient implements ITracClient {
 
 	public TracSeverity[] getSeverities() {
 		return (data.severities != null) ? data.severities.toArray(new TracSeverity[0]) : null;
+	}
+
+	public TracTicketField[] getTicketFields() {
+		return (data.ticketFields != null) ? data.ticketFields.toArray(new TracTicketField[0]) : null;
 	}
 	
 	public TracTicketResolution[] getTicketResolutions() {

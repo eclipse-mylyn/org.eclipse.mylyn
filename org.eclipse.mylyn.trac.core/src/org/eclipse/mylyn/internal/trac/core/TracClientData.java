@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSeverity;
@@ -31,7 +32,9 @@ public class TracClientData implements Serializable {
 	List<TracPriority> priorities;
 	
 	List<TracSeverity> severities;
-	
+
+	List<TracTicketField> ticketFields;
+
 	List<TracTicketResolution> ticketResolutions;
 	
 	List<TracTicketStatus> ticketStatus;
@@ -39,7 +42,7 @@ public class TracClientData implements Serializable {
 	List<TracTicketType> ticketTypes;
 	
 	List<TracVersion> versions;
-
+	
 	long lastUpdate;
 
 }

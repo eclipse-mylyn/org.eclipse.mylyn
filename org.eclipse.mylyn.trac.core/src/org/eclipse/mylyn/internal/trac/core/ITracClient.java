@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
@@ -147,6 +148,8 @@ public interface ITracClient {
 
 	TracComponent[] getComponents();
 
+	TracTicketField[] getTicketFields();
+	
 	TracMilestone[] getMilestones();
 
 	TracPriority[] getPriorities();

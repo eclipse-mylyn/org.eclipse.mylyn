@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.core.util.TracUtils;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
@@ -200,6 +201,8 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 
 	public static void createDefaultAttributes(AbstractAttributeFactory factory, RepositoryTaskData data,
 			ITracClient client, boolean existingTask) {
+		TracTicketField[] fields = client.getTicketFields();
+		
 		if (existingTask) {
 			createAttribute(factory, data, Attribute.STATUS, client.getTicketStatus());
 			createAttribute(factory, data, Attribute.RESOLUTION, client.getTicketResolutions());
@@ -229,6 +232,38 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			createAttribute(factory, data, Attribute.SUMMARY);
 			createAttribute(factory, data, Attribute.DESCRIPTION);
 		}
+		
+		if (fields != null) {
+			for (TracTicketField field : fields) {
+				if (field.isCustom()) {
+					createAttribute(data, field);
+				}
+			}
+		}
+	}
+
+	private static void createAttribute(RepositoryTaskData data, TracTicketField field) {
+		RepositoryTaskAttribute attr = new RepositoryTaskAttribute(field.getName(), field.getLabel(), false);
+		if (field.getType() == TracTicketField.Type.CHECKBOX) {
+			//attr.addOption("True", "1");
+			//attr.addOption("False", "0");
+			attr.addOption("1", "1");
+			attr.addOption("0", "0");
+		} else {
+			String[] values = field.getOptions();
+			if (values != null && values.length > 0) {
+				if (field.isOptional()) {
+					attr.addOption("", "");
+				}
+				for (int i = 0; i < values.length; i++) {
+					attr.addOption(values[i].toString(), values[i].toString());
+				}
+			}
+		}
+		if (field.getDefaultValue() != null) {
+			attr.setValue(field.getDefaultValue());
+		}
+		data.addAttribute(attr.getID(), attr);
 	}
 
 	private static RepositoryTaskAttribute createAttribute(AbstractAttributeFactory factory, RepositoryTaskData data,

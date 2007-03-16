@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketType;
@@ -293,25 +294,21 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	@Override
 	public synchronized void updateAttributes(IProgressMonitor monitor) throws TracException {
-		monitor.beginTask("Updating attributes", 8);
+		monitor.beginTask("Updating attributes", 9);
 
 		Object[] result = getAttributes("ticket.component");
 		data.components = new ArrayList<TracComponent>(result.length);
 		for (Object item : result) {
 			data.components.add(parseComponent((Map<?, ?>) getMultiCallResult(item)));
 		}
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		result = getAttributes("ticket.milestone");
 		data.milestones = new ArrayList<TracMilestone>(result.length);
 		for (Object item : result) {
 			data.milestones.add(parseMilestone((Map<?, ?>) getMultiCallResult(item)));
 		}
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		List<TicketAttributeResult> attributes = getTicketAttributes("ticket.priority");
 		data.priorities = new ArrayList<TracPriority>(result.length);
@@ -319,9 +316,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			data.priorities.add(new TracPriority(attribute.name, attribute.value));
 		}
 		Collections.sort(data.priorities);
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.resolution");
 		data.ticketResolutions = new ArrayList<TracTicketResolution>(result.length);
@@ -329,9 +324,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			data.ticketResolutions.add(new TracTicketResolution(attribute.name, attribute.value));
 		}
 		Collections.sort(data.ticketResolutions);
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.severity");
 		data.severities = new ArrayList<TracSeverity>(result.length);
@@ -339,9 +332,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			data.severities.add(new TracSeverity(attribute.name, attribute.value));
 		}
 		Collections.sort(data.severities);
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.status");
 		data.ticketStatus = new ArrayList<TracTicketStatus>(result.length);
@@ -349,9 +340,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			data.ticketStatus.add(new TracTicketStatus(attribute.name, attribute.value));
 		}
 		Collections.sort(data.ticketStatus);
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		attributes = getTicketAttributes("ticket.type");
 		data.ticketTypes = new ArrayList<TracTicketType>(result.length);
@@ -359,18 +348,28 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			data.ticketTypes.add(new TracTicketType(attribute.name, attribute.value));
 		}
 		Collections.sort(data.ticketTypes);
-		monitor.worked(1);
-		if (monitor.isCanceled())
-			throw new OperationCanceledException();
+		advance(monitor, 1);
 
 		result = getAttributes("ticket.version");
 		data.versions = new ArrayList<TracVersion>(result.length);
 		for (Object item : result) {
 			data.versions.add(parseVersion((Map<?, ?>) getMultiCallResult(item)));
 		}
-		monitor.worked(1);
+		advance(monitor, 1);
+
+		result = (Object[]) call("ticket.getTicketFields");
+		data.ticketFields = new ArrayList<TracTicketField>(result.length);
+		for (Object item : result) {
+			data.ticketFields.add(parseTicketField((Map<?, ?>) item));
+		}
+		advance(monitor, 1);
+	}
+
+	private void advance(IProgressMonitor monitor, int worked) {
+		monitor.worked(worked);
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
+
 	}
 
 	private TracComponent parseComponent(Map<?, ?> result) {
@@ -393,6 +392,37 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		version.setTime(parseDate(result.get("time")));
 		version.setDescription((String) result.get("description"));
 		return version;
+	}
+
+	private TracTicketField parseTicketField(Map<?, ?> result) {
+		TracTicketField field = new TracTicketField((String) result.get("name"));
+		field.setType(TracTicketField.Type.fromString((String) result.get("type")));
+		field.setLabel((String) result.get("label"));
+		field.setDefaultValue((String) result.get("value"));
+		Object[] items = (Object[]) result.get("options");
+		if (items != null) {
+			String[] options = new String[items.length];
+			for (int i = 0; i < items.length; i++) {
+				options[i] = (String) items[i];
+			}
+			field.setOptions(options);
+		}
+		if (result.get("custom") != null) {
+			field.setCustom((Boolean) result.get("custom"));
+		}
+		if (result.get("order") != null) {
+			field.setOrder((Integer) result.get("order"));
+		}
+		if (result.get("optional") != null) {
+			field.setOptional((Boolean) result.get("optional"));
+		}
+		if (result.get("width") != null) {
+			field.setOrder((Integer) result.get("width"));
+		}
+		if (result.get("height") != null) {
+			field.setOrder((Integer) result.get("height"));
+		}		
+		return field;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -451,9 +481,9 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	}
 
 	public void deleteAttachment(int ticketId, String filename) throws TracException {
-		call("ticket.deleteAttachment", ticketId, filename);		
+		call("ticket.deleteAttachment", ticketId, filename);
 	}
-	
+
 	private class TicketAttributeResult {
 
 		String name;
