@@ -43,8 +43,11 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String COMMIT_TEMPLATE = "org.eclipse.mylar.team.commit.template";
 
-	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}"; 
+	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description} \n${task.url}"; 
 
+	private static final String OLD_DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}";
+	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}";
+	
 	public MylarTeamPlugin() {
 		INSTANCE = this;
 	} 
@@ -91,8 +94,13 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void initPreferenceDefaults() {
-		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);
+		getPreferenceStore().setDefault(CHANGE_SET_MANAGE, true);		
 		getPreferenceStore().setDefault(COMMIT_TEMPLATE, DEFAULT_COMMIT_TEMPLATE);
+		// 2.0M1 - 2.0M2 Default template migration
+		if(getPreferenceStore().getString(COMMIT_TEMPLATE).equals(OLD_DEFAULT_COMMIT_TEMPLATE) || 
+				getPreferenceStore().getString(COMMIT_TEMPLATE).equals(OLD_DEFAULT_COMMIT_TEMPLATE2)) {
+			getPreferenceStore().setValue(COMMIT_TEMPLATE, DEFAULT_COMMIT_TEMPLATE);
+		}
 	}
 
 	public static MylarTeamPlugin getDefault() {

@@ -38,22 +38,23 @@ public class CommitTemplateVariables {
 
 		return builder.toString();
 	}
-	
+
 	public static class ConnectorTaskPrefix extends AbstractCommitTemplateVariable {
 
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector((AbstractRepositoryTask)task);
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						(AbstractRepositoryTask) task);
 				if (connector != null) {
 					return connector.getTaskIdPrefix();
 				}
 			}
 			return null;
 		}
-		
+
 	}
-	
+
 	public static class RepositoryKind extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
@@ -122,7 +123,7 @@ public class CommitTemplateVariables {
 	public static class TaskStatus extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask)task).getTaskData() != null) {
+			if (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask) task).getTaskData() != null) {
 				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase(Locale.ENGLISH);
 			} else {
 				// TODO: refactor completion labels
@@ -192,7 +193,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask)task).getTaskId();
+				return ((AbstractRepositoryTask) task).getTaskId();
 			} else {
 				return null;
 			}
@@ -203,7 +204,11 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask)task).getTaskKey();
+				String value = ((AbstractRepositoryTask) task).getTaskKey();
+				if (value == null) {
+					value = ((AbstractRepositoryTask) task).getTaskId();
+				}
+				return value;
 			} else {
 				return null;
 			}
