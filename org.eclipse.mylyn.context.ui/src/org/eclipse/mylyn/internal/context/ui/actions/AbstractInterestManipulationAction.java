@@ -52,6 +52,12 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 	protected abstract boolean isIncrement();
 
 	public void run(IAction action) {
+		if (!ContextCorePlugin.getContextManager().isContextActive()) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
+					MESSAGE_NO_CONTEXT);
+			return;
+		}
+
 		boolean increment = isIncrement();
 		ISelection currentSelection = null;
 		if (action instanceof ObjectPluginAction) {
@@ -87,21 +93,18 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 							// ignore
 						}
 					}
-					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, increment,
-							false, SOURCE_ID);
+					boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+							increment, false, SOURCE_ID);
 					if (!manipulated) {
 						UiUtil.displayInterestManipulationFailure();
 					}
-				} else {
-					MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-							ITasksUiConstants.TITLE_DIALOG, MESSAGE_NO_CONTEXT);
 				}
 			}
 		} else {
 			IMylarElement node = ContextCorePlugin.getContextManager().getActiveElement();
 			if (node != null) {
-				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node, increment,
-						false, SOURCE_ID);
+				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
+						increment, false, SOURCE_ID);
 				if (!manipulated) {
 					UiUtil.displayInterestManipulationFailure();
 				}
