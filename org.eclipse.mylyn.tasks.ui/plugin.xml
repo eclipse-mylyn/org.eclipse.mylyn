@@ -521,16 +521,6 @@
      </colorDefinition>
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.background.category"
-           isEditable="true"
-           label="Categories - Background"
-           value="234,233,237"> 
-         <description>
-            Background color of Task List categories and queries.
-         </description>
-     </colorDefinition>
-     <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasks.ui.colors.incoming.background"
            isEditable="true"
            label="Task Editor - Incoming Changes"
@@ -539,6 +529,29 @@
             Background color of attributes with incoming changes.
          </description>
      </colorDefinition>  
+
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasks.ui.colors.category.gradient.start"
+           isEditable="true"
+           label="Task List - Category Gradient Top"
+           value="247,247,247"> 
+         <description>
+            Background start color for Task List category gradients.
+         </description>
+     </colorDefinition> 
+
+     <colorDefinition
+           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylar.tasks.ui.colors.category.gradient.end"
+           isEditable="true"
+           label="Task List - Category Gradient Bottom"
+           value="220,220,220"> 
+         <description>
+            Background end color for Task List category gradients.
+         </description>
+     </colorDefinition> 
+
 	<fontDefinition
        categoryId="org.eclipse.mylar.tasklist.ui.presentation"
        id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"

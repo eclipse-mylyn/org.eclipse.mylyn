@@ -785,7 +785,7 @@ public class TaskListView extends ViewPart {
 			});
 		}
 
-		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
@@ -881,13 +881,19 @@ public class TaskListView extends ViewPart {
 					Color oldForeground = gc.getForeground();
 					Color oldBackground = gc.getBackground();
 
-					/* Gradient */
-					gc.setForeground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_START);
-					gc.setBackground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_BG);
+					/* Gradient */					
+					Color gradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
+							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
+
+					Color gradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
+							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
+					
+					gc.setForeground(gradientStart);
+					gc.setBackground(gradientEnd);
 					gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
 
 					/* Bottom Line */
-					gc.setForeground(TaskListColorsAndFonts.COLOR_CATEGORY_GRADIENT_END);
+					gc.setForeground(gradientEnd);
 					gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
 
 					gc.setForeground(oldForeground);
