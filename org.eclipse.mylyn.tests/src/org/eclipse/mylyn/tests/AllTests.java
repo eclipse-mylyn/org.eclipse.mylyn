@@ -54,6 +54,8 @@ public class AllTests {
 		suite.addTest(AllMiscTests.suite());
 		suite.addTest(AllJiraTests.suite());
 		suite.addTest(AllTracTests.suite());
+		suite.addTestSuite(WebClientUtilTest.class);
+		suite.addTestSuite(SslProtocolSocketFactoryTest.class);
 		// $JUnit-END$
 		return suite;
 	}
