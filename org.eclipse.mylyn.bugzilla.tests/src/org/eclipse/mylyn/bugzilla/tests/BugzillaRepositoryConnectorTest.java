@@ -14,20 +14,15 @@ package org.eclipse.mylar.bugzilla.tests;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.net.InetAddress;
-import java.net.Proxy;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.net.SslProtocolSocketFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
@@ -579,35 +574,6 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (enableDeadline)
 			assertEquals(deadline, bugtaskdata.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
 
-	}
-
-	public void testTrustAllSslProtocolSocketFactory() throws Exception {
-		SslProtocolSocketFactory factory = new SslProtocolSocketFactory(Proxy.NO_PROXY);
-		Socket s;
-
-		s = factory.createSocket("mylar.eclipse.org", 80);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
-
-		InetAddress anyHost = new Socket().getLocalAddress();
-
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
-
-		HttpConnectionParams params = new HttpConnectionParams();
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, null);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
-
-		params.setConnectionTimeout(1000);
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, params);
-		assertNotNull(s);
-		assertTrue(s.isConnected());
-		s.close();
 	}
 
 	private String generateNewDay() {
