@@ -87,6 +87,7 @@ public class CommitTemplateManager {
 		final String KEYWORD_PLACEHOLDER = "\ufffe";
 
 		template = template.replaceFirst("\\$\\{task\\.id\\}", TASK_ID_PLACEHOLDER);
+		template = template.replaceFirst("\\$\\{task\\.key\\}", TASK_ID_PLACEHOLDER);
 		template = replaceKeywords(template, KEYWORD_PLACEHOLDER);
 		template = quoteChars(template, META_CHARS);
 		template = template.replaceFirst(TASK_ID_PLACEHOLDER, "(\\\\d+)");
