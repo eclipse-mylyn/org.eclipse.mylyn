@@ -11,21 +11,21 @@
 
 package org.eclipse.mylar.core.net;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.KeyStore;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.ProxyClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -33,84 +33,91 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 /**
  * @author Nathan Hapke
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
-	private static SSLContext sslContext;
+	private static final String KEY_STORE = "javax.net.ssl.keyStore";
 
-	static {
+	private static final String KEY_STORE_PASSWORD = "javax.net.ssl.keyStorePassword";
+
+	static SslProtocolSocketFactory factory = new SslProtocolSocketFactory();
+
+	public static SslProtocolSocketFactory getInstance() {
+		return factory;
+	}
+
+	private SSLSocketFactory socketFactory;
+
+	private boolean hasKeyManager;
+
+	private SslProtocolSocketFactory() {
+		KeyManager[] keymanagers = null;
+		if (System.getProperty(KEY_STORE) != null && System.getProperty(KEY_STORE_PASSWORD) != null) {
+			try {
+				KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				char[] password = System.getProperty(KEY_STORE_PASSWORD).toCharArray();
+				keyStore.load(new FileInputStream(System.getProperty(KEY_STORE)), password);
+				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory
+						.getDefaultAlgorithm());
+				keyManagerFactory.init(keyStore, password);
+				keymanagers = keyManagerFactory.getKeyManagers();
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "Could not initialize keystore");
+			}
+		}
+
+		hasKeyManager = keymanagers != null;
+
 		try {
-			sslContext = SSLContext.getInstance("SSL");
-			sslContext.init(null, new TrustManager[] { new TrustAllTrustManager() }, null);
+			SSLContext sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
+			this.socketFactory = sslContext.getSocketFactory();
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Could not initialize SSL context");
 		}
 	}
 
-	private Proxy proxy;
-
-	public SslProtocolSocketFactory(Proxy proxy) {
-		super();
-		this.proxy = proxy;
-	}
-
-	private SSLContext getSslContext() throws IOException {
-		if (sslContext == null) {
+	private SSLSocketFactory getSocketFactory() throws IOException {
+		if (socketFactory == null) {
 			throw new IOException("Could not initialize SSL context");
 		}
-		return sslContext;
+		return socketFactory;
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort) throws IOException, UnknownHostException {
-		return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort);
+		return getSocketFactory().createSocket(remoteHost, remotePort);
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort)
 			throws IOException, UnknownHostException {
-		return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+		return getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
 	}
 
 	public Socket createSocket(String remoteHost, int remotePort, InetAddress clientHost, int clientPort,
 			HttpConnectionParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
-		if (params == null || params.getConnectionTimeout() == 0)
-			return getSslContext().getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
-
-		if (proxy != null && !Proxy.NO_PROXY.equals(proxy) && proxy.address() instanceof InetSocketAddress) {
-			ProxyClient proxyClient = new ProxyClient();
-
-			InetSocketAddress address = (InetSocketAddress) proxy.address();
-			proxyClient.getHostConfiguration().setProxy(WebClientUtil.getDomain(address.getHostName()),
-					address.getPort());
-			proxyClient.getHostConfiguration().setHost(remoteHost, remotePort);
-			if (proxy instanceof AuthenticatedProxy) {
-				AuthenticatedProxy authProxy = (AuthenticatedProxy) proxy;
-				Credentials credentials = new UsernamePasswordCredentials(authProxy.getUserName(), authProxy
-						.getPassword());
-				AuthScope proxyAuthScope = new AuthScope(address.getHostName(), address.getPort(), AuthScope.ANY_REALM);
-				proxyClient.getState().setProxyCredentials(proxyAuthScope, credentials);
-			}
-
-			ProxyClient.ConnectResponse response = proxyClient.connect();
-			if (response.getSocket() != null) {
-				// tunnel SSL via the resultant socket
-				Socket sslsocket = getSslContext().getSocketFactory().createSocket(response.getSocket(), remoteHost,
-						remotePort, true);
-				return sslsocket;
-			} else {
-				MylarStatusHandler.log("Could not make proxy connection. Trying direct...", this);
-			}
-
+		if (params == null) {
+			throw new IllegalArgumentException("Parameters may not be null");
 		}
 
-		Socket socket = getSslContext().getSocketFactory().createSocket();
-		socket.bind(new InetSocketAddress(clientHost, clientPort));
-		socket.connect(new InetSocketAddress(remoteHost, remotePort), params.getConnectionTimeout());
-		return socket;
+		int timeout = params.getConnectionTimeout();
+		if (timeout == 0) {
+			return getSocketFactory().createSocket(remoteHost, remotePort, clientHost, clientPort);
+		} else {
+			Socket socket = getSocketFactory().createSocket();
+			socket.bind(new InetSocketAddress(clientHost, clientPort));
+			socket.connect(new InetSocketAddress(remoteHost, remotePort), timeout);
+			return socket;
+		}
 	}
 
 	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
 			UnknownHostException {
-		return getSslContext().getSocketFactory().createSocket(socket, host, port, autoClose);
+		return getSocketFactory().createSocket(socket, host, port, autoClose);
 	}
 
+	public boolean hasKeyManager() {
+		return hasKeyManager;
+	}
+	
 }
