@@ -73,6 +73,8 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
 	
 	public static final String ATTR_USER_MANAGED = "userManaged";
+	
+	public static final String ATTR_CUSTOM_NOTIFICATIONS = "customNotifications";
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider";
 	
@@ -249,8 +251,7 @@ public class TasksUiExtensionReader {
 				if(userManagedString != null){
 					boolean userManaged = Boolean.parseBoolean(userManagedString);
 					repositoryConnector.setUserManaged(userManaged);					
-				}
-				
+				}				
 			} else {
 				MylarStatusHandler.log("could not not load connector core: " + connectorCore, null);
 			}
@@ -262,10 +263,17 @@ public class TasksUiExtensionReader {
 
 	private static void readRepositoryConnectorUi(IConfigurationElement element) {
 		try {
-			Object connectorUi = element.createExecutableExtension(ATTR_CLASS);
-			if (connectorUi instanceof AbstractRepositoryConnectorUi) {
+			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
+			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
+				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi)connectorUiObject;
 				TasksUiPlugin.addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
 
+				String customNotificationsString = element.getAttribute(ATTR_CUSTOM_NOTIFICATIONS);
+				if(customNotificationsString != null){
+					boolean customNotifications = Boolean.parseBoolean(customNotificationsString);
+					connectorUi.setCustomNotificationHandling(customNotifications);					
+				}
+				
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
@@ -285,7 +293,7 @@ public class TasksUiExtensionReader {
 					}
 				}
 			} else {
-				MylarStatusHandler.log("could not not load connector ui: " + connectorUi, null);
+				MylarStatusHandler.log("could not not load connector ui: " + connectorUiObject, null);
 			}
 
 		} catch (CoreException e) {

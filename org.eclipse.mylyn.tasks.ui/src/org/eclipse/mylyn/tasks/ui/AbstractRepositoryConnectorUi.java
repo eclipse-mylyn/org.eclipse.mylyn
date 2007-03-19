@@ -38,6 +38,8 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	private static final String LABEL_TASK_DEFAULT = "Task";
 
+	private boolean customNotificationHandling = false;
+	
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
@@ -146,4 +148,11 @@ public abstract class AbstractRepositoryConnectorUi {
 		return null;
 	}
 
+	public void setCustomNotificationHandling(boolean customNotifications) {
+		this.customNotificationHandling = customNotifications;
+	}
+	
+	public boolean hasCustomNotificationHandling() {
+		return customNotificationHandling;
+	}
 }
