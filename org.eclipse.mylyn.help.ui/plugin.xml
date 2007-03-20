@@ -31,7 +31,12 @@
     </extension>
   
    <extension point="org.eclipse.ui.commands">
+   <category
+         id="org.eclipse.mylar.doc.commands"
+         name="Mylar Documentation">
+   </category>
 	  <command
+         category="org.eclipse.mylar.doc.commands"
          categoryId="org.eclipse.mylar.ui"
          description="Show Mylar UI Legend"
          id="org.eclipse.mylar.doc.legend.show"
