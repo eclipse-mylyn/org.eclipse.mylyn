@@ -441,13 +441,13 @@
 
    <extension point="org.eclipse.ui.commands">
 	  <command
-         categoryId="org.eclipse.mylar.ui"
+         categoryId="org.eclipse.mylar.ui.commands"
          description="Search the current task context"
          id="org.eclipse.mylar.java.ui.search.context"
          name="Search Task Context">
       </command>
 	  <command
-         categoryId="org.eclipse.mylar.ui"
+         categoryId="org.eclipse.mylar.ui.commands"
          description="Toggle Active Folding"
          id="org.eclipse.mylar.java.ui.editor.folding.auto"
          name="Toggle Active Folding">

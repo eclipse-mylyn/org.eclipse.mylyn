@@ -291,30 +291,30 @@
       <category
             name="Mylar"
             description="Mylar commands"
-            id="org.eclipse.mylar.ui">
+            id="org.eclipse.mylar.ui.commands">
       </category>
       <command
             name="Global Filtering"
             id="org.eclipse.mylar.ui.interest.filter.global"
-            categoryId="org.eclipse.mylar.ui">
+            categoryId="org.eclipse.mylar.ui.commands">
       </command>
       <command
             name="Show Related Elements"
             description="Show Related Elements"
             id="org.eclipse.mylar.ui.related.show"
-            categoryId="org.eclipse.mylar.ui">
+            categoryId="org.eclipse.mylar.ui.commands">
       </command>
       <command
             name="Make Landmark"
             description="Make Landmark"
             id="org.eclipse.mylar.ui.interest.increment"
-            categoryId="org.eclipse.mylar.ui">
+            categoryId="org.eclipse.mylar.ui.commands">
       </command>
       <command
             name="Make Less Interesting"
             description="Make Less Interesting"
             id="org.eclipse.mylar.ui.interest.decrement"
-            categoryId="org.eclipse.mylar.ui">
+            categoryId="org.eclipse.mylar.ui.commands">
       </command>
       <!--
       <command
