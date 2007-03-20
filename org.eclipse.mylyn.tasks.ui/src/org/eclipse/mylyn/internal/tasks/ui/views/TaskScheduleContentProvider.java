@@ -18,6 +18,7 @@ import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * Used by Scheduled task list presentation
@@ -36,7 +37,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.view.getViewSite())) {
 			Set<ITaskListElement> ranges = new HashSet<ITaskListElement>();
-			ranges.addAll(taskListManager.getDateRanges());
+			ranges.addAll(taskListManager.getDateRanges());			
+			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 			return applyFilter(ranges).toArray();
 		} else {
 			return super.getElements(parent);
