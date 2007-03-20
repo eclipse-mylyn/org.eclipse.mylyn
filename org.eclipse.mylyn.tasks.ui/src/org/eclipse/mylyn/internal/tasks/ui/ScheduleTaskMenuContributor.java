@@ -90,7 +90,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 			@Override
 			public void run() {
 				Calendar reminderCalendar = GregorianCalendar.getInstance();
-				TasksUiPlugin.getTaskListManager().setScheduledToday(reminderCalendar);
+				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(reminderCalendar);
 				for (ITaskListElement element : taskListElementsToSchedule) {
 					ITask task = tasklistManager.getTaskForElement(element, true);
 					TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderCalendar.getTime());

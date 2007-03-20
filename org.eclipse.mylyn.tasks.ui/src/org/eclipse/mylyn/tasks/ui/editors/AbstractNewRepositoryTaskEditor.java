@@ -221,7 +221,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
 		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
+			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
 		scheduledForDate.setDate(newTaskSchedule);
 		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);

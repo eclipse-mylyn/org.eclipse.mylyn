@@ -217,7 +217,7 @@ public class TaskListManagerTest extends TestCase {
 		task.setScheduledForDate(cal.getTime());
 		assertFalse(manager.isScheduledForToday(task));
 		cal = Calendar.getInstance();
-		manager.setScheduledToday(cal);
+		manager.setScheduledEndOfDay(cal);
 		task.setScheduledForDate(cal.getTime());
 		assertTrue(manager.isScheduledForToday(task));
 	}

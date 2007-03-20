@@ -609,7 +609,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	/**
 	 * Will schedule for today if past work-day's end.
 	 */
-	public Calendar setScheduledToday(Calendar calendar) {
+	public Calendar setScheduledEndOfDay(Calendar calendar) {
 		// Calendar now = Calendar.getInstance();
 		// if (now.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 		// setSecheduledIn(calendar, 1);
@@ -623,7 +623,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public void setScheduledNextWeek(Calendar calendar) {
 		calendar.setTimeInMillis(TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart().getTimeInMillis());
-		setScheduledToday(calendar);
+		setScheduledEndOfDay(calendar);
 	}
 
 	public List<DateRangeContainer> getDateRanges() {

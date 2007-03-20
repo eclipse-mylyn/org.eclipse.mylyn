@@ -114,7 +114,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
 		} else {
-			TasksUiPlugin.getTaskListManager().setScheduledToday(newTaskSchedule);
+			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
 		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
 	}

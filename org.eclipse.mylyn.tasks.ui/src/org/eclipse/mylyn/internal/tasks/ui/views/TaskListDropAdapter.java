@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -34,6 +35,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -115,6 +117,12 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				} else {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getContainer(), task);
 				}
+			} else if (currentTarget instanceof DateRangeContainer) {
+				DateRangeContainer container = (DateRangeContainer)currentTarget;
+				Calendar newSchedule = Calendar.getInstance();
+				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());				
+				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
+				TasksUiPlugin.getTaskListManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
 			}
