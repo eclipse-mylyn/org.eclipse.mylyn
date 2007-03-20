@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
-import org.eclipse.mylar.internal.tasks.ui.views.TaskActivityView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -22,38 +21,37 @@ import org.eclipse.ui.IPerspectiveFactory;
  */
 public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
-    public void createInitialLayout(IPageLayout layout) {
-        defineActions(layout);
-        defineLayout(layout);
-    }
+	public void createInitialLayout(IPageLayout layout) {
+		defineActions(layout);
+		defineLayout(layout);
+	}
 
-    public void defineActions(IPageLayout layout) { 
-        layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
-        layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
-        layout.addShowViewShortcut(TaskListView.ID);
-        layout.addShowViewShortcut(TaskActivityView.ID);
-        
-        layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
-    }
+	public void defineActions(IPageLayout layout) {
+		layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
+		layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
+		layout.addShowViewShortcut(TaskListView.ID);
+		// layout.addShowViewShortcut(TaskActivityView.ID);
 
-    public void defineLayout(IPageLayout layout) {
-        String editorArea = layout.getEditorArea();
+		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
+	}
 
-        IFolderLayout topLeft = layout.createFolder(
-                "topLeft", IPageLayout.LEFT, (float) 0.4, editorArea);//$NON-NLS-1$
-        topLeft.addView(TaskListView.ID);
+	public void defineLayout(IPageLayout layout) {
+		String editorArea = layout.getEditorArea();
 
-        IFolderLayout bottomLeft = layout.createFolder(
-                "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-                "topLeft");//$NON-NLS-1$
-        bottomLeft.addView(TaskActivityView.ID);
-        topLeft.addPlaceholder(IPageLayout.ID_RES_NAV);
-        
-//		IFolderLayout bottomRight = layout.createFolder(
-//                "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
-//                editorArea);
-//		
-//		bottomRight.addView(IPageLayout.ID_TASK_LIST);
-		
-    }
+		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.4, editorArea);//$NON-NLS-1$
+		topLeft.addView(TaskListView.ID);
+
+		// IFolderLayout bottomLeft = layout.createFolder(
+		// "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+		// "topLeft");//$NON-NLS-1$
+		// bottomLeft.addView(TaskActivityView.ID);
+		topLeft.addPlaceholder(IPageLayout.ID_RES_NAV);
+
+		// IFolderLayout bottomRight = layout.createFolder(
+		// "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
+		// editorArea);
+		//		
+		// bottomRight.addView(IPageLayout.ID_TASK_LIST);
+
+	}
 }
