@@ -98,11 +98,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 		@Override
 		public void run() {
-			try {
-				view.applyPresentation(presentation);
-			} finally {
-				view.getViewer().getControl().setRedraw(true);
-			}
+			view.applyPresentation(presentation);
 		}
 	}
 
