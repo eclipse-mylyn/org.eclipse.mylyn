@@ -36,17 +36,10 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
-	public static final String ID = "tasklist.mode.categorized";
-	
 	protected final TaskListView view;
-	
-	private final String providerLabel = "Categorized";
-
-	protected String id;
 	
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
-		this.id = ID;
 	}
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -276,11 +269,4 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	public String getLabel() {
-		return providerLabel;
-	}
-	
-	public String getId() {
-		return id;
-	}
 }

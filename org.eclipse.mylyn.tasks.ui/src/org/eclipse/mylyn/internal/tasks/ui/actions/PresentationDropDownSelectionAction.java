@@ -14,7 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListContentProvider;
+import org.eclipse.mylar.internal.tasks.ui.views.ITaskListPresentation;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -22,36 +22,37 @@ import org.eclipse.swt.widgets.Menu;
 /**
  * @author Rob Elves
  */
-public class ModelDropDownSelectionAction extends Action implements IMenuCreator {
+public class PresentationDropDownSelectionAction extends Action implements IMenuCreator {
 
 	private static final String LABEL_NAME = "Task Presentation";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.modelselection";
+	public static final String ID = "org.eclipse.mylar.tasklist.actions.presentationselection";
 
 	private TaskListView view;
 
 	protected Menu dropDownMenu = null;
 
-	private TaskListContentProvider[] contentProviders;
+	private ITaskListPresentation[] presentations;
 
-	public ModelDropDownSelectionAction(TaskListView view, TaskListContentProvider[] contentProviders) {
+	public PresentationDropDownSelectionAction(TaskListView view, ITaskListPresentation[] presentations) {
 		super();
 		this.view = view;
+		this.presentations = presentations;
 		setMenuCreator(this);
 		setText(LABEL_NAME);
 		setToolTipText(LABEL_NAME);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TaskListImages.TASKLIST_MODE);
-		this.contentProviders = contentProviders;
 	}
 
 	protected void addActionsToMenu() {
-		for (TaskListContentProvider provider : contentProviders) {
-			ModelSelectionAction action = new ModelSelectionAction(provider);
+		for (ITaskListPresentation presentation : presentations) {
+			PresentationSelectionAction action = new PresentationSelectionAction(presentation);
 			ActionContributionItem item = new ActionContributionItem(action);
-			action.setText(provider.getLabel());
-			action.setChecked(view.getViewer().getContentProvider().equals(provider));
+			action.setText(presentation.getPresentationName());
+			action.setChecked(view.getCurrentPresentation().getPresentationName().equals(
+					presentation.getPresentationName()));
 			item.fill(dropDownMenu, -1);
 		}
 	}
@@ -86,21 +87,19 @@ public class ModelDropDownSelectionAction extends Action implements IMenuCreator
 		return dropDownMenu;
 	}
 
-	private class ModelSelectionAction extends Action {
+	private class PresentationSelectionAction extends Action {
 
-		private TaskListContentProvider provider;
+		private ITaskListPresentation presentation;
 
-		public ModelSelectionAction(TaskListContentProvider provider) {
-			this.provider = provider;
-			setText(provider.getLabel());
+		public PresentationSelectionAction(ITaskListPresentation presentation) {
+			this.presentation = presentation;
+			setText(presentation.getPresentationName());
 		}
 
 		@Override
 		public void run() {
 			try {
-				view.getViewer().getControl().setRedraw(false);
-				view.getViewer().setContentProvider(provider);
-				view.refreshAndFocus(view.isFocusedMode());
+				view.applyPresentation(presentation);
 			} finally {
 				view.getViewer().getControl().setRedraw(true);
 			}

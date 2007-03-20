@@ -35,11 +35,11 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -67,10 +67,10 @@ import org.eclipse.mylar.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.ModelDropDownSelectionAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.RenameAction;
@@ -177,10 +177,6 @@ public class TaskListView extends ViewPart {
 
 	private boolean focusedMode = false;
 
-	private TaskListContentProvider taskListContentProvider;
-
-	private TaskActivityContentProvider taskActivityContentProvider;
-
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -225,7 +221,7 @@ public class TaskListView extends ViewPart {
 
 	private PreviousTaskDropDownAction previousTaskAction;
 
-	private ModelDropDownSelectionAction modelDropDownSelectionAction;
+	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
 	static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
 
@@ -251,15 +247,43 @@ public class TaskListView extends ViewPart {
 
 	private int sortIndex = 2;
 
+	private ITaskListPresentation currentPresentation;
+
 	private TaskListTableLabelProvider taskListTableLabelProvider;
 
 	private TaskListTableSorter tableSorter;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
-	
+
 	private final static int MAX_SELECTION_HISTORY_SIZE = 10;
-	
-	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(MAX_SELECTION_HISTORY_SIZE);
+
+	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
+			MAX_SELECTION_HISTORY_SIZE);
+
+	private ITaskListPresentation catagorizedPresentation = new ITaskListPresentation() {
+
+		public IStructuredContentProvider getContentProvider() {
+			return new TaskListContentProvider(TaskListView.this);
+		}
+
+		public String getPresentationName() {
+			return "Categorized";
+		}
+
+	};
+
+	// TODO: Use extension point
+	private ITaskListPresentation scheduledPresentation = new ITaskListPresentation() {
+
+		public IStructuredContentProvider getContentProvider() {
+			return new TaskScheduleContentProvider(TaskListView.this, TasksUiPlugin.getTaskListManager());
+		}
+
+		public String getPresentationName() {
+			return "Scheduled";
+		}
+
+	};
 
 	/**
 	 * True if the view should indicate that interaction monitoring is paused
@@ -321,7 +345,8 @@ public class TaskListView extends ViewPart {
 		public void localInfoChanged(final ITask task) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if(getTasklistMode().equals(TaskActivityContentProvider.ID)) {
+					if (getCurrentPresentation().getPresentationName().equals(
+							scheduledPresentation.getPresentationName())) {
 						refresh(null);
 					} else {
 						refresh(task);
@@ -748,49 +773,16 @@ public class TaskListView extends ViewPart {
 
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
-		getViewer().setColumnProperties(columnNames);
 		getViewer().setUseHashlookup(true);
-
-		columns = new TreeColumn[columnNames.length];
-		for (int i = 0; i < columnNames.length; i++) {
-			columns[i] = new TreeColumn(getViewer().getTree(), 0); // SWT.LEFT
-			columns[i].setText(columnNames[i]);
-			columns[i].setWidth(columnWidths[i]);
-			final int index = i;
-			columns[i].addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					sortIndex = index;
-					sortDirection *= DEFAULT_SORT_DIRECTION;
-					tableSorter.setColumn(columnNames[sortIndex]);
-					getViewer().refresh(false);
-					// getViewer().setSorter(new
-					// TaskListTableSorter(TaskListView.this,
-					// columnNames[sortIndex]));
-				}
-			});
-			columns[i].addControlListener(new ControlListener() {
-				public void controlResized(ControlEvent e) {
-					for (int j = 0; j < columnWidths.length; j++) {
-						if (columns[j].equals(e.getSource())) {
-							columnWidths[j] = columns[j].getWidth();
-						}
-					}
-				}
-
-				public void controlMoved(ControlEvent e) {
-					// don't care if the control is moved
-				}
-			});
-		}
+		
+		configureColumns(columnNames, columnWidths);
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
+		getViewer().setLabelProvider(
+				new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
+						.getDecoratorManager().getLabelDecorator(), categoryBackground, this));
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
@@ -800,16 +792,16 @@ public class TaskListView extends ViewPart {
 		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
 		editors[3] = null;
 		editors[4] = textEditor;
+
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
 		getViewer().setSorter(tableSorter);
 
+		applyPresentation(catagorizedPresentation);
+
+
 		drillDownAdapter = new DrillDownAdapter(getViewer());
-		taskListContentProvider = new TaskListContentProvider(this);
-		taskActivityContentProvider = new TaskActivityContentProvider(this, TasksUiPlugin.getTaskListManager());
-		getViewer().setContentProvider(taskListContentProvider);
-		getViewer().setLabelProvider(taskListTableLabelProvider);
 		getViewer().setInput(getViewSite());
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
@@ -881,13 +873,13 @@ public class TaskListView extends ViewPart {
 					Color oldForeground = gc.getForeground();
 					Color oldBackground = gc.getBackground();
 
-					/* Gradient */					
+					/* Gradient */
 					Color gradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
 
 					Color gradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
-					
+
 					gc.setForeground(gradientStart);
 					gc.setBackground(gradientEnd);
 					gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
@@ -914,6 +906,59 @@ public class TaskListView extends ViewPart {
 			updateDescription(activeTasks.get(0));
 		}
 		getSite().setSelectionProvider(getViewer());
+	}
+
+	public void applyPresentation(ITaskListPresentation presentation) {
+		try {
+			getViewer().getControl().setRedraw(false);
+			getViewer().setContentProvider(presentation.getContentProvider());
+			refreshAndFocus(isFocusedMode());
+			currentPresentation = presentation;
+		} finally {
+			getViewer().getControl().setRedraw(true);
+		}
+	}
+
+	public ITaskListPresentation getCurrentPresentation() {
+		return currentPresentation;
+	}
+
+
+	private void configureColumns(final String[] columnNames, final int[] columnWidths) {
+		getViewer().setColumnProperties(columnNames);
+		// for (TreeColumn col: columns) {
+		// col.dispose();
+		// }
+		columns = new TreeColumn[columnNames.length];
+		for (int i = 0; i < columnNames.length; i++) {
+			columns[i] = new TreeColumn(getViewer().getTree(), 0);
+			columns[i].setText(columnNames[i]);
+			columns[i].setWidth(columnWidths[i]);
+			final int index = i;
+			columns[i].addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					sortIndex = index;
+					sortDirection *= DEFAULT_SORT_DIRECTION;
+					tableSorter.setColumn(columnNames[sortIndex]);
+					getViewer().refresh(false);
+				}
+			});
+			columns[i].addControlListener(new ControlListener() {
+				public void controlResized(ControlEvent e) {
+					for (int j = 0; j < columnWidths.length; j++) {
+						if (columns[j].equals(e.getSource())) {
+							columnWidths[j] = columns[j].getWidth();
+						}
+					}
+				}
+
+				public void controlMoved(ControlEvent e) {
+					// don't care if the control is moved
+				}
+			});
+		}
 	}
 
 	private void expandRegion(Event event, Scrollable scrollable, GC gc, Rectangle area) {
@@ -1001,7 +1046,7 @@ public class TaskListView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
-		manager.add(modelDropDownSelectionAction);
+		manager.add(presentationDropDownSelectionAction);
 		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -1214,14 +1259,16 @@ public class TaskListView extends ViewPart {
 		filterOnPriority = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
-		TaskListContentProvider[] providers = {taskListContentProvider, taskActivityContentProvider};
-		modelDropDownSelectionAction = new ModelDropDownSelectionAction(this, providers);
+		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
+		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this, presentations);
 
 		filteredTree.getViewer().addSelectionChangedListener(openWithBrowser);
 		filteredTree.getViewer().addSelectionChangedListener(copyDetailsAction);
-//		openWithBrowser.selectionChanged((StructuredSelection) getViewer().getSelection());
-//		copyDetailsAction.selectionChanged((StructuredSelection) getViewer().getSelection());
-//
+		// openWithBrowser.selectionChanged((StructuredSelection)
+		// getViewer().getSelection());
+		// copyDetailsAction.selectionChanged((StructuredSelection)
+		// getViewer().getSelection());
+		//
 	}
 
 	// public void toggleNextAction(boolean enable) {
@@ -1240,15 +1287,15 @@ public class TaskListView extends ViewPart {
 	}
 
 	/**
-	 * Recursive function that checks for the occurrence of a certain task taskId.
-	 * All children of the supplied node will be checked.
-	 *
+	 * Recursive function that checks for the occurrence of a certain task
+	 * taskId. All children of the supplied node will be checked.
+	 * 
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
 	 *            The taskId that is being searched for.
-	 * @return <code>true</code> if the taskId was found in the node or any of its
-	 *         children
+	 * @return <code>true</code> if the taskId was found in the node or any of
+	 *         its children
 	 */
 	protected boolean lookForId(String taskId) {
 		return (TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
@@ -1452,12 +1499,12 @@ public class TaskListView extends ViewPart {
 		if (task == null || getViewer().getControl().isDisposed()) {
 			return;
 		}
-		
+
 		saveSelection();
 
 		IStructuredSelection selection = restoreSelection(task);
 		getViewer().setSelection(selection, true);
-		
+
 		// if no task exists, select the query hit if exists
 		AbstractQueryHit hit = null;
 		if (getViewer().getSelection().isEmpty()
@@ -1477,7 +1524,8 @@ public class TaskListView extends ViewPart {
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (!selection.isEmpty()) {
 			if (selection.getFirstElement() instanceof ITaskListElement) {
-				// make sure the new selection is inserted at the end of the list
+				// make sure the new selection is inserted at the end of the
+				// list
 				String handle = ((ITaskListElement) selection.getFirstElement()).getHandleIdentifier();
 				lastSelectionByTaskHandle.remove(handle);
 				lastSelectionByTaskHandle.put(handle, selection);
@@ -1497,7 +1545,7 @@ public class TaskListView extends ViewPart {
 			return selection;
 		} else {
 			return new StructuredSelection(task);
-		}		
+		}
 	}
 
 	/**
@@ -1543,28 +1591,33 @@ public class TaskListView extends ViewPart {
 						}
 					} else if (element instanceof AbstractTaskContainer) {
 						// check if the container should appear or disappear
-//						List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
-//						boolean containerVisible = visibleElements.contains(element);
-//						AbstractTaskContainer container = (AbstractTaskContainer) element;
-//						boolean refreshRoot = false;
-//						if (refreshRoot) {
-//							getViewer().refresh();
-//						} else {
-//						refresh(element);
+						// List<?> visibleElements =
+						// Arrays.asList(getViewer().getVisibleExpandedElements());
+						// boolean containerVisible =
+						// visibleElements.contains(element);
+						// AbstractTaskContainer container =
+						// (AbstractTaskContainer) element;
+						// boolean refreshRoot = false;
+						// if (refreshRoot) {
+						// getViewer().refresh();
+						// } else {
+						// refresh(element);
 						getViewer().refresh(element, true);
-//						}
+						// }
 					} else {
-//						getViewer().refresh(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+						// getViewer().refresh(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 						getViewer().refresh(element, true);
-//						if (element instanceof AbstractTaskContainer
-//								&& !((AbstractTaskContainer) element).equals(TasksUiPlugin.getTaskListManager()
-//										.getTaskList().getArchiveContainer())) {
-//							List<?> visibleElements = Arrays.asList(getViewer().getVisibleExpandedElements());
-//							if (!visibleElements.contains(element)) {
-//								getViewer().refresh();
-//								// refresh(null);
-//							}
-//						}
+						// if (element instanceof AbstractTaskContainer
+						// && !((AbstractTaskContainer)
+						// element).equals(TasksUiPlugin.getTaskListManager()
+						// .getTaskList().getArchiveContainer())) {
+						// List<?> visibleElements =
+						// Arrays.asList(getViewer().getVisibleExpandedElements());
+						// if (!visibleElements.contains(element)) {
+						// getViewer().refresh();
+						// // refresh(null);
+						// }
+						// }
 					}
 				} catch (SWTException e) {
 					MylarStatusHandler.log(e, "Failed to refresh Task List");
@@ -1610,13 +1663,5 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;
-	}
-
-	private String getTasklistMode() {
-		IContentProvider provider = TaskListView.this.getViewer().getContentProvider();
-		if(provider instanceof TaskListContentProvider) {
-			return ((TaskListContentProvider)provider).getId();
-		}
-		return null;
 	}
 }

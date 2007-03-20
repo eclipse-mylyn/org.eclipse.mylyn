@@ -20,20 +20,17 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 
 /**
+ * Used by Scheduled task list presentation
+ * 
  * @author Rob Elves
  */
-public class TaskActivityContentProvider extends TaskListContentProvider {
-
-	public static final String ID = "tasklist.mode.scheduled";
-	
-	private static final String LABEL_ACTIVITY = "Scheduled";
+public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	private TaskListManager taskListManager;
 
-	public TaskActivityContentProvider(TaskListView view, TaskListManager taskActivityManager) {
+	public TaskScheduleContentProvider(TaskListView view, TaskListManager taskActivityManager) {
 		super(view);
 		this.taskListManager = taskActivityManager;
-		this.id = ID;
 	}
 
 	public Object[] getElements(Object parent) {
@@ -62,10 +59,5 @@ public class TaskActivityContentProvider extends TaskListContentProvider {
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public String getLabel() {
-		return LABEL_ACTIVITY;
 	}
 }

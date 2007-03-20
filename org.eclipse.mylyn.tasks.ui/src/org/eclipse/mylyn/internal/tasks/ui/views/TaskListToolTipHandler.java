@@ -19,11 +19,13 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -57,6 +59,10 @@ public class TaskListToolTipHandler {
 
 	// private static final String SEPARATOR = "\n---------------\n";
 	private static final String SEPARATOR = "\n\n";
+
+	private static final String UNITS_HOURS = " hours";
+
+	private static final String NO_MINUTES = "0 minutes";
 
 	private Shell tipShell;
 
@@ -168,6 +174,23 @@ public class TaskListToolTipHandler {
 		ITaskListElement element = getTaskListElement(object);
 		String tooltip = "";
 		String priority = "";
+
+		if (element instanceof DateRangeContainer) {
+			DateRangeContainer container = (DateRangeContainer) element;
+			tooltip += "Estimate: " + container.getTotalEstimated() + UNITS_HOURS;
+			String elapsedTimeString = NO_MINUTES;
+			try {
+				elapsedTimeString = DateUtil.getFormattedDurationShort(container.getTotalElapsed());
+				if (elapsedTimeString.equals("")) {
+					elapsedTimeString = NO_MINUTES;
+				}
+			} catch (RuntimeException e) {
+				// ignore
+			}
+			tooltip += "   Elapsed: " + elapsedTimeString+"\n";
+			return tooltip;
+		}
+
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 
@@ -182,7 +205,7 @@ public class TaskListToolTipHandler {
 				tooltip += " (synched: " + syncStamp + ")\n";
 			}
 			if (query.getStatus() != null) {
-				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage()+"\n";
+				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage() + "\n";
 			}
 
 			// Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
@@ -209,13 +232,15 @@ public class TaskListToolTipHandler {
 			tooltip += (element).getSummary();
 			if (repositoryTask != null) {
 
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				if(repository != null && repository.getRepositoryLabel() != null && !repository.getRepositoryLabel().equals("")) {
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+				if (repository != null && repository.getRepositoryLabel() != null
+						&& !repository.getRepositoryLabel().equals("")) {
 					tooltip += "\n" + repository.getRepositoryLabel();
 				} else {
-					tooltip += "\n" + repositoryTask.getRepositoryUrl(); 	
+					tooltip += "\n" + repositoryTask.getRepositoryUrl();
 				}
-				
+
 				tooltip += formatScheduledFor(repositoryTask);
 
 				if (repositoryTask.getStatus() != null) {
@@ -236,9 +261,8 @@ public class TaskListToolTipHandler {
 		if (element instanceof ITask) {
 			Date date = ((ITask) element).getScheduledForDate();
 			if (date != null) {
-				return SEPARATOR + "Scheduled for: " 
-					    + DateFormat.getDateInstance(DateFormat.FULL).format(date)
-						+ ", " + DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + "";
+				return SEPARATOR + "Scheduled for: " + DateFormat.getDateInstance(DateFormat.FULL).format(date) + ", "
+						+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + "";
 			}
 		}
 		return "";
