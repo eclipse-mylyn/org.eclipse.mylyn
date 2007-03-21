@@ -65,6 +65,9 @@ import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
  */
 public class TaskListManager implements IPropertyChangeListener {
 
+	// Did have preference for this so should re-enable
+	private static final int START_HOUR = 8;
+
 	private static final long SECOND = 1000;
 
 	private static final long MINUTE = 60 * SECOND;
@@ -1056,5 +1059,9 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public boolean isWeekDay(DateRangeContainer dateRangeTaskContainer) {
 		return activityWeekDays.contains(dateRangeTaskContainer);
+	}
+
+	public int getStartHour() {
+		return START_HOUR;
 	}
 }

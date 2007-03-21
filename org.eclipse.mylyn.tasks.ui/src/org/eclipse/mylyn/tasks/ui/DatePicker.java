@@ -140,6 +140,7 @@ public class DatePicker extends Composite {
 
 			public void widgetSelected(SelectionEvent arg0) {
 				Calendar newCalendar = GregorianCalendar.getInstance();
+				newCalendar.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
 				if(date != null) {
 					newCalendar.setTime(date.getTime());
 				}

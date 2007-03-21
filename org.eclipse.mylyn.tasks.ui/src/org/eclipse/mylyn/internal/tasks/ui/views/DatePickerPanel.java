@@ -18,10 +18,14 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -58,6 +62,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	private void initialize() {
 		if (date == null) {
 			date = GregorianCalendar.getInstance();
+			date.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
 		}
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
@@ -87,32 +92,41 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 	 * 
 	 */
 	private void createTimeList(Composite composite) {
-		timeList = new org.eclipse.swt.widgets.List(composite, SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+
 		DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 		Calendar tempCalendar = Calendar.getInstance();
 		tempCalendar.set(Calendar.MINUTE, 0);
 		tempCalendar.set(Calendar.SECOND, 0);
+		String[] times = new String[24];
 		for (int x = 0; x < 24; x++) {
 			tempCalendar.set(Calendar.HOUR_OF_DAY, x);
-			timeList.add(dateFormat.format(tempCalendar.getTime()));
+			String timeString = dateFormat.format(tempCalendar.getTime());
+			times[x] = timeString;
 		}
 
-		if (date == null) {
-			timeList.select(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-		} else {
-			timeList.select(date.get(Calendar.HOUR_OF_DAY));
-		}
-		timeList.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+		ListViewer listViewer = new ListViewer(composite);
+
+		listViewer.setContentProvider(new ArrayContentProvider());
+		listViewer.setInput(times);
+
+		timeList = listViewer.getList();
+
+		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
 				date.set(Calendar.HOUR_OF_DAY, timeList.getSelectionIndex());
 				date.set(Calendar.MINUTE, 0);
 				setSelection(new DateSelection(date));
 				notifyListeners(new SelectionChangedEvent(DatePickerPanel.this, getSelection()));
-				// updateCalendar();
 			}
 		});
+
 		GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 150).grab(false, true).applyTo(timeList);
+		if (date != null) {
+			listViewer.setSelection(new StructuredSelection(times[date.get(Calendar.HOUR_OF_DAY)]), true);
+		} else {
+			listViewer.setSelection(new StructuredSelection(times[8]), true);
+		}
 		timeList.addKeyListener(this);
 	}
 
