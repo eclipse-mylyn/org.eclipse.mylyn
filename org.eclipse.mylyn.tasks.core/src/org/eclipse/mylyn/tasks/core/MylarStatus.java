@@ -64,8 +64,12 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		case REPOSITORY_ERROR:
 			return MylarMessages.bind(MylarMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
 		case IO_ERROR:
-			String string1 = getException().getClass().getSimpleName();
-			String string2 = getException().getMessage();
+			String string1 = "Unknown IO error occurred";
+			String string2 = "No message provided";
+			if(getException() != null) {
+				string1 = getException().getClass().getSimpleName();
+				string2 = getException().getMessage();
+			}
 			Object[] strings = { getRepositoryUrl(), string1, string2 };
 			return MylarMessages.bind(MylarMessages.io_error, strings);
 		case INTERNAL_ERROR:

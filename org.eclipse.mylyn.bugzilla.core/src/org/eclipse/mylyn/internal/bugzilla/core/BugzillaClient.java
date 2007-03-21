@@ -225,8 +225,6 @@ public class BugzillaClient {
 				getMethod.setQueryString(requestURL.substring(requestURL.indexOf(QUERY_DELIMITER)));
 			}
 
-			// httpClient.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
-			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 			getMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
 					+ characterEncoding);
 
@@ -242,7 +240,8 @@ public class BugzillaClient {
 				code = httpClient.executeMethod(getMethod);
 			} catch (IOException e) {
 				getMethod.releaseConnection();
-				throw e;
+				throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+						IMylarStatusConstants.IO_ERROR, repositoryUrl.toString(), e));
 			}
 
 			if (code == HttpURLConnection.HTTP_OK) {
