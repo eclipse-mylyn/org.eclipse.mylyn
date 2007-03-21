@@ -714,7 +714,7 @@
        </category>
        <command
              category="org.eclipse.mylar.tasks.ui.commands"
-             categoryId="org.eclipse.mylar.tasks.category.taskRepository"
+             categoryId="org.eclipse.mylar.tasks.ui.commands"
              defaultHandler="org.eclipse.mylar.internal.tasks.ui.commands.AddTaskRepositoryHandler"
              id="org.eclipse.mylar.tasks.command.addTaskRepository"
              name="Add Task Repository">

@@ -37,7 +37,7 @@
    </category>
 	  <command
          category="org.eclipse.mylar.doc.commands"
-         categoryId="org.eclipse.mylar.ui"
+         categoryId="org.eclipse.mylar.doc.commands"
          description="Show Mylar UI Legend"
          id="org.eclipse.mylar.doc.legend.show"
          name="Show Mylar UI Legend">
