@@ -147,7 +147,7 @@ public class WebClientUtil {
 					.getInstance(), WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
-			// Protocol.registerProtocol("https", acceptAllSsl);
+			Protocol.registerProtocol("https", acceptAllSsl);
 		} else {
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl));
