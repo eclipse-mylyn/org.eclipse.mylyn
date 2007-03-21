@@ -12,7 +12,9 @@
 package org.eclipse.mylar.core.net;
 
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.URL;
 import java.net.Proxy.Type;
 
 import org.apache.commons.httpclient.Credentials;
@@ -23,10 +25,15 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWTException;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 
 /**
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @author Leo Dos Santos - getFaviconForUrl
  */
 public class WebClientUtil {
 
@@ -179,6 +186,34 @@ public class WebClientUtil {
 			}
 		}
 		return Proxy.NO_PROXY;
+	}
+	
+	/**
+	 * @param repositoryUrl	The URL of the web site including protocol.
+	 * 				E.g. <code>http://foo.bar</code> or <code>https://foo.bar/baz</code>
+	 * @return a 16*16 favicon, or null if no favicon found
+	 * @throws MalformedURLException 
+	 */
+	public static Image getFaviconForUrl(String repositoryUrl) throws MalformedURLException {
+		URL url = new URL(repositoryUrl);
+		
+		String host = url.getHost();
+		String protocol = url.getProtocol();
+		String favString = protocol + "://" + host + "/favicon.ico";
+		
+		URL favUrl = new URL(favString);
+		try {
+			ImageDescriptor desc = ImageDescriptor.createFromURL(favUrl);
+			if (desc.getImageData() != null) {
+				if ((desc.getImageData().width != 16) && (desc.getImageData().height != 16)) {
+					ImageData data = desc.getImageData().scaledTo(16, 16);
+					return ImageDescriptor.createFromImageData(data).createImage(false);
+				}
+			}
+			return ImageDescriptor.createFromURL(favUrl).createImage(false);
+		} catch (SWTException e) {
+			return null;
+		}
 	}
 
 }
