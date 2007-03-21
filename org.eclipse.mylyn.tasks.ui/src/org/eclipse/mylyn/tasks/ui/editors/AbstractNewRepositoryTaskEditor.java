@@ -328,7 +328,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), "New Description",
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData.getRepositoryKind(), "New Description",
 							false, taskData.getSummary()))));
 		}
 	}

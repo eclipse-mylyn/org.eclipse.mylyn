@@ -332,7 +332,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		public ISelection getSelection() {
-			return null;
+			return new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
+					.getRepositoryKind(), "", true, taskData.getSummary());
 		}
 
 		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
@@ -709,7 +710,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData != null && taskData.isNew()) {
 			form.setText("New " + kindLabel);
-		} else if(idLabel != null){
+		} else if (idLabel != null) {
 			form.setText(kindLabel + " " + idLabel);
 		} else {
 			form.setText(kindLabel);
@@ -723,12 +724,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		if (taskData == null) {
-			GridLayout warningLayout = new GridLayout(2, false);			
+			GridLayout warningLayout = new GridLayout(2, false);
 			Composite warningComposite = toolkit.createComposite(editorComposite);
 			warningComposite.setLayout(warningLayout);
 			Label warning = toolkit.createLabel(warningComposite, "");
 			warning.setImage(TaskListImages.getImage(TaskListImages.WARNING));
-			toolkit.createLabel(warningComposite, "Task data not available. If connected, synchronize the task and reopen.");
+			toolkit.createLabel(warningComposite,
+					"Task data not available. If connected, synchronize the task and reopen.");
 		} else {
 			createSections();
 			getSite().getPage().addSelectionListener(selectionListener);
@@ -747,8 +749,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				text.setFont(TITLE_FONT);
 				text.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				String label = repository.getRepositoryLabel();
-				if(label == null || label.equals("")){
-					if(repository.getUrl().indexOf("//") != -1) {
+				if (label == null || label.equals("")) {
+					if (repository.getUrl().indexOf("//") != -1) {
 						label = repository.getUrl().substring((repository.getUrl().indexOf("//") + 2));
 					} else {
 						label = repository.getUrl();
@@ -1747,8 +1749,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
+							.getRepositoryKind(), getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION), true, taskData
+							.getSummary()))));
 		}
 	}
 
@@ -2394,8 +2397,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected class NewCommentListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), "New Comment", false,
-							taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
+							.getRepositoryKind(), "New Comment", false, taskData.getSummary()))));
 		}
 	}
 

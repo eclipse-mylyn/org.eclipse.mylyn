@@ -29,7 +29,7 @@ public class ContentOutlineTools {
 	 * @return The handle for the bugzilla selection.
 	 */
 	public static String getHandle(IRepositoryTaskSelection taskSelection) {
-		String handle = taskSelection.getServer() + ";" + taskSelection.getId();
+		String handle = taskSelection.getRepositoryUrl() + ";" + taskSelection.getId();
 		if (taskSelection.hasComment()) {
 			int number = taskSelection.getComment().getNumber() + 1;
 			handle += ";" + number;
@@ -42,7 +42,7 @@ public class ContentOutlineTools {
 	}
 
 	public static String getName(IRepositoryTaskSelection taskSelection) {
-		String name = taskSelection.getServer() + ": Bug#: " + taskSelection.getId() + ": " + taskSelection.getBugSummary();
+		String name = taskSelection.getRepositoryUrl() + ": Bug#: " + taskSelection.getId() + ": " + taskSelection.getBugSummary();
 		if (taskSelection.hasComment()) {
 			name += " : Comment#: " + taskSelection.getComment().getNumber();
 		} else if (taskSelection.isCommentHeader()) {

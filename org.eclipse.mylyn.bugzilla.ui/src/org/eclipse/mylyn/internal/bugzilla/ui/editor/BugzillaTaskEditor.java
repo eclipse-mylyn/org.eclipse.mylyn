@@ -648,7 +648,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData.getRepositoryKind(),
 							taskComment.getCreated(), taskComment, taskData.getSummary()))));
 		}
 	}

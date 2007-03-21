@@ -293,7 +293,7 @@ public class RepositoryTaskOutlineNode implements IRepositoryTaskSelection {
 		this.id = id;
 	}
 
-	public String getServer() {
+	public String getRepositoryUrl() {
 		return server;
 	}
 

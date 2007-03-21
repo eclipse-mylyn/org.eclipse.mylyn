@@ -67,7 +67,7 @@ public interface IRepositoryTaskSelection extends ISelection {
 	 * @return The server of the Bugzilla object that the selection was on, or
 	 *         <code>null</code> if no server is supplied.
 	 */
-	public String getServer();
+	public String getRepositoryUrl();
 
 	/**
 	 * Sets the server of the Bugzilla object that the selection was on.

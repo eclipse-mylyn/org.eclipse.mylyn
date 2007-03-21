@@ -15,10 +15,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -47,7 +50,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public void run() {
 		ISelection selection = super.getStructuredSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
-		String text = getTextForTask(object); 
+		String text = getTextForTask(object);
 
 		// HACK: this should be done using proper copying
 		Composite dummyComposite = TaskListView.getFromActivePerspective().getFilteredTree();
@@ -63,29 +66,40 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		if (object instanceof ITask || object instanceof AbstractQueryHit) {
 			ITask task = null;
 			if (object instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit)object).getCorrespondingTask();
+				task = ((AbstractQueryHit) object).getCorrespondingTask();
 			} else if (object instanceof ITask) {
-				task = (ITask)object;
+				task = (ITask) object;
 			}
 			if (task != null) {
 				if (task instanceof AbstractRepositoryTask) {
-					text += ((AbstractRepositoryTask)task).getTaskKey() + ": ";
+					text += ((AbstractRepositoryTask) task).getTaskKey() + ": ";
 				}
-				
+
 				text += task.getSummary();
 				if (task.hasValidUrl()) {
 					text += "\n" + task.getTaskUrl();
-				} 
+				}
 			} else {
-				text += ((AbstractQueryHit)object).getSummary();
+				text += ((AbstractQueryHit) object).getSummary();
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery)object;
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
 		} else if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 			text = element.getSummary();
+		} else if (object instanceof RepositoryTaskSelection) {
+
+			RepositoryTaskSelection selection = (RepositoryTaskSelection) object;
+			text += selection.getId() + ": " + selection.getBugSummary();
+			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+					selection.getRepositoryKind());
+			if (connector != null) {
+				text += "\n" + connector.getTaskWebUrl(selection.getRepositoryUrl(), selection.getId());
+			} else {
+				text += "\n" + selection.getRepositoryUrl();
+			}
 		}
 		return text;
 	}

@@ -185,6 +185,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					subMenuManager.add(action);
 				}
 			}
+			
+			copyTaskDetailsAction.selectionChanged(new StructuredSelection(editor.getSelection()));
 			manager.add(subMenuManager);
 			return;
 
@@ -198,7 +200,6 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		} else {
 			// TODO: refactor
 			IStructuredSelection selection = new StructuredSelection(task);
-
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
 			attachFileAction.selectionChanged(selection);
