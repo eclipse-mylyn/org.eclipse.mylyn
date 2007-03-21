@@ -102,7 +102,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository
 					.getSystemProxy(), page.getCharacterEncoding());
 			client.validate();
-		} catch (UnknownHostException e) {
+		} catch (CoreException e) {
+			assertTrue(e.getStatus().getException() instanceof UnknownHostException);
 			return;
 		}
 		fail("UnknownHostException didn't occur!");

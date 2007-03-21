@@ -119,6 +119,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	private ArrayList<DateRangeContainer> dateRangeContainers = new ArrayList<DateRangeContainer>();
 
 	private Set<ITask> tasksWithReminders = new HashSet<ITask>();
+	
+	private Set<ITask> tasksWithDueDates = new HashSet<ITask>();
 
 	private ITask currentTask = null;
 
@@ -283,8 +285,14 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask activity : toRemove) {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
-			if (delegate.getScheduledForDate() != null) {
-				calendar.setTime(delegate.getScheduledForDate());
+			
+			Date schedDate = delegate.getScheduledForDate();
+			if(schedDate == null) {
+				schedDate = delegate.getDueDate();
+			}
+			
+			if (schedDate != null) {
+				calendar.setTime(schedDate);
 				if (!activityThisWeek.includes(calendar) && activityThisWeek.getElapsed(delegate) == 0) {
 					activityThisWeek.remove(delegate);
 				}
@@ -296,12 +304,24 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 		GregorianCalendar tempCalendar = new GregorianCalendar();
 		tempCalendar.setFirstDayOfWeek(startDay);
-		for (ITask task : tasksWithReminders) {
+		
+		Set<ITask> allScheduledTasks = new HashSet<ITask>();
+		allScheduledTasks.addAll(tasksWithReminders);
+		allScheduledTasks.addAll(tasksWithDueDates);
+		
+		for (ITask task : allScheduledTasks) {
 			if (task instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) task).getCorrespondingTask();
 			}
-			if (task.getScheduledForDate() != null) {
-				tempCalendar.setTime(task.getScheduledForDate());
+			
+			Date schedDate = task.getScheduledForDate();
+			if(schedDate == null) {
+				schedDate = task.getDueDate();
+			}
+			
+			
+			if (schedDate != null) {
+				tempCalendar.setTime(schedDate);
 				if (activityNextWeek.includes(tempCalendar)) {
 					activityNextWeek.addTask(new DateRangeActivityDelegate(activityNextWeek, task, tempCalendar,
 							tempCalendar));
@@ -689,10 +709,12 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 
 			for (ITask task : taskList.getAllTasks()) {
-				if (task.getScheduledForDate() != null)// &&
-					// task.hasBeenReminded()
-					// != true
+				if (task.getScheduledForDate() != null) {
 					tasksWithReminders.add(task);
+				}
+				if(task.getDueDate() != null) {
+					tasksWithDueDates.add(task);
+				}
 			}
 			resetActivity();
 			parseFutureReminders();
@@ -919,6 +941,13 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	public void setDueDate(ITask task, Date dueDate) {
 		task.setDueDate(dueDate);
+		if(dueDate == null) {
+			tasksWithDueDates.remove(task);
+		} else {
+			tasksWithDueDates.remove(task);
+			tasksWithDueDates.add(task);
+		}
+		parseFutureReminders();
 		taskList.notifyLocalInfoChanged(task);
 	}
 
@@ -945,9 +974,13 @@ public class TaskListManager implements IPropertyChangeListener {
 	public void resetAndRollOver() {
 		taskActivityHistoryInitialized = false;
 		tasksWithReminders.clear();
+		tasksWithDueDates.clear();
 		for (ITask task : taskList.getAllTasks()) {
 			if (task.getScheduledForDate() != null) {
 				tasksWithReminders.add(task);
+			}
+			if(task.getDueDate() != null) {
+				tasksWithDueDates.add(task);
 			}
 		}
 		resetActivity();

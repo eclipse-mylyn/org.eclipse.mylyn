@@ -83,6 +83,8 @@ public class TaskListImages {
  
 	public static final ImageDescriptor OVERLAY_SYNCHRONIZING = create(T_EVIEW, "overlay-synchronizing.gif");
 
+	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
+	
 	public static final ImageDescriptor OVERLAY_DUE = create(T_EVIEW, "overlay-due.gif");
 	
 	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
