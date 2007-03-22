@@ -150,9 +150,8 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		}
 
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 			public void run() {
-				if (!taskProgressBar.isDisposed()) {
+				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
 					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Tasks: " + completeTasks + " of "
 							+ totalTasks + " scheduled" + "\n     Hours: " + completeTime + " of "
