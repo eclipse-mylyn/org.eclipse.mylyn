@@ -117,11 +117,12 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 		jobsQueue.clear();
 		if (refreshJob != null) {
 			if (!refreshJob.cancel()) {
-				try {
-					refreshJob.join();
-				} catch (InterruptedException e) {
-					// ignore
-				}
+//				try {
+//					// Potential deadlock if synch job never ends bug#178745
+//					// refreshJob.join();
+//				} catch (InterruptedException e) {
+//					// ignore
+//				}
 			}
 		}
 	}
