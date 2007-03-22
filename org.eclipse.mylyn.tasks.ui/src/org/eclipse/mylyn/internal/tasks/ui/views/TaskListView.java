@@ -255,6 +255,10 @@ public class TaskListView extends ViewPart {
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
 
+	private Color categoryGradientStart;
+
+	private Color categoryGradientEnd;
+
 	private final static int MAX_SELECTION_HISTORY_SIZE = 10;
 
 	private LinkedHashMap<String, IStructuredSelection> lastSelectionByTaskHandle = new LinkedHashMap<String, IStructuredSelection>(
@@ -289,6 +293,41 @@ public class TaskListView extends ViewPart {
 	 * True if the view should indicate that interaction monitoring is paused
 	 */
 	protected boolean isPaused = false;
+
+	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
+		public void handleEvent(Event event) {
+			if (event.item.getData() instanceof AbstractTaskContainer) {
+				Scrollable scrollable = (Scrollable) event.widget;
+				GC gc = event.gc;
+
+				Rectangle area = scrollable.getClientArea();
+				Rectangle rect = event.getBounds();
+
+				/* Paint the selection beyond the end of last column */
+				expandRegion(event, scrollable, gc, area);
+
+				/* Draw Gradient Rectangle */
+				Color oldForeground = gc.getForeground();
+				Color oldBackground = gc.getBackground();
+
+				gc.setForeground(categoryGradientStart);
+				gc.setBackground(categoryGradientEnd);
+				gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
+
+				/* Bottom Line */
+				gc.setForeground(categoryGradientEnd);
+				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
+
+				gc.setForeground(oldForeground);
+				gc.setBackground(oldBackground);
+
+				/* Mark as Background being handled */
+				event.detail &= ~SWT.BACKGROUND;
+			}
+		}
+	};
+
+	private boolean gradientListenerAdded = false;
 
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 		public void taskActivated(final ITask task) {
@@ -440,12 +479,29 @@ public class TaskListView extends ViewPart {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
 					|| TaskListColorsAndFonts.isTaskListTheme(event.getProperty())) {
+				updateGradientColors();
 				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry()
 						.get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
 			}
 		}
 	};
+
+	private void updateGradientColors() {
+		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
+		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
+
+		if (gradientListenerAdded == false && categoryGradientStart != null
+				&& !categoryGradientStart.equals(categoryGradientEnd)) {
+			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
+			gradientListenerAdded = true;
+		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)){
+			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
+			gradientListenerAdded = false;
+		}
+	}
 
 	public static TaskListView getFromActivePerspective() {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -774,15 +830,15 @@ public class TaskListView extends ViewPart {
 		getViewer().getTree().setHeaderVisible(true);
 		getViewer().getTree().setLinesVisible(true);
 		getViewer().setUseHashlookup(true);
-		
+
 		configureColumns(columnNames, columnWidths);
 
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		getViewer().setLabelProvider(
-				new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI.getWorkbench()
-						.getDecoratorManager().getLabelDecorator(), categoryBackground, this));
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
+		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
@@ -799,7 +855,6 @@ public class TaskListView extends ViewPart {
 		getViewer().setSorter(tableSorter);
 
 		applyPresentation(catagorizedPresentation);
-
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
@@ -853,49 +908,10 @@ public class TaskListView extends ViewPart {
 
 		// Set to empty string to disable native tooltips (windows only?)
 		// bug#160897
-		// ref:
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText("");
 
-		getViewer().getTree().addListener(SWT.EraseItem, new Listener() {
-			public void handleEvent(Event event) {
-				if (event.item.getData() instanceof AbstractTaskContainer) {
-					Scrollable scrollable = (Scrollable) event.widget;
-					GC gc = event.gc;
-
-					Rectangle area = scrollable.getClientArea();
-					Rectangle rect = event.getBounds();
-
-					/* Paint the selection beyond the end of last column */
-					expandRegion(event, scrollable, gc, area);
-
-					/* Draw Gradient Rectangle */
-					Color oldForeground = gc.getForeground();
-					Color oldBackground = gc.getBackground();
-
-					/* Gradient */
-					Color gradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
-
-					Color gradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-							TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
-
-					gc.setForeground(gradientStart);
-					gc.setBackground(gradientEnd);
-					gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
-
-					/* Bottom Line */
-					gc.setForeground(gradientEnd);
-					gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
-
-					gc.setForeground(oldForeground);
-					gc.setBackground(oldBackground);
-
-					/* Mark as Background being handled */
-					event.detail &= ~SWT.BACKGROUND;
-				}
-			}
-		});
+		updateGradientColors();
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();
@@ -922,7 +938,6 @@ public class TaskListView extends ViewPart {
 	public ITaskListPresentation getCurrentPresentation() {
 		return currentPresentation;
 	}
-
 
 	private void configureColumns(final String[] columnNames, final int[] columnWidths) {
 		getViewer().setColumnProperties(columnNames);
