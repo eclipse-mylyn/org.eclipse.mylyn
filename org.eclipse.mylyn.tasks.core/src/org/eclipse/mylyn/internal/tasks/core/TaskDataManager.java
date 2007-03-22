@@ -223,7 +223,7 @@ public class TaskDataManager {
 			}
 		}
 		// TODO force save
-		save(true);
+		save(false);
 	}
 
 	public Set<RepositoryTaskAttribute> getEdits(String handle) {
@@ -240,7 +240,7 @@ public class TaskDataManager {
 		synchronized (file) {
 			getLocalChangesMap().remove(handle);
 		}
-		save(true);
+		save(false);
 	}
 
 	/**
