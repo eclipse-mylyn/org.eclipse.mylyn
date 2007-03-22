@@ -113,14 +113,20 @@ public class TaskEditor extends FormEditor {
 		return super.getActiveEditor();
 	}
 
-	private int createBrowserPage(String url) {
+	private int createBrowserPage(final String url) {
 		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
-				webBrowser.setUrl(url);
+				
+				
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						webBrowser.setUrl(url);
+					}});
 
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
