@@ -235,7 +235,7 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getValue();
+		return getID() + ":" + values;
 	}
 
 	@Override
