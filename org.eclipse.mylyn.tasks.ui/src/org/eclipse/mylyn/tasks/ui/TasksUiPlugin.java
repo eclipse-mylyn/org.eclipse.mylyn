@@ -123,7 +123,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskListBackupManager taskListBackupManager;
 
-	private TaskDataManager offlineTaskManager;
+	private TaskDataManager taskDataManager;
 
 	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
 
@@ -419,11 +419,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			readOfflineReports();
 			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
 				if (externalizer instanceof DelegatingTaskExternalizer) {
-					((DelegatingTaskExternalizer) externalizer).init(offlineTaskManager);
+					((DelegatingTaskExternalizer) externalizer).init(taskDataManager);
 				}
 			}
 
-			taskListWriter.setTaskDataManager(offlineTaskManager);
+			taskListWriter.setTaskDataManager(taskDataManager);
 
 			// NOTE: task list must be read before Task List view can be
 			// initialized
@@ -522,6 +522,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
+		taskDataManager.save(false);
 		try {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
@@ -746,7 +747,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		IPath offlineReportsPath = getOfflineReportsFilePath();
 
 		try {
-			offlineTaskManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), true);
+			taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), true);
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Recreating offline task cache due to format update.");
 			boolean deleted = offlineReportsPath.toFile().delete();
@@ -754,7 +755,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
 			}
 			try {
-				offlineTaskManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), false);
+				taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), false);
 			} catch (Exception e1) {
 				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
 			}
@@ -772,10 +773,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public TaskDataManager getTaskDataManager() {
-		if (offlineTaskManager == null) {
+		if (taskDataManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
 		}
-		return offlineTaskManager;
+		return taskDataManager;
 	}
 
 	public static void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
