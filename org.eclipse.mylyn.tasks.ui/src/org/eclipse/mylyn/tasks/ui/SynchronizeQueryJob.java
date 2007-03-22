@@ -207,7 +207,7 @@ class SynchronizeQueryJob extends Job {
 					}
 				}
 
-				TasksUiPlugin.getDefault().getTaskDataManager().save();
+				//TasksUiPlugin.getDefault().getTaskDataManager().save();
 			} finally {
 				monitor.done();
 			}

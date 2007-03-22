@@ -269,14 +269,16 @@ public class RepositorySynchronizationManager {
 		case INCOMING:
 			// only most recent incoming will be displayed if two
 			// sequential incoming's /conflicts happen
+			
+			// TODO: Only replace if has new incoming?
 			TasksUiPlugin.getDefault().getTaskDataManager().replace(repositoryTask.getHandleIdentifier(), newTaskData);
 			break;
 		case SYNCHRONIZED:
 			if (checkHasIncoming(repositoryTask, newTaskData)) {
 				status = RepositoryTaskSyncState.INCOMING;
 				repositoryTask.setNotified(false);
+				TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			}
-			TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			break;
 		}
 

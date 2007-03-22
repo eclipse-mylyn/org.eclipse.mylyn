@@ -9,9 +9,9 @@
 package org.eclipse.mylar.internal.tasks.core;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -30,16 +30,16 @@ class OfflineDataStore implements Serializable {
 	private int lastNewRepositoryTaskId = 0;
 
 	// Local changes to existing reports
-	private Map<String, Set<RepositoryTaskAttribute>> localEdits = new HashMap<String, Set<RepositoryTaskAttribute>>();
+	private Map<String, Set<RepositoryTaskAttribute>> localEdits = new ConcurrentHashMap<String, Set<RepositoryTaskAttribute>>();
 
 	/** Older version of Task Data */
-	private Map<String, RepositoryTaskData> oldTaskDataMap = new HashMap<String, RepositoryTaskData>();
+	private Map<String, RepositoryTaskData> oldTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	/** Newest version of the task data */
-	private Map<String, RepositoryTaskData> newTaskDataMap = new HashMap<String, RepositoryTaskData>();
+	private Map<String, RepositoryTaskData> newTaskDataMap = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	/** New unsubmitted repository task data */
-	private Map<String, RepositoryTaskData> unsubmittedTaskData = new HashMap<String, RepositoryTaskData>();
+	private Map<String, RepositoryTaskData> unsubmittedTaskData = new ConcurrentHashMap<String, RepositoryTaskData>();
 
 	public void setLastNewTaskId(int lastNumber) {
 		lastNewRepositoryTaskId = new Integer(lastNumber);

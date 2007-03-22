@@ -88,7 +88,7 @@ class SynchronizeTaskJob extends Job {
 
 				monitor.worked(1);
 			}
-			TasksUiPlugin.getDefault().getTaskDataManager().save();
+			//TasksUiPlugin.getDefault().getTaskDataManager().save();
 
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not download report", false);
