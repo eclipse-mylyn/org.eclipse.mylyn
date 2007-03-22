@@ -2015,17 +2015,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void saveTaskOffline(IProgressMonitor progressMonitor) {
-//		if (progressMonitor == null) {
-//			progressMonitor = new NullProgressMonitor();
-//		}
-//		try {
-//			progressMonitor.beginTask("Saving...", IProgressMonitor.UNKNOWN);
-//			TasksUiPlugin.getDefault().getTaskDataManager().save();
-//		} catch (Exception e) {
-//			MylarStatusHandler.fail(e, "Saving of offline task data failed", true);
-//		} finally {
-//			progressMonitor.done();
-//		}
+		// if (progressMonitor == null) {
+		// progressMonitor = new NullProgressMonitor();
+		// }
+		// try {
+		// progressMonitor.beginTask("Saving...", IProgressMonitor.UNKNOWN);
+		// TasksUiPlugin.getDefault().getTaskDataManager().save();
+		// } catch (Exception e) {
+		// MylarStatusHandler.fail(e, "Saving of offline task data failed",
+		// true);
+		// } finally {
+		// progressMonitor.done();
+		// }
 
 	}
 
@@ -2059,21 +2060,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		saveTaskOffline(monitor);
 	}
 
-//	// TODO: Remove once offline persistence is improved
-//	private void runSaveJob() {
-//		Job saveJob = new Job("Save") {
-//
-//			@Override
-//			protected IStatus run(IProgressMonitor monitor) {
-//				saveTaskOffline(monitor);
-//				return Status.OK_STATUS;
-//			}
-//
-//		};
-//		saveJob.setSystem(true);
-//		saveJob.schedule();
-//		markDirty(false);
-//	}
+	// // TODO: Remove once offline persistence is improved
+	// private void runSaveJob() {
+	// Job saveJob = new Job("Save") {
+	//
+	// @Override
+	// protected IStatus run(IProgressMonitor monitor) {
+	// saveTaskOffline(monitor);
+	// return Status.OK_STATUS;
+	// }
+	//
+	// };
+	// saveJob.setSystem(true);
+	// saveJob.schedule();
+	// markDirty(false);
+	// }
 
 	@Override
 	public void doSaveAs() {
@@ -2607,17 +2608,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void showBusy(boolean busy) {
-		form.setBusy(busy);
-		if (busy) {
-			setEnabledState(editorComposite, false);
-			// regularCursor = form.getCursor();
-			// if (waitCursor == null) {
-			// waitCursor = new Cursor(form.getDisplay(), SWT.CURSOR_WAIT);
-			// }
-			// form.setCursor(waitCursor);
-		} else {
-			// form.setCursor(regularCursor);
-			setEnabledState(editorComposite, true);
+		if (!form.isDisposed()) {
+			form.setBusy(busy);
+			if (busy) {
+				setEnabledState(editorComposite, false);
+				// regularCursor = form.getCursor();
+				// if (waitCursor == null) {
+				// waitCursor = new Cursor(form.getDisplay(), SWT.CURSOR_WAIT);
+				// }
+				// form.setCursor(waitCursor);
+			} else {
+				// form.setCursor(regularCursor);
+				setEnabledState(editorComposite, true);
+			}
 		}
 	}
 
