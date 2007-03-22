@@ -36,12 +36,17 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
-			if (repositoryUrl != null) {
-				try {
-					URL url = new URL(repositoryUrl);
-					decoration.addSuffix("   [" + url.getHost() + "]");
-				} catch (MalformedURLException e) {
-					decoration.addSuffix("   [ <unknown host> ]");
+			TaskRepository taskRepository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+			if (repositoryUrl != null && taskRepository != null) {
+				if (taskRepository.getRepositoryLabel() == null || taskRepository.getRepositoryLabel().trim().equals("")) {
+					try {
+						URL url = new URL(repositoryUrl);
+						decoration.addSuffix("   [" + url.getHost() + "]");
+					} catch (MalformedURLException e) {
+						decoration.addSuffix("   [ <unknown host> ]");
+					}
+				} else {
+					decoration.addSuffix("   [" + taskRepository.getRepositoryLabel() + "]");
 				}
 			}
 			if (query.isSynchronizing()) {

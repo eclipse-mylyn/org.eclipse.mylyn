@@ -107,7 +107,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public String getText(Object object) {
-
 		if (object instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) object;
 			if (hit.getSummary() == null) {
