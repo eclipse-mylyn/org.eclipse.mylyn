@@ -274,9 +274,12 @@ public class RepositorySynchronizationManager {
 			TasksUiPlugin.getDefault().getTaskDataManager().replace(repositoryTask.getHandleIdentifier(), newTaskData);
 			break;
 		case SYNCHRONIZED:
-			if (checkHasIncoming(repositoryTask, newTaskData)) {
+			boolean hasIncoming = checkHasIncoming(repositoryTask, newTaskData);
+			if (hasIncoming) {
 				status = RepositoryTaskSyncState.INCOMING;
 				repositoryTask.setNotified(false);
+			}
+			if (hasIncoming || offlineTaskData == null) {
 				TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			}
 			break;
