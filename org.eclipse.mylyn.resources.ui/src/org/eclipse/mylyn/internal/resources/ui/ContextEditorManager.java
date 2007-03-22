@@ -47,7 +47,7 @@ public class ContextEditorManager implements IMylarContextListener {
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 	
 	public void contextActivated(IMylarContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (!Workbench.getInstance().isStarting() && ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			Workbench workbench = (Workbench) PlatformUI.getWorkbench();
 			previousCloseEditorsSetting = workbench.getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 			workbench.getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
@@ -71,6 +71,7 @@ public class ContextEditorManager implements IMylarContextListener {
 					opened++;
 				}
 				IMylarElement activeNode = context.getActiveNode();
+
 				if (activeNode != null) {
 					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
