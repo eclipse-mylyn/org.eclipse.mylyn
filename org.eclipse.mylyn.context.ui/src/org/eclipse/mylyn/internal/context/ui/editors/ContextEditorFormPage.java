@@ -36,6 +36,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -139,7 +140,7 @@ public class ContextEditorFormPage extends FormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		super.createFormContent(managedForm);
 		ContextCorePlugin.getContextManager().addListener(CONTEXT_LISTENER);
-		task = ((ContextEditorInput) getEditorInput()).getTask();
+		task = ((TaskEditorInput) getEditorInput()).getTask();
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
