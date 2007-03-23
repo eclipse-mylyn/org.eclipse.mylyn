@@ -68,7 +68,6 @@ public class ContextEditorManager implements IMylarContextListener {
 					IMylarElement document = iter.next();
 					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(document.getContentType());
 					bridge.restoreEditor(document);
-					opened++;
 				}
 				IMylarElement activeNode = context.getActiveNode();
 
