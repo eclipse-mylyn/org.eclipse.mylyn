@@ -205,6 +205,12 @@
        	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
           </includes>
        </viewerContentBinding>
+       <viewerContentBinding 
+             viewerId="org.eclipse.mylar.context.ui.navigator.context.quick">
+          <includes>
+       	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
+          </includes>
+       </viewerContentBinding>
    </extension>	
  
 	<!-- ==================== Markers ==================== -->
@@ -268,6 +274,14 @@
                label="Mark as Landmark"
                menubarPath="navigate/open.ext2">
          </action>
+	
+	     <action
+               definitionId="org.eclipse.mylar.ui.context.dialog.show"
+               label="Quick Context View"
+               class="org.eclipse.mylar.internal.context.ui.actions.OpenQuickContextPopupDialog"
+               menubarPath="navigate/open.ext2"
+               id="org.eclipse.mylar.context.ui.actions.open.context.dialog">
+         </action>
          <!--
          <action
                definitionId="org.eclipse.mylar.ui.related.show"
@@ -301,7 +315,7 @@
       <command
             name="Show Related Elements"
             description="Show Related Elements"
-            id="org.eclipse.mylar.ui.related.show"
+            id="org.eclipse.mylar.ui.context.dialog.show"
             categoryId="org.eclipse.mylar.ui.commands">
       </command>
       <command
@@ -340,9 +354,9 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
-            sequence="M1+M2+M3+ARROW_LEFT"
+            sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.related.show"
+            commandId="org.eclipse.mylar.ui.context.dialog.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
 	  <!--

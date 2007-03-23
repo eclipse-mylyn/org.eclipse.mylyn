@@ -68,7 +68,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private static final String LABEL = "Task Context Editor";
 
-	private static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context";
+	public static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context";
 
 	private ScrolledForm form;
 
@@ -322,7 +322,7 @@ public class ContextEditorFormPage extends FormPage {
 		section.setExpanded(true);
 	}
 
-	public void createViewer(Composite aParent) {
+	private void createViewer(Composite aParent) {
 
 		commonViewer = createCommonViewer(aParent);
 		commonViewer.addFilter(interestFilter);
@@ -330,24 +330,7 @@ public class ContextEditorFormPage extends FormPage {
 		try {
 			commonViewer.getControl().setRedraw(false);
 
-			INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
-					"org.eclipse.jdt.java.ui.javaContent");
-			if (javaContent != null) {
-				ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
-				// TODO: find a sane way of doing this, should be:
-				// if (javaContent.getContentProvider() != null) {
-				// JavaNavigatorContentProvider java =
-				// (JavaNavigatorContentProvider)javaContent.getContentProvider();
-				// java.setIsFlatLayout(true);
-				// }
-				try {
-					Class<?> clazz = treeContentProvider.getClass().getSuperclass();
-					Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
-					method.invoke(treeContentProvider, new Object[] { true });
-				} catch (Exception e) {
-					MylarStatusHandler.log(e, "couldn't set flat layout on Java content provider");
-				}
-			}
+			forceFlatLayoutOfJavaContent(commonViewer);
 
 			commonViewer.setInput(getSite().getPage().getInput());
 			getSite().setSelectionProvider(commonViewer);
@@ -358,6 +341,27 @@ public class ContextEditorFormPage extends FormPage {
 			commonViewer.expandAll();
 		} finally {
 			commonViewer.getControl().setRedraw(true);
+		}
+	}
+
+	public static void forceFlatLayoutOfJavaContent(CommonViewer commonViewer) {
+		INavigatorContentExtension javaContent = commonViewer.getNavigatorContentService().getContentExtensionById(
+				"org.eclipse.jdt.java.ui.javaContent");
+		if (javaContent != null) {
+			ITreeContentProvider treeContentProvider = javaContent.getContentProvider();
+			// TODO: find a sane way of doing this, should be:
+			// if (javaContent.getContentProvider() != null) {
+			// JavaNavigatorContentProvider java =
+			// (JavaNavigatorContentProvider)javaContent.getContentProvider();
+			// java.setIsFlatLayout(true);
+			// }
+			try {
+				Class<?> clazz = treeContentProvider.getClass().getSuperclass();
+				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
+				method.invoke(treeContentProvider, new Object[] { true });
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "couldn't set flat layout on Java content provider");
+			}
 		}
 	}
 
