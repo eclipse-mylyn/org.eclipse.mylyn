@@ -396,7 +396,7 @@ public class TaskEditor extends FormEditor {
 							FormPage taskEditor = (FormPage) editor;
 							// repositoryTaskEditor.setParentEditor(this);
 							editor.init(getEditorSite(), input);
-							taskEditor.createPartControl(getContainer());
+							//taskEditor.createPartControl(getContainer());
 							index = addPage(taskEditor);
 							if (editor instanceof AbstractRepositoryTaskEditor) {
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
