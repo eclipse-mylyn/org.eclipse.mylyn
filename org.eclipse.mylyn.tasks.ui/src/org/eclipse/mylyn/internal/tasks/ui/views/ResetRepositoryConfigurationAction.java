@@ -57,7 +57,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 								try {
 									connector.updateAttributes(repository, monitor);
 								} catch (CoreException ce) {
-									MylarStatusHandler.fail(ce, ce.getStatus().getMessage(), true);
+									MylarStatusHandler.displayStatus("Error updating attributes", ce.getStatus());
 								}
 								
 								monitor.done();	

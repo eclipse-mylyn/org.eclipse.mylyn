@@ -95,16 +95,29 @@ public class ScheduledTaskListSynchJob extends Job {
 				}
 
 				// Occasionally update repository attributes
-				if(count >= UPDATE_ATTRIBUTES_FREQUENCY) {
-					try {
-						connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));						
-					} catch (CoreException e) {
-						MylarStatusHandler.log(e, "Unable to update attributes for "+repository.getUrl()+"  " + e.getMessage());
-					} catch (Throwable t) {
-						MylarStatusHandler.log(t, "Unable to update attributes for "+repository.getUrl()+"  " + t.getMessage());
-					}
+				if (count >= UPDATE_ATTRIBUTES_FREQUENCY) {
+					Job updateJob = new Job("Updating attributes for "+repository.getUrl()) {
+
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
+
+							} catch (CoreException e) {
+								MylarStatusHandler.log(e, "Unable to update attributes for " + repository.getUrl()
+										+ "  " + e.getMessage());
+							} catch (Throwable t) {
+								MylarStatusHandler.log(t, "Unable to update attributes for " + repository.getUrl()
+										+ "  " + t.getMessage());
+							}
+							return Status.OK_STATUS;
+						}
+					};
+					//updateJob.setSystem(true);
+					updateJob.setPriority(Job.LONG);
+					updateJob.schedule();
 				}
-				
+
 				Set<AbstractRepositoryQuery> queries = Collections.unmodifiableSet(taskList
 						.getRepositoryQueries(repository.getUrl()));
 				if (queries.size() > 0) {
@@ -115,15 +128,16 @@ public class ScheduledTaskListSynchJob extends Job {
 								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 							}
 						};
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queries, jobAdapter, Job.DECORATE, 0, false);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queries, jobAdapter,
+								Job.DECORATE, 0, false);
 					}
 				} else {
 					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 				}
 				monitor.worked(1);
-			}			
+			}
 		} finally {
-			count = count >= UPDATE_ATTRIBUTES_FREQUENCY ? 0 : count + 1;			
+			count = count >= UPDATE_ATTRIBUTES_FREQUENCY ? 0 : count + 1;
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -145,7 +159,7 @@ public class ScheduledTaskListSynchJob extends Job {
 	public static long getCount() {
 		return count;
 	}
-	
+
 	/** for testing */
 	public static void resetCount() {
 		count = 0;
