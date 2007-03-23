@@ -206,6 +206,8 @@ public class TaskListImages {
 	
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");
 
+	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
+	
 	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TaskListImages.STATUS_NORMAL,
 								TaskListImages.OVERLAY_WARNING, false, true);
 

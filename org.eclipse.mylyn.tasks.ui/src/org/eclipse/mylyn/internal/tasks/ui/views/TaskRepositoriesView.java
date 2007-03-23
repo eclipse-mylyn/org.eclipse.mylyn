@@ -100,6 +100,14 @@ public class TaskRepositoriesView extends ViewPart {
 			return (TaskRepositoriesView) view;
 		return null;
 	}
+	
+	public static TaskRepositoriesView openInActivePerspective() {
+		try {
+			return (TaskRepositoriesView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -205,4 +213,6 @@ public class TaskRepositoriesView extends ViewPart {
 	public TableViewer getViewer() {
 		return viewer;
 	}
+
+	
 }
