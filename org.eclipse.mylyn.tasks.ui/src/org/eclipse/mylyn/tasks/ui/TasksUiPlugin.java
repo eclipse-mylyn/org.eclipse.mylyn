@@ -522,7 +522,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		INSTANCE = null;
-		taskDataManager.save(false);
 		try {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);

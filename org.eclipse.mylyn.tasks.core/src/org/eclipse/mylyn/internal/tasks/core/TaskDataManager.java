@@ -393,20 +393,21 @@ public class TaskDataManager {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			synchronized (file) {
-
-				ObjectOutputStream out = null;
-				try {
-					out = new ObjectOutputStream(new FileOutputStream(file));
-					out.writeObject(dataStore);
-					out.close();
-				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
-				} finally {
-					if (out != null) {
-						try {
-							out.close();
-						} catch (IOException e) {
-							// ignore
+				if (Platform.isRunning()) {
+					ObjectOutputStream out = null;
+					try {
+						out = new ObjectOutputStream(new FileOutputStream(file));
+						out.writeObject(dataStore);
+						out.close();
+					} catch (IOException e) {
+						MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
+					} finally {
+						if (out != null) {
+							try {
+								out.close();
+							} catch (IOException e) {
+								// ignore
+							}
 						}
 					}
 				}
