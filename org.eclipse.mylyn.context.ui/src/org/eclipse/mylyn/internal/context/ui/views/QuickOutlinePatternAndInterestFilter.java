@@ -16,40 +16,45 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.ui.internal.misc.StringMatcher;
 
 /**
- * Derived from {@link QuickOutlineNamePatternFilter}
+ * Derived from {@link QuickOutlinePatternAndInterestFilter}
  * 
  * @author Mik Kersten
  */
-public class QuickOutlineNamePatternFilter extends ViewerFilter {
+public class QuickOutlinePatternAndInterestFilter extends ViewerFilter {
 
-	private StringMatcher fStringMatcher;
-	
-	public QuickOutlineNamePatternFilter() {
-		fStringMatcher = null;
+	private InterestFilter interestFilter = new InterestFilter();
+
+	private StringMatcher stringMatcher;
+
+	public QuickOutlinePatternAndInterestFilter() {
+		stringMatcher = null;
 	}
 
-
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		// Element passes the filter if the string matcher is undefined or the
-		// viewer is not a tree viewer
-		if ((fStringMatcher == null) || 
-				((viewer instanceof TreeViewer) == false)) {
-			return true;
+		boolean isInteresting = interestFilter.select(viewer, parentElement, element);
+		if (!isInteresting) {
+			return false;
+		} else {
+			// Element passes the filter if the string matcher is undefined or
+			// the
+			// viewer is not a tree viewer
+			if ((stringMatcher == null) || ((viewer instanceof TreeViewer) == false)) {
+				return true;
+			}
+			TreeViewer treeViewer = (TreeViewer) viewer;
+			// Match the pattern against the label of the given element
+			String matchName = ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
+			// Element passes the filter if it matches the pattern
+			if ((matchName != null) && stringMatcher.match(matchName)) {
+				return true;
+			}
+			// Determine whether the element has children that pass the filter
+			return hasUnfilteredChild(treeViewer, element);
 		}
-		TreeViewer treeViewer = (TreeViewer)viewer;
-		// Match the pattern against the label of the given element
-		String matchName = 
-			((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
-		// Element passes the filter if it matches the pattern
-		if ((matchName != null) && 
-				fStringMatcher.match(matchName)) {
-			return true;
-		}
-		// Determine whether the element has children that pass the filter
-		return hasUnfilteredChild(treeViewer, element);
 	}
 
 	/**
@@ -62,8 +67,7 @@ public class QuickOutlineNamePatternFilter extends ViewerFilter {
 		// as getting the children
 		// If the element has a child that passes the filter, then we want to
 		// keep the parent around - even if it does not pass the filter itself
-		Object[] children = 
-			((ITreeContentProvider) viewer.getContentProvider()).getChildren(element);
+		Object[] children = ((ITreeContentProvider) viewer.getContentProvider()).getChildren(element);
 		for (int i = 0; i < children.length; i++) {
 			if (select(viewer, element, children[i])) {
 				return true;
@@ -71,13 +75,10 @@ public class QuickOutlineNamePatternFilter extends ViewerFilter {
 		}
 		// Element does not pass the filter
 		return false;
-	}	
-	
-	/**
-	 * @param stringMatcher
-	 */
-	public void setStringMatcher(StringMatcher stringMatcher) {
-		fStringMatcher = stringMatcher;
 	}
-	
+
+	public void setStringMatcher(StringMatcher stringMatcher) {
+		this.stringMatcher = stringMatcher;
+	}
+
 }

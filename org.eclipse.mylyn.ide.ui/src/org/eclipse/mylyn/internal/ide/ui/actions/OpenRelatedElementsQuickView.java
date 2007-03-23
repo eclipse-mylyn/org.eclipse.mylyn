@@ -22,9 +22,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Class to activate the inplace Cross Reference view, via the key binding
- * defined in the plugin.xml.
- * 
  * @author Mik Kersten
  */
 public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDelegate {

@@ -69,7 +69,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	
 	private StringMatcher fStringMatcher;
 	
-	private QuickOutlineNamePatternFilter namePatternFilter;
+	private QuickOutlinePatternAndInterestFilter namePatternFilter;
 			
 	public QuickContextPopupDialog(Shell parent, int shellStyle) {
 		super(parent, shellStyle, true, true, true, true, null, null);
@@ -78,20 +78,8 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	}
 
 	protected Control createDialogArea(Composite parent) {
-
-		// Applies only to dialog body - not title.  See createTitleControl
-		// Create an empty dialog area, if the source page is not defined
-//		if ((fOutlineContentCreator == null) ||
-//				(fOutlineSelectionHandler == null)) {
-//			return super.createDialogArea(parent);
-//		}
-		// Create the tree viewer
 		createViewer(parent);
-		
-		namePatternFilter = new QuickOutlineNamePatternFilter();
-//		createUIWidgetTreeViewer(parent);
 		createUIListenersTreeViewer();
-		createUIActions();
 		addDisposeListener(this);
 			
 		return commonViewer.getControl();
@@ -100,6 +88,9 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	private void createViewer(Composite parent) {
 		commonViewer = createCommonViewer(parent);
 		commonViewer.addFilter(interestFilter);
+		
+		namePatternFilter = new QuickOutlinePatternAndInterestFilter();
+		commonViewer.addFilter(namePatternFilter);
 		
 		try {
 			commonViewer.getControl().setRedraw(false);
@@ -118,77 +109,13 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return viewer;
 	}
 
-	private void createUIActions() {
-		// Add sort action to dialog menu
-//		fSortAction = new SortAction(fTreeViewer,
-//				PDEUIMessages.PDEMultiPageContentOutline_SortingAction_tooltip,
-//				fTreeViewerComparator, fTreeViewerDefaultComparator, null);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.PopupDialog#fillDialogMenu(org.eclipse.jface.action.IMenuManager)
-	 */
 	protected void fillDialogMenu(IMenuManager dialogMenu) {
-		// Add the sort action
-//		dialogMenu.add(fSortAction); 
-		// Separator
-		dialogMenu.add(new Separator()); 
-		// Add the default actions
+		dialogMenu.add(new Separator());
 		super.fillDialogMenu(dialogMenu);
 	}
-	
-//	/**
-//	 * @param parent
-//	 */
-//	private void createUIWidgetTreeViewer(Composite parent) {
-//		
-//		// NOTE: Instructions to implement for PDE form pages:
-//		// Need to call PDEFormEditor.getFormOutline()
-//		// Specify PDE form editor as input
-//		// Need to adjust commandId="org.eclipse.pde.ui.quickOutline" 
-//		// scope:  contextId="org.eclipse.ui.textEditorScope"
-//		// SEE org.eclipse.ui.contexts.window
-//		// TODO: MP: QO: LOW: Implement bi-directional support between form and source page for manifest		
-//		
-//		int style = SWT.H_SCROLL | SWT.V_SCROLL;
-//		// Create the tree
-//		Tree widget = new Tree(parent, style);
-//		// Configure the layout
-//		GridData data = new GridData(GridData.FILL_BOTH);
-//		data.heightHint = widget.getItemHeight() * 12;
-//		widget.setLayoutData(data);		
-//		// Create the tree viewer
-//		fTreeViewer = new TreeViewer(widget);
-//		// Add the name pattern filter
-//		fNamePatternFilter = new QuickOutlineNamePatternFilter();
-//		fTreeViewer.addFilter(fNamePatternFilter);
-//		// Set the content provider
-////		fTreeContentProvider = fOutlineContentCreator.createOutlineContentProvider();
-//		fTreeViewer.setContentProvider(null);
-//		// Set the label provider
-////		fTreeLabelProvider = fOutlineContentCreator.createOutlineLabelProvider();
-//		fTreeViewer.setLabelProvider(null);
-//		// Create the outline sorter (to be set on the sort action)
-////		fTreeViewerComparator = fOutlineContentCreator.createOutlineComparator();	
-//		// Set the comparator to null (sort action will be disabled initially 
-//		// because of this)
-//		// Create the default outline sorter (Most like this will just return
-//		// null to indicate sorting disabled
-////		fTreeViewe//efaultComparator = 
-////			fOutlineC//tentCreator.createDefaultOutlineComparator();
-//		fTreeViewer.setComparator(fTreeViewerDefaultComparator);
-//		fTreeViewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
-//		fTreeViewer.setUseHashlookup(true);
-////		fTreeViewe//setInput(fOutlineContentCreator.getOutlineInput());
-//	}
-	
-	/**
-	 * 
-	 */
+
 	private void createUIListenersTreeViewer() {
-		// Get the underlying tree widget
 		final Tree tree = commonViewer.getTree();
-		// Handle key events
 		tree.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e)  {
 				if (e.character == 0x1B) { 
@@ -197,21 +124,19 @@ public class QuickContextPopupDialog extends PopupDialog implements
 				}
 			}
 			public void keyReleased(KeyEvent e) {
-				// NO-OP
+				// ignore
 			}
 		});		
-		// Handle mouse clicks
+		
 		tree.addMouseListener(new MouseAdapter() {
 			public void mouseUp(MouseEvent e) { 
 				handleTreeViewerMouseUp(tree, e);
 			}
 		});
-		// Handle mouse move events
-//		tree.addMo//eMoveListener(new QuickOutlineMouseMoveListener(fTreeViewer));
-		// Handle widget selection events
+
 		tree.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				// NO-OP
+				// ignore
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				gotoSelectedElement();
@@ -219,13 +144,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		});		
 	}	
 
-	/**
-	 * @param tree
-	 * @param e
-	 */
 	private void handleTreeViewerMouseUp(final Tree tree, MouseEvent e) {
-		// Ensure a selection was made, the first mouse button was
-		// used and the event happened in the tree
 		if ((tree.getSelectionCount() < 1) ||
 				(e.button != 1) ||
 				(tree.equals(e.getSource()) == false)) {
@@ -239,9 +158,6 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		}
 	}	
 	
-	/**
-	 * @return
-	 */
 	private Object getSelectedElement() {
 		if (commonViewer == null) {
 			return null;
@@ -249,36 +165,23 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return ((IStructuredSelection) commonViewer.getSelection()).getFirstElement();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#addDisposeListener(org.eclipse.swt.events.DisposeListener)
-	 */
 	public void addDisposeListener(DisposeListener listener) {
 		getShell().addDisposeListener(listener);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#addFocusListener(org.eclipse.swt.events.FocusListener)
-	 */
 	public void addFocusListener(FocusListener listener) {
 		getShell().addFocusListener(listener);
 	}
 
 	public Point computeSizeHint() {
 		// Note that it already has the persisted size if persisting is enabled.
-//		return new Point(400, 600);		
 		return getShell().getSize();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#dispose()
-	 */
 	public void dispose() {
 		close();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#isFocusControl()
-	 */
 	public boolean isFocusControl() {
 		if (commonViewer.getControl().isFocusControl() ||
 				fFilterText.isFocusControl()) {
@@ -287,53 +190,31 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#removeDisposeListener(org.eclipse.swt.events.DisposeListener)
-	 */
 	public void removeDisposeListener(DisposeListener listener) {
 		getShell().removeDisposeListener(listener);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#removeFocusListener(org.eclipse.swt.events.FocusListener)
-	 */
 	public void removeFocusListener(FocusListener listener) {
 		getShell().removeFocusListener(listener);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setBackgroundColor(org.eclipse.swt.graphics.Color)
-	 */
 	public void setBackgroundColor(Color background) {
 		applyBackgroundColor(background, getContents());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setFocus()
-	 */
 	public void setFocus() {
 		getShell().forceFocus();
 		fFilterText.setFocus();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setForegroundColor(org.eclipse.swt.graphics.Color)
-	 */
 	public void setForegroundColor(Color foreground) {
 		applyForegroundColor(foreground, getContents());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setInformation(java.lang.String)
-	 */
 	public void setInformation(String information) {
-		// Ignore
 		// See IInformationControlExtension2
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setLocation(org.eclipse.swt.graphics.Point)
-	 */
 	public void setLocation(Point location) {
 		/*
 		 * If the location is persisted, it gets managed by PopupDialog - fine. Otherwise, the location is
@@ -352,23 +233,14 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setSize(int, int)
-	 */
 	public void setSize(int width, int height) {	
 		getShell().setSize(width, height);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setSizeConstraints(int, int)
-	 */
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		// Ignore
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControl#setVisible(boolean)
-	 */
 	public void setVisible(boolean visible) {
 		if (visible) {
 			open();
@@ -378,9 +250,6 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControlExtension#hasContents()
-	 */
 	public boolean hasContents() {
 		if ((commonViewer == null) ||
 				(commonViewer.getInput() == null)) {
@@ -389,9 +258,6 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang.Object)
-	 */
 	public void setInput(Object input) {
 		// Input comes from PDESourceInfoProvider.getInformation2()
 		// The input should be a model object of some sort
@@ -401,18 +267,13 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-	 */
 	public void widgetDisposed(DisposeEvent e) {
 		// Note: We do not reuse the dialog
 		commonViewer= null;
 		fFilterText= null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.PopupDialog#createTitleControl(org.eclipse.swt.widgets.Composite)
-	 */
+
 	protected Control createTitleControl(Composite parent) {
 		// Applies only to dialog title - not body.  See createDialogArea
 		// Create the text widget
@@ -422,11 +283,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		// Return the text widget
 		return fFilterText;
 	}
-	
-	/**
-	 * @param parent
-	 * @return
-	 */
+
 	private void createUIWidgetFilterText(Composite parent) {
 		// Create the widget
 		fFilterText = new Text(parent, SWT.NONE);
@@ -452,18 +309,9 @@ public class QuickContextPopupDialog extends PopupDialog implements
 			return;
 		}
 		dispose();
-		// Get the content outline page within the content outline view
-		// and select the item there to keep the quick outline in sync with the
-		// main outline and prevent duplicate selection events from occurring
-//		fOutlineSe//ctionHandler.getContentOutline().setSelection(
-//				new Stru//uredSelection(selectedElement));
 	}	
-	
-	/**
-	 * 
-	 */
+
 	private void createUIListenersFilterText() {
-		// Handle key events
 		fFilterText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == 0x0D) {

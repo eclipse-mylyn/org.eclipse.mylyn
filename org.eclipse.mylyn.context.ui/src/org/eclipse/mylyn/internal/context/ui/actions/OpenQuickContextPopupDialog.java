@@ -45,6 +45,7 @@ public class OpenQuickContextPopupDialog implements IWorkbenchWindowActionDelega
 		inplaceDialog.setSize(400, 500);
 		
 		inplaceDialog.open();
+		inplaceDialog.setFocus();	
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
 //		inplaceDialog.setWorkbenchooooooooooooooooos
 	}
