@@ -105,6 +105,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static final int NOTIFICATION_DELAY = 5000;
 
+	public static final int MAX_HITS = 5000;
+
 	private static TasksUiPlugin INSTANCE;
 
 	private static TaskListManager taskListManager;
@@ -642,6 +644,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	// }
 
 	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
+
+	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
 	public Map<String, List<IDynamicSubMenuContributor>> getDynamicMenuMap() {
 		return menuContributors;

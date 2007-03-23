@@ -24,9 +24,9 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
 
-	protected int maxHits;
+	protected int maxHits = -1;
 
-	private Set<String> hitHandles = new HashSet<String>(); 
+	private Set<String> hitHandles = new HashSet<String>();
 
 	protected String lastRefreshTimeStamp = "<never>";
 
@@ -37,9 +37,9 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	public abstract String getRepositoryKind();
 
 	/**
-	 * Query must be added to tasklist or synchronization will result
-	 * in empty result set due to removeOrphanedHits(). All hits
-	 * that don't have a query in the tasklist are removed.
+	 * Query must be added to tasklist or synchronization will result in empty
+	 * result set due to removeOrphanedHits(). All hits that don't have a query
+	 * in the tasklist are removed.
 	 */
 	public AbstractRepositoryQuery(String description, TaskList taskList) {
 		super(description, taskList);
@@ -67,14 +67,14 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	public synchronized AbstractQueryHit findQueryHit(String handle) {
-		if(hitHandles.contains(handle)) {
+		if (hitHandles.contains(handle)) {
 			return taskList.getQueryHit(handle);
 		}
 		return null;
 	}
-	
+
 	public synchronized Set<AbstractQueryHit> getHits() {
-		return taskList.getQueryHits(hitHandles);		
+		return taskList.getQueryHits(hitHandles);
 	}
 
 	public synchronized void updateHits(List<AbstractQueryHit> newHits, TaskList taskList) {
@@ -90,16 +90,16 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		}
 	}
 
-	public synchronized void addHit(AbstractQueryHit hit) {		
-		if(hit.getCorrespondingTask() == null) {
+	public synchronized void addHit(AbstractQueryHit hit) {
+		if (hit.getCorrespondingTask() == null) {
 			ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 			if (correspondingTask instanceof AbstractRepositoryTask) {
 				hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
 			}
-		}		
-		// Always replace even if exists (may have new summary etc.) 
+		}
+		// Always replace even if exists (may have new summary etc.)
 		taskList.addQueryHit(hit);
-		
+
 		// TODO: this is meaningless since only one hit object exists now
 		hit.setParent(this);
 		hitHandles.add(hit.getHandleIdentifier());
@@ -146,7 +146,8 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public void setRepositoryUrl(String newRepositoryUrl) {
 		if (repositoryUrl != null && url != null) {
-			// the repository url has changed, so change corresponding part of query URL
+			// the repository url has changed, so change corresponding part of
+			// query URL
 			this.url = newRepositoryUrl + url.substring(repositoryUrl.length());
 		}
 		this.repositoryUrl = newRepositoryUrl;
@@ -164,7 +165,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	final void add(ITask task) {
 		// ignore, can not add tasks to a query
 	}
-	
+
 	public String getLastRefreshTimeStamp() {
 		return lastRefreshTimeStamp;
 	}
@@ -172,13 +173,13 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	public void setLastRefreshTimeStamp(String lastRefreshTimeStamp) {
 		this.lastRefreshTimeStamp = lastRefreshTimeStamp;
 	}
-	
+
 	public IStatus getStatus() {
-		return status ;
+		return status;
 	}
-	
+
 	public void setStatus(IStatus status) {
 		this.status = status;
 	}
-	
+
 }

@@ -147,7 +147,7 @@ public class TaskListToolTipHandler {
 						completed++;
 					}
 				}
-				suffix = "  (query max: " + query.getMaxHits() + ")";
+				//suffix = "  (query max: " + query.getMaxHits() + ")";
 			}
 			taskProgressBar.reset(completed, total);
 			return "Completed " + completed + " of " + total + suffix;

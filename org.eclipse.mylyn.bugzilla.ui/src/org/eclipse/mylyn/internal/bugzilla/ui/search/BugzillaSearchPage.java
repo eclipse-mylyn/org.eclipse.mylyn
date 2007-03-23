@@ -62,13 +62,9 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements Listener {
 
-	private static final String MAX_HITS_GREATER = "Max hits shown must be greater than 0 or enter -1 for all results found.";
-
 	private static final String NUM_DAYS_POSITIVE = "Number of days must be a positive integer. ";
 
 	private static final String TITLE_BUGZILLA_QUERY = "Bugzilla Query";
-
-	private static final String MAX_HITS = "100";
 
 	private static final int HEIGHT_ATTRIBUTE_COMBO = 60;
 
@@ -86,8 +82,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private IDialogSettings fDialogSettings;
 
-	protected Text maxHitsText;
-
 	private static final String[] patternOperationText = { "all words", "any word", "regexp" };
 
 	private static final String[] patternOperationValues = { "allwordssubstr", "anywordssubstr", "regexp" };
@@ -101,8 +95,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	// protected IPreferenceStore prefs =
 	// BugzillaUiPlugin.getDefault().getPreferenceStore();
-
-	protected String maxHits;
 
 	private BugzillaRepositoryQuery originalQuery = null;
 
@@ -530,172 +522,9 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		daysLayoutData.widthHint = 30;
 		daysText.setLayoutData(daysLayoutData);
 		daysText.addListener(SWT.Modify, this);
-		// daysText.addFocusListener(new FocusListener() {
-		//
-		// public void focusGained(FocusEvent e) {
-		// // ignore
-		//
-		// }
-		//
-		// public void focusLost(FocusEvent e) {
-		// String days = daysText.getText();
-		// if (days.length() == 0)
-		// return;
-		// try {
-		// if (Integer.parseInt(days) < 0) {
-		// daysText.setText("");
-		// }
-		// } catch (NumberFormatException ex) {
-		// daysText.setText("");
-		// }
-		// }
-		// });
-
-		// daysText.addModifyListener(new ModifyListener() {
-		// public void modifyText(ModifyEvent e) {
-		// String days = daysText.getText();
-		// if (days.length() == 0)
-		// return;
-		// for (int i = days.length() - 1; i >= 0; i--) {
-		// try {
-		// if (days.equals("") || Integer.parseInt(days) > -1) {
-		// if (i == days.length() - 1)
-		// return;
-		// else
-		// break;
-		// }
-		// } catch (NumberFormatException ex) {
-		// days = days.substring(0, i);
-		// }
-		// }
-		// daysText.setText(days);
-		// }
-		// });
 		label = new Label(group, SWT.LEFT);
 		label.setText(" days.");
-
-		label = new Label(group, SWT.LEFT);
-		label.setText("  Show a maximum of ");
-
-		// operation combo
-		maxHitsText = new Text(group, SWT.BORDER);
-		maxHitsText.setTextLimit(6);
-		maxHitsText.addListener(SWT.Modify, this);
-
-		// maxHitsText.addFocusListener(new FocusListener() {
-		//
-		// public void focusGained(FocusEvent e) {
-		// // ignore
-		//
-		// }
-		//
-		// public void focusLost(FocusEvent e) {
-		// String maxHitss = maxHitsText.getText();
-		// if (maxHitss.length() == 0)
-		// return;
-		//
-		// try {
-		// if (Integer.parseInt(maxHitss) < 0) {
-		// maxHitsText.setText(MAX_HITS);
-		//
-		// }
-		// } catch (NumberFormatException ex) {
-		// maxHitsText.setText(MAX_HITS);
-		// }
-		// }
-		// });
-
-		// maxHitsText.addModifyListener(new ModifyListener() {
-		// public void modifyText(ModifyEvent e) {
-		// String maxHitss = maxHitsText.getText();
-		// if (maxHitss.length() == 0)
-		// return;
-		// for (int i = maxHitss.length() - 1; i >= 0; i--) {
-		// try {
-		// if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
-		// if (i == maxHitss.length() - 1) {
-		// maxHits = maxHitss;
-		// return;
-		// } else {
-		// break;
-		// }
-		// }
-		// } catch (NumberFormatException ex) {
-		// maxHitss = maxHitss.substring(0, i);
-		// }
-		// }
-		//
-		// BugzillaSearchPage.this.maxHits = maxHitss;
-		// }
-		// });
-		gd = new GridData();
-		gd.widthHint = 30;
-		maxHitsText.setLayoutData(gd);
-		label = new Label(group, SWT.LEFT);
-		label.setText(" hits. (-1 returns all)");
-
-		maxHits = MAX_HITS;
-		maxHitsText.setText(maxHits);
-
 		return group;
-	}
-
-	// protected Control createMaxHits(Composite control) {
-	// GridLayout layout;
-	// GridData gd;
-	//
-	// Group group = new Group(control, SWT.NONE);
-	// layout = new GridLayout(3, false);
-	// group.setLayout(layout);
-	// group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	// gd = new GridData(GridData.BEGINNING | GridData.FILL_HORIZONTAL |
-	// GridData.GRAB_HORIZONTAL);
-	// gd.horizontalSpan = 2;
-	// group.setLayoutData(gd);
-	//
-	// Label label = new Label(group, SWT.LEFT);
-	// label.setText("Show a maximum of ");
-	//
-	// // operation combo
-	// maxHitsText = new Text(group, SWT.BORDER);
-	// maxHitsText.setTextLimit(5);
-	// maxHitsText.addModifyListener(new ModifyListener() {
-	// public void modifyText(ModifyEvent e) {
-	// String maxHitss = maxHitsText.getText();
-	// if (maxHitss.length() == 0)
-	// return;
-	// for (int i = maxHitss.length() - 1; i >= 0; i--) {
-	// try {
-	// if (maxHitss.equals("") || Integer.parseInt(maxHitss) > -1) {
-	// if (i == maxHitss.length() - 1) {
-	// maxHits = maxHitss;
-	// return;
-	// } else {
-	// break;
-	// }
-	// }
-	// } catch (NumberFormatException ex) {
-	// maxHitss = maxHitss.substring(0, i);
-	// }
-	// }
-	//
-	// BugzillaSearchPage.this.maxHits = maxHitss;
-	// }
-	// });
-	// gd = new GridData();
-	// gd.widthHint = 20;
-	// maxHitsText.setLayoutData(gd);
-	// label = new Label(group, SWT.LEFT);
-	// label.setText(" Hits. (-1 means all hits are returned)");
-	//
-	// maxHits = "100";
-	// maxHitsText.setText(maxHits);
-	//
-	// return group;
-	// }
-
-	public String getMaxHits() {
-		return maxHitsText.getText();
 	}
 
 	private static final String[] emailText = { "bug owner", "reporter", "CC list", "commenter" };
@@ -982,7 +811,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				}
 				if (originalQuery != null) {
 					try {
-						updateDefaults(originalQuery.getUrl(), String.valueOf(originalQuery.getMaxHits()));
+						updateDefaults(originalQuery.getUrl());
 					} catch (UnsupportedEncodingException e) {
 						// ignore
 					}
@@ -1270,8 +1099,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	private static final String STORE_EMAILMATCH_ID = PAGE_NAME + ".EMAILMATCH";
 
-	private static final String STORE_MAXHITS_ID = PAGE_NAME + ".MAXHITS";
-
 	private static final String STORE_EMAILBUTTON_ID = PAGE_NAME + ".EMAILATTR";
 
 	private static final String STORE_SUMMARYTEXT_ID = PAGE_NAME + ".SUMMARYTEXT";
@@ -1458,19 +1285,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 					message = NUM_DAYS_POSITIVE + days + " is invalid.";
 				}
 			}
-		} else if (event.widget == maxHitsText) {
-			String maxHitss = maxHitsText.getText();
-			if (maxHitss.length() == 0) {
-				message = MAX_HITS_GREATER;
-			} else {
-				try {
-					if (Integer.parseInt(maxHitss) < -1 || Integer.parseInt(maxHitss) == 0) {
-						message = MAX_HITS_GREATER;
-					}
-				} catch (NumberFormatException ex) {
-					message = MAX_HITS_GREATER;
-				}
-			}
 		}
 
 		setPageComplete(message == null);
@@ -1483,7 +1297,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	/**
 	 * TODO: get rid of this?
 	 */
-	public void updateDefaults(String startingUrl, String maxHits) throws UnsupportedEncodingException {
+	public void updateDefaults(String startingUrl) throws UnsupportedEncodingException {
 		// String serverName = startingUrl.substring(0,
 		// startingUrl.indexOf("?"));
 
@@ -1654,8 +1468,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				daysText.setText(value);
 			}
 		}
-		this.maxHits = maxHits;
-		maxHitsText.setText(maxHits);
 	}
 
 	@Override
@@ -1663,8 +1475,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		if (originalQuery == null) {
 			try {
 				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
-						getQueryParameters()), getQueryTitle(), getMaxHits(), TasksUiPlugin.getTaskListManager()
-						.getTaskList());
+						getQueryParameters()), getQueryTitle(), TasksUiPlugin.MAX_HITS + "", TasksUiPlugin
+						.getTaskListManager().getTaskList());
 			} catch (UnsupportedEncodingException e) {
 				return null;
 			}
@@ -1672,7 +1484,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		} else {
 			try {
 				originalQuery.setUrl(getQueryURL(repository, getQueryParameters()));
-				originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
+				// originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
 				originalQuery.setDescription(getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
 				return null;
@@ -1710,7 +1522,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		summaryOperation.select(settings.getInt(STORE_SUMMARYMATCH_ID + repoId));
 		commentOperation.select(settings.getInt(STORE_COMMENTMATCH_ID + repoId));
 		emailOperation.select(settings.getInt(STORE_EMAILMATCH_ID + repoId));
-		maxHitsText.setText(settings.get(STORE_MAXHITS_ID + repoId));
 		for (int i = 0; i < emailButton.length; i++) {
 			emailButton[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
 		}
@@ -1735,7 +1546,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		settings.put(STORE_SUMMARYMATCH_ID + repoId, summaryOperation.getSelectionIndex());
 		settings.put(STORE_COMMENTMATCH_ID + repoId, commentOperation.getSelectionIndex());
 		settings.put(STORE_EMAILMATCH_ID + repoId, emailOperation.getSelectionIndex());
-		settings.put(STORE_MAXHITS_ID + repoId, maxHitsText.getText());
 		for (int i = 0; i < emailButton.length; i++) {
 			settings.put(STORE_EMAILBUTTON_ID + i + repoId, emailButton[i].getSelection());
 		}

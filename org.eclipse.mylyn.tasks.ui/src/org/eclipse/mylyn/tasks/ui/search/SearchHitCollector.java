@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.ui.search;
 
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,6 +19,7 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -83,6 +83,13 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	}
 
 	public ISearchResult getSearchResult() {
+		if (searchResult.getMatchCount() >= TasksUiPlugin.MAX_HITS) {
+			MylarStatusHandler
+					.displayStatus(
+							"Maximum hits reached",
+							new MylarStatus(Status.WARNING, TasksUiPlugin.PLUGIN_ID, MylarStatus.INTERNAL_ERROR,
+									TasksUiPlugin.MAX_HITS_REACHED));
+		}
 		return searchResult;
 	}
 

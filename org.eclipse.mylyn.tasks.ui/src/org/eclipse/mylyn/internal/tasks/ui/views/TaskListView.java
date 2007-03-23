@@ -926,6 +926,7 @@ public class TaskListView extends ViewPart {
 
 	public void applyPresentation(ITaskListPresentation presentation) {
 		try {
+			filteredTree.getFilterControl().setText("");
 			getViewer().getControl().setRedraw(false);
 			getViewer().setContentProvider(presentation.getContentProvider());
 			refreshAndFocus(isFocusedMode());
