@@ -72,8 +72,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	private QuickOutlinePatternAndInterestFilter namePatternFilter;
 			
 	public QuickContextPopupDialog(Shell parent, int shellStyle) {
-		super(parent, shellStyle, true, true, true, true, null, null);
-		setInfoText("Task Context"); 
+		super(parent, shellStyle, true, true, true, true, null, "Task Context");
 		create();
 	}
 
@@ -109,6 +108,10 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		return viewer;
 	}
 
+	protected Point getInitialSize() {
+		return new Point(400, 500);
+	}
+	
 	protected void fillDialogMenu(IMenuManager dialogMenu) {
 		dialogMenu.add(new Separator());
 		super.fillDialogMenu(dialogMenu);

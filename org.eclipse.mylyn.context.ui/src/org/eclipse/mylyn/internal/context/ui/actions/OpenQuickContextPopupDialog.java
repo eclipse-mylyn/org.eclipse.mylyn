@@ -42,8 +42,7 @@ public class OpenQuickContextPopupDialog implements IWorkbenchWindowActionDelega
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		inplaceDialog = new QuickContextPopupDialog(parent, SWT.NULL);
 		// TODO: remember size settings
-		inplaceDialog.setSize(400, 500);
-		
+//		inplaceDialog.setSize(400, 500);
 		inplaceDialog.open();
 		inplaceDialog.setFocus();	
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
