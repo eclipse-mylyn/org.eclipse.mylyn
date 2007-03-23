@@ -47,12 +47,10 @@ public class OpenQuickContextPopupDialog implements IWorkbenchWindowActionDelega
 		inplaceDialog.open();
 		inplaceDialog.setFocus();	
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
-//		inplaceDialog.setWorkbenchooooooooooooooooos
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// Have selected something in the editor - therefore
-		// want to close the inplace view if haven't already done so
+		// Editor selection
 		if (inplaceDialog != null) {
 			inplaceDialog.close();
 			inplaceDialog = null;
