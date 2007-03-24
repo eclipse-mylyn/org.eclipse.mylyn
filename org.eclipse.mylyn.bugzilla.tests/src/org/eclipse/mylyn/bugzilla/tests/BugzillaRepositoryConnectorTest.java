@@ -458,6 +458,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		ArrayList<String> taskDataList = new ArrayList<String>();
 		taskDataList.add(task7.getHandleIdentifier());
 		TasksUiPlugin.getDefault().getTaskDataManager().remove(taskDataList);
+		
 		assertNull(TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
 				RepositoryTaskHandleUtil.getHandle(IBugzillaConstants.TEST_BUGZILLA_222_URL, "7")));
 
@@ -476,7 +477,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			priority = "P1";
 			recentTaskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
-
+		task7.setTaskData(null); // all task data gone now for task7
 		connector.getTaskDataHandler().postTaskData(repository, recentTaskData);
 		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());

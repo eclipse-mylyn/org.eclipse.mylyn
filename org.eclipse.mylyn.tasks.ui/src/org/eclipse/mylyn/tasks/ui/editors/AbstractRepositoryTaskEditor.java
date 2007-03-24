@@ -39,6 +39,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -71,6 +72,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.RefreshEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
@@ -120,6 +122,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -151,6 +154,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -214,7 +218,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final Font HEADER_FONT = JFaceResources.getDefaultFont();
 
-	public static final int DESCRIPTION_WIDTH = 79 * 8; // 500;
+	public static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
@@ -366,16 +370,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void run() {
 
 					if (repositoryTask != null && task.equals(repositoryTask)) {
-						// System.err.println(">>>
-						// "+repositoryTask.getSyncState().toString());
 						if ((repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING || repositoryTask
 								.getSyncState() == RepositoryTaskSyncState.CONFLICT)
 								&& !submitting) {
-							MessageDialog.openInformation(AbstractRepositoryTaskEditor.this.getSite().getShell(),
-									"Changed - " + repositoryTask.getSummary(),
-									"Editor will refresh with new incoming changes.");
+							// MessageDialog.openInformation(AbstractRepositoryTaskEditor.this.getSite().getShell(),
+							// "Changed - " + repositoryTask.getSummary(),
+							// "Editor will refresh with new incoming
+							// changes.");
 
-							updateContents();
+							form.setMessage("Task has new incoming changes. Refresh editor to see new changes.",
+									IMessageProvider.WARNING);
+
+							setSubmitEnabled(false, "Refresh editor to see new incoming changes before submitting");
+							// updateContents();
 							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
 							// true);
 							// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(
@@ -386,7 +393,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							updateContents();
 						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 							submitting = false;
-							updateContents();
+							// updateContents();
 						}
 					}
 				}
@@ -398,8 +405,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							TasksUiUtil.refreshAndOpenTaskListElement(repositoryTask);
 							return;
 						}
-						showBusy(true);
-						updateEditor();
+						refreshEditor();
 
 					}
 				}
@@ -743,11 +749,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void addHeaderControls() {
-		ControlContribution repositoryLabelControl = new ControlContribution("TaskEditorHeader") { //$NON-NLS-1$
+		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
 			protected Control createControl(Composite parent) {
-				Text text = new Text(parent, SWT.FLAT | SWT.READ_ONLY);
-				text.setFont(TITLE_FONT);
-				text.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+				Composite composite = toolkit.createComposite(parent);
+				composite.setLayout(new RowLayout());
+				composite.setBackground(null);
 				String label = repository.getRepositoryLabel();
 				if (label == null || label.equals("")) {
 					if (repository.getUrl().indexOf("//") != -1) {
@@ -756,13 +762,33 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						label = repository.getUrl();
 					}
 				}
-				text.setText(label);
-				text.setBackground(null);
-				return text;
+
+				Hyperlink link = new Hyperlink(composite, SWT.NONE);
+				link.setText(label);
+				link.setFont(TITLE_FONT);
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openEditRepositoryWizard(repository);
+					}
+				});
+
+				return composite;
 			}
 		};
 		if (form.getToolBarManager() != null) {
 			form.getToolBarManager().add(repositoryLabelControl);
+			if (repositoryTask != null) {
+				RefreshEditorAction refreshEditorAction = new RefreshEditorAction();
+				refreshEditorAction.selectionChanged(new StructuredSelection(this));
+				form.getToolBarManager().add(refreshEditorAction);
+			}
+
+			// Header drop down menu additions:
+			// form.getForm().getMenuManager().add(new
+			// SynchronizeSelectedAction());
+
 			form.getToolBarManager().update(true);
 		}
 	}
@@ -1978,13 +2004,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				submitToRepository();
 			}
 		});
-		submitButton.setToolTipText("Submit to " + this.repository.getUrl());
+
+		setSubmitEnabled(true, "");
 
 		toolkit.createLabel(buttonComposite, "    ");
 
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (attachContext && task != null) {
 			addAttachContextButton(buttonComposite, task);
+		}
+	}
+
+	private void setSubmitEnabled(boolean enabled, String disabledMessage) {
+		if (submitButton != null) {
+			submitButton.setEnabled(enabled);
+			if (enabled) {
+				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
+			} else {
+				submitButton.setToolTipText(disabledMessage);
+			}
 		}
 	}
 
@@ -2353,6 +2391,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Cursor waitCursor;
 
+	private boolean formBusy = false;
+
 	public boolean isDisposed() {
 		return isDisposed;
 	}
@@ -2429,7 +2469,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (!o.hasOptions() && !o.isInput())
 				radioData.horizontalSpan = 4;
 			else
-				radioData.horizontalSpan = 3;
+				radioData.horizontalSpan = 1;
 			radioData.heightHint = 20;
 			String opName = o.getOperationName();
 			opName = opName.replaceAll("</.*>", "");
@@ -2441,7 +2481,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			if (o.hasOptions()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 1;
+				radioData.horizontalSpan = 3;
 				radioData.heightHint = 20;
 				radioData.widthHint = RADIO_OPTION_WIDTH;
 				radioOptions[i] = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
@@ -2459,7 +2499,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
 			} else if (o.isInput()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-				radioData.horizontalSpan = 1;
+				radioData.horizontalSpan = 3;
 				radioData.widthHint = RADIO_OPTION_WIDTH - 10;
 
 				String assignmentValue = "";
@@ -2607,7 +2647,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void showBusy(boolean busy) {
-		if (!form.isDisposed()) {
+		if (!form.isDisposed() && busy != formBusy) {
 			form.setBusy(busy);
 			if (busy) {
 				setEnabledState(editorComposite, false);
@@ -2620,6 +2660,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// form.setCursor(regularCursor);
 				setEnabledState(editorComposite, true);
 			}
+			formBusy = busy;
 		}
 	}
 
@@ -2690,6 +2731,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											close();
 											TasksUiPlugin.getSynchronizationManager().setTaskRead(modifiedTask, true);
 											TasksUiUtil.openEditor(modifiedTask, false);
+										} else {
+											PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+												public void run() {
+													refreshEditor();
+												}
+											});
 										}
 									}
 								});
@@ -2733,43 +2780,58 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	/**
 	 * @since 2.0 If existing task editor, update contents in place
 	 */
-	protected void updateEditor() {
-		if (!this.isDisposed) {
-			changedAttributes.clear();
-			commentStyleText.clear();
-			textHash.clear();
-			editorInput.refreshInput();
-			if (repositoryTask != null) {
-				repositoryTask.setDirty(false);
-			}
-			this.setInputWithNotify(this.getEditorInput());
-			this.init(this.getEditorSite(), this.getEditorInput());
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					updateEditorTitle();
-					menu = editorComposite.getMenu();
-					removeSections();
-					editorComposite.setMenu(menu);
-					createSections();
-					markDirty(false);
+	public void refreshEditor() {
+		try {
+			if (!this.isDisposed) {
 
-					showBusy(false);
-					AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
-							AbstractRepositoryTaskEditor.this.getId());
-					AbstractRepositoryTaskEditor.this.getEditor().getEditorSite().getPage().activate(
-							AbstractRepositoryTaskEditor.this);
-					// TODO: expand sections that were previously expanded
-
-					if (taskOutlineModel != null && outlinePage != null) {
-						outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
-						outlinePage.getOutlineTreeViewer().refresh(true);
-					}
-					if (repositoryTask != null) {
-						TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
-					}
+				if (this.isDirty) {
+					this.doSave(new NullProgressMonitor());
 				}
-			});
+				showBusy(true);
+				changedAttributes.clear();
+				commentStyleText.clear();
+				textHash.clear();
+				editorInput.refreshInput();
+				if (repositoryTask != null) {
+					repositoryTask.setDirty(false);
+				}
+				this.setInputWithNotify(this.getEditorInput());
+				this.init(this.getEditorSite(), this.getEditorInput());
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						updateEditorTitle();
+						menu = editorComposite.getMenu();
+						removeSections();
+						editorComposite.setMenu(menu);
+						createSections();
+						markDirty(false);
+						form.setMessage(null, 0);
+						AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
+								AbstractRepositoryTaskEditor.this.getId());
 
+						// Activate editor disabled: bug#179078
+						// AbstractRepositoryTaskEditor.this.getEditor().getEditorSite().getPage().activate(
+						// AbstractRepositoryTaskEditor.this);
+
+						// TODO: expand sections that were previously expanded
+
+						if (taskOutlineModel != null && outlinePage != null) {
+							outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
+							outlinePage.getOutlineTreeViewer().refresh(true);
+						}
+						if (repositoryTask != null) {
+							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+						}
+
+						setSubmitEnabled(true, null);
+					}
+				});
+
+			}
+		} finally {
+			if (!this.isDisposed) {
+				showBusy(false);
+			}
 		}
 	}
 

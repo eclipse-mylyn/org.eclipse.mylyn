@@ -168,6 +168,8 @@ public class TaskListImages {
 	public static final ImageDescriptor GO_UP = create(T_TOOL, "go-up.gif");
 
 	public static final ImageDescriptor GO_INTO = create(T_TOOL, "go-into.gif");
+	
+	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.gif");
 
 	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
 

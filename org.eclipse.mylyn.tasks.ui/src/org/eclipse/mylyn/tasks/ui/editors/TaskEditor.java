@@ -167,6 +167,19 @@ public class TaskEditor extends FormEditor {
 		return (IFormPage[]) formPages.toArray(new IFormPage[formPages.size()]);
 	}
 
+	
+	/**
+	 * Refresh editor with new contents (if any)
+	 */
+	public void refreshEditorContents() {
+		for (IFormPage page: getPages()) {
+			if(page instanceof AbstractRepositoryTaskEditor) {
+				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor)page;
+				editor.refreshEditor();
+			}
+		}
+	}
+	
 	/**
 	 * HACK: perform real check
 	 */
