@@ -100,7 +100,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		queryUrl += "&product=" + taskData.getProduct();
 
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				"100", TasksUiPlugin.getTaskListManager().getTaskList());
+				TasksUiPlugin.getTaskListManager().getTaskList());
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				repository, bugzillaQuery);

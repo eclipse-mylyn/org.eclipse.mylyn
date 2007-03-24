@@ -22,15 +22,15 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 
 	private boolean customQuery = false;
 
-	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description, String maxHits, TaskList taskList) {
+	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description, TaskList taskList) {
 		super(description, taskList);
 		this.url = queryUrl;
 		this.repositoryUrl = repositoryUrl;
-		try {
-			this.maxHits = Integer.parseInt(maxHits);
-		} catch (Exception e) {
-			this.maxHits = -1;
-		}
+//		try {
+//			this.maxHits = Integer.parseInt(maxHits);
+//		} catch (Exception e) {
+//			this.maxHits = -1;
+//		}
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 				null, "status");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-				"summary", "10", TasksUiPlugin.getTaskListManager().getTaskList());
+				"summary", TasksUiPlugin.getTaskListManager().getTaskList());
 		query.addHit(hit);
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()
@@ -116,7 +116,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		String hitHandle = hit.getHandleIdentifier();
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-				"summary", "10", TasksUiPlugin.getTaskListManager().getTaskList());		
+				"summary", TasksUiPlugin.getTaskListManager().getTaskList());		
 		query.addHit(hit);
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);		
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault()

@@ -24,8 +24,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
 
-	protected int maxHits = -1;
-
 	private Set<String> hitHandles = new HashSet<String>();
 
 	protected String lastRefreshTimeStamp = "<never>";
@@ -130,14 +128,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	@Override
 	public boolean isCompleted() {
 		return false;
-	}
-
-	public int getMaxHits() {
-		return maxHits;
-	}
-
-	public void setMaxHits(int maxHits) {
-		this.maxHits = maxHits;
 	}
 
 	public String getRepositoryUrl() {

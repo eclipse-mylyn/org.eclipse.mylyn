@@ -83,12 +83,12 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	}
 
 	public ISearchResult getSearchResult() {
-		if (searchResult.getMatchCount() >= TasksUiPlugin.MAX_HITS) {
+		if (searchResult.getMatchCount() >= QueryHitCollector.MAX_HITS) {
 			MylarStatusHandler
 					.displayStatus(
 							"Maximum hits reached",
 							new MylarStatus(Status.WARNING, TasksUiPlugin.PLUGIN_ID, MylarStatus.INTERNAL_ERROR,
-									TasksUiPlugin.MAX_HITS_REACHED));
+									MAX_HITS_REACHED));
 		}
 		return searchResult;
 	}

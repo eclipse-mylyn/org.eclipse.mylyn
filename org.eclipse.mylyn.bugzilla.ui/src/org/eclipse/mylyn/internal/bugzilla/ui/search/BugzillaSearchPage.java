@@ -1475,7 +1475,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		if (originalQuery == null) {
 			try {
 				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
-						getQueryParameters()), getQueryTitle(), TasksUiPlugin.MAX_HITS + "", TasksUiPlugin
+						getQueryParameters()), getQueryTitle(), TasksUiPlugin
 						.getTaskListManager().getTaskList());
 			} catch (UnsupportedEncodingException e) {
 				return null;

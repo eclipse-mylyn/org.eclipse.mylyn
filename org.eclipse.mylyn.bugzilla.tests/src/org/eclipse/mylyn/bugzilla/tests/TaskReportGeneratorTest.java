@@ -163,7 +163,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTestUtil.setBugTaskCompleted(task1, false);
 
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",
-				"TaskReportGeneratorBugzillaQueryCategory", "maxHits", manager.getTaskList());
+				"TaskReportGeneratorBugzillaQueryCategory", manager.getTaskList());
 
 		manager.getTaskList().addQuery(bugQuery);
 

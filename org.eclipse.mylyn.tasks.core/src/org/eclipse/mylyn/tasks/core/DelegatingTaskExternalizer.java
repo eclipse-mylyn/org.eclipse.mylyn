@@ -56,7 +56,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_QUERY_HIT = "QueryHit";
 
-	public static final String KEY_QUERY_MAX_HITS = "MaxHits";
+//	public static final String KEY_QUERY_MAX_HITS = "MaxHits";
 
 	public static final String KEY_QUERY_STRING = "QueryString";
 
@@ -556,7 +556,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		String queryTagName = getQueryTagNameForElement(query);
 		Element node = doc.createElement(queryTagName);
 		node.setAttribute(KEY_NAME, query.getSummary());
-		node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
+//		node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
 		node.setAttribute(KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastRefreshTimeStamp() != null) {

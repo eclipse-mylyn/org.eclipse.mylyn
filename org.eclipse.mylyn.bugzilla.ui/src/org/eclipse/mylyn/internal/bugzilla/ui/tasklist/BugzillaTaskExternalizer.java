@@ -21,7 +21,6 @@ import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -65,10 +64,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(element.getAttribute(KEY_REPOSITORY_URL), element
-				.getAttribute(KEY_QUERY_STRING), element.getAttribute(KEY_NAME), element
-				.getAttribute(KEY_QUERY_MAX_HITS), taskList);
-		// Migrate max query hits 2.0M1 -> 2.0M2
-		query.setMaxHits(TasksUiPlugin.MAX_HITS);
+				.getAttribute(KEY_QUERY_STRING), element.getAttribute(KEY_NAME), taskList);
 		if (node.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
 		}

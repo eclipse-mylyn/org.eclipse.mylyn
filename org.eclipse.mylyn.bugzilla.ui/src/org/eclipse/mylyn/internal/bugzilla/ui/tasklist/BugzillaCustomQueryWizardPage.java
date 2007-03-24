@@ -123,7 +123,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 	@Override
 	public BugzillaRepositoryQuery getQuery() {
 		if (query == null) {
-			query = new BugzillaRepositoryQuery(repository.getUrl(), queryText.getText(), this.getQueryTitle(), "-1",
+			query = new BugzillaRepositoryQuery(repository.getUrl(), queryText.getText(), this.getQueryTitle(),
 					TasksUiPlugin.getTaskListManager().getTaskList());
 			query.setCustomQuery(true);
 		} else {

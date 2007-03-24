@@ -181,7 +181,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList);
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", "-1",
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "",
 				taskList);
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);

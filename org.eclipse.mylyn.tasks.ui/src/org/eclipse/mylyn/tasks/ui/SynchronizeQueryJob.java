@@ -95,8 +95,8 @@ class SynchronizeQueryJob extends Job {
 					// do nothing
 				} else if (resultingStatus.isOK()) {
 
-					if (collector.getHits().size() >= TasksUiPlugin.MAX_HITS) {
-						MylarStatusHandler.log(TasksUiPlugin.MAX_HITS_REACHED, this);
+					if (collector.getHits().size() >= QueryHitCollector.MAX_HITS) {
+						MylarStatusHandler.log(QueryHitCollector.MAX_HITS_REACHED+"\n"+repositoryQuery.getSummary(), this);
 					}
 
 					repositoryQuery.updateHits(collector.getHits(), taskList);

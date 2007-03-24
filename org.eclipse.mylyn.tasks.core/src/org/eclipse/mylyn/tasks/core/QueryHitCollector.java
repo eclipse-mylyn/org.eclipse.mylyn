@@ -26,6 +26,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  */
 public class QueryHitCollector {
 
+	public static final int MAX_HITS = 5000;
+
+	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
+
 	private List<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
 
 	/** The progress monitor for the search operation */
@@ -58,6 +62,7 @@ public class QueryHitCollector {
 		monitor.setTaskName(STARTING);
 	}
 
+	
 	public void accept(AbstractQueryHit hit) throws CoreException {
 
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
@@ -67,7 +72,7 @@ public class QueryHitCollector {
 
 		addMatch(hit);
 		matchCount++;
-
+		
 		if (!getProgressMonitor().isCanceled()) {
 			// if the operation is canceled finish with whatever data was
 			// already found
@@ -112,7 +117,7 @@ public class QueryHitCollector {
 	public List<AbstractQueryHit> getHits() {
 		return results;
 	}
-	
+
 	public void clear() {
 		results.clear();
 	}

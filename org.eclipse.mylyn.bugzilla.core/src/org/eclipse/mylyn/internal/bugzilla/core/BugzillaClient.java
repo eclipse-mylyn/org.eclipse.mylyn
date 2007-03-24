@@ -451,7 +451,7 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
-						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, query.getMaxHits());
+						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
 						return;
 					}
 				}

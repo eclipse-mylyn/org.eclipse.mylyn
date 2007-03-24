@@ -88,7 +88,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		//		
 		String queryUrl = "http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				"-1", taskList);
+				taskList);
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				repository, bugzillaQuery);
@@ -225,14 +225,14 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testUniqueQueryHitObjects() {
 		init222();
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"queryurl", "description1", "-1", taskList);
+				"queryurl", "description1", taskList);
 		BugzillaQueryHit query1Hit = new BugzillaQueryHit(taskList, "description1", "P1",
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
 		query1.addHit(query1Hit);
 		taskList.addQuery(query1);
 
 		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"queryurl2", "description2", "-1", taskList);
+				"queryurl2", "description2", taskList);
 		BugzillaQueryHit query2Hit = new BugzillaQueryHit(taskList, "description2", "P1",
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
 		query2.addHit(query2Hit);

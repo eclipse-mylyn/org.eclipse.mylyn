@@ -30,7 +30,6 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class BugzillaSearchEngineTest extends TestCase {
 
-	private static final String MAX_HITS = "100";
 	private static final String QUERY_NAME = "Query Page Name";
 	private static final String BUG_DESC_SUBSTRING_SEARCH = "/buglist.cgi?short_desc_type=allwordssubstr&short_desc=";//search-match-test&amp";
 	private static final String SEARCH_DESCRIPTION = "search-match-test";
@@ -95,7 +94,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 				repository.getUrl(), 
 				repository.getUrl() + BUG_DESC_SUBSTRING_SEARCH+SearchString, 
 				QUERY_NAME, 
-				MAX_HITS, TasksUiPlugin.getTaskListManager().getTaskList());
+				TasksUiPlugin.getTaskListManager().getTaskList());
 		
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
 		
