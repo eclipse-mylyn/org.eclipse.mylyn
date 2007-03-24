@@ -623,7 +623,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (progressService != null) {
 			progressService.showBusyForFamily(FAMILY_SUBMIT);
 		}
-
 	}
 
 	protected IWorkbenchSiteProgressService getProgressService() {
