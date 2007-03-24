@@ -279,7 +279,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 						repository.getKind());
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getKind());
-				if (!connectorUi.hasCustomNotificationHandling()) {
+				if (connectorUi != null && !connectorUi.hasCustomNotificationHandling()) {
 					for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
 						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
