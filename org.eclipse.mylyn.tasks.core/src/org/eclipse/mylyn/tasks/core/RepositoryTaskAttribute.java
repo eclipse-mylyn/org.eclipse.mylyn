@@ -21,6 +21,7 @@ import java.util.Map;
  * Class representing a report attribute
  * 
  * @author Rob Elves
+ * 
  */
 public class RepositoryTaskAttribute implements Serializable {
 
@@ -133,7 +134,7 @@ public class RepositoryTaskAttribute implements Serializable {
 		return name;
 	}
 
-	public String getID() {
+	public String getId() {
 		return key;
 	}
 
@@ -235,7 +236,7 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getID() + ":" + values;
+		return getId() + ":" + values;
 	}
 
 	@Override

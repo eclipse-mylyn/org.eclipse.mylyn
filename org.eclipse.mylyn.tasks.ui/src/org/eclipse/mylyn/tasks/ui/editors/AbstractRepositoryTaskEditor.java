@@ -72,7 +72,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.RefreshEditorAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
@@ -378,10 +378,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Editor will refresh with new incoming
 							// changes.");
 
-							form.setMessage("Task has new incoming changes. Refresh editor to see new changes.",
+							form.setMessage("Task has new incoming changes. Synchronize to see new changes.",
 									IMessageProvider.WARNING);
 
-							setSubmitEnabled(false, "Refresh editor to see new incoming changes before submitting");
+							setSubmitEnabled(false);
 							// updateContents();
 							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
 							// true);
@@ -393,7 +393,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							updateContents();
 						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 							submitting = false;
-							// updateContents();
+							updateContents();
 						}
 					}
 				}
@@ -631,6 +631,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	public AbstractRepositoryTask getRepositoryTask() {
+		return repositoryTask;
+	}
+	
 	protected IWorkbenchSiteProgressService getProgressService() {
 		Object siteService = getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (siteService != null)
@@ -766,6 +770,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
 				link.setText(label);
 				link.setFont(TITLE_FONT);
+				link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				link.addHyperlinkListener(new HyperlinkAdapter() {
 
 					@Override
@@ -780,9 +785,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (form.getToolBarManager() != null) {
 			form.getToolBarManager().add(repositoryLabelControl);
 			if (repositoryTask != null) {
-				RefreshEditorAction refreshEditorAction = new RefreshEditorAction();
-				refreshEditorAction.selectionChanged(new StructuredSelection(this));
-				form.getToolBarManager().add(refreshEditorAction);
+				SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
+				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
+				form.getToolBarManager().add(synchronizeEditorAction);
 			}
 
 			// Header drop down menu additions:
@@ -2005,7 +2010,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 
-		setSubmitEnabled(true, "");
+		setSubmitEnabled(true);
 
 		toolkit.createLabel(buttonComposite, "    ");
 
@@ -2015,14 +2020,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	private void setSubmitEnabled(boolean enabled, String disabledMessage) {
+	private void setSubmitEnabled(boolean enabled) {
 		if (submitButton != null) {
 			submitButton.setEnabled(enabled);
-			if (enabled) {
-				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
-			} else {
-				submitButton.setToolTipText(disabledMessage);
-			}
 		}
 	}
 
@@ -2570,7 +2570,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return false;
 		}
 
-		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
+		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
 		if (oldAttribute == null)
 			return true;
 		if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(newAttribute.getValue())) {
@@ -2823,7 +2823,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						}
 
-						setSubmitEnabled(true, null);
+						setSubmitEnabled(true);
 					}
 				});
 

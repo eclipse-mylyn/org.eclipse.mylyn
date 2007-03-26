@@ -35,7 +35,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.RefreshEditorAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -82,7 +82,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 	private AttachFileAction attachFileAction = new AttachFileAction();
 	
-	private RefreshEditorAction refreshEditorAction = new RefreshEditorAction();
+	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
 	private GlobalAction cutAction;
 
@@ -206,12 +206,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
 			attachFileAction.selectionChanged(selection);
-			refreshEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
+			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 
 			manager.add(openWithBrowserAction);
 			if (task instanceof AbstractRepositoryTask) {
 				manager.add(attachFileAction);
-				manager.add(refreshEditorAction);
+				manager.add(synchronizeEditorAction);
 			}
 
 			if (task.isActive()) {

@@ -191,7 +191,7 @@ public class TaskDataManager {
 		for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
 			if (attribute == null)
 				continue;
-			RepositoryTaskAttribute existing = clone.getAttribute(attribute.getID());
+			RepositoryTaskAttribute existing = clone.getAttribute(attribute.getId());
 			if (existing != null) {
 				existing.clearValues();
 				List<String> options = existing.getOptions();
@@ -207,7 +207,7 @@ public class TaskDataManager {
 				}
 
 			} else {
-				clone.addAttribute(attribute.getID(), attribute);
+				clone.addAttribute(attribute.getId(), attribute);
 			}
 
 		}
