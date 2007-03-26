@@ -164,6 +164,9 @@ public abstract class AbstractRepositoryConnector {
 	 * Of <code>tasks</code> provided, return all that have changed since last
 	 * synchronization of <code>repository</code>
 	 * 
+	 * All errors should be thrown as <code>CoreException</code> for the framework
+	 * to handle, since background synchronizations fail silently when disconnected.
+	 * 
 	 * TODO: Add progress monitor as parameter
 	 * 
 	 * @throws CoreException

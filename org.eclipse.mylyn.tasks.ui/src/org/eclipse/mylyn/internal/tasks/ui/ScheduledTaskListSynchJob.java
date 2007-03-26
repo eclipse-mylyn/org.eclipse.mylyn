@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -25,7 +24,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -102,13 +100,10 @@ public class ScheduledTaskListSynchJob extends Job {
 						protected IStatus run(IProgressMonitor monitor) {
 							try {
 								connector.updateAttributes(repository, new SubProgressMonitor(monitor, 1));
-
-							} catch (CoreException e) {
-								MylarStatusHandler.log(e, "Unable to update attributes for " + repository.getUrl()
-										+ "  " + e.getMessage());
 							} catch (Throwable t) {
-								MylarStatusHandler.log(t, "Unable to update attributes for " + repository.getUrl()
-										+ "  " + t.getMessage());
+								// ignore, since we might not be connector
+//								MylarStatusHandler.log(t, "Unable to update attributes for " + repository.getUrl()
+//										+ "  " + t.getMessage());
 							}
 							return Status.OK_STATUS;
 						}

@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
@@ -315,7 +314,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not update attributes", false);
+			throw new CoreException(new TracStatus(IStatus.INFO, TracCorePlugin.PLUGIN_ID, Status.WARNING, "Could not update attributes", null));
 		}
 	}
 	
