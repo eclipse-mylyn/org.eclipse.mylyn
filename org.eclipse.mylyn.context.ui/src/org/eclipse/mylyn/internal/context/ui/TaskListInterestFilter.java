@@ -80,7 +80,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean shouldAlwaysShow(ITask task) {
 
-		return super.shouldAlwaysShow(task) || shouldShowInFocusedWorkweeDateContainer(task) || hasChanges(task)
+		return super.shouldAlwaysShow(task) || shouldShowInFocusedWorkweekDateContainer(task) || hasChanges(task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| (isInterestingForThisWeek(task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
@@ -88,32 +88,35 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		// || isCurrentlySelectedInEditor(task);
 	}
 
-	private static boolean shouldShowInFocusedWorkweeDateContainer(ITask task) {
+	private static boolean shouldShowInFocusedWorkweekDateContainer(ITask task) {
 		if (task instanceof DateRangeActivityDelegate) {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) task;
 
 			boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(delegate.getCorrespondingTask());
+			if(overdue || task.isPastReminder()){
+				return true;
+			}
 			DateRangeContainer container = delegate.getDateRangeContainer();
 			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
 			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
 			if ((container.getEnd().compareTo(previousCal) <= 0 || container.getStart().compareTo(nextCal) >= 0)
 					&& !overdue) {
-				// if bin in past return false, unless overdue
+				// if bin is past return false, unless overdue
 				return false;
 			} else {
+				// if bin in today or future return true, unless past current
+				// workweek
 				return true;
 			}
-
-			// if bin in today or future return true, unless past current
-			// workweek
-		} else {
+			
+		} else {			
 			return false;
 		}
 	}
 
 	public static boolean isInterestingForThisWeek(ITask task) {
 		if (task instanceof DateRangeActivityDelegate) {
-			return shouldShowInFocusedWorkweeDateContainer(task);
+			return shouldShowInFocusedWorkweekDateContainer(task);
 		} else {
 			return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
 					|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
