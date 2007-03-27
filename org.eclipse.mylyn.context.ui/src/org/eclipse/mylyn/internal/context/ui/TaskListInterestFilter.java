@@ -32,7 +32,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
-	public boolean select(Object object) {
+	public boolean select(Object parent, Object object) {
 		try {
 			if (object instanceof DateRangeContainer) {
 				DateRangeContainer dateRangeTaskContainer = (DateRangeContainer) object;
