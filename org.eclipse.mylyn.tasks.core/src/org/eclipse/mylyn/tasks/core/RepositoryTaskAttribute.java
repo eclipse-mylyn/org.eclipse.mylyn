@@ -36,7 +36,7 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String USER_OWNER = "task.common.user.owner";
 
 	public static final String USER_CC = "task.common.user.cc";
-	
+
 	public static final String COMMENT_NEW = "task.common.comment.new";
 
 	public static final String COMMENT_TEXT = "task.common.comment.text";
@@ -121,6 +121,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	 * Attribute's values (selected or added)
 	 */
 	private List<String> values = new ArrayList<String>();
+
+	private Map<String, String> metaData = new HashMap<String, String>();
 
 	public RepositoryTaskAttribute(String key, String name, boolean hidden) {
 		this.key = key;
@@ -264,6 +266,12 @@ public class RepositoryTaskAttribute implements Serializable {
 		return true;
 	}
 
-	
-	
+	public void setMetaDataValue(String key, String value) {
+		metaData.put(key, value);
+	}
+
+	public String getMetaDataValue(String key) {
+		return metaData.get(key);
+	}
+
 }
