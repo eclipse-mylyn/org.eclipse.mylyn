@@ -1918,7 +1918,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						Calendar calComment = Calendar.getInstance();
 						calComment.setTimeInMillis(commentDate.getTime());
 						calComment.set(Calendar.SECOND, 0);
-						if (commentDate.after(calLastMod.getTime())) {
+						if (calComment.after(calLastMod)) {
 							return true;
 						}
 					}
