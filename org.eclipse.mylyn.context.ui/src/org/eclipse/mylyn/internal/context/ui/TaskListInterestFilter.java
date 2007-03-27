@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.internal.context.ui;
 
+import java.util.Calendar;
+
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
@@ -77,25 +79,45 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean shouldAlwaysShow(ITask task) {
-		if(task instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate)task;
-			if(!isDateRangeInteresting(delegate.getDateRangeContainer())) {
-				return false;
-			}
-		}
-		
-		return super.shouldAlwaysShow(task) || hasChanges(task)
+
+		return super.shouldAlwaysShow(task) || shouldShowInFocusedWorkweeDateContainer(task) || hasChanges(task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| (isInterestingForThisWeek(task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
-// || isCurrentlySelectedInEditor(task);
+		// || isCurrentlySelectedInEditor(task);
+	}
+
+	private static boolean shouldShowInFocusedWorkweeDateContainer(ITask task) {
+		if (task instanceof DateRangeActivityDelegate) {
+			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) task;
+
+			boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(delegate.getCorrespondingTask());
+			DateRangeContainer container = delegate.getDateRangeContainer();
+			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
+			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
+			if ((container.getEnd().compareTo(previousCal) <= 0 || container.getStart().compareTo(nextCal) >= 0)
+					&& !overdue) {
+				// if bin in past return false, unless overdue
+				return false;
+			} else {
+				return true;
+			}
+
+			// if bin in today or future return true, unless past current
+			// workweek
+		} else {
+			return false;
+		}
 	}
 
 	public static boolean isInterestingForThisWeek(ITask task) {
-
-		return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
-				|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
+		if (task instanceof DateRangeActivityDelegate) {
+			return shouldShowInFocusedWorkweeDateContainer(task);
+		} else {
+			return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
+					|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
+		}
 	}
 
 	public static boolean hasChanges(ITask task) {
