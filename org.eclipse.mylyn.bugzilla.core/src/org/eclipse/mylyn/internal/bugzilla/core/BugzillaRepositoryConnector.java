@@ -311,7 +311,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			throws CoreException {
 		String product = existingReport.getAttributeValue(BugzillaReportElement.PRODUCT.getKeyString());
 		for (RepositoryTaskAttribute attribute : existingReport.getAttributes()) {
-			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getId().trim().toUpperCase(
+			BugzillaReportElement element = BugzillaReportElement.valueOf(attribute.getID().trim().toUpperCase(
 					Locale.ENGLISH));
 			attribute.clearOptions();
 			List<String> optionValues = BugzillaCorePlugin.getRepositoryConfiguration(taskRepository, false)

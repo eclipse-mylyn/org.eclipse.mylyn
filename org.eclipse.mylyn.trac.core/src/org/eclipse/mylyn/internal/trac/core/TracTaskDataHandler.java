@@ -280,7 +280,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 				attr.setValue(field.getDefaultValue());	
 			}
 		}
-		data.addAttribute(attr.getId(), attr);
+		data.addAttribute(attr.getID(), attr);
 	}
 
 	private static RepositoryTaskAttribute createAttribute(AbstractAttributeFactory factory, RepositoryTaskData data,

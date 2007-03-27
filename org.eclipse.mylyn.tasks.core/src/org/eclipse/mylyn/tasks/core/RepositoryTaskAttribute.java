@@ -134,7 +134,7 @@ public class RepositoryTaskAttribute implements Serializable {
 		return name;
 	}
 
-	public String getId() {
+	public String getID() {
 		return key;
 	}
 
@@ -236,7 +236,7 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getId() + ":" + values;
+		return getID() + ":" + values;
 	}
 
 	@Override

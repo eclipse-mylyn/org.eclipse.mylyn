@@ -2574,7 +2574,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			return false;
 		}
 
-		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
+		RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
 		if (oldAttribute == null)
 			return true;
 		if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(newAttribute.getValue())) {
