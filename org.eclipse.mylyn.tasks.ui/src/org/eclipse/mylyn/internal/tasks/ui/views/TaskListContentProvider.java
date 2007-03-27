@@ -22,7 +22,6 @@ import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -219,9 +218,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}				
 				Set<ITask> parentsTasks = ((AbstractTaskContainer) parent).getChildren();
 				for (ITaskListElement element : parentsTasks) {
-					if(element instanceof DateRangeActivityDelegate) {
-						element = ((DateRangeActivityDelegate)element).getCorrespondingTask();
-					}
+//					if(element instanceof DateRangeActivityDelegate) {
+//						element = ((DateRangeActivityDelegate)element).getCorrespondingTask();
+//					}
 					if (!filter(element)) {
 						children.add(element);
 					}
