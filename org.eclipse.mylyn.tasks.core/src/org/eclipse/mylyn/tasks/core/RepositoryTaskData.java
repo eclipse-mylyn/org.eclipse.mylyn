@@ -13,8 +13,10 @@ package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -27,7 +29,7 @@ import java.util.StringTokenizer;
  */
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
-	private static final long serialVersionUID = 2304501248225237689L;
+	private static final long serialVersionUID = 2304501248225237699L;
 
 	private boolean hasLocalChanges = false;
 
@@ -36,14 +38,16 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	private String reportID;
 
 	private String repositoryURL;
-	
+
 	private String repositoryKind;
-	
+
 	private String taskKind;
 
 	private List<TaskComment> taskComments = new ArrayList<TaskComment>();
 
 	private List<RepositoryAttachment> attachments = new ArrayList<RepositoryAttachment>();
+
+	private Map<String, String> metaValues = new HashMap<String, String>();
 
 	/** The operation that was selected to do to the bug */
 	private RepositoryOperation selectedOperation = null;
@@ -51,7 +55,8 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/** The repositoryOperations that can be done on the report */
 	private List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
-	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id, String taskKind) {
+	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id,
+			String taskKind) {
 		super(factory);
 		this.reportID = id;
 		this.repositoryKind = repositoryKind;
@@ -317,6 +322,14 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	public String getTaskKind() {
 		return taskKind;
+	}
+
+	public void setMetaDataValue(String key, String value) {
+		metaValues.put(key, value);
+	}
+
+	public String getMetaDataValue(String key) {
+		return metaValues.get(key);
 	}
 
 }
