@@ -19,7 +19,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
-	public boolean select(Object element) {
+	public boolean select(Object parent, Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (shouldAlwaysShow(task)) {
