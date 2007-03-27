@@ -22,14 +22,14 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 	public boolean select(Object parent, Object element) {
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			if (shouldAlwaysShow(task)) {
+			if (shouldAlwaysShow(parent, task)) {
 				return true;
 			}
 			return !task.isCompleted();
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
-				if (shouldAlwaysShow(hit.getCorrespondingTask())) {
+				if (shouldAlwaysShow(parent, hit.getCorrespondingTask())) {
 					return true;
 				} else {
 					return !hit.getCorrespondingTask().isCompleted();

@@ -43,7 +43,7 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
-				if (shouldAlwaysShow(task)) {
+				if (shouldAlwaysShow(parent, task)) {
 					return true;
 				}
 			}

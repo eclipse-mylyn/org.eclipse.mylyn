@@ -280,10 +280,6 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void parseFutureReminders() {
 		activityFuture.clear();
 		activityNextWeek.clear();
-		activityPast.clear();
-		activityPreviousWeek.clear();
-		
-		parseTaskActivityInteractionHistory();
 		
 		for (DateRangeContainer day : activityWeekDays) {
 			day.clear();
@@ -370,7 +366,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					calendar.setFirstDayOfWeek(startDay);
 					calendar.setTime(event.getDate());
 					currentTaskStart = calendar;
-					currentHandle = event.getStructureHandle();
+					currentHandle = event.getStructureHandle();					
 				}
 			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && isInactive) {
 				isInactive = false;

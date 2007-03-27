@@ -172,7 +172,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private boolean shouldAlwaysShow(AbstractTaskContainer container) {
 		for (ITask task : container.getChildren()) {
-			if (shouldAlwaysShow(task)) {
+			if (shouldAlwaysShow(container, task)) {
 				if (container instanceof TaskArchive) {
 					if (TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(
 							task.getHandleIdentifier()) == null
@@ -188,9 +188,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	private boolean shouldAlwaysShow(ITask task) {
+	private boolean shouldAlwaysShow(Object parent, ITask task) {
 		for (AbstractTaskListFilter filter : this.view.getFilters()) {
-			if (filter.shouldAlwaysShow(task)) {
+			if (filter.shouldAlwaysShow(parent, task)) {
 				return true;
 			}
 		}
@@ -204,7 +204,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				if (filter(null, parent)) {
 					if (((AbstractTaskContainer) parent) instanceof TaskArchive) {
 						for (ITask task : ((AbstractTaskContainer) parent).getChildren()) {
-							if (shouldAlwaysShow(task)) {
+							if (shouldAlwaysShow(parent, task)) {
 								// TODO: archive logic?
 								if (TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(
 										task.getHandleIdentifier()) == null) {
@@ -260,7 +260,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private boolean filter(Object parent, Object object) {
 		for (AbstractTaskListFilter filter : this.view.getFilters()) {
-			if (!filter.select(null, object)) {
+			if (!filter.select(parent, object)) {
 				return true;
 			}
 		}
