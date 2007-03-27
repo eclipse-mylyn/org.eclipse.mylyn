@@ -18,7 +18,6 @@ import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
@@ -48,7 +47,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				if (task != null) {
 					if (isUninteresting(task)) {
 						return false;
-					} else if (isInteresting(task)) {
+					} else if (isInteresting(parent, task)) {
 						return true;
 					}
 				} else if (object instanceof AbstractQueryHit) {
@@ -73,34 +72,32 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	// TODO: make meta-context more explicit
-	protected boolean isInteresting(ITask task) {
-		return shouldAlwaysShow(task);
+	protected boolean isInteresting(Object parent, ITask task) {
+		return shouldAlwaysShow(parent, task);
 	}
 
 	@Override
-	public boolean shouldAlwaysShow(ITask task) {
-
-		return super.shouldAlwaysShow(task) || shouldShowInFocusedWorkweekDateContainer(task) || hasChanges(task)
+	public boolean shouldAlwaysShow(Object parent, ITask task) {
+		return super.shouldAlwaysShow(parent, task) || hasChanges(task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
-				|| (isInterestingForThisWeek(task) && !task.isCompleted())
+				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
+				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
 		// || isCurrentlySelectedInEditor(task);
 	}
 
-	private static boolean shouldShowInFocusedWorkweekDateContainer(ITask task) {
-		if (task instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) task;
+	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
+		boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(task);
+		if (overdue || task.isPastReminder()) {
+			return true;
+		}
 
-			boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(delegate.getCorrespondingTask());
-			if(overdue || task.isPastReminder()){
-				return true;
-			}
-			DateRangeContainer container = delegate.getDateRangeContainer();
+		if (parent instanceof DateRangeContainer) {
+			DateRangeContainer container = (DateRangeContainer) parent;
 			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
 			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
-			if ((container.getEnd().compareTo(previousCal) <= 0 || container.getStart().compareTo(nextCal) >= 0)
-					&& !overdue) {
+			if (container.getEnd().compareTo(previousCal) <= 0 || container.getStart().compareTo(nextCal) >= 0) {
 				// if bin is past return false, unless overdue
 				return false;
 			} else {
@@ -108,15 +105,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// workweek
 				return true;
 			}
-			
-		} else {			
-			return false;
 		}
+
+		return false;
 	}
 
-	public static boolean isInterestingForThisWeek(ITask task) {
-		if (task instanceof DateRangeActivityDelegate) {
-			return shouldShowInFocusedWorkweekDateContainer(task);
+	public static boolean isInterestingForThisWeek(Object parent, ITask task) {
+		if (parent instanceof DateRangeContainer) {
+			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
 			return TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)
 					|| TasksUiPlugin.getTaskListManager().isScheduledForToday(task) || task.isPastReminder();
