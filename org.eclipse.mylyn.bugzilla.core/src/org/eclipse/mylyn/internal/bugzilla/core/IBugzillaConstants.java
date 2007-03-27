@@ -83,6 +83,8 @@ public interface IBugzillaConstants {
 	// (see also: https://bugzilla.mozilla.org/show_bug.cgi?id=136603https://bugzilla.mozilla.org/show_bug.cgi?id=136603)
 	public static final String URL_GET_SHOW_BUG_XML = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata&id=";
 	
+	public static final String URL_GET_SHOW_BUG_XML_NOID = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata";
+	
 	public static final String XML_ERROR_INVALIDBUGID = "invalidbugid";
 
 	public static final String XML_ERROR_NOTFOUND = "notfound";
@@ -247,5 +249,7 @@ public interface IBugzillaConstants {
 	public static final String REPOSITORY_SETTING_SHORT_LOGIN = "bugzilla.shortLoginEnabled";
 
 	public static final String BUGZILLA_TASK_KIND = "Bug";
+
+	static final int MAX_URL_LENGTH = 2000;
 
 }

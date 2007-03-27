@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -337,7 +338,8 @@ public class BugzillaClient {
 			postMethod = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl.toString()
 					+ IBugzillaConstants.URL_POST_LOGIN));
 
-			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=" + characterEncoding);
+			postMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset="
+					+ characterEncoding);
 			postMethod.setRequestBody(formData);
 			postMethod.setDoAuthentication(true);
 			postMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new BugzillaRetryHandler());
@@ -985,6 +987,48 @@ public class BugzillaClient {
 			}
 		}
 		return null;
+	}
+
+	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds) throws IOException, CoreException {
+		GetMethod method = null;
+		try {
+
+			// TODO: Handle too long of url (IBugzillaConstants.MAX_URL_LENGTH)
+			
+			String requestUrl = repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML_NOID;
+
+			HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
+			RepositoryTaskData taskData = null;
+			for (String taskId : taskIds) {
+				requestUrl += "&id=" + taskId;
+				taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
+						repositoryUrl.toString(), taskId, Task.DEFAULT_TASK_KIND);
+				setupExistingBugAttributes(repositoryUrl.toString(), taskData);
+				taskDataMap.put(taskId, taskData);
+			}
+
+			method = getConnect(requestUrl);
+			if (method.getResponseHeader("Content-Type") != null) {
+				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+				for (String type : VALID_CONFIG_CONTENT_TYPES) {
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+						MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsStream(),
+								characterEncoding);
+						factory.populateReport(taskDataMap);
+						return taskDataMap;
+					}
+				}
+			}
+
+			parseHtmlError(new BufferedReader(
+					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+
+			return null;
+		} finally {
+			if (method != null) {
+				method.releaseConnection();
+			}
+		}
 	}
 
 }

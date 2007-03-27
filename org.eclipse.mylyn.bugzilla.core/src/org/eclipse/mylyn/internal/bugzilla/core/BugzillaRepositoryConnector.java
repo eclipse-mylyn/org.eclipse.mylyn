@@ -47,8 +47,6 @@ import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
  */
 public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
-	private static final int MAX_URL_LENGTH = 2000;
-
 	private static final String BUG_ID = "&bug_id=";
 
 	private static final String CHANGED_BUGS_CGI_ENDDATE = "&chfieldto=Now";
@@ -158,7 +156,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				AbstractRepositoryTask task = itr.next();
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
-						.length()) > MAX_URL_LENGTH) {
+						.length()) > IBugzillaConstants.MAX_URL_LENGTH) {
 					queryForChanged(repository, changedTasks, urlQueryString);
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
