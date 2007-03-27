@@ -124,7 +124,17 @@ public class TaskRepositoryManager {
 		listeners.remove(listener);
 	}
 
+	/* Public for testing. */
+	public static String stripSlashes(String url) {
+		StringBuilder sb = new StringBuilder(url.trim());
+		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb.toString();
+	}
+	
 	public TaskRepository getRepository(String kind, String urlString) {
+		urlString = stripSlashes(urlString);
 		if (repositoryMap.containsKey(kind)) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
 				if (repository.getUrl().equals(urlString)) {
@@ -139,6 +149,7 @@ public class TaskRepositoryManager {
 	 * @return first repository that matches the given url
 	 */
 	public TaskRepository getRepository(String urlString) {
+		urlString = stripSlashes(urlString);
 		for (String kind : repositoryMap.keySet()) {
 			for (TaskRepository repository : repositoryMap.get(kind)) {
 				if (repository.getUrl().equals(urlString)) {

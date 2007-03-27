@@ -28,6 +28,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -734,21 +735,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected abstract boolean isValidUrl(String name);
 
-	/* Public for testing. */
-	public static String stripSlashes(String url) {
-		StringBuilder sb = new StringBuilder(url.trim());
-		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == '/') {
-			sb.deleteCharAt(sb.length() - 1);
-		}
-		return sb.toString();
-	}
-
 	public String getRepositoryLabel() {
 		return repositoryLabelEditor.getStringValue();
 	}
 
 	public String getServerUrl() {
-		return stripSlashes(serverUrlCombo.getText());
+		return TaskRepositoryManager.stripSlashes(serverUrlCombo.getText());
 	}
 
 	public String getUserName() {
