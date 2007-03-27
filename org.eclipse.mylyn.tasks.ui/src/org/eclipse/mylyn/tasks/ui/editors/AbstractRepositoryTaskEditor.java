@@ -634,7 +634,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public AbstractRepositoryTask getRepositoryTask() {
 		return repositoryTask;
 	}
-	
+
 	protected IWorkbenchSiteProgressService getProgressService() {
 		Object siteService = getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		if (siteService != null)
@@ -1914,6 +1914,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					Date commentDate = taskData.getAttributeFactory().getDateForAttributeType(
 							RepositoryTaskAttribute.COMMENT_DATE, comment.getCreated());
 					if (commentDate != null) {
+
+						Calendar calComment = Calendar.getInstance();
+						calComment.setTimeInMillis(commentDate.getTime());
+						calComment.set(Calendar.SECOND, 0);
 						if (commentDate.after(calLastMod.getTime())) {
 							return true;
 						}
