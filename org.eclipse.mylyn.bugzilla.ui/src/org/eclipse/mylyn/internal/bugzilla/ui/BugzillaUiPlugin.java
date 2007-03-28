@@ -25,7 +25,6 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.ui.search.IBugzillaResultEditorMatchAdapter;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -78,8 +77,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 	private static BugzillaUiPlugin plugin;
 
-	private static IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter = null;
-
 	public static final char PREF_DELIM_REPOSITORY = ':';
 
 	public BugzillaUiPlugin() {
@@ -95,8 +92,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		if (repConfigCacheFile != null) {
 			BugzillaCorePlugin.setConfigurationCacheFile(repConfigCacheFile.toFile());
 		}
-
-		BugzillaUiPlugin.setResultEditorMatchAdapter(new BugzillaResultMatchAdapter());
 
 		BugzillaRepositoryConnector bugzillaConnector = (BugzillaRepositoryConnector) TasksUiPlugin
 				.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
@@ -130,14 +125,6 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 
 		super.stop(context);
 		plugin = null;
-	}
-
-	public static IBugzillaResultEditorMatchAdapter getResultEditorMatchAdapter() {
-		return resultEditorMatchAdapter;
-	}
-
-	public static void setResultEditorMatchAdapter(IBugzillaResultEditorMatchAdapter resultEditorMatchAdapter) {
-		BugzillaUiPlugin.resultEditorMatchAdapter = resultEditorMatchAdapter;
 	}
 
 	/**
