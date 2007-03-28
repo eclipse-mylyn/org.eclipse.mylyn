@@ -75,7 +75,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			case 4:
 				if (obj instanceof DateRangeContainer) {
 					if (((DateRangeContainer) obj).isPresent()) {
-						return "TODAY";
+						return super.getText(obj) + " - Today";
 					}
 				}
 				return super.getText(obj);
