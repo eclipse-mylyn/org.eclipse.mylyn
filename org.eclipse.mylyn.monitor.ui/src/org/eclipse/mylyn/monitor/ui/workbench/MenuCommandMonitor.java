@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author Leah Findlater and Mik Kersten
  */
 public class MenuCommandMonitor implements Listener {
+	
 	public static final String MENU_ITEM_ID = "item.label.";
 
 	public static final String MENU_ITEM_SELECTED = "menu";
@@ -44,9 +45,10 @@ public class MenuCommandMonitor implements Listener {
 			Object target = event.widget.getData();
 			String id = null;
 			String delta = null;
-			if (target instanceof IContributionItem)
+			if (target instanceof IContributionItem) {
 				id = ((IContributionItem) target).getId();
-
+			}
+				
 			if (item instanceof MenuItem) {
 				MenuItem menu = (MenuItem) item;
 				Menu parentMenu = menu.getParent();
@@ -57,20 +59,23 @@ public class MenuCommandMonitor implements Listener {
 						parentMenu = parentMenu.getParentMenu();
 					}
 				}
-				String simpleId = "";
-				if (id == null)
-					id = "null";
-				String itemText = obfuscateValueIfContainsPath(item.getText());
-				id = id + "$" + MENU_ITEM_ID + simpleId + location + itemText;
+				if (id == null) {
+					return;
+					// TODO: would be good to put back this info in some form
+					// but it can contain private data, bug 178064
+					
+//					if (id == null) 
+//						id = "null";
+//					String itemText = obfuscateItemText(item.getText());
+//					id = id + "$" + MENU_ITEM_ID + location + itemText;
+				}
 
 				delta = MENU_ITEM_SELECTED;
 			} else if (item instanceof ToolItem) {
 				ToolItem tool = (ToolItem) item;
-				String simpleId = "";
 				if (id == null)
 					id = "null";
-				id = id + "$" + MENU_ITEM_ID + simpleId + '.' + tool.getToolTipText();
-
+				id = id + "$" + MENU_ITEM_ID + '.' + tool.getToolTipText();
 				delta = TOOLBAR_ITEM_SELECTED;
 			}
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
@@ -81,14 +86,14 @@ public class MenuCommandMonitor implements Listener {
 		}
 	}
 
-	/**
-	 * TODO: generalize this to other resources whose names are private
-	 */
-	private String obfuscateValueIfContainsPath(String text) {
-		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
-			return MylarMonitorUiPlugin.OBFUSCATED_LABEL;
-		} else {
-			return text;
-		}
-	}
+//	/**
+//	 * TODO: generalize this to other resources whose names are private
+//	 */
+//	private String obfuscateItemText(String text) {
+//		if (text.indexOf(".java") != -1 || text.indexOf(".xml") != -1) {
+//			return MylarMonitorUiPlugin.OBFUSCATED_LABEL;
+//		} else {
+//			return text;
+//		}
+//	}
 }
