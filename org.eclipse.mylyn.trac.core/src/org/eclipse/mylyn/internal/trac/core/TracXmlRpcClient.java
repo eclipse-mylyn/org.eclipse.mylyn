@@ -17,6 +17,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.WebClientUtil;
@@ -211,7 +212,17 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		String[] actions = getActions(id);
 		ticket.setActions(actions);
 
-		ticket.setResolutions(getDefaultTicketResolutions());
+		updateAttributes(new NullProgressMonitor(), false);
+		TracTicketResolution[] resolutions = getTicketResolutions();
+		if (resolutions != null) {
+			String[] resolutionStrings = new String[resolutions.length];
+			for (int i = 0; i < resolutions.length; i++) {
+				resolutionStrings[i] = resolutions[i].getName();
+			}
+			ticket.setResolutions(resolutionStrings);
+		} else {
+			ticket.setResolutions(getDefaultTicketResolutions());
+		}
 
 		return ticket;
 	}
