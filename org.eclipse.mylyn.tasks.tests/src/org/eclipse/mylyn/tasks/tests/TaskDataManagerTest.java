@@ -64,8 +64,8 @@ public class TaskDataManagerTest extends TestCase {
 				Task.DEFAULT_TASK_KIND);
 
 		RepositoryTaskAttribute attrib1 = new RepositoryTaskAttribute("key", "name", false);
-		attrib1.setMetaDataValue("key1", "value1");
-		attrib1.setMetaDataValue("key2", "value2");
+		attrib1.putMetaDataValue("key1", "value1");
+		attrib1.putMetaDataValue("key2", "value2");
 		taskData.addAttribute("key", attrib1);
 
 		offlineTaskDataManager.push(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "1"),
@@ -74,8 +74,8 @@ public class TaskDataManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "2", Task.DEFAULT_TASK_KIND);
 
 		RepositoryTaskAttribute attrib2 = new RepositoryTaskAttribute("key", "name", false);
-		attrib2.setMetaDataValue("key3", "value3");
-		attrib2.setMetaDataValue("key4", "value4");
+		attrib2.putMetaDataValue("key3", "value3");
+		attrib2.putMetaDataValue("key4", "value4");
 		taskData.addAttribute("key", attrib2);
 
 		offlineTaskDataManager.push(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "2"),
