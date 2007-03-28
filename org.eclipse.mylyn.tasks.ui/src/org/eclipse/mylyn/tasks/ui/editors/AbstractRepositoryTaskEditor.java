@@ -259,10 +259,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected final int HORZ_INDENT = 0;
 
-	protected CCombo attributeCombo;
-
-	// protected Button addSelfToCCCheck;
-
 	protected Text summaryText;
 
 	protected Button submitButton;
@@ -308,8 +304,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected boolean attachContext = true;
 
 	private boolean submitting = false;
-
-	private Section newCommentSection;
 
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
@@ -467,10 +461,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	};
 
-	private Section attributesSection;
-
-	private Section descriptionSection;
-
 	private AbstractRepositoryTask repositoryTask;
 
 	protected Set<RepositoryTaskAttribute> changedAttributes;
@@ -620,6 +610,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		setSite(site);
 		setInput(input);
+		
+		editorInput.setToolTipText(taskData.getLabel());
 
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
 		hasAttributeChanges = hasVisibleAttributeChanges();
@@ -811,8 +803,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		Composite bottomComposite = toolkit.createComposite(editorComposite);
 		bottomComposite.setLayout(new GridLayout(2, false));
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(bottomComposite);
-		// GridDataFactory.fillDefaults().align(SWT.FILL,
-		// SWT.DEFAULT).applyTo(bottomComposite);
 
 		createActionsLayout(bottomComposite);
 		createPeopleLayout(bottomComposite);
@@ -991,8 +981,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * attributes of the task (some of which are editable).
 	 */
 	protected Composite createAttributeLayout(Composite composite) {
-		String title = taskData.getLabel();
-		attributesSection = createSection(composite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
+		Section attributesSection = createSection(composite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
 		// Attributes Composite- this holds all the combo fields and text fields
@@ -1007,7 +996,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesData.grabExcessVerticalSpace = false;
 		attributesComposite.setLayoutData(attributesData);
 		attributesSection.setClient(attributesComposite);
-		editorInput.setToolTipText(title);
+		
 
 		int currentCol = 1;
 
@@ -1029,7 +1018,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (attribute.hasOptions() && !attribute.isReadOnly()) {
 				Label label = createLabel(attributesComposite, attribute);
 				GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-				attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
+				CCombo attributeCombo = new CCombo(attributesComposite, SWT.FLAT | SWT.READ_ONLY);
 				toolkit.adapt(attributeCombo, true, true);
 				attributeCombo.setFont(TEXT_FONT);
 				attributeCombo.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -1572,7 +1561,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	// }
 
 	protected void createDescriptionLayout(Composite composite) {
-		descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
+		Section descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
 		final Composite sectionComposite = toolkit.createComposite(descriptionSection);
 		descriptionSection.setClient(sectionComposite);
 		GridLayout addCommentsLayout = new GridLayout();
@@ -1932,7 +1921,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
-		newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
+		Section newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 
 		Composite newCommentsComposite = toolkit.createComposite(newCommentSection);
 		newCommentsComposite.setLayout(new GridLayout());
