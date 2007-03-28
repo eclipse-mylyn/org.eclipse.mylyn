@@ -20,14 +20,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
 public class DateRangeContainer extends AbstractTaskContainer {
 
-	private Set<ITask> children = new HashSet<ITask>();
+	private Set<DateRangeActivityDelegate> dateRangeDelegates = new HashSet<DateRangeActivityDelegate>();
 
 	private Map<DateRangeActivityDelegate, Long> taskToDuration = new HashMap<DateRangeActivityDelegate, Long>();
 
@@ -80,7 +79,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	public void clear() {
-		children.clear();
+		dateRangeDelegates.clear();
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {
@@ -88,8 +87,8 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		if (taskActivity < 0)
 			taskActivity = 0;
 		totalElapsed += taskActivity;
-		children.remove(taskWrapper);
-		children.add(taskWrapper);
+		dateRangeDelegates.remove(taskWrapper);
+		dateRangeDelegates.add(taskWrapper);
 		if (taskToDuration.containsKey(taskWrapper)) {
 			long previous = taskToDuration.get(taskWrapper);
 			long newDuration = previous + taskActivity;
@@ -97,10 +96,12 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		} else {
 			taskToDuration.put(taskWrapper, taskActivity);
 		}
+		super.add(taskWrapper.getCorrespondingTask());
 	}
 
 	public void remove(DateRangeActivityDelegate taskWrapper) {
-		children.remove(taskWrapper);
+		dateRangeDelegates.remove(taskWrapper);
+		super.remove(taskWrapper.getCorrespondingTask());
 	}
 
 	public Calendar getStart() {
@@ -125,7 +126,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 
 	public long getTotalEstimated() {
 		totalEstimated = 0;
-		for (ITask task : children) {
+		for (ITask task : dateRangeDelegates) {
 			totalEstimated += task.getEstimateTimeHours();
 		}
 		return totalEstimated;
@@ -148,9 +149,8 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		// ignore
 	}
 
-	@Override
-	public Set<ITask> getChildren() {
-		return children;
+	public Set<DateRangeActivityDelegate> getDateRangeDelegates() {
+		return dateRangeDelegates;
 	}
 
 	public boolean isFuture() {
@@ -198,11 +198,11 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	/**
-	 * The handle for most containers is their summary.  Override to specify a
+	 * The handle for most containers is their summary. Override to specify a
 	 * different natural ordering.
 	 */
 	@Override
 	public int compareTo(ITaskListElement taskListElement) {
-		return startDate.compareTo(((DateRangeContainer)taskListElement).startDate);
+		return startDate.compareTo(((DateRangeContainer) taskListElement).startDate);
 	}
 }

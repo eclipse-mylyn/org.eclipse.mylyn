@@ -82,12 +82,12 @@ public class TaskActivityViewTest extends TestCase {
 		assertEquals(currentEndMili - currentStartMili, testContainer.getTotalElapsed());
 		testContainer.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 0));
 		assertEquals(2 * (currentEndMili - currentStartMili), testContainer.getTotalElapsed());
-		assertEquals(2, testContainer.getChildren().size());
+		assertEquals(2, testContainer.getDateRangeDelegates().size());
 		testContainer.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd));
 		assertEquals(3 * (currentEndMili - currentStartMili), testContainer.getTotalElapsed());
 		assertEquals(2 * (currentEndMili - currentStartMili), testContainer.getElapsed(new DateRangeActivityDelegate(
 				testContainer, task2, currentTaskStart, currentTaskEnd)));
-		assertEquals(2, testContainer.getChildren().size());
+		assertEquals(2, testContainer.getDateRangeDelegates().size());
 	}
 	
 	public void testNegativeInactivity() {

@@ -285,7 +285,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			day.clear();
 		}
 		HashSet<ITask> toRemove = new HashSet<ITask>();
-		toRemove.addAll(activityThisWeek.getChildren());
+		toRemove.addAll(activityThisWeek.getDateRangeDelegates());
 		for (ITask activity : toRemove) {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
