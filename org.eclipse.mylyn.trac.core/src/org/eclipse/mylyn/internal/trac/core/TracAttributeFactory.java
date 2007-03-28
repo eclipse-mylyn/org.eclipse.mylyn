@@ -92,7 +92,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 		 * This is for Mylar attributes that do not map to Trac attributes.
 		 */
 		Attribute(String taskKey, String prettyName) {
-			this(taskKey, prettyName, taskKey, false, false);
+			this(taskKey, prettyName, taskKey, true, false);
 		}
 		
 		public String getTaskKey() {
@@ -124,8 +124,12 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 
 	@Override
 	public boolean getIsHidden(String key) {
+		if (isInternalAttribute(key)) {
+			return true;
+		}
+		
 		Attribute attribute = attributeByTracKey.get(key);
-		return (attribute != null) ? attribute.isHidden() : isInternalAttribute(key);
+		return (attribute != null) ? attribute.isHidden() : false;
 	}
 
 	@Override
