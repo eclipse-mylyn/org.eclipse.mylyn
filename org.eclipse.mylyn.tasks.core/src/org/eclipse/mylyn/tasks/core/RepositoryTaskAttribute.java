@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class RepositoryTaskAttribute implements Serializable {
 
-	private static final long serialVersionUID = 5548885751675139746L;
+	private static final long serialVersionUID = 5548885751645139746L;
 
 	/**
 	 * Key for the author of a comment.
@@ -266,7 +266,7 @@ public class RepositoryTaskAttribute implements Serializable {
 		return true;
 	}
 
-	public void setMetaDataValue(String key, String value) {
+	public void putMetaDataValue(String key, String value) {
 		metaData.put(key, value);
 	}
 
