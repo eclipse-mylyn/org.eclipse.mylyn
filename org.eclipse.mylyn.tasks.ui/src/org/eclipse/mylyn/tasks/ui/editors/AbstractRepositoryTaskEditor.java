@@ -2016,6 +2016,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private void setSubmitEnabled(boolean enabled) {
 		if (submitButton != null) {
 			submitButton.setEnabled(enabled);
+			if (enabled) {
+				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
+			}
 		}
 	}
 
