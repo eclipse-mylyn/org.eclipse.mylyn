@@ -610,7 +610,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		setSite(site);
 		setInput(input);
-		
+
 		editorInput.setToolTipText(taskData.getLabel());
 
 		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
@@ -996,7 +996,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesData.grabExcessVerticalSpace = false;
 		attributesComposite.setLayoutData(attributesData);
 		attributesSection.setClient(attributesComposite);
-		
 
 		int currentCol = 1;
 
@@ -2240,7 +2239,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		for (StyledText text : commentStyleText) {
 			Composite comp = text.getParent();
 			while (comp != null) {
-				if (comp instanceof ExpandableComposite) {
+				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					ex.setExpanded(true);
 
