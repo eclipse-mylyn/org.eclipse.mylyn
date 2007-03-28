@@ -88,21 +88,20 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
-		boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(task);
-		if (overdue || task.isPastReminder()) {
-			return true;
-		}
-
 		if (parent instanceof DateRangeContainer) {
+
+			boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(task);
+			if (overdue || task.isPastReminder()) {
+				return true;
+			}
+
 			DateRangeContainer container = (DateRangeContainer) parent;
 			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
 			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
 			if (container.getEnd().compareTo(previousCal) <= 0 || container.getStart().compareTo(nextCal) >= 0) {
-				// if bin is past return false, unless overdue
+				// not within workweek
 				return false;
 			} else {
-				// if bin in today or future return true, unless past current
-				// workweek
 				return true;
 			}
 		}
