@@ -51,6 +51,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 			PresentationSelectionAction action = new PresentationSelectionAction(presentation);
 			ActionContributionItem item = new ActionContributionItem(action);
 			action.setText(presentation.getPresentationName());
+			action.setImageDescriptor(presentation.getImageDescriptor());
 			action.setChecked(view.getCurrentPresentation().getPresentationName().equals(
 					presentation.getPresentationName()));
 			item.fill(dropDownMenu, -1);

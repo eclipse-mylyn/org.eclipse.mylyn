@@ -28,6 +28,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
@@ -274,6 +275,9 @@ public class TaskListView extends ViewPart {
 			return "Categorized";
 		}
 
+		public ImageDescriptor getImageDescriptor() {
+			return TaskListImages.CATEGORY;
+		}
 	};
 
 	// TODO: Use extension point
@@ -286,7 +290,10 @@ public class TaskListView extends ViewPart {
 		public String getPresentationName() {
 			return "Scheduled";
 		}
-
+		
+		public ImageDescriptor getImageDescriptor() {
+			return TaskListImages.CALENDAR;
+		}
 	};
 
 	/**

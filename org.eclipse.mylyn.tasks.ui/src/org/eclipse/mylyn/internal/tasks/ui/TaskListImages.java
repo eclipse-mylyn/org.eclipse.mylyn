@@ -202,7 +202,7 @@ public class TaskListImages {
 
 	public static final ImageDescriptor PRIORITY_5 = createSize(create(T_EVIEW, "priority-5.gif"), SIZE);
 
-	public static final ImageDescriptor CALENDAR = create(T_EVIEW, "task-activity.gif");
+	public static final ImageDescriptor CALENDAR = create(T_TOOL, "calendar.gif");
 
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 	

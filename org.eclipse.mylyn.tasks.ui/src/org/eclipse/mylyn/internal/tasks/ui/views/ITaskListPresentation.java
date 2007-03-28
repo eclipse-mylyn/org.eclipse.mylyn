@@ -8,15 +8,19 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 /**
  * @author Rob Elves
+ * @author Mik Kersten
  */
 public interface ITaskListPresentation {
 
 	public abstract IStructuredContentProvider getContentProvider();
 
 	public abstract String getPresentationName();
+
+	public abstract ImageDescriptor getImageDescriptor();
 
 }
