@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 
@@ -43,7 +44,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 		final Set<IResource> addedResources = new HashSet<IResource>();
 		final Set<IResource> changedResources = new HashSet<IResource>();
-		final Set<String> excludedPatterns = MylarResourcesPlugin.getDefault().getExcludedResourcePatterns();
+		final Set<String> excludedPatterns = MylarResourcesPreferenceInitializer.getExcludedResourcePatterns();
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {

@@ -2,6 +2,14 @@
 <?eclipse version="3.0"?>
 <plugin>
  
+   <extension-point id="changeMonitoring" name="Resource Change Monitorin" schema="schema/changeMonitoring.exsd"/>
+ 
+    <extension
+         point="org.eclipse.mylar.resources.changeMonitoring">
+		<exclude
+         	pattern=".*"/>
+   </extension>
+ 
    <extension
          point="org.eclipse.mylar.context.core.bridges">
       <structureBridge
@@ -18,6 +26,9 @@
             class="org.eclipse.mylar.internal.resources.ui.ResourceContextLabelProvider"
             contentType="*"/>
    </extension>  
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer"/>
+   </extension>
    
    <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.mylar.resources">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.mylar.resources" id="changeMonitoring" name="changeMonitoring"/>
+      </appInfo>
+      <documentation>
+         This extension point is used so that plugins may contribute extensions that should be ignored by default (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=178931 for details)
+      </documentation>
+   </annotation>
+
+   <element name="changeMonitoring">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="exclude" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="exclude">
+      <complexType>
+         <attribute name="pattern" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Use example:
+
+   &lt;extension point=&quot;org.eclipse.mylar.resources.mylar_resources_to_ignore&quot;&gt;
+     &lt;resource_to_ignore pattern=&quot;*.pyc&quot;/&gt;
+     &lt;resource_to_ignore pattern=&quot;*.pyo&quot;/&gt;
+   &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         In the preferences initializer it will search for plugins that supply this extension point and add those as defaults.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

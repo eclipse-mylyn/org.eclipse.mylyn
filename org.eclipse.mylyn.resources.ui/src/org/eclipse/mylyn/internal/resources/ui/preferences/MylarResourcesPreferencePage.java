@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,8 +44,6 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 	private Button addButton;
 
 	private Button removeButton;
-	
-//	private Button resourceMonitoringButton;
 
 	public void init(IWorkbench workbench) {
 		// ignore
@@ -53,31 +51,16 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 	
 	@Override
 	protected Control createContents(Composite parent) {
-//		createNewResourceSection(parent);
 		createExcludesTable(parent);
 
 		return parent;
 	}
-
-//	private void createNewResourceSection(Composite parent) {
-//		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-//		group.setText("Change Monitoring");
-//		GridLayout layout = new GridLayout(1, false);
-//		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		group.setLayout(layout);
-//		
-//		resourceMonitoringButton = new Button(group, SWT.CHECK);
-//		resourceMonitoringButton.setText("Add new and modified files to the active context");
-//		resourceMonitoringButton.setSelection(MylarIdePlugin.getDefault().isResourceMonitoringEnabled());
-//	}
 
 	private void createExcludesTable(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		group.setText("Resource Monitoring Exclusions");
 		GridLayout layout = new GridLayout(1, false);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		layout.marginWidth = 0;
-//		layout.marginHeight = 0;
 		group.setLayout(layout);
 		
 		Composite composite = new Composite(group, SWT.NULL);
@@ -86,9 +69,6 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 		layout.marginHeight = 0;
 		layout.numColumns = 2;
 		composite.setLayout(layout);
-//		GridData data = new GridData();
-//		data.verticalAlignment = GridData.FILL;
-//		data.horizontalAlignment = GridData.FILL;
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label l1 = new Label(composite, SWT.NULL);
@@ -131,7 +111,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 				removeIgnore();
 			}
 		});
-		fillTable(MylarResourcesPlugin.getDefault().getExcludedResourcePatterns());
+		fillTable(MylarResourcesPreferenceInitializer.getExcludedResourcePatterns());
 		Dialog.applyDialogFont(group);
 		setButtonLayoutData(addButton);
 		setButtonLayoutData(removeButton);
@@ -149,8 +129,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 		for (int i = 0; i < items.length; i++) {
 			patterns.add(items[i].getText());
 		}
-		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(patterns);
-//		MylarIdePlugin.getDefault().setResourceMonitoringEnabled(resourceMonitoringButton.getSelection());
+		MylarResourcesPreferenceInitializer.setExcludedResourcePatterns(patterns);
 		return true;
 	}
 
@@ -158,9 +137,8 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 	protected void performDefaults() {
 		super.performDefaults();
 		ignoreTable.removeAll();
-		MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(MylarResourcesPlugin.PREF_RESOURCES_IGNORED, MylarResourcesPlugin.PREF_VAL_DEFAULT_RESOURCES_IGNORED);
-//		MylarIdePlugin.getDefault().getPreferenceStore().setValue(MylarIdePlugin.PREF_RESOURCE_MONITORING_ENABLED, MylarIdePlugin.getDefault().getPreferenceStore().getDefaultBoolean(MylarIdePlugin.PREF_RESOURCE_MONITORING_ENABLED));
-		fillTable(MylarResourcesPlugin.getDefault().getExcludedResourcePatterns());
+		MylarResourcesPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
+		fillTable(MylarResourcesPreferenceInitializer.getExcludedResourcePatterns());
 	}
 
 	/**
@@ -181,13 +159,6 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 			return;
 		String pattern = dialog.getValue();
 		if (pattern.equals(""))return; //$NON-NLS-1$
-		// Check if the item already exists
-//		TableItem[] items = ignoreTable.getItems();
-//		for (int i = 0; i < items.length; i++) {
-//			if (items[i].getText().equals(pattern)) {
-//				return;
-//			}
-//		}
 		TableItem item = new TableItem(ignoreTable, SWT.NONE);
 		item.setText(pattern);
 		item.setChecked(true);

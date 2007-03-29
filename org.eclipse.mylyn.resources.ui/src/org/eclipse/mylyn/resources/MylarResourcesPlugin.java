@@ -44,6 +44,8 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarResourcesPlugin extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.mylar.resources";
+	
 	private static MylarResourcesPlugin plugin;
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
@@ -57,7 +59,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	private ResourceInterestUpdater interestUpdater = new ResourceInterestUpdater();
 	
 	private ResourceBundle resourceBundle;
-
+	
 	private static final String PREF_STORE_DELIM = ", ";
 
 	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylar.ide.resources.ignored.pattern";
