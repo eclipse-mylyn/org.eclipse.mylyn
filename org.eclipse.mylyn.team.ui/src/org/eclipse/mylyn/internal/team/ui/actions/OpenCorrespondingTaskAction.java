@@ -192,14 +192,14 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					if (currTask instanceof AbstractRepositoryTask) {
 						String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
 						if (taskFullUrl.equals(currUrl)) {
-							return new LinkedTaskInfo(currTask);
+							return new LinkedTaskInfo(currTask, null);
 						}
 					}
 				}
 			}
 		}
 		if (task != null) {
-			return new LinkedTaskInfo(task);
+			return new LinkedTaskInfo(task, null);
 		}
 
 		return new LinkedTaskInfo(repositoryUrl, taskId, taskFullUrl, comment);

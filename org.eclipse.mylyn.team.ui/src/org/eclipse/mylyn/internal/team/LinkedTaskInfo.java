@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.team;
 
 import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**
  * Default implementation of {@link ILinkedTaskInfo}
@@ -31,9 +32,11 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 
 	private String comment;
 	
-
-	public LinkedTaskInfo(ITask task) {
+	private ChangeSet changeSet = null;
+	
+	public LinkedTaskInfo(ITask task, ChangeSet changeSet) {
 		this.task = task;
+		this.changeSet = changeSet;
 	}
 
 	public LinkedTaskInfo(String taskFullUrl) {
@@ -65,6 +68,10 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 
 	public String getComment() {
 		return comment;
+	}
+
+	public ChangeSet getChangeSet() {
+		return changeSet;
 	}
 
 }
