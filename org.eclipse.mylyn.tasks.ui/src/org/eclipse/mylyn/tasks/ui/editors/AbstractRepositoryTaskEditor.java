@@ -46,19 +46,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -72,8 +64,8 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskSelection;
@@ -119,7 +111,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -264,8 +255,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Button submitButton;
 
 	protected Table attachmentsTable;
-
-	protected TableViewer attachmentTableViewer;
+	
+	protected TableViewer attachmentsTableViewer;
 
 	protected String[] attachmentsColumns = { "Description", "Type", "Creator", "Created" };
 
@@ -290,8 +281,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected org.eclipse.swt.widgets.List ccList;
 
 	protected Text ccText;
-
-	private TableViewer attachmentsTableViewer;
 
 	private Section commentsSection;
 
@@ -470,95 +459,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private String kindLabel;
 
 	private Menu menu;
-
-	private final class AttachmentLabelProvider extends LabelProvider implements IColorProvider {
-
-		public Color getBackground(Object element) {
-			return attachmentsTable.getDisplay().getSystemColor(SWT.COLOR_WHITE);
-		}
-
-		public Color getForeground(Object element) {
-			return attachmentsTable.getDisplay().getSystemColor(SWT.COLOR_BLACK);
-		}
-
-	}
-
-	private final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements
-			ITableColorProvider, ITableLabelProvider {
-
-		private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-
-		public AttachmentTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator) {
-			super(provider, decorator);
-		}
-
-		public Image getColumnImage(Object element, int columnIndex) {
-			// RepositoryAttachment attachment = (RepositoryAttachment)
-			// element;
-			return null;
-		}
-
-		public String getColumnText(Object element, int columnIndex) {
-			RepositoryAttachment attachment = (RepositoryAttachment) element;
-			switch (columnIndex) {
-			case 0:
-				return attachment.getDescription();
-			case 1:
-				if (attachment.isPatch()) {
-					return "patch";
-				} else {
-					return attachment.getContentType();
-				}
-			case 2:
-				return attachment.getCreator();
-			case 3:
-				// TODO should retrieve Date object from IOfflineTaskHandler
-				return formatDate(attachment.getDateCreated());
-			}
-			return "unrecognized column";
-		}
-
-		@Override
-		public void addListener(ILabelProviderListener listener) {
-			// ignore
-
-		}
-
-		@Override
-		public void dispose() {
-			// ignore
-
-		}
-
-		@Override
-		public boolean isLabelProperty(Object element, String property) {
-			// ignore
-			return false;
-		}
-
-		@Override
-		public void removeListener(ILabelProviderListener listener) {
-			// ignore
-
-		}
-
-		public Color getForeground(Object element, int columnIndex) {
-			RepositoryAttachment att = (RepositoryAttachment) element;
-			if (att.isObsolete()) {
-				return themeManager.getCurrentTheme().getColorRegistry().get(
-						TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
-			}
-			return super.getForeground(element);
-		}
-
-		public Color getBackground(Object element, int columnIndex) {
-			return super.getBackground(element);
-		}
-
-		public Font getFont(Object element, int columnIndex) {
-			return super.getFont(element);
-		}
-	}
 
 	protected class ComboSelectionListener extends SelectionAdapter {
 
@@ -1132,8 +1032,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTable.setHeaderVisible(true);
 			attachmentsTable.setLayout(new GridLayout());
 			GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-			// tableGridData.heightHint = 100;
-			// tableGridData.widthHint = DESCRIPTION_WIDTH;
 			attachmentsTable.setLayoutData(tableGridData);
 
 			for (int i = 0; i < attachmentsColumns.length; i++) {
@@ -1169,35 +1067,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				});
 			}
 
-			attachmentsTableViewer.setContentProvider(new IStructuredContentProvider() {
+			attachmentsTableViewer.setContentProvider(new AttachmentsTableContentProvider(taskData.getAttachments()));
 
-				public Object[] getElements(Object inputElement) {
-					List<RepositoryAttachment> attachments = taskData.getAttachments();
-					return attachments.toArray();
-				}
-
-				public void dispose() {
-					// ignore
-				}
-
-				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-					if (!viewer.getControl().isDisposed()) {
-						viewer.refresh();
-					}
-				}
-			});
-
-			attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider(new AttachmentLabelProvider(),
+			attachmentsTableViewer.setLabelProvider(new AttachmentTableLabelProvider(this, new LabelProvider(),
 					PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 
 			attachmentsTableViewer.addDoubleClickListener(new IDoubleClickListener() {
 				public void doubleClick(DoubleClickEvent event) {
-					// String address = repository.getUrl() +
-					// ATTACHMENT_URL_SUFFIX;
 					if (!event.getSelection().isEmpty()) {
 						StructuredSelection selection = (StructuredSelection) event.getSelection();
 						RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
-						// address += attachment.getId() + "&amp;action=view";
 						TasksUiUtil.openBrowser(attachment.getUrl());
 					}
 				}
@@ -1306,7 +1185,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 
 					// TODO: Use IAttachmentHandler instead
-
 					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 							.getRepositoryConnector(repository.getKind());
 					IAttachmentHandler handler = connector.getAttachmentHandler();
@@ -1335,14 +1213,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-			// final Action applyPatchAction = new ApplyPatchAction() {
-			//
-			// };
-			// applyPatchAction.setEnabled(true); // pending bug 98707
-
-			/*
-			 * Rebuild menu with the appropriate items for the selection
-			 */
 			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent e) {
 
@@ -1373,9 +1243,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						popupMenu.add(copyToClipAction);
 					}
 					popupMenu.add(new Separator("actions"));
-					// if (att.isPatch()) {
-					// popupMenu.add(applyPatchAction);
-					// }
 				}
 			});
 
@@ -1415,14 +1282,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					attachFileAction.selectionChanged(new StructuredSelection(task));
 					attachFileAction.run();
 				}
-				// NewAttachmentWizard naw = new NewAttachmentWizard(repository,
-				// (AbstractRepositoryTask) task);
-				// NewAttachmentWizardDialog dialog = new
-				// NewAttachmentWizardDialog(attachmentsComposite.getShell(),
-				// naw);
-				// naw.setDialog(dialog);
-				// dialog.create();
-				// dialog.open();
 			}
 		});
 
@@ -1430,16 +1289,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		registerDropListener(attachmentsComposite);
 		registerDropListener(addAttachmentButton);
 	}
-
-	// protected ITaskDataHandler getOfflineTaskHandler() {
-	// final AbstractRepositoryConnector connector =
-	// TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-	// taskData.getRepositoryKind());
-	// if (connector != null) {
-	// return connector.getTaskDataHandler();
-	// }
-	// return null;
-	// }
 
 	private void registerDropListener(final Control control) {
 		DropTarget target = new DropTarget(control, DND.DROP_COPY | DND.DROP_DEFAULT);
@@ -2160,21 +2009,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			});
 		}
 	}
-
-	// /**
-	// * A generic listener for selection of unimportant items. The default
-	// * selection item sent out is the entire bug object.
-	// */
-	// public class GenericListener implements Listener {
-	// public void handleEvent(Event event) {
-	// RepositoryTaskData bug = taskData;
-	// fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new
-	// StructuredSelection(
-	// new RepositoryTaskSelection(bug.getId(), bug.getRepositoryUrl(),
-	// bug.getLabel(), false, bug
-	// .getSummary()))));
-	// }
-	// }
 
 	/**
 	 * A listener to check if the summary field was modified.
