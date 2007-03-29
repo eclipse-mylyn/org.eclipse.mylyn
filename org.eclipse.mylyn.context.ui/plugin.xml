@@ -43,6 +43,19 @@
 	  		enablesFor="*"/>
 	 </objectContribution> 
 	 
+	 <objectContribution
+            adaptable="false"
+            id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+         <action
+               class="org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction"
+               icon="icons/etool16/context-retrieve.gif"
+               id="org.eclipse.mylar.ui.context.repository.retrieve"
+               label="Retrieve Context..."
+               menubarPath="actions">
+         </action>
+      </objectContribution>
+	 
 	 <!--
      <viewerContribution 
            id="org.eclipse.mylar.ui.tasklist.contribution"

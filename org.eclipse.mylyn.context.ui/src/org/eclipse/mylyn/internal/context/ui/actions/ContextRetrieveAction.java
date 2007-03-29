@@ -13,7 +13,9 @@ package org.eclipse.mylar.internal.context.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.ContextRetrieveWizard;
@@ -21,9 +23,12 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -40,16 +45,35 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	private TaskRepository repository;
 
 	private AbstractRepositoryConnector connector;
+	
+	private StructuredSelection selection;
 
 	public void init(IViewPart view) {
 		// ignore
 	}
 
 	public void run(IAction action) {
-		if (task == null) {
-			return;
-		} else {
+		if (task != null) {
 			run(task);
+		} else {
+			// TODO: consider refactoring to be based on object contributions
+			if (selection.getFirstElement() instanceof RepositoryAttachment) {
+				RepositoryAttachment attachment = (RepositoryAttachment)selection.getFirstElement();
+				
+				// HACK: need better way of getting task
+				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+				ITask currentTask = null;
+				if (activeEditor instanceof TaskEditor) {
+					currentTask = ((TaskEditor)activeEditor).getTaskEditorInput().getTask();
+				}
+				
+				if (currentTask instanceof AbstractRepositoryTask) {
+					ContextRetrieveWizard.retrieveContext((AbstractRepositoryTask)currentTask, attachment);
+				} else {
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+							"Retrieve Context", "Can not retrieve contenxt for local tasks.");
+				}
+			}
 		}
 	}
 
@@ -70,7 +94,19 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		ITask selectedTask = TaskListView.getSelectedTask(selection);
-		if (selectedTask instanceof AbstractRepositoryTask) {
+		
+		if (selectedTask == null) {
+			StructuredSelection structuredSelection = (StructuredSelection)selection;
+			this.selection = structuredSelection;
+			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
+				RepositoryAttachment attachment = (RepositoryAttachment)structuredSelection.getFirstElement();
+				if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
+					action.setEnabled(true);
+				} else {
+					action.setEnabled(false);
+				}
+			}
+		} else if (selectedTask instanceof AbstractRepositoryTask) {
 			task = (AbstractRepositoryTask) selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 					task.getRepositoryUrl());
@@ -83,5 +119,4 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 			action.setEnabled(false);
 		}
 	}
-
 }
