@@ -2075,8 +2075,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			commentsSection.setExpanded(true);
 		}
 		for (StyledText text : commentStyleText) {
+			if (text.isDisposed())
+				continue;
 			Composite comp = text.getParent();
-			while (comp != null) {
+			while (comp != null && !comp.isDisposed()) {
 				if (comp instanceof ExpandableComposite && !comp.isDisposed()) {
 					ExpandableComposite ex = (ExpandableComposite) comp;
 					ex.setExpanded(true);
