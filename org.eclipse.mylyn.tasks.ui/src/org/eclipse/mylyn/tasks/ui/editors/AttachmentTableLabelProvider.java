@@ -61,7 +61,7 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		switch (columnIndex) {
 		case 0:
-			return attachment.getDescription();
+			return " " + attachment.getDescription();
 		case 1:
 			if (attachment.isPatch()) {
 				return "patch";
