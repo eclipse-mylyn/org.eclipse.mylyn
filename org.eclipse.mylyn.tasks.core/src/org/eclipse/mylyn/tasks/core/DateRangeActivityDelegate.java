@@ -31,14 +31,13 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 
 	private long endMili = 0;
 
-	private long inactivity = 0;
+	private long activity = 0;
 
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
 		this(parent, task, start, end, 0);
 	}
 
-	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end,
-			long inactivity) {
+	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long activity) {
 		if (task == null) {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
 		}
@@ -49,10 +48,8 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		if (end != null) {
 			this.endMili = end.getTimeInMillis();
 		}
-		// this.start = start;
-		// this.end = end;
 		this.parent = parent;
-		this.inactivity = inactivity;
+		this.activity = activity;
 	}
 
 	public long getEnd() {
@@ -63,12 +60,8 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		return startMili;
 	}
 
-	public long getInactivity() {
-		return inactivity;
-	}
-
 	public long getActivity() {
-		return (endMili - startMili) - inactivity;
+		return activity;
 	}
 
 	public ITask getCorrespondingTask() {
@@ -259,6 +252,6 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 	}
 
 	public void setDueDate(Date date) {
-		task.setDueDate(date);		
+		task.setDueDate(date);
 	}
 }

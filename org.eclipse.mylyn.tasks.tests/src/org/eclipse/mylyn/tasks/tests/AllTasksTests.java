@@ -43,7 +43,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskListDnDTest.class);
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
-		suite.addTestSuite(TaskActivityViewTest.class);
+		suite.addTestSuite(TaskActivityTest.class);
 		suite.addTestSuite(TaskAttachmentActionsTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
