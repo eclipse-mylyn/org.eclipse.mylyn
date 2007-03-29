@@ -255,7 +255,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected Button submitButton;
 
 	protected Table attachmentsTable;
-	
+
 	protected TableViewer attachmentsTableViewer;
 
 	protected String[] attachmentsColumns = { "Description", "Type", "Creator", "Created" };
@@ -511,9 +511,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		setSite(site);
 		setInput(input);
 
-		editorInput.setToolTipText(taskData.getLabel());
-
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
+		if (taskData != null) {
+			editorInput.setToolTipText(taskData.getLabel());
+			taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData);
+		}
 		hasAttributeChanges = hasVisibleAttributeChanges();
 		isDirty = false;
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
@@ -597,16 +598,46 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				false);
 		form.setImage(TaskListImages.getImage(imageDescriptor));
 
+		toolkit.decorateFormHeading(form.getForm());
+
+		editorComposite = form.getBody();
+		GridLayout editorLayout = new GridLayout();
+		editorComposite.setLayout(editorLayout);
+		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		if (taskData == null) {
+
+			form.setMessage("Task data not available. Press synchronize button (right) to retrieve latest data.",
+					IMessageProvider.WARNING);
+
+		} else {
+
+			createSections();
+
+		}
+
+		setFormHeaderLabel();
+		addHeaderControls();
+
+		if (summaryText != null) {
+			summaryText.setFocus();
+		}
+
+	}
+
+	private void setFormHeaderLabel() {
+
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 		kindLabel = "";
 		if (connectorUi != null) {
 			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
 		}
+
 		String idLabel = "";
 
 		if (repositoryTask != null) {
 			idLabel = repositoryTask.getTaskKey();
-		} else {
+		} else if (taskData != null) {
 			idLabel = taskData.getId();
 		}
 
@@ -616,31 +647,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			form.setText(kindLabel + " " + idLabel);
 		} else {
 			form.setText(kindLabel);
-		}
-
-		toolkit.decorateFormHeading(form.getForm());
-
-		editorComposite = form.getBody();
-		GridLayout editorLayout = new GridLayout();
-		editorComposite.setLayout(editorLayout);
-		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		if (taskData == null) {
-			GridLayout warningLayout = new GridLayout(2, false);
-			Composite warningComposite = toolkit.createComposite(editorComposite);
-			warningComposite.setLayout(warningLayout);
-			Label warning = toolkit.createLabel(warningComposite, "");
-			warning.setImage(TaskListImages.getImage(TaskListImages.WARNING));
-			toolkit.createLabel(warningComposite,
-					"Task data not available. If connected, synchronize the task and reopen.");
-		} else {
-			createSections();
-			getSite().getPage().addSelectionListener(selectionListener);
-			getSite().setSelectionProvider(selectionProvider);
-			if (summaryText != null) {
-				summaryText.setFocus();
-			}
-			addHeaderControls();
 		}
 	}
 
@@ -708,6 +714,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createPeopleLayout(bottomComposite);
 		bottomComposite.pack(true);
 		form.reflow(true);
+		getSite().getPage().addSelectionListener(selectionListener);
+		getSite().setSelectionProvider(selectionProvider);
 	}
 
 	protected void removeSections() {
@@ -2639,6 +2647,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						removeSections();
 						editorComposite.setMenu(menu);
 						createSections();
+						setFormHeaderLabel();
 						markDirty(false);
 						form.setMessage(null, 0);
 						AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
