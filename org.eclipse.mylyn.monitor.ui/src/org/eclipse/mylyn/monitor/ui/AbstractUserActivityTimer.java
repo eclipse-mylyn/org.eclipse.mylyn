@@ -42,9 +42,9 @@ public abstract class AbstractUserActivityTimer {
 
 	public abstract void setTimeoutMillis(int millis);
 
-	public void fireActive() {
+	public void fireActive(long start, long end) {
 		for (IActivityTimerListener listener : listeners) {
-			listener.fireActive();
+			listener.fireActive(start, end);
 		}
 	}
 

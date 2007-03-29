@@ -33,7 +33,7 @@ public class ActiveTimerTest extends TestCase {
 			thread.kill();
 		}
 
-		public void fireActive() {
+		public void fireActive(long start, long end) {
 			// ignore
 		}
 
@@ -45,8 +45,7 @@ public class ActiveTimerTest extends TestCase {
 			gotTimeOut = true;
 		}
 
-		
-		public void fireActive() {
+		public void fireActive(long start, long end) {
 			// ignore
 		}
 

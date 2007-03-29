@@ -16,8 +16,13 @@ package org.eclipse.mylar.monitor.core;
  */
 public interface IActivityTimerListener {
 	
-	public void fireActive();
+	/**
+	 * @param start time in milliseconds
+	 * @param end time in milliseconds
+	 */
+	public void fireActive(long start, long end);
 	
+	// TODO: Deprecated?
 	public void fireInactive();
 
 }

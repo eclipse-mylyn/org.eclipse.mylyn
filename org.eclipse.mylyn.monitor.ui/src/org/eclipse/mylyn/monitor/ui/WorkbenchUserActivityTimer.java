@@ -11,62 +11,129 @@
 
 package org.eclipse.mylar.monitor.ui;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.monitor.core.ActivityTimerThread;
 import org.eclipse.mylar.monitor.core.IActivityTimerListener;
-import org.eclipse.mylar.monitor.core.IInteractionEventListener;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
-public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer implements IInteractionEventListener {
+public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer {
 
-	private ActivityTimerThread timerThread;
+	private long lastEventTime = -1;
+
+	private long startTime = -1;
+
+	private int timeout;
+
+	private Listener idleListener;
+
+	private Display display;
+
+	private Object eventTimeLock = new Object();
+
+	private Object startTimeLock = new Object();
+
+	private int tick = 30 * 1000;
+
+	private int shortTick = 10 * 1000;
+
+	private boolean wasTimedOut = true;
 
 	public WorkbenchUserActivityTimer(int millis) {
-		timerThread = new ActivityTimerThread(millis);
-	}
-
-	public void interactionObserved(InteractionEvent event) {
-		fireActive();
+		this.timeout = millis;
 	}
 
 	@Override
 	public void addListener(IActivityTimerListener activityListener) {
 		super.addListener(activityListener);
-		timerThread.addListener(activityListener);
 	}
 
 	@Override
 	public void start() {
-		timerThread.start();
-		MylarMonitorUiPlugin.getDefault().addInteractionListener(this);
+		display = MylarMonitorUiPlugin.getDefault().getWorkbench().getDisplay();
+		idleListener = new Listener() {
+			public void handleEvent(Event event) {
+				setLastEventTime(System.currentTimeMillis());
+			}
+		};
+		display.addFilter(SWT.KeyUp, idleListener);
+		display.addFilter(SWT.MouseUp, idleListener);
+
+		display.timerExec(shortTick, new Runnable() {
+
+			public void run() {
+				if (!display.isDisposed() && !MylarMonitorUiPlugin.getDefault().getWorkbench().isClosing()) {
+
+					long localLastEventTime = getLastEventTime();
+					long localStartTime = getStartTime();
+					long currentTime = System.currentTimeMillis();
+					if ((currentTime - localLastEventTime) >= timeout) {
+						if (wasTimedOut == false) {
+							// timed out
+							wasTimedOut = true;
+						}
+						display.timerExec(shortTick, this);
+						return;
+					} else {
+						if (wasTimedOut) {
+							wasTimedOut = false;
+							// back...
+							setStartTime(currentTime);
+						} else {
+							fireActive(localStartTime, currentTime);
+							setStartTime(currentTime);
+						}
+						display.timerExec(tick, this);
+					}
+
+				}
+			}
+		});
 	}
 
 	@Override
 	public void kill() {
-		if (Platform.isRunning() && MylarMonitorUiPlugin.getDefault() != null) {
-			timerThread.kill();
-			MylarMonitorUiPlugin.getDefault().removeInteractionListener(this);
+		if (display != null && !display.isDisposed()) {
+			display.removeFilter(SWT.KeyUp, idleListener);
+			display.removeFilter(SWT.MouseUp, idleListener);
 		}
 	}
 
 	@Override
 	public void resetTimer() {
-		timerThread.resetTimer();
 	}
 
 	@Override
 	public void setTimeoutMillis(int millis) {
-		timerThread.setTimeoutMillis(millis);
+		this.timeout = millis;
 	}
 
-	public void startMonitoring() {
-		// ignore
+	public long getLastEventTime() {
+		synchronized (eventTimeLock) {
+			return lastEventTime;
+		}
 	}
 
-	public void stopMonitoring() {
-		// ignore
+	public void setLastEventTime(long lastEventTime) {
+		synchronized (eventTimeLock) {
+			this.lastEventTime = lastEventTime;
+		}
 	}
+
+	public long getStartTime() {
+		synchronized (startTimeLock) {
+			return startTime;
+		}
+	}
+
+	public void setStartTime(long startTime) {
+		synchronized (startTimeLock) {
+			this.startTime = startTime;
+		}
+	}
+
 }

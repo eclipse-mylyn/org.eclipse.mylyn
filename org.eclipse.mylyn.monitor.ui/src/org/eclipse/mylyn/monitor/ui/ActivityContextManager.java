@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.monitor.ui;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -26,8 +27,6 @@ public class ActivityContextManager implements IActivityTimerListener {
 
 	private AbstractUserActivityTimer userActivityTimer;
 
-	private boolean isStalled;
-
 	private Set<IUserAttentionListener> attentionListeners = new CopyOnWriteArraySet<IUserAttentionListener>();
 
 	public ActivityContextManager(AbstractUserActivityTimer userActivityTimer) {
@@ -35,31 +34,29 @@ public class ActivityContextManager implements IActivityTimerListener {
 		userActivityTimer.addListener(this);
 	}
 
-	public void fireActive() {
-		userActivityTimer.resetTimer();
-		if (isStalled) {
-			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
-							MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID,
-							null, MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f));
-			for (IUserAttentionListener attentionListener : attentionListeners) {
-				attentionListener.userAttentionGained();
-			}
+	public void fireActive(long start, long end) {
+		ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
+						MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null,
+						MylarContextManager.ACTIVITY_DELTA_ACTIVATED, 1f, new Date(start), new Date(end)));
+		for (IUserAttentionListener attentionListener : attentionListeners) {
+			attentionListener.userAttentionGained();
 		}
-		isStalled = false;
 	}
 
 	public void fireInactive() {
-		if (!isStalled) {
-			ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
-					new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
-							MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID,
-							null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
-			for (IUserAttentionListener attentionListener : attentionListeners) {
-				attentionListener.userAttentionLost();
-			}
-		}
-		isStalled = true;
+		// if (!isStalled) {
+		// ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
+		// new InteractionEvent(InteractionEvent.Kind.COMMAND,
+		// MylarContextManager.ACTIVITY_STRUCTURE_KIND,
+		// MylarContextManager.ACTIVITY_HANDLE_ATTENTION,
+		// MylarContextManager.ACTIVITY_ORIGIN_ID,
+		// null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+		// for (IUserAttentionListener attentionListener : attentionListeners) {
+		// attentionListener.userAttentionLost();
+		// }
+		// }
+		// isStalled = true;
 	}
 
 	public void start() {

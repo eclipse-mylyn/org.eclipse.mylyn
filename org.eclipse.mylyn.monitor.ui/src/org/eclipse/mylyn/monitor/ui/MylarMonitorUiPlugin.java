@@ -42,7 +42,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 
-	private static final int TIMEOUT_INACTIVITY_MILLIS = 2 * 60 * 1000;
+	public static final int TIMEOUT_INACTIVITY_MILLIS = 2 * 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
 
