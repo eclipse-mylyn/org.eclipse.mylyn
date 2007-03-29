@@ -39,6 +39,11 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
+		
+		// see bug 123
+//		if (columnIndex == 0) {
+//			return TaskListImages.getImage(TaskListImages.TASK);
+//		}
 		return null;
 	}
 

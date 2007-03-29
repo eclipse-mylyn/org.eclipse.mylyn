@@ -762,7 +762,7 @@
             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
             id="org.eclipse.mylar.jira.ui.hyperlinkdetector"
             name="Mylar Task"
-            targetId="org.eclipse.jdt.ui.javaCode">
+            targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
    </extension>
   
