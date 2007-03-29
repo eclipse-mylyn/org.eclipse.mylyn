@@ -483,7 +483,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
-	private static final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements
+	private final class AttachmentTableLabelProvider extends DecoratingLabelProvider implements
 			ITableColorProvider, ITableLabelProvider {
 
 		private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
@@ -513,7 +513,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				return attachment.getCreator();
 			case 3:
 				// TODO should retrieve Date object from IOfflineTaskHandler
-				return attachment.getDateCreated();
+				return formatDate(attachment.getDateCreated());
 			}
 			return "unrecognized column";
 		}
@@ -1819,7 +1819,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
 			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
-					+ taskComment.getCreated());
+					+ formatDate(taskComment.getCreated()));
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -1875,6 +1875,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentsSection.setExpanded(newTaskComments.size() != oldTaskComments.size());
 			}
 		}
+	}
+
+	protected String formatDate(String dateString) {
+		return dateString;
 	}
 
 	private boolean isNewComment(TaskComment comment) {
