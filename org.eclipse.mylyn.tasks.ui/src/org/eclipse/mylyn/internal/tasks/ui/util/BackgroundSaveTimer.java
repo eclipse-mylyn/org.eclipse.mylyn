@@ -97,7 +97,7 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 		}
 	}
 
-	public void fireActive() {
+	public void fireActive(long start, long end) {
 		// ignore
 	}
 

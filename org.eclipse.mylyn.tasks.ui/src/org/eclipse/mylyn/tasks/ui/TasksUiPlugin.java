@@ -573,7 +573,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		getTaskListManager().setTaskListFile(
 				new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));
 		getTaskListManager().readExistingOrCreateNewList();
-		getTaskListManager().parseTaskActivityInteractionHistory();
+		getTaskListManager().initActivityHistory();
 		checkForCredentials();
 	}
 

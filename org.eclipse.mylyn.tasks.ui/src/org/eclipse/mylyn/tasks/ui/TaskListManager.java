@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -58,7 +58,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 
 /**
- * TODO: clean-up
+ * TODO: pull task activity management out into new TaskActivityManager
  * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
@@ -113,12 +113,6 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private DateRangeContainer activityPast;
 
-	private boolean isInactive;
-
-	private long startInactive;
-
-	private long totalInactive;
-
 	private ArrayList<DateRangeContainer> dateRangeContainers = new ArrayList<DateRangeContainer>();
 
 	private Set<ITask> tasksWithReminders = new HashSet<ITask>();
@@ -133,7 +127,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private Calendar currentTaskEnd = null;
 
-	private Map<ITask, Long> taskElapsedTimeMap = new HashMap<ITask, Long>();
+	private Map<ITask, Long> taskElapsedTimeMap = new ConcurrentHashMap<ITask, Long>();
 
 	private List<ITaskActivityListener> activityListeners = new ArrayList<ITaskActivityListener>();
 
@@ -166,7 +160,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private final IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
 
 		public void contextActivated(IMylarContext context) {
-			parseTaskActivityInteractionHistory();
+			// ignore
 		}
 
 		public void contextDeactivated(IMylarContext context) {
@@ -186,6 +180,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					.getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
 			parseInteractionEvent(event);
+
 		}
 
 		public void elementDeleted(IMylarElement element) {
@@ -234,6 +229,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	};
 
+	private int timeTicks = 0;
+
 	public TaskListManager(TaskListWriter taskListWriter, File file) {
 		this.taskListFile = file;
 		this.taskListWriter = taskListWriter;
@@ -264,8 +261,10 @@ public class TaskListManager implements IPropertyChangeListener {
 		setupCalendarRanges();
 	}
 
-	// TODO: make private
-	public void parseTaskActivityInteractionHistory() {
+	/**
+	 * Warning: if called twice task times will be wrong
+	 */
+	private void parseTaskActivityInteractionHistory() {
 		if (!TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 			return;
 		}
@@ -280,7 +279,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void parseFutureReminders() {
 		activityFuture.clear();
 		activityNextWeek.clear();
-		
+
 		for (DateRangeContainer day : activityWeekDays) {
 			day.clear();
 		}
@@ -353,24 +352,60 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
+
 		if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)) {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
-				if (isInactive) {
-					isInactive = false;
-					totalInactive = 0;
-					startInactive = 0;
+
+				ITask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						event.getStructureHandle());
+
+				if (currentTask != null && activatedTask != null) {
+					if (!currentTask.equals(activatedTask)) {
+
+						GregorianCalendar calendarEnd = new GregorianCalendar();
+						calendarEnd.setFirstDayOfWeek(startDay);
+						calendarEnd.setTime(event.getDate());
+						calendarEnd.getTime();
+						// Activation of different task before deactivation of
+						// previous, log was inconsistent,
+						// finish what we started
+						taskDeactivated(calendarEnd);
+					} else {
+						// skip re-activations of same task
+						return;
+					}
 				}
-				currentTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
+
+				currentTask = activatedTask;
 				if (currentTask != null) {
 					GregorianCalendar calendar = new GregorianCalendar();
 					calendar.setFirstDayOfWeek(startDay);
 					calendar.setTime(event.getDate());
 					currentTaskStart = calendar;
-					currentHandle = event.getStructureHandle();					
+					currentHandle = event.getStructureHandle();
 				}
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && isInactive) {
-				isInactive = false;
-				totalInactive += event.getDate().getTime() - startInactive;
+			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				if (!currentHandle.equals("")) {
+					long active = event.getEndDate().getTime() - event.getDate().getTime();
+
+					// add to running total
+					if (taskElapsedTimeMap.containsKey(currentTask)) {
+						long pastTime = taskElapsedTimeMap.get(currentTask);
+						taskElapsedTimeMap.put(currentTask, pastTime + active);
+						timeTicks++;
+						if (taskActivityHistoryInitialized && timeTicks > 3) {
+							// Save incase of system failure.
+							// TODO: request asynchronous save
+							ContextCorePlugin.getContextManager().saveActivityHistoryContext();
+							timeTicks = 0;
+						}
+
+					} else {
+						taskElapsedTimeMap.put(currentTask, active);
+					}
+
+				}
+
 			}
 		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
@@ -379,50 +414,42 @@ public class TaskListManager implements IPropertyChangeListener {
 				calendarEnd.setFirstDayOfWeek(startDay);
 				calendarEnd.setTime(event.getDate());
 				calendarEnd.getTime();
-				currentTaskEnd = calendarEnd;
-				if (isInactive) {
-					isInactive = false;
-					totalInactive += event.getDate().getTime() - startInactive;
-				}
+				taskDeactivated(calendarEnd);
+			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				// Deactivated attention events not currently used (ignored)
+			}
+		}
+	}
 
-				Set<DateRangeContainer> rangeSet = new HashSet<DateRangeContainer>();
-				rangeSet.addAll(dateRangeContainers);
-				rangeSet.add(activityThisWeek);
+	private void taskDeactivated(GregorianCalendar calendarEnd) {
+		currentTaskEnd = calendarEnd;
 
-				for (DateRangeContainer week : rangeSet) {
-					if (week.includes(currentTaskStart) && (!isWeekDay(week) && !week.isFuture())) {
-						if (currentTask != null) {
-							// add to date range 'bin'
-							DateRangeActivityDelegate delegate = new DateRangeActivityDelegate(week, currentTask,
-									currentTaskStart, currentTaskEnd, totalInactive);
-							week.addTask(delegate);
-							// add to running total
-							if (taskElapsedTimeMap.containsKey(currentTask)) {
-								taskElapsedTimeMap.put(currentTask, taskElapsedTimeMap.get(currentTask)
-										+ delegate.getActivity());
-							} else {
-								taskElapsedTimeMap.put(currentTask, delegate.getActivity());
-							}
-							if (taskActivityHistoryInitialized) {
-								for (ITaskActivityListener listener : activityListeners) {
-									listener.activityChanged(week);
-								}
-							}
+		Set<DateRangeContainer> rangeSet = new HashSet<DateRangeContainer>();
+		rangeSet.addAll(dateRangeContainers);
+		rangeSet.add(activityThisWeek);
+
+		for (DateRangeContainer week : rangeSet) {
+			if (week.includes(currentTaskStart) && (!isWeekDay(week) && !week.isFuture())) {
+				if (currentTask != null) {
+					// add to date range 'bin'
+					Long activeTime = taskElapsedTimeMap.get(currentTask);
+					if (activeTime == null) {
+						activeTime = new Long(0);
+					}
+					DateRangeActivityDelegate delegate = new DateRangeActivityDelegate(week, currentTask,
+							currentTaskStart, currentTaskEnd, activeTime);
+					week.addTask(delegate);
+					if (taskActivityHistoryInitialized) {
+						for (ITaskActivityListener listener : activityListeners) {
+							listener.activityChanged(week);
 						}
 					}
 				}
-
-				currentTask = null;
-				currentHandle = "";
-				totalInactive = 0;
-				startInactive = 0;
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION) && !isInactive) {
-				if (!currentHandle.equals("")) {
-					isInactive = true;
-					startInactive = event.getDate().getTime();
-				}
 			}
 		}
+
+		currentTask = null;
+		currentHandle = "";
 	}
 
 	/** public for testing * */
@@ -452,15 +479,10 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/** total elapsed time based on activation history */
 	public long getElapsedTime(ITask task) {
-		long unaccounted = 0;
-		if (task.equals(currentTask)) {
-			unaccounted = Calendar.getInstance().getTimeInMillis() - currentTaskStart.getTimeInMillis() - totalInactive;
-			unaccounted = unaccounted < 0 ? 0 : unaccounted;
-		}
 		if (taskElapsedTimeMap.containsKey(task)) {
-			return unaccounted + taskElapsedTimeMap.get(task);
+			return taskElapsedTimeMap.get(task);
 		} else {
-			return unaccounted;
+			return 0;
 		}
 	}
 
@@ -725,6 +747,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					tasksWithDueDates.add(task);
 				}
 			}
+
 			resetActivity();
 			parseFutureReminders();
 			taskListInitialized = true;
@@ -738,8 +761,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		return true;
 	}
 
+	/**
+	 * Only to be called upon initial startup by plugin.
+	 */
 	public void initActivityHistory() {
-		parseTaskActivityInteractionHistory();
+		resetAndRollOver();// parseTaskActivityInteractionHistory();
 		taskActivityHistory.loadPersistentHistory();
 	}
 
