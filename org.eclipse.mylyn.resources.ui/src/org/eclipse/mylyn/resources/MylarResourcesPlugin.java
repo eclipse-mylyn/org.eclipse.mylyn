@@ -11,6 +11,7 @@
 package org.eclipse.mylar.resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -130,7 +131,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 
 	public List<IResource> getInterestingResources(IMylarContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		List<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
+		Collection<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
 		for (IMylarElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {

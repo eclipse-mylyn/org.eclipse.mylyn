@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,14 +28,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.InterestComparator;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
@@ -663,10 +663,7 @@ public class MylarContextManager {
 		return acceptedLandmarks;
 	}
 
-	/**
-	 * Sorted in descending interest order.
-	 */
-	public List<IMylarElement> getInterestingDocuments(IMylarContext context) {
+	public Collection<IMylarElement> getInterestingDocuments(IMylarContext context) {
 		Set<IMylarElement> set = new HashSet<IMylarElement>();
 		List<IMylarElement> allIntersting = context.getInteresting();
 		for (IMylarElement node : allIntersting) {
@@ -675,17 +672,12 @@ public class MylarContextManager {
 				set.add(node);
 			}
 		}
-		List<IMylarElement> list = new ArrayList<IMylarElement>(set);
-		Collections.sort(list, new InterestComparator<IMylarElement>());
-		return list;
+//		List<IMylarElement> list = new ArrayList<IMylarElement>(set);
+//		Collections.sort(list, new InterestComparator<IMylarElement>());
+		return set;
 	}
 
-	/**
-	 * Get the interesting resources for the active context.
-	 * 
-	 * Sorted in descending interest order.
-	 */
-	public List<IMylarElement> getInterestingDocuments() {
+	public Collection<IMylarElement> getInterestingDocuments() {
 		return getInterestingDocuments(currentContext);
 	}
 

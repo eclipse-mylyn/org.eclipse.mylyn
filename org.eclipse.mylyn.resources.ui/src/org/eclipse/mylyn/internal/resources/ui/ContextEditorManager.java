@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.resources.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class ContextEditorManager implements IMylarContextListener {
 					ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 				}
 
-				List<IMylarElement> documents = ContextCorePlugin.getContextManager().getInterestingDocuments();
+				Collection<IMylarElement> documents = ContextCorePlugin.getContextManager().getInterestingDocuments();
 				int opened = 0;
 				int threshold = ContextUiPlugin.getDefault().getPreferenceStore().getInt(ContextUiPrefContstants.AUTO_MANAGE_EDITORS_OPEN_NUM);
 				for (Iterator<IMylarElement> iter = documents.iterator(); iter.hasNext() && opened < threshold - 1; opened++) {
