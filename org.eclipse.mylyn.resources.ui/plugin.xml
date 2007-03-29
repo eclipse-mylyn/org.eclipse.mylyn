@@ -32,16 +32,18 @@
    
    <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
+     	adaptable="true"
         id="org.eclipse.mylar.ui.interest"
         objectClass="org.eclipse.core.resources.IResource">
-     	<action  
-  		  	label="Make Less Interesting" 
-	  		tooltip="Mark selected element as uninteresting"
-	  		menubarPath="additions" 
-	  		id="org.eclipse.mylar.resources.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
-	  		icon="icons/elcl16/interest-decrease.gif"
-	  		enablesFor="*"/>
+     	<action
+            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            enablesFor="*"
+            icon="icons/elcl16/interest-decrease.gif"
+            id="org.eclipse.mylar.resources.ui.actions.InterestDecrementAction"
+            label="Remove from Focus"
+            menubarPath="additions"
+            tooltip="Mark selected element as uninteresting">
+      </action>
 	    <action  
   		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"

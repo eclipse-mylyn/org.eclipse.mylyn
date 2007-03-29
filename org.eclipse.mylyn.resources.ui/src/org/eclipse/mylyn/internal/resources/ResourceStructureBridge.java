@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
@@ -106,9 +107,16 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		}
 		if (object instanceof IResource) {
 			return ((IResource) object).getFullPath().toPortableString();
-		} else {
-			return null;
-		}
+			
+		}else if (object instanceof IAdaptable) {
+			IAdaptable adaptable = (IAdaptable) object;
+			Object adapter = adaptable.getAdapter(IResource.class);
+			if(adapter instanceof IResource){
+				return ((IResource) adapter).getFullPath().toPortableString();
+			}
+			
+		} 
+		return null;
 	}
 
 	@Override
@@ -151,7 +159,18 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean acceptsObject(Object object) {
-		return object instanceof IResource;
+		if(object instanceof IResource){
+			return true;
+		}
+		if(object instanceof IAdaptable){
+			IAdaptable adaptable = (IAdaptable) object;
+			Object adapter = adaptable.getAdapter(IResource.class);
+			if(adapter instanceof IResource){
+				return true;
+			}
+			
+		}
+		return false;
 	}
 
 	@Override

@@ -327,17 +327,18 @@
 	
   <extension point="org.eclipse.ui.popupMenus"> 
      <objectContribution
+     	   adaptable="false"
            id="org.eclipse.mylar.java.ui.interest"
-           objectClass="org.eclipse.jdt.core.IJavaElement">
+           objectClass="org.eclipse.jdt.core.IMember">
      	<action
             class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylar.java.ui.actions.interest.decrement"
-            label="Mark Less Interesting"
+            label="Remove from Focus"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
-      </action>
+        </action>
 	    <action  
   		  	label="Mark as Landmark" 
 	  		tooltip="Mark the selected element as a landmark"
@@ -346,6 +347,16 @@
 	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
+     <visibility>
+        <or>
+           <objectClass
+                 name="org.eclipse.jdt.core.IMethod">
+           </objectClass>
+           <objectClass
+                 name="org.eclipse.jdt.core.IField">
+           </objectClass>
+        </or>
+     </visibility>
 	 </objectContribution>
      <objectContribution
            adaptable="false"
@@ -356,7 +367,7 @@
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylar.java.ui.actions.interest.decrement.container"
-            label="Mark Less Interesting"
+            label="Remove from Focus"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
       </action>
