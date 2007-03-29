@@ -15,11 +15,15 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -39,11 +43,17 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		
-		// see bug 123
-//		if (columnIndex == 0) {
-//			return TaskListImages.getImage(TaskListImages.TASK);
-//		}
+		RepositoryAttachment attachment = (RepositoryAttachment) element;
+		if (columnIndex == 0) {
+			if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
+				return TaskListImages.getImage(TaskListImages.CONTEXT_TRANSFER);
+			} else if (attachment.isPatch()) {
+				return TaskListImages.getImage(TaskListImages.ATTACHMENT_PATCH);
+			} else {
+				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
+			}
+		} else {
+		}
 		return null;
 	}
 
