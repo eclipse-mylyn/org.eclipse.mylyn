@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.monitor.ui.workbench;
 
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
@@ -48,6 +50,16 @@ public class MenuCommandMonitor implements Listener {
 			if (target instanceof IContributionItem) {
 				id = ((IContributionItem) target).getId();
 			}
+			if (id == null && target instanceof ActionContributionItem) {
+				IAction action = ((ActionContributionItem) target).getAction();
+				if (action.getId() != null) {
+					id = action.getId();
+				} else {
+					id = action.getClass().getName();
+				}
+			} else if (id == null) {
+				id = target.getClass().getName();
+			}
 				
 			if (item instanceof MenuItem) {
 				MenuItem menu = (MenuItem) item;
@@ -62,7 +74,7 @@ public class MenuCommandMonitor implements Listener {
 				if (id == null) {
 					return;
 					// TODO: would be good to put back this info in some form
-					// but it can contain private data, bug 178064
+					// but it can contain private data, bug 178604
 					
 //					if (id == null) 
 //						id = "null";
@@ -72,10 +84,12 @@ public class MenuCommandMonitor implements Listener {
 
 				delta = MENU_ITEM_SELECTED;
 			} else if (item instanceof ToolItem) {
-				ToolItem tool = (ToolItem) item;
-				if (id == null)
-					id = "null";
-				id = id + "$" + MENU_ITEM_ID + '.' + tool.getToolTipText();
+				// TODO: would be good to put back this info in some form
+				// but it can contain private data, bug 178604
+				// ToolItem tool = (ToolItem) item;
+				// if (id == null)
+				// 	 id = "null";
+				// id = id + "$" + MENU_ITEM_ID + '.' + tool.getToolTipText();
 				delta = TOOLBAR_ITEM_SELECTED;
 			}
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
