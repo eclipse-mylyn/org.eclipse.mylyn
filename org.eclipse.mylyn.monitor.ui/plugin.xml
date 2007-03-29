@@ -2,5 +2,4 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="user" name="User Monitoring" schema="schema/user.exsd"/>
-  
 </plugin>
