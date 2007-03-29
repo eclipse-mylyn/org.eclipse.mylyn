@@ -35,7 +35,7 @@ public class FileDisplayDialogTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		monitorFile = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(
-		"testdata/monitor-history.xml"));
+		"testdata/monitor-log.xml"));
 	}
 
 	@Override
