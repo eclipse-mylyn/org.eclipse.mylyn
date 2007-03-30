@@ -45,7 +45,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
-					if (isUninteresting(task)) {
+					if (isUninteresting(parent, task)) {
 						return false;
 					} else if (isInteresting(parent, task)) {
 						return true;
@@ -64,11 +64,11 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return (TasksUiPlugin.getTaskListManager().isWeekDay(container));// ||dateRangeTaskContainer.isFuture();
 	}
 
-	protected boolean isUninteresting(ITask task) {
+	protected boolean isUninteresting(Object parent, ITask task) {
 		return !task.isActive()
-				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(task)) || (TasksUiPlugin
+				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(parent, task)) || (TasksUiPlugin
 						.getTaskListManager().isScheduledAfterThisWeek(task))
-						&& !hasChanges(task));
+						&& !hasChanges(parent, task));
 	}
 
 	// TODO: make meta-context more explicit
@@ -78,7 +78,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean shouldAlwaysShow(Object parent, ITask task) {
-		return super.shouldAlwaysShow(parent, task) || hasChanges(task)
+		return super.shouldAlwaysShow(parent, task) || hasChanges(parent, task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
@@ -118,8 +118,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 	}
 
-	public static boolean hasChanges(ITask task) {
-		if (task instanceof AbstractRepositoryTask) {
+	public static boolean hasChanges(Object parent, ITask task) {
+		if (parent instanceof DateRangeContainer) {
+			return shouldShowInFocusedWorkweekDateContainer(parent, task);
+		} else if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
