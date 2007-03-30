@@ -40,7 +40,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class TaskListBackupManager implements IPropertyChangeListener {
 
 	private static final String TITLE_TASKLIST_BACKUP = "Tasklist Backup";
-
+  
 	private static final String BACKUP_JOB_NAME = "Scheduled task data backup";
 
 	public static final String BACKUP_FAILURE_MESSAGE = "Could not backup task data. Check backup preferences.\n";
