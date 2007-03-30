@@ -67,8 +67,6 @@ import org.eclipse.ui.navigator.INavigatorContentExtension;
  */
 public class ContextEditorFormPage extends FormPage {
 
-	private static final String LABEL = "Task Context Editor";
-
 	public static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context";
 
 	private ScrolledForm form;
@@ -145,9 +143,9 @@ public class ContextEditorFormPage extends FormPage {
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
 
-		form.setImage(TaskListImages.getImage(TaskListImages.TASK_ACTIVE_CENTERED));
-		form.setText(LABEL);
-		toolkit.decorateFormHeading(form.getForm());
+		//form.setImage(TaskListImages.getImage(TaskListImages.TASK_ACTIVE_CENTERED));
+		//form.setText(LABEL);
+		//toolkit.decorateFormHeading(form.getForm());
 
 		form.getBody().setLayout(new GridLayout(2, false));
 		form.getBody().setLayoutData(new GridData(GridData.FILL_BOTH));
