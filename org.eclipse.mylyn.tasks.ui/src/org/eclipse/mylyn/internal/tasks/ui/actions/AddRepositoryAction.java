@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.ui.TaskCommandIds;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
@@ -29,7 +29,7 @@ public class AddRepositoryAction extends Action {
 	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
-		setImageDescriptor(TaskListImages.REPOSITORY_NEW);
+		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);
 		setText(TITLE);
 		setId(ID);
 		setEnabled(TasksUiPlugin.getRepositoryManager().hasUserManagedRepositoryConnectors());

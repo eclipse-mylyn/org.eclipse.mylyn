@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
@@ -30,7 +30,7 @@ public class MultiRepositoryAwareWizard extends Wizard implements INewWizard {
 		setForcePreviousAndNextButtons(true);
 		setNeedsProgressMonitor(true);
 		setWindowTitle(title);
-		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

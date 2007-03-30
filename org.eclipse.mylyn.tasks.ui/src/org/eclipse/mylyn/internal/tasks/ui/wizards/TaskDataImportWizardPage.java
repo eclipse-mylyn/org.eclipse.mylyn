@@ -21,7 +21,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -98,7 +98,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 				TasksUiPlugin.PLUGIN_ID, "icons/wizban/banner-import.gif"));
 		setPageComplete(false);
 		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_IMPORT);
+		setImageDescriptor(TasksUiImages.BANNER_IMPORT);
 	}
 
 	@Override

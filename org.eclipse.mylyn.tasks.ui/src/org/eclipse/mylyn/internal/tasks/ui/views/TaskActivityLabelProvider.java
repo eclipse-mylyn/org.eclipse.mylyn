@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
@@ -54,7 +54,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			if (element instanceof DateRangeContainer) {
-				return TaskListImages.getImage(TaskListImages.CALENDAR);
+				return TasksUiImages.getImage(TasksUiImages.CALENDAR);
 			} else if (element instanceof DateRangeActivityDelegate) {
 				return super.getImage(((DateRangeActivityDelegate) element).getCorrespondingTask());
 			} else {

@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -43,16 +43,16 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);
 				if (task != null) {
 					if (task.isActive()) {
-						return TaskListImages.getImage(TaskListImages.TASK_ACTIVE);
+						return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
 					} else {
 						if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-							return TaskListImages.getImage(TaskListImages.TASK_INACTIVE_CONTEXT);
+							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 						} else {
-							return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
 						}
 					}
 				} else {
-					return TaskListImages.getImage(TaskListImages.TASK_INACTIVE);
+					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
 				}
 			}
 		} else if (columnIndex == 1) {

@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasks.ui.search;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -55,7 +55,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 		this(wizardTitle, null);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		setPageComplete(false);
 	}
 

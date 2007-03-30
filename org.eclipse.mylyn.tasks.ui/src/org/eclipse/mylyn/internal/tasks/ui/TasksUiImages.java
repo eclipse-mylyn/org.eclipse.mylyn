@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class TaskListImages {
+public class TasksUiImages {
 
 	private static ImageRegistry imageRegistry;
 
@@ -35,6 +35,8 @@ public class TaskListImages {
 
 	private static final String T_TOOL = "etool16";
 
+	private static final String T_OBJ = "obj16";
+	
 	private static final String T_WIZBAN = "wizban";
 	
 	private static final String T_OVR = "ovr16";
@@ -113,7 +115,7 @@ public class TaskListImages {
 
 	public static final ImageDescriptor CONTEXT_TRANSFER = create(T_TOOL, "context-transfer.gif");
 	
-	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_TOOL, "attachment-patch.gif");
+	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 	
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
 
@@ -214,8 +216,8 @@ public class TaskListImages {
 
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
 	
-	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TaskListImages.STATUS_NORMAL,
-								TaskListImages.OVERLAY_WARNING, false, true);
+	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TasksUiImages.STATUS_NORMAL,
+								TasksUiImages.OVERLAY_WARNING, false, true);
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 

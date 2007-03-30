@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.List;
 
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -34,7 +34,7 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 		setToolTipText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
-		setImageDescriptor(TaskListImages.STATUS_NORMAL_INCOMING);
+		setImageDescriptor(TasksUiImages.STATUS_NORMAL_INCOMING);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
 			Task task = (Task) selectedElements.get(0);
 			setEnabled(!task.isLocal());

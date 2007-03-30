@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -184,7 +184,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					};
 					String text = category.getSummary();
 					action.setText(text);
-					action.setImageDescriptor(TaskListImages.CATEGORY);
+					action.setImageDescriptor(TasksUiImages.CATEGORY);
 					subMenuManager.add(action);
 				}
 			}

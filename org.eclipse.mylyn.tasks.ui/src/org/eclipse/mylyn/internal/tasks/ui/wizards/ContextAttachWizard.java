@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -46,7 +46,7 @@ public class ContextAttachWizard extends Wizard {
 				task.getRepositoryUrl());
 		this.task = task;
 		setWindowTitle(ContextRetrieveWizard.TITLE);
-		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY_CONTEXT);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_CONTEXT);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class ContextAttachWizard extends Wizard {
 				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart().getSite();
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite)site).getActionBars().getStatusLineManager();
-					statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+					statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST),
 							"Context attached to task: " + task.getSummary());
 					TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 				}

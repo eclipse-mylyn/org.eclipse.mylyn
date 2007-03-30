@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.ITaskListPresentation;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Control;
@@ -43,7 +43,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 		setToolTipText(LABEL_NAME);
 		setId(ID);
 		setEnabled(true);
-		setImageDescriptor(TaskListImages.TASKLIST_MODE);
+		setImageDescriptor(TasksUiImages.TASKLIST_MODE);
 	}
 
 	protected void addActionsToMenu() {

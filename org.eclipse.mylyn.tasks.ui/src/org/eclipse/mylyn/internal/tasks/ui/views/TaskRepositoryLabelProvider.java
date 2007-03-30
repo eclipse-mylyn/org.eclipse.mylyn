@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -41,10 +41,10 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 			if (image != null) {
 				return image;
 			} else {
-				return TaskListImages.getImage(TaskListImages.REPOSITORY);
+				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 			}
 		} else if (object instanceof TaskRepository) {
-			return TaskListImages.getImage(TaskListImages.REPOSITORY);
+			return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 		}
 		return null;
 	}

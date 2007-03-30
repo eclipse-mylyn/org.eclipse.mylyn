@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -38,7 +38,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		setImageDescriptor(TaskListImages.REFRESH);
+		setImageDescriptor(TasksUiImages.REFRESH);
 		// setAccelerator(SWT.MOD1 + 'r');
 	}
 

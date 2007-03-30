@@ -35,7 +35,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
@@ -87,15 +87,15 @@ public class TasksUiUtil {
 		}
 		switch (priorityLevel) {
 		case P1:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_1);
+			return TasksUiImages.getImage(TasksUiImages.PRIORITY_1);
 		case P2:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_2);
+			return TasksUiImages.getImage(TasksUiImages.PRIORITY_2);
 		case P3:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_3);
+			return TasksUiImages.getImage(TasksUiImages.PRIORITY_3);
 		case P4:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_4);
+			return TasksUiImages.getImage(TasksUiImages.PRIORITY_4);
 		case P5:
-			return TaskListImages.getImage(TaskListImages.PRIORITY_5);
+			return TasksUiImages.getImage(TasksUiImages.PRIORITY_5);
 		default:
 			return null;
 		}

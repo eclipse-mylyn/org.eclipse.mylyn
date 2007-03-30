@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -32,7 +32,7 @@ public class ActivityReportAction extends Action {
 		setId(ID);
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(TaskListImages.TASKLIST);
+		setImageDescriptor(TasksUiImages.TASKLIST);
 	}
 
 	@Override

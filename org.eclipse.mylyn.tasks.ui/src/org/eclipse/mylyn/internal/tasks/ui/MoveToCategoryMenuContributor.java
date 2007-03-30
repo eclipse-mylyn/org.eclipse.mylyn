@@ -48,7 +48,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 				};
 				String text = handleAcceleratorKeys(category.getSummary());
 				action.setText(text);
-				action.setImageDescriptor(TaskListImages.CATEGORY);
+				action.setImageDescriptor(TasksUiImages.CATEGORY);
 				subMenuManager.add(action);
 			}
 		}

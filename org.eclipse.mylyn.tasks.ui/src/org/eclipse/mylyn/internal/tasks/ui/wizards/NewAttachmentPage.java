@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -172,7 +172,7 @@ public class NewAttachmentPage extends WizardPage {
 		attachContextButton = new Button(composite, SWT.CHECK);
 		attachContextButton.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false, 2, 1));
 		attachContextButton.setText("Attach Context");
-		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 		attachContextButton.setEnabled((((NewAttachmentWizard) getWizard()).hasContext()));
 
 		/*

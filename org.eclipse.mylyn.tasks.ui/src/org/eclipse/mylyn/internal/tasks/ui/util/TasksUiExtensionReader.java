@@ -23,7 +23,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
@@ -280,7 +280,7 @@ public class TasksUiExtensionReader {
 							.getName(), iconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addBrandingIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
-								TaskListImages.getImage(descriptor));
+								TasksUiImages.getImage(descriptor));
 					}
 				}
 				String overlayIconPath = element.getAttribute(ATTR_OVERLAY_ICON);

@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -29,7 +29,7 @@ public class TaskDeactivateAction extends Action {
 	public TaskDeactivateAction() {
 		setId(ID);
 		setText("Deactivate");
-		setImageDescriptor(TaskListImages.TASK_INACTIVE);
+		setImageDescriptor(TasksUiImages.TASK_INACTIVE);
 	}
 
 	public void run(ITask task) {

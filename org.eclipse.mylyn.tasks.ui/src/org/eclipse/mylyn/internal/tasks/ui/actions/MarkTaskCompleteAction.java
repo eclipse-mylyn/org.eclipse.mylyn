@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylar.internal.tasks.core.WebQueryHit;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -39,7 +39,7 @@ public class MarkTaskCompleteAction extends Action {
 		setText(ACTION_NAME);
 		setToolTipText("Mark "+ACTION_NAME);
 		setId(ID);
-		setImageDescriptor(TaskListImages.TASK_COMPLETE);
+		setImageDescriptor(TasksUiImages.TASK_COMPLETE);
 		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
 			Task task = (Task)selectedElements.get(0);
 			if (task instanceof WebTask) {

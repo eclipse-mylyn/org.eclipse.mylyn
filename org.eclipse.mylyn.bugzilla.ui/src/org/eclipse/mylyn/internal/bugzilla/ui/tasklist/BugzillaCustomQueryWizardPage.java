@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
@@ -49,7 +49,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
 //		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	public BugzillaCustomQueryWizardPage(TaskRepository repository) {
@@ -57,7 +57,7 @@ public class BugzillaCustomQueryWizardPage extends AbstractRepositoryQueryPage {
 		this.repository = repository;
 		setTitle(LABEL_CUSTOM_QUERY);
 //		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	@Override

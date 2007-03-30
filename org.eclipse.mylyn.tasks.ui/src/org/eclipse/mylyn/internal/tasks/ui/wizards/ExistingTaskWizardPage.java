@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -38,7 +38,7 @@ public class ExistingTaskWizardPage extends WizardPage {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	public void createControl(Composite parent) {

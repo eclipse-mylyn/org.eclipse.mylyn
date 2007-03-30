@@ -63,7 +63,7 @@ public class TaskListNotificationReminder implements ITaskListNotification {
 	}
 
 	public Image getOverlayIcon() {
-		return TaskListImages.getImage(TaskListImages.CALENDAR);
+		return TasksUiImages.getImage(TasksUiImages.CALENDAR);
 	}
 
 	@Override

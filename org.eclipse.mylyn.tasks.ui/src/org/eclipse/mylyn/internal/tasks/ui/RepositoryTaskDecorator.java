@@ -50,7 +50,7 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 				}
 			}
 			if (query.isSynchronizing()) {
-				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
@@ -61,20 +61,20 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 					task.getRepositoryUrl());
 			if (connectorUi != null) {
 				if (!connectorUi.hasRichEditor()) {
-					decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
+					decoration.addOverlay(TasksUiImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 				} else if (connector != null && connector.hasRepositoryContext(repository, task)) {
-					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
+					decoration.addOverlay(TasksUiImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
 				} else {
-					decoration.addOverlay(TaskListImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
+					decoration.addOverlay(TasksUiImages.OVERLAY_REPOSITORY, IDecoration.BOTTOM_LEFT);
 				}
 			}
 			if (task.isSynchronizing()) {
-				decoration.addOverlay(TaskListImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_SYNCHRONIZING, IDecoration.TOP_LEFT);
 			}
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
-				decoration.addOverlay(TaskListImages.OVERLAY_HAS_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
@@ -83,10 +83,10 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			ITask task = (ITask) element;
 			String url = task.getTaskUrl();
 			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-				decoration.addOverlay(TaskListImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_WEB, IDecoration.BOTTOM_LEFT);
 			}
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TaskListImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository) element).getKind());

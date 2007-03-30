@@ -13,7 +13,7 @@ package org.eclipse.mylar.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewWebTaskPage;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -37,7 +37,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		this.newTaskUrl = newTaskUrl;
 
 		setWindowTitle("New Repository Task");
-		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {

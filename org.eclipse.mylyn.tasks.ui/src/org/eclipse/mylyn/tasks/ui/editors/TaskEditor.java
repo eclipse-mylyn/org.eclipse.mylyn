@@ -22,7 +22,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
@@ -412,7 +412,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());
-				setPageImage(0, TaskListImages.getImage(TaskListImages.CALENDAR));
+				setPageImage(0, TasksUiImages.getImage(TasksUiImages.CALENDAR));
 			}
 
 			int selectedIndex = index;
@@ -426,7 +426,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 							editor.init(getEditorSite(), input);
 							index = addPage(taskEditor);
 							if (input.getImageDescriptor() != null) {
-								setPageImage(index, TaskListImages.getImage(input.getImageDescriptor()));
+								setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
 							}
 							if (editor instanceof AbstractRepositoryTaskEditor) {
 
@@ -456,7 +456,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			String urlToOpen = getUrl();
 			if (urlToOpen != null && !urlToOpen.equals("")) {
 				browserPageIndex = createBrowserPage(urlToOpen);
-				setPageImage(browserPageIndex, TaskListImages.getImage(TaskListImages.OVERLAY_WEB));
+				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.OVERLAY_WEB));
 				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
 					selectedIndex = browserPageIndex;
 				}
@@ -467,11 +467,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			}
 
 			if (task instanceof AbstractRepositoryTask) {
-				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY));
+				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
 			} else if (getEditorInput() instanceof AbstractTaskEditorInput) {
-				this.setTitleImage(TaskListImages.getImage(TaskListImages.TASK_REMOTE));
+				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
 			} else if (getUrl() != null) {
-				setTitleImage(TaskListImages.getImage(TaskListImages.TASK_WEB));
+				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_WEB));
 			}
 
 		} catch (PartInitException e) {
@@ -505,7 +505,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	@Override
 	protected void createHeaderContents(IManagedForm headerForm) {
 		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
-		headerForm.getForm().setImage(TaskListImages.getImage(TaskListImages.TASK));
+		headerForm.getForm().setImage(TasksUiImages.getImage(TasksUiImages.TASK));
 
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
@@ -535,9 +535,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	private void setFormHeaderImage(String repositoryKind) {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
-		ImageDescriptor imageDescriptor = TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay, false,
+		ImageDescriptor imageDescriptor = TasksUiImages.createWithOverlay(TasksUiImages.REPOSITORY, overlay, false,
 				false);
-		getHeaderForm().getForm().setImage(TaskListImages.getImage(imageDescriptor));
+		getHeaderForm().getForm().setImage(TasksUiImages.getImage(imageDescriptor));
 	}
 
 	public Form getTopForm() {

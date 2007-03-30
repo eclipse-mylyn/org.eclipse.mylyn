@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.trac.ui.wizard;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -40,7 +40,7 @@ public class NewTracTaskWizard extends Wizard implements INewWizard {
 		newTaskPage = new NewTracTaskPage(taskRepository);
 		
 		setWindowTitle("New Repository Task");
-		setDefaultPageImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		
 		setNeedsProgressMonitor(true);
 	}

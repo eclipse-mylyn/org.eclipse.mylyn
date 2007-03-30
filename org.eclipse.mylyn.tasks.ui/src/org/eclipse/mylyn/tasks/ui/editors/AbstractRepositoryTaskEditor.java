@@ -60,7 +60,7 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
@@ -808,7 +808,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			ImageHyperlink hyperlink = toolkit.createImageHyperlink(headerInfoComposite, SWT.NONE);
 			hyperlink.setText(linkName);
 			hyperlink.setToolTipText(kindLabel + " " + LABEL_HISTORY);
-			hyperlink.setImage(TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_HISTORY));
+			hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_HISTORY));
 			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
@@ -1482,7 +1482,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final String commentBody) {
 		final ImageHyperlink replyLink = new ImageHyperlink(section, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
-		replyLink.setImage(TaskListImages.getImage(TaskListImages.REPLY));
+		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
 		replyLink.setToolTipText(LABEL_REPLY);
 		// no need for the background - transparency will take care of it
 		replyLink.setBackground(null);
@@ -1645,7 +1645,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		ImageHyperlink hyperlink = new ImageHyperlink(commentsSection, SWT.NONE);
 		toolkit.adapt(hyperlink, true, true);
 		hyperlink.setBackground(null);
-		hyperlink.setImage(TaskListImages.getImage(TaskListImages.EXPAND_ALL));
+		hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.EXPAND_ALL));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				revealAllComments();
@@ -2441,7 +2441,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
-		attachContextButton.setImage(TaskListImages.getImage(TaskListImages.CONTEXT_ATTACH));
+		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
 
 	/**
@@ -2474,7 +2474,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData
 				.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
-		addSelfButton.setImage(TaskListImages.getImage(TaskListImages.PERSON));
+		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

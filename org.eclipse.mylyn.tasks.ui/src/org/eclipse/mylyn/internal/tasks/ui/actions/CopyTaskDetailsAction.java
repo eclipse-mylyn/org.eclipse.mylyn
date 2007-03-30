@@ -12,7 +12,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -40,7 +40,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		setImageDescriptor(TaskListImages.COPY);
+		setImageDescriptor(TasksUiImages.COPY);
 		if (setAccelerator) {
 			setAccelerator(SWT.MOD1 + 'c');
 		}

@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.swt.graphics.Color;
@@ -46,9 +46,9 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
 			if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
-				return TaskListImages.getImage(TaskListImages.CONTEXT_TRANSFER);
+				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
-				return TaskListImages.getImage(TaskListImages.ATTACHMENT_PATCH);
+				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);
 			} else {
 				return WorkbenchImages.getImage(ISharedImages.IMG_OBJ_FILE);
 			}

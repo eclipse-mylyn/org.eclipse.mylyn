@@ -22,7 +22,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
@@ -613,7 +613,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		
 		
 		ImageHyperlink clearScheduledDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearScheduledDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
+		clearScheduledDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 		clearScheduledDate.setToolTipText(CLEAR);
 		clearScheduledDate.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -649,7 +649,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(nameValueComp);
 
 		ImageHyperlink clearDueDate = toolkit.createImageHyperlink(nameValueComp, SWT.NONE);
-		clearDueDate.setImage(TaskListImages.getImage(TaskListImages.REMOVE));
+		clearDueDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
 		clearDueDate.setToolTipText(CLEAR);
 		clearDueDate.addHyperlinkListener(new HyperlinkAdapter() {
 

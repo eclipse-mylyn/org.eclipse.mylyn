@@ -77,7 +77,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 	}
 
 	public Image getOverlayIcon() {
-		return TaskListImages.getImage(TaskListImages.OVERLAY_INCOMMING);
+		return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
 	}
 
 	public Date getDate() {

@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.planner;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.ITask;
 
 /**
@@ -29,7 +29,7 @@ public class RemoveTaskAction extends Action {
 		this.viewer = view;
 		setText("Remove Selected");
 		setId(ID);
-		setImageDescriptor(TaskListImages.REMOVE);
+		setImageDescriptor(TasksUiImages.REMOVE);
 	}
 
 	@Override

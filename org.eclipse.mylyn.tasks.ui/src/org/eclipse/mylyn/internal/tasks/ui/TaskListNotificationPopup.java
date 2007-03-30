@@ -149,7 +149,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 		ImageHyperlink hyperlink = new ImageHyperlink(section, SWT.NONE);
 		toolkit.adapt(hyperlink, true, true);
 		hyperlink.setBackground(null);
-		hyperlink.setImage(TaskListImages.getImage(TaskListImages.NOTIFICATION_CLOSE));
+		hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
 		hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				close();

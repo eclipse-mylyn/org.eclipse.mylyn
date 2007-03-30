@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -33,7 +33,7 @@ public class FilterCompletedTasksAction extends Action {
 		setText(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		setImageDescriptor(TaskListImages.FILTER_COMPLETE);
+		setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE));
 	}
 

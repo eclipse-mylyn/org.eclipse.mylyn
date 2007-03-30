@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -49,7 +49,7 @@ public class BugzillaQueryTypeWizardPage extends WizardPage {
 		super(TITLE);
 		setTitle(TITLE);
 		setDescription(DESCRIPTION);
-		setImageDescriptor(TaskListImages.BANNER_REPOSITORY);
+		setImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		customPage = new BugzillaCustomQueryWizardPage(repository);		
 		searchPage = new BugzillaSearchPage(repository);
 		searchPage.setRestoreQueryOptions(false);

@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewActionDelegate;
@@ -38,7 +38,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 		setText("New Category...");
 		setToolTipText("New Category...");
 		setId(ID);
-		setImageDescriptor(TaskListImages.CATEGORY_NEW);
+		setImageDescriptor(TasksUiImages.CATEGORY_NEW);
 	}
 	
 	public void init(IViewPart view) {

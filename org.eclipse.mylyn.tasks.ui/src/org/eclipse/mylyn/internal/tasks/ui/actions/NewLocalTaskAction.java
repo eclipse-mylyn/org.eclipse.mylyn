@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -49,7 +49,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		setText(TaskInputDialog.LABEL_SHELL);
 		setToolTipText(TaskInputDialog.LABEL_SHELL);
 		setId(ID);
-		setImageDescriptor(TaskListImages.TASK_NEW);
+		setImageDescriptor(TasksUiImages.TASK_NEW);
 	}
 
 	public void init(IViewPart view) {

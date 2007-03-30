@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -49,17 +49,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof TaskArchive) {
-			return TaskListImages.getImage(TaskListImages.CATEGORY_ARCHIVE);
+			return TasksUiImages.getImage(TasksUiImages.CATEGORY_ARCHIVE);
 		} else if (element instanceof TaskCategory) {
-			return TaskListImages.getImage(TaskListImages.CATEGORY);
+			return TasksUiImages.getImage(TasksUiImages.CATEGORY);
 		} else if (element instanceof AbstractRepositoryQuery) {
-			return TaskListImages.getImage(TaskListImages.QUERY);
+			return TasksUiImages.getImage(TasksUiImages.QUERY);
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
 				return getImage(hit.getCorrespondingTask());
 			} else {
-				return TaskListImages.getImage(TaskListImages.TASK_REMOTE);
+				return TasksUiImages.getImage(TasksUiImages.TASK_REMOTE);
 			}
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
@@ -69,36 +69,36 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
 							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TaskListImages.getImage(TaskListImages.TASK_COMPLETED);
+						return TasksUiImages.getImage(TasksUiImages.TASK_COMPLETED);
 					} else {
-						return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_COMPLETED);
+						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_COMPLETED);
 					}
 				} else {
-					return TaskListImages.getImage(TaskListImages.TASK_COMPLETED);
+					return TasksUiImages.getImage(TasksUiImages.TASK_COMPLETED);
 				}
 			} else if (task.getNotes() != null && !task.getNotes().trim().equals("")) {
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
 							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TaskListImages.getImage(TaskListImages.TASK_NOTES);
+						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 					} else {
-						return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY_NOTES);
+						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_NOTES);
 					}
 				} else {
-					return TaskListImages.getImage(TaskListImages.TASK_NOTES);
+					return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 				}
 			} else {
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
 							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
 					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TaskListImages.getImage(TaskListImages.TASK);
+						return TasksUiImages.getImage(TasksUiImages.TASK);
 					} else {
-						return TaskListImages.getImage(TaskListImages.TASK_REPOSITORY);
+						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY);
 					}
 				} else {
-					return TaskListImages.getImage(TaskListImages.TASK);
+					return TasksUiImages.getImage(TasksUiImages.TASK);
 				}
 			}
 		}

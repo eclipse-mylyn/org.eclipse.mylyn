@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -42,7 +42,7 @@ public class DiscardOutgoingAction extends Action {
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
 		setId(ID);
-		setImageDescriptor(TaskListImages.STATUS_NORMAL);
+		setImageDescriptor(TasksUiImages.STATUS_NORMAL);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
 			setEnabled(task.getSyncState().equals(RepositoryTaskSyncState.OUTGOING));

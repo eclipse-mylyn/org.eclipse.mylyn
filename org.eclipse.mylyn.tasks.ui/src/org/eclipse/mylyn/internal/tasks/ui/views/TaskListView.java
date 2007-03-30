@@ -54,7 +54,7 @@ import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
@@ -276,7 +276,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public ImageDescriptor getImageDescriptor() {
-			return TaskListImages.CATEGORY;
+			return TasksUiImages.CATEGORY;
 		}
 	};
 
@@ -292,7 +292,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public ImageDescriptor getImageDescriptor() {
-			return TaskListImages.CALENDAR;
+			return TasksUiImages.CALENDAR;
 		}
 	};
 
@@ -1503,7 +1503,7 @@ public class TaskListView extends ViewPart {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager.setMessage(TaskListImages.getImage(TaskListImages.TASKLIST),
+			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST),
 					"Mylar context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {

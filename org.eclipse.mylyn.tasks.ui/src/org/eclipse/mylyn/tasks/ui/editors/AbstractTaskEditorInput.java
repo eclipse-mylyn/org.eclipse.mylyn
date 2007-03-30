@@ -14,7 +14,7 @@ package org.eclipse.mylar.tasks.ui.editors;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -79,7 +79,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	}
 	
 	public ImageDescriptor getImageDescriptor() {
-		return TaskListImages.REPOSITORY;
+		return TasksUiImages.REPOSITORY;
 	}
 
 	public IPersistableElement getPersistable() {
