@@ -167,7 +167,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //					backupFiles.add(file);
 //				}
 //			}
-//		}
+//		} 
 //
 //		File[] backupFileArray = backupFiles.toArray(new File[backupFiles.size()]);
 //   
@@ -187,7 +187,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //	}
 
 	class CheckBackupRequired extends TimerTask {
-
+  
 		@Override
 		public void run() {
 			if (!Platform.isRunning() || TasksUiPlugin.getDefault() == null) {
