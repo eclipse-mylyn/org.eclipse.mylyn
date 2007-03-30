@@ -18,10 +18,8 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
@@ -33,6 +31,7 @@ import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
+import org.eclipse.mylar.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -327,12 +326,8 @@ public class ContextEditorFormPage extends FormPage {
 
 		commonViewer = createCommonViewer(aParent);
 		commonViewer.addFilter(interestFilter);
-		commonViewer.addOpenListener(new IOpenListener() {
-
-			public void open(OpenEvent event) {
-				System.err.println(">>> " + event);
-			}
-		});
+		
+		commonViewer.addOpenListener(new ContextNodeOpenListener(commonViewer)); 
 		
 		try {
 			commonViewer.getControl().setRedraw(false);

@@ -86,6 +86,9 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	
 	private void createViewer(Composite parent) {
 		commonViewer = createCommonViewer(parent);
+		
+		commonViewer.addOpenListener(new ContextNodeOpenListener(commonViewer)); 
+		
 		commonViewer.addFilter(interestFilter);
 		
 		namePatternFilter = new QuickOutlinePatternAndInterestFilter();
