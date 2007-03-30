@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -22,6 +21,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -63,8 +63,8 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 
 		final ITaskDataHandler taskDataHandler = (ITaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
-			MylarStatusHandler.displayStatus("Error creating new task", new Status(IStatus.ERROR,
-					TasksUiPlugin.PLUGIN_ID, "The selected repository does not support creating new tasks."));
+			MylarStatusHandler.displayStatus("Error creating new task", new MylarStatus(IStatus.ERROR,
+					TasksUiPlugin.PLUGIN_ID, MylarStatus.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));
 			return false;
 		}
 
@@ -79,9 +79,8 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
-							throw new CoreException(new Status(IStatus.ERROR,
-									TasksUiPlugin.PLUGIN_ID, "The selected repository does not support creating new tasks."));
-						}
+							throw new CoreException(new MylarStatus(IStatus.ERROR,
+									TasksUiPlugin.PLUGIN_ID, MylarStatus.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}
