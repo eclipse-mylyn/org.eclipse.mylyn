@@ -43,6 +43,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 
 	private Button managePerspectivesButton = null;
 
+	private Button manageExpansionButton = null;
+
 	/**
 	 * Constructor - set preference store to MylarUiPlugin store since the
 	 * tasklist plugin needs access to the values stored from the preference
@@ -95,6 +97,7 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 		
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, manageExpansionButton.getSelection());
 
 		return true;
 	}
@@ -155,16 +158,20 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
 				
 		manageEditorsButton = new Button(group, SWT.CHECK);
-		manageEditorsButton.setText("Manage open editors to match task context");
+		manageEditorsButton.setText("Manage open editors with task context (Recommended)");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
 		
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
-			String message = "<a>''{0}''</a> \"" + prefName + "\" setting will toggle with task activation";
+			String message = "<a>''{0}''</a> \"" + prefName + "\" will turn off when task activated";
 			new PreferenceLinkArea(group, SWT.NONE,
 					"org.eclipse.ui.preferencePages.Editors", message, (IWorkbenchPreferenceContainer) getContainer(),
 					null);
 		}
+
+		manageExpansionButton = new Button(group, SWT.CHECK);
+		manageExpansionButton.setText("Automatically maintain expansion of focused tree views (Recommended)");
+		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION));
 
 		return;
 	}

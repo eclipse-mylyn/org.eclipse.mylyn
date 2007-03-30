@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenRepositoryTask;
 import org.eclipse.mylar.internal.team.LinkedTaskInfo;
 import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
@@ -66,7 +66,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	public OpenCorrespondingTaskAction() {
 		setText(LABEL);
 		setToolTipText(LABEL);
-		setImageDescriptor(TaskListImages.TASK_REPOSITORY);
+		setImageDescriptor(TasksUiImages.TASK_REPOSITORY);
 	}
 
 	public void init(IViewPart view) {

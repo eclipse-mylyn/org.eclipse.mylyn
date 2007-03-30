@@ -34,6 +34,8 @@ public class ContextUiPrefContstants {
 	public static final String AUTO_MANAGE_EDITORS = "org.eclipse.mylar.ide.ui.editors.auto.manage";
 	
 	public static final String AUTO_MANAGE_PERSPECTIVES = "org.eclipse.mylar.ide.ui.perspectives.auto.manage";
+	
+	public static final String AUTO_MANAGE_EXPANSION = "org.eclipse.mylar.ide.ui.expansion.auto.manage";
 		
 	public static final String HIGHLIGHTER_PREFIX = "org.eclipse.mylar.ui.interest.highlighters";
 

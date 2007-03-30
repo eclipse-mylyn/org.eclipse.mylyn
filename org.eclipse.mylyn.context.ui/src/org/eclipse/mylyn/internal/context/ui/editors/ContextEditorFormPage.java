@@ -18,8 +18,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
@@ -31,7 +33,7 @@ import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -179,7 +181,7 @@ public class ContextEditorFormPage extends FormPage {
 		sectionClient.setLayoutData(new GridData());
 
 		Label label = toolkit.createLabel(sectionClient, "");
-		label.setImage(TaskListImages.getImage(TaskListImages.FILTER));
+		label.setImage(TasksUiImages.getImage(TasksUiImages.FILTER));
 
 		doiScale = new Scale(sectionClient, SWT.FLAT);
 		GridData scaleGridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -218,7 +220,7 @@ public class ContextEditorFormPage extends FormPage {
 		}
 		
 		Label attachImage = toolkit.createLabel(sectionClient, "");
-		attachImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_ATTACH));
+		attachImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task instanceof AbstractRepositoryTask);
 		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
 		attachHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
@@ -238,7 +240,7 @@ public class ContextEditorFormPage extends FormPage {
 		});
 
 		Label retrieveImage = toolkit.createLabel(sectionClient, "");
-		retrieveImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
+		retrieveImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
 		retrieveImage.setEnabled(task instanceof AbstractRepositoryTask);
 		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
 		retrieveHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
@@ -258,7 +260,7 @@ public class ContextEditorFormPage extends FormPage {
 		});
 
 		Label copyImage = toolkit.createLabel(sectionClient, "");
-		copyImage.setImage(TaskListImages.getImage(ContextUiImages.CONTEXT_COPY));
+		copyImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_COPY));
 		Hyperlink copyHyperlink = toolkit.createHyperlink(sectionClient, "Copy Context to...", SWT.NONE);
 		copyHyperlink.addMouseListener(new MouseListener() {
 
@@ -325,7 +327,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		commonViewer = createCommonViewer(aParent);
 		commonViewer.addFilter(interestFilter);
+		commonViewer.addOpenListener(new IOpenListener() {
 
+			public void open(OpenEvent event) {
+				System.err.println(">>> " + event);
+			}
+		});
+		
 		try {
 			commonViewer.getControl().setRedraw(false);
 

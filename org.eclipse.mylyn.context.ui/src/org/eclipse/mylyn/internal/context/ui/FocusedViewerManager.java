@@ -25,6 +25,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.ui.workbench.AbstractPartTracker;
 import org.eclipse.ui.ISelectionListener;
@@ -86,15 +87,15 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 	};
 
 	public FocusedViewerManager() {
-		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
-	}
-
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// ignore
+//		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 
 	public void dispose() {
-		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
+//		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
+	}
+	
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		// ignore
 	}
 
 	public void addManagedViewer(StructuredViewer viewer, IWorkbenchPart viewPart) {
@@ -226,7 +227,10 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 	}
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
-		if (viewer instanceof TreeViewer && filteredViewers.contains(viewer)) {
+ 		if (viewer instanceof TreeViewer 
+ 				&& filteredViewers.contains(viewer)
+				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+						ContextUiPrefContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;
 			if (objectToRefresh == null) {
 				treeViewer.expandAll();

@@ -21,7 +21,7 @@ import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.internal.navigator.NavigatorContentServiceContentProvider;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -41,7 +41,7 @@ public class RemoveFromContextAction extends BaseSelectionListenerAction {
 	public RemoveFromContextAction(CommonViewer commonViewer, InterestFilter interestFilter) {
 		super("Remove from Context");
 		setId(ID);
-		setImageDescriptor(TaskListImages.REMOVE);
+		setImageDescriptor(TasksUiImages.REMOVE);
 		this.commonViewer = commonViewer;
 		this.interestFilter = interestFilter;
 	}

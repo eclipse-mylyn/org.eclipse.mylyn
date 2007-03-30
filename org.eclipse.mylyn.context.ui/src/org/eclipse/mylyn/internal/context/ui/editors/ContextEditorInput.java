@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.context.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.ui.TaskListImages;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -35,7 +35,7 @@ public class ContextEditorInput implements IEditorInput {
 	}
 
 	public ImageDescriptor getImageDescriptor() {
-		return TaskListImages.TASK_ACTIVE_CENTERED;
+		return TasksUiImages.TASK_ACTIVE_CENTERED;
 	}
 
 	public String getName() {
