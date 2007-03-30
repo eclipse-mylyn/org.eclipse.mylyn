@@ -77,6 +77,10 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 		childHandles.remove(task.getHandleIdentifier());
 	}
 
+	void clear() {
+		childHandles.clear();
+	}
+
 	public boolean isCompleted() {
 		return false;
 	}

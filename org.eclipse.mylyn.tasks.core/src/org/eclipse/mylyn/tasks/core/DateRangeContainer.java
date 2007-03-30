@@ -79,6 +79,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	public void clear() {
+		super.clear();
 		dateRangeDelegates.clear();
 	}
 

@@ -343,7 +343,7 @@ public class TaskListManager implements IPropertyChangeListener {
 
 				for (DateRangeContainer day : activityWeekDays) {
 					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar));
+						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar, this.getElapsedTime(task)));
 					}
 				}
 			}
