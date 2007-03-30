@@ -42,6 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
@@ -54,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  * @author Eric Booth
+ * @author Leo Dos Santos - multi-monitor support
  */
 public class TaskListToolTipHandler {
 
@@ -147,7 +149,7 @@ public class TaskListToolTipHandler {
 						completed++;
 					}
 				}
-				//suffix = "  (query max: " + query.getMaxHits() + ")";
+				// suffix = " (query max: " + query.getMaxHits() + ")";
 			}
 			taskProgressBar.reset(completed, total);
 			return "Completed " + completed + " of " + total + suffix;
@@ -187,7 +189,7 @@ public class TaskListToolTipHandler {
 			} catch (RuntimeException e) {
 				// ignore
 			}
-			tooltip += "   Elapsed: " + elapsedTimeString+"\n";
+			tooltip += "   Elapsed: " + elapsedTimeString + "\n";
 			return tooltip;
 		}
 
@@ -441,9 +443,24 @@ public class TaskListToolTipHandler {
 	 * @return the top-left location for a hovering box
 	 */
 	private void setHoverLocation(Shell shell, Point position) {
-		Rectangle displayBounds = shell.getDisplay().getBounds();
+		Rectangle displayBounds = shell.getMonitor().getClientArea();
 		Rectangle shellBounds = shell.getBounds();
-		shellBounds.x = Math.max(Math.min(position.x, displayBounds.width - shellBounds.width), 0);
+
+		// We need to find the exact monitor we're mousing over
+		Monitor[] array = PlatformUI.getWorkbench().getDisplay().getMonitors();
+		for (Monitor m : array) {
+			Rectangle monitorBounds = m.getBounds();
+			if ((position.x >= monitorBounds.x) && (position.x < (monitorBounds.x + monitorBounds.width))
+					&& (position.y >= monitorBounds.y) && (position.y < (monitorBounds.y + monitorBounds.height))) {
+				displayBounds = m.getClientArea();
+			}
+		}
+
+		if ((position.x + shellBounds.width) > (displayBounds.x + displayBounds.width))
+			shellBounds.x = displayBounds.x + displayBounds.width - shellBounds.width;
+		else
+			shellBounds.x = position.x;
+
 		shellBounds.y = Math.max(Math.min(position.y + 10, displayBounds.height - shellBounds.height), 0);
 		shell.setBounds(shellBounds);
 	}
