@@ -73,6 +73,7 @@ public class WorkbenchUserActivityTimer extends AbstractUserActivityTimer {
 					long currentTime = System.currentTimeMillis();
 					if ((currentTime - localLastEventTime) >= timeout) {
 						if (wasTimedOut == false) {
+							fireInactive();
 							// timed out
 							wasTimedOut = true;
 						}

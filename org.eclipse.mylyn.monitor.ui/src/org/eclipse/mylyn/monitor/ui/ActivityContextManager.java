@@ -52,10 +52,10 @@ public class ActivityContextManager implements IActivityTimerListener {
 		// MylarContextManager.ACTIVITY_HANDLE_ATTENTION,
 		// MylarContextManager.ACTIVITY_ORIGIN_ID,
 		// null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
-		// for (IUserAttentionListener attentionListener : attentionListeners) {
-		// attentionListener.userAttentionLost();
-		// }
-		// }
+		for (IUserAttentionListener attentionListener : attentionListeners) {
+			attentionListener.userAttentionLost();
+		}
+
 		// isStalled = true;
 	}
 
