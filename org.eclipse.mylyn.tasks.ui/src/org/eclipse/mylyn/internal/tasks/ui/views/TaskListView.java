@@ -290,7 +290,7 @@ public class TaskListView extends ViewPart {
 		public String getPresentationName() {
 			return "Scheduled";
 		}
-		
+
 		public ImageDescriptor getImageDescriptor() {
 			return TaskListImages.CALENDAR;
 		}
@@ -504,7 +504,7 @@ public class TaskListView extends ViewPart {
 				&& !categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			gradientListenerAdded = true;
-		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)){
+		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			gradientListenerAdded = false;
 		}
@@ -933,8 +933,10 @@ public class TaskListView extends ViewPart {
 
 	public void applyPresentation(ITaskListPresentation presentation) {
 		try {
-			filteredTree.getFilterControl().setText("");
 			getViewer().getControl().setRedraw(false);
+			if (!filteredTree.getFilterControl().getText().equals("")) {
+				filteredTree.getFilterControl().setText("");
+			}
 			getViewer().setContentProvider(presentation.getContentProvider());
 			refreshAndFocus(isFocusedMode());
 			currentPresentation = presentation;
