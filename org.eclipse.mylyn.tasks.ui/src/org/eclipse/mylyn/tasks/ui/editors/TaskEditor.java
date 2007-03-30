@@ -22,8 +22,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
@@ -478,7 +478,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
-
+	
+	@Override
+	public void setFocus() {
+		if(getActivePageInstance() instanceof AbstractNewRepositoryTaskEditor){
+			getActivePageInstance().setFocus();
+		} else {
+			super.setFocus();
+		}
+	}
+	
 	/**
 	 * Update the title of the editor
 	 */

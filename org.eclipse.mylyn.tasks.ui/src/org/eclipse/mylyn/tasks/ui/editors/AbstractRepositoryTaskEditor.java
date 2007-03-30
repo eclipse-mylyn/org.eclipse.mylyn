@@ -1938,10 +1938,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
+	// once the following bug is fixed, this check for first focus is probably
+	// not needed -> Bug# 172033: Restore editor focus
+	private boolean firstFocus = true;
+
 	@Override
 	public void setFocus() {
 		if (summaryText != null && !summaryText.isDisposed()) {
-			summaryText.setFocus();
+			if (firstFocus) {
+				summaryText.setFocus();
+				firstFocus = false;
+			}
 		} else {
 			form.setFocus();
 		}
