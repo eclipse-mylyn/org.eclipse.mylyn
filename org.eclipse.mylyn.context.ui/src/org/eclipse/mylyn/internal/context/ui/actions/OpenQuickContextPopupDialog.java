@@ -49,11 +49,7 @@ public class OpenQuickContextPopupDialog implements IWorkbenchWindowActionDelega
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// Editor selection
-		if (inplaceDialog != null) {
-			inplaceDialog.close();
-			inplaceDialog = null;
-		}
+		// ignore
 	}
 
 }
