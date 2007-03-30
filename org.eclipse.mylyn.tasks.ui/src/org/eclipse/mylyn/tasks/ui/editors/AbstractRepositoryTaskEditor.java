@@ -972,14 +972,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
 					text.setData(attribute);
-					text.addListener(SWT.KeyUp, new Listener() {
-						public void handleEvent(Event event) {
-							String newValue = text.getText();
-							RepositoryTaskAttribute attribute = (RepositoryTaskAttribute) text.getData();
-							attribute.setValue(newValue);
-							attributeChanged(attribute);
-						}
-					});
 				}
 
 				currentCol += 2;

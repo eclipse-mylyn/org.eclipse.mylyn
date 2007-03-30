@@ -20,6 +20,7 @@ package org.eclipse.mylar.internal.bugzilla.core;
 public enum BugzillaReportElement {
 	// Format: ENUM ( "pretty name", "xml key", <hidden: true/false>, <readonly: true/false>)
 	// Hidden elements are not automatically displayed in ui	
+	STATUS_WHITEBOARD ("Status Whiteboard:", "status_whiteboard", true, false),
 	ACTUAL_TIME ("Hours Worked:", "actual_time", true),
 	ADD_COMMENT ("Additional Comments:", "comment", true, false),
 	ASSIGNED_TO ("Assigned to:", "assigned_to", true, true),
