@@ -66,8 +66,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	protected boolean isUninteresting(Object parent, ITask task) {
 		return !task.isActive()
-				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(parent, task)) || (TasksUiPlugin
-						.getTaskListManager().isScheduledAfterThisWeek(task))
+				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(
+						parent, task)) || (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task))
 						&& !hasChanges(parent, task));
 	}
 
@@ -80,7 +80,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	public boolean shouldAlwaysShow(Object parent, ITask task) {
 		return super.shouldAlwaysShow(parent, task) || hasChanges(parent, task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
-				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
+				||  shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
@@ -89,11 +89,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof DateRangeContainer) {
-
-			boolean overdue = TasksUiPlugin.getTaskListManager().isOverdue(task);
-			if (overdue || task.isPastReminder()) {
-				return true;
-			}
+			// if(task.isCompleted()) {
+			// return false;
+			// }
+			// boolean overdue =
+			// TasksUiPlugin.getTaskListManager().isOverdue(task);
+			// if (overdue || task.isPastReminder()) {
+			// return true;
+			// }
 
 			DateRangeContainer container = (DateRangeContainer) parent;
 			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
@@ -120,12 +123,16 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	public static boolean hasChanges(Object parent, ITask task) {
 		if (parent instanceof DateRangeContainer) {
-			return shouldShowInFocusedWorkweekDateContainer(parent, task);
-		} else if (task instanceof AbstractRepositoryTask) {
+			if (!shouldShowInFocusedWorkweekDateContainer(parent, task)) {
+				return false;
+			}
+		}
+		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+					&& !(parent instanceof DateRangeContainer)) {
 				return true;
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 				return true;
