@@ -173,19 +173,17 @@ public class TaskListNotificationPopup extends PopupDialog {
 	private Rectangle restoreBounds() {
 		bounds = form.getBounds();
 		Rectangle maxBounds = null;
-		// IWorkbenchWindow window =
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		// if (window != null) {
-		// maxBounds = window.getShell().getBounds();
-		if (getShell() != null && !getShell().isDisposed()) {
-			maxBounds = getShell().getDisplay().getClientArea();
+		
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window != null) {
+			maxBounds = window.getShell().getMonitor().getClientArea();
 		} else {
 			// fallback
 			Display display = Display.getCurrent();
 			if (display == null)
 				display = Display.getDefault();
 			if (display != null && !display.isDisposed())
-				maxBounds = display.getBounds();
+				maxBounds = display.getPrimaryMonitor().getClientArea();
 		}
 
 		if (bounds.width > -1 && bounds.height > -1) {
@@ -199,14 +197,15 @@ public class TaskListNotificationPopup extends PopupDialog {
 		}
 
 		if (bounds.x > -1 && bounds.y > -1 && maxBounds != null) {
-			bounds.x = Math.max(bounds.x, maxBounds.x);
-			bounds.y = Math.max(bounds.y, maxBounds.y);
+			//bounds.x = Math.max(bounds.x, maxBounds.x);
+			//bounds.y = Math.max(bounds.y, maxBounds.y);
 
 			if (bounds.width > -1 && bounds.height > -1) {
-				bounds.x = maxBounds.width - bounds.width;
-				bounds.y = maxBounds.height - bounds.height;
+				bounds.x = maxBounds.x + maxBounds.width - bounds.width;
+				bounds.y = maxBounds.y + maxBounds.height - bounds.height;
 			}
 		}
+		
 		return bounds;
 	}
 
