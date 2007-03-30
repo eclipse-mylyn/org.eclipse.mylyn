@@ -237,7 +237,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	public void notifyTaskChanged() {
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		if (task != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+		}
 	}
 
 	@Override
@@ -478,16 +480,16 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
-	
+
 	@Override
 	public void setFocus() {
-		if(getActivePageInstance() instanceof AbstractNewRepositoryTaskEditor){
+		if (getActivePageInstance() instanceof AbstractNewRepositoryTaskEditor) {
 			getActivePageInstance().setFocus();
 		} else {
 			super.setFocus();
 		}
 	}
-	
+
 	/**
 	 * Update the title of the editor
 	 */
