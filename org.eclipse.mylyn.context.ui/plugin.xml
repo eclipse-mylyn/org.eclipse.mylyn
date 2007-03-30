@@ -212,6 +212,28 @@
 	
     <extension
          point="org.eclipse.ui.navigator.viewer">
+       <viewer
+             viewerId="org.eclipse.mylar.context.ui.navigator.context">
+          <popupMenu
+                allowsPlatformContributions="false"
+                id="org.eclipse.mylar.context.ui.navigator.context#PopupMenu">  
+             <insertionPoint name="group.new"/>
+             <insertionPoint
+                   	name="group.open"
+                   	separator="true"/>
+             <insertionPoint 
+             		name="group.openWith"/>     
+             <insertionPoint
+                   name="additions"
+                   separator="true"/>              
+			 <insertionPoint
+                   name="group.port"
+                   separator="true"/>  
+             <insertionPoint
+                   name="group.properties"
+                   separator="true"/>
+          </popupMenu>
+       </viewer>
        <viewerContentBinding 
              viewerId="org.eclipse.mylar.context.ui.navigator.context">
           <includes>
@@ -224,6 +246,13 @@
        	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
           </includes>
        </viewerContentBinding>
+       
+       <viewerActionBinding
+            viewerId="org.eclipse.mylar.context.ui.navigator.context">
+         <includes>
+             <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
+         </includes>
+       </viewerActionBinding>
    </extension>	
  
 	<!-- ==================== Markers ==================== -->

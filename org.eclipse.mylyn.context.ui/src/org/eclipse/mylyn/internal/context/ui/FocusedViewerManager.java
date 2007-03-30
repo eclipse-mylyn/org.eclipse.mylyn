@@ -27,7 +27,6 @@ import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.ui.workbench.AbstractPartTracker;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -55,38 +54,8 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 	 */
 	private boolean syncRefreshMode = false;
 
-	private AbstractPartTracker VIEWER_PART_TRACKER = new AbstractPartTracker() {
-
-		@Override
-		public void partActivated(IWorkbenchPart part) {
-			if (partToViewerMap.containsKey(part)) {
-				StructuredViewer viewer = partToViewerMap.get(part);
-				refreshViewer(null, false, viewer);
-			}
-		}
-
-		@Override
-		public void partBroughtToTop(IWorkbenchPart part) {
-
-		}
-
-		@Override
-		public void partClosed(IWorkbenchPart part) {
-			// ignore
-		}
-
-		@Override
-		public void partDeactivated(IWorkbenchPart part) {
-			// ignore
-		}
-
-		@Override
-		public void partOpened(IWorkbenchPart part) {
-			// ignore
-		}
-	};
-
 	public FocusedViewerManager() {
+		// NOTE: no longer using viewer part tracker due to bug 162346
 //		VIEWER_PART_TRACKER.install(PlatformUI.getWorkbench());
 	}
 

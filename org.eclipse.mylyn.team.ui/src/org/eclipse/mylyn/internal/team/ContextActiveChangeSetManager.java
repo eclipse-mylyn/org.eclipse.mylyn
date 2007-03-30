@@ -36,17 +36,27 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
 
 /**
+ * NOTE: this class contains several work-arounds for change set limitations in the Platform/Team support.
+ * 
  * @author Mik Kersten
  */
 public class ContextActiveChangeSetManager extends AbstractContextChangeSetManager {
-	
+
+	private List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
+
+	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
+
+	/**
+	 * Used to restore change sets managed with task context when platform deletes them, bug 168129
+	 */
 	private final IChangeSetChangeListener CHANGE_SET_LISTENER = new IChangeSetChangeListener() {
 		public void setRemoved(ChangeSet set) {
 			if (set instanceof ContextChangeSet) {
 				ContextChangeSet contextChangeSet = (ContextChangeSet) set;
-				if (contextChangeSet.getTask().isActive()) {
+				if (contextChangeSet.getTask() != null && contextChangeSet.getTask().isActive()) {
 					for (ActiveChangeSetManager collector : changeSetManagers) {
-						collector.add(contextChangeSet); // put it back
+						// put it back
+						collector.add(contextChangeSet); 
 					}
 				}
 			}
@@ -69,16 +79,13 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		}
 	};
 
-	private List<ActiveChangeSetManager> changeSetManagers = new ArrayList<ActiveChangeSetManager>();
-
-	private Map<String, ContextChangeSet> activeChangeSets = new HashMap<String, ContextChangeSet>();
-
 	public ContextActiveChangeSetManager() {
 		Set<AbstractActiveChangeSetProvider> providerList = MylarTeamPlugin.getDefault().getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {
 				changeSetManagers.add(changeSetManager);
+				changeSetManager.addListener(CHANGE_SET_LISTENER);
 			}
 		}
 	}
@@ -98,7 +105,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			}
 		}
 	}
-	
+
 	@Override
 	public void enable() {
 		super.enable();
@@ -155,6 +162,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
 				if (set instanceof ContextChangeSet) {
+					System.err.println(">>> " + set);
+
 					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
 						return contextChangeSet.getResources();
@@ -171,7 +180,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources(context);
+					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources(
+							context);
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
 					activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
@@ -204,7 +214,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {
 					IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(element, false);
@@ -233,7 +244,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			}
 		}
 	}
-	
+
 	public List<ContextChangeSet> getActiveChangeSets() {
 		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
 	}
