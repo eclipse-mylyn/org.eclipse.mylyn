@@ -13,7 +13,6 @@
  */
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
@@ -51,10 +50,10 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 		return true;
 	}
 
-	@Override
-	public ImageDescriptor getImageDescriptor() {
-		return null;
-	}
+//	@Override
+//	public ImageDescriptor getImageDescriptor() {
+//		return null;
+//	}
 
 	@Override
 	public IPersistableElement getPersistable() {

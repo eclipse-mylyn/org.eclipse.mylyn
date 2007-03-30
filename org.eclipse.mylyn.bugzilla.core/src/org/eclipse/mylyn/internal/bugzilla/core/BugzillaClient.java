@@ -406,7 +406,7 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
 								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id,
-								Task.DEFAULT_TASK_KIND);
+								IBugzillaConstants.BUGZILLA_TASK_KIND);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
 								.getResponseBodyAsStream(), characterEncoding);

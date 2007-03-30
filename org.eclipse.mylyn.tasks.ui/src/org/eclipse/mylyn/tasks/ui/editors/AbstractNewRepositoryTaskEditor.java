@@ -59,7 +59,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
@@ -110,11 +109,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-		isDirty = false;
-		IWorkbenchSiteProgressService progressService = getProgressService();
-		if (progressService != null) {
-			progressService.showBusyForFamily(FAMILY_SUBMIT);
-		}
+		isDirty = false;		
 	}
 
 	@Override

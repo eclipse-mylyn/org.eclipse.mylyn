@@ -298,8 +298,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		form = managedForm.getForm();
 		toolkit = managedForm.getToolkit();
-		form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
-		toolkit.decorateFormHeading(form.getForm());
+//		form.setImage(TaskListImages.getImage(TaskListImages.CALENDAR));
+//		toolkit.decorateFormHeading(form.getForm());
 
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
@@ -308,10 +308,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// try {
 		if (task instanceof AbstractRepositoryTask) {
-			form.setText("Planning");
+			//form.setText("Planning");
 		} else {
 			createSummarySection(editorComposite);
-			form.setText("Task: " + task.getSummary());
+			//form.setText("Task: " + task.getSummary());
 		}
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);

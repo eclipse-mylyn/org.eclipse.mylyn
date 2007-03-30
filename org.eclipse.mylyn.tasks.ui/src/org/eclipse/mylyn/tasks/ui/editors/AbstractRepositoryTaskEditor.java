@@ -42,7 +42,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
@@ -89,7 +88,6 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -150,7 +148,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -216,8 +213,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String REASSIGN_BUG_TO = "Reassign to";
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
-
-	protected final Object FAMILY_SUBMIT = new Object();
 
 	protected RepositoryTaskEditorInput editorInput;
 
@@ -361,7 +356,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Editor will refresh with new incoming
 							// changes.");
 
-							form.setMessage("Task has new incoming changes. Synchronize to see new changes.",
+							
+							parentEditor.setMessage("Task has new incoming changes. Synchronize to see new changes.",
 									IMessageProvider.WARNING);
 
 							setSubmitEnabled(false);
@@ -518,21 +514,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		hasAttributeChanges = hasVisibleAttributeChanges();
 		isDirty = false;
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASKLIST_CHANGE_LISTENER);
-		IWorkbenchSiteProgressService progressService = getProgressService();
-		if (progressService != null) {
-			progressService.showBusyForFamily(FAMILY_SUBMIT);
-		}
+
 	}
 
 	public AbstractRepositoryTask getRepositoryTask() {
 		return repositoryTask;
-	}
-
-	protected IWorkbenchSiteProgressService getProgressService() {
-		Object siteService = getSite().getAdapter(IWorkbenchSiteProgressService.class);
-		if (siteService != null)
-			return (IWorkbenchSiteProgressService) siteService;
-		return null;
 	}
 
 	@Override
@@ -593,12 +579,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit = managedForm.getToolkit();
 		registerDropListener(form);
 
-		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repository.getKind());
-		ImageDescriptor imageDescriptor = TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay, false,
-				false);
-		form.setImage(TaskListImages.getImage(imageDescriptor));
+		// ImageDescriptor overlay =
+		// TasksUiPlugin.getDefault().getOverlayIcon(repository.getKind());
+		// ImageDescriptor imageDescriptor =
+		// TaskListImages.createWithOverlay(TaskListImages.REPOSITORY, overlay,
+		// false,
+		// false);
+		// form.setImage(TaskListImages.getImage(imageDescriptor));
 
-		toolkit.decorateFormHeading(form.getForm());
+		// toolkit.decorateFormHeading(form.getForm());
 
 		editorComposite = form.getBody();
 		GridLayout editorLayout = new GridLayout();
@@ -607,7 +596,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		if (taskData == null) {
 
-			form.setMessage("Task data not available. Press synchronize button (right) to retrieve latest data.",
+			parentEditor.setMessage(
+					"Task data not available. Press synchronize button (right) to retrieve latest data.",
 					IMessageProvider.WARNING);
 
 		} else {
@@ -616,39 +606,39 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		}
 
-		setFormHeaderLabel();
+		// setFormHeaderLabel();
 		addHeaderControls();
 
 		if (summaryText != null) {
 			summaryText.setFocus();
 		}
-
 	}
 
-	private void setFormHeaderLabel() {
-
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-		kindLabel = "";
-		if (connectorUi != null) {
-			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
-		}
-
-		String idLabel = "";
-
-		if (repositoryTask != null) {
-			idLabel = repositoryTask.getTaskKey();
-		} else if (taskData != null) {
-			idLabel = taskData.getId();
-		}
-
-		if (taskData != null && taskData.isNew()) {
-			form.setText("New " + kindLabel);
-		} else if (idLabel != null) {
-			form.setText(kindLabel + " " + idLabel);
-		} else {
-			form.setText(kindLabel);
-		}
-	}
+	// private void setFormHeaderLabel() {
+	//
+	// AbstractRepositoryConnectorUi connectorUi =
+	// TasksUiPlugin.getRepositoryUi(repository.getKind());
+	// kindLabel = "";
+	// if (connectorUi != null) {
+	// kindLabel = connectorUi.getTaskKindLabel(repositoryTask);
+	// }
+	//
+	// String idLabel = "";
+	//
+	// if (repositoryTask != null) {
+	// idLabel = repositoryTask.getTaskKey();
+	// } else if (taskData != null) {
+	// idLabel = taskData.getId();
+	// }
+	//
+	// if (taskData != null && taskData.isNew()) {
+	// form.setText("New " + kindLabel);
+	// } else if (idLabel != null) {
+	// form.setText(kindLabel + " " + idLabel);
+	// } else {
+	// form.setText(kindLabel);
+	// }
+	// }
 
 	protected void addHeaderControls() {
 		ControlContribution repositoryLabelControl = new ControlContribution("Title") { //$NON-NLS-1$
@@ -680,20 +670,38 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				return composite;
 			}
 		};
-		if (form.getToolBarManager() != null) {
-			form.getToolBarManager().add(repositoryLabelControl);
+
+		if (parentEditor.getTopForm() != null) {
+			parentEditor.getTopForm().getToolBarManager().add(repositoryLabelControl);
 			if (repositoryTask != null) {
 				SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
-				form.getToolBarManager().add(synchronizeEditorAction);
+				parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
 			}
 
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
 			// SynchronizeSelectedAction());
 
-			form.getToolBarManager().update(true);
+			parentEditor.getTopForm().getToolBarManager().update(true);
 		}
+
+		// if (form.getToolBarManager() != null) {
+		// form.getToolBarManager().add(repositoryLabelControl);
+		// if (repositoryTask != null) {
+		// SynchronizeEditorAction synchronizeEditorAction = new
+		// SynchronizeEditorAction();
+		// synchronizeEditorAction.selectionChanged(new
+		// StructuredSelection(this));
+		// form.getToolBarManager().add(synchronizeEditorAction);
+		// }
+		//
+		// // Header drop down menu additions:
+		// // form.getForm().getMenuManager().add(new
+		// // SynchronizeSelectedAction());
+		//
+		// form.getToolBarManager().update(true);
+		// }
 	}
 
 	protected void createSections() {
@@ -1781,8 +1789,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
-		Section newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
+		//Section newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 
+		Section newCommentSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
+		newCommentSection.setText(getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
+		newCommentSection.setLayout(new GridLayout());
+		newCommentSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+			
+			
 		Composite newCommentsComposite = toolkit.createComposite(newCommentSection);
 		newCommentsComposite.setLayout(new GridLayout());
 
@@ -1795,9 +1809,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				| SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		newCommentTextViewer.setEditable(true);
 
-		GridData addCommentsTextData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-		addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+		//addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+		addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 		newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
 		newCommentTextViewer.getControl().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
@@ -2490,8 +2505,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void showBusy(boolean busy) {
-		if (!form.isDisposed() && busy != formBusy) {
-			form.setBusy(busy);
+		if (busy != formBusy) {
+			parentEditor.showBusy(busy);
 			if (busy) {
 				setEnabledState(editorComposite, false);
 				// regularCursor = form.getCursor();
@@ -2532,9 +2547,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		Job submitJob = new Job(LABEL_JOB_SUBMIT) {
 
-			public boolean belongsTo(Object family) {
-				return family == FAMILY_SUBMIT;
-			}
+			// public boolean belongsTo(Object family) {
+			// return family == parentEditor.FAMILY_SUBMIT;
+			// }
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -2647,9 +2662,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						removeSections();
 						editorComposite.setMenu(menu);
 						createSections();
-						setFormHeaderLabel();
+						// setFormHeaderLabel();
 						markDirty(false);
-						form.setMessage(null, 0);
+						parentEditor.setMessage(null, 0);
 						AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
 								AbstractRepositoryTaskEditor.this.getId());
 
