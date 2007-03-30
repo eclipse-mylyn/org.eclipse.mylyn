@@ -65,16 +65,20 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 	}
 
 	private TaskRepository getRepository(ITextViewer textViewer) {
-		if (textViewer instanceof RepositoryTextViewer) {
-			RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
-			return viewer.getRepository();
-		} else {
-			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-			IEditorInput input = part.getEditorInput();
-			IResource resource = (IResource) input.getAdapter(IResource.class);
-			if (resource != null) {
-				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
+		IResource resource = (IResource) getAdapter(IResource.class);
+		if (resource == null) {
+			if (textViewer instanceof RepositoryTextViewer) {
+				RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
+				return viewer.getRepository();
+			} else {
+				IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.getActiveEditor();
+				IEditorInput input = part.getEditorInput();
+				resource = (IResource) input.getAdapter(IResource.class);
 			}
+		}
+		if (resource != null) {
+			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 		}
 		return null;
 	}
