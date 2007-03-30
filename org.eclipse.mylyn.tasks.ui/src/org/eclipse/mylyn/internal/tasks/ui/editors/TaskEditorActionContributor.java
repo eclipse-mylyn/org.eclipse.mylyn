@@ -173,6 +173,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
 			List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin
 					.getTaskListManager().getTaskList().getCategories());
+			
+			// This is added to solve Bug 180252
+			categories.add(TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
 			Collections.sort(categories);
 			for (final AbstractTaskContainer category : categories) {
 				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
