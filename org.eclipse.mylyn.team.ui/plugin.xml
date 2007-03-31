@@ -46,12 +46,6 @@
 				menubarPath="mylar"
 				tooltip="Open Corresponding Task">
 			</action> 
-		</objectContribution>
-
-     	<objectContribution
-				id="org.eclipse.mylar.ui.team.synchronize.create.context.contribution"
-				objectClass="org.eclipse.mylar.tasks.core.ILinkedTaskInfo"
-				adaptable="true">
 			<action
 				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
@@ -64,7 +58,7 @@
 		</objectContribution>
 
 		<objectContribution
-            objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
+            objectClass="org.eclipse.team.internal.ui.synchronize.SyncInfoModelElement"
             id="org.eclipse.mylar.ui.team.synchronize.open.report">
             <action
 				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
@@ -76,6 +70,22 @@
 				tooltip="Add to Task Context">
 			</action> 
 		</objectContribution>
+		<objectContribution
+            objectClass="org.eclipse.team.internal.ui.synchronize.UnchangedResourceModelElement"
+            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            <action
+				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
+				enablesFor="*" 
+				icon="icons/elcl16/context-add.gif"
+				id="org.eclipse.mylar.ui.team.synchronize.create.context"
+				label="Add to Task Context"
+				menubarPath="mylar"
+				tooltip="Add to Task Context">
+			</action> 
+		</objectContribution>
+
+
+
 
         <!--
 		<objectContribution
