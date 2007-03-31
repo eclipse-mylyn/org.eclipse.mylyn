@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
@@ -123,8 +122,6 @@ public class Task extends PlatformObject implements ITask {
 	private String taskUrl = "";
 
 	private AbstractTaskContainer parentCategory = null;
-
-	private long timeActive = 0;
 
 	private Date completionDate = null;
 
@@ -243,18 +240,6 @@ public class Task extends PlatformObject implements ITask {
 
 	public void setNotes(String notes) {
 		this.notes = notes;
-	}
-
-	public long getElapsedTime() {
-		return timeActive;
-	}
-
-	public void setElapsedTime(long elapsedTime) {
-		if (elapsedTime >= 0) {
-			this.timeActive = elapsedTime;
-		} else {
-			MylarStatusHandler.log("Attempt to set negative time on task: " + getSummary(), this);
-		}
 	}
 
 	public int getEstimateTimeHours() {

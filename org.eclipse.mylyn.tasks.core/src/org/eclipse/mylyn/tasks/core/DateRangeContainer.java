@@ -79,9 +79,11 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	}
 
 	public void clear() {
+		totalEstimated = 0;
 		totalElapsed = 0;
-		super.clear();
+		taskToDuration.clear();
 		dateRangeDelegates.clear();
+		super.clear();
 	}
 
 	public void addTask(DateRangeActivityDelegate taskWrapper) {

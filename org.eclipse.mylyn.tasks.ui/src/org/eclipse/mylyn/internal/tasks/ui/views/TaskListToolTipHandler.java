@@ -260,14 +260,30 @@ public class TaskListToolTipHandler {
 	}
 
 	private String formatScheduledFor(ITaskListElement element) {
+		String result = "";
 		if (element instanceof ITask) {
+			
+			String elapsedTimeString = NO_MINUTES;
+			try {
+				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask)element);
+				elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
+				if (elapsedTimeString.equals("")) {
+					elapsedTimeString = NO_MINUTES;
+				}
+			} catch (RuntimeException e) {
+				// ignore
+			}
+
+			result += SEPARATOR +"\nElapsed: " + elapsedTimeString + "\n";
+			
+			
 			Date date = ((ITask) element).getScheduledForDate();
 			if (date != null) {
-				return SEPARATOR + "Scheduled for: " + DateFormat.getDateInstance(DateFormat.FULL).format(date) + ", "
+				result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.FULL).format(date) + ", "
 						+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + "";
 			}
 		}
-		return "";
+		return result;
 	}
 
 	// private String formatLastRefreshTime(Date lastRefresh) {

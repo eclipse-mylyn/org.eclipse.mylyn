@@ -95,6 +95,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(2, testContainer.getDateRangeDelegates().size());
 		testContainer
 				.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
+		
 		assertEquals(30, testContainer.getTotalElapsed());
 		// assertEquals(3 * (currentEndMili - currentStartMili),
 		// testContainer.getTotalElapsed());

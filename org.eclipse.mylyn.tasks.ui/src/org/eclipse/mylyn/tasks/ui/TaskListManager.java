@@ -274,6 +274,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			parseInteractionEvent(event);
 		}
 		taskActivityHistoryInitialized = true;
+		parseFutureReminders();
 	}
 
 	private void parseFutureReminders() {
@@ -749,7 +750,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 
 			resetActivity();
-			parseFutureReminders();
+			//parseFutureReminders();
 			taskListInitialized = true;
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
@@ -765,7 +766,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * Only to be called upon initial startup by plugin.
 	 */
 	public void initActivityHistory() {
-		resetAndRollOver();// parseTaskActivityInteractionHistory();
+		resetAndRollOver();
 		taskActivityHistory.loadPersistentHistory();
 	}
 
@@ -1018,8 +1019,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				tasksWithDueDates.add(task);
 			}
 		}
-		resetActivity();
-		parseFutureReminders();
+		resetActivity();		
 		parseTaskActivityInteractionHistory();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.calendarChanged();
