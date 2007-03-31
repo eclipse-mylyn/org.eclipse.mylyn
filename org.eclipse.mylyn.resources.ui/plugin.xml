@@ -30,6 +30,15 @@
       <initializer class="org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer"/>
    </extension>
    
+   <!--
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <dragAssistant
+             class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
+             viewerId="org.eclipse.mylar.context.ui.navigator.context"/>
+   </extension>
+   -->
+   
    <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
      	adaptable="true"

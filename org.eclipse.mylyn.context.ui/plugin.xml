@@ -212,6 +212,7 @@
 	
     <extension
          point="org.eclipse.ui.navigator.viewer">
+       <!--
        <viewer
              viewerId="org.eclipse.mylar.context.ui.navigator.context">
           <popupMenu
@@ -234,12 +235,14 @@
                    separator="true"/>
           </popupMenu>
        </viewer>
+       -->
        <viewerContentBinding 
              viewerId="org.eclipse.mylar.context.ui.navigator.context">
           <includes>
        	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
           </includes>
        </viewerContentBinding>
+       
        <viewerContentBinding 
              viewerId="org.eclipse.mylar.context.ui.navigator.context.quick">
           <includes>
