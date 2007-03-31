@@ -357,7 +357,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// changes.");
 
 							
-							parentEditor.setMessage("Task has new incoming changes. Synchronize to see new changes.",
+							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);
 
 							setSubmitEnabled(false);
