@@ -453,7 +453,8 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
-						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
+						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector,
+								QueryHitCollector.MAX_HITS);
 						return;
 					}
 				}
@@ -470,7 +471,8 @@ public class BugzillaClient {
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
 		// ordered list of elements as they appear in UI
 		// and additional elements that may not appear in the incoming xml
-		// stream but need to be present for bug submission
+		// stream but need to be present for bug submission / not always dirty
+		// state handling
 		BugzillaReportElement[] reportElements = { BugzillaReportElement.SHORT_DESC, BugzillaReportElement.BUG_STATUS,
 				BugzillaReportElement.RESOLUTION, BugzillaReportElement.BUG_ID, BugzillaReportElement.REP_PLATFORM,
 				BugzillaReportElement.PRODUCT, BugzillaReportElement.OP_SYS, BugzillaReportElement.COMPONENT,
@@ -478,7 +480,8 @@ public class BugzillaClient {
 				BugzillaReportElement.ASSIGNED_TO, BugzillaReportElement.TARGET_MILESTONE,
 				BugzillaReportElement.REPORTER, BugzillaReportElement.DEPENDSON, BugzillaReportElement.BLOCKED,
 				BugzillaReportElement.BUG_FILE_LOC, BugzillaReportElement.NEWCC, BugzillaReportElement.KEYWORDS,
-				BugzillaReportElement.CC, BugzillaReportElement.NEW_COMMENT, BugzillaReportElement.QA_CONTACT };
+				BugzillaReportElement.CC, BugzillaReportElement.NEW_COMMENT, BugzillaReportElement.QA_CONTACT,
+				BugzillaReportElement.STATUS_WHITEBOARD };
 
 		for (BugzillaReportElement element : reportElements) {
 			RepositoryTaskAttribute reportAttribute = BugzillaClient.makeNewAttribute(element);
@@ -994,7 +997,7 @@ public class BugzillaClient {
 		try {
 
 			// TODO: Handle too long of url (IBugzillaConstants.MAX_URL_LENGTH)
-			
+
 			String requestUrl = repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML_NOID;
 
 			HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
