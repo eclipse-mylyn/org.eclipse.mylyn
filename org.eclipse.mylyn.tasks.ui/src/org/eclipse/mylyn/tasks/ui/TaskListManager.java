@@ -290,11 +290,9 @@ public class TaskListManager implements IPropertyChangeListener {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
 
-			Date schedDate = delegate.getDueDate();
-
+			Date schedDate = delegate.getScheduledForDate();
 			if (schedDate == null) {
-				schedDate = delegate.getScheduledForDate();
-				// schedDate = delegate.getDueDate();
+				schedDate = delegate.getDueDate();
 			}
 
 			if (schedDate != null) {
@@ -320,9 +318,9 @@ public class TaskListManager implements IPropertyChangeListener {
 				task = ((DateRangeActivityDelegate) task).getCorrespondingTask();
 			}
 
-			Date schedDate = task.getDueDate();
-			if (schedDate == null) {
-				schedDate = task.getScheduledForDate();
+			Date schedDate = task.getScheduledForDate();
+			if (schedDate == null || isOverdue(task)) {
+				schedDate = task.getDueDate();
 			}
 
 			if (schedDate != null) {
