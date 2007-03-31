@@ -133,6 +133,8 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart {
 
+	private static final String PRESENTATION_SCHEDULED = "Scheduled";
+
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	public static final String LABEL_VIEW = "Task List";
@@ -280,7 +282,7 @@ public class TaskListView extends ViewPart {
 		}
 
 		public String getPresentationName() {
-			return "Scheduled";
+			return PRESENTATION_SCHEDULED;
 		}
 
 		public ImageDescriptor getImageDescriptor() {
@@ -929,8 +931,12 @@ public class TaskListView extends ViewPart {
 			if (!filteredTree.getFilterControl().getText().equals("")) {
 				filteredTree.getFilterControl().setText("");
 			}
+			if(presentation.getPresentationName().equals(PRESENTATION_SCHEDULED)) {
+				TasksUiPlugin.getTaskListManager().parseFutureReminders();
+			}
 			getViewer().setContentProvider(presentation.getContentProvider());
 			refreshAndFocus(isFocusedMode());
+			
 			currentPresentation = presentation;
 		} finally {
 			getViewer().getControl().setRedraw(true);

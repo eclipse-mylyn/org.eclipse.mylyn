@@ -277,7 +277,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		parseFutureReminders();
 	}
 
-	private void parseFutureReminders() {
+	public void parseFutureReminders() {
 		activityFuture.clear();
 		activityNextWeek.clear();
 
@@ -290,9 +290,11 @@ public class TaskListManager implements IPropertyChangeListener {
 			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
 
-			Date schedDate = delegate.getScheduledForDate();
+			Date schedDate = delegate.getDueDate();
+
 			if (schedDate == null) {
-				schedDate = delegate.getDueDate();
+				schedDate = delegate.getScheduledForDate();
+				// schedDate = delegate.getDueDate();
 			}
 
 			if (schedDate != null) {
@@ -318,9 +320,9 @@ public class TaskListManager implements IPropertyChangeListener {
 				task = ((DateRangeActivityDelegate) task).getCorrespondingTask();
 			}
 
-			Date schedDate = task.getScheduledForDate();
+			Date schedDate = task.getDueDate();
 			if (schedDate == null) {
-				schedDate = task.getDueDate();
+				schedDate = task.getScheduledForDate();
 			}
 
 			if (schedDate != null) {
@@ -344,7 +346,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 				for (DateRangeContainer day : activityWeekDays) {
 					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar, this.getElapsedTime(task)));
+						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar, this
+								.getElapsedTime(task)));
 					}
 				}
 			}
@@ -750,7 +753,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			}
 
 			resetActivity();
-			//parseFutureReminders();
+			// parseFutureReminders();
 			taskListInitialized = true;
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
@@ -1019,7 +1022,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				tasksWithDueDates.add(task);
 			}
 		}
-		resetActivity();		
+		resetActivity();
 		parseTaskActivityInteractionHistory();
 		for (ITaskActivityListener listener : activityListeners) {
 			listener.calendarChanged();

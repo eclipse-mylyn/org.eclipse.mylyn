@@ -279,7 +279,7 @@ public class RepositorySynchronizationManager {
 				status = RepositoryTaskSyncState.INCOMING;
 				repositoryTask.setNotified(false);
 			}
-			if (hasIncoming || offlineTaskData == null) {
+			if (hasIncoming || offlineTaskData == null || forceSync) {
 				TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 			}
 			break;

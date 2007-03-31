@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 
 /**
@@ -27,9 +26,9 @@ import org.eclipse.mylar.tasks.core.TaskComment;
  */
 public class BugzillaTask extends AbstractRepositoryTask {
 
-	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
+	private static final String DEADLINE_FORMAT = "yyyy-MM-dd";
 
-	private static SimpleDateFormat comment_creation_ts_format = new SimpleDateFormat(COMMENT_FORMAT);
+	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
 
 	public BugzillaTask(String repositoryUrl, String id, String label, boolean newTask) {
 		super(repositoryUrl, id, label, newTask);
@@ -64,14 +63,8 @@ public class BugzillaTask extends AbstractRepositoryTask {
 			return super.getSummary();
 		} else {
 			if (isSynchronizing()) {
-				// return
-				// AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":
-				// <synchronizing>";
 				return "<synchronizing>";
 			} else {
-				// return
-				// AbstractRepositoryTask.getTaskId(getHandleIdentifier()) + ":
-				// ";
 				return "";
 			}
 		}
@@ -107,20 +100,15 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		try {
 			if (taskData != null) {
 				if (isCompleted()) {
-					// if (taskData.isResolved()) {
 					List<TaskComment> taskComments = taskData.getComments();
 					if (taskComments != null && !taskComments.isEmpty()) {
 						// TODO: fix not to be based on comment
-						return comment_creation_ts_format.parse(taskComments.get(taskComments.size() - 1).getCreated());
-						// return
-						// offlineHandler.getDateForAttributeType(RepositoryTaskAttribute.COMMENT_DATE,
-						// (taskComments.get(taskComments.size() -
-						// 1).getCreated()));
+						return new SimpleDateFormat(COMMENT_FORMAT).parse(taskComments.get(taskComments.size() - 1)
+								.getCreated());
 					}
 				}
 			}
 		} catch (Exception e) {
-			// MylarStatusHandler.log(e, "BugzillaTask.getCompletionDate()");
 			return null;
 		}
 		return super.getCompletionDate();
@@ -149,8 +137,23 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		}
 	}
 
-	public RepositoryTaskData getOldTaskData() {
-		// ignore
-		return null;
+	@Override
+	public Date getDueDate() {
+
+		if (taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
+			// HACK: if estimated_time field exists, time tracking is enabled
+			try {
+				String dueStr = taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
+				if (dueStr != null) {
+					return new SimpleDateFormat(DEADLINE_FORMAT).parse(dueStr);
+				}
+			} catch (Exception e) {
+				return null;
+			}
+			return null;
+		} else {
+			return super.getDueDate();
+		}
+
 	}
 }

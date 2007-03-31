@@ -632,6 +632,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		dueDatePicker = new DatePicker(nameValueComp, SWT.FLAT, DatePicker.LABEL_CHOOSE);
 
 		calendar = Calendar.getInstance();
+				
 		if (task.getDueDate() != null) {
 			calendar.setTime(task.getDueDate());
 			dueDatePicker.setDate(calendar);
@@ -660,6 +661,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
+		
+		if (task instanceof AbstractRepositoryTask) {
+			dueDatePicker.setEnabled(false);
+			clearDueDate.setEnabled(false);
+		}
 		
 		// Estimated time
 		nameValueComp = makeComposite(sectionClient, 2);
