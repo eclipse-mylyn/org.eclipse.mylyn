@@ -41,7 +41,7 @@
 				class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
 				enablesFor="1" 
 				icon="icons/elcl16/task-repository.gif"
-				id="org.eclipse.mylar.ui.team.synchronize.open.report"
+				id="org.eclipse.mylar.ui.team.synchronize.open.report.linked"
 				label="Open Corresponding Task"
 				menubarPath="mylar"
 				tooltip="Open Corresponding Task">
@@ -59,7 +59,7 @@
 
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.SyncInfoModelElement"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            id="org.eclipse.mylar.ui.team.synchronize.open.report.syncinfo">
             <action
 				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
@@ -72,7 +72,7 @@
 		</objectContribution>
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.UnchangedResourceModelElement"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            id="org.eclipse.mylar.ui.team.synchronize.open.report.unchanged">
             <action
 				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
