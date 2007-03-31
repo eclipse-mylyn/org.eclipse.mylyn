@@ -25,6 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Ken Sueda
@@ -39,12 +40,16 @@ public class DateSelectionDialog extends Dialog {
 	
 	private Calendar initialCalendar = GregorianCalendar.getInstance();
 
+	private FormToolkit toolkit;
+	
 	public DateSelectionDialog(Shell parentShell, String title) {
 		this(parentShell, GregorianCalendar.getInstance(), title);
 	}
 
 	public DateSelectionDialog(Shell parentShell, Calendar initialDate, String title) {
 		super(parentShell);
+		
+		toolkit = new FormToolkit(parentShell.getDisplay());;
 		if(title != null) {
 			this.title = title;
 		}
@@ -56,9 +61,8 @@ public class DateSelectionDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(title);
+		getShell().setText(title);		
 		DatePickerPanel datePanel = new DatePickerPanel(parent, SWT.NULL, initialCalendar);
-
 		datePanel.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -68,12 +72,19 @@ public class DateSelectionDialog extends Dialog {
 				}
 			}
 		});
-
+		//datePanel.setBackground(toolkit.getColors().getBackground());		
 		return datePanel;
 	}
 	
 	@Override
+	public boolean close() {
+		toolkit.dispose();
+		return super.close();
+	}
+
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		parent.setBackground(toolkit.getColors().getBackground());
 		createButton(parent, IDialogConstants.CLIENT_ID + 1, "Clear", false);
 		super.createButtonsForButtonBar(parent);
 	}

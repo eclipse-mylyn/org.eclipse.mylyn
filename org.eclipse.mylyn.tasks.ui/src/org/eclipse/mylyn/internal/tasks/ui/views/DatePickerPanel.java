@@ -57,6 +57,7 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 		this.date = initialDate;
 		initialize();
 		setDate(date);
+		//this.setBackground()
 	}
 
 	private void initialize() {
@@ -65,13 +66,9 @@ public class DatePickerPanel extends Composite implements KeyListener, ISelectio
 			date.set(Calendar.HOUR_OF_DAY, TasksUiPlugin.getTaskListManager().getStartHour());
 		}
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 2;
 		this.setLayout(gridLayout);
-		Composite middle = new Composite(this, SWT.NONE);
-		GridLayout middleLayout = new GridLayout();
-		// middleLayout.verticalSpacing = 0;
-		middle.setLayout(middleLayout);
-		calendar = new DateTime(middle, SWT.CALENDAR | SWT.BORDER);
+		calendar = new DateTime(this, SWT.CALENDAR);
 		calendar.addSelectionListener(new SelectionAdapter() {
 
 			@Override
