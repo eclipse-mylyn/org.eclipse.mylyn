@@ -31,6 +31,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -47,11 +48,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.net.ProxyPreferencePage;
 
 /**
  * @author Mik Kersten
@@ -521,28 +527,35 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthComp.setBackground(container.getBackground());
 		proxyExpComposite.setClient(proxyAuthComp);
 
-		systemProxyButton = new Button(proxyAuthComp, SWT.CHECK);
-		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(systemProxyButton);
+		
+		Composite settingsComposite = new Composite(proxyAuthComp, SWT.NULL);
+		GridLayout gridLayout3 = new GridLayout();
+		gridLayout3.numColumns = 2;
+		gridLayout3.verticalSpacing = 0;
+		settingsComposite.setLayout(gridLayout3);
+		
+		systemProxyButton = new Button(settingsComposite, SWT.CHECK);
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(settingsComposite);
 
-		systemProxyButton.setText("Use global Network Connections preference settings");
+		systemProxyButton.setText("Use global Network Connections preferences");
+		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(settingsComposite, "Change Settings", SWT.NULL);
+		changeProxySettingsLink.setBackground(container.getBackground());
+		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
 
-//		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(proxyAuthComp, "Change", SWT.NULL);
-//		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
-//
-//			public void linkActivated(HyperlinkEvent e) {
-//				ProxyPreferencePage page = new ProxyPreferencePage();
-//				page.init(PlatformUI.getWorkbench());
-//				TasksUiUtil.showPreferencePage(TasksUiUtil.PREFS_PAGE_ID_NET_PROXY, page);
-//			}
-//
-//			public void linkEntered(HyperlinkEvent e) {
-//				// ignore
-//			}
-//
-//			public void linkExited(HyperlinkEvent e) {
-//				// ignore
-//			}
-//		});		
+			public void linkActivated(HyperlinkEvent e) {
+				ProxyPreferencePage page = new ProxyPreferencePage();
+				page.init(PlatformUI.getWorkbench());
+				TasksUiUtil.showPreferencePage(TasksUiUtil.PREFS_PAGE_ID_NET_PROXY, page);
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+		});		
 		
 		systemProxyButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
