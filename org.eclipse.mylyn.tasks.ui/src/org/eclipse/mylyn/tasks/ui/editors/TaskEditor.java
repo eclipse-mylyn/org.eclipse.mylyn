@@ -570,6 +570,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 		String kindLabel = taskData.getTaskKind();
 		String idLabel = taskData.getId();
+		if(taskData.isNew()) {
+			kindLabel = "New Task";
+			idLabel = "";
+		}
 
 		if (idLabel != null) {
 			getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
