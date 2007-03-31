@@ -49,6 +49,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
 
+	public static final ImageDescriptor REPOSITORY_SMALL = create(T_OBJ, "repository-small.gif");
+	
 	public static final ImageDescriptor REPOSITORY_NEW = create("etool16", "repository-new.gif");
 
 	public static final ImageDescriptor REPOSITORIES = create("eview16", "repositories.gif");
@@ -83,6 +85,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
  
+	public static final ImageDescriptor BROWSER_SMALL = create(T_OBJ, "browser-small.gif"); 
+	
 	public static final ImageDescriptor OVERLAY_SYNCHRONIZING = create(T_EVIEW, "overlay-synchronizing.gif");
 
 	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
@@ -177,6 +181,8 @@ public class TasksUiImages {
 	
 	public static final ImageDescriptor REFRESH = create(T_ELCL, "refresh.gif");
 
+	public static final ImageDescriptor REFRESH_SMALL = create(T_ELCL, "refresh-small.gif");
+	
 	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_ACTIVE_CENTERED = createSize(create(T_TOOL, "task-active-centered.gif"), SIZE);
@@ -210,6 +216,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CALENDAR = create(T_TOOL, "calendar.gif");
 
+	public static final ImageDescriptor CALENDAR_SMALL = create(T_OBJ, "calendar-small.gif");
+	
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 	
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");

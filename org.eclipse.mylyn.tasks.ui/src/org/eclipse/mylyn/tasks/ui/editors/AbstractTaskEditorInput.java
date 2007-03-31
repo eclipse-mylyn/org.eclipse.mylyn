@@ -79,7 +79,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	}
 	
 	public ImageDescriptor getImageDescriptor() {
-		return TasksUiImages.REPOSITORY;
+		return TasksUiImages.REPOSITORY_SMALL;
 	}
 
 	public IPersistableElement getPersistable() {

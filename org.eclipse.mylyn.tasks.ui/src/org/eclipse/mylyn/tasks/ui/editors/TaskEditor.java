@@ -414,7 +414,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				taskEditorInput = (TaskEditorInput) getEditorInput();
 				task = taskEditorInput.getTask();
 				setPartName(taskEditorInput.getLabel());
-				setPageImage(0, TasksUiImages.getImage(TasksUiImages.CALENDAR));
+				setPageImage(0, TasksUiImages.getImage(TasksUiImages.CALENDAR_SMALL));
 			}
 
 			int selectedIndex = index;
@@ -458,7 +458,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 			String urlToOpen = getUrl();
 			if (urlToOpen != null && !urlToOpen.equals("")) {
 				browserPageIndex = createBrowserPage(urlToOpen);
-				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.OVERLAY_WEB));
+				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
 				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
 					selectedIndex = browserPageIndex;
 				}

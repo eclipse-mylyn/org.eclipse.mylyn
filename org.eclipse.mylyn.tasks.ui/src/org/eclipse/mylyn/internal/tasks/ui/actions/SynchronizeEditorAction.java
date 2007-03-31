@@ -38,7 +38,7 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 		super(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.REFRESH);
+		setImageDescriptor(TasksUiImages.REFRESH_SMALL);
 		// setAccelerator(SWT.MOD1 + 'r');
 	}
 
