@@ -550,7 +550,7 @@
            id="org.eclipse.mylar.tasks.ui.colors.category.gradient.end"
            isEditable="true"
            label="Task List - Category Gradient Bottom"
-           value="220,220,220"> 
+           value="234,233,237"> <!-- was all 220 -->
          <description>
             Background end color for Task List category gradients.
          </description>
