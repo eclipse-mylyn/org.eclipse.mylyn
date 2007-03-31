@@ -39,7 +39,7 @@ public class WebClientUtil {
 
 	public static final int CONNNECT_TIMEOUT = 30000;
 
-	public static final int SOCKET_TIMEOUT = 10000;
+	public static final int SOCKET_TIMEOUT = 17000;
 
 	private static final int HTTP_PORT = 80;
 
