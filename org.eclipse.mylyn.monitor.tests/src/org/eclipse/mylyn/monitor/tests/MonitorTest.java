@@ -90,7 +90,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		assertEquals(0, browserMonitor.getAcceptedUrls().size());
 	}
 
-	@SuppressWarnings({ "deprecation", "unchecked" })
+	@SuppressWarnings( { "deprecation", "unchecked" })
 	public void testLogging() throws InterruptedException {
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		logger.stopMonitoring();
@@ -130,8 +130,9 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 
 		perspectiveMonitor.perspectiveActivated(null, perspective);
 	}
-	
+
 	boolean monitorRunning = false;
+
 	public void startMonitoring() {
 		monitorRunning = true;
 	}
@@ -145,12 +146,12 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		MylarUsageMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
 		assertFalse(monitorRunning);
-		
+
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
 		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		assertFalse(monitorRunning);
-		
+
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
 		MylarUsageMonitorPlugin.getDefault().stopMonitoring();

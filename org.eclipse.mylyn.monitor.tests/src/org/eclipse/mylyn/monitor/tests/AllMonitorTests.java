@@ -29,7 +29,7 @@ public class AllMonitorTests {
 		suite.addTest(AllMonitorUsageTests.suite());
 		suite.addTest(AllMonitorReportTests.suite());
 		// suite.addTestSuite(TaskTimerTest.class);
-		suite.addTestSuite(StatisticsReportingTest.class); 
+		suite.addTestSuite(StatisticsReportingTest.class);
 		suite.addTestSuite(InteractionLoggerTest.class);
 		suite.addTestSuite(ActiveTimerTest.class);
 		suite.addTestSuite(StatisticsLoggingTest.class);
