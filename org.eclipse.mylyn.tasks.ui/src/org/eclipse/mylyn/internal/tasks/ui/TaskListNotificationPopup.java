@@ -45,8 +45,6 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
 
-	private FormToolkit toolkit;
-
 	private Form form;
 
 	private Rectangle bounds;
@@ -55,8 +53,11 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private Composite sectionClient;
 
+	private FormToolkit toolkit;
+
 	public TaskListNotificationPopup(Shell parent) {
 		super(parent, PopupDialog.INFOPOPUP_SHELLSTYLE | SWT.ON_TOP, false, false, false, false, null, null);
+		toolkit = new FormToolkit(parent.getDisplay());
 	}
 
 	public void setContents(List<ITaskListNotification> notifications) {
@@ -74,7 +75,6 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 		getShell().setText(MYLAR_NOTIFICATION_LABEL);
 
-		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createForm(parent);
 		form.getBody().setLayout(new GridLayout());
 
@@ -212,7 +212,9 @@ public class TaskListNotificationPopup extends PopupDialog {
 	@Override
 	public boolean close() {
 		if (toolkit != null) {
-			toolkit.dispose();
+			if (toolkit.getColors() != null) {
+				toolkit.dispose();
+			}
 		}
 		return super.close();
 	}
