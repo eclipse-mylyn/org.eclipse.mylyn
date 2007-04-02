@@ -387,7 +387,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					currentHandle = event.getStructureHandle();
 				}
 			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
-				if (!currentHandle.equals("")) {
+				if (currentTask != null && !currentHandle.equals("")) {
 					long active = event.getEndDate().getTime() - event.getDate().getTime();
 
 					// add to running total
@@ -405,7 +405,6 @@ public class TaskListManager implements IPropertyChangeListener {
 					} else {
 						taskElapsedTimeMap.put(currentTask, active);
 					}
-
 				}
 
 			}
