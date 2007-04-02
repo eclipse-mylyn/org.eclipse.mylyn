@@ -52,11 +52,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	public String getText(Object object) {
 		if (object instanceof TaskRepository) {
 			TaskRepository repository = (TaskRepository) object;
-			if (repository.getRepositoryLabel() != null && repository.getRepositoryLabel().length() > 0) {
-				return repository.getRepositoryLabel();
-			} else {
-				return repository.getUrl();
-			}
+			return repository.getRepositoryLabel();
 		} else if (object instanceof AbstractRepositoryConnector) {
 			return ((AbstractRepositoryConnector) object).getLabel();
 		} else {

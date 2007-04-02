@@ -10,6 +10,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -22,8 +23,8 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 		if (e1 instanceof TaskRepository && e2 instanceof TaskRepository) {
 			TaskRepository t1 = (TaskRepository) e1;
 			TaskRepository t2 = (TaskRepository) e2;
-			String label1 = t1.getRepositoryLabel();
-			String label2 = t2.getRepositoryLabel();
+			String label1 = t1.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+			String label2 = t2.getProperty(IRepositoryConstants.PROPERTY_LABEL);
 			
 			if (!t1.getKind().equals(t2.getKind())) {
 				return (t1.getKind()).compareTo(t2.getKind());

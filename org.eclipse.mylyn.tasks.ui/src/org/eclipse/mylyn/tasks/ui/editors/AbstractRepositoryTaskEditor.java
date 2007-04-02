@@ -656,13 +656,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				composite.setLayout(new RowLayout());
 				composite.setBackground(null);
 				String label = repository.getRepositoryLabel();
-				if (label == null || label.equals("")) {
-					if (repository.getUrl().indexOf("//") != -1) {
-						label = repository.getUrl().substring((repository.getUrl().indexOf("//") + 2));
-					} else {
-						label = repository.getUrl();
-					}
-				}
+				if (label.indexOf("//") != -1) {
+					label = label.substring((repository.getUrl().indexOf("//") + 2));
+				} 
 
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
 				link.setText(label);

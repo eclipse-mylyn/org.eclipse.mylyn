@@ -364,8 +364,16 @@ public class TaskRepository {
 		this.properties.put(IRepositoryConstants.PROPERTY_LABEL, repositoryLabel);
 	}
 
+	/**
+	 * @return	the URL if the label property is not set
+	 */
 	public String getRepositoryLabel() {
-		return this.properties.get(IRepositoryConstants.PROPERTY_LABEL);
+		String label = properties.get(IRepositoryConstants.PROPERTY_LABEL);
+		if (label != null && label.length() > 0) {
+			return label;
+		} else {
+			return getUrl();
+		}
 	}
 
 	public Map<String, String> getProperties() {

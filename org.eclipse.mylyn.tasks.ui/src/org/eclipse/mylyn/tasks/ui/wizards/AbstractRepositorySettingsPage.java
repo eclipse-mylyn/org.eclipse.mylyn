@@ -27,6 +27,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.IRepositoryConstants;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -293,7 +294,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				oldProxyPassword = "";
 
 			try {
-				String repositoryLabel = repository.getRepositoryLabel();
+				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
 				if (repositoryLabel != null && repositoryLabel.length() > 0) {
 					// repositoryLabelCombo.add(repositoryLabel);
 					// repositoryLabelCombo.select(0);

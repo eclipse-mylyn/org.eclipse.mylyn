@@ -236,13 +236,7 @@ public class TaskListToolTipHandler {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				if (repository != null && repository.getRepositoryLabel() != null
-						&& !repository.getRepositoryLabel().equals("")) {
-					tooltip += "\n" + repository.getRepositoryLabel();
-				} else {
-					tooltip += "\n" + repositoryTask.getRepositoryUrl();
-				}
-
+				tooltip += "\n" + repository.getRepositoryLabel();
 				tooltip += formatScheduledFor(repositoryTask);
 
 				if (repositoryTask.getStatus() != null) {
