@@ -831,8 +831,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * Utility method to create text field sets backgournd to
-	 * TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED if attribute has .
+	 * Utility method to create text field sets background to
+	 * TaskListColorsAndFonts.COLOR_ATTRIBUTE_CHANGED if attribute has changed.
 	 * 
 	 * @param composite
 	 * @param attribute
@@ -848,7 +848,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		if ((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
 			text = new Text(composite, style);
-			toolkit.adapt(text, true, true);
+			toolkit.adapt(text, true, true);			
+			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(value);
 		} else {
 			text = toolkit.createText(composite, value, style);
