@@ -41,6 +41,12 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.TextViewer;
@@ -90,6 +96,7 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
@@ -134,6 +141,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RetargetAction;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -148,6 +156,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.themes.IThemeManager;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -973,6 +982,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
 					text.setData(attribute);
+					
+					if (hasContentAssist(attribute)) {
+						ContentAssistCommandAdapter adapter = applyContentAssist(text, attribute);
+						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+					}
 				}
 
 				currentCol += 2;
@@ -990,6 +1004,61 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		}
 		return attributesComposite;
+	}
+
+	/**
+	 * Adds content assist to the given text field.
+	 * @param text text field to decorate.
+	 * @return the ContentAssistCommandAdapter for the field. 
+	 */
+	protected ContentAssistCommandAdapter applyContentAssist(Text text, RepositoryTaskAttribute attribute) {
+		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
+		controlDecoration.setMarginWidth(0);
+		controlDecoration.setShowHover(true);
+		controlDecoration.setShowOnlyOnFocus(true);
+		
+		FieldDecoration contentProposalImage = 
+			FieldDecorationRegistry.getDefault().getFieldDecoration(
+				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);			
+		controlDecoration.setImage(contentProposalImage.getImage());
+
+		TextContentAdapter textContentAdapter = new TextContentAdapter();
+		IContentProposalProvider proposalProvider = createContentProposalProvider(attribute);
+		
+		ContentAssistCommandAdapter adapter = 
+			new ContentAssistCommandAdapter(
+					text, 
+					textContentAdapter, 
+					proposalProvider, 
+					"org.eclipse.ui.edit.text.contentAssist.proposals", 
+					new char[0]);
+		
+		IBindingService bindingService = 
+			(IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		controlDecoration.setDescriptionText(NLS.bind(
+			"Content Assist Available ({0})",
+			bindingService.getBestActiveBindingFormattedFor(adapter.getCommandId())));
+		
+		return adapter;
+	}
+
+	/** 
+	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
+	 * @param attribute attribute for which to provide content assist.
+	 * @return the IContentProposalProvider.
+	 */
+	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
+		return null;
+	}
+
+	/**
+	 * Called to check if there's content assist available for the given attribute.
+	 * 
+	 * @param attribute the attribute
+	 * @return true if content assist is available for the specified attribute.
+	 */
+	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
+		return false;
 	}
 
 	/**
