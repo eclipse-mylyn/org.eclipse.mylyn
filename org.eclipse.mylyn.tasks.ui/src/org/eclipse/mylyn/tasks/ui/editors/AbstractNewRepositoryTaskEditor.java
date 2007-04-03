@@ -79,7 +79,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
-	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the summary text.\nDuplicate search currently only supports stack trace matching.";
+	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
 
 	protected Button searchForDuplicates;
 
@@ -431,15 +431,19 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 
-		searchForDuplicates = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-		GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-		searchForDuplicates.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				searchForDuplicates();
-			}
-		});
+		SearchHitCollector collector = getDuplicateSearchCollector("");
+		if (collector != null) {
 
+			searchForDuplicates = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+			GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
+			searchForDuplicates.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					searchForDuplicates();
+				}
+			});
+		}
+		
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
