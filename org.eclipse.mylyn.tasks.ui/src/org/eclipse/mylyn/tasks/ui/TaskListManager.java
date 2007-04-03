@@ -271,7 +271,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
 				.getInteractionHistory();
 		for (InteractionEvent event : events) {
-			parseInteractionEvent(event);
+			try {
+				parseInteractionEvent(event);
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Error parsing interaction event", false);
+			}
 		}
 		taskActivityHistoryInitialized = true;
 		parseFutureReminders();
@@ -406,7 +410,6 @@ public class TaskListManager implements IPropertyChangeListener {
 						taskElapsedTimeMap.put(currentTask, active);
 					}
 				}
-
 			}
 		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
 			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
