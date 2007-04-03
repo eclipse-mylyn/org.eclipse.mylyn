@@ -497,6 +497,7 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		// setContentDescription(name);
 		setPartName(name);
 		setTitleToolTip(name);
+		updateFormTitle();
 	}
 
 	public void showBusy(boolean busy) {
@@ -517,7 +518,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	protected void createHeaderContents(IManagedForm headerForm) {
 		getToolkit().decorateFormHeading(headerForm.getForm().getForm());
 		headerForm.getForm().setImage(TasksUiImages.getImage(TasksUiImages.TASK));
-
+		updateFormTitle();
+	}
+	
+	protected void updateFormTitle() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
 			ITask task = ((TaskEditorInput) input).getTask();
