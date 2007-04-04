@@ -28,7 +28,6 @@ public abstract class AbstractUserActivityMonitor {
 	public void setLastEventTime(long lastEventTime) {
 		synchronized (this) {			
 			lastEventTimeStamp = lastEventTime;
-			System.err.println(">>> "+lastEventTimeStamp);
 		}
 	}
 
