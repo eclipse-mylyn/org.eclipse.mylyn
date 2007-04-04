@@ -274,7 +274,7 @@ public class DatePicker extends Composite {
 			dateText.setText(simpleDateFormat.format(currentDate));
 		} else {
 			dateText.setEnabled(false);
-			dateText.setText(initialText);
+			dateText.setText(LABEL_CHOOSE);
 			dateText.setEnabled(true);
 		}
 	}
