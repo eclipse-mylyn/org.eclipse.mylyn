@@ -26,6 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -59,6 +60,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.themes.IThemeManager;
 
@@ -383,7 +385,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		timeSection.setLayoutData(gd);
 
 		Composite timeComposite = toolkit.createComposite(timeSection);
-		gl = new GridLayout(4, true);
+		gl = new GridLayout(4, false);
 		timeComposite.setLayout(gl);
 		gd = new GridData();
 		gd.horizontalSpan = 5;
@@ -447,7 +449,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null) {
 			createLabel(timeComposite, attribute);
 
-			deadlinePicker = new DatePicker(timeComposite, /* SWT.NONE */SWT.BORDER, taskData
+			
+			Composite dateWithClear = toolkit.createComposite(timeComposite);
+			GridLayout layout = new GridLayout(2, false);
+			layout.marginWidth = 1;
+			dateWithClear.setLayout(layout);
+			
+			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, taskData
 					.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
@@ -478,6 +486,20 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 					}
 				}
 			});
+
+			ImageHyperlink clearDeadlineDate = toolkit.createImageHyperlink(dateWithClear, SWT.NONE);
+			clearDeadlineDate.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+			clearDeadlineDate.setToolTipText("Clear");
+			clearDeadlineDate.addHyperlinkListener(new HyperlinkAdapter() {
+
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					taskData.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), "");
+					attributeChanged(taskData.getAttribute(BugzillaReportElement.DEADLINE.getKeyString()));
+					deadlinePicker.setDate(null);
+				}
+			});
+
 		}
 
 		timeSection.setClient(timeComposite);

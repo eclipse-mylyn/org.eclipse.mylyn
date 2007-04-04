@@ -886,6 +886,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			label = toolkit.createLabel(composite, attribute.getName());
 		}
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 		return label;
 	}
 
