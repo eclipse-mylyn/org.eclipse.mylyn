@@ -9,19 +9,30 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.core;
+package org.eclipse.mylar.monitor.ui;
 
 /**
  * @author Mik Kersten
+ * @author Rob Elves
  */
-public interface IActivityTimerListener {
-	
-	/**
-	 * @param start time in milliseconds
-	 * @param end time in milliseconds
-	 */
-	public void fireActive(long start, long end);
-	
-	public void fireInactive();
+public abstract class AbstractUserActivityMonitor {
 
+	private long lastEventTimeStamp = -1;
+
+	public long getLastInteractionTime() {
+		synchronized (this) {
+			return lastEventTimeStamp;
+		}
+	}
+
+	public void setLastEventTime(long lastEventTime) {
+		synchronized (this) {			
+			lastEventTimeStamp = lastEventTime;
+			System.err.println(">>> "+lastEventTimeStamp);
+		}
+	}
+
+	public abstract void start();
+
+	public abstract void stop();
 }
