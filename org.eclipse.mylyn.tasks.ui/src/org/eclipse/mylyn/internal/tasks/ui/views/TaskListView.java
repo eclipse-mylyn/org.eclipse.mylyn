@@ -107,10 +107,18 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Scrollable;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
@@ -250,9 +258,9 @@ public class TaskListView extends ViewPart {
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
 
-//	private Color categoryGradientStart;
-//
-//	private Color categoryGradientEnd;
+	private Color categoryGradientStart;
+
+	private Color categoryGradientEnd;
 
 	private final static int MAX_SELECTION_HISTORY_SIZE = 10;
 
@@ -295,40 +303,59 @@ public class TaskListView extends ViewPart {
 	 */
 	protected boolean isPaused = false;
 
-//	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
-//		public void handleEvent(Event event) {
-//			if (event.item.getData() instanceof AbstractTaskContainer) {
-//				Scrollable scrollable = (Scrollable) event.widget;
-//				GC gc = event.gc;
-//
-//				Rectangle area = scrollable.getClientArea();
-//				Rectangle rect = event.getBounds();
-//
-//				/* Paint the selection beyond the end of last column */
-//				expandRegion(event, scrollable, gc, area);
-//
-//				/* Draw Gradient Rectangle */
-//				Color oldForeground = gc.getForeground();
-//				Color oldBackground = gc.getBackground();
-//
-//				gc.setForeground(categoryGradientStart);
-//				gc.setBackground(categoryGradientEnd);
-//				gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
-//
-//				/* Bottom Line */
-//				gc.setForeground(categoryGradientEnd);
-//				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
-//
-//				gc.setForeground(oldForeground);
-//				gc.setBackground(oldBackground);
-//
-//				/* Mark as Background being handled */
-//				event.detail &= ~SWT.BACKGROUND;
-//			}
-//		}
-//	};
-//
-//	private boolean gradientListenerAdded = false;
+	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
+		public void handleEvent(Event event) {
+			if (event.item.getData() instanceof AbstractTaskContainer) {
+				Scrollable scrollable = (Scrollable) event.widget;
+				GC gc = event.gc;
+
+				Rectangle area = scrollable.getClientArea();
+				Rectangle rect = event.getBounds();
+
+				/* Paint the selection beyond the end of last column */
+				expandRegion(event, scrollable, gc, area);
+
+				/* Draw Gradient Rectangle */
+				Color oldForeground = gc.getForeground();
+				Color oldBackground = gc.getBackground();
+
+				gc.setForeground(categoryGradientStart);
+				gc.setBackground(categoryGradientEnd);
+				gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
+
+				/* Bottom Line */
+				gc.setForeground(categoryGradientEnd);
+				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
+
+				gc.setForeground(oldForeground);
+				gc.setBackground(oldBackground);
+
+				/* Mark as Background being handled */
+				event.detail &= ~SWT.BACKGROUND;
+			}
+		}
+
+		private void expandRegion(Event event, Scrollable scrollable, GC gc, Rectangle area) {
+			int columnCount;
+			if (scrollable instanceof Table)
+				columnCount = ((Table) scrollable).getColumnCount();
+			else
+				columnCount = ((Tree) scrollable).getColumnCount();
+
+			if (event.index == columnCount - 1 || columnCount == 0) {
+				int width = area.x + area.width - event.x;
+				if (width > 0) {
+					Region region = new Region();
+					gc.getClipping(region);
+					region.add(event.x, event.y, width, event.height);
+					gc.setClipping(region);
+					region.dispose();
+				}
+			}
+		}
+	};
+
+	private boolean gradientListenerAdded = false;
 
 	private final ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 		public void taskActivated(final ITask task) {
@@ -489,19 +516,19 @@ public class TaskListView extends ViewPart {
 	};
 
 	private void updateGradientColors() {
-//		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
-//				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
-//		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
-//				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
+		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
+		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_END);
 
-//		if (gradientListenerAdded == false && categoryGradientStart != null
-//				&& !categoryGradientStart.equals(categoryGradientEnd)) {
-//			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
-//			gradientListenerAdded = true;
-//		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
-//			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
-//			gradientListenerAdded = false;
-//		}
+		if (gradientListenerAdded == false && categoryGradientStart != null
+				&& !categoryGradientStart.equals(categoryGradientEnd)) {
+			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
+			gradientListenerAdded = true;
+		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
+			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
+			gradientListenerAdded = false;
+		}
 	}
 
 	public static TaskListView getFromActivePerspective() {
@@ -931,12 +958,12 @@ public class TaskListView extends ViewPart {
 			if (!filteredTree.getFilterControl().getText().equals("")) {
 				filteredTree.getFilterControl().setText("");
 			}
-			if(presentation.getPresentationName().equals(PRESENTATION_SCHEDULED)) {
+			if (presentation.getPresentationName().equals(PRESENTATION_SCHEDULED)) {
 				TasksUiPlugin.getTaskListManager().parseFutureReminders();
 			}
 			getViewer().setContentProvider(presentation.getContentProvider());
 			refreshAndFocus(isFocusedMode());
-			
+
 			currentPresentation = presentation;
 		} finally {
 			getViewer().getControl().setRedraw(true);
@@ -983,25 +1010,6 @@ public class TaskListView extends ViewPart {
 			});
 		}
 	}
-
-//	private void expandRegion(Event event, Scrollable scrollable, GC gc, Rectangle area) {
-//		int columnCount;
-//		if (scrollable instanceof Table)
-//			columnCount = ((Table) scrollable).getColumnCount();
-//		else
-//			columnCount = ((Tree) scrollable).getColumnCount();
-//
-//		if (event.index == columnCount - 1 || columnCount == 0) {
-//			int width = area.x + area.width - event.x;
-//			if (width > 0) {
-//				Region region = new Region();
-//				gc.getClipping(region);
-//				region.add(event.x, event.y, width, event.height);
-//				gc.setClipping(region);
-//				region.dispose();
-//			}
-//		}
-//	}
 
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(),
@@ -1501,8 +1509,8 @@ public class TaskListView extends ViewPart {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST),
-					"Mylar context capture paused");
+			statusLineManager
+					.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylar context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");
