@@ -365,7 +365,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// "Editor will refresh with new incoming
 							// changes.");
 
-							
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);
 
@@ -380,8 +379,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							submitting = false;
 							updateContents();
 						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+							if (!submitting) {
+								updateContents();
+							}
 							submitting = false;
-							updateContents();
 						}
 					}
 				}
@@ -656,7 +657,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				String label = repository.getRepositoryLabel();
 				if (label.indexOf("//") != -1) {
 					label = label.substring((repository.getUrl().indexOf("//") + 2));
-				} 
+				}
 
 				Hyperlink link = new Hyperlink(composite, SWT.NONE);
 				link.setText(label);
@@ -669,7 +670,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						TasksUiUtil.openEditRepositoryWizard(repository);
 					}
 				});
-				
+
 				if (getActivityUrl() != null) {
 					ImageHyperlink hyperlink = toolkit.createImageHyperlink(composite, SWT.NONE);
 					hyperlink.setToolTipText(LABEL_HISTORY);
@@ -849,7 +850,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		if ((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
 			text = new Text(composite, style);
-			toolkit.adapt(text, true, true);			
+			toolkit.adapt(text, true, true);
 			text.setData(FormToolkit.KEY_DRAW_BORDER, Boolean.FALSE);
 			text.setText(value);
 		} else {
@@ -975,7 +976,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					text.setLayoutData(textData);
 					toolkit.paintBordersFor(textFieldComposite);
 					text.setData(attribute);
-					
+
 					if (hasContentAssist(attribute)) {
 						ContentAssistCommandAdapter adapter = applyContentAssist(text, attribute);
 						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
@@ -1001,43 +1002,40 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	/**
 	 * Adds content assist to the given text field.
-	 * @param text text field to decorate.
-	 * @return the ContentAssistCommandAdapter for the field. 
+	 * 
+	 * @param text
+	 *            text field to decorate.
+	 * @return the ContentAssistCommandAdapter for the field.
 	 */
 	protected ContentAssistCommandAdapter applyContentAssist(Text text, RepositoryTaskAttribute attribute) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
 		controlDecoration.setShowHover(true);
 		controlDecoration.setShowOnlyOnFocus(true);
-		
-		FieldDecoration contentProposalImage = 
-			FieldDecorationRegistry.getDefault().getFieldDecoration(
-				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);			
+
+		FieldDecoration contentProposalImage = FieldDecorationRegistry.getDefault().getFieldDecoration(
+				FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		controlDecoration.setImage(contentProposalImage.getImage());
 
 		TextContentAdapter textContentAdapter = new TextContentAdapter();
 		IContentProposalProvider proposalProvider = createContentProposalProvider(attribute);
-		
-		ContentAssistCommandAdapter adapter = 
-			new ContentAssistCommandAdapter(
-					text, 
-					textContentAdapter, 
-					proposalProvider, 
-					"org.eclipse.ui.edit.text.contentAssist.proposals", 
-					new char[0]);
-		
-		IBindingService bindingService = 
-			(IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
-		controlDecoration.setDescriptionText(NLS.bind(
-			"Content Assist Available ({0})",
-			bindingService.getBestActiveBindingFormattedFor(adapter.getCommandId())));
-		
+
+		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
+				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
+
+		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})", bindingService
+				.getBestActiveBindingFormattedFor(adapter.getCommandId())));
+
 		return adapter;
 	}
 
-	/** 
-	 * Creates an IContentProposalProvider to provide content assist proposals for the given attribute.
-	 * @param attribute attribute for which to provide content assist.
+	/**
+	 * Creates an IContentProposalProvider to provide content assist proposals
+	 * for the given attribute.
+	 * 
+	 * @param attribute
+	 *            attribute for which to provide content assist.
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
@@ -1045,9 +1043,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	/**
-	 * Called to check if there's content assist available for the given attribute.
+	 * Called to check if there's content assist available for the given
+	 * attribute.
 	 * 
-	 * @param attribute the attribute
+	 * @param attribute
+	 *            the attribute
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
@@ -1844,14 +1844,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
-		//Section newCommentSection = createSection(composite, getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
+		// Section newCommentSection = createSection(composite,
+		// getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 
 		Section newCommentSection = toolkit.createSection(composite, ExpandableComposite.TITLE_BAR);
 		newCommentSection.setText(getSectionLabel(SECTION_NAME.NEWCOMMENT_SECTION));
 		newCommentSection.setLayout(new GridLayout());
 		newCommentSection.setLayoutData(new GridData(GridData.FILL_BOTH));
-			
-			
+
 		Composite newCommentsComposite = toolkit.createComposite(newCommentSection);
 		newCommentsComposite.setLayout(new GridLayout());
 
@@ -1866,7 +1866,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		GridData addCommentsTextData = new GridData(GridData.FILL_BOTH);
 		addCommentsTextData.widthHint = DESCRIPTION_WIDTH;
-		//addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
+		// addCommentsTextData.heightHint = DESCRIPTION_HEIGHT;
 		addCommentsTextData.minimumHeight = DESCRIPTION_HEIGHT;
 		addCommentsTextData.grabExcessHorizontalSpace = true;
 		newCommentTextViewer.getControl().setLayoutData(addCommentsTextData);
@@ -2703,7 +2703,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void refreshEditor() {
 		try {
 			if (!this.isDisposed) {
-
 				if (this.isDirty) {
 					this.doSave(new NullProgressMonitor());
 				}
