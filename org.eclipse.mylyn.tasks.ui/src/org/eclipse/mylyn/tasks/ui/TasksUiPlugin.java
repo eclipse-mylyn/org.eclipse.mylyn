@@ -403,14 +403,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
 				for (RepositoryTemplate template : connector.getTemplates()) {
 					if (template.addAutomatically) {
-						TaskRepository taskRepository = taskRepositoryManager.getRepository(connector
-								.getRepositoryType(), template.repositoryUrl);
-						if (taskRepository == null) {
-							taskRepository = new TaskRepository(connector.getRepositoryType(), template.repositoryUrl,
-									template.version);
-							taskRepository.setRepositoryLabel(template.label);
-							taskRepository.setAnonymous(true);
-							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+						try {
+							TaskRepository taskRepository = taskRepositoryManager.getRepository(connector
+									.getRepositoryType(), template.repositoryUrl);
+							if (taskRepository == null) {
+								taskRepository = new TaskRepository(connector.getRepositoryType(),
+										template.repositoryUrl, template.version);
+								taskRepository.setRepositoryLabel(template.label);
+								taskRepository.setAnonymous(true);
+								taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+							}
+						} catch (Throwable t) {
+							MylarStatusHandler.fail(t, "Could not load repository template", false);
 						}
 					}
 				}
@@ -419,7 +423,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			readOfflineReports();
 			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
 				if (externalizer instanceof DelegatingTaskExternalizer) {
-					((DelegatingTaskExternalizer) externalizer).init(taskDataManager);
+					try {
+						((DelegatingTaskExternalizer) externalizer).init(taskDataManager);
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not initialize externalizer", false);
+					}
 				}
 			}
 
@@ -434,6 +442,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
+					// NOTE: failure in one part of the initialization should
+					// not prevent others
 					try {
 						TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
@@ -443,19 +453,31 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
 						}
 						taskListManager.initActivityHistory();
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not initialize task activity", false);
+					}
 
+					try {
 						taskListNotificationManager = new TaskListNotificationManager();
 						taskListNotificationManager.addNotificationProvider(REMINDER_NOTIFICATION_PROVIDER);
 						taskListNotificationManager.addNotificationProvider(INCOMING_NOTIFICATION_PROVIDER);
 						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 						getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not initialize notifications", false);
+					}
 
+					try {
 						taskListBackupManager = new TaskListBackupManager();
 						getPreferenceStore().addPropertyChangeListener(taskListBackupManager);
 
 						synchronizationScheduler = new TaskListSynchronizationScheduler(true);
 						synchronizationScheduler.startSynchJob();
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not initialize task list backup and synchronization", false);
+					}
 
+					try {
 						taskListSaveManager = new TaskListSaveManager();
 						taskListManager.setTaskListSaveManager(taskListSaveManager);
 
@@ -473,8 +495,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							repositoriesView.getViewer().refresh();
 						}
 						checkForCredentials();
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "Mylar Tasks UI start failed", false);
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
 					}
 				}
 			});

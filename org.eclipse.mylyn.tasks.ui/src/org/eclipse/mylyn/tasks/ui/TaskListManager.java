@@ -271,11 +271,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
 				.getInteractionHistory();
 		for (InteractionEvent event : events) {
-			try {
-				parseInteractionEvent(event);
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Error parsing interaction event", false);
-			}
+			parseInteractionEvent(event);
 		}
 		taskActivityHistoryInitialized = true;
 		parseFutureReminders();
@@ -358,70 +354,74 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
+		try {
+			if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+				if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 
-		if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+					ITask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+							event.getStructureHandle());
 
-				ITask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						event.getStructureHandle());
+					if (currentTask != null && activatedTask != null) {
+						if (!currentTask.equals(activatedTask)) {
 
-				if (currentTask != null && activatedTask != null) {
-					if (!currentTask.equals(activatedTask)) {
-
-						GregorianCalendar calendarEnd = new GregorianCalendar();
-						calendarEnd.setFirstDayOfWeek(startDay);
-						calendarEnd.setTime(event.getDate());
-						calendarEnd.getTime();
-						// Activation of different task before deactivation of
-						// previous, log was inconsistent,
-						// finish what we started
-						taskDeactivated(calendarEnd);
-					} else {
-						// skip re-activations of same task
-						return;
-					}
-				}
-
-				currentTask = activatedTask;
-				if (currentTask != null) {
-					GregorianCalendar calendar = new GregorianCalendar();
-					calendar.setFirstDayOfWeek(startDay);
-					calendar.setTime(event.getDate());
-					currentTaskStart = calendar;
-					currentHandle = event.getStructureHandle();
-				}
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
-				if (currentTask != null && !currentHandle.equals("")) {
-					long active = event.getEndDate().getTime() - event.getDate().getTime();
-
-					// add to running total
-					if (taskElapsedTimeMap.containsKey(currentTask)) {
-						long pastTime = taskElapsedTimeMap.get(currentTask);
-						taskElapsedTimeMap.put(currentTask, pastTime + active);
-						timeTicks++;
-						if (taskActivityHistoryInitialized && timeTicks > 3) {
-							// Save incase of system failure.
-							// TODO: request asynchronous save
-							ContextCorePlugin.getContextManager().saveActivityHistoryContext();
-							timeTicks = 0;
+							GregorianCalendar calendarEnd = new GregorianCalendar();
+							calendarEnd.setFirstDayOfWeek(startDay);
+							calendarEnd.setTime(event.getDate());
+							calendarEnd.getTime();
+							// Activation of different task before deactivation
+							// of
+							// previous, log was inconsistent,
+							// finish what we started
+							taskDeactivated(calendarEnd);
+						} else {
+							// skip re-activations of same task
+							return;
 						}
+					}
 
-					} else {
-						taskElapsedTimeMap.put(currentTask, active);
+					currentTask = activatedTask;
+					if (currentTask != null) {
+						GregorianCalendar calendar = new GregorianCalendar();
+						calendar.setFirstDayOfWeek(startDay);
+						calendar.setTime(event.getDate());
+						currentTaskStart = calendar;
+						currentHandle = event.getStructureHandle();
+					}
+				} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+					if (currentTask != null && !currentHandle.equals("")) {
+						long active = event.getEndDate().getTime() - event.getDate().getTime();
+
+						// add to running total
+						if (taskElapsedTimeMap.containsKey(currentTask)) {
+							long pastTime = taskElapsedTimeMap.get(currentTask);
+							taskElapsedTimeMap.put(currentTask, pastTime + active);
+							timeTicks++;
+							if (taskActivityHistoryInitialized && timeTicks > 3) {
+								// Save incase of system failure.
+								// TODO: request asynchronous save
+								ContextCorePlugin.getContextManager().saveActivityHistoryContext();
+								timeTicks = 0;
+							}
+
+						} else {
+							taskElapsedTimeMap.put(currentTask, active);
+						}
 					}
 				}
+			} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
+				if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
+						&& currentHandle.equals(event.getStructureHandle())) {
+					GregorianCalendar calendarEnd = new GregorianCalendar();
+					calendarEnd.setFirstDayOfWeek(startDay);
+					calendarEnd.setTime(event.getDate());
+					calendarEnd.getTime();
+					taskDeactivated(calendarEnd);
+				} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+					// Deactivated attention events not currently used (ignored)
+				}
 			}
-		} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
-			if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
-					&& currentHandle.equals(event.getStructureHandle())) {
-				GregorianCalendar calendarEnd = new GregorianCalendar();
-				calendarEnd.setFirstDayOfWeek(startDay);
-				calendarEnd.setTime(event.getDate());
-				calendarEnd.getTime();
-				taskDeactivated(calendarEnd);
-			} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
-				// Deactivated attention events not currently used (ignored)
-			}
+		} catch (Throwable t) {
+			MylarStatusHandler.fail(t, "Error parsing interaction event", false);
 		}
 	}
 
@@ -758,8 +758,8 @@ public class TaskListManager implements IPropertyChangeListener {
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {
 				listener.taskListRead();
 			}
-		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Could not read task list");
+		} catch (Throwable t) {
+			MylarStatusHandler.fail(t, "Could not read task list, consider restoring via view menu", true);
 			return false;
 		}
 		return true;

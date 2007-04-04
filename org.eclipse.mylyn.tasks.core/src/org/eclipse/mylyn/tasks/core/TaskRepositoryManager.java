@@ -232,7 +232,11 @@ public class TaskRepositoryManager {
 		loadRepositories(repositoriesFilePath);
 
 		for (ITaskRepositoryListener listener : listeners) {
-			listener.repositoriesRead();
+			try {
+				listener.repositoriesRead();
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "repository listener failed", false);
+			}
 		}
 		return repositoryMap;
 	}
