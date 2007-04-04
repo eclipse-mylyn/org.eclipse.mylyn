@@ -461,8 +461,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected Map<SECTION_NAME, String> alternateSectionLabels = new HashMap<SECTION_NAME, String>();
 
-	private String kindLabel;
-
 	private Menu menu;
 
 	protected class ComboSelectionListener extends SelectionAdapter {
@@ -671,6 +669,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						TasksUiUtil.openEditRepositoryWizard(repository);
 					}
 				});
+				
+				if (getActivityUrl() != null) {
+					ImageHyperlink hyperlink = toolkit.createImageHyperlink(composite, SWT.NONE);
+					hyperlink.setToolTipText(LABEL_HISTORY);
+					hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_HISTORY));
+					hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+						@Override
+						public void linkActivated(HyperlinkEvent e) {
+							if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
+								TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
+								mylarTaskEditor.displayInBrowser(getActivityUrl());
+							}
+						}
+					});
+				}
 
 				return composite;
 			}
@@ -806,23 +819,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			Text text = new Text(nameValue, SWT.FLAT | SWT.READ_ONLY);
 			toolkit.adapt(text, true, true);
 			text.setText(modifiedDateString);
-		}
-
-		if (getActivityUrl() != null) {
-			String linkName = LABEL_HISTORY;
-			ImageHyperlink hyperlink = toolkit.createImageHyperlink(headerInfoComposite, SWT.NONE);
-			hyperlink.setText(linkName);
-			hyperlink.setToolTipText(kindLabel + " " + LABEL_HISTORY);
-			hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_HISTORY));
-			hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-				@Override
-				public void linkActivated(HyperlinkEvent e) {
-					if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
-						TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
-						mylarTaskEditor.displayInBrowser(getActivityUrl());
-					}
-				}
-			});
 		}
 	}
 
