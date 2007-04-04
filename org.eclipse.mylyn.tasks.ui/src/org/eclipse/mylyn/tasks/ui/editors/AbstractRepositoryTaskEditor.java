@@ -671,21 +671,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				});
 
-				if (getActivityUrl() != null) {
-					ImageHyperlink hyperlink = toolkit.createImageHyperlink(composite, SWT.NONE);
-					hyperlink.setToolTipText(LABEL_HISTORY);
-					hyperlink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_HISTORY));
-					hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-						@Override
-						public void linkActivated(HyperlinkEvent e) {
-							if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
-								TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
-								mylarTaskEditor.displayInBrowser(getActivityUrl());
-							}
-						}
-					});
-				}
-
 				return composite;
 			}
 		};
@@ -696,6 +681,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
+			}
+
+			if (getActivityUrl() != null) {
+				Action historyAction = new Action() {
+
+					@Override
+					public void run() {
+						if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
+							TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
+							mylarTaskEditor.displayInBrowser(getActivityUrl());
+						}
+					}
+
+				};
+
+				historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
+				historyAction.setToolTipText(LABEL_HISTORY);
+				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
 
 			// Header drop down menu additions:
