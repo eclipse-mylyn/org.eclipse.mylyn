@@ -12,17 +12,18 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.net.*;
-import java.net.Proxy.Type;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
-import org.eclipse.core.net.proxy.IProxyData;
-import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.internal.tasks.core.Activator;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -365,7 +366,7 @@ public class TaskRepository {
 	}
 
 	/**
-	 * @return	the URL if the label property is not set
+	 * @return the URL if the label property is not set
 	 */
 	public String getRepositoryLabel() {
 		String label = properties.get(IRepositoryConstants.PROPERTY_LABEL);
@@ -400,7 +401,7 @@ public class TaskRepository {
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
 		if (useDefaultProxy()) {
-			proxy = getSystemProxy();
+			proxy = WebClientUtil.getPlatformProxy();
 		} else {
 
 			String proxyHost = getProperty(PROXY_HOSTNAME);
@@ -416,37 +417,18 @@ public class TaskRepository {
 		return proxy;
 	}
 
-	public boolean useDefaultProxy() {
-		return "true".equals(getProperty(PROXY_USEDEFAULT)) || (getProperty(PROXY_HOSTNAME) == null);
-	}
-
 	/**
-	 * TODO: move utility method, should use TaskRepository.getProxy()
+	 * Use platform proxy settings
 	 */
-	public static Proxy getSystemProxy() {
-		Proxy proxy = Proxy.NO_PROXY;
-		IProxyService service = Activator.getInstance().getProxyService();
-		if (service != null && service.isProxiesEnabled()) {
-			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
-			if (data.getHost() != null) {
-				String proxyHost = data.getHost();
-				int proxyPort = data.getPort();
-				// Change the IProxyData default port to the Java default port
-				if (proxyPort == -1)
-					proxyPort = 0;
-
-				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
-				proxy = new Proxy(Type.HTTP, sockAddr);
-			}
-		}
-		return proxy;
+	public boolean useDefaultProxy() {
+		return "true".equals(getProperty(PROXY_USEDEFAULT));
 	}
 
 	public void setAnonymous(boolean b) {
 		properties.put(ANONYMOUS_LOGIN, String.valueOf(b));
 	}
 
-	public boolean isAnonymous() {				
+	public boolean isAnonymous() {
 		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
 	}
 }

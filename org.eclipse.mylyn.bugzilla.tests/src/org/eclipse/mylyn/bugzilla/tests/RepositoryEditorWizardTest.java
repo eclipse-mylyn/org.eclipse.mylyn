@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylar.core.net.WebClientUtil;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
@@ -61,12 +62,12 @@ public class RepositoryEditorWizardTest extends TestCase {
 		// BugzillaClient client =
 		// BugzillaClientFactory.createClient(page.getServerUrl(),
 		// page.getUserName(), page.getPassword(), page.getHttpAuthUserId(),
-		// page.getHttpAuthPassword(), page.getCharacterEncoding());		
+		// page.getHttpAuthPassword(), page.getCharacterEncoding());
 		page.setPassword("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository
-					.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getPlatformProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (CoreException e) {
 			return;
@@ -82,8 +83,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUserId("bogus");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository
-					.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getPlatformProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (CoreException e) {
 			return;
@@ -99,8 +100,8 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page.setUrl("http://invalid");
 		try {
 			BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository
-					.getSystemProxy(), page.getCharacterEncoding());
+					.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil
+					.getPlatformProxy(), page.getCharacterEncoding());
 			client.validate();
 		} catch (CoreException e) {
 			assertTrue(e.getStatus().getException() instanceof UnknownHostException);
@@ -135,7 +136,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository.getSystemProxy(),
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getPlatformProxy(),
 				page.getCharacterEncoding());
 		client.validate();
 		page.setUrl(IBugzillaConstants.TEST_BUGZILLA_218_URL);
@@ -155,7 +156,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		dialog.create();
 		BugzillaRepositorySettingsPage page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		BugzillaClient client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page
-				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository.getSystemProxy(),
+				.getPassword(), page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getPlatformProxy(),
 				page.getCharacterEncoding());
 		client.validate();
 		page.setUserId("bogus");
@@ -170,7 +171,7 @@ public class RepositoryEditorWizardTest extends TestCase {
 		page = (BugzillaRepositorySettingsPage) wizard.getSettingsPage();
 		try {
 			client = BugzillaClientFactory.createClient(page.getServerUrl(), page.getUserName(), page.getPassword(),
-					page.getHttpAuthUserId(), page.getHttpAuthPassword(), TaskRepository.getSystemProxy(), page
+					page.getHttpAuthUserId(), page.getHttpAuthPassword(), WebClientUtil.getPlatformProxy(), page
 							.getCharacterEncoding());
 			client.validate();
 		} catch (CoreException e) {
