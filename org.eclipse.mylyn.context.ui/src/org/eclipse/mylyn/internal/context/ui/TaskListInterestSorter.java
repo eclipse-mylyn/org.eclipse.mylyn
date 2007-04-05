@@ -32,7 +32,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	@Override
-	public int compare(Viewer compareViewer, Object o1, Object o2) {		
+	public int compare(Viewer compareViewer, Object o1, Object o2) {
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
 		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
@@ -43,11 +43,13 @@ public class TaskListInterestSorter extends ViewerSorter {
 			if (o2 instanceof DateRangeContainer) {
 				DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
 				DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
-				return -1*dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+				return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
+			} else if (o2 instanceof ITask) {
+				return 1;
 			} else {
 				return -1;
 			}
-		} 
+		}
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof ITask) {
 			return 1;
 		}
@@ -68,29 +70,29 @@ public class TaskListInterestSorter extends ViewerSorter {
 				ITask task2 = null;
 				if (element1 instanceof AbstractQueryHit) {
 					task1 = ((AbstractQueryHit) element1).getCorrespondingTask();
-//					if (task1 == null) {
-//						return 1;
-//					}
+					// if (task1 == null) {
+					// return 1;
+					// }
 				} else if (element1 instanceof ITask) {
 					task1 = (ITask) element1;
 				}
 				if (element2 instanceof AbstractQueryHit) {
 					task2 = ((AbstractQueryHit) element2).getCorrespondingTask();
-//					if (task2 == null) {
-//						return -1;
-//					}
+					// if (task2 == null) {
+					// return -1;
+					// }
 				} else if (element2 instanceof ITask) {
 					task2 = (ITask) element2;
 				}
 
 				if (task1 == null && task2 == null) {
-					 return comparePrioritiesAndKeys(element1, element2);
+					return comparePrioritiesAndKeys(element1, element2);
 				} else if (task1 == null) {
 					return 1;
 				} else if (task2 == null) {
 					return -1;
 				}
-				
+
 				int complete = compareCompleted(task1, task2);
 				if (complete != 0) {
 					return complete;
@@ -107,10 +109,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 							if (today != 0) {
 								return today;
 							} else {
-//								int hasChanges = compareChanges(task1, task2);
-//								if (hasChanges != 0) {
-//									return hasChanges;
-//								}
+								// int hasChanges = compareChanges(task1,
+								// task2);
+								// if (hasChanges != 0) {
+								// return hasChanges;
+								// }
 							}
 						}
 					}
@@ -143,15 +146,17 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 	}
 
-//	private int compareChanges(ITask task1, ITask task2) {
-//		if (TaskListInterestFilter.hasChanges(task1) && !TaskListInterestFilter.hasChanges(task2)) {
-//			return 1;
-//		} else if (!TaskListInterestFilter.hasChanges(task1) && TaskListInterestFilter.hasChanges(task2)) {
-//			return -1;
-//		} else { 
-//			return 0;
-//		}
-//	}
+	// private int compareChanges(ITask task1, ITask task2) {
+	// if (TaskListInterestFilter.hasChanges(task1) &&
+	// !TaskListInterestFilter.hasChanges(task2)) {
+	// return 1;
+	// } else if (!TaskListInterestFilter.hasChanges(task1) &&
+	// TaskListInterestFilter.hasChanges(task2)) {
+	// return -1;
+	// } else {
+	// return 0;
+	// }
+	// }
 
 	private int compareThisWeek(ITask task1, ITask task2) {
 		if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
