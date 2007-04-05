@@ -29,8 +29,9 @@ import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
- * Provides custom content for the task list, e.g. guaranteed visibility of some elements,
- * ability to suppress containers showing if nothing should show under them.
+ * Provides custom content for the task list, e.g. guaranteed visibility of some
+ * elements, ability to suppress containers showing if nothing should show under
+ * them.
  * 
  * TODO: move to viewer filter architecture?
  * 
@@ -81,7 +82,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
-			Set<AbstractQueryHit> hits = t.getHits(); 
+			Set<AbstractQueryHit> hits = t.getHits();
 			// TODO: should provide hasHits() method!
 			return hits != null && hits.size() > 0;
 		} else if (parent instanceof AbstractTaskContainer) {
