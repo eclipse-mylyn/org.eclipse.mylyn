@@ -25,7 +25,10 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.eclipse.core.net.proxy.IProxyData;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylar.internal.core.MylarCorePlugin;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -119,11 +122,16 @@ public class WebClientUtil {
 		// commons-logging-api jars
 		// System.setProperty("org.apache.commons.logging.Log",
 		// "org.apache.commons.logging.impl.SimpleLog");
-//		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-//		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",	"trace");
+		// System.setProperty("org.apache.commons.logging.simplelog.showdatetime",
+		// "true");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient",
+		// "debug");
+		// System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient.HttpConnection",
+		// "trace");
 
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
@@ -186,20 +194,47 @@ public class WebClientUtil {
 		}
 		return Proxy.NO_PROXY;
 	}
-	
+
 	/**
-	 * @param repositoryUrl	The URL of the web site including protocol.
-	 * 				E.g. <code>http://foo.bar</code> or <code>https://foo.bar/baz</code>
+	 * utility method, proxy should be obtained via TaskRepository.getProxy() *
+	 * 
+	 * @return proxy as defined in platform proxy settings property page,
+	 *         Proxy.NO_PROXY otherwise
+	 */
+	public static Proxy getPlatformProxy() {
+		Proxy proxy = Proxy.NO_PROXY;
+		IProxyService service = MylarCorePlugin.getDefault().getProxyService();
+		if (service != null && service.isProxiesEnabled()) {
+			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
+			if (data.getHost() != null) {
+				String proxyHost = data.getHost();
+				int proxyPort = data.getPort();
+				// Change the IProxyData default port to the Java default port
+				if (proxyPort == -1)
+					proxyPort = 0;
+
+				InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPort);
+				proxy = new Proxy(Type.HTTP, sockAddr);
+			}
+		}
+		return proxy;
+	}
+
+	/**
+	 * @param repositoryUrl
+	 *            The URL of the web site including protocol. E.g.
+	 *            <code>http://foo.bar</code> or
+	 *            <code>https://foo.bar/baz</code>
 	 * @return a 16*16 favicon, or null if no favicon found
-	 * @throws MalformedURLException 
+	 * @throws MalformedURLException
 	 */
 	public static ImageDescriptor getFaviconForUrl(String repositoryUrl) throws MalformedURLException {
 		URL url = new URL(repositoryUrl);
-		
+
 		String host = url.getHost();
 		String protocol = url.getProtocol();
 		String favString = protocol + "://" + host + "/favicon.ico";
-		
+
 		URL favUrl = new URL(favString);
 		try {
 			ImageDescriptor desc = ImageDescriptor.createFromURL(favUrl);
