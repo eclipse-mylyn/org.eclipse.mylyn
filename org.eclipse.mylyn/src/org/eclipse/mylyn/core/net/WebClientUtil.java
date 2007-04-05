@@ -27,7 +27,6 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWTException;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
 /**
@@ -194,7 +193,7 @@ public class WebClientUtil {
 	 * @return a 16*16 favicon, or null if no favicon found
 	 * @throws MalformedURLException 
 	 */
-	public static Image getFaviconForUrl(String repositoryUrl) throws MalformedURLException {
+	public static ImageDescriptor getFaviconForUrl(String repositoryUrl) throws MalformedURLException {
 		URL url = new URL(repositoryUrl);
 		
 		String host = url.getHost();
@@ -207,10 +206,10 @@ public class WebClientUtil {
 			if (desc.getImageData() != null) {
 				if ((desc.getImageData().width != 16) && (desc.getImageData().height != 16)) {
 					ImageData data = desc.getImageData().scaledTo(16, 16);
-					return ImageDescriptor.createFromImageData(data).createImage(false);
+					return ImageDescriptor.createFromImageData(data);
 				}
 			}
-			return ImageDescriptor.createFromURL(favUrl).createImage(false);
+			return ImageDescriptor.createFromURL(favUrl);
 		} catch (SWTException e) {
 			return null;
 		}
