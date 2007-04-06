@@ -75,7 +75,7 @@ public class TracWebClient extends AbstractTracClient {
 		super(url, version, username, password, proxy);
 	}
 
-	private GetMethod connect(String serverURL) throws TracException {
+	private synchronized GetMethod connect(String serverURL) throws TracException {
 		try {
 			return connectInternal(serverURL);
 		} catch (TracException e) {
@@ -107,7 +107,7 @@ public class TracWebClient extends AbstractTracClient {
 			if (code == HttpURLConnection.HTTP_OK) {
 				return method;
 			} else if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
-				// login or reauthenticate due to an expired session
+				// login or re-authenticate due to an expired session
 				method.releaseConnection();
 				authenticated = false;
 				authenticate();
@@ -124,16 +124,17 @@ public class TracWebClient extends AbstractTracClient {
 			throw new TracLoginException();
 		}
 
+		// try standard basic/digest authentication first
 		Credentials credentials = new UsernamePasswordCredentials(username, password);
 		httpClient.getState().setCredentials(
 				new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM), credentials);
 
 		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
 		method.setFollowRedirects(false);
-
+		int code;
 		try {
 			httpClient.getParams().setAuthenticationPreemptive(true);
-			int code = httpClient.executeMethod(method);
+			code = httpClient.executeMethod(method);
 			if (code == HttpURLConnection.HTTP_UNAUTHORIZED || code == HttpURLConnection.HTTP_FORBIDDEN) {
 				throw new TracLoginException();
 			}
@@ -142,6 +143,15 @@ public class TracWebClient extends AbstractTracClient {
 			httpClient.getParams().setAuthenticationPreemptive(false);
 		}
 
+		// the expected return code is a redirect, anything else is suspicious
+		if (code == HttpURLConnection.HTTP_OK) {
+			// try form-based authentication via AccountManagerPlugin as a fall-back
+			authenticateAccountManager(httpClient);
+		}
+		
+		validateAuthenticationState(httpClient);
+		
+		// success since no exception was thrown 
 		authenticated = true;
 	}
 

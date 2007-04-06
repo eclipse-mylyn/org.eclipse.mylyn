@@ -1,5 +1,6 @@
 package org.eclipse.mylar.internal.trac.core;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -64,6 +66,8 @@ public class TracXmlRpcClient extends AbstractTracClient {
 
 	private int minorAPIVersion = -1;
 
+	private boolean accountMangerAuthenticationFailed;
+
 	public TracXmlRpcClient(URL url, Version version, String username, String password, Proxy proxy) {
 		super(url, version, username, password, proxy);
 	}
@@ -108,6 +112,47 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	}
 
 	private Object call(String method, Object... parameters) throws TracException {
+		try {
+			// first attempt
+			return callInternal(method, parameters);
+		} catch (TracPermissionDeniedException e) {
+			if (accountMangerAuthenticationFailed) {
+				// do not try again if this has failed in the past since it
+				// is more likely that XML_RPC permissions have not been set
+				throw e;
+			}
+
+			// try form-based authentication via AccountManagerPlugin as a
+			// fall-back
+			HttpClient httpClient = new HttpClient();
+			WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), null, null);
+			try {
+				authenticateAccountManager(httpClient);
+			} catch (TracLoginException loginException) {
+				// caused by wrong username or password
+				throw loginException;
+			} catch (IOException ignore) {
+				accountMangerAuthenticationFailed = true;
+				throw e;
+			}
+
+			try {
+				validateAuthenticationState(httpClient);
+			} catch (TracLoginException ignore) {
+				// most likely form based authentication is not supported by
+				// repository
+				accountMangerAuthenticationFailed = true;
+				throw e;
+			}
+
+			factory.setCookies(httpClient.getState().getCookies());
+		}
+
+		// second attempt
+		return callInternal(method, parameters);
+	}
+
+	private Object callInternal(String method, Object... parameters) throws TracException {
 		getClient();
 
 		try {
@@ -432,7 +477,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		}
 		if (result.get("height") != null) {
 			field.setOrder((Integer) result.get("height"));
-		}		
+		}
 		return field;
 	}
 

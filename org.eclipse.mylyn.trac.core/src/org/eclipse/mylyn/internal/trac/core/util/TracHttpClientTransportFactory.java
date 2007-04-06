@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -53,11 +54,13 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	public static class TracHttpClientTransport extends XmlRpcCommonsTransport {
 
 		private Proxy proxy;
+		private Cookie[] cookies;
 
-		public TracHttpClientTransport(XmlRpcClient client, Proxy proxy) {
+		public TracHttpClientTransport(XmlRpcClient client, Proxy proxy, Cookie[] cookies) {
 			super(client);
 
 			this.proxy = proxy;
+			this.cookies = cookies;
 			
 			XmlRpcHttpClientConfig config = (XmlRpcHttpClientConfig) client.getConfig();
 			// this needs to be set to avoid exceptions
@@ -121,6 +124,9 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			
 			String url = config.getServerURL().toString();
 			WebClientUtil.setupHttpClient(getHttpClient(), proxy, url, null, null);
+			if (cookies != null) {
+				getHttpClient().getState().addCookies(cookies);
+			}
 			
 			PostMethod method = new PostMethod(WebClientUtil.getRequestPath(url));
 			setMethod(method);
@@ -143,13 +149,14 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 
 	private XmlRpcClient client;
 	private Proxy proxy;
+	private Cookie[] cookies;
 
 	public TracHttpClientTransportFactory(XmlRpcClient client) {
 		this.client = client;
 	}
 
 	public XmlRpcTransport getTransport() {
-		return new TracHttpClientTransport(client, proxy);
+		return new TracHttpClientTransport(client, proxy, cookies);
 	}
 	
 	public Proxy getProxy() {
@@ -158,6 +165,14 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 	
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
+	}
+	
+	public Cookie[] getCookies() {
+		return cookies;
+	}
+	
+	public void setCookies(Cookie[] cookies) {
+		this.cookies = cookies;
 	}
 	
 }

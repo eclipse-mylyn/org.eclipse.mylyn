@@ -11,15 +11,22 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.mylar.core.net.WebClientUtil;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
-import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSeverity;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketType;
@@ -29,6 +36,8 @@ import org.eclipse.mylar.internal.trac.core.model.TracVersion;
  * @author Steffen Pingel
  */
 public abstract class AbstractTracClient implements ITracClient {
+
+	private static final String LOGIN_COOKIE_NAME = "trac_auth";
 
 	protected String username;
 
@@ -60,6 +69,42 @@ public abstract class AbstractTracClient implements ITracClient {
 		return username != null && username.length() > 0;
 	}
 
+	protected void authenticateAccountManager(HttpClient httpClient) throws IOException, TracLoginException {
+		PostMethod post = new PostMethod(WebClientUtil.getRequestPath(repositoryUrl + LOGIN_URL));
+		post.setFollowRedirects(false);
+		NameValuePair[] data = {
+				new NameValuePair("referer", ""),
+				new NameValuePair("user", username),
+				new NameValuePair("password", password)
+		};
+		post.setRequestBody(data);
+		try {
+			int code = httpClient.executeMethod(post);
+			// code should be a redirect in case of success  
+			if (code == HttpURLConnection.HTTP_OK) {
+				throw new TracLoginException();
+			}
+		} finally {
+			post.releaseConnection();
+		}
+	}
+	
+	/**
+	 * Check if authentication cookie has been set.
+
+	 * @throws TracLoginException thrown if the cookie has not been set
+	 */
+	protected void validateAuthenticationState(HttpClient httpClient) throws TracLoginException {
+		Cookie[] cookies = httpClient.getState().getCookies();
+		for (Cookie cookie : cookies) {
+			if (LOGIN_COOKIE_NAME.equals(cookie.getName())) {
+				return;
+			}
+		}
+		
+		throw new TracLoginException();
+	}
+	
 	public TracComponent[] getComponents() {
 		return (data.components != null) ? data.components.toArray(new TracComponent[0]) : null;
 	}

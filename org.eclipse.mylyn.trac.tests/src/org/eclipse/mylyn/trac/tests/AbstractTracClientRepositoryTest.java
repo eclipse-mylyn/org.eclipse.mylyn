@@ -46,6 +46,10 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		validate(Constants.TEST_TRAC_011_URL);
 	}	
 
+	public void testValidate010FormAuth() throws Exception {
+		validate(Constants.TEST_TRAC_010_FORM_AUTH_URL);
+	}
+	
 	protected void validate(String url) throws Exception {
 		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
 		
