@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylar.internal.trac.core.model.TracComment;
@@ -261,7 +260,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 					attr.addOption("", "");
 				}
 				for (int i = 0; i < values.length; i++) {
-					attr.addOption(values[i].toString(), values[i].toString());
+					attr.addOption(values[i], values[i]);
 				}
 				
 				if (field.getDefaultValue() != null) {
@@ -271,7 +270,12 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 							attr.setValue(values[index]);
 						}
 					} catch (NumberFormatException e) {
-						MylarStatusHandler.fail(e, "Invalid default value '" + field.getDefaultValue() + "' for custom field '" + field.getName() + "'", false);
+						for (int i = 0; i < values.length; i++) {
+							if (field.getDefaultValue().equals(values[i].toString())) {
+								attr.setValue(values[i]);
+								break;
+							}
+						}
 					}
 				}
 			}
