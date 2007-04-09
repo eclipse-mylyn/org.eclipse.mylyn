@@ -14,8 +14,6 @@ package org.eclipse.mylar.internal.context.ui;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -96,15 +94,4 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}
-
-	@Override
-	public List<AbstractRelationProvider> getRelationshipProviders() {
-		return null;
-	}
-
-	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
-	}
-
 }

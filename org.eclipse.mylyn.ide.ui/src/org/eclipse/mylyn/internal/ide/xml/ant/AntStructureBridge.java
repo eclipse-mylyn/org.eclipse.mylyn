@@ -32,11 +32,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
@@ -334,22 +331,4 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 //		}
 //		return null;
 //	}
-
-	/**
-	 * TODO: weird that there is none
-	 */
-	@Override
-	public List<AbstractRelationProvider> getRelationshipProviders() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return Collections.emptyList();
-	}
-
-	public boolean containsProblem(IMylarElement node) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

@@ -24,6 +24,18 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
  */
 public abstract class AbstractRelationProvider implements IMylarContextListener {
 
+	protected final String DOS_0_LABEL = "disabled";
+
+	protected final String DOS_1_LABEL = "landmark resources";
+
+	protected final String DOS_2_LABEL = "interesting resources";
+
+	protected final String DOS_3_LABEL = "interesting projects";
+
+	protected final String DOS_4_LABEL = "project dependencies";
+
+	protected final String DOS_5_LABEL = "entire workspace (slow)";
+	
 	private boolean enabled = false;
 
 	private String id;
@@ -39,13 +51,11 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 	public AbstractRelationProvider(String structureKind, String id) {
 		this.id = id;
 		this.structureKind = structureKind;
-//		if (ContextCorePlugin.getDefault().getPreferenceStore().contains(getGenericId())) {
-//			degreeOfSeparation = ContextCorePlugin.getDefault().getPreferenceStore().getInt(getGenericId());
-//		} else {
 		degreeOfSeparation = getDefaultDegreeOfSeparation();
-//		}
 	}
 
+	public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
+	
 	protected abstract int getDefaultDegreeOfSeparation();
 
 	protected abstract void findRelated(final IMylarElement node, int degreeOfSeparation);
@@ -170,4 +180,5 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 	public abstract String getGenericId();
 
 	public abstract void stopAllRunningJobs();
+
 }

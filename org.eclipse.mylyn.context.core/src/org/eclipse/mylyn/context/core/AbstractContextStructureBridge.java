@@ -18,18 +18,6 @@ import java.util.List;
  */
 public abstract class AbstractContextStructureBridge {
 
-	protected final String DOS_0_LABEL = "disabled";
-
-	protected final String DOS_1_LABEL = "landmark resources";
-
-	protected final String DOS_2_LABEL = "interesting resources";
-
-	protected final String DOS_3_LABEL = "interesting projects";
-
-	protected final String DOS_4_LABEL = "project dependencies";
-
-	protected final String DOS_5_LABEL = "entire workspace (slow)";
-
 	protected String parentContentType = null;
 	
 	/**
@@ -78,22 +66,10 @@ public abstract class AbstractContextStructureBridge {
 	 */
 	public abstract String getHandleForOffsetInObject(Object resource, int offset);
 
-//	/**
-//	 * TODO remove coupling to projects
-//	 * 
-//	 * @return The IProject that contains the object, or null if there is no
-//	 *         project
-//	 */
-//	public abstract IProject getProjectForObject(Object object);
-
 	/**
 	 * Used for switching kinds based on parent handles
 	 */
 	public abstract String getContentType(String elementHandle);
-
-	public abstract List<AbstractRelationProvider> getRelationshipProviders();
-
-	public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
 
 	public String getParentContentType() {
 		return parentContentType;

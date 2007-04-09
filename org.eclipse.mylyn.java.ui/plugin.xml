@@ -15,6 +15,30 @@
      <structureBridge
            class="org.eclipse.mylar.internal.java.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.JavaImplementorsProvider"
+           contentType="java">
+     </relationProvider>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.JavaReadAccessProvider"
+           contentType="java">
+     </relationProvider>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.JavaReferencesProvider"
+           contentType="java">
+     </relationProvider>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.JavaWriteAccessProvider"
+           contentType="java">
+     </relationProvider>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.JUnitReferencesProvider"
+           contentType="java">
+     </relationProvider>
+     <relationProvider
+           class="org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider"
+           contentType="plugin.xml">
+     </relationProvider>
 	</extension>
 	   
 	<extension point="org.eclipse.mylar.context.ui.bridges">

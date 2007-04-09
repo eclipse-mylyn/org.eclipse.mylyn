@@ -199,7 +199,7 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 		manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), scaling.getLandmark()));
 		assertTrue(m2Node.getInterest().isLandmark());
 
-		AbstractRelationProvider provider = new JavaStructureBridge().getRelationshipProviders().get(0);
+		AbstractRelationProvider provider = ContextCorePlugin.getDefault().getRelationProviders("java").iterator().next();
 		provider.createEdge(m2Node, m1Node.getContentType(), m2.getHandleIdentifier());
 
 		assertEquals(1, m2Node.getRelations().size());

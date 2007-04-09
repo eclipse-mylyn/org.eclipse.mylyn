@@ -11,7 +11,7 @@
 /*
  * Created on Feb 7, 2005
  */
-package org.eclipse.mylar.internal.ide.xml;
+package org.eclipse.mylar.internal.java.search;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,11 +39,14 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.search.core.text.TextSearchScope;
@@ -55,8 +58,9 @@ import org.eclipse.search.ui.text.Match;
 
 /**
  * @author Shawn Minto
+ * @author Mik Kersten
  */
-public class XmlJavaReferencesProvider extends AbstractRelationProvider {
+public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
 
@@ -68,18 +72,25 @@ public class XmlJavaReferencesProvider extends AbstractRelationProvider {
 
 	public static final Map<Match, XmlNodeHelper> nodeMap = new HashMap<Match, XmlNodeHelper>();
 
-	public XmlJavaReferencesProvider() {
+	public XmlJavaRelationProvider() {
 		// TODO: should this be a generic XML extension?
 		super(PdeStructureBridge.CONTENT_TYPE, SOURCE_ID);
 	}
 
-	/**
-	 * @see org.eclipse.mylar.context.core.AbstractRelationProvider#findRelated(org.eclipse.mylar.context.core.IMylarElement,
-	 *      int)
-	 */
+	@Override
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
+		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
+		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
+		separations.add(new DegreeOfSeparation(DOS_3_LABEL, 3));
+		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
+		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
+		return separations;
+	}
+	
 	@Override
 	protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
-
 		if (!node.getContentType().equals("java"))
 			return;
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
@@ -235,7 +246,7 @@ public class XmlJavaReferencesProvider extends AbstractRelationProvider {
 						incrementInterest(node, PdeStructureBridge.CONTENT_TYPE, handle, degreeOfSeparation);
 					}
 					gathered = true;
-					XmlJavaReferencesProvider.this.searchCompleted(node);
+					XmlJavaRelationProvider.this.searchCompleted(node);
 				}
 
 				public boolean resultsGathered() {

@@ -4,7 +4,7 @@
 <plugin>
     <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
 
-    <extension
+    <extension 
          point="org.eclipse.mylar.context.core.bridges">
       <structureBridge 
       		class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 

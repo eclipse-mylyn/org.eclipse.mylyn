@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.ide.xml;
+package org.eclipse.mylar.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;

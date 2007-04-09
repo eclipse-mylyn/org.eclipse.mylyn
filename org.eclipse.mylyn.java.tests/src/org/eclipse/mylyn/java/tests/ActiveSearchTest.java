@@ -59,7 +59,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		view = (ActiveSearchView) JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
 		ActiveSearchView.getFromActivePerspective().setSyncExecForTesting(false);
 
-		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			assertTrue(provider.isEnabled());
 		}
 		assertEquals(0, view.getViewer().getTree().getItemCount());
@@ -90,7 +90,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 
 	public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
 		view = (ActiveSearchView) JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			assertTrue(provider.getCurrentDegreeOfSeparation() > 0);
 		}
 		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); 
@@ -101,12 +101,12 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 //		assertTrue(perspective.canCloseView(view));
 		assertTrue(perspective.hideView(reference));
 
-		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			assertFalse(provider.isEnabled());
 		}
 
 		JavaPlugin.getActivePage().showView(ActiveSearchView.ID);
-		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			assertTrue(provider.isEnabled());
 		}
 	}

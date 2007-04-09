@@ -13,12 +13,13 @@
  */
 package org.eclipse.mylar.internal.context.ui.actions;
 
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -36,30 +37,37 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
 
-	private AbstractContextStructureBridge structureBridge;
+//	private AbstractContextStructureBridge structureBridge;
 
+	private Set<AbstractRelationProvider> providers;
+	
 	private Menu dropDownMenu = null;
 
-	public ToggleRelationshipProviderAction(AbstractContextStructureBridge structureBridge, AbstractContextUiBridge uiBridge) {
+	public ToggleRelationshipProviderAction(Set<AbstractRelationProvider> providers, AbstractContextUiBridge uiBridge) {
 		super();
-		this.structureBridge = structureBridge;
+		this.providers = providers;
 		setImageDescriptor(ContextUiPlugin.getDefault().getActiveSearchIcon(uiBridge));
 		setId(ID);
 		setText(ContextUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
 		setToolTipText(ContextUiPlugin.getDefault().getActiveSearchLabel(uiBridge));
 		setMenuCreator(this);
 
-		AbstractRelationProvider provider = structureBridge.getRelationshipProviders().get(0);
-		degreeOfSeparation = provider.getCurrentDegreeOfSeparation();
+		degreeOfSeparation = getCurrentProvider().getCurrentDegreeOfSeparation();
 
-		if (degreeOfSeparation > 0)
+		if (degreeOfSeparation > 0) {
 			run();
+		}
+	}
+
+	// HACK: this should be specified
+	private AbstractRelationProvider getCurrentProvider() {
+		return providers.iterator().next();
 	}
 
 	@Override
 	public void run() {
 		ContextUiPlugin.getDefault()
-				.updateDegreesOfSeparation(structureBridge.getRelationshipProviders(), degreeOfSeparation);
+				.updateDegreesOfSeparation(providers, degreeOfSeparation);
 	}
 
 	public void dispose() {
@@ -91,7 +99,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	public void addActionsToMenu() {
 		// HACK: if there are multiple providers, all store the same current DOS
-		degreeOfSeparation = structureBridge.getRelationshipProviders().get(0).getCurrentDegreeOfSeparation();
+		degreeOfSeparation = getCurrentProvider().getCurrentDegreeOfSeparation();
 
 		MenuItem menuItem = new MenuItem(dropDownMenu, SWT.NONE);
 		menuItem.setText(LABEL_DEGREE_OF_SEPARATION);
@@ -99,7 +107,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 		new MenuItem(dropDownMenu, SWT.SEPARATOR);
 
-		for (IDegreeOfSeparation separation : structureBridge.getDegreesOfSeparation()) {
+		for (IDegreeOfSeparation separation : getCurrentProvider().getDegreesOfSeparation()) {
 
 			Action degreeOfSeparationSelectionAction = new Action(
 					separation.getDegree() + ": " + separation.getLabel(), AS_CHECK_BOX) {
@@ -107,7 +115,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 				public void run() {
 					try {
 						degreeOfSeparation = Integer.parseInt(getId());
-						ContextUiPlugin.getDefault().updateDegreesOfSeparation(structureBridge.getRelationshipProviders(),
+						ContextUiPlugin.getDefault().updateDegreesOfSeparation(providers,
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
 						// ignore this for now

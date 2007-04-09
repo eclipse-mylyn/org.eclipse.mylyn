@@ -21,9 +21,9 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.ide.xml.XmlJavaReferencesProvider;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
+import org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
@@ -100,7 +100,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 		int predictedInterest = 1;// (7-degreeOfSeparation) *
 									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
-				XmlJavaReferencesProvider.SOURCE_ID, XmlJavaReferencesProvider.SOURCE_ID, null, predictedInterest);
+				XmlJavaRelationProvider.SOURCE_ID, XmlJavaRelationProvider.SOURCE_ID, null, predictedInterest);
 		ContextCorePlugin.getContextManager().handleInteractionEvent(event);
 
 	}

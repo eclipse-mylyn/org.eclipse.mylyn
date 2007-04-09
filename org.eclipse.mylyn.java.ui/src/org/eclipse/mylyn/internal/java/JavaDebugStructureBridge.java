@@ -25,9 +25,7 @@ import org.eclipse.jdt.internal.debug.core.JavaDebugUtils;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 
 /**
@@ -102,11 +100,6 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return null;
-	}
-
-	@Override
 	public String getHandleForOffsetInObject(Object resource, int offset) {
 		return null;
 	}
@@ -145,11 +138,6 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getParentHandle(String handle) {
-		return null;
-	}
-
-	@Override
-	public List<AbstractRelationProvider> getRelationshipProviders() {
 		return null;
 	}
 

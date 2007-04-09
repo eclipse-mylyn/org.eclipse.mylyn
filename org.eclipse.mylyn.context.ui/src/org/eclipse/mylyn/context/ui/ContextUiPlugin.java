@@ -12,6 +12,7 @@
 package org.eclipse.mylar.context.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +35,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
@@ -112,7 +112,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private Map<String, Set<Class<?>>> preservedFilterClasses = new HashMap<String, Set<Class<?>>>();
 
 	private Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
-	
+
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
 		public Color getHighlightColor(ITask task) {
 			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
@@ -205,24 +205,26 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public void activityChanged(DateRangeContainer week) {
 			// ignore
-			
+
 		}
 
 		public void calendarChanged() {
 			// ignore
-			
+
 		}
 
 		public void taskActivated(ITask task) {
 			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext && task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repositoryTask);
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryUrl());
-				
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+						repositoryTask);
+				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+						repositoryTask.getRepositoryUrl());
+
 				if (connector != null && connector.hasRepositoryContext(repository, repositoryTask)) {
-					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-							ITasksUiConstants.TITLE_DIALOG, 
+					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getShell(), ITasksUiConstants.TITLE_DIALOG,
 							"No local task context exists.  Retrieve from repository?");
 					if (getRemote) {
 						new ContextRetrieveAction().run(repositoryTask);
@@ -233,21 +235,21 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public void taskDeactivated(ITask task) {
 			// ignore
-			
+
 		}
 
 		public void taskListRead() {
 			// ignore
-			
+
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
 			// ignore
-			
+
 		}
-		
+
 	};
-	
+
 	public ContextUiPlugin() {
 		super();
 		INSTANCE = this;
@@ -281,7 +283,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
 					TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
-					
+
 					workbench.addWindowListener(activeSearchViewTracker);
 					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {
@@ -307,10 +309,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			super.stop(context);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
 			MylarMonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
-			
+
 			TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
-			
+
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
 				workbench.removeWindowListener(activeSearchViewTracker);
@@ -555,8 +557,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public static final String ELEMENT_VIEW_ID = "viewId";
 
-		public static final String ELEMENT_ID = "id";		
-		
+		public static final String ELEMENT_ID = "id";
+
 		public static final String ELEMENT_FILTER = "filter";
 
 		public static final String ELEMENT_CLASS = "class";
@@ -658,15 +660,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @param task	can be null to indicate no task
+	 * @param task
+	 *            can be null to indicate no task
 	 */
 	public String getPerspectiveIdFor(ITask task) {
 		if (task != null) {
 			return getPreferenceStore().getString(
-				ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
+					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
 		} else {
-			return getPreferenceStore().getString(
-					ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK);	
+			return getPreferenceStore().getString(ContextUiPrefContstants.PERSPECTIVE_NO_ACTIVE_TASK);
 		}
 	}
 
@@ -716,7 +718,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		return activeSearchLabels.get(bridge);
 	}
 
-	public void updateDegreesOfSeparation(List<AbstractRelationProvider> providers, int degreeOfSeparation) {
+	public void updateDegreesOfSeparation(Collection<AbstractRelationProvider> providers, int degreeOfSeparation) {
 		for (AbstractRelationProvider provider : providers) {
 			updateDegreeOfSeparation(provider, degreeOfSeparation);
 		}
@@ -735,20 +737,16 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	public void refreshRelatedElements() {
 		try {
-			for (AbstractContextStructureBridge bridge : ContextCorePlugin.getDefault().getStructureBridges().values()) {
-				if (bridge.getRelationshipProviders() != null) {
-					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
-						List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
-						providerList.add(provider);
-						updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
-					}
-				}
+			for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
+				List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
+				providerList.add(provider);
+				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
 			}
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
-	
+
 	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
 		Set<Class<?>> preservedList = preservedFilterClasses.get(viewId);
 		if (preservedList == null) {
@@ -775,7 +773,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 		preservedList.add(filterId);
 	}
-	
+
 	public Set<String> getPreservedFilterIds(String viewId) {
 		UiExtensionPointReader.initExtensions();
 		if (preservedFilterIds.containsKey(viewId)) {

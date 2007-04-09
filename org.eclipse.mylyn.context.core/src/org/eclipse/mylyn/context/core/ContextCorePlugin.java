@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -53,6 +53,8 @@ public class ContextCorePlugin extends Plugin {
 	private static AbstractContextStore contextStore;
 
 	private boolean extensionsLoaded = false;
+
+	private Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
 
 	private static final AbstractContextStructureBridge DEFAULT_BRIDGE = new AbstractContextStructureBridge() {
 
@@ -113,16 +115,6 @@ public class ContextCorePlugin extends Plugin {
 		}
 
 		@Override
-		public List<AbstractRelationProvider> getRelationshipProviders() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-			return Collections.emptyList();
-		}
-
-		@Override
 		public String getHandleForOffsetInObject(Object resource, int offset) {
 //			MylarStatusHandler.log("null bridge for marker: " + resource.getClass(), this);
 			return null;
@@ -150,18 +142,8 @@ public class ContextCorePlugin extends Plugin {
 		try {
 			super.stop(context);
 			INSTANCE = null;
-			// resourceBundle = null;
-
-			// Stop all running jobs when we exit if the plugin didn't do it
-			Map<String, AbstractContextStructureBridge> bridges = getStructureBridges();
-			for (Entry<String, AbstractContextStructureBridge> entry : bridges.entrySet()) {
-				AbstractContextStructureBridge bridge = entry.getValue();// bridges.get(extension);
-				List<AbstractRelationProvider> providers = bridge.getRelationshipProviders();
-				if (providers == null)
-					continue;
-				for (AbstractRelationProvider provider : providers) {
-					provider.stopAllRunningJobs();
-				}
+			for (AbstractRelationProvider provider : getRelationProviders()) {
+				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar Core stop failed", false);
@@ -172,19 +154,37 @@ public class ContextCorePlugin extends Plugin {
 		if (!extensionsLoaded) {
 			ContextStoreExtensionReader.initExtensions();
 			HandlersExtensionPointReader.initExtensions();
-
-			for (AbstractContextStructureBridge bridge : bridges.values()) {
-				if (bridge.getRelationshipProviders() != null) {
-					for (AbstractRelationProvider provider : bridge.getRelationshipProviders()) {
-						getContextManager().addListener(provider);
-					}
-				}
+			for (AbstractRelationProvider provider : getRelationProviders()) {
+				getContextManager().addListener(provider);
 			}
-
 			extensionsLoaded = true;
 		}
 	}
 
+	private void addRelationProvider(String contentType, AbstractRelationProvider provider) {
+		Set<AbstractRelationProvider> providers = relationProviders.get(contentType);
+		if (providers == null) {
+			providers = new HashSet<AbstractRelationProvider>();
+			relationProviders.put(contentType, providers);
+		}
+		providers.add(provider);
+	}
+	
+	/**
+	 * @return	all relation providers
+	 */
+	public Set<AbstractRelationProvider> getRelationProviders() {
+		Set<AbstractRelationProvider> allProviders = new HashSet<AbstractRelationProvider>();
+		for (Set<AbstractRelationProvider> providers : relationProviders.values()) {
+			allProviders.addAll(providers);
+		}
+		return allProviders;
+	}
+
+	public Set<AbstractRelationProvider> getRelationProviders(String contentType) {
+		return relationProviders.get(contentType);
+	}
+	
 	public static ContextCorePlugin getDefault() {
 		return INSTANCE;
 	}
@@ -317,9 +317,13 @@ public class ContextCorePlugin extends Plugin {
 
 		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 
-		private static final String ELEMENT_CLASS = "class";
+		private static final String ELEMENT_RELATION_PROVIDER = "relationProvider";
+		
+		private static final String ATTR_CLASS = "class";
+		
+		private static final String ATTR_CONTENT_TYPE = "contentType";
 
-		private static final String ELEMENT_STRUCTURE_BRIDGE_PARENT = "parentContentType";
+		private static final String ATTR_PARENT_CONTENT_TYPE = "parentContentType";
 
 		private static boolean extensionsRead = false;
 
@@ -334,6 +338,8 @@ public class ContextCorePlugin extends Plugin {
 					for (int j = 0; j < elements.length; j++) {
 						if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(elements[j]);
+						} else if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
+							readRelationProvider(elements[j]);
 						}
 					}
 				}
@@ -344,7 +350,7 @@ public class ContextCorePlugin extends Plugin {
 		@SuppressWarnings("deprecation")
 		private static void readBridge(IConfigurationElement element) {
 			try {
-				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
+				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
 					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
@@ -352,29 +358,29 @@ public class ContextCorePlugin extends Plugin {
 				}
 
 				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
-				if (element.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT) != null) {
+				if (element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE) != null) {
 					String parentContentType = element
-							.getAttribute(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
+							.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
 					if (parentContentType instanceof String) {
 						bridge.setParentContentType(parentContentType);
 					}
-					// Object parent = element
-					// .createExecutableExtension(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE_PARENT);
-					// if (parent instanceof AbstractContextStructureBridge) {
-					// (bridge).setParentBridge(((AbstractContextStructureBridge)
-					// parent));
-					// } else {
-					// MylarStatusHandler.log("Could not load parent bridge: "
-					// + parent.getClass().getCanonicalName() + " must implement
-					// "
-					// +
-					// AbstractContextStructureBridge.class.getCanonicalName(),
-					// null);
-					// }
 				}
 				ContextCorePlugin.getDefault().internalAddBridge(bridge);
 			} catch (CoreException e) {
 				MylarStatusHandler.log(e, "Could not load bridge extension");
+			}
+		}
+		
+		@SuppressWarnings("deprecation")
+		private static void readRelationProvider(IConfigurationElement element) {
+			try {
+				String contentType = element.getAttribute(BridgesExtensionPointReader.ATTR_CONTENT_TYPE);
+				AbstractRelationProvider relationProvider = (AbstractRelationProvider)element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
+				if (contentType != null) {
+					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
+				}
+			} catch (Exception e) {
+				MylarStatusHandler.log(e, "Could not load relation provider");
 			}
 		}
 	}

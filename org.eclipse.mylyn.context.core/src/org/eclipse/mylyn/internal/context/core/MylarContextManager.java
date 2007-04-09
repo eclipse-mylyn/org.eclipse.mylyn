@@ -24,9 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
@@ -671,18 +669,6 @@ public class MylarContextManager {
 		}
 	}
 
-	public List<AbstractRelationProvider> getActiveRelationProviders() {
-		List<AbstractRelationProvider> providers = new ArrayList<AbstractRelationProvider>();
-		Map<String, AbstractContextStructureBridge> bridges = ContextCorePlugin.getDefault().getStructureBridges();
-		for (Entry<String, AbstractContextStructureBridge> entry : bridges.entrySet()) {
-			AbstractContextStructureBridge bridge = entry.getValue();// bridges.get(extension);
-			if (bridge.getRelationshipProviders() != null) {
-				providers.addAll(bridge.getRelationshipProviders());
-			}
-		}
-		return providers;
-	}
-
 	public static ScalingFactors getScalingFactors() {
 		return MylarContextManager.scalingFactors;
 	}
@@ -778,13 +764,13 @@ public class MylarContextManager {
 		if (changeValue != 0) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, element
 					.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
-			ContextCorePlugin.getContextManager().handleInteractionEvent(interactionEvent);
+			handleInteractionEvent(interactionEvent);
 		}
 		return true;
 	}
 
 	public void setActiveSearchEnabled(boolean enabled) {
-		for (AbstractRelationProvider provider : getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			provider.setEnabled(enabled);
 		}
 	}

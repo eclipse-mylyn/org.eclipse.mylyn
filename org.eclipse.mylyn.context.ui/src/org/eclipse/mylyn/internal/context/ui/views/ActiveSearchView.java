@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.context.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -26,18 +27,18 @@ import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
-import org.eclipse.mylar.internal.context.ui.DoiOrderSorter;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
+import org.eclipse.mylar.internal.context.ui.DoiOrderSorter;
 import org.eclipse.mylar.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylar.internal.context.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylar.internal.context.ui.actions.ToggleRelationshipProviderAction;
@@ -132,7 +133,7 @@ public class ActiveSearchView extends ViewPart {
 
 	public ActiveSearchView() {
 		ContextCorePlugin.getContextManager().addListener(REFRESH_UPDATE_LISTENER);
-		for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			provider.setEnabled(true);
 		}
 		ContextUiPlugin.getDefault().refreshRelatedElements();
@@ -280,7 +281,7 @@ public class ActiveSearchView extends ViewPart {
 		IAction stopAction = new Action() {
 			@Override
 			public void run() {
-				for (AbstractRelationProvider provider : ContextCorePlugin.getContextManager().getActiveRelationProviders()) {
+				for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 					provider.stopAllRunningJobs();
 				}
 			}
@@ -297,12 +298,9 @@ public class ActiveSearchView extends ViewPart {
 	private void fillActions(IContributionManager manager) {
 		List<AbstractContextUiBridge> bridges = ContextUiPlugin.getDefault().getUiBridges();
 		for (AbstractContextUiBridge uiBridge : bridges) {
-			AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(uiBridge.getContentType());
-			
-//			AbstractContextStructureBridge bridge = entry.getValue(); // bridges.get(extension);
-			List<AbstractRelationProvider> providers = structureBridge.getRelationshipProviders();
+			Set<AbstractRelationProvider> providers = ContextCorePlugin.getDefault().getRelationProviders(uiBridge.getContentType());
 			if (providers != null && providers.size() > 0) {
-				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(structureBridge, uiBridge);
+				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(providers, uiBridge);
 				relationshipProviderActions.add(action);
 				manager.add(action);
 			}

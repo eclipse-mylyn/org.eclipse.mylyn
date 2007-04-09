@@ -43,9 +43,11 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -75,6 +77,18 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		super(structureKind, id);
 	}
 
+	@Override
+	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
+		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
+		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
+		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
+		separations.add(new DegreeOfSeparation(DOS_3_LABEL, 3));
+		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
+		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
+		return separations;
+	}
+	
 	@Override
 	protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
 		if (node == null)

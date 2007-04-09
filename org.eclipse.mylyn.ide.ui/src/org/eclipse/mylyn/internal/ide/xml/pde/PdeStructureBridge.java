@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.internal.ide.xml.pde;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,13 +24,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
-import org.eclipse.mylar.internal.ide.xml.XmlJavaReferencesProvider;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginNode;
@@ -49,14 +44,6 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
 public class PdeStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "plugin.xml";
-
-	private List<AbstractRelationProvider> providers;
-
-	public PdeStructureBridge() {
-		providers = new ArrayList<AbstractRelationProvider>();
-		providers.add(new XmlJavaReferencesProvider());
-
-	}
 
 	@Override
 	public String getContentType() {
@@ -345,28 +332,6 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 //		}
 //		return null;
 //	}
-
-	/**
-	 * HACK: This is weird that the relationship provider is only here. There
-	 * are relly 3 different bridges, 2 specific and 1 generic
-	 */
-	@Override
-	public List<AbstractRelationProvider> getRelationshipProviders() {
-		return providers;
-	}
-
-	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
-		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
-		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
-		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
-		separations.add(new DegreeOfSeparation(DOS_3_LABEL, 3));
-		separations.add(new DegreeOfSeparation(DOS_4_LABEL, 4));
-		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
-
-		return separations;
-	}
 
 	public boolean containsProblem(IMylarElement node) {
 		// TODO Auto-generated method stub

@@ -26,8 +26,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -207,18 +205,4 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 	public String getContentType(String elementHandle) {
 		return getContentType();
 	}
-
-	/**
-	 * These methods aren't needed since there is no generic active search
-	 */
-	@Override
-	public List<AbstractRelationProvider> getRelationshipProviders() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		return Collections.emptyList();
-	}
-
 }
