@@ -11,7 +11,6 @@
 package org.eclipse.mylar.tasks.ui.editors;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -76,8 +75,6 @@ import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskAttributeListe
 import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskSelection;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryAttachmentEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -102,8 +99,6 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -1373,114 +1368,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		// Adapted from eclipse.org DND Article by Veronika Irvine, IBM OTI Labs
 		// http://www.eclipse.org/articles/Article-SWT-DND/DND-in-SWT.html#_dt10D
-		target.addDropListener(new DropTargetListener() {
-			public void dragEnter(DropTargetEvent event) {
-				if (event.detail == DND.DROP_DEFAULT) {
-					if ((event.operations & DND.DROP_COPY) != 0) {
-						event.detail = DND.DROP_COPY;
-					} else {
-						event.detail = DND.DROP_NONE;
-					}
-				}
-				// will accept text but prefer to have files dropped
-				for (int i = 0; i < event.dataTypes.length; i++) {
-					if (fileTransfer.isSupportedType(event.dataTypes[i])) {
-						event.currentDataType = event.dataTypes[i];
-						// files should only be copied
-						if (event.detail != DND.DROP_COPY) {
-							event.detail = DND.DROP_NONE;
-						}
-						break;
-					}
-				}
-			}
-
-			public void dragOver(DropTargetEvent event) {
-				event.feedback = DND.FEEDBACK_SELECT | DND.FEEDBACK_SCROLL;
-				// if (textTransfer.isSupportedType(event.currentDataType)) {
-				// // NOTE: on unsupported platforms this will return null
-				// Object o = textTransfer.nativeToJava(event.currentDataType);
-				// String t = (String)o;
-				// if (t != null) System.out.println(t);
-				// }
-			}
-
-			public void dragOperationChanged(DropTargetEvent event) {
-				if ((event.detail == DND.DROP_DEFAULT) || (event.operations & DND.DROP_COPY) != 0) {
-
-					event.detail = DND.DROP_COPY;
-				} else {
-					event.detail = DND.DROP_NONE;
-				}
-
-				// allow text to be moved but files should only be copied
-				if (fileTransfer.isSupportedType(event.currentDataType)) {
-					if (event.detail != DND.DROP_COPY) {
-						event.detail = DND.DROP_NONE;
-					}
-				}
-			}
-
-			public void dragLeave(DropTargetEvent event) {
-			}
-
-			public void dropAccept(DropTargetEvent event) {
-			}
-
-			public void drop(DropTargetEvent event) {
-				if (textTransfer.isSupportedType(event.currentDataType)) {
-					String text = (String) event.data;
-					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-							taskData.getId());
-					if (!(task instanceof AbstractRepositoryTask)) {
-						// Should not happen
-						return;
-					}
-
-					NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task, text);
-					NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
-					naw.setDialog(dialog);
-					dialog.create();
-					dialog.open();
-				}
-				if (fileTransfer.isSupportedType(event.currentDataType)) {
-					String[] files = (String[]) event.data;
-					if (files.length > 0) {
-						ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
-								taskData.getId());
-						if (!(task instanceof AbstractRepositoryTask)) {
-							// Should not happen
-							return;
-						}
-
-						NewAttachmentWizard naw = new NewAttachmentWizard(repository, (AbstractRepositoryTask) task,
-								new File(files[0]));
-						NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
-						naw.setDialog(dialog);
-						dialog.create();
-						dialog.open();
-					}
-				}
-			}
-		});
+		target.addDropListener(new RepositoryTaskEditorDropListener(this, fileTransfer, textTransfer, control));
 	}
-
-	// public static InputStream getAttachmentInputStream(String url) {
-	// URLConnection urlConnect;
-	// InputStream stream = null;
-	// try {
-	// urlConnect = (new URL(url)).openConnection();
-	// urlConnect.connect();
-	// stream = urlConnect.getInputStream();
-	//
-	// } catch (MalformedURLException e) {
-	// MylarStatusHandler.fail(e, "Attachment url was malformed.", false);
-	// } catch (IOException e) {
-	// MylarStatusHandler.fail(e, "I/O Error occurred reading attachment.",
-	// false);
-	// }
-	// return stream;
-	// }
 
 	protected void createDescriptionLayout(Composite composite) {
 		Section descriptionSection = createSection(composite, getSectionLabel(SECTION_NAME.DESCRIPTION_SECTION));
