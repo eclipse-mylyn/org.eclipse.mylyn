@@ -72,7 +72,7 @@ public class DateSelectionDialog extends Dialog {
 				}
 			}
 		});
-		//datePanel.setBackground(toolkit.getColors().getBackground());		
+		datePanel.setBackground(toolkit.getColors().getBackground());		
 		return datePanel;
 	}
 	
