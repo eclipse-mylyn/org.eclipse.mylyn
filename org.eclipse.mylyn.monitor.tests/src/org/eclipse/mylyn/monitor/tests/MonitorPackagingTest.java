@@ -43,7 +43,8 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		files.add(monitorFile);
 		// files.add(logFile);
 
-		File zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory() + "/mylarUpload.zip");
+		File zipFile = new File(ContextCorePlugin.getDefault().getContextStore().getRootDirectory()
+				+ "/mylarUpload.zip");
 
 		ZipFileUtil.createZipFile(zipFile, files);
 

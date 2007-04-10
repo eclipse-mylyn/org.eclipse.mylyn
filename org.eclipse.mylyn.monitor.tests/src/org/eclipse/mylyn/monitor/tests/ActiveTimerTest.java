@@ -37,6 +37,12 @@ public class ActiveTimerTest extends TestCase {
 			// ignore
 		}
 
+		@SuppressWarnings("unused")
+		public void fireActive() {
+			// ignore
+
+		}
+
 	};
 
 	private IActivityTimerListener listener2 = new IActivityTimerListener() {
@@ -47,6 +53,12 @@ public class ActiveTimerTest extends TestCase {
 
 		public void fireActive(long start, long end) {
 			// ignore
+		}
+		
+		@SuppressWarnings("unused")
+		public void fireActive() {
+			// ignore
+
 		}
 
 	};

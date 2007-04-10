@@ -87,7 +87,8 @@ public class DataOverviewCollectorTest extends TestCase {
 
 		ReportGenerator generator = new ReportGenerator(MylarUsageMonitorPlugin.getDefault().getInteractionLogger(),
 				collectors);
-		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles);
+		generator.forceSyncForTesting(true);
+		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, null);
 
 		// cleanup
 		logFile.delete();

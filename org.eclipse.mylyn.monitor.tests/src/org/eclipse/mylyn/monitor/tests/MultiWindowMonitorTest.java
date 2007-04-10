@@ -42,7 +42,7 @@ public class MultiWindowMonitorTest extends TestCase {
 	private IWorkbenchWindow window1;
 
 	private IWorkbenchWindow window2;
-	
+
 	private boolean monitoringWasEnabled;
 
 	@Override
@@ -72,7 +72,7 @@ public class MultiWindowMonitorTest extends TestCase {
 		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		logger.clearInteractionHistory();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
-		
+
 		generateSelection(window1);
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 

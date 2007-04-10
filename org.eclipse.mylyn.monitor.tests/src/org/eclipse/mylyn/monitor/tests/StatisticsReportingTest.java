@@ -18,6 +18,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -64,6 +65,7 @@ public class StatisticsReportingTest extends TestCase {
 		collectors.add(viewCollector);
 		collectors.add(editRatioCollector);
 		report = new ReportGenerator(logger, collectors);
+		report.forceSyncForTesting(true);
 	}
 
 	@Override
@@ -111,7 +113,8 @@ public class StatisticsReportingTest extends TestCase {
 
 		mockEdit("A.java");
 
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(InteractionEvent.makeCommand(TaskActivateAction.ID, ""));
+		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(
+				InteractionEvent.makeCommand(TaskActivateAction.ID, ""));
 
 		mockExplorerSelection("A.java");
 		mockEdit("A.java");
@@ -119,7 +122,7 @@ public class StatisticsReportingTest extends TestCase {
 		mockEdit("A.java");
 
 		logger.stopMonitoring();
-		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
+		report.getStatisticsFromInteractionHistory(logger.getOutputFile(), null);
 
 		// TODO: these are off from expected when test run alone, due to unknown
 		// element selections
@@ -127,16 +130,23 @@ public class StatisticsReportingTest extends TestCase {
 		assertEquals(2f, editRatioCollector.getMylarRatio(-1));
 	}
 
+	@SuppressWarnings("unused")
 	public void testSimpleSelection() {
 		mockExplorerSelection("A.java");
-		UsageStatisticsSummary summary = report.getStatisticsFromInteractionHistory(logger.getOutputFile());
-		assertTrue(summary.getSingleSummaries().size() > 0);
+		report.getStatisticsFromInteractionHistory(logger.getOutputFile(), new JobChangeAdapter() {
+			public void done() {
+				UsageStatisticsSummary summary = report.getLastParsedSummary();
+				assertTrue(summary.getSingleSummaries().size() > 0);
+			}
+		});
+
 	}
 
+	@SuppressWarnings("unused")
 	public void testFilteredModeDetection() throws IOException {
 		MylarUsageMonitorPlugin.getDefault().addMonitoredPreferences(
 				ContextUiPlugin.getDefault().getPluginPreferences());
-		
+
 		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
 		mockUserDelay();
@@ -147,12 +157,13 @@ public class StatisticsReportingTest extends TestCase {
 		assertNotNull(ContextUiPlugin.getDefault().getPreferenceStore());
 		String prefId = FocusPackageExplorerAction.PREF_ID_PREFIX + JavaUI.ID_PACKAGES;
 		assertNotNull(prefId);
-		
+
 		PackageExplorerPart part = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(part);
-//		AbstractFocusViewAction action = FocusPackageExplorerAction.getActionForPart(part);
-//		assertNotNull(action);
-		
+		// AbstractFocusViewAction action =
+		// FocusPackageExplorerAction.getActionForPart(part);
+		// assertNotNull(action);
+
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(prefId, true);
 
 		mockExplorerSelection("A.java");
@@ -166,16 +177,20 @@ public class StatisticsReportingTest extends TestCase {
 		mockExplorerSelection("A.java");
 
 		logger.stopMonitoring();
-		report.getStatisticsFromInteractionHistory(logger.getOutputFile());
+		report.getStatisticsFromInteractionHistory(logger.getOutputFile(), new JobChangeAdapter() {
 
-		int normal = viewCollector.getNormalViewSelections().get(JavaUI.ID_PACKAGES);
-		assertEquals(5, normal);
-		
-		int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
-		assertEquals(2, filtered);
-		
-		MylarUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
-				ContextUiPlugin.getDefault().getPluginPreferences());
+			public void done() {
+				int normal = viewCollector.getNormalViewSelections().get(JavaUI.ID_PACKAGES);
+				assertEquals(5, normal);
+
+				int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
+				assertEquals(2, filtered);
+
+				MylarUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
+						ContextUiPlugin.getDefault().getPluginPreferences());
+			}
+		});
+
 	}
 
 	/**

@@ -22,33 +22,32 @@ import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
 
 import junit.framework.TestCase;
 
-
 /**
  * @author Meghan Allen
  */
 public class FileDisplayDialogTest extends TestCase {
-	
-	private static final long TWO_SECONDS = 2* 1000;
-		
+
+	private static final long TWO_SECONDS = 2 * 1000;
+
 	File monitorFile;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		monitorFile = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(
-		"testdata/monitor-log.xml"));
+				"testdata/monitor-log.xml"));
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 
 	}
-	
+
 	public void testGetContents() throws FileNotFoundException {
 		long startTime = Calendar.getInstance().getTimeInMillis();
 		FileDisplayDialog.getContents(monitorFile);
 		long endTime = Calendar.getInstance().getTimeInMillis();
-				
-		assertTrue( endTime - startTime <= TWO_SECONDS);
+
+		assertTrue(endTime - startTime <= TWO_SECONDS);
 	}
-	
+
 }

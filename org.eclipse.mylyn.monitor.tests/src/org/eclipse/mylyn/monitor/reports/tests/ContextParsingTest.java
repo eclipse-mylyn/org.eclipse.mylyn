@@ -60,39 +60,42 @@ public class ContextParsingTest extends TestCase {
 			}
 		}
 	}
-	
+
 	public void testHistoryParsingWithDecayReset() {
 		ScalingFactors scalingFactors = new ScalingFactors();
-//		scalingFactors.setDecay(new ScalingFactor("decay", .05f)); 
+		// scalingFactors.setDecay(new ScalingFactor("decay", .05f));
 		MylarContext context = new MylarContext("test", scalingFactors);
 		int numEvents = 0;
 		for (InteractionEvent event : events) {
 			if (event.isValidStructureHandle()) {
-//			if (SelectionMonitor.isValidStructureHandle(event)) {
+				// if (SelectionMonitor.isValidStructureHandle(event)) {
 				InteractionEvent newEvent = InteractionEvent.makeCopy(event, 1f);
-				context.parseEvent(newEvent); 
+				context.parseEvent(newEvent);
 				if (event.isValidStructureHandle() && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
-//				if (SelectionMonitor.isValidStructureHandle(event) && event.getKind().equals(InteractionEvent.Kind.SELECTION)) {
+					// if (SelectionMonitor.isValidStructureHandle(event) &&
+					// event.getKind().equals(InteractionEvent.Kind.SELECTION))
+					// {
 					IMylarElement element = context.parseEvent(event);
-					
+
 					// reset decay if not selected
-					if (element.getInterest().getValue() < 0) { 
+					if (element.getInterest().getValue() < 0) {
 						float decayOffset = (-1) * (element.getInterest().getValue()) + 1;
-						element = context.parseEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
-								event.getStructureKind(), event.getStructureHandle(), "test-decay", decayOffset));
-					} 
-					
-					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest().getValue() >= 0);
+						element = context.parseEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION, event
+								.getStructureKind(), event.getStructureHandle(), "test-decay", decayOffset));
+					}
+
+					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest()
+							.getValue() >= 0);
 					numEvents++;
 				}
 			}
 		}
 	}
-	
+
 	public void testScalingVactorSet() {
 		ScalingFactors scalingFactors = new ScalingFactors();
-		scalingFactors.setDecay(new ScalingFactor("decay", 0f)); 
+		scalingFactors.setDecay(new ScalingFactor("decay", 0f));
 		MylarContext context = new MylarContext("test", scalingFactors);
-		assertEquals(0f, context.getScalingFactors().getDecay().getValue());	 	
+		assertEquals(0f, context.getScalingFactors().getDecay().getValue());
 	}
 }
