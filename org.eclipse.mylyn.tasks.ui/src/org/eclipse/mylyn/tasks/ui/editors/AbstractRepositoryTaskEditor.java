@@ -2627,7 +2627,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 						// TODO: expand sections that were previously expanded
 
-						if (taskOutlineModel != null && outlinePage != null) {
+						if (taskOutlineModel != null && outlinePage != null && !outlinePage.getControl().isDisposed()) {
 							outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
 							outlinePage.getOutlineTreeViewer().refresh(true);
 						}
