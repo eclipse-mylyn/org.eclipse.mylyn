@@ -48,15 +48,7 @@ public class GetFaviconForUrlTest extends TestCase {
 		img.dispose();
 	}
 	
-	public void testNoFavicon() {
-		Image img = null;
-		try {
-			img = WebClientUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp").createImage(false);
-		} catch (MalformedURLException e) {
-			fail();
-		}
-		assertNull(img);
-		img.dispose();
-	}
-	
+	public void testNoFavicon() throws MalformedURLException {
+		assertNull(WebClientUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp"));
+	}	
 }
