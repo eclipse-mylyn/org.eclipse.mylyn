@@ -44,7 +44,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  */
 class SynchronizeQueryJob extends Job {
 
-	private static final int NUM_HITS_TO_PRIME = 20;
+	// private static final int NUM_HITS_TO_PRIME = 20;
 
 	private final AbstractRepositoryConnector connector;
 
@@ -96,7 +96,8 @@ class SynchronizeQueryJob extends Job {
 				} else if (resultingStatus.isOK()) {
 
 					if (collector.getHits().size() >= QueryHitCollector.MAX_HITS) {
-						MylarStatusHandler.log(QueryHitCollector.MAX_HITS_REACHED+"\n"+repositoryQuery.getSummary(), this);
+						MylarStatusHandler.log(
+								QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 					}
 
 					repositoryQuery.updateHits(collector.getHits(), taskList);
@@ -113,8 +114,8 @@ class SynchronizeQueryJob extends Job {
 											hit.getHandleIdentifier()) == null) {
 								temp.add(hit);
 							}
-							if (temp.size() > NUM_HITS_TO_PRIME)
-								break;
+							// if (temp.size() > NUM_HITS_TO_PRIME)
+							// break;
 						}
 					}
 
