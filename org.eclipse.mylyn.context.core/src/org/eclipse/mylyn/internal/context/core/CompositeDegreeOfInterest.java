@@ -21,38 +21,43 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
  */
 public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 
-	private Set<IDegreeOfInterest> infos = new HashSet<IDegreeOfInterest>();
+	private Set<IDegreeOfInterest> composed = new HashSet<IDegreeOfInterest>();
 
 	public void addEvent(InteractionEvent event) {
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			((DegreeOfInterest) info).addEvent(event);
+		}
 	}
 
 	public List<InteractionEvent> getEvents() {
 		Set<InteractionEvent> events = new HashSet<InteractionEvent>();
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			events.addAll(info.getEvents());
+		}
 		return new ArrayList<InteractionEvent>(events);
 	}
 
 	public float getValue() {
 		float value = 0;
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			value += info.getValue();
+		}
 		return value;
 	}
 
 	public float getDecayValue() {
 		float value = 0;
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			value += info.getDecayValue();
+		}
 		return value;
 	}
 
 	public float getEncodedValue() {
 		float value = 0;
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			value += info.getEncodedValue();
+		}
 		return value;
 	}
 
@@ -61,9 +66,11 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	 */
 	public boolean isInteresting() {
 		boolean isInteresting = false;
-		for (IDegreeOfInterest info : infos)
-			if (info.isInteresting())
+		for (IDegreeOfInterest info : composed) {
+			if (info.isInteresting()) {
 				isInteresting = true;
+			}
+		}
 		return isInteresting;
 	}
 
@@ -71,22 +78,28 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	 * @return true if all are predicted
 	 */
 	public boolean isPropagated() {
-		if (infos.isEmpty())
+		if (composed.isEmpty()) {
 			return false;
+		}
 		boolean allPropagated = true;
-		for (IDegreeOfInterest info : infos)
-			if (!info.isPropagated())
+		for (IDegreeOfInterest info : composed) {
+			if (!info.isPropagated()) {
 				allPropagated = false;
+			}
+		}
 		return allPropagated;
 	}
 
 	public boolean isPredicted() {
-		if (infos.isEmpty())
+		if (composed.isEmpty()) {
 			return false;
+		}
 		boolean allPredicted = true;
-		for (IDegreeOfInterest info : infos)
-			if (!info.isPredicted())
+		for (IDegreeOfInterest info : composed) {
+			if (!info.isPredicted()) {
 				allPredicted = false;
+			}
+		}
 		return allPredicted;
 	}
 
@@ -94,35 +107,18 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 		return getValue() >= MylarContextManager.getScalingFactors().getLandmark();
 	}
 
+	public Set<IDegreeOfInterest> getComposedDegreesOfInterest() {
+		return composed;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer();
 		result.append("composite(");
-		for (IDegreeOfInterest info : infos)
+		for (IDegreeOfInterest info : composed) {
 			result.append(info.toString());
+		}
 		result.append(")");
 		return result.toString();
 	}
-
-	public Set<IDegreeOfInterest> getInfos() {
-		return infos;
-	}
-
-	public MylarContext getCorrespondingContext() {
-		return null;
-	}
-
-	// public boolean hasChildWithEncodedInterest() {
-	// boolean has = true;
-	// for (IDegreeOfInterest info : infos) {
-	// if (!info.hasChildWithEncodedInterest()) has = false;
-	// }
-	// return has;
-	// }
-	//
-	// public void setHasChildWithEncodedInterest(boolean value) {
-	// for (IDegreeOfInterest info : infos) {
-	// info.setHasChildWithEncodedInterest(value);
-	// }
-	// }
 }

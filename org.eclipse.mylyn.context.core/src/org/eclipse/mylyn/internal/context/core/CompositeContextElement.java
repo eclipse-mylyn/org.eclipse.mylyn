@@ -53,7 +53,7 @@ public class CompositeContextElement implements IMylarElement {
 	public IDegreeOfInterest getInterest() {
 		CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
 		for (IMylarElement node : nodes) {
-			degreeOfInterest.getInfos().add(node.getInterest());
+			degreeOfInterest.getComposedDegreesOfInterest().add(node.getInterest());
 		}
 		return degreeOfInterest;
 	}
