@@ -96,7 +96,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// not within workweek
 				return false;
 			} else {
-				return TasksUiPlugin.getTaskListManager().isOwnedByUser(task);
+				return true; //TasksUiPlugin.getTaskListManager().isOwnedByUser(task);
 			}
 		}
 
