@@ -881,33 +881,39 @@ public class TaskListManager implements IPropertyChangeListener {
 	 */
 	public boolean isCompletedToday(ITask task) {
 		if (task != null) {
+			boolean isOwnedByUser = isOwnedByUser(task);
+			if (!isOwnedByUser) {
+				return false;
+			} else {
+				Date completionDate = task.getCompletionDate();
+				if (completionDate != null) {
+					Calendar tomorrow = Calendar.getInstance();
+					snapToNextDay(tomorrow);
+					Calendar yesterday = Calendar.getInstance();
+					yesterday.set(Calendar.HOUR_OF_DAY, 0);
+					yesterday.set(Calendar.MINUTE, 0);
+					yesterday.set(Calendar.SECOND, 0);
+					yesterday.set(Calendar.MILLISECOND, 0);
 
-			if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-
-				if (repository != null && repositoryTask.getOwner() != null
-						&& !repositoryTask.getOwner().equals(repository.getUserName())) {
-					return false;
+					return completionDate.compareTo(yesterday.getTime()) == 1
+							&& completionDate.compareTo(tomorrow.getTime()) == -1;
 				}
-			}
-
-			Date completionDate = task.getCompletionDate();
-			if (completionDate != null) {
-				Calendar tomorrow = Calendar.getInstance();
-				snapToNextDay(tomorrow);
-				Calendar yesterday = Calendar.getInstance();
-				yesterday.set(Calendar.HOUR_OF_DAY, 0);
-				yesterday.set(Calendar.MINUTE, 0);
-				yesterday.set(Calendar.SECOND, 0);
-				yesterday.set(Calendar.MILLISECOND, 0);
-
-				return completionDate.compareTo(yesterday.getTime()) == 1
-						&& completionDate.compareTo(tomorrow.getTime()) == -1;
 			}
 		}
 		return false;
+	}
+
+	private boolean isOwnedByUser(ITask task) {
+		if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+			if (repository != null && repositoryTask.getOwner() != null
+					&& !repositoryTask.getOwner().equals(repository.getUserName())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean isScheduledAfterThisWeek(ITask task) {
@@ -994,7 +1000,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * @return true if task due date != null and has past
 	 */
 	public boolean isOverdue(ITask task) {
-		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()));
+		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate())) && isOwnedByUser(task);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
