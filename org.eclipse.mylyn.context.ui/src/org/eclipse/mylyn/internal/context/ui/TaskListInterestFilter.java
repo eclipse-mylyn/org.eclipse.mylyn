@@ -87,6 +87,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		// || isCurrentlySelectedInEditor(task);
 	}
 
+	// TODO: refactor the messy rules
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof DateRangeContainer) {
 			DateRangeContainer container = (DateRangeContainer) parent;
@@ -96,7 +97,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// not within workweek
 				return false;
 			} else {
-				return true; //TasksUiPlugin.getTaskListManager().isOwnedByUser(task);
+				return TasksUiPlugin.getTaskListManager().isOwnedByUser(task) || TasksUiPlugin.getTaskListManager().isOverdue(task);
 			}
 		}
 
