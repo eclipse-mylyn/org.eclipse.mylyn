@@ -196,6 +196,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	public void indicateActiveTask(ITask task) {
+		if (!filterComposite.isDisposed()) {
+			return;
+		}
+		
 		String text = task.getSummary();
 		activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
@@ -208,6 +212,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	public void indicateNoActiveTask() {
+		if (!filterComposite.isDisposed()) {
+			return;
+		}
+		
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText("");
