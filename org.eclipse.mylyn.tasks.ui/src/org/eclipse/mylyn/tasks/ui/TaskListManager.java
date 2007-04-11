@@ -903,7 +903,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		return false;
 	}
 
-	private boolean isOwnedByUser(ITask task) {
+	public boolean isOwnedByUser(ITask task) {
 		if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
