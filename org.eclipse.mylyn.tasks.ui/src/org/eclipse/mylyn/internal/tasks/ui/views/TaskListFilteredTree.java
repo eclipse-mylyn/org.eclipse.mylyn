@@ -196,7 +196,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	public void indicateActiveTask(ITask task) {
-		if (!filterComposite.isDisposed()) {
+		if (filterComposite.isDisposed()) {
 			return;
 		}
 		
@@ -212,7 +212,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	public void indicateNoActiveTask() {
-		if (!filterComposite.isDisposed()) {
+		if (filterComposite.isDisposed()) {
 			return;
 		}
 		
