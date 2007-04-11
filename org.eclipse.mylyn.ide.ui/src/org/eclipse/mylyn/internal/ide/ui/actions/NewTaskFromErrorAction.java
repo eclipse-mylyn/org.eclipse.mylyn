@@ -68,8 +68,9 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			AbstractRepositoryTaskEditor editor = null;
 
-			String summary = selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
-					+ selection.getPluginId();
+			String summary = ""; 
+//				selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
+//					+ selection.getPluginId();
 			String description = "\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
 					+ selection.getMessage() + "\nSeverity: " + selection.getSeverityText() + "\nPlugin ID: "
 					+ selection.getPluginId() + "\nStack Trace:\n"
