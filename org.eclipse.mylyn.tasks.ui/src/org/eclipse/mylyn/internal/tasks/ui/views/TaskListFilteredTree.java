@@ -39,7 +39,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		super(parent, treeStyle, filter);
 	}
 
-	private static final String LABEL_NO_ACTIVE = "<no active task>";
+	public static final String LABEL_NO_ACTIVE = "<no active task>";
 
 	private Hyperlink activeTaskLabel;
 
