@@ -95,7 +95,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(2, testContainer.getDateRangeDelegates().size());
 		testContainer
 				.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
-		
+
 		assertEquals(30, testContainer.getTotalElapsed());
 		// assertEquals(3 * (currentEndMili - currentStartMili),
 		// testContainer.getTotalElapsed());
@@ -716,6 +716,47 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(2, doi.getCollapsedEvents().size());
 		InteractionEvent collapsed = doi.getCollapsedEvents().get(1);
 		assertEquals(40 * 1000, collapsed.getEndDate().getTime() - collapsed.getDate().getTime());
+	}
+
+	public void testCollapsedExternalization() {
+
+		Calendar startTime1 = Calendar.getInstance();
+		Calendar endTime1 = Calendar.getInstance();
+		endTime1.add(Calendar.SECOND, 20);
+
+		Calendar startTime2 = Calendar.getInstance();
+		startTime2.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar endTime2 = Calendar.getInstance();
+		endTime2.add(Calendar.DAY_OF_MONTH, 1);
+		endTime2.add(Calendar.SECOND, 20);
+
+		ITask task1 = new Task("task 1", "Task 1", true);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
+		MylarContext metaContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
+
+		TasksUiPlugin.getTaskListManager().activateTask(task1);
+
+		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND,
+				MylarContextManager.ACTIVITY_STRUCTURE_KIND, MylarContextManager.ACTIVITY_HANDLE_ATTENTION,
+				MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_ACTIVATED,  endTime1.getTime().getTime() - startTime1.getTime().getTime(),
+				startTime1.getTime(), endTime1.getTime());
+
+		InteractionEvent activityEvent2 = new InteractionEvent(InteractionEvent.Kind.COMMAND,
+				MylarContextManager.ACTIVITY_STRUCTURE_KIND, MylarContextManager.ACTIVITY_HANDLE_ATTENTION,
+				MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_ACTIVATED, endTime2.getTime().getTime() - startTime2.getTime().getTime(),
+				startTime2.getTime(), endTime2.getTime());
+
+		metaContext.parseEvent(activityEvent1);
+		metaContext.parseEvent(activityEvent2);
+
+		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
+		TasksUiPlugin.getTaskListManager().saveTaskList();
+		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
+		ContextCorePlugin.getContextManager().loadActivityMetaContext();
+		TasksUiPlugin.getTaskListManager().resetAndRollOver();
+		assertEquals((endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
+				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TasksUiPlugin.getTaskListManager()
+				.getElapsedTime(task1));
 	}
 
 }
