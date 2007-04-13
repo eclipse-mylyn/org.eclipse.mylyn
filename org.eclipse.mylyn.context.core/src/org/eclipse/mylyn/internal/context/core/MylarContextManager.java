@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -582,21 +583,23 @@ public class MylarContextManager {
 			List<InteractionEvent> attention = new ArrayList<InteractionEvent>();
 
 			MylarContext context = getActivityHistoryMetaContext();
-			MylarContext temp = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
+			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager
+					.getScalingFactors());
 			for (InteractionEvent event : context.getInteractionHistory()) {
-				if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)
+						&& event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					attention.add(event);
 				} else {
-					addAttentionEvents(attention, temp);
-					temp.parseEvent(event);
+					addAttentionEvents(attention, tempContext);
+					tempContext.parseEvent(event);
 				}
 			}
 
 			if (!attention.isEmpty()) {
-				addAttentionEvents(attention, temp);
+				addAttentionEvents(attention, tempContext);
 			}
 
-			externalizer.writeContextToXml(temp, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
+			externalizer.writeContextToXml(tempContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save activity history", false);
 		} finally {
@@ -608,20 +611,31 @@ public class MylarContextManager {
 
 	private void addAttentionEvents(List<InteractionEvent> attention, MylarContext temp) {
 		InteractionEvent aggregateEvent = null;
-		if (attention.size() > 1) {
-			InteractionEvent firstEvent = attention.get(0);
-			InteractionEvent lastEvent = attention.get(attention.size() - 1);
-			aggregateEvent = new InteractionEvent(firstEvent.getKind(), firstEvent.getStructureKind(), firstEvent
-					.getStructureHandle(), firstEvent.getOriginId(), firstEvent.getNavigation(), firstEvent.getDelta(),
-					firstEvent.getInterestContribution() + firstEvent.getInterestContribution(), firstEvent.getDate(),
-					lastEvent.getEndDate());
-		} else if (attention.size() == 1) {
-			aggregateEvent = attention.get(0);
+		try {
+			if (attention.size() > 1) {
+				InteractionEvent firstEvent = attention.get(0);
+				long totalTime = 0;
+				for (InteractionEvent interactionEvent : attention) {
+					totalTime += interactionEvent.getEndDate().getTime() - interactionEvent.getDate().getTime();
+				}
+				if (totalTime != 0) {
+					Date newEndDate = new Date(firstEvent.getDate().getTime() + totalTime);
+					aggregateEvent = new InteractionEvent(firstEvent.getKind(), firstEvent.getStructureKind(),
+							firstEvent.getStructureHandle(), firstEvent.getOriginId(), firstEvent.getNavigation(),
+							firstEvent.getDelta(), 1f, firstEvent.getDate(), newEndDate);
+				}
+			} else if (attention.size() == 1) {
+				if (attention.get(0).getEndDate().getTime() - attention.get(0).getDate().getTime() > 0) {
+					aggregateEvent = attention.get(0);
+				}
+			}
+			if (aggregateEvent != null) {
+				temp.parseEvent(aggregateEvent);
+			}
+			attention.clear();
+		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Error during meta activity collapse", false);
 		}
-		if (aggregateEvent != null) {
-			temp.parseEvent(aggregateEvent);
-		}
-		attention.clear();
 	}
 
 	public File getFileForContext(String handleIdentifier) {
@@ -700,8 +714,8 @@ public class MylarContextManager {
 				set.add(node);
 			}
 		}
-//		List<IMylarElement> list = new ArrayList<IMylarElement>(set);
-//		Collections.sort(list, new InterestComparator<IMylarElement>());
+		// List<IMylarElement> list = new ArrayList<IMylarElement>(set);
+		// Collections.sort(list, new InterestComparator<IMylarElement>());
 		return set;
 	}
 
