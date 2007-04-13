@@ -80,7 +80,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	public boolean shouldAlwaysShow(Object parent, ITask task) {
 		return super.shouldAlwaysShow(parent, task) || hasChanges(parent, task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
-				||  shouldShowInFocusedWorkweekDateContainer(parent, task)
+				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
@@ -97,7 +97,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// not within workweek
 				return false;
 			} else {
-				return TasksUiPlugin.getTaskListManager().isOwnedByUser(task) || TasksUiPlugin.getTaskListManager().isOverdue(task);
+				return task.isPastReminder() || TasksUiPlugin.getTaskListManager().isOverdue(task);
 			}
 		}
 
