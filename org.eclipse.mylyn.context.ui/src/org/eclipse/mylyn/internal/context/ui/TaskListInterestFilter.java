@@ -97,7 +97,15 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				// not within workweek
 				return false;
 			} else {
-				return task.isPastReminder() || TasksUiPlugin.getTaskListManager().isOverdue(task);
+				if (task.getScheduledForDate() != null) {
+					Calendar scheduledCal = Calendar.getInstance();
+					scheduledCal.setTime(task.getScheduledForDate());
+					if (container.includes(scheduledCal))
+						return true;
+				}
+
+				if (TasksUiPlugin.getTaskListManager().isOverdue(task))
+					return true;
 			}
 		}
 
