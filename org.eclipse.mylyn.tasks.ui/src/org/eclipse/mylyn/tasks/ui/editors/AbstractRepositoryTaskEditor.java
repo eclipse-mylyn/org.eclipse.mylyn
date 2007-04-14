@@ -976,7 +976,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					text.setData(attribute);
 
 					if (hasContentAssist(attribute)) {
-						ContentAssistCommandAdapter adapter = applyContentAssist(text, attribute);
+						ContentAssistCommandAdapter adapter = applyContentAssist(text, 
+							createContentProposalProvider(attribute));
 						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 					}
 				}
@@ -1003,9 +1004,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * 
 	 * @param text
 	 *            text field to decorate.
+	 * @param proposalProvider
+	 *            instance providing content proposals
 	 * @return the ContentAssistCommandAdapter for the field.
 	 */
-	protected ContentAssistCommandAdapter applyContentAssist(Text text, RepositoryTaskAttribute attribute) {
+	protected ContentAssistCommandAdapter applyContentAssist(Text text, IContentProposalProvider proposalProvider) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, (SWT.TOP | SWT.LEFT));
 		controlDecoration.setMarginWidth(0);
 		controlDecoration.setShowHover(true);
@@ -1016,7 +1019,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		controlDecoration.setImage(contentProposalImage.getImage());
 
 		TextContentAdapter textContentAdapter = new TextContentAdapter();
-		IContentProposalProvider proposalProvider = createContentProposalProvider(attribute);
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
 				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
@@ -1039,6 +1041,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
 		return null;
 	}
+	
+	/**
+	 * Creates an IContentProposalProvider to provide content assist proposals
+	 * for the given operation.
+	 * 
+	 * @param operation
+	 *            operation for which to provide content assist.
+	 * @return the IContentProposalProvider.
+	 */
+	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
+		return null;
+	}
 
 	/**
 	 * Called to check if there's content assist available for the given
@@ -1049,6 +1063,18 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @return true if content assist is available for the specified attribute.
 	 */
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
+		return false;
+	}
+	
+	/**
+	 * Called to check if there's content assist available for the given
+	 * operation.
+	 * 
+	 * @param operation
+	 *            the operation
+	 * @return true if content assist is available for the specified operation.
+	 */
+	protected boolean hasContentAssist(RepositoryOperation operation) {
 		return false;
 	}
 
@@ -1560,6 +1586,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
+			
+			if (hasContentAssist(addCCattribute)) {
+				ContentAssistCommandAdapter adapter = applyContentAssist(text, 
+					createContentProposalProvider(addCCattribute));
+				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+			}
 		}
 
 		RepositoryTaskAttribute CCattribute = taskData.getAttribute(RepositoryTaskAttribute.USER_CC);
@@ -2421,6 +2453,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// radioOptions[i].setBackground(background);
 				((Text) radioOptions[i]).setText(o.getInputValue());
 				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
+				
+				if (hasContentAssist(o)) {
+					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i], 
+						createContentProposalProvider(o));
+					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+				}
 			}
 
 			if (i == 0 || o.isChecked()) {
