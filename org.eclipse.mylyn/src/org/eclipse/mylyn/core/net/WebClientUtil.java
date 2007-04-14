@@ -75,7 +75,13 @@ public class WebClientUtil {
 		else
 			end = requestPath;
 
-		return Integer.parseInt(repositoryUrl.substring(colonPort + 1, end));
+		String port = repositoryUrl.substring(colonPort + 1, end);
+		
+		if(port.length() == 0){
+			return repositoryUsesHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
+		}
+		
+		return Integer.parseInt(port);
 	}
 
 	public static String getDomain(String repositoryUrl) {
