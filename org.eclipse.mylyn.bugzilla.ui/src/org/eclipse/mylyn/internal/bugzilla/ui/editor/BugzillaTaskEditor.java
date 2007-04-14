@@ -354,12 +354,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			button.setBackground(backgroundIncoming);
 		}
 	}
-	
+
 	@Override
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
 		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getID());
 	}
-	
+
 	@Override
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
 		return new EmailContentProposalProvider();
@@ -370,24 +370,23 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		BUGZILLA_OPERATION operation;
 		try {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
-		}
-		catch (RuntimeException e) {
+		} catch (RuntimeException e) {
 			MylarStatusHandler.log(e, "Unrecognized operatoin: " + repositoryOperation.getKnobName());
 			operation = null;
 		}
-		
+
 		if (operation != null && operation == BUGZILLA_OPERATION.reassign) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
 	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
 		return new EmailContentProposalProvider();
 	}
-	
+
 	private Button addButtonField(Composite rolesComposite, RepositoryTaskAttribute attribute, int style) {
 		if (attribute == null) {
 			return null;
@@ -494,12 +493,11 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null) {
 			createLabel(timeComposite, attribute);
 
-			
 			Composite dateWithClear = toolkit.createComposite(timeComposite);
 			GridLayout layout = new GridLayout(2, false);
 			layout.marginWidth = 1;
 			dateWithClear.setLayout(layout);
-			
+
 			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, taskData
 					.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
 			deadlinePicker.setFont(TEXT_FONT);
@@ -748,16 +746,16 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		public IContentProposal[] getProposals(String contents, int position) {
 			ArrayList<IContentProposal> result = new ArrayList<IContentProposal>();
-			
-			contents = contents.substring(0, position); 
-			
+
+			contents = contents.substring(0, position);
+
 			Set<String> addressSet = getAddressSet();
 			for (final String address : addressSet) {
 				if (address.startsWith(contents)) {
 					result.add(new EmailProposal(address));
 				}
 			}
-			
+
 			return result.toArray(new IContentProposal[result.size()]);
 		}
 
@@ -768,13 +766,22 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 						return s1.compareToIgnoreCase(s2);
 					}
 				});
-				
+
+				if (taskData != null) {
+					java.util.List<TaskComment> comments = taskData.getComments();
+					for (TaskComment comment : comments) {
+						addressSet.add(comment.getAuthor());
+					}
+				}
+
 				AbstractRepositoryTask repositoryTask = getRepositoryTask();
 				if (repositoryTask != null) {
+
 					Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
-					
-					Set<AbstractRepositoryQuery> queries = 
-						TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(repositoryTask.getHandleIdentifier());
+					tasks.add(repositoryTask);
+
+					Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
+							.getQueriesForHandle(repositoryTask.getHandleIdentifier());
 					for (AbstractRepositoryQuery query : queries) {
 						Set<ITask> queryTasks = query.getChildren();
 						for (ITask task : queryTasks) {
@@ -783,13 +790,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 							}
 						}
 					}
-					
+
 					for (AbstractRepositoryTask task : tasks) {
 						addEmailAddresses(task, addressSet);
 					}
 				}
 			}
-				
+
 			return addressSet;
 		}
 
@@ -801,7 +808,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		}
 	}
-	
+
 	private final class EmailProposal implements IContentProposal {
 		private final String address;
 
