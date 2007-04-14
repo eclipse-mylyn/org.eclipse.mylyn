@@ -1083,6 +1083,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.paintBordersFor(summaryComposite);
 	}
 
+	protected boolean supportsAttachmentDelete() {
+		return false;
+	}
+
+	protected void deleteAttachment(RepositoryAttachment attachment) {
+
+	}
+
 	protected void createAttachmentLayout(Composite composite) {
 
 		// TODO: expand to show new attachments
@@ -1320,8 +1328,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			registerDropListener(label);
 		}
 
+		final Composite attachmentControlsComposite = toolkit.createComposite(attachmentsComposite);
+		attachmentControlsComposite.setLayout(new GridLayout(2, false));
+		attachmentControlsComposite.setLayoutData(new GridData(GridData.BEGINNING));
+
 		/* Launch a NewAttachemntWizard */
-		Button addAttachmentButton = toolkit.createButton(attachmentsComposite, "Attach File...", SWT.PUSH);
+		Button addAttachmentButton = toolkit.createButton(attachmentControlsComposite, "Attach File...", SWT.PUSH);
 
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (task == null) {
@@ -1354,9 +1366,49 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		});
 
+		Button deleteAttachmentButton = null;
+		if (supportsAttachmentDelete()) {
+			deleteAttachmentButton = toolkit
+					.createButton(attachmentControlsComposite, "Delete Attachment...", SWT.PUSH);
+
+			deleteAttachmentButton.addSelectionListener(new SelectionListener() {
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+							taskData.getId());
+					if (task == null || !(task instanceof AbstractRepositoryTask)) {
+						// Should not happen
+						return;
+					}
+					if (AbstractRepositoryTaskEditor.this.isDirty
+							|| ((AbstractRepositoryTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+						MessageDialog.openInformation(attachmentsComposite.getShell(),
+								"Task not synchronized or dirty editor",
+								"Commit edits or synchronize task before deleting attachments.");
+						return;
+					} else {
+						if (attachmentsTableViewer != null
+								&& attachmentsTableViewer.getSelection() != null
+								&& ((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement() != null) {
+							RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
+									.getSelection()).getFirstElement());
+							deleteAttachment(attachment);
+							submitToRepository();
+						}
+					}
+				}
+			});
+
+		}
 		registerDropListener(section);
 		registerDropListener(attachmentsComposite);
 		registerDropListener(addAttachmentButton);
+		if (supportsAttachmentDelete()) {
+			registerDropListener(deleteAttachmentButton);
+		}
 	}
 
 	private void registerDropListener(final Control control) {
@@ -1425,9 +1477,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	}
 
-	private ImageHyperlink createReplyHyperlink(final int commentNum, final ExpandableComposite section,
-			final String commentBody) {
-		final ImageHyperlink replyLink = new ImageHyperlink(section, SWT.NULL);
+	private ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
+		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
 		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
 		replyLink.setToolTipText(LABEL_REPLY);
@@ -1455,14 +1506,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				newCommentTextViewer.getTextWidget().setCaretOffset(strBuilder.length());
 			}
 		});
-		section.addExpansionListener(new ExpansionAdapter() {
-
-			@Override
-			public void expansionStateChanged(ExpansionEvent e) {
-				replyLink.setVisible(section.isExpanded());
-			}
-		});
-		section.setTextClient(replyLink);
 
 		return replyLink;
 	}
@@ -1586,6 +1629,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	protected boolean supportsCommentDelete() {
+		return false;
+	}
+
+	protected void deleteComment(TaskComment comment) {
+
+	}
+
 	protected void createCommentLayout(Composite composite) {
 		commentsSection = createSection(composite, getSectionLabel(SECTION_NAME.COMMENTS_SECTION));
 		commentsSection.setText(commentsSection.getText() + " (" + taskData.getComments().size() + ")");
@@ -1639,15 +1690,46 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			});
 
-			ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), expandableComposite, taskComment
-					.getText());
-			replyLink.setVisible(expandableComposite.isExpanded());
+			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
+			toolbarComp.setLayout(new RowLayout());
+
+			if (supportsCommentDelete()) {
+				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarComp, SWT.NULL);
+				toolkit.adapt(deleteComment, true, true);
+				deleteComment.setImage(TasksUiImages.getImage(TasksUiImages.REMOVE));
+				deleteComment.setToolTipText("Remove");
+
+				deleteComment.addHyperlinkListener(new HyperlinkAdapter() {
+
+					@Override
+					public void linkActivated(HyperlinkEvent e) {
+						if (taskComment != null) {
+							deleteComment(taskComment);
+							submitToRepository();
+						}
+					}
+				});
+
+			}
+
+			createReplyHyperlink(taskComment.getNumber(), toolbarComp, taskComment.getText());
+
+			expandableComposite.addExpansionListener(new ExpansionAdapter() {
+
+				@Override
+				public void expansionStateChanged(ExpansionEvent e) {
+					toolbarComp.setVisible(expandableComposite.isExpanded());
+				}
+			});
+
+			toolbarComp.setVisible(expandableComposite.isExpanded());
+			expandableComposite.setTextClient(toolbarComp);
 
 			// HACK: This is necessary
 			// due to a bug in SWT's ExpandableComposite.
 			// 165803: Expandable bars should expand when clicking anywhere
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-			expandableComposite.setData(replyLink);
+			expandableComposite.setData(toolbarComp);
 
 			expandableComposite.setLayout(new GridLayout());
 			expandableComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -1673,6 +1755,21 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// code for outline
 			commentStyleText.add(styledText);
 			textHash.put(taskComment, styledText);
+
+			// if (supportsCommentDelete()) {
+			// Button deleteButton = toolkit.createButton(ecComposite, null,
+			// SWT.PUSH);
+			// deleteButton.setImage(TasksUiImages.getImage(TasksUiImages.COMMENT_DELETE));
+			// deleteButton.setToolTipText("Remove comment above.");
+			// deleteButton.addListener(SWT.Selection, new Listener() {
+			// public void handleEvent(Event e) {
+			// if (taskComment != null) {
+			// deleteComment(taskComment);
+			// submitToRepository();
+			// }
+			// }
+			// });
+			// }
 		}
 		if (foundNew) {
 			commentsSection.setExpanded(true);
@@ -2065,8 +2162,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// 165803: Expandable bars should expand when clicking
 					// anywhere
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=165803
-					if (ex.getData() != null && ex.getData() instanceof ImageHyperlink) {
-						((ImageHyperlink) ex.getData()).setVisible(true);
+					if (ex.getData() != null && ex.getData() instanceof Composite) {
+						((Composite) ex.getData()).setVisible(true);
 					}
 
 					break;
@@ -2500,10 +2597,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		final boolean attachContext = getAttachContext();
 
 		Job submitJob = new Job(LABEL_JOB_SUBMIT) {
-
-			// public boolean belongsTo(Object family) {
-			// return family == parentEditor.FAMILY_SUBMIT;
-			// }
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

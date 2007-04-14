@@ -50,6 +50,7 @@ public class TaskActivityTest extends TestCase {
 	protected void tearDown() throws Exception {
 		// MylarTaskListPlugin.getTaskListManager().readExistingOrCreateNewList();
 		TasksUiPlugin.getTaskListManager().resetTaskList();
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 		super.tearDown();
 	}
 
