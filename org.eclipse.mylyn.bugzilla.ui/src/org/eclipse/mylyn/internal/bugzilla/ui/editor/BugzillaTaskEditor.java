@@ -14,21 +14,33 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -342,7 +354,40 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			button.setBackground(backgroundIncoming);
 		}
 	}
+	
+	@Override
+	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
+		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getID());
+	}
+	
+	@Override
+	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
+		return new EmailContentProposalProvider();
+	}
 
+	@Override
+	protected boolean hasContentAssist(RepositoryOperation repositoryOperation) {
+		BUGZILLA_OPERATION operation;
+		try {
+			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
+		}
+		catch (RuntimeException e) {
+			MylarStatusHandler.log(e, "Unrecognized operatoin: " + repositoryOperation.getKnobName());
+			operation = null;
+		}
+		
+		if (operation != null && operation == BUGZILLA_OPERATION.reassign) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
+		return new EmailContentProposalProvider();
+	}
+	
 	private Button addButtonField(Composite rolesComposite, RepositoryTaskAttribute attribute, int style) {
 		if (attribute == null) {
 			return null;
@@ -698,4 +743,86 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
 	}
 
+	private class EmailContentProposalProvider implements IContentProposalProvider {
+		private Set<String> addressSet;
+
+		public IContentProposal[] getProposals(String contents, int position) {
+			ArrayList<IContentProposal> result = new ArrayList<IContentProposal>();
+			
+			contents = contents.substring(0, position); 
+			
+			Set<String> addressSet = getAddressSet();
+			for (final String address : addressSet) {
+				if (address.startsWith(contents)) {
+					result.add(new EmailProposal(address));
+				}
+			}
+			
+			return result.toArray(new IContentProposal[result.size()]);
+		}
+
+		private Set<String> getAddressSet() {
+			if (addressSet == null) {
+				addressSet = new TreeSet<String>(new Comparator<String>() {
+					public int compare(String s1, String s2) {
+						return s1.compareToIgnoreCase(s2);
+					}
+				});
+				
+				AbstractRepositoryTask repositoryTask = getRepositoryTask();
+				if (repositoryTask != null) {
+					Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+					
+					Set<AbstractRepositoryQuery> queries = 
+						TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(repositoryTask.getHandleIdentifier());
+					for (AbstractRepositoryQuery query : queries) {
+						Set<ITask> queryTasks = query.getChildren();
+						for (ITask task : queryTasks) {
+							if (!task.isCompleted() && task instanceof AbstractRepositoryTask) {
+								tasks.add((AbstractRepositoryTask) task);
+							}
+						}
+					}
+					
+					for (AbstractRepositoryTask task : tasks) {
+						addEmailAddresses(task, addressSet);
+					}
+				}
+			}
+				
+			return addressSet;
+		}
+
+		private void addEmailAddresses(AbstractRepositoryTask task, Set<String> addressSet) {
+			RepositoryTaskData data = task.getTaskData();
+			if (data != null) {
+				addressSet.add(data.getAssignedTo());
+				addressSet.addAll(data.getCC());
+			}
+		}
+	}
+	
+	private final class EmailProposal implements IContentProposal {
+		private final String address;
+
+		private EmailProposal(String address) {
+			this.address = address;
+		}
+
+		public String getLabel() {
+			return address;
+		}
+
+		public String getDescription() {
+			return null;
+		}
+
+		public int getCursorPosition() {
+			return address.length();
+		}
+
+		public String getContent() {
+			return address;
+		}
+	}
 }
