@@ -976,8 +976,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					text.setData(attribute);
 
 					if (hasContentAssist(attribute)) {
-						ContentAssistCommandAdapter adapter = applyContentAssist(text, 
-							createContentProposalProvider(attribute));
+						ContentAssistCommandAdapter adapter = applyContentAssist(text,
+								createContentProposalProvider(attribute));
 						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 					}
 				}
@@ -1041,7 +1041,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
 		return null;
 	}
-	
+
 	/**
 	 * Creates an IContentProposalProvider to provide content assist proposals
 	 * for the given operation.
@@ -1065,7 +1065,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
 		return false;
 	}
-	
+
 	/**
 	 * Called to check if there's content assist available for the given
 	 * operation.
@@ -1497,9 +1497,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 		descriptionTextViewer.getTextWidget().addListener(SWT.FocusIn, new DescriptionListener());
 
-		createReplyHyperlink(0, descriptionSection, taskData.getDescription());
+		Composite replyComp = toolkit.createComposite(descriptionSection);
+		replyComp.setLayout(new RowLayout());
+		replyComp.setBackground(null);
 
-		// toolkit.paintBordersFor(sectionComposite);
+		createReplyHyperlink(0, replyComp, taskData.getDescription());
+		descriptionSection.setTextClient(replyComp);
 
 	}
 
@@ -1586,10 +1589,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text text = createTextField(attributesComposite, addCCattribute, SWT.FLAT);
 			GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(text);
-			
+
 			if (hasContentAssist(addCCattribute)) {
-				ContentAssistCommandAdapter adapter = applyContentAssist(text, 
-					createContentProposalProvider(addCCattribute));
+				ContentAssistCommandAdapter adapter = applyContentAssist(text,
+						createContentProposalProvider(addCCattribute));
 				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 			}
 		}
@@ -1725,7 +1728,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
 			toolbarComp.setLayout(new RowLayout());
 			toolbarComp.setBackground(null);
-			
+
 			if (supportsCommentDelete()) {
 				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarComp, SWT.NULL);
 				toolkit.adapt(deleteComment, true, true);
@@ -2454,10 +2457,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				// radioOptions[i].setBackground(background);
 				((Text) radioOptions[i]).setText(o.getInputValue());
 				((Text) radioOptions[i]).addModifyListener(new RadioButtonListener());
-				
+
 				if (hasContentAssist(o)) {
-					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i], 
-						createContentProposalProvider(o));
+					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i],
+							createContentProposalProvider(o));
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 				}
 			}
