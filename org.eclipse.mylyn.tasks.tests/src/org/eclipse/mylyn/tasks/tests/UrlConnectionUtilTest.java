@@ -40,6 +40,17 @@ public class UrlConnectionUtilTest extends TestCase {
 		assertEquals(321, WebClientUtil.getPort(url));
 		assertEquals("example.com", WebClientUtil.getDomain(url));
 		assertEquals("", WebClientUtil.getRequestPath(url));
+        
+		url = "https://example.com:444/folder/file.txt?search=https://example.com:812/folder/file.txt";
+		assertEquals(444, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("/folder/file.txt?search=https://example.com:812/folder/file.txt", WebClientUtil.getRequestPath(url));
+	
+		url = "https://example.com/folder/file.txt?search=https://example.com:812/folder/file.txt";
+		assertEquals(443, WebClientUtil.getPort(url));
+		assertEquals("example.com", WebClientUtil.getDomain(url));
+		assertEquals("/folder/file.txt?search=https://example.com:812/folder/file.txt", WebClientUtil.getRequestPath(url));
+	
 	}
 	
 	public void testCredentials() {

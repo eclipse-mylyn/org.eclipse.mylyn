@@ -734,7 +734,9 @@ public class TaskActivityTest extends TestCase {
 		ITask task1 = new Task("task 1", "Task 1", true);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		MylarContext metaContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
-
+		metaContext.reset();
+		assertEquals(0, metaContext.getInteractionHistory().size());
+		
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		InteractionEvent activityEvent1 = new InteractionEvent(InteractionEvent.Kind.COMMAND,
@@ -748,12 +750,19 @@ public class TaskActivityTest extends TestCase {
 				startTime2.getTime(), endTime2.getTime());
 
 		metaContext.parseEvent(activityEvent1);
-		metaContext.parseEvent(activityEvent2);
-
+		metaContext.parseEvent(activityEvent2);		
 		TasksUiPlugin.getTaskListManager().deactivateAllTasks();
-		TasksUiPlugin.getTaskListManager().saveTaskList();
+		assertEquals(4, ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().size());
+		TasksUiPlugin.getTaskListManager().saveTaskList();		
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
+		ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().reset();
+		assertEquals(0, ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().size());
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
+		
+		// Only three remain as the two attention events have compressed into one
+		assertEquals(3, ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory().size());
+		assertEquals(0, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
+		
 		TasksUiPlugin.getTaskListManager().resetAndRollOver();
 		assertEquals((endTime1.getTimeInMillis() - startTime1.getTimeInMillis())
 				+ (endTime2.getTimeInMillis() - startTime2.getTimeInMillis()), TasksUiPlugin.getTaskListManager()
