@@ -1724,7 +1724,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
 			toolbarComp.setLayout(new RowLayout());
-
+			toolbarComp.setBackground(null);
+			
 			if (supportsCommentDelete()) {
 				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarComp, SWT.NULL);
 				toolkit.adapt(deleteComment, true, true);
