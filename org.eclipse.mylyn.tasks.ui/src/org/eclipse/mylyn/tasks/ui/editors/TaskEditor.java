@@ -552,7 +552,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
 		ImageDescriptor imageDescriptor = TasksUiImages.createWithOverlay(TasksUiImages.REPOSITORY, overlay, false,
 				false);
-		getHeaderForm().getForm().setImage(TasksUiImages.getImage(imageDescriptor));
+		if (getHeaderForm() != null) {
+			getHeaderForm().getForm().setImage(TasksUiImages.getImage(imageDescriptor));
+		}
 	}
 
 	public Form getTopForm() {
