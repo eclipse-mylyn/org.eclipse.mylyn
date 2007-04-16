@@ -129,9 +129,10 @@ public class TaskEditor extends SharedHeaderFormEditor {
 				setPageText(index, ISSUE_WEB_PAGE_LABEL);
 
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 					public void run() {
-						webBrowser.setUrl(url);
+						if (!webBrowser.isDisposed()) {
+							webBrowser.setUrl(url);
+						}
 					}
 				});
 
