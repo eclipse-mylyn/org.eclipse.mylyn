@@ -1372,12 +1372,12 @@ public class TaskListView extends ViewPart {
 					}
 				}
 				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
-//					TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
-					if(getViewer().getExpandedState(object)){
-						getViewer().collapseToLevel(object, TreeViewer.ALL_LEVELS);
-					} else {
-						getViewer().expandToLevel(object, TreeViewer.ALL_LEVELS);
-					}
+					TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
+//					if(getViewer().getExpandedState(object)){
+//						getViewer().collapseToLevel(object, TreeViewer.ALL_LEVELS);
+//					} else {
+//						getViewer().expandToLevel(object, TreeViewer.ALL_LEVELS);
+//					}
 				}
 			}
 		});
