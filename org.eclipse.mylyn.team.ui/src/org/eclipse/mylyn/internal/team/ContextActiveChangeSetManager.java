@@ -162,8 +162,6 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			for (int i = 0; i < sets.length; i++) {
 				ChangeSet set = sets[i];
 				if (set instanceof ContextChangeSet) {
-					System.err.println(">>> " + set);
-
 					ContextChangeSet contextChangeSet = (ContextChangeSet) set;
 					if (contextChangeSet.getTask().equals(task)) {
 						return contextChangeSet.getResources();

@@ -54,8 +54,8 @@ public class ContextEditorManager implements IMylarContextListener {
 			workbench.getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN, false);
 			boolean wasPaused = ContextCorePlugin.getContextManager().isContextCapturePaused();
 			try {
-//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(false);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(false);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(false);
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(false);
 				workbench.largeUpdateStart();
 				
 				if (!wasPaused) {
@@ -80,8 +80,8 @@ public class ContextEditorManager implements IMylarContextListener {
 			} finally {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 				workbench.largeUpdateEnd();
-//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(true);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(true);
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(true);
+//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setEnabled(true);
 			}
 		}
 	}
