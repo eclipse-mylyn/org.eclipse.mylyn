@@ -738,9 +738,13 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected String getActivityUrl() {
-		return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
+		if (repository != null && taskData != null) {
+			return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
+		} else {
+			return null;
+		}
 	}
-
+	
 	private class EmailContentProposalProvider implements IContentProposalProvider {
 		private Set<String> addressSet;
 
