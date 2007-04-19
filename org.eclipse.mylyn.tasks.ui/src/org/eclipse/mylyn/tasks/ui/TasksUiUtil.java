@@ -274,6 +274,15 @@ public class TasksUiUtil {
 
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
+		if (task instanceof AbstractRepositoryTask) {
+			for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
+				if (editor.getEditorInput().equals(editorInput)) {
+					editor.refreshEditorContents();
+					return;
+				}
+			}
+		}	
+		
 		if (asyncExec) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
