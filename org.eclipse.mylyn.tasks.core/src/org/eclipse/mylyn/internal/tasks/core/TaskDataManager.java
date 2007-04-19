@@ -119,6 +119,9 @@ public class TaskDataManager {
 	 * taskData is held and can be retrieved via getOldTaskData()
 	 */
 	public void push(String taskHandle, RepositoryTaskData newEntry) {
+		if (taskHandle == null || newEntry == null) {
+			return;
+		}
 		RepositoryTaskData moveToOld = getNewDataMap().get(taskHandle);
 		synchronized (file) {
 			if (moveToOld != null) {
