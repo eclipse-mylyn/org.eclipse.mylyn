@@ -46,5 +46,4 @@ public class WorkbenchUserActivityMonitor extends AbstractUserActivityMonitor {
 			display.removeFilter(SWT.MouseUp, interactionActivityListener);
 		}
 	}
-
 }
