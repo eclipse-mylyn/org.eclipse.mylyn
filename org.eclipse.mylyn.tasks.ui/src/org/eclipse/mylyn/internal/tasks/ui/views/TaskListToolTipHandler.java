@@ -59,7 +59,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListToolTipHandler {
 
-	// private static final String SEPARATOR = "\n---------------\n";
 	private static final String SEPARATOR = "\n\n";
 
 	private static final String UNITS_HOURS = " hours";
@@ -74,11 +73,11 @@ public class TaskListToolTipHandler {
 
 	private WorkweekProgressBar taskProgressBar;
 
-	private Widget tipWidget; // widget this tooltip is hovering over
+	private Widget tipWidget; 
 
-	protected Point tipPosition; // the position being hovered over on the
+	protected Point tipPosition; 
 
-	protected Point widgetPosition; // the position hovered over in the Widget;
+	protected Point widgetPosition; 
 
 	public TaskListToolTipHandler(Shell parentShell) {
 		if (parentShell != null) {
@@ -237,7 +236,8 @@ public class TaskListToolTipHandler {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 				tooltip += "\n" + repository.getRepositoryLabel();
-				tooltip += formatScheduledFor(repositoryTask);
+				tooltip += SEPARATOR;
+				tooltip += formatActivityInformation(repositoryTask);
 
 				if (repositoryTask.getStatus() != null) {
 					tooltip += SEPARATOR + "Last Error: " + repositoryTask.getStatus().getMessage();
@@ -245,7 +245,9 @@ public class TaskListToolTipHandler {
 			}
 			return tooltip;
 		} else if (element != null) {
-			tooltip += (element).getSummary() + formatScheduledFor(element);
+			tooltip += (element).getSummary();
+			tooltip += SEPARATOR;
+			tooltip += formatActivityInformation(element);
 			return tooltip + priority;
 		} else if (object instanceof Control) {
 			return (String) ((Control) object).getData("TIP_TEXT");
@@ -253,54 +255,27 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private String formatScheduledFor(ITaskListElement element) {
+	private String formatActivityInformation(ITaskListElement element) {
 		String result = "";
 		if (element instanceof ITask) {
-			
-			String elapsedTimeString = NO_MINUTES;
 			try {
-				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask)element);
-				elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-				if (elapsedTimeString.equals("")) {
-					elapsedTimeString = NO_MINUTES;
+				Date date = ((ITask) element).getScheduledForDate();
+				if (date != null) {
+					result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.LONG).format(date)
+							+ " (" + DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + ")";
 				}
-			} catch (RuntimeException e) {
+				
+				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask)element);
+				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
+				if (!elapsedTimeString.equals("")) {
+					result += "\nElapsed: " + elapsedTimeString + "\n";
+				}
+			} catch (Exception e) {
 				// ignore
-			}
-
-			result += SEPARATOR +"\nElapsed: " + elapsedTimeString + "\n";
-			
-			
-			Date date = ((ITask) element).getScheduledForDate();
-			if (date != null) {
-				result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.FULL).format(date) + ", "
-						+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + "";
 			}
 		}
 		return result;
 	}
-
-	// private String formatLastRefreshTime(Date lastRefresh) {
-	// String toolTip = "Last synchronized: ";
-	// if (lastRefresh == null)
-	// return toolTip += "unknown";
-	// Date timeNow = new Date();
-	// long timeDifference = (timeNow.getTime() - lastRefresh.getTime()) /
-	// 60000;
-	// long minutes = timeDifference % 60;
-	// timeDifference /= 60;
-	// long hours = timeDifference % 24;
-	// timeDifference /= 24;
-	// if (timeDifference > 0) {
-	// toolTip += timeDifference + ((timeDifference == 1) ? " day, " : " days,
-	// ");
-	// }
-	// if (hours > 0 || timeDifference > 0) {
-	// toolTip += hours + ((hours == 1) ? " hour, " : " hours, ");
-	// }
-	// toolTip += minutes + ((minutes == 1) ? " minute " : " minutes ") + "ago";
-	// return toolTip;
-	// }
 
 	protected Image getToolTipImage(Object object) {
 		ITaskListElement element = getTaskListElement(object);
@@ -480,29 +455,3 @@ public class TaskListToolTipHandler {
 			tipShell.setVisible(false);
 	}
 }
-
-// /*
-// * Trap F1 Help to pop up a custom help box
-// */
-// control.addHelpListener(new HelpListener() {
-// public void helpRequested(HelpEvent event) {
-// if (tipWidget == null)
-// return;
-// Object help = getToolTipHelp(tipWidget);
-// if (help == null)
-// return;
-// if (help.getClass() != String.class) {
-// return;
-// }
-// if (tipShell.isVisible()) {
-// tipShell.setVisible(false);
-// Shell helpShell = new Shell(parentShell, SWT.SHELL_TRIM);
-// helpShell.setLayout(new FillLayout());
-// Label label = new Label(helpShell, SWT.NONE);
-// label.setText((String) help);
-// helpShell.pack();
-// setHoverLocation(helpShell, tipPosition);
-// helpShell.open();
-// }
-// }
-// });
