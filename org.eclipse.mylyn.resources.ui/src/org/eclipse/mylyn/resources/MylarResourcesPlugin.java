@@ -35,6 +35,7 @@ import org.eclipse.mylar.internal.resources.ResourceInterestUpdater;
 import org.eclipse.mylar.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -82,6 +83,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		initPreferenceDefaults();
 
 		ContextCorePlugin.getContextManager().addListener(editorManager);
+		TasksUiPlugin.getTaskListManager().addActivityListener(editorManager);
 		MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
