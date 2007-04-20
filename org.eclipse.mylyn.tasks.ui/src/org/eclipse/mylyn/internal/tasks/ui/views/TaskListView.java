@@ -1019,8 +1019,8 @@ public class TaskListView extends ViewPart {
 				FileTransfer.getInstance(), // PluginTransfer.getInstance(),
 				RTFTransfer.getInstance() };
 
-		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE, dragTypes, new TaskListDragSourceListener(this));
-		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, dropTypes, new TaskListDropAdapter(getViewer()));
+		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes, new TaskListDragSourceListener(this));
+		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT, dropTypes, new TaskListDropAdapter(getViewer()));
 	}
 
 	void expandToActiveTasks() {
