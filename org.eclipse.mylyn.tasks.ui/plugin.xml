@@ -288,7 +288,7 @@
           enablesFor="*"
           icon="icons/eview16/repositories.gif"
           id="org.eclipse.mylar.tasks.ui.open.repositories.view"
-          label="Show Task Repositries View"
+          label="Show Task Repositories View"
           menubarPath="tasks"
           tooltip="Show Task Repositories View">
          </action>

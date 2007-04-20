@@ -28,6 +28,7 @@ import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Used for returning results from Eclipse Search view. Collects results of a
@@ -56,7 +57,11 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	public void aboutToStart(int startMatchCount) throws CoreException {
 		super.aboutToStart(startMatchCount);
 		searchResult.removeAll();
-		NewSearchUI.activateSearchResultView();
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				NewSearchUI.activateSearchResultView();
+			}
+		});
 	}
 
 	@Override
