@@ -61,7 +61,6 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void open(IMylarElement node) {
-		// get the element and open it in an editor
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		if (javaElement == null || !javaElement.exists())
 			return;
@@ -72,29 +71,6 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 			MylarStatusHandler.fail(t, "Could not open editor for: " + node, true);
 		}
 	}
-
-//	private boolean explorerLinked = PreferenceConstants.getPreferenceStore().getBoolean(
-//	PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
-	
-//	public void setContextCapturePaused(boolean paused) {
-//		PackageExplorerPart explorer = PackageExplorerPart.getFromActivePerspective();
-//		if (paused) {
-//			explorerLinked = PreferenceConstants.getPreferenceStore().getBoolean(
-//					PreferenceConstants.LINK_PACKAGES_TO_EDITOR);
-//			if (explorerLinked) { // causes delayed selection
-//				if (explorer != null)
-//					explorer.setLinkingEnabled(false);
-//			}
-//		} else {
-//			if (explorer != null)
-//				explorer.setLinkingEnabled(true);
-//			PreferenceConstants.getPreferenceStore().setValue(PreferenceConstants.LINK_PACKAGES_TO_EDITOR,
-//					explorerLinked);
-//			if (explorer != null) {
-//				explorer.setLinkingEnabled(explorerLinked);
-//			}
-//		}
-//	}
 
 	@Override
 	public void restoreEditor(IMylarElement document) {
