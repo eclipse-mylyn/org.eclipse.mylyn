@@ -286,10 +286,11 @@ public class TaskDataManager {
 	}
 
 	public void remove(String handle) {
-		synchronized (file) {
+		synchronized (file) {			
 			getNewDataMap().remove(handle);
 			getOldDataMap().remove(handle);
 		}
+		discardEdits(handle);
 	}
 
 	/**
@@ -469,4 +470,7 @@ public class TaskDataManager {
 
 	}
 
+	public boolean hasOutgoing(String handleIdentifier) {
+		return getLocalChanges(handleIdentifier).size() > 0;
+	}
 }

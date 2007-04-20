@@ -21,6 +21,7 @@ import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -28,6 +29,10 @@ import org.w3c.dom.Node;
  * @author Mik Kersten
  */
 public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
+
+	private static final String KEY_SEVERITY = "bugzilla.severity";
+	
+	private static final String KEY_PRODUCT = "bugzilla.product";
 
 	private static final String STATUS_RESO = "RESO";
 
@@ -75,6 +80,14 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
+	public Element createTaskElement(ITask task, Document doc, Element parent) {
+		Element node = super.createTaskElement(task, doc, parent);
+		node.setAttribute(KEY_SEVERITY, ((BugzillaTask)task).getSeverity());
+		node.setAttribute(KEY_PRODUCT, ((BugzillaTask)task).getProduct());
+		return node;
+	}
+	
+	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
 	}
@@ -93,6 +106,12 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
 			throws TaskExternalizationException {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary, false);
+		if(element.hasAttribute(KEY_SEVERITY)) {
+			task.setSeverity(element.getAttribute(KEY_SEVERITY));
+		}
+		if(element.hasAttribute(KEY_PRODUCT)) {
+			task.setProduct(element.getAttribute(KEY_PRODUCT));
+		}
 		return task;
 	}
 

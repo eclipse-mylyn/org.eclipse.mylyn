@@ -85,10 +85,6 @@ public class TaskListWriter {
 		this.delagatingExternalizer = new DelegatingTaskExternalizer();
 	}
 
-	public void setTaskDataManager(TaskDataManager taskDataManager) {
-		delagatingExternalizer.init(taskDataManager);
-	}
-
 	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
 		this.externalizers = externalizers;
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);

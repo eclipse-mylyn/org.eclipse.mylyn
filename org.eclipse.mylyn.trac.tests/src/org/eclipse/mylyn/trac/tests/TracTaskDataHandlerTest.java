@@ -28,6 +28,7 @@ import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -77,7 +78,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "");
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);
@@ -103,9 +104,11 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void getChangedSinceLastSync() throws Exception {
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		int lastModified = Integer.parseInt(task.getTaskData().getLastModified());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
+		
+		int lastModified = Integer.parseInt(taskData.getLastModified());
 		
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);

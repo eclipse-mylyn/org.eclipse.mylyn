@@ -489,7 +489,7 @@ public class BugzillaClient {
 		}
 	}
 
-	public static String getBugUrlWithoutLogin(String repositoryUrl, int id) {
+	public static String getBugUrlWithoutLogin(String repositoryUrl, String id) {
 		String url = repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG + id;
 		return url;
 	}

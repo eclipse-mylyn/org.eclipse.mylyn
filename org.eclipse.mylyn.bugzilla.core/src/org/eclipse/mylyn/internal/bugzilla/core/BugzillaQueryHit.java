@@ -32,14 +32,13 @@ public class BugzillaQueryHit extends AbstractQueryHit {
 	}
 
 	@Override
-	protected AbstractRepositoryTask createTask() {
+	protected AbstractRepositoryTask createTask() {		
 		return new BugzillaTask(this, true);
 	}
 
 	@Override
 	public String getUrl() {
-		Integer idInt = new Integer(taskId);
-		return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, idInt);
+		return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 	}
 
 	@Override

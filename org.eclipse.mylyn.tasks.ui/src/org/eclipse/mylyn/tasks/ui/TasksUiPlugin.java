@@ -65,12 +65,11 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
@@ -286,15 +285,18 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 
-							if (repositoryTask.getTaskData() != null) {
-								List<TaskComment> taskComments = repositoryTask.getTaskData().getComments();
+							RepositoryTaskData taskData = getDefault().getTaskDataManager().getRepositoryTaskData(
+									repositoryTask.getHandleIdentifier());
+
+							if (taskData != null) {
+								List<TaskComment> taskComments = taskData.getComments();
 								if (taskComments != null && taskComments.size() > 0) {
 									TaskComment lastComment = taskComments.get(taskComments.size() - 1);
 									if (lastComment != null) {
 										notification.setDescription(lastComment.getText());
 									}
 								} else {
-									String description = repositoryTask.getTaskData().getDescription();
+									String description = taskData.getDescription();
 									if (description != null) {
 										notification.setDescription(description);
 									}
@@ -302,11 +304,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 								if (connector != null) {
 									ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
-									if (offlineHandler != null
-											&& repositoryTask.getTaskData().getLastModified() != null) {
-										Date modified = repositoryTask.getTaskData().getAttributeFactory()
-												.getDateForAttributeType(RepositoryTaskAttribute.DATE_MODIFIED,
-														repositoryTask.getTaskData().getLastModified());
+									if (offlineHandler != null && taskData.getLastModified() != null) {
+										Date modified = taskData.getAttributeFactory().getDateForAttributeType(
+												RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
 										notification.setDate(modified);
 									}
 								}
@@ -399,8 +399,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 
+			readOfflineReports();
+
 			// add the automatically created templates
 			for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+				connector.setTaskDataManager(taskDataManager);
+
 				for (RepositoryTemplate template : connector.getTemplates()) {
 					if (template.addAutomatically) {
 						try {
@@ -419,19 +423,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			}
-
-			readOfflineReports();
-			for (ITaskListExternalizer externalizer : taskListWriter.getExternalizers()) {
-				if (externalizer instanceof DelegatingTaskExternalizer) {
-					try {
-						((DelegatingTaskExternalizer) externalizer).init(taskDataManager);
-					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not initialize externalizer", false);
-					}
-				}
-			}
-
-			taskListWriter.setTaskDataManager(taskDataManager);
 
 			// NOTE: task list must be read before Task List view can be
 			// initialized
@@ -514,7 +505,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private void checkForCredentials() {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
 			if (!repository.isAnonymous()
-					&& ("".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
+					&& (repository.getUserName() == null || repository.getPassword() == null || "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
 				try {
 					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -909,4 +900,5 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public String getNextNewRepositoryTaskId() {
 		return getTaskDataManager().getNewRepositoryTaskId();
 	}
+
 }

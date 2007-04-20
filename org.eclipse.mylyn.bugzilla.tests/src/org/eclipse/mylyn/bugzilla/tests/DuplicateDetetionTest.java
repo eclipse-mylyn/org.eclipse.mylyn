@@ -49,7 +49,6 @@ public class DuplicateDetetionTest extends TestCase {
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -68,7 +67,6 @@ public class DuplicateDetetionTest extends TestCase {
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 		model.setDescription(fakeStackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -91,7 +89,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(extraText + "\n" + stackTrace + "\n");
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -122,7 +119,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -152,7 +148,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -178,7 +173,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -203,7 +197,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -230,7 +223,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
@@ -256,7 +248,6 @@ public class DuplicateDetetionTest extends TestCase {
 				.getTaskDataManager().getNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 
 		model.setDescription(stackTrace);
-		model.setHasLocalChanges(true);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);

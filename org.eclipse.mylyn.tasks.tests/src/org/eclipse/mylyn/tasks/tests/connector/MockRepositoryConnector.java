@@ -50,12 +50,6 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
-		// ignore
-		return null;
-	}
-
-	@Override
 	public IAttachmentHandler getAttachmentHandler() {
 		// ignore
 		return null;
@@ -135,6 +129,18 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws CoreException {
 		return Collections.emptySet();
+	}
+
+	@Override
+	protected AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary) {
+		// ignore
+		return null;
+	}
+
+	@Override
+	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+		// ignore
+		
 	}
 
 }

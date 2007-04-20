@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
@@ -25,22 +24,14 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	/** The last time this task's bug report was in a synchronized (read?) state. */
 	protected String lastSynchronizedDateStamp;
-  
+
 	protected String repositoryUrl;
 
 	protected String taskId;
 	
-	protected transient RepositoryTaskData taskData;
-
-	protected boolean currentlySynchronizing;
-
+	protected String owner;
+		
 	protected boolean isNotifiedIncoming = true;
-
-	/**
-	 * Value is <code>true</code> if the bug report has saved changes that
-	 * need synchronizing with the repository.
-	 */
-	protected boolean isDirty;
 
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
@@ -48,8 +39,15 @@ public abstract class AbstractRepositoryTask extends Task {
 
 	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 
-	protected IStatus status = null;
+	// transient
+	protected IStatus errorStatus = null;
 
+	// transient
+	protected boolean currentlySynchronizing;
+
+	// transient
+	protected boolean submitting;
+	
 	public AbstractRepositoryTask(String repositoryUrl, String taskId, String summary, boolean newTask) {
 		// NOTE: Repository tasks specify their own handle format.
 		super(null, summary, newTask);
@@ -62,13 +60,8 @@ public abstract class AbstractRepositoryTask extends Task {
 		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 	}
 
-	
 	@Override
 	public abstract String getRepositoryKind();
-
-	public boolean isDownloaded() {
-		return taskData != null;
-	}
 
 	public String getLastSyncDateStamp() {
 		return lastSynchronizedDateStamp;
@@ -102,26 +95,6 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.currentlySynchronizing = currentlySychronizing;
 	}
 
-	public boolean isDirty() {
-		return isDirty;
-	}
-
-	public void setDirty(boolean isDirty) {
-		this.isDirty = isDirty;
-	}
-
-	public RepositoryTaskData getTaskData() {
-		return taskData;
-	}
-
-	public void setTaskData(RepositoryTaskData taskData) {
-		this.taskData = taskData;
-		// TODO: remove?
-		if (taskData != null) {
-			setDescription(HtmlStreamTokenizer.unescape(taskData.getSummary()));
-		}
-	}
-
 	public boolean isNotified() {
 		return isNotifiedIncoming;
 	}
@@ -131,19 +104,19 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	public String getOwner() {
-		if (taskData != null && taskData.getAssignedTo() != null) {
-			return taskData.getAssignedTo();
-		} else {
-			return "<unknown>";
-		}
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	public IStatus getStatus() {
-		return status;
+		return errorStatus;
 	}
 
 	public void setStatus(IStatus status) {
-		this.status = status;
+		this.errorStatus = status;
 	}
 
 	public final String getTaskId() {
@@ -159,11 +132,20 @@ public abstract class AbstractRepositoryTask extends Task {
 	}
 
 	/**
-	 * User identifiable key for the task to be used in UI facilities such as 
-	 * label displays and hyperlinked references.  Can return the same as the ID
-	 * (e.g. in the case of Bugzilla).  Can return null if no such label exists.
+	 * User identifiable key for the task to be used in UI facilities such as
+	 * label displays and hyperlinked references. Can return the same as the ID
+	 * (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
 	public String getTaskKey() {
 		return taskId;
+	}
+
+	
+	public boolean isSubmitting() {
+		return submitting;
+	}
+
+	public void setSubmitting(boolean submitting) {
+		this.submitting = submitting;
 	}
 }

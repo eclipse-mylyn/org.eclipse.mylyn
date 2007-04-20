@@ -167,7 +167,7 @@ public class TaskList {
 	}
 
 	public void renameTask(Task task, String description) {
-		task.setDescription(description);
+		task.setSummary(description);
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.localInfoChanged(task);
 		}

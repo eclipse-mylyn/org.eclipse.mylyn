@@ -90,5 +90,5 @@ public interface ITask extends ITaskListElement {
 
 	public abstract boolean isPastReminder();
 
-	public abstract void setDescription(String attribute);
+	public abstract void setSummary(String attribute);
 }

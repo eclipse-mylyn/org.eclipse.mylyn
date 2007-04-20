@@ -26,6 +26,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -82,7 +83,9 @@ class SynchronizeTaskJob extends Job {
 					}
 				}
 
+				// TODO: Set in connector.updateTask
 				repositoryTask.setCurrentlySynchronizing(false);
+				
 				TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
 				// TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
@@ -100,8 +103,6 @@ class SynchronizeTaskJob extends Job {
 	}
 
 	private void syncTask(IProgressMonitor monitor, final AbstractRepositoryTask repositoryTask) throws CoreException {
-		// boolean hasLocalChanges = repositoryTask.isDirty();
-		// if (forceSync || !repositoryTask.isDownloaded()) {
 		monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getSummary());
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -120,11 +121,11 @@ class SynchronizeTaskJob extends Job {
 			RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
 
 			if (downloadedTaskData != null) {
-				if (TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData,
-						forceSync)) {
-
+				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forceSync);
+				connector.updateTask(repository, repositoryTask, downloadedTaskData);
+				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
-
 				}
 			} else {
 				connector.updateTask(repository, repositoryTask);
@@ -133,5 +134,4 @@ class SynchronizeTaskJob extends Job {
 			connector.updateTask(repository, repositoryTask);
 		}
 	}
-	// }
 }

@@ -14,7 +14,9 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -37,9 +39,11 @@ import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.UnrecognizedReponseException;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -55,11 +59,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private static final String CLIENT_LABEL = "Bugzilla (supports uncustomized 2.18-3.0)";
 
+	private static final String COMMENT_FORMAT = "yyyy-MM-dd HH:mm";
+
+	private static final String DEADLINE_FORMAT = "yyyy-MM-dd";
+
 	private BugzillaAttachmentHandler attachmentHandler;
 
 	private BugzillaTaskDataHandler taskDataHandler;
-
-	private boolean forceSynchExecForTesting = false;
 
 	private BugzillaClientManager clientManager;
 
@@ -91,40 +97,97 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
-	@Override
-	public AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id) throws CoreException {
-		int bugId = -1;
-		try {
-			if (id != null) {
-				bugId = Integer.parseInt(id);
-			} else {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-						"invalid report id: null", new Exception("Invalid report id: null")));
-			}
-		} catch (NumberFormatException nfe) {
-			if (!forceSynchExecForTesting) {
-				throw new CoreException(new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, IStatus.OK,
-						"invalid report id: " + id, nfe));
-			}
-			return null;
-		}
+	protected AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary) {
+		return new BugzillaTask(repositoryUrl, id, summary, true);
+	}
 
-		// String handle = AbstractRepositoryTask.getHandle();
-		ITask task = taskList.getTask(repository.getUrl(), id);
-		AbstractRepositoryTask repositoryTask = null;
-		if (task == null) {
-			RepositoryTaskData taskData = null;
-			taskData = taskDataHandler.getTaskData(repository, id);			
-			if (taskData != null) {
-				repositoryTask = new BugzillaTask(repository.getUrl(), "" + bugId, taskData.getId() + ": "
-						+ taskData.getDescription(), true);
-				repositoryTask.setTaskData(taskData);				
-				taskList.addTask(repositoryTask);
+	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
+		if (taskData != null) {
+			// Summary
+			String summary = taskData.getSummary();
+			bugzillaTask.setSummary(summary);
+
+			// Owner
+			String owner = taskData.getAssignedTo();
+			if (owner != null && !owner.equals("")) {
+				bugzillaTask.setOwner(owner);
 			}
-		} else if (task instanceof AbstractRepositoryTask) {
-			repositoryTask = (AbstractRepositoryTask) task;
+
+			// Completed
+			boolean isComplete = false;
+			// TODO: use repository configuration to determine what -completed-
+			// states are
+			if (taskData.getStatus() != null) {
+				isComplete = taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_RESOLVED)
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_CLOSED)
+						|| taskData.getStatus().equals(IBugzillaConstants.VALUE_STATUS_VERIFIED);
+			}
+			bugzillaTask.setCompleted(isComplete);
+
+			// Completion Date
+			if (isComplete) {
+				Date completionDate = null;
+				try {
+
+					List<TaskComment> taskComments = taskData.getComments();
+					if (taskComments != null && !taskComments.isEmpty()) {
+						// TODO: fix not to be based on comment
+						completionDate = new SimpleDateFormat(COMMENT_FORMAT).parse(taskComments.get(
+								taskComments.size() - 1).getCreated());
+
+					}
+
+				} catch (Exception e) {
+
+				}
+				bugzillaTask.setCompletionDate(completionDate);
+
+			}
+
+			// Priority
+			String priority = PriorityLevel.getDefault().toString();
+			if (taskData.getAttribute(RepositoryTaskAttribute.PRIORITY) != null) {
+				priority = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY).getValue();
+			}
+			bugzillaTask.setPriority(priority);
+
+			// Task Web Url
+			String url = getTaskWebUrl(repository.getUrl(), taskData.getId());
+			if (url != null) {
+				bugzillaTask.setTaskUrl(url);
+			}
+
+			// Bugzilla Specific Attributes
+
+			// Product
+			if (taskData.getProduct() != null) {
+				bugzillaTask.setProduct(taskData.getProduct());
+			}
+
+			// Severity
+			String severity = taskData.getAttributeValue(BugzillaReportElement.BUG_SEVERITY.getKeyString());
+			if (severity != null && !severity.equals("")) {
+				bugzillaTask.setSeverity(severity);
+			}
+
+			// Due Date
+			if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null) {
+				Date dueDate = null;
+				// HACK: if estimated_time field exists, time tracking is
+				// enabled
+				try {
+					String dueStr = taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString());
+					if (dueStr != null) {
+						dueDate = new SimpleDateFormat(DEADLINE_FORMAT).parse(dueStr);
+					}
+				} catch (Exception e) {
+					// ignore
+				}
+				bugzillaTask.setDueDate(dueDate);
+			}
+
 		}
-		return repositoryTask;
 	}
 
 	@Override
@@ -179,8 +242,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList);
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "",
-				taskList);
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", taskList);
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);
 
@@ -199,16 +261,22 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				// the return hits.
 				// (or the changeddate field in the hit rdf becomes consistent,
 				// currently it doesn't return a proper modified date string)
-				if (repositoryTask.getTaskData() != null
-						&& repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp())) {
-					// String taskId =
-					// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData taskData = getTaskDataHandler().getTaskData(repository,
-							repositoryTask.getTaskId());
-					if (taskData != null && taskData.getLastModified().equals(repository.getSyncTimeStamp())) {
-						continue;
-					}
-				}
+				// if (repositoryTask.getTaskData() != null
+				// &&
+				// repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp()))
+				// {
+				// // String taskId =
+				// //
+				// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+				// RepositoryTaskData taskData =
+				// getTaskDataHandler().getTaskData(repository,
+				// repositoryTask.getTaskId());
+				// if (taskData != null &&
+				// taskData.getLastModified().equals(repository.getSyncTimeStamp()))
+				// {
+				// continue;
+				// }
+				// }
 				changedTasks.add(repositoryTask);
 			}
 		}
@@ -273,19 +341,16 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public String getTaskWebUrl(String repositoryUrl, String taskId) {
 		try {
-			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, Integer.parseInt(taskId));
-		} catch (NumberFormatException ex) {
-			return null;
+			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
+		} catch (Exception ex) {
+			MylarStatusHandler.fail(ex, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, false);
 		}
+		return null;
 	}
 
 	@Override
 	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
 		// ignore
-	}
-
-	public void setForceSynchExecForTesting(boolean forceSynchExecForTesting) {
-		this.forceSynchExecForTesting = forceSynchExecForTesting;
 	}
 
 	@Override

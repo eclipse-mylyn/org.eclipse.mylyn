@@ -24,6 +24,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -97,29 +98,22 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
-		connector.setForceSynchExecForTesting(true);
+//		connector.setForceSynchExecForTesting(true);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, taskNumber);
-		TasksUiPlugin.getDefault().getTaskDataManager().push(task.getHandleIdentifier(), task.getTaskData());
-		// if (task.getTaskData() == null) {
-		// System.err.println(">>> getting data");
-		// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
-		// task, true, null);
-		// }
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber);
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
-		assertTrue(task.isDownloaded());
+		
 		return task;
 	}
 
-	protected void submit(AbstractRepositoryTask task) throws CoreException {
-		connector.getTaskDataHandler().postTaskData(repository, task.getTaskData());
-		task.getTaskData().setHasLocalChanges(true);
-		task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+	protected void submit(AbstractRepositoryTask task, RepositoryTaskData taskData) throws CoreException {
+		connector.getTaskDataHandler().postTaskData(repository, taskData);
+		task.setSubmitting(true);
 	}
 
 	// protected BugzillaReportSubmitForm makeExistingBugPost(RepositoryTaskData

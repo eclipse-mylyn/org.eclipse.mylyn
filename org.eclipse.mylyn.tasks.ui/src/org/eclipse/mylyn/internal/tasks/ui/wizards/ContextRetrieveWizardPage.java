@@ -19,10 +19,12 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -79,7 +81,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		final Table contextTable = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER);
 		contextTable.setHeaderVisible(true);
 		contextTable.setLinesVisible(true);
-		
+
 		contextTable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -118,12 +120,25 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 
 			public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
-				Date created1 = task.getTaskData().getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1.getDateCreated());
-				Date created2 = task.getTaskData().getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2.getDateCreated());
+				RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
+						task.getHandleIdentifier());
+
+				AbstractAttributeFactory factory = null;
+
+				Date created1 = null;
+				Date created2 = null;
+				if (data != null) {
+					factory = data.getAttributeFactory();
+				}
+				if (factory != null) {
+					created1 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1
+							.getDateCreated());
+					created2 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2
+							.getDateCreated());
+				}
+
 				if (created1 != null && created2 != null) {
-					return (-1)*created1.compareTo(created2);
+					return (-1) * created1.compareTo(created2);
 				} else if (created1 == null && created2 != null) {
 					return 1;
 				} else if (created1 != null && created2 == null) {

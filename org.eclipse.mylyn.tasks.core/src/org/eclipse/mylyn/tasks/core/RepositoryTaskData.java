@@ -277,10 +277,12 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return repositoryURL;
 	}
 
+	@Deprecated
 	public boolean hasLocalChanges() {
 		return hasLocalChanges;
 	}
 
+	@Deprecated
 	public void setHasLocalChanges(boolean b) {
 		hasLocalChanges = b;
 	}
@@ -319,4 +321,8 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	public String getTaskKind() {
 		return taskKind;
 	}
+	
+//	public final String getHandleIdentifier() {
+//		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
+//	}
 }

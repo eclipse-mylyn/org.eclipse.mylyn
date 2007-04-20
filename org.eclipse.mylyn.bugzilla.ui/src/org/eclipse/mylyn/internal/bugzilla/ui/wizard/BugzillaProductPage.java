@@ -316,9 +316,9 @@ public class BugzillaProductPage extends WizardPage {
 
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaTask) {
-			BugzillaTask task = (BugzillaTask) element;
-			if (task.getTaskData() != null) {
-				products.add(task.getTaskData().getProduct());
+			BugzillaTask bugzillaTask = (BugzillaTask) element;			
+			if (bugzillaTask.getProduct() != null) {
+				products.add(bugzillaTask.getProduct());
 			}
 		} else {
 			BugzillaRepositoryQuery query = null;
@@ -357,7 +357,9 @@ public class BugzillaProductPage extends WizardPage {
 					ITask task = (ITask) adaptable.getAdapter(ITask.class);
 					if (task instanceof BugzillaTask) {
 						BugzillaTask bugzillaTask = (BugzillaTask) task;
-						products.add(bugzillaTask.getTaskData().getProduct());
+						if (bugzillaTask.getProduct() != null) {
+							products.add(bugzillaTask.getProduct());
+						}
 					}
 				}
 			}

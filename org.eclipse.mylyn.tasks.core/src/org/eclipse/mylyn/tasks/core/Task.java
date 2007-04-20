@@ -308,7 +308,7 @@ public class Task extends PlatformObject implements ITask {
 		this.creationDate = date;
 	}
 
-	public void setDescription(String summary) {
+	public void setSummary(String summary) {
 		this.summary = summary;
 	}
 

@@ -52,7 +52,7 @@ public class TaskPlanningEditorTest extends TestCase {
 
 	public void testDirtyOnEdit() {
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
-		task.setDescription(DESCRIPTION);
+		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -74,7 +74,7 @@ public class TaskPlanningEditorTest extends TestCase {
 
 	public void testNotDirtyOnRename() {
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
-		task.setDescription(DESCRIPTION);
+		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -98,7 +98,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	 */
 	public void testRenameInDirtyState() {		
 		Task task = new Task(MOCK_HANDLE, MOCK_LABEL, true);
-		task.setDescription(DESCRIPTION);
+		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

@@ -40,7 +40,6 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -805,11 +804,17 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		private void addEmailAddresses(AbstractRepositoryTask task, Set<String> addressSet) {
-			RepositoryTaskData data = task.getTaskData();
-			if (data != null) {
-				addressSet.add(data.getAssignedTo());
-				addressSet.addAll(data.getCC());
+			// TODO: Owner, Creator, and CC should be stored on
+			// AbstractRepositoryTask
+			// RepositoryTaskData data =
+			// TasksUiPlugin.getDefault().getTaskData(task);
+			if (task.getOwner() != null) {
+				addressSet.add(task.getOwner());				
 			}
+			// if (data != null) {
+			// addressSet.add(data.getAssignedTo());
+			// addressSet.addAll(data.getCC());
+			// }
 		}
 	}
 

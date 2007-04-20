@@ -143,23 +143,25 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		ITask task = connector.createTaskFromExistingKey(repository, id);
+		ITask task = connector.createTaskFromExistingId(repository, id);
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getTaskUrl());
 
 		try {
-			task = connector.createTaskFromExistingKey(repository, "does not exist");
+			task = connector.createTaskFromExistingId(repository, "does not exist");
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
 
-		try {
-			task = connector.createTaskFromExistingKey(repository, Integer.MAX_VALUE + "");
-			fail("Expected CoreException");
-		} catch (CoreException e) {
-		}
+		// No longer parsing as an integer
+		// try {
+		// task = connector.createTaskFromExistingId(repository,
+		// Integer.MAX_VALUE + "");
+		// fail("Expected CoreException");
+		// } catch (CoreException e) {
+		//		}
 	}
 
 	public void testClientManagerChangeTaskRepositorySettings() throws MalformedURLException {
@@ -306,7 +308,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -327,7 +329,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingKey(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();

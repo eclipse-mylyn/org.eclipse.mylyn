@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -46,14 +48,14 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testDifferentReportEncoding() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57");
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		assertTrue(task.getSummary().equals("\u05D0"));
 		taskList.deleteTask(task);
 		connector.getClientManager().repositoryRemoved(repository);
 		repository.setCharacterEncoding("ISO-8859-1");
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");
+		task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57");
 		assertNotNull(task);
 		//TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);		
 		// iso-8859-1 'incorrect' interpretation
@@ -63,21 +65,22 @@ public class EncodingTest extends AbstractBugzillaTest {
 	public void testProperEncodingUponPost() throws CoreException {
 		init222();
 		repository.setCharacterEncoding("UTF-8");
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57");
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u05D0"));
 		String priority = null;
 		if (task.getPriority().equals("P1")) {
 			priority = "P2";
-			task.getTaskData().setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		} else {
 			priority = "P1";
-			task.getTaskData().setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
+			taskData.setAttributeValue(BugzillaReportElement.PRIORITY.getKeyString(), priority);
 		}
 
-		submit(task);
+		submit(task, taskData);
 		taskList.deleteTask(task);
-		task = (BugzillaTask) connector.createTaskFromExistingKey(repository, "57");
+		task = (BugzillaTask) connector.createTaskFromExistingId(repository, "57");
 		assertNotNull(task);
 		assertTrue(task.getSummary().equals("\u05D0"));
 	}

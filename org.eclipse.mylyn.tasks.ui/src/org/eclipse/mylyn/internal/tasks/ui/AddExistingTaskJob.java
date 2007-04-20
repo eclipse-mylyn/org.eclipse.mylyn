@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskCategory;
@@ -64,14 +63,14 @@ public class AddExistingTaskJob extends Job {
 				repository.getKind());
 		try {
 			monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
-			final ITask newTask = connector.createTaskFromExistingKey(repository, taskId);
+			final ITask newTask = connector.createTaskFromExistingId(repository, taskId);
 
-			if (newTask instanceof AbstractRepositoryTask) {
-				// TODO: encapsulate in abstract connector
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
-				TasksUiPlugin.getDefault().getTaskDataManager().push(newTask.getHandleIdentifier(),
-						repositoryTask.getTaskData());
-			}
+//			if (newTask instanceof AbstractRepositoryTask) {
+//				// TODO: encapsulate in abstract connector
+//				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
+//				TasksUiPlugin.getDefault().getTaskDataManager().push(newTask.getHandleIdentifier(),
+//						repositoryTask.getTaskData());
+//			}
 
 			if (newTask != null) {
 				TasksUiUtil.refreshAndOpenTaskListElement(newTask);

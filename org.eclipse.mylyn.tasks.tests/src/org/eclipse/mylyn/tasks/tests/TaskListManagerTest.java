@@ -235,10 +235,9 @@ public class TaskListManagerTest extends TestCase {
 		task.setCompleted(true);
 		task.setCompletionDate(new Date());
 		assertTrue(manager.isCompletedToday(task));
-
-		
 		
 		MockRepositoryTask mockTask = new MockRepositoryTask("1");
+		mockTask.setOwner("unknown");
 		manager.getTaskList().addTask(mockTask);
 		mockTask.setCompleted(true);
 		mockTask.setCompletionDate(new Date());

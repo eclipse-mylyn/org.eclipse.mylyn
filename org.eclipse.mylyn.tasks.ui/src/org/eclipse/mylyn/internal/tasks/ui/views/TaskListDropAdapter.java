@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
@@ -42,7 +41,6 @@ import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -199,15 +197,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					connector.getRepositoryType())) {
 				if (repository.getUrl().equals(repositoryUrl)) {
 					try {
-						newTask = connector.createTaskFromExistingKey(repository, id);
+						newTask = connector.createTaskFromExistingId(repository, id);
 
-						if (newTask instanceof AbstractRepositoryTask) {
-							// TODO: encapsulate in abstract connector
-							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
-							TasksUiPlugin.getDefault().getTaskDataManager().push(
-									RepositoryTaskHandleUtil.getHandle(repository.getUrl(), id),
-									repositoryTask.getTaskData());
-						}
+//						if (newTask instanceof AbstractRepositoryTask) {
+//							// TODO: encapsulate in abstract connector
+//							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
+//							TasksUiPlugin.getDefault().getTaskDataManager().push(
+//									RepositoryTaskHandleUtil.getHandle(repository.getUrl(), id),
+//									repositoryTask.getTaskData());
+//						}
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {
@@ -296,7 +294,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			RetrieveTitleFromUrlJob job = new RetrieveTitleFromUrlJob(url) {
 				@Override
 				protected void setTitle(final String pageTitle) {
-					newTask.setDescription(pageTitle);
+					newTask.setSummary(pageTitle);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(newTask);
 				}
 			};

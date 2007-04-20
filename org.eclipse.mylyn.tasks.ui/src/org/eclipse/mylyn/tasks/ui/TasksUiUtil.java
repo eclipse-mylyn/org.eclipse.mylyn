@@ -35,8 +35,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -48,9 +48,11 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -77,7 +79,7 @@ public class TasksUiUtil {
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
 	public static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.net.ui.NetPreferences";
-	
+
 	/**
 	 * TODO: move
 	 */
@@ -187,6 +189,7 @@ public class TasksUiUtil {
 			}
 
 			if (task instanceof AbstractRepositoryTask) {
+
 				final AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				String repositoryKind = repositoryTask.getRepositoryKind();
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
@@ -194,22 +197,24 @@ public class TasksUiUtil {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 						repositoryTask.getRepositoryUrl());
+
 				if (repository == null) {
 					MylarStatusHandler.fail(null, "No repository found for task. Please create repository in "
 							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 					return;
 				}
 
-				if (connector != null)
-					if (repositoryTask.getTaskData() != null
-							|| TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
-									repositoryTask.getHandleIdentifier()) != null) {
-						if (repositoryTask.getTaskData() == null) {
-							repositoryTask.setTaskData(TasksUiPlugin.getDefault().getTaskDataManager()
-									.getRepositoryTaskData(repositoryTask.getHandleIdentifier()));
-						}
+				if (connector != null) {
+
+					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager()
+							.getRepositoryTaskData(task.getHandleIdentifier());
+
+					if (taskData != null) {
 						TasksUiUtil.openEditor(task, true, false);
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false, null);
+						// Synchronization now happens AFTER editor opened and
+						// marked read.
+						// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+						// repositoryTask, false, null);
 					} else {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
@@ -222,6 +227,7 @@ public class TasksUiUtil {
 							TasksUiUtil.openEditor(task, false);
 						}
 					}
+				}
 			} else {
 				TasksUiUtil.openEditor(task, false);
 			}
@@ -242,7 +248,8 @@ public class TasksUiUtil {
 		String taskEditorId = TaskListPreferenceConstants.TASK_EDITOR_ID;
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask
+					.getRepositoryKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
 				taskEditorId = customTaskEditorId;
@@ -270,25 +277,38 @@ public class TasksUiUtil {
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 
-		final String taskEditorId= getTaskEditorId(task);
+		final String taskEditorId = getTaskEditorId(task);
 
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
 
-		
 		if (asyncExec) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window != null) {
 						IWorkbenchPage page = window.getActivePage();
-						IEditorPart part = openEditor(editorInput, taskEditorId, page);
-						if (newTask && part instanceof TaskEditor) {
-							TaskEditor taskEditor = (TaskEditor) part;
-							taskEditor.setFocusOfActivePage();
+
+						if (!alreadyOpen(task, editorInput)) {
+							IEditorPart part = openEditor(editorInput, taskEditorId, page);
+							if (newTask && part instanceof TaskEditor) {
+								TaskEditor taskEditor = (TaskEditor) part;
+								taskEditor.setFocusOfActivePage();
+							}
 						}
+
 						if (task instanceof AbstractRepositoryTask) {
-							TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
+							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+							// Synchronization must happen after marked read.
+							AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+									.getRepositoryConnector(repositoryTask.getRepositoryKind());
+							if (connector != null) {
+								TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false,
+										null);
+							}
+
 						}
+
 					}
 				}
 			});
@@ -304,6 +324,25 @@ public class TasksUiUtil {
 				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
 		}
+	}
+
+	/**
+	 * If task is already open and has incoming, must force refresh in place
+	 */
+	private static boolean alreadyOpen(ITask task, IEditorInput editorInput) {
+		if (task instanceof AbstractRepositoryTask) {
+			if (((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.INCOMING
+					|| ((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+				for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
+					if (editor.getEditorInput().equals(editorInput)) {
+						editor.refreshEditorContents();
+						editor.getEditorSite().getPage().activate(editor);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {

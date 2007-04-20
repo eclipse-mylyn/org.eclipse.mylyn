@@ -11,9 +11,7 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
-import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.Task;
 
 /**
@@ -131,35 +129,8 @@ public class TracTask extends AbstractRepositoryTask {
 	}
 
 	@Override
-	public boolean isCompleted() {
-		if (taskData != null) {
-			return isCompleted(taskData.getStatus());
-		} else {
-			return super.isCompleted();
-		}
-	}
-
-	@Override
 	public String getRepositoryKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
-	}
-
-	@Override
-	public String getPriority() {
-		if (taskData != null && taskData.getAttribute(Attribute.PRIORITY.getTracKey()) != null) {
-			return getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY.getTracKey()));
-		} else {
-			return super.getPriority();
-		}
-	}
-
-	@Override
-	public String getOwner() {
-		if (taskData != null && taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED) != null) {
-			return taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED);
-		} else {
-			return super.getOwner();
-		}
 	}
 
 	// TODO use priority attributes from repository instead of hard coded enum

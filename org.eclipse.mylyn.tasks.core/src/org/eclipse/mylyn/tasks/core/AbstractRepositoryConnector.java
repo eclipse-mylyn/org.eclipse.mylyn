@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
@@ -42,6 +43,8 @@ public abstract class AbstractRepositoryConnector {
 	protected TaskList taskList;
 
 	private boolean userManaged = true;
+
+	private TaskDataManager taskDataManager;
 
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
@@ -72,14 +75,44 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
+	 * Create new repository task, storing necessary task data
+	 * 
 	 * @param taskId
 	 *            identifier, e.g. "123" bug Bugzilla bug 123
 	 * @return null if task could not be created
 	 * @throws CoreException
 	 *             TODO
 	 */
-	public abstract AbstractRepositoryTask createTaskFromExistingKey(TaskRepository repository, String id)
-			throws CoreException;
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id) throws CoreException {
+		ITask task = taskList.getTask(repository.getUrl(), id);
+		AbstractRepositoryTask repositoryTask = null;
+		if (task instanceof AbstractRepositoryTask) {
+			repositoryTask = (AbstractRepositoryTask) task;
+		} else if (task == null && getTaskDataHandler() != null) {
+			RepositoryTaskData taskData = null;
+			taskData = getTaskDataHandler().getTaskData(repository, id);
+			if (taskData != null) {
+				// Use connector task factory
+				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
+
+				updateTask(repository, repositoryTask, taskData);
+
+				taskList.addTask(repositoryTask);
+				getTaskDataManager().push(repositoryTask.getHandleIdentifier(), taskData);
+			}
+		} // TODO: Handle case similar to web tasks (no taskDataHandler but
+			// have tasks)
+
+		return repositoryTask;
+	}
+
+	/**
+	 * Utility method for construction of connector specific task object TODO:
+	 * Move to 'task' factory
+	 * 
+	 * @return instance of AbstractRepositoryTask
+	 */
+	protected abstract AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary);
 
 	/**
 	 * Implementors must execute query synchronously.
@@ -126,6 +159,14 @@ public abstract class AbstractRepositoryConnector {
 	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask)
 			throws CoreException;
 
+	/**
+	 * Sets all fields on the given task
+	 * 
+	 * @since 2.0
+	 */
+	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			RepositoryTaskData taskData);
+
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };
@@ -140,8 +181,10 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
-		if (task.getTaskData() != null) {
-			for (RepositoryAttachment attachment : task.getTaskData().getAttachments()) {
+
+		if (taskDataManager != null && taskDataManager.getRepositoryTaskData(task.getHandleIdentifier()) != null) {
+			for (RepositoryAttachment attachment : taskDataManager.getRepositoryTaskData(task.getHandleIdentifier())
+					.getAttachments()) {
 				if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
 					contextAttachments.add(attachment);
 				}
@@ -164,8 +207,9 @@ public abstract class AbstractRepositoryConnector {
 	 * Of <code>tasks</code> provided, return all that have changed since last
 	 * synchronization of <code>repository</code>
 	 * 
-	 * All errors should be thrown as <code>CoreException</code> for the framework
-	 * to handle, since background synchronizations fail silently when disconnected.
+	 * All errors should be thrown as <code>CoreException</code> for the
+	 * framework to handle, since background synchronizations fail silently when
+	 * disconnected.
 	 * 
 	 * TODO: Add progress monitor as parameter
 	 * 
@@ -185,7 +229,7 @@ public abstract class AbstractRepositoryConnector {
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 
 		RepositoryTaskSyncState previousState = task.getSyncState();
-		
+
 		if (sourceContextFile != null && sourceContextFile.exists()) {
 			IAttachmentHandler handler = getAttachmentHandler();
 			if (handler == null) {
@@ -194,9 +238,6 @@ public abstract class AbstractRepositoryConnector {
 
 			try {
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				if (task.getTaskData() != null) {
-					task.getTaskData().setHasLocalChanges(true);
-				}
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
 						APPLICATION_OCTET_STREAM, false);
 			} catch (CoreException e) {
@@ -279,9 +320,10 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Following synchronization, the timestamp needs to be recorded.
-	 * This provides a default implementation for determining the last synchronization
-	 * timestamp. Override to return actual timestamp from repository.
+	 * Following synchronization, the timestamp needs to be recorded. This
+	 * provides a default implementation for determining the last
+	 * synchronization timestamp. Override to return actual timestamp from
+	 * repository.
 	 */
 	public String getLastSyncTimestamp(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks) {
 		Date mostRecent = new Date(0);
@@ -289,20 +331,37 @@ public abstract class AbstractRepositoryConnector {
 		for (AbstractRepositoryTask task : changedTasks) {
 			Date taskModifiedDate;
 
-			if (getTaskDataHandler() != null && task.getTaskData() != null
-					&& task.getTaskData().getLastModified() != null) {
-				taskModifiedDate = task.getTaskData().getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.DATE_MODIFIED, task.getTaskData().getLastModified());
+			if (getTaskData(task) != null && getTaskDataHandler() != null
+					&& getTaskData(task).getLastModified() != null) {
+				taskModifiedDate = getTaskData(task).getAttributeFactory().getDateForAttributeType(
+						RepositoryTaskAttribute.DATE_MODIFIED, getTaskData(task).getLastModified());
 			} else {
 				continue;
 			}
 
 			if (taskModifiedDate != null && taskModifiedDate.after(mostRecent)) {
 				mostRecent = taskModifiedDate;
-				mostRecentTimeStamp = task.getTaskData().getLastModified();
+				mostRecentTimeStamp = getTaskData(task).getLastModified();
 			}
 		}
 		return mostRecentTimeStamp;
 	}
 
+	private RepositoryTaskData getTaskData(AbstractRepositoryTask task) {
+		if (taskDataManager != null) {
+			return taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());
+		}
+		return null;
+	}
+
+	private TaskDataManager getTaskDataManager() {
+		return taskDataManager;
+	}
+
+	/**
+	 * Set upon construction
+	 */
+	public void setTaskDataManager(TaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
+	}
 }

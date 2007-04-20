@@ -23,10 +23,12 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTaskDataHandler;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskComment;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -50,9 +52,11 @@ public class BugzillaTaskTest extends TestCase {
 
 	public void testCompletionDate() throws Exception {
 		BugzillaTask task = new BugzillaTask("repo", "1", "summary", true);
-		RepositoryTaskData report = new RepositoryTaskData(new BugzillaAttributeFactory(),
+		RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL, "1", Task.DEFAULT_TASK_KIND);
-		task.setTaskData(report);
+				
+		//XXX rewrite test
+		
 		assertNull(task.getCompletionDate());
 
 		Date now = new Date();
@@ -63,15 +67,17 @@ public class BugzillaTaskTest extends TestCase {
 				.getKeyString());
 		attribute.setValue(nowTimeStamp);
 		taskComment.addAttribute(BugzillaReportElement.BUG_WHEN.getKeyString(), attribute);
-		report.addComment(taskComment);
+		taskData.addComment(taskComment);
 		assertNull(task.getCompletionDate());
 
 		RepositoryTaskAttribute resolvedAttribute = attributeFactory.createAttribute(BugzillaReportElement.BUG_STATUS
 				.getKeyString());
 		resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
-		report.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
+		taskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		connector.updateTask(new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "http://eclipse.org"), task, taskData);
 		assertNotNull(task.getCompletionDate());
-		assertEquals(report.getAttributeFactory()
+		assertEquals(taskData.getAttributeFactory()
 				.getDateForAttributeType(BugzillaReportElement.BUG_WHEN.getKeyString(), nowTimeStamp), task
 				.getCompletionDate());
 

@@ -291,8 +291,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected boolean attachContext = true;
 
-	private boolean submitting = false;
-
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
 				"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People");
@@ -352,14 +350,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				public void run() {
 
 					if (repositoryTask != null && task.equals(repositoryTask)) {
-						if ((repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING || repositoryTask
-								.getSyncState() == RepositoryTaskSyncState.CONFLICT)
-								&& !submitting) {
+						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+								|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 							// MessageDialog.openInformation(AbstractRepositoryTaskEditor.this.getSite().getShell(),
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will refresh with new incoming
 							// changes.");
-
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);
 
@@ -369,31 +365,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// true);
 							// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(
 							// repositoryTask.getHandleIdentifier());
-						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING
-								&& !taskData.hasLocalChanges()) {
-							submitting = false;
-							updateContents();
-						} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
-							if (!submitting) {
-								updateContents();
-							}
-							submitting = false;
+						} else {
+							refreshEditor();
 						}
 					}
 				}
-
-				private void updateContents() {
-					if (repositoryTask != null && task.equals(repositoryTask)) {
-						if (repositoryTask.getTaskData() == null) {
-							close();
-							TasksUiUtil.refreshAndOpenTaskListElement(repositoryTask);
-							return;
-						}
-						refreshEditor();
-
-					}
-				}
-
 			});
 
 		}
@@ -524,13 +500,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return repositoryTask;
 	}
 
-	@Override
-	public void markDirty(boolean dirty) {
-		if (repositoryTask != null) {
-			repositoryTask.setDirty(dirty);
-		}
-		super.markDirty(dirty);
-	}
+	// @Override
+	// public void markDirty(boolean dirty) {
+	// if (repositoryTask != null) {
+	// repositoryTask.setDirty(dirty);
+	// }
+	// super.markDirty(dirty);
+	// }
 
 	/**
 	 * Update task state
@@ -538,7 +514,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void updateTask() {
 		if (taskData == null)
 			return;
-		taskData.setHasLocalChanges(true);
 		if (repositoryTask != null) {
 			TasksUiPlugin.getSynchronizationManager().saveOutgoing(repositoryTask, changedAttributes);
 		}
@@ -2091,12 +2066,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			waitCursor.dispose();
 		}
 		isDisposed = true;
-		if (repositoryTask != null && repositoryTask.isDirty()) {
-			// Edits are being made to the outgoing object
-			// Must discard these unsaved changes
-			TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
-			repositoryTask.setDirty(false);
-		}
+		// if (repositoryTask != null && repositoryTask.isDirty()) {
+		// // Edits are being made to the outgoing object
+		// // Must discard these unsaved changes
+		// TasksUiPlugin.getSynchronizationManager().discardOutgoing(repositoryTask);
+		// repositoryTask.setDirty(false);
+		// }
 
 		super.dispose();
 	}
@@ -2666,8 +2641,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						if (attachContext) {
 							connector.attachContext(repository, modifiedTask, "");
 						}
-						submitting = true;
-						modifiedTask.getTaskData().setHasLocalChanges(true);
+
+						modifiedTask.setSubmitting(true);
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 								new JobChangeAdapter() {
 
@@ -2703,8 +2678,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					return Status.OK_STATUS;
 				} catch (CoreException e) {
+					if (modifiedTask != null) {
+						modifiedTask.setSubmitting(false);
+					}
 					return handleSubmitError(e);
 				} catch (Exception e) {
+					if (modifiedTask != null) {
+						modifiedTask.setSubmitting(false);
+					}
 					MylarStatusHandler.fail(e, e.getMessage(), true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
@@ -2738,9 +2719,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentStyleText.clear();
 				textHash.clear();
 				editorInput.refreshInput();
-				if (repositoryTask != null) {
-					repositoryTask.setDirty(false);
-				}
+				// if (repositoryTask != null) {
+				// repositoryTask.setDirty(false);
+				// }
 				this.setInputWithNotify(this.getEditorInput());
 				this.init(this.getEditorSite(), this.getEditorInput());
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -2825,7 +2806,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	protected AbstractRepositoryTask handleNewBugPost(String postResult) throws CoreException {
-		final AbstractRepositoryTask newTask = connector.createTaskFromExistingKey(repository, postResult);
+		final AbstractRepositoryTask newTask = connector.createTaskFromExistingId(repository, postResult);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

@@ -243,8 +243,8 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		return task.toString().compareTo(((Task) taskListElement).toString());
 	}
 
-	public void setDescription(String description) {
-		task.setDescription(description);
+	public void setSummary(String description) {
+		task.setSummary(description);
 	}
 
 	public Date getDueDate() {
