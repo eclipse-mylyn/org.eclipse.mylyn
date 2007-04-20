@@ -17,12 +17,15 @@ import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.AbstractCommitTemplateVariable;
 
 /**
  * @author Eike Stepper
  * @author Mik Kersten
+ * 
+ * TODO refactor into extension point
  */
 public class CommitTemplateVariables {
 
@@ -80,7 +83,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getProduct();
+				return getTaskData(task).getProduct();
 			}
 
 			return null;
@@ -91,7 +94,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getAssignedTo();
+				return getTaskData(task).getAssignedTo();
 			}
 
 			return null;
@@ -102,7 +105,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getReporter();
+				return getTaskData(task).getReporter();
 			}
 
 			return null;
@@ -113,7 +116,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getResolution();
+				return getTaskData(task).getResolution();
 			}
 
 			return null;
@@ -123,8 +126,8 @@ public class CommitTemplateVariables {
 	public static class TaskStatus extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(ITask task) {
-			if (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask) task).getTaskData() != null) {
-				return ((AbstractRepositoryTask) task).getTaskData().getStatus().toUpperCase(Locale.ENGLISH);
+			if (task instanceof AbstractRepositoryTask && getTaskData(task) != null) {
+				return getTaskData(task).getStatus().toUpperCase(Locale.ENGLISH);
 			} else {
 				// TODO: refactor completion labels
 				if (task.isCompleted()) {
@@ -140,7 +143,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getCC();
+				List<String> list = getTaskData(task).getCC();
 				return implode(list, ", ");
 			}
 
@@ -152,7 +155,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				List<String> list = ((AbstractRepositoryTask) task).getTaskData().getKeywords();
+				List<String> list = getTaskData(task).getKeywords();
 				return implode(list, ", ");
 			}
 
@@ -164,7 +167,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getLastModified();
+				return getTaskData(task).getLastModified();
 			}
 
 			return null;
@@ -175,7 +178,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(ITask task) {
 			if (task instanceof AbstractRepositoryTask) {
-				return ((AbstractRepositoryTask) task).getTaskData().getSummary();
+				return getTaskData(task).getSummary();
 			}
 
 			return task.getSummary();
@@ -241,6 +244,10 @@ public class CommitTemplateVariables {
 		public String getValue(ITask task) {
 			return task.getTaskUrl();
 		}
+	}
+	
+	public static RepositoryTaskData getTaskData(ITask task) {
+		return TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
 	}
 
 	/**
