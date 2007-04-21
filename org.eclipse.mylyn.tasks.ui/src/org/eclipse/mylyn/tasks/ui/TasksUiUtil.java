@@ -288,7 +288,9 @@ public class TasksUiUtil {
 					if (window != null) {
 						IWorkbenchPage page = window.getActivePage();
 
-						if (!alreadyOpen(task, editorInput)) {
+						boolean wasOpen = refreshIfOpen(task, editorInput);
+
+						if (!wasOpen) {
 							IEditorPart part = openEditor(editorInput, taskEditorId, page);
 							if (newTask && part instanceof TaskEditor) {
 								TaskEditor taskEditor = (TaskEditor) part;
@@ -298,7 +300,9 @@ public class TasksUiUtil {
 
 						if (task instanceof AbstractRepositoryTask) {
 							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+							if (!wasOpen) {
+								TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+							}
 							// Synchronization must happen after marked read.
 							AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 									.getRepositoryConnector(repositoryTask.getRepositoryKind());
@@ -329,7 +333,7 @@ public class TasksUiUtil {
 	/**
 	 * If task is already open and has incoming, must force refresh in place
 	 */
-	private static boolean alreadyOpen(ITask task, IEditorInput editorInput) {
+	private static boolean refreshIfOpen(ITask task, IEditorInput editorInput) {
 		if (task instanceof AbstractRepositoryTask) {
 			if (((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.INCOMING
 					|| ((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.CONFLICT) {
