@@ -578,11 +578,11 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		// gd.horizontalSpan = 3;
 		// buttons.setLayoutData(gd);
 
-		emailButton = new Button[emailText.length];
-		for (int i = 0; i < emailButton.length; i++) {
+		emailButtons = new Button[emailText.length];
+		for (int i = 0; i < emailButtons.length; i++) {
 			Button button = new Button(group, SWT.CHECK);
 			button.setText(emailText[i]);
-			emailButton[i] = button;
+			emailButtons[i] = button;
 		}
 
 		return group;
@@ -1041,18 +1041,27 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			sb.append(URLEncoder.encode(os.getItem(selected[i]), repository.getCharacterEncoding()));
 		}
 
-		if (emailPattern.getText() != null) {
-			for (int i = 0; i < emailButton.length; i++) {
-				if (emailButton[i].getSelection()) {
-					sb.append("&");
-					sb.append(emailRoleValues[i]);
-					sb.append("=1");
+		if (emailPattern.getText() != null && !emailPattern.getText().trim().equals("")) {
+			boolean selectionMade = false;
+			for (Button button : emailButtons) {
+				if (button.getSelection()) {
+					selectionMade = true;
+					break;
 				}
 			}
-			sb.append("&emailtype1=");
-			sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
-			sb.append("&email1=");
-			sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
+			if (selectionMade) {
+				for (int i = 0; i < emailButtons.length; i++) {
+					if (emailButtons[i].getSelection()) {
+						sb.append("&");
+						sb.append(emailRoleValues[i]);
+						sb.append("=1");
+					}
+				}
+				sb.append("&emailtype1=");
+				sb.append(emailOperationValues[emailOperation.getSelectionIndex()]);
+				sb.append("&email1=");
+				sb.append(URLEncoder.encode(emailPattern.getText(), repository.getCharacterEncoding()));
+			}
 		}
 
 		if (daysText.getText() != null && !daysText.getText().equals("")) {
@@ -1139,7 +1148,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 	protected Combo emailPattern;
 
-	protected Button[] emailButton;
+	protected Button[] emailButtons;
 
 	// /** File containing saved queries */
 	// protected static SavedQueryFile input;
@@ -1426,32 +1435,32 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 				// in same
 				// position
 				if (value.equals("1"))
-					emailButton[0].setSelection(true);
+					emailButtons[0].setSelection(true);
 				else
-					emailButton[0].setSelection(false);
+					emailButtons[0].setSelection(false);
 			} else if (key.equals("emailreporter1")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
 				if (value.equals("1"))
-					emailButton[1].setSelection(true);
+					emailButtons[1].setSelection(true);
 				else
-					emailButton[1].setSelection(false);
+					emailButtons[1].setSelection(false);
 			} else if (key.equals("emailcc1")) { // HACK: email buttons
 				// assumed to be in same
 				// position
 				if (value.equals("1"))
-					emailButton[2].setSelection(true);
+					emailButtons[2].setSelection(true);
 				else
-					emailButton[2].setSelection(false);
+					emailButtons[2].setSelection(false);
 			} else if (key.equals("emaillongdesc1")) { // HACK: email
 				// buttons assumed
 				// to be in same
 				// position
 				if (value.equals("1"))
-					emailButton[3].setSelection(true);
+					emailButtons[3].setSelection(true);
 				else
-					emailButton[3].setSelection(false);
+					emailButtons[3].setSelection(false);
 			} else if (key.equals("emailtype1")) {
 				int index = 0;
 				for (String item : emailOperation.getItems()) {
@@ -1475,8 +1484,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		if (originalQuery == null) {
 			try {
 				originalQuery = new BugzillaRepositoryQuery(repository.getUrl(), getQueryURL(repository,
-						getQueryParameters()), getQueryTitle(), TasksUiPlugin
-						.getTaskListManager().getTaskList());
+						getQueryParameters()), getQueryTitle(), TasksUiPlugin.getTaskListManager().getTaskList());
 			} catch (UnsupportedEncodingException e) {
 				return null;
 			}
@@ -1522,8 +1530,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		summaryOperation.select(settings.getInt(STORE_SUMMARYMATCH_ID + repoId));
 		commentOperation.select(settings.getInt(STORE_COMMENTMATCH_ID + repoId));
 		emailOperation.select(settings.getInt(STORE_EMAILMATCH_ID + repoId));
-		for (int i = 0; i < emailButton.length; i++) {
-			emailButton[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
+		for (int i = 0; i < emailButtons.length; i++) {
+			emailButtons[i].setSelection(settings.getBoolean(STORE_EMAILBUTTON_ID + i + repoId));
 		}
 		summaryPattern.setText(settings.get(STORE_SUMMARYTEXT_ID + repoId));
 		commentPattern.setText(settings.get(STORE_COMMENTTEXT_ID + repoId));
@@ -1546,8 +1554,8 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		settings.put(STORE_SUMMARYMATCH_ID + repoId, summaryOperation.getSelectionIndex());
 		settings.put(STORE_COMMENTMATCH_ID + repoId, commentOperation.getSelectionIndex());
 		settings.put(STORE_EMAILMATCH_ID + repoId, emailOperation.getSelectionIndex());
-		for (int i = 0; i < emailButton.length; i++) {
-			settings.put(STORE_EMAILBUTTON_ID + i + repoId, emailButton[i].getSelection());
+		for (int i = 0; i < emailButtons.length; i++) {
+			settings.put(STORE_EMAILBUTTON_ID + i + repoId, emailButtons[i].getSelection());
 		}
 		settings.put(STORE_SUMMARYTEXT_ID + repoId, summaryPattern.getText());
 		settings.put(STORE_COMMENTTEXT_ID + repoId, commentPattern.getText());

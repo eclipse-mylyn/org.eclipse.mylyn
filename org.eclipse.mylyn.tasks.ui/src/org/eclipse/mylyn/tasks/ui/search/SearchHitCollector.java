@@ -89,11 +89,8 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= QueryHitCollector.MAX_HITS) {
-			MylarStatusHandler
-					.displayStatus(
-							"Maximum hits reached",
-							new MylarStatus(Status.WARNING, TasksUiPlugin.PLUGIN_ID, MylarStatus.INTERNAL_ERROR,
-									MAX_HITS_REACHED));
+			MylarStatusHandler.displayStatus("Maximum hits reached", new MylarStatus(Status.WARNING,
+					TasksUiPlugin.PLUGIN_ID, MylarStatus.INTERNAL_ERROR, MAX_HITS_REACHED));
 		}
 		return searchResult;
 	}
@@ -118,21 +115,15 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			}
 
 			if (!status.isOK()) {
-				MylarStatusHandler.fail(status.getException(), "Search failed. Please see details below.", true);
-				status = Status.OK_STATUS;
+				throw new CoreException(status);
 			}
 
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e, "Search failed.", true);
-			status = new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.ERROR,
-					"Core Exception occurred while querying Bugzilla Server " + repository.getUrl() + ".\n"
-							+ "\nClick Details for more information.", e);
-
+		} catch (final CoreException exception) {
+			MylarStatusHandler.displayStatus("Search failed", exception.getStatus());
 		} finally {
-			// deals with monitor
 			done();
 		}
-		return status;
+		return Status.OK_STATUS;
 	}
 
 }
