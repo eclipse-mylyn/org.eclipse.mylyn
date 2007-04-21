@@ -141,6 +141,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				} catch (Exception e) {
 
 				}
+				
+				if(bugzillaTask.getCompletionDate() != null && completionDate != null) {
+					// if changed:
+					// TODO: get taskListManger.setDueDate(ITask task, Date dueDate)
+				}
 				bugzillaTask.setCompletionDate(completionDate);
 
 			}
