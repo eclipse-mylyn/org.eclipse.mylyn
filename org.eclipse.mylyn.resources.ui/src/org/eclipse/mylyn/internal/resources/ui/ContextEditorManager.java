@@ -115,7 +115,6 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 			} catch (IOException e) {
 				MylarStatusHandler.fail(e, "Could not store editor state", false);
 			}
-			// editorMementoMap.put(task.getHandleIdentifier(), memento);
 
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
 					previousCloseEditorsSetting);
