@@ -53,6 +53,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
@@ -904,16 +905,35 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isOwnedByUser(ITask task) {
-		if (task instanceof AbstractRepositoryTask && !(task instanceof WebTask)) {
+		if (task instanceof WebTask || (task instanceof Task && ((Task) task).isLocal())) {
+			return true;
+		}
+
+		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-			if (repository != null && repositoryTask.getOwner() != null
-					&& !repositoryTask.getOwner().equals(repository.getUserName())) {
-				return false;
+			if (repository != null && repositoryTask.getOwner() != null) {
+				return repositoryTask.getOwner().equals(repository.getUserName());
 			}
 		}
-		return true;
+
+		return false;
+
+		// if (task instanceof AbstractRepositoryTask && !(task instanceof
+		// WebTask)) {
+		// AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)
+		// task;
+		// TaskRepository repository =
+		// TasksUiPlugin.getRepositoryManager().getRepository(
+		// repositoryTask.getRepositoryKind(),
+		// repositoryTask.getRepositoryUrl());
+		// if (repository != null && repositoryTask.getOwner() != null
+		// && !repositoryTask.getOwner().equals(repository.getUserName())) {
+		// return false;
+		// }
+		// }
+		// return true;
 	}
 
 	public boolean isScheduledAfterThisWeek(ITask task) {
@@ -1000,7 +1020,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	 * @return true if task due date != null and has past
 	 */
 	public boolean isOverdue(ITask task) {
-		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate())) && isOwnedByUser(task);
+		return (!task.isCompleted() && task.getDueDate() != null && new Date().after(task.getDueDate()))
+				&& isOwnedByUser(task);
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
