@@ -1068,18 +1068,22 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		summaryComposite.setLayout(summaryLayout);
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
 
-		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
-		if (attribute != null) {
-			// Label summaryLabel = createLabel(summaryComposite, attribute);
-			// summaryLabel.setFont(TITLE_FONT);
-			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
-			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
-			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
-					TaskListColorsAndFonts.TASK_EDITOR_FONT);
-			summaryText.setFont(summaryFont);
+		if (taskData != null) {
+			RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+			if (attribute != null) {
+				// Label summaryLabel = createLabel(summaryComposite,
+				// attribute);
+				// summaryLabel.setFont(TITLE_FONT);
+				summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
+				IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+				Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
+						TaskListColorsAndFonts.TASK_EDITOR_FONT);
+				summaryText.setFont(summaryFont);
 
-			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
-			summaryText.addListener(SWT.KeyUp, new SummaryListener());
+				GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
+						summaryText);
+				summaryText.addListener(SWT.KeyUp, new SummaryListener());
+			}
 		}
 		toolkit.paintBordersFor(summaryComposite);
 	}
