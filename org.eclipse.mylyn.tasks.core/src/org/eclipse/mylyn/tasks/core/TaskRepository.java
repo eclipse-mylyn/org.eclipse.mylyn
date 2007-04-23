@@ -153,6 +153,7 @@ public class TaskRepository {
 		// NOTE: if anonymous, user name is "" string so we won't go to keyring
 		if (!isCachedUserName) {
 			cachedUserName = getUserNameFromKeyRing();
+			isCachedUserName = true;
 		}
 		return cachedUserName;
 	}
