@@ -85,7 +85,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				try {
 					mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
 							PREFS_PREFIX + task.getHandleIdentifier());
-					if (mementoString != null) {
+					if (mementoString != null || mementoString.trim().equals("")) {
 						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
 						if (memento != null) {
 							restoreEditors(page, memento);
