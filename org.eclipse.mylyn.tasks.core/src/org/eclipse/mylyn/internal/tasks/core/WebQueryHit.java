@@ -41,11 +41,11 @@ public class WebQueryHit extends AbstractQueryHit {
 		return new WebTask(taskId, summary, taskPrefix, repositoryUrl, WebTask.REPOSITORY_TYPE);
 	}
 	
-//	@Override
-//	public String getHandleIdentifier() {
-//		return taskPrefix + getTaskId();
-//	}
-
+	@Override
+	public String getIdentifyingLabel() {
+		return taskPrefix.equals("") ? "" : super.getIdentifyingLabel();
+	}
+	
 	public String getTaskPrefix() {
 		return this.taskPrefix;
 	}
