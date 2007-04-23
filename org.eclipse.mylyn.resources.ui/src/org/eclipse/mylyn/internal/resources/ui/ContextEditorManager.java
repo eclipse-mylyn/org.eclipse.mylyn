@@ -81,8 +81,9 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				}
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
+				String mementoString = null;
 				try {
-					String mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
+					mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
 							PREFS_PREFIX + task.getHandleIdentifier());
 					if (mementoString != null) {
 						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
@@ -91,7 +92,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 						}
 					}
 				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Could not restore all editors");
+					MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString);
 				}
 
 				IMylarElement activeNode = ContextCorePlugin.getContextManager().getActiveContext().getActiveNode();
