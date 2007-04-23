@@ -432,9 +432,9 @@
          </action>
         -->
     </actionSet>
-  </extension>
+   </extension>
   
-  <extension
+   <extension
          point="org.eclipse.ui.actionSetPartAssociations">
       <actionSetPartAssociation
             targetID="org.eclipse.mylar.java.actionSet">
@@ -446,6 +446,24 @@
          </part>
       </actionSetPartAssociation>
    </extension>
+  
+   <extension point="org.eclipse.ui.actionSets">
+	<actionSet
+            id="org.eclipse.mylar.java.actionSet.browsing"
+            label="Mylar Java Browsing"
+            visible="false"> 
+	    <action
+           class="org.eclipse.mylar.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
+           id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
+           style="toggle"
+	       label="Apply Mylar" 
+	       icon="icons/elcl16/interest-filtering-browsing.gif"
+	       tooltip="Focus Java Browsing Views on Active Task"
+	       toolbarPath="mylar"
+	       enablesFor="*">
+	    </action>
+  	</actionSet>
+  </extension>
   
  <extension point="org.eclipse.ui.actionSetPartAssociations">
 	<actionSetPartAssociation targetID="org.eclipse.mylar.java.actionSet.browsing">

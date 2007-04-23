@@ -80,13 +80,15 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 					ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 				}
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
-				
+
 				try {
-					String storedState = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
+					String mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
 							PREFS_PREFIX + task.getHandleIdentifier());
-					IMemento memento = XMLMemento.createReadRoot(new StringReader(storedState));
-					if (memento != null) {
-						restoreEditors(page, memento);
+					if (mementoString != null) {
+						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
+						if (memento != null) {
+							restoreEditors(page, memento);
+						}
 					}
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "Could not restore all editors");
@@ -116,8 +118,8 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 			StringWriter writer = new StringWriter();
 			try {
 				memento.save(writer);
-				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(PREFS_PREFIX + task.getHandleIdentifier(),
-						writer.getBuffer().toString());
+				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(
+						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 			} catch (IOException e) {
 				MylarStatusHandler.fail(e, "Could not store editor state", false);
 			}
@@ -143,19 +145,20 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		// HACK: using reflection to gain accessibility
 		Class<?> clazz = editorManager.getClass();
 		try {
-			Method method = clazz.getDeclaredMethod("restoreEditorState", IMemento.class, ArrayList.class, IEditorReference[].class, MultiStatus.class);
+			Method method = clazz.getDeclaredMethod("restoreEditorState", IMemento.class, ArrayList.class,
+					IEditorReference[].class, MultiStatus.class);
 			method.setAccessible(true);
 
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
 			for (int x = 0; x < editorMementos.length; x++) {
-//				editorManager.restoreEditorState(editorMementos[x], visibleEditors, activeEditor, result);
-				method.invoke(editorManager, new Object[] { editorMementos[x], visibleEditors, activeEditor, result});
+				//				editorManager.restoreEditorState(editorMementos[x], visibleEditors, activeEditor, result);
+				method.invoke(editorManager, new Object[] { editorMementos[x], visibleEditors, activeEditor, result });
 			}
-	
+
 			for (int i = 0; i < visibleEditors.size(); i++) {
 				editorManager.setVisibleEditor((IEditorReference) visibleEditors.get(i), false);
 			}
-	
+
 			if (activeEditor[0] != null) {
 				IWorkbenchPart editor = activeEditor[0].getPart(true);
 				if (editor != null) {
