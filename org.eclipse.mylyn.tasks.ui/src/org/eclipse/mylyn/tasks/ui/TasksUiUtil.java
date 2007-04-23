@@ -277,6 +277,9 @@ public class TasksUiUtil {
 	 */
 	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 
+		final boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
+
 		final String taskEditorId = getTaskEditorId(task);
 
 		final IEditorInput editorInput = new TaskEditorInput(task, newTask);
@@ -286,15 +289,19 @@ public class TasksUiUtil {
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window != null) {
-						IWorkbenchPage page = window.getActivePage();
+						boolean wasOpen = false;
+						if (openWithBrowser) {
+							openBrowser(task.getTaskUrl());
+						} else {
+							IWorkbenchPage page = window.getActivePage();
+							wasOpen = refreshIfOpen(task, editorInput);
 
-						boolean wasOpen = refreshIfOpen(task, editorInput);
-
-						if (!wasOpen) {
-							IEditorPart part = openEditor(editorInput, taskEditorId, page);
-							if (newTask && part instanceof TaskEditor) {
-								TaskEditor taskEditor = (TaskEditor) part;
-								taskEditor.setFocusOfActivePage();
+							if (!wasOpen) {
+								IEditorPart part = openEditor(editorInput, taskEditorId, page);
+								if (newTask && part instanceof TaskEditor) {
+									TaskEditor taskEditor = (TaskEditor) part;
+									taskEditor.setFocusOfActivePage();
+								}
 							}
 						}
 
@@ -319,8 +326,12 @@ public class TasksUiUtil {
 		} else {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
-				IWorkbenchPage page = window.getActivePage();
-				openEditor(editorInput, taskEditorId, page);
+				if (openWithBrowser) {
+					openBrowser(task.getTaskUrl());
+				} else {
+					IWorkbenchPage page = window.getActivePage();
+					openEditor(editorInput, taskEditorId, page);
+				}
 				if (task instanceof AbstractRepositoryTask) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
 				}
