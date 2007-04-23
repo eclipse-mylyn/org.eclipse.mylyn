@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.ITextSelection;
@@ -82,7 +81,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	public IViewPart getPartForAction() {
 		if (viewPart == null) {
 			if (this instanceof IWorkbenchWindowActionDelegate) {
-				if (Platform.isRunning()) {
+				if (!PlatformUI.getWorkbench().isClosing()) {
 					throw new RuntimeException("not supported on IWorkbenchWindowActionDelegate");
 				}
 			} else {

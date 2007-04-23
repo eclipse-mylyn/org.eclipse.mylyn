@@ -59,6 +59,8 @@ import org.eclipse.ui.internal.WorkbenchPage;
  */
 public class ContextEditorManager implements IMylarContextListener, ITaskActivityListener {
 
+	private static final String PREFS_PREFIX = "editors.task.";
+
 	private static final String KEY_CONTEXT_EDITORS = "ContextOpenEditors";
 
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(
@@ -79,11 +81,15 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				}
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 				
-				String storedState = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
-						KEY_CONTEXT_EDITORS);
-				IMemento memento = XMLMemento.createReadRoot(new StringReader(storedState));
-				if (memento != null) {
-					restoreEditors(page, memento);
+				try {
+					String storedState = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
+							PREFS_PREFIX + task.getHandleIdentifier());
+					IMemento memento = XMLMemento.createReadRoot(new StringReader(storedState));
+					if (memento != null) {
+						restoreEditors(page, memento);
+					}
+				} catch (Exception e) {
+					MylarStatusHandler.log(e, "Could not restore all editors");
 				}
 
 				IMylarElement activeNode = ContextCorePlugin.getContextManager().getActiveContext().getActiveNode();
@@ -110,7 +116,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 			StringWriter writer = new StringWriter();
 			try {
 				memento.save(writer);
-				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(KEY_CONTEXT_EDITORS,
+				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(PREFS_PREFIX + task.getHandleIdentifier(),
 						writer.getBuffer().toString());
 			} catch (IOException e) {
 				MylarStatusHandler.fail(e, "Could not store editor state", false);
