@@ -11,6 +11,15 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -64,11 +73,13 @@ import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskListElementAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.RenameAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskListElementPropertiesAction;
@@ -128,15 +139,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Mik Kersten
@@ -221,6 +223,10 @@ public class TaskListView extends ViewPart {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
+	private SynchronizeAutomaticallyAction synchronizeAutomatically;
+	
+	private OpenTasksUiPreferencesAction openPreferencesAction;
+	
 	private FilterArchiveContainerAction filterArchiveCategory;
 
 	private PriorityDropDownAction filterOnPriority;
@@ -1071,15 +1077,21 @@ public class TaskListView extends ViewPart {
 		manager.add(filterOnPriority);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
+		
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 
+		manager.add(synchronizeAutomatically);
+		
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
+		
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				filterOnPriority.updateCheckedState();
 			}
 		});
+		
+		manager.add(new Separator());
+		manager.add(openPreferencesAction);
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
@@ -1294,6 +1306,8 @@ public class TaskListView extends ViewPart {
 		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
+		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
+		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		filterOnPriority = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()

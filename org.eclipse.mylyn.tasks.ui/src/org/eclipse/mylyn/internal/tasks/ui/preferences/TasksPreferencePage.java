@@ -48,6 +48,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class TasksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	public static final String ID = "org.eclipse.mylar.tasks.ui.preferences";
+	
 	private static final int OVERWRITE = 0;
 
 	private static final int LOAD_EXISTING = 1;
@@ -108,11 +110,13 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
-
-		String message = "See <a>''{0}''</a> for configuring Task List colors.";
-		new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message,
-				(IWorkbenchPreferenceContainer) getContainer(), null);
-
+		
+		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
+			String message = "See <a>''{0}''</a> for configuring Task List colors.";
+				new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", 
+						message, (IWorkbenchPreferenceContainer) getContainer(), null);
+		}
+		
 		createTaskRefreshScheduleGroup(container);
 		createNotificationsGroup(container);
 		createSchedulingGroup(container);
@@ -241,33 +245,17 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Synchronization");
+		group.setText("Automatic Synchronization");
 		GridLayout gridLayout = new GridLayout(1, false);
-		// gridLayout.marginLeft = 0;
 		group.setLayout(gridLayout);
+		
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// userRefreshOnly = new Button(group, SWT.RADIO);
-		// GridData gridData = new GridData();
-		// gridData.horizontalSpan = 2;
-		// userRefreshOnly.setLayoutData(gridData);
-		// userRefreshOnly.setText("Disabled");
-		// userRefreshOnly.setSelection(!getPreferenceStore().getBoolean(
-		// TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
-		// userRefreshOnly.addSelectionListener(new SelectionListener() {
-		// public void widgetSelected(SelectionEvent e) {
-		// updateRefreshGroupEnablements();
-		// }
-		//
-		// public void widgetDefaultSelected(SelectionEvent e) {
-		// }
-		// });
 		Composite enableSynch = new Composite(group, SWT.NULL);
 		gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		enableSynch.setLayout(gridLayout);
 		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
-		// enableBackgroundSynch.setLayoutData(gridData);
 		enableBackgroundSynch.setText("Synchronize with repositories every");
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));

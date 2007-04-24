@@ -274,24 +274,6 @@
 		<viewContribution 
 			id="org.eclipse.mylar.tasklist.actions.view" 
 	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
-    <action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.RestoreTaskListAction"
-          icon="icons/etool16/import.gif"
-          id="org.eclipse.mylar.tasks.ui.action.restore"
-          label="Restore Tasks from History..."
-          menubarPath="tasks"
-          style="push">
-    </action>
-
-  		<action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
-          enablesFor="*"
-          icon="icons/eview16/repositories.gif"
-          id="org.eclipse.mylar.tasks.ui.open.repositories.view"
-          label="Show Task Repositories View"
-          menubarPath="tasks"
-          tooltip="Show Task Repositories View">
-         </action>
   		
   		<action
           class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
@@ -303,6 +285,24 @@
           toolbarPath="new"
           tooltip="Synchronize All Tasks and Queries">
          </action>
+
+  		<action
+          class="org.eclipse.mylar.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
+          enablesFor="*"
+          icon="icons/eview16/repositories.gif"
+          id="org.eclipse.mylar.tasks.ui.open.repositories.view"
+          label="Show Task Repositories View"
+          menubarPath="tasks"
+          tooltip="Show Task Repositories View">
+         </action>
+    <action
+          class="org.eclipse.mylar.internal.tasks.ui.actions.RestoreTaskListAction"
+          icon="icons/etool16/import.gif"
+          id="org.eclipse.mylar.tasks.ui.action.restore"
+          label="Restore Tasks from History..."
+          menubarPath="tasks"
+          style="push">
+    </action>
            		
   		<action
                class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
@@ -431,7 +431,7 @@
       <page 
          name="Task List"
          class="org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage"
-         id="org.eclipse.mylar.tasklist.ui.preferences"
+         id="org.eclipse.mylar.tasks.ui.preferences"
          category="org.eclipse.mylar.ui.preferences">
          <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
       </page> 
