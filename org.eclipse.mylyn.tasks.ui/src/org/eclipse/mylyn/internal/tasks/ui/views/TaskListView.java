@@ -981,9 +981,6 @@ public class TaskListView extends ViewPart {
 		TreeColumnLayout layout = (TreeColumnLayout) getViewer().getTree().getParent().getLayout();
 
 		getViewer().setColumnProperties(columnNames);
-		// for (TreeColumn col: columns) {
-		// col.dispose();
-		// }
 		columns = new TreeColumn[columnNames.length];
 		for (int i = 0; i < columnNames.length; i++) {
 			columns[i] = new TreeColumn(getViewer().getTree(), 0);
