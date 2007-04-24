@@ -71,14 +71,14 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			case 2:
 				return null;
 			case 3:
-				return null;
-			case 4:
 				if (obj instanceof DateRangeContainer) {
 					if (((DateRangeContainer) obj).isPresent()) {
 						return super.getText(obj) + " - Today";
 					}
 				}
 				return super.getText(obj);
+			case 4:
+				return null;
 			}
 		}
 		return null;
@@ -119,7 +119,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				ITaskListElement taskElement = (ITaskListElement) element;
 				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
-		} else if (columnIndex == 3) {
+		} else if (columnIndex == 4) {
 			AbstractRepositoryTask repositoryTask = null;
 			if (element instanceof AbstractQueryHit) {
 				repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();

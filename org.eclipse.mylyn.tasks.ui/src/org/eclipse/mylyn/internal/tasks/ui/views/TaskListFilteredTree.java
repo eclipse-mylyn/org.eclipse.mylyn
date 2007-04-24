@@ -13,6 +13,8 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -52,6 +54,17 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	private int completeTasks;
 
 	private int incompleteTime;
+
+	@Override
+	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+		// Use a single Composite for the Tree to being able to use the
+		// TreeColumnLayout. See Bug 177891 for more details.
+		Composite container = new Composite(parent, SWT.None);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		container.setLayout(new TreeColumnLayout());
+
+		return super.doCreateTreeViewer(container, style);
+	}
 
 	@Override
 	protected Composite createProgressComposite(Composite container) {
@@ -199,7 +212,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		if (filterComposite.isDisposed()) {
 			return;
 		}
-		
+
 		String text = task.getSummary();
 		activeTaskLabel.setText(text);
 		activeTaskLabel.setUnderlined(true);
@@ -215,7 +228,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		if (filterComposite.isDisposed()) {
 			return;
 		}
-		
+
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		activeTaskLabel.setUnderlined(false);
 		activeTaskLabel.setToolTipText("");

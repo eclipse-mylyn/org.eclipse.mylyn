@@ -11,15 +11,6 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -28,11 +19,14 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -135,6 +129,15 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.IThemeManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Mik Kersten
  * @author Ken Sueda
@@ -234,9 +237,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { "", "", " !", "  ", "Summary" };
+	protected String[] columnNames = new String[] { "", "", "!", "Summary", "" };
 
-	protected int[] columnWidths = new int[] { 53, 20, 12, 12, 160 };
+	protected int[] columnWidths = new int[] { 53, 20, 12, 160, 15 };
 
 	private TreeColumn[] columns;
 
@@ -798,7 +801,7 @@ public class TaskListView extends ViewPart {
 		if (taskListMemento != null) {
 			IMemento taskListWidth = taskListMemento.getChild(columnWidthIdentifier);
 			if (taskListWidth != null) {
-				for (int i = 0; i < columnWidths.length; i++) {
+				for (int i = 0; i < columnWidths.length - 1; i++) {
 					IMemento m = taskListWidth.getChild("col" + i);
 					if (m != null) {
 						int width = m.getInteger(MEMENTO_KEY_WIDTH);
@@ -975,6 +978,8 @@ public class TaskListView extends ViewPart {
 	}
 
 	private void configureColumns(final String[] columnNames, final int[] columnWidths) {
+		TreeColumnLayout layout = (TreeColumnLayout) getViewer().getTree().getParent().getLayout();
+
 		getViewer().setColumnProperties(columnNames);
 		// for (TreeColumn col: columns) {
 		// col.dispose();
@@ -983,7 +988,13 @@ public class TaskListView extends ViewPart {
 		for (int i = 0; i < columnNames.length; i++) {
 			columns[i] = new TreeColumn(getViewer().getTree(), 0);
 			columns[i].setText(columnNames[i]);
-			columns[i].setWidth(columnWidths[i]);
+
+			if (i == 0 || i == 1 || i == 2 || i == 4) {
+				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
+			} else {
+				layout.setColumnData(columns[i], new ColumnWeightData(100));
+			}
+			
 			final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {
 
@@ -1320,7 +1331,7 @@ public class TaskListView extends ViewPart {
 	/**
 	 * Recursive function that checks for the occurrence of a certain task
 	 * taskId. All children of the supplied node will be checked.
-	 * 
+	 *
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
