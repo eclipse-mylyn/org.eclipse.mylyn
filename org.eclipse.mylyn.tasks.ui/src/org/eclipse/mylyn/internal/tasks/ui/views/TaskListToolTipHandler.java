@@ -73,11 +73,11 @@ public class TaskListToolTipHandler {
 
 	private WorkweekProgressBar taskProgressBar;
 
-	private Widget tipWidget; 
+	private Widget tipWidget;
 
-	protected Point tipPosition; 
+	protected Point tipPosition;
 
-	protected Point widgetPosition; 
+	protected Point widgetPosition;
 
 	public TaskListToolTipHandler(Shell parentShell) {
 		if (parentShell != null) {
@@ -235,7 +235,9 @@ public class TaskListToolTipHandler {
 
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				tooltip += "\n" + repository.getRepositoryLabel();
+				if (repository != null) {
+					tooltip += "\n" + repository.getRepositoryLabel();
+				}
 				tooltip += SEPARATOR;
 				tooltip += formatActivityInformation(repositoryTask);
 
@@ -261,11 +263,11 @@ public class TaskListToolTipHandler {
 			try {
 				Date date = ((ITask) element).getScheduledForDate();
 				if (date != null) {
-					result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.LONG).format(date)
-							+ " (" + DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + ")";
+					result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.LONG).format(date) + " ("
+							+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + ")";
 				}
-				
-				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask)element);
+
+				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask) element);
 				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 				if (!elapsedTimeString.equals("")) {
 					result += "\nElapsed: " + elapsedTimeString + "\n";
