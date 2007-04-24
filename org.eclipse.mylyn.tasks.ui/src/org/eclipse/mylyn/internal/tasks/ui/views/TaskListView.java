@@ -156,7 +156,7 @@ public class TaskListView extends ViewPart {
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
-	private static final String MEMENTO_KEY_WIDTH = "width";
+//	private static final String MEMENTO_KEY_WIDTH = "width";
 
 	private static final String ID_SEPARATOR_NEW = "new";
 
@@ -239,7 +239,7 @@ public class TaskListView extends ViewPart {
 
 	protected String[] columnNames = new String[] { "", "", "!", "Summary", "" };
 
-	protected int[] columnWidths = new int[] { 53, 20, 12, 160, 15 };
+	protected int[] columnWidths = new int[] { 53, 20, 12, 160, 16 };
 
 	private TreeColumn[] columns;
 
@@ -781,12 +781,12 @@ public class TaskListView extends ViewPart {
 
 	@Override
 	public void saveState(IMemento memento) {
-		IMemento colMemento = memento.createChild(columnWidthIdentifier);
+//		IMemento colMemento = memento.createChild(columnWidthIdentifier);
 
-		for (int i = 0; i < columnWidths.length; i++) {
-			IMemento m = colMemento.createChild("col" + i);
-			m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
-		}
+//		for (int i = 0; i < columnWidths.length; i++) {
+//			IMemento m = colMemento.createChild("col" + i);
+//			m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
+//		}
 
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
@@ -799,17 +799,17 @@ public class TaskListView extends ViewPart {
 
 	private void restoreState() {
 		if (taskListMemento != null) {
-			IMemento taskListWidth = taskListMemento.getChild(columnWidthIdentifier);
-			if (taskListWidth != null) {
-				for (int i = 0; i < columnWidths.length - 1; i++) {
-					IMemento m = taskListWidth.getChild("col" + i);
-					if (m != null) {
-						int width = m.getInteger(MEMENTO_KEY_WIDTH);
-						columnWidths[i] = width;
-						columns[i].setWidth(width);
-					}
-				}
-			}
+//			IMemento taskListWidth = taskListMemento.getChild(columnWidthIdentifier);
+//			if (taskListWidth != null) {
+//				for (int i = 0; i < columnWidths.length - 1; i++) {
+//					IMemento m = taskListWidth.getChild("col" + i);
+//					if (m != null) {
+//						int width = m.getInteger(MEMENTO_KEY_WIDTH);
+//						columnWidths[i] = width;
+//						columns[i].setWidth(width);
+//					}
+//				}
+//			}
 			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
 			if (sorterMemento != null) {
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
