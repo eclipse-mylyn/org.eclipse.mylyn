@@ -2723,6 +2723,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentStyleText.clear();
 				textHash.clear();
 				editorInput.refreshInput();
+				if (repositoryTask != null) {
+					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+				}
 				// if (repositoryTask != null) {
 				// repositoryTask.setDirty(false);
 				// }
@@ -2750,9 +2753,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						if (taskOutlineModel != null && outlinePage != null && !outlinePage.getControl().isDisposed()) {
 							outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
 							outlinePage.getOutlineTreeViewer().refresh(true);
-						}
-						if (repositoryTask != null) {
-							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						}
 
 						setSubmitEnabled(true);
