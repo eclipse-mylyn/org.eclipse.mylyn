@@ -85,14 +85,14 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				try {
 					mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
 							PREFS_PREFIX + task.getHandleIdentifier());
-					if (mementoString != null || mementoString.trim().equals("")) {
+					if (mementoString != null && !mementoString.trim().equals("")) {
 						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
 						if (memento != null) {
 							restoreEditors(page, memento);
 						}
 					}
 				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString);
+					MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
 				}
 
 				IMylarElement activeNode = ContextCorePlugin.getContextManager().getActiveContext().getActiveNode();
