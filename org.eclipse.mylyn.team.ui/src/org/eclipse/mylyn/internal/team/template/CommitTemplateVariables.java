@@ -247,7 +247,7 @@ public class CommitTemplateVariables {
 	}
 	
 	public static RepositoryTaskData getTaskData(ITask task) {
-		return TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
+		return TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 	}
 
 	/**
