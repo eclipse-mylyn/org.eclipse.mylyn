@@ -42,7 +42,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());
 		abstractRepositorySettingsPage.setWizard(this);		
 		setNeedsProgressMonitor(true);
-		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
+		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY_SETTINGS);
 		setWindowTitle(TITLE);
 	}
 
