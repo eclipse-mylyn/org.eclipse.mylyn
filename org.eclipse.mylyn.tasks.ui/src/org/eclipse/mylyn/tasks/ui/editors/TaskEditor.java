@@ -36,6 +36,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -59,7 +60,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Eric Booth (initial prototype)
  * @author Rob Elves
  */
-public class TaskEditor extends SharedHeaderFormEditor {
+public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor{
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
@@ -83,6 +84,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	public final Object FAMILY_SUBMIT = new Object();
 
+	private EditorBusyIndicator editorBusyIndicator;
+	
 	public TaskEditor() {
 		super();
 		taskPlanningEditor = new TaskPlanningEditor(this);
@@ -370,6 +373,8 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	public void dispose() {
+		editorBusyIndicator.dispose();
+		
 		for (IEditorPart part : editors) {
 			part.dispose();
 		}
@@ -397,6 +402,9 @@ public class TaskEditor extends SharedHeaderFormEditor {
 
 	@Override
 	protected void addPages() {
+		
+		editorBusyIndicator = new EditorBusyIndicator(this);
+		
 		try {
 			MenuManager manager = new MenuManager();
 			IMenuListener listener = new IMenuListener() {
@@ -502,8 +510,14 @@ public class TaskEditor extends SharedHeaderFormEditor {
 	}
 
 	public void showBusy(boolean busy) {
-		if (!this.getHeaderForm().getForm().isDisposed()) {
-			this.getHeaderForm().getForm().setBusy(busy);
+		// if (!this.getHeaderForm().getForm().isDisposed()) {
+		// this.getHeaderForm().getForm().setBusy(busy);
+		//		}
+		
+		if(busy){
+			editorBusyIndicator.startBusy();
+		} else {
+			editorBusyIndicator.stopBusy();
 		}
 	}
 
@@ -610,6 +624,11 @@ public class TaskEditor extends SharedHeaderFormEditor {
 		} else {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
+	}
+	
+	@Override
+	public void setTitleImage(Image titleImage) {
+		super.setTitleImage(titleImage);
 	}
 
 }
