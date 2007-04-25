@@ -2723,12 +2723,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				commentStyleText.clear();
 				textHash.clear();
 				editorInput.refreshInput();
+
+				// Note: Marking read must run synchronously
+				// If not, incomings resulting from subsequent synchronization can get marked as read (without having been viewd by user
 				if (repositoryTask != null) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
-				// if (repositoryTask != null) {
-				// repositoryTask.setDirty(false);
-				// }
+				
 				this.setInputWithNotify(this.getEditorInput());
 				this.init(this.getEditorSite(), this.getEditorInput());
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -2753,6 +2754,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						if (taskOutlineModel != null && outlinePage != null && !outlinePage.getControl().isDisposed()) {
 							outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
 							outlinePage.getOutlineTreeViewer().refresh(true);
+						}
+						
+									if (repositoryTask != null) {
+							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						}
 
 						setSubmitEnabled(true);
