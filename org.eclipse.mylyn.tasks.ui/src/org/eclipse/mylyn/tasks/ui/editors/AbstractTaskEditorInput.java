@@ -116,7 +116,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 
 	public void refreshInput() {
 		this.editableTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(handle);
-		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldRepositoryTaskData(handle);
+		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);
 		this.oldEdits = TasksUiPlugin.getDefault().getTaskDataManager().getEdits(handle);
 	}
 }

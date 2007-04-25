@@ -110,7 +110,7 @@ class SynchronizeQueryJob extends Job {
 						for (AbstractQueryHit hit : collector.getHits()) {
 							if (!temp.contains(hit)
 									&& hit.getCorrespondingTask() == null
-									&& TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
+									&& TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 											hit.getHandleIdentifier()) == null) {
 								temp.add(hit);
 							}
@@ -204,7 +204,7 @@ class SynchronizeQueryJob extends Job {
 							continue;
 						}
 						if (taskData != null) {
-							TasksUiPlugin.getDefault().getTaskDataManager().push(hit.getHandleIdentifier(), taskData);
+							TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(hit.getHandleIdentifier(), taskData);
 						}
 						monitor.worked(1);
 					}

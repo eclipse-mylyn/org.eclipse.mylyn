@@ -97,7 +97,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
@@ -127,7 +127,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
 		byte[] result = attachmentHandler.getAttachmentData(repository,taskData.getAttachments().get(0));

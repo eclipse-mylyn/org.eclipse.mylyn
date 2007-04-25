@@ -120,7 +120,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 
 			public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
-				RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
+				RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 						task.getHandleIdentifier());
 
 				AbstractAttributeFactory factory = null;

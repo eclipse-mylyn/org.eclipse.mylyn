@@ -118,32 +118,41 @@ public class TaskDataManager {
 	 * Add a RepositoryTaskData to the offline reports file. Previously stored
 	 * taskData is held and can be retrieved via getOldTaskData()
 	 */
-	public void push(String taskHandle, RepositoryTaskData newEntry) {
+	public void setNewTaskData(String taskHandle, RepositoryTaskData newEntry) {
 		if (taskHandle == null || newEntry == null) {
 			return;
 		}
-		RepositoryTaskData moveToOld = getNewDataMap().get(taskHandle);
 		synchronized (file) {
-			if (moveToOld != null) {
-				getOldDataMap().put(taskHandle, moveToOld);
-			} else {
-				getOldDataMap().put(taskHandle, newEntry);
-			}
 			getNewDataMap().put(taskHandle, newEntry);
 		}
 		dataStateChanged();
 	}
 
-	/**
-	 * Replace the recent (new) data with this copy
-	 * 
-	 * @param newData
-	 */
-	public void replace(String handle, RepositoryTaskData newData) {
+	public void setOldTaskData(String taskHandle, RepositoryTaskData oldEntry) {
+		if (taskHandle == null || oldEntry == null) {
+			return;
+		}
 		synchronized (file) {
-			getNewDataMap().put(handle, newData);
+			getOldDataMap().put(taskHandle, oldEntry);
 		}
 		dataStateChanged();
+	}
+
+	/**
+	 * Returns the most recent copy of the task data.
+	 * 
+	 * @return offline task data, null if no data found
+	 */
+	public RepositoryTaskData getNewTaskData(String handle) {
+		RepositoryTaskData data = getNewDataMap().get(handle);
+		return data;
+	}
+
+	/**
+	 * Returns the old copy if exists, null otherwise.
+	 */
+	public RepositoryTaskData getOldTaskData(String handle) {
+		return getOldDataMap().get(handle);
 	}
 
 	public Map<String, RepositoryTaskData> getUnsubmitted() {
@@ -182,37 +191,39 @@ public class TaskDataManager {
 	 * @return editable copy of task data with any edits applied
 	 */
 	public RepositoryTaskData getEditableCopy(String handle) {
-		RepositoryTaskData data = getRepositoryTaskData(handle);
-		RepositoryTaskData clone;
-		try {
-			clone = (RepositoryTaskData) ObjectCloner.deepCopy(data);
-			updateAttributeFactory(clone);
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error constructing modifiable task", false);
-			return null;
-		}
-		for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
-			if (attribute == null)
-				continue;
-			RepositoryTaskAttribute existing = clone.getAttribute(attribute.getID());
-			if (existing != null) {
-				existing.clearValues();
-				List<String> options = existing.getOptions();
+		RepositoryTaskData data = getNewTaskData(handle);
+		RepositoryTaskData clone = null;
+		if (data != null) {
+			try {
+				clone = (RepositoryTaskData) ObjectCloner.deepCopy(data);
+				updateAttributeFactory(clone);
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "Error constructing modifiable task", false);
+				return null;
+			}
+			for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
+				if (attribute == null)
+					continue;
+				RepositoryTaskAttribute existing = clone.getAttribute(attribute.getID());
+				if (existing != null) {
+					existing.clearValues();
+					List<String> options = existing.getOptions();
 
-				for (String value : attribute.getValues()) {
-					if (options.size() > 0) {
-						if (options.contains(value)) {
+					for (String value : attribute.getValues()) {
+						if (options.size() > 0) {
+							if (options.contains(value)) {
+								existing.addValue(value);
+							}
+						} else {
 							existing.addValue(value);
 						}
-					} else {
-						existing.addValue(value);
 					}
+
+				} else {
+					clone.addAttribute(attribute.getID(), attribute);
 				}
 
-			} else {
-				clone.addAttribute(attribute.getID(), attribute);
 			}
-
 		}
 
 		return clone;
@@ -252,26 +263,6 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Returns the most recent copy of the task data.
-	 * 
-	 * @return offline task data, null if no data found
-	 */
-	public RepositoryTaskData getRepositoryTaskData(String handle) {
-		RepositoryTaskData data = getNewDataMap().get(handle);
-		if (data == null) {
-			data = getOldRepositoryTaskData(handle);
-		}
-		return data;
-	}
-
-	/**
-	 * Returns the old copy if exists, null otherwise.
-	 */
-	public RepositoryTaskData getOldRepositoryTaskData(String handle) {
-		return getOldDataMap().get(handle);
-	}
-
-	/**
 	 * Remove some bugs from the offline reports list
 	 * 
 	 * @param indicesToRemove
@@ -286,25 +277,25 @@ public class TaskDataManager {
 	}
 
 	public void remove(String handle) {
-		synchronized (file) {			
+		synchronized (file) {
 			getNewDataMap().remove(handle);
 			getOldDataMap().remove(handle);
 		}
 		discardEdits(handle);
 	}
 
-	/**
-	 * Make both new and old the same so that no deltas will be revealed.
-	 */
-	public void clearIncoming(String handle) {
-		RepositoryTaskData newData = getNewDataMap().get(handle);
-		if (newData != null) {
-			synchronized (file) {
-				getOldDataMap().put(handle, newData);
-			}
-		}
-		dataStateChanged();
-	}
+	// /**
+	// * Make both new and old the same so that no deltas will be revealed.
+	// */
+	// public void clearIncoming(String handle) {
+	// RepositoryTaskData newData = getNewDataMap().get(handle);
+	// if (newData != null) {
+	// synchronized (file) {
+	// getOldDataMap().put(handle, newData);
+	// }
+	// }
+	// dataStateChanged();
+	// }
 
 	/**
 	 * force a reset of all data maps

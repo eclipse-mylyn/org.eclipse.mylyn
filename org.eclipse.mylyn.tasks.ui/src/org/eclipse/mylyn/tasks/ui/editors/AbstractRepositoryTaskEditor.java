@@ -13,7 +13,6 @@ package org.eclipse.mylar.tasks.ui.editors;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -435,6 +434,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private Menu menu;
 
+	private SynchronizeEditorAction synchronizeEditorAction;
+
 	protected class ComboSelectionListener extends SelectionAdapter {
 
 		private CCombo combo;
@@ -648,7 +649,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (parentEditor.getTopForm() != null) {
 			parentEditor.getTopForm().getToolBarManager().add(repositoryLabelControl);
 			if (repositoryTask != null) {
-				SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
+				synchronizeEditorAction = new SynchronizeEditorAction();
 				synchronizeEditorAction.selectionChanged(new StructuredSelection(this));
 				parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
 			}
@@ -1683,8 +1684,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			if (repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null) {
-				// hit? Expose all comments
+			if ((repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null)
+					|| editorInput.getOldTaskData() == null) {
+				// hit or lost task data, expose all comments
 				expandableComposite.setExpanded(true);
 				foundNew = true;
 			} else if (isNewComment(taskComment)) {
@@ -1807,44 +1809,53 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean isNewComment(TaskComment comment) {
 
-		if (repositoryTask != null) {
-			if (repositoryTask.getLastSyncDateStamp() == null) {
-				// new hit
-				return true;
-			}
-			AbstractRepositoryConnector connector = (AbstractRepositoryConnector) TasksUiPlugin.getRepositoryManager()
-					.getRepositoryConnector(taskData.getRepositoryKind());
-			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
-			if (offlineHandler != null) {
-
-				Date lastSyncDate = taskData.getAttributeFactory().getDateForAttributeType(
-						RepositoryTaskAttribute.DATE_MODIFIED, repositoryTask.getLastSyncDateStamp());
-
-				if (lastSyncDate != null) {
-
-					// reduce granularity to minutes
-					Calendar calLastMod = Calendar.getInstance();
-					calLastMod.setTimeInMillis(lastSyncDate.getTime());
-					calLastMod.set(Calendar.SECOND, 0);
-
-					Date commentDate = taskData.getAttributeFactory().getDateForAttributeType(
-							RepositoryTaskAttribute.COMMENT_DATE, comment.getCreated());
-					if (commentDate != null) {
-
-						Calendar calComment = Calendar.getInstance();
-						calComment.setTimeInMillis(commentDate.getTime());
-						calComment.set(Calendar.SECOND, 0);
-						if (calComment.after(calLastMod)) {
-							return true;
-						}
-					}
-				}
-			}
+		// Simple test (will not reveal new comments if offline data was lost
+		if (editorInput.getOldTaskData() != null) {
+			return (comment.getNumber() > editorInput.getOldTaskData().getComments().size());
 		}
 		return false;
 
-		// Simple test (will not reveal new comments if offline data was lost
-		// return (comment.getNumber() > oldTaskData.getComments().size());
+		// OLD METHOD FOR DETERMINING NEW COMMENTS
+		// if (repositoryTask != null) {
+		// if (repositoryTask.getLastSyncDateStamp() == null) {
+		// // new hit
+		// return true;
+		// }
+		// AbstractRepositoryConnector connector = (AbstractRepositoryConnector)
+		// TasksUiPlugin.getRepositoryManager()
+		// .getRepositoryConnector(taskData.getRepositoryKind());
+		// ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+		// if (offlineHandler != null) {
+		//
+		// Date lastSyncDate =
+		// taskData.getAttributeFactory().getDateForAttributeType(
+		// RepositoryTaskAttribute.DATE_MODIFIED,
+		// repositoryTask.getLastSyncDateStamp());
+		//
+		// if (lastSyncDate != null) {
+		//
+		// // reduce granularity to minutes
+		// Calendar calLastMod = Calendar.getInstance();
+		// calLastMod.setTimeInMillis(lastSyncDate.getTime());
+		// calLastMod.set(Calendar.SECOND, 0);
+		//
+		// Date commentDate =
+		// taskData.getAttributeFactory().getDateForAttributeType(
+		// RepositoryTaskAttribute.COMMENT_DATE, comment.getCreated());
+		// if (commentDate != null) {
+		//
+		// Calendar calComment = Calendar.getInstance();
+		// calComment.setTimeInMillis(commentDate.getTime());
+		// calComment.set(Calendar.SECOND, 0);
+		// if (calComment.after(calLastMod)) {
+		// return true;
+		// }
+		// }
+		// }
+		// }
+		// }
+		// return false;
+
 	}
 
 	protected void createNewCommentLayout(Composite composite) {
@@ -2579,17 +2590,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public void showBusy(boolean busy) {
 		if (busy != formBusy) {
 			parentEditor.showBusy(busy);
-			if (busy) {
-				setEnabledState(editorComposite, false);
-				// regularCursor = form.getCursor();
-				// if (waitCursor == null) {
-				// waitCursor = new Cursor(form.getDisplay(), SWT.CURSOR_WAIT);
-				// }
-				// form.setCursor(waitCursor);
-			} else {
-				// form.setCursor(regularCursor);
-				setEnabledState(editorComposite, true);
+			if (synchronizeEditorAction != null) {
+				synchronizeEditorAction.setEnabled(!busy);
 			}
+
+			setEnabledState(editorComposite, !busy);
+
 			formBusy = busy;
 		}
 	}
@@ -2725,11 +2731,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				editorInput.refreshInput();
 
 				// Note: Marking read must run synchronously
-				// If not, incomings resulting from subsequent synchronization can get marked as read (without having been viewd by user
+				// If not, incomings resulting from subsequent synchronization
+				// can get marked as read (without having been viewd by user
 				if (repositoryTask != null) {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 				}
-				
+
 				this.setInputWithNotify(this.getEditorInput());
 				this.init(this.getEditorSite(), this.getEditorInput());
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -2755,8 +2762,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							outlinePage.getOutlineTreeViewer().setInput(taskOutlineModel);
 							outlinePage.getOutlineTreeViewer().refresh(true);
 						}
-						
-									if (repositoryTask != null) {
+
+						if (repositoryTask != null) {
 							TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 						}
 

@@ -207,7 +207,7 @@ public class TasksUiUtil {
 				if (connector != null) {
 
 					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager()
-							.getRepositoryTaskData(task.getHandleIdentifier());
+							.getNewTaskData(task.getHandleIdentifier());
 
 					if (taskData != null) {
 						TasksUiUtil.openEditor(task, true, false);

@@ -285,7 +285,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 
-							RepositoryTaskData taskData = getDefault().getTaskDataManager().getRepositoryTaskData(
+							RepositoryTaskData taskData = getDefault().getTaskDataManager().getNewTaskData(
 									repositoryTask.getHandleIdentifier());
 
 							if (taskData != null) {

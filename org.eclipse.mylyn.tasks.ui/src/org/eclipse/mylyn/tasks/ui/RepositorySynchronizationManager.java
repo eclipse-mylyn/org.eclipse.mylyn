@@ -247,19 +247,25 @@ public class RepositorySynchronizationManager {
 			return false;
 		}
 
-		RepositoryTaskData oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
+		RepositoryTaskData previousTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 				repositoryTask.getHandleIdentifier());
 
-		if (repositoryTask.isSubmitting()) {			
+		if (repositoryTask.isSubmitting()) {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 			repositoryTask.setSubmitting(false);
 			TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 			dataManager.discardEdits(repositoryTask.getHandleIdentifier());
-			// repositoryTask.setLastSyncDateStamp(newTaskData.getLastModified());
-			// push twice so we don't see our own changes
-			TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
-			TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
 
+			TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(),
+					newTaskData);
+			/**
+			 * If we set both so we don't see our own changes
+			 * 
+			 * @see RepositorySynchronizationManager.setTaskRead(AbstractRepositoryTask,
+			 *      boolean)
+			 */
+			// TasksUiPlugin.getDefault().getTaskDataManager().setOldTaskData(repositoryTask.getHandleIdentifier(),
+			// newTaskData);
 		} else {
 
 			switch (status) {
@@ -267,7 +273,8 @@ public class RepositorySynchronizationManager {
 				if (checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.CONFLICT;
 				}
-				TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(), newTaskData);
+				TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(),
+						newTaskData);
 				break;
 
 			case CONFLICT:
@@ -276,8 +283,7 @@ public class RepositorySynchronizationManager {
 				// only most recent incoming will be displayed if two
 				// sequential incoming's /conflicts happen
 
-				// TODO: Only replace if has new incoming?
-				TasksUiPlugin.getDefault().getTaskDataManager().replace(repositoryTask.getHandleIdentifier(),
+				TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(),
 						newTaskData);
 				break;
 			case SYNCHRONIZED:
@@ -286,9 +292,9 @@ public class RepositorySynchronizationManager {
 					status = RepositoryTaskSyncState.INCOMING;
 					repositoryTask.setNotified(false);
 				}
-				if (hasIncoming || oldTaskData == null || forceSync) {
-					TasksUiPlugin.getDefault().getTaskDataManager().push(repositoryTask.getHandleIdentifier(),
-							newTaskData);
+				if (hasIncoming || previousTaskData == null || forceSync) {
+					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(
+							repositoryTask.getHandleIdentifier(), newTaskData);
 				}
 				break;
 			}
@@ -324,13 +330,13 @@ public class RepositorySynchronizationManager {
 	 */
 	public void setTaskRead(AbstractRepositoryTask repositoryTask, boolean read) {
 		TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 				repositoryTask.getHandleIdentifier());
 
 		if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.INCOMING)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(taskData.getLastModified());
-				dataManager.clearIncoming(repositoryTask.getHandleIdentifier());
+				dataManager.setOldTaskData(repositoryTask.getHandleIdentifier(), taskData);
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
@@ -343,6 +349,16 @@ public class RepositorySynchronizationManager {
 		} else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(taskData.getLastModified());
+				// By setting old every time (and not setting upon submission)
+				// we see our changes
+				// If condition is enabled and we save old in OUTGOING handler
+				// our own changes
+				// will not be displayed after submission.
+				// if
+				// (dataManager.getOldTaskData(repositoryTask.getHandleIdentifier())
+				// == null) {
+				dataManager.setOldTaskData(repositoryTask.getHandleIdentifier(), taskData);
+				// }
 			}
 		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);

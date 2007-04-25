@@ -98,7 +98,7 @@ public abstract class AbstractRepositoryConnector {
 				updateTask(repository, repositoryTask, taskData);
 
 				taskList.addTask(repositoryTask);
-				getTaskDataManager().push(repositoryTask.getHandleIdentifier(), taskData);
+				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
 			}
 		} // TODO: Handle case similar to web tasks (no taskDataHandler but
 			// have tasks)
@@ -182,8 +182,8 @@ public abstract class AbstractRepositoryConnector {
 	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractRepositoryTask task) {
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 
-		if (taskDataManager != null && taskDataManager.getRepositoryTaskData(task.getHandleIdentifier()) != null) {
-			for (RepositoryAttachment attachment : taskDataManager.getRepositoryTaskData(task.getHandleIdentifier())
+		if (taskDataManager != null && taskDataManager.getNewTaskData(task.getHandleIdentifier()) != null) {
+			for (RepositoryAttachment attachment : taskDataManager.getNewTaskData(task.getHandleIdentifier())
 					.getAttachments()) {
 				if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
 					contextAttachments.add(attachment);
@@ -349,7 +349,7 @@ public abstract class AbstractRepositoryConnector {
 
 	private RepositoryTaskData getTaskData(AbstractRepositoryTask task) {
 		if (taskDataManager != null) {
-			return taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());
+			return taskDataManager.getNewTaskData(task.getHandleIdentifier());
 		}
 		return null;
 	}

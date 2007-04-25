@@ -30,6 +30,7 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		if (newTask) {
 			setSyncState(RepositoryTaskSyncState.INCOMING);
 		}
+		setTaskUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
 	}
 
 	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {

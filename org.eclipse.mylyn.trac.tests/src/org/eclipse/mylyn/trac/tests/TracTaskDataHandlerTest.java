@@ -106,7 +106,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	private void getChangedSinceLastSync() throws Exception {
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "");
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getRepositoryTaskData(task.getHandleIdentifier());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
 		int lastModified = Integer.parseInt(taskData.getLastModified());
 		
