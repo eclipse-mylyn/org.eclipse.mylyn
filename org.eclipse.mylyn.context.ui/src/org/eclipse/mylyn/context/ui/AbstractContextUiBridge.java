@@ -26,7 +26,7 @@ public abstract class AbstractContextUiBridge {
 
 	public abstract void open(IMylarElement element);
 
-	public abstract void restoreEditor(IMylarElement document);
+//	public abstract void restoreEditor(IMylarElement document);
 
 	public abstract void close(IMylarElement element);
 

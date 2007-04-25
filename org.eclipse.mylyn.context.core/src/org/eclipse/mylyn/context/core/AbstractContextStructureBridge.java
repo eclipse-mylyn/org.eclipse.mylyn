@@ -30,6 +30,13 @@ public abstract class AbstractContextStructureBridge {
 	
 	public abstract String getContentType();
 
+	/**
+	 * A workspace-unique and robust String identifier for a structured element.
+	 * For example, in Java these are the IJavaElement's handle identifier.
+	 * For XML, this could be an xpath, but due to the fact that xpaths
+	 * rely on element ordering for identity they are not robust to
+	 * element order switching.
+	 */
 	public abstract String getHandleIdentifier(Object object);
 
 	public abstract String getParentHandle(String handle);

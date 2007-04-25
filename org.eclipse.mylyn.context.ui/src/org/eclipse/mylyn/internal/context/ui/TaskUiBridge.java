@@ -33,11 +33,6 @@ public class TaskUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void restoreEditor(IMylarElement document) {
-		// ignore
-	}
-
-	@Override
 	public void close(IMylarElement node) {
 		// ignore
 	}

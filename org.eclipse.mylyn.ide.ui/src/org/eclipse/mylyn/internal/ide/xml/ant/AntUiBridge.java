@@ -186,11 +186,6 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void restoreEditor(IMylarElement document) {
-		open(document);
-	}
-	
-	@Override
 	public IMylarElement getElement(IEditorInput input) {
 		return null;
 	}

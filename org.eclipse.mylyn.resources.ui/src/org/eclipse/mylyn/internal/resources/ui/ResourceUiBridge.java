@@ -18,13 +18,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -49,14 +48,6 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 			if (resource instanceof IFile && resource.exists()) {
 				internalOpenEditor((IFile) resource, true);
 			}
-		}
-	}
-
-	@Override
-	public void restoreEditor(IMylarElement document) {
-		IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(document, false);
-		if (resource instanceof IFile && resource.exists()) {
-			internalOpenEditor((IFile) resource, false);
 		}
 	}
 

@@ -186,11 +186,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		@Override
-		public void restoreEditor(IMylarElement document) {
-			// ignore
-		}
-
-		@Override
 		public IMylarElement getElement(IEditorInput input) {
 			return null;
 		}

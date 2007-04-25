@@ -310,11 +310,6 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
-
-	@Override
-	public void restoreEditor(IMylarElement document) {
-		open(document);
-	}
 	
 	@Override
 	public IMylarElement getElement(IEditorInput input) {
