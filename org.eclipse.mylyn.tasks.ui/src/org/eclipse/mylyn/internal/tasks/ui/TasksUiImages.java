@@ -278,4 +278,23 @@ public class TasksUiImages {
 		buffer.append(name);
 		return new URL(baseURL, buffer.toString());
 	}
+
+
+	private static Image[] progressImages;
+	
+	public static Image[] getProgressImages() {
+
+		if(progressImages != null)
+			return progressImages;
+		
+		progressImages = new Image[8];
+
+		for (int i = 1; i <= 8; i++) {
+			ImageDescriptor imageDescriptor = create(T_EVIEW + "/progress", i + ".png");
+			progressImages[i - 1] = getImage(imageDescriptor);
+		}
+		
+		return progressImages;
+
+	}
 }
