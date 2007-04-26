@@ -65,19 +65,17 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		if (obj instanceof ITaskListElement) {
 			switch (columnIndex) {
 			case 0:
-				return null;
-			case 1:
-				return null;
-			case 2:
-				return null;
-			case 3:
 				if (obj instanceof DateRangeContainer) {
 					if (((DateRangeContainer) obj).isPresent()) {
 						return super.getText(obj) + " - Today";
 					}
 				}
 				return super.getText(obj);
-			case 4:
+			case 1:
+				return null;
+			case 2:
+				return null;
+			case 3:
 				return null;
 			}
 		}
@@ -91,72 +89,82 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		if (columnIndex == 0) {
 			if (element instanceof DateRangeContainer) {
 				return TasksUiImages.getImage(TasksUiImages.CALENDAR);
-			} else if (element instanceof AbstractTaskContainer) {
-				return super.getImage(element);
 			} else {
-				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
-				if (task != null) {
-					if (task.isActive()) {
-						return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
-					} else {
-						if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
-						} else {
-							return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
-						}
-					}
-				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
-				}
-			}
+				return super.getImage(element);
+			} 
+//		} else if (columnIndex == 1) {
+//			if (element instanceof AbstractTaskContainer) {
+//				return null;
+//			}
+//			return super.getImage(element);
 		} else if (columnIndex == 1) {
-			if (element instanceof AbstractTaskContainer) {
-				return null;
-			}
-			return super.getImage(element);
-		} else if (columnIndex == 2) {
 			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 				ITaskListElement taskElement = (ITaskListElement) element;
 				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
-		} else if (columnIndex == 4) {
-			AbstractRepositoryTask repositoryTask = null;
-			if (element instanceof AbstractQueryHit) {
-				repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
-			} else if (element instanceof AbstractRepositoryTask) {
-				repositoryTask = (AbstractRepositoryTask) element;
+		} else if (columnIndex == 2) {
+			if (!(element instanceof AbstractTaskContainer)) {
+				return geContextActivationImage(element);
 			}
-			if (repositoryTask != null) {
-				ImageDescriptor image = null;
-				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-					image = TasksUiImages.STATUS_NORMAL_OUTGOING;
-				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					image = TasksUiImages.STATUS_NORMAL_INCOMING;
-				} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-					image = TasksUiImages.STATUS_NORMAL_CONFLICT;
-				}
-				if (image == null && repositoryTask.getStatus() != null) {
+//			return getSynchronizationStateImage(element);
+		}
+		return null;
+	}
+
+	private Image getSynchronizationStateImage(Object element) {
+		AbstractRepositoryTask repositoryTask = null;
+		if (element instanceof AbstractQueryHit) {
+			repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
+		} else if (element instanceof AbstractRepositoryTask) {
+			repositoryTask = (AbstractRepositoryTask) element;
+		}
+		if (repositoryTask != null) {
+			ImageDescriptor image = null;
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+				image = TasksUiImages.STATUS_NORMAL_OUTGOING;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+				image = TasksUiImages.STATUS_NORMAL_INCOMING;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+				image = TasksUiImages.STATUS_NORMAL_CONFLICT;
+			}
+			if (image == null && repositoryTask.getStatus() != null) {
+				return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING);
+			} else if (image != null) {
+				return TasksUiImages.getImage(image);
+			}
+		} else if (element instanceof AbstractQueryHit) {
+			return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
+		} else if (element instanceof AbstractTaskContainer) {
+			AbstractTaskContainer container = (AbstractTaskContainer) element;
+			if (container instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
+				if (query.getStatus() != null) {
 					return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING);
-				} else if (image != null) {
-					return TasksUiImages.getImage(image);
 				}
-			} else if (element instanceof AbstractQueryHit) {
+			}
+			if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
+					&& hasIncoming(container)) {
 				return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-			} else if (element instanceof AbstractTaskContainer) {
-				AbstractTaskContainer container = (AbstractTaskContainer) element;
-				if (container instanceof AbstractRepositoryQuery) {
-					AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-					if (query.getStatus() != null) {
-						return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING);
-					}
-				}
-				if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
-						&& hasIncoming(container)) {
-					return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-				}
 			}
 		}
 		return null;
+	}
+
+	private Image geContextActivationImage(Object element) {
+		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+		if (task != null) {
+			if (task.isActive()) {
+				return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+			} else {
+				if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+				} else {
+					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+				}
+			}
+		} else {
+			return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+		}
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {

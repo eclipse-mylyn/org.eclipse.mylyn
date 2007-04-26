@@ -84,7 +84,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 					} else {
 						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_NOTES);
-					}
+					} 
 				} else {
 					return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
 				}

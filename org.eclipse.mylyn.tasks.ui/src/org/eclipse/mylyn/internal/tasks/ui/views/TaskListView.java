@@ -158,8 +158,6 @@ public class TaskListView extends ViewPart {
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
-//	private static final String MEMENTO_KEY_WIDTH = "width";
-
 	private static final String ID_SEPARATOR_NEW = "new";
 
 	private static final String ID_SEPARATOR_CONTEXT = "context";
@@ -243,9 +241,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { "", "", "!", "Summary", "" };
+	protected String[] columnNames = new String[] { " Summary", "!", "" };
 
-	protected int[] columnWidths = new int[] { 55, 20, 12, 160, 16 };
+	protected int[] columnWidths = new int[] { 160, 14, 16 };
 
 	private TreeColumn[] columns;
 
@@ -880,11 +878,9 @@ public class TaskListView extends ViewPart {
 		CellEditor[] editors = new CellEditor[columnNames.length];
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
-		editors[0] = new CheckboxCellEditor();
-		editors[1] = null;
-		editors[2] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
-		editors[3] = null;
-		editors[4] = textEditor;
+		editors[0] = textEditor;
+		editors[1] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
+		editors[2] = new CheckboxCellEditor();
 
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
@@ -992,11 +988,11 @@ public class TaskListView extends ViewPart {
 			columns[i] = new TreeColumn(getViewer().getTree(), 0);
 			columns[i].setText(columnNames[i]);
 
-			if (i == 0 || i == 1 || i == 2 || i == 4) {
-				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
-			} else {
+			if (i == 0) {
 				layout.setColumnData(columns[i], new ColumnWeightData(100));
-			}
+			} else {
+				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
+			} 
 			
 			final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {

@@ -43,8 +43,42 @@ public class TasksUiImages {
 
 	public static final Point SIZE = new Point(16, 16);
 
+	public static final Point SIZE_WIDE = new Point(32, 16);
+	
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
+	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_ACTIVE_CENTERED = createSize(create(T_TOOL, "task-active-centered.gif"),
+			SIZE);
+
+	public static final ImageDescriptor TASK_INACTIVE = createSize(create(T_TOOL, "task-inactive.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = createSize(create(T_TOOL, "task-context.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
+
+	public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
+
+	public static final ImageDescriptor TASK = createSize(create(T_TOOL, "task.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_COMPLETED = createSize(create(T_TOOL, "task-completed.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
+	
+	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = createSize(create(T_TOOL,
+	"task-repository-history.gif"), SIZE);
+
+	public static final ImageDescriptor TASK_REPOSITORY_NOTES = createSize(create(T_TOOL, "task-repository-notes.gif"),
+		SIZE);
+	
+	public static final ImageDescriptor TASK_REPOSITORY_COMPLETED = createSize(create(T_TOOL,
+		"task-repository-completed.gif"), SIZE);
+	
+	public static final ImageDescriptor TASK_REMOTE = createSize(create(T_TOOL, "task-remote.gif"), SIZE);
+	
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
@@ -69,23 +103,6 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
 
-	public static final ImageDescriptor TASK = createSize(create(T_TOOL, "task.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_COMPLETED = createSize(create(T_TOOL, "task-completed.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = createSize(create(T_TOOL,
-			"task-repository-history.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_REPOSITORY_NOTES = createSize(create(T_TOOL, "task-repository-notes.gif"),
-			SIZE);
-
-	public static final ImageDescriptor TASK_REPOSITORY_COMPLETED = createSize(create(T_TOOL,
-			"task-repository-completed.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
-
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
 
 	public static final ImageDescriptor BROWSER_SMALL = create(T_OBJ, "browser-small.gif");
@@ -106,9 +123,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CATEGORY_ARCHIVE = createSize(create(T_TOOL, "category-archive.gif"), SIZE);
 
-	public static final ImageDescriptor TASK_REMOTE = createSize(create(T_TOOL, "task-remote.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_REPOSITORY = create(T_TOOL, "task-repository.gif");
+	public static final ImageDescriptor TASK_REPOSITORY = createSize(create(T_TOOL, "task-repository.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
@@ -180,19 +195,6 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REFRESH_SMALL = create(T_ELCL, "refresh-small.gif");
 
-	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_ACTIVE_CENTERED = createSize(create(T_TOOL, "task-active-centered.gif"),
-			SIZE);
-
-	public static final ImageDescriptor TASK_INACTIVE = createSize(create(T_TOOL, "task-inactive.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_INACTIVE_CONTEXT = createSize(create(T_TOOL, "task-context.gif"), SIZE);
-
-	public static final ImageDescriptor TASK_COMPLETE = create(T_TOOL, "task-complete.gif");
-
-	public static final ImageDescriptor TASK_INCOMPLETE = create(T_TOOL, "task-incomplete.gif");
-
 	public static final ImageDescriptor COLLAPSE_ALL = create(T_ELCL, "collapseall.png");
 
 	public static final ImageDescriptor NOTIFICATION_CLOSE = create(T_EVIEW, "notification-close.gif");
@@ -245,24 +247,6 @@ public class TasksUiImages {
 		return new TaskListImageDescriptor(base, overlay, top, left);
 	}
 
-	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (baseURL == null)
-			throw new MalformedURLException();
-
-		StringBuffer buffer = new StringBuffer(prefix);
-		buffer.append('/');
-		buffer.append(name);
-		return new URL(baseURL, buffer.toString());
-	}
-
-	private static ImageRegistry getImageRegistry() {
-		if (imageRegistry == null) {
-			imageRegistry = new ImageRegistry();
-		}
-
-		return imageRegistry;
-	}
-
 	/**
 	 * Lazily initializes image map.
 	 */
@@ -277,21 +261,21 @@ public class TasksUiImages {
 		return image;
 	}
 
-	private static Image[] progressImages;
-	
-	public static Image[] getProgressImages() {
-
-		if(progressImages != null)
-			return progressImages;
-		
-		progressImages = new Image[8];
-
-		for (int i = 1; i <= 8; i++) {
-			ImageDescriptor imageDescriptor = create(T_EVIEW + "/progress", i + ".png");
-			progressImages[i - 1] = getImage(imageDescriptor);
+	private static ImageRegistry getImageRegistry() {
+		if (imageRegistry == null) {
+			imageRegistry = new ImageRegistry();
 		}
-		
-		return progressImages;
 
+		return imageRegistry;
+	}
+
+	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+		if (baseURL == null)
+			throw new MalformedURLException();
+
+		StringBuffer buffer = new StringBuffer(prefix);
+		buffer.append('/');
+		buffer.append(name);
+		return new URL(baseURL, buffer.toString());
 	}
 }

@@ -36,8 +36,9 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 		this.base = getImageData(baseDesc);
 		this.top = top;
 		this.left = left;
-		if (overlayDesc != null)
+		if (overlayDesc != null) {
 			this.overlay = getImageData(overlayDesc);
+		}
 		Point size = new Point(base.width, base.height);
 		setImageSize(size);
 	}
@@ -62,9 +63,8 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
-		ImageData data = descriptor.getImageData(); // see bug 51965:
-		// getImageData can
-		// return null
+		ImageData data = descriptor.getImageData(); 
+		// see bug 51965: getImageData can return null
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;
 		}
@@ -86,7 +86,7 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	protected Point getSize() {
-		return new Point(fSize.x, fSize.y);
+		return new Point(24, fSize.y);
 	}
 
 }

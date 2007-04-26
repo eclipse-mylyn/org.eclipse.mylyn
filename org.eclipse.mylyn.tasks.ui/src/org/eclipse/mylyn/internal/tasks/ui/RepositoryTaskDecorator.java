@@ -22,8 +22,10 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -76,6 +78,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
 				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_LEFT);
 			}
+			
+			decoration.addOverlay(getSynchronizationStateImageDescriptor(element), IDecoration.TOP_RIGHT);
+			
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			decorate(correspondingTask, decoration);
@@ -88,6 +93,9 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
 				decoration.addOverlay(TasksUiImages.OVERLAY_DUE, IDecoration.TOP_LEFT);
 			}
+			
+			decoration.addOverlay(getSynchronizationStateImageDescriptor(element), IDecoration.TOP_RIGHT);
+			
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository) element).getKind());
 			if (overlay != null) {
@@ -96,6 +104,40 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 		}
 	}
 
+	private ImageDescriptor getSynchronizationStateImageDescriptor(Object element) {
+		AbstractRepositoryTask repositoryTask = null;
+		if (element instanceof AbstractQueryHit) {
+			repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
+		} else if (element instanceof AbstractRepositoryTask) {
+			repositoryTask = (AbstractRepositoryTask) element;
+		}
+		if (repositoryTask != null) {
+			ImageDescriptor image = null;
+			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+				image = TasksUiImages.OVERLAY_OUTGOING;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+				image = TasksUiImages.OVERLAY_INCOMMING;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+				image = TasksUiImages.OVERLAY_CONFLICT;
+			}
+			if (image == null && repositoryTask.getStatus() != null) {
+				return TasksUiImages.OVERLAY_WARNING;
+			} else if (image != null) {
+				return image;
+			}
+		} else if (element instanceof AbstractQueryHit) {
+			return TasksUiImages.OVERLAY_INCOMMING;
+		} else if (element instanceof AbstractTaskContainer) {
+			AbstractTaskContainer container = (AbstractTaskContainer) element;
+			if (container instanceof AbstractRepositoryQuery) {
+				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
+				if (query.getStatus() != null) {
+					return TasksUiImages.OVERLAY_WARNING;
+				}
+			}
+		}
+		return null;
+	}
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
 
