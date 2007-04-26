@@ -64,7 +64,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		// ignore
 	}
 
-	public synchronized AbstractQueryHit findQueryHit(String handle) {
+	public /*synchronized*/ AbstractQueryHit findQueryHit(String handle) {
 		if (hitHandles.contains(handle)) {
 			return taskList.getQueryHit(handle);
 		}
@@ -79,8 +79,9 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		Set<AbstractQueryHit> oldHits = getHits();
 		hitHandles.clear();
 		for (AbstractQueryHit oldHit : oldHits) {
-			if (newHits.contains(oldHit)) {
-				newHits.get(newHits.indexOf(oldHit)).setNotified(oldHit.isNotified());
+			int index = newHits.indexOf(oldHit);
+			if (index != -1) {
+				newHits.get(index).setNotified(oldHit.isNotified());
 			}
 		}
 		for (AbstractQueryHit hit : newHits) {
