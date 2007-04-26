@@ -240,7 +240,7 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { " Summary", "", "" };
+	protected String[] columnNames = new String[] { " Summary", " ?", " !" };
 
 	protected int[] columnWidths = new int[] { 100, 14, 16 };
 
@@ -607,19 +607,18 @@ public class TaskListView extends ViewPart {
 
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(columnNames).indexOf(property);
-			// if (columnIndex == 0 && element instanceof ITaskListElement) {
-			// return element instanceof ITask || element instanceof
-			// AbstractQueryHit;
-			// } else
-			if (columnIndex == 0 && element instanceof ITask) {
+			if (columnIndex == 2) {
+				return true;
+			} else if (columnIndex == 0 && isInRenameAction) {
 				return !(element instanceof AbstractRepositoryTask);
-			} else if (element instanceof ITaskListElement && isInRenameAction) {
-				switch (columnIndex) {
-				case 0:
-					return element instanceof AbstractTaskContainer
-							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
-				}
-			}
+			} 
+//			else if (element instanceof ITaskListElement && isInRenameAction) {
+//				switch (columnIndex) {
+//				case 0:
+//					return element instanceof AbstractTaskContainer
+//							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
+//				}
+//			}
 			return false;
 		}
 
@@ -700,19 +699,7 @@ public class TaskListView extends ViewPart {
 					case 2:
 						break;
 					}
-				} else if (((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
-					AbstractRepositoryQuery query = (AbstractRepositoryQuery) ((TreeItem) element).getData();
-					switch (columnIndex) {
-					case 0:
-						TasksUiPlugin.getTaskListManager().getTaskList()
-								.renameContainer(query, ((String) value).trim());
-					case 1:
-						break;
-					case 2:
-						break;
-					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
-
 					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
 					ITask task = null;
 					if (taskListElement instanceof ITask) {
@@ -875,6 +862,7 @@ public class TaskListView extends ViewPart {
 		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
 		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
 		editors[1] = null;
+//		editors[2] = null;
 		editors[2] = new CheckboxCellEditor();
 
 		getViewer().setCellEditors(editors);
