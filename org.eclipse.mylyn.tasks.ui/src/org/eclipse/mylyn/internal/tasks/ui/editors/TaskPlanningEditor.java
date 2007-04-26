@@ -33,6 +33,7 @@ import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
@@ -658,8 +659,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		if (task instanceof AbstractRepositoryTask) {
-			dueDatePicker.setEnabled(false);
-			clearDueDate.setEnabled(false);
+				AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)task).getRepositoryKind());
+				if(connector != null && connector.handlesDueDates((AbstractRepositoryTask)task)){
+					dueDatePicker.setEnabled(false);
+					clearDueDate.setEnabled(false);
+				}
 		}
 
 		// Estimated time

@@ -21,15 +21,19 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TaskHyperlink;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
@@ -136,4 +140,17 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
+	@SuppressWarnings("restriction")
+	@Override
+	public boolean handlesDueDates(AbstractRepositoryTask task) {
+		if(task instanceof BugzillaTask){
+			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
+			// we wouldn't have to get the task data this way from here
+			RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
+			if(taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
+				return true;
+		}
+		return super.handlesDueDates(task);
+	}
+	
 }

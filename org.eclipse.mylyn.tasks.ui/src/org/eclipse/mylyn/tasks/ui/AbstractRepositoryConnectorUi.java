@@ -155,4 +155,8 @@ public abstract class AbstractRepositoryConnectorUi {
 	public boolean hasCustomNotificationHandling() {
 		return customNotificationHandling;
 	}
+
+	public boolean handlesDueDates(AbstractRepositoryTask task) {
+		return false;
+	}
 }
