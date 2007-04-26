@@ -13,15 +13,15 @@ package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
+import org.eclipse.mylar.tasks.ui.AbstractTaskDecorator;
 
 /**
  * @author Mik Kersten
  */
-public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
+public class BugzillaTaskDecorator extends AbstractTaskDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof BugzillaTask) {
@@ -31,9 +31,11 @@ public class BugzillaTaskDecorator implements ILightweightLabelDecorator {
 			if (severity != null) {
 				// XXX: refactor to use configuration
 				if ("major".equals(severity) || "blocker".equals(severity) || "critical".equals(severity)) {
-					decoration.addOverlay(BugzillaImages.OVERLAY_MAJOR, IDecoration.BOTTOM_RIGHT);
+					decoration.addOverlay(BugzillaImages.OVERLAY_MAJOR, getQuadrantForKind());
 				} else if ("enhancement".equals(severity)) {
-					decoration.addOverlay(BugzillaImages.OVERLAY_ENHANCEMENT, IDecoration.BOTTOM_RIGHT);
+					decoration.addOverlay(BugzillaImages.OVERLAY_ENHANCEMENT, getQuadrantForKind());
+				} else {
+					decoration.addOverlay(BugzillaImages.OVERLAY_NORMAL, getQuadrantForKind());
 				}
 			}
 		} else if (element instanceof BugzillaQueryHit) {

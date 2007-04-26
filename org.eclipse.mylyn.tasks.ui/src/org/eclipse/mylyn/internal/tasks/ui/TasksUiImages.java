@@ -43,8 +43,8 @@ public class TasksUiImages {
 
 	public static final Point SIZE = new Point(16, 16);
 
-	public static final Point SIZE_WIDE = new Point(32, 16);
-	
+	public static final Point SIZE_WIDE = new Point(26, 16);
+
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor TASK_ACTIVE = createSize(create(T_TOOL, "task-active.gif"), SIZE);
@@ -67,18 +67,18 @@ public class TasksUiImages {
 	public static final ImageDescriptor TASK_NOTES = createSize(create(T_TOOL, "task-notes.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_NEW = create(T_TOOL, "task-new.gif");
-	
+
 	public static final ImageDescriptor TASK_REPOSITORY_HISTORY = createSize(create(T_TOOL,
-	"task-repository-history.gif"), SIZE);
+			"task-repository-history.gif"), SIZE);
 
 	public static final ImageDescriptor TASK_REPOSITORY_NOTES = createSize(create(T_TOOL, "task-repository-notes.gif"),
-		SIZE);
-	
+			SIZE);
+
 	public static final ImageDescriptor TASK_REPOSITORY_COMPLETED = createSize(create(T_TOOL,
-		"task-repository-completed.gif"), SIZE);
-	
+			"task-repository-completed.gif"), SIZE);
+
 	public static final ImageDescriptor TASK_REMOTE = createSize(create(T_TOOL, "task-remote.gif"), SIZE);
-	
+
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
@@ -111,7 +111,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
 
-	public static final ImageDescriptor OVERLAY_DUE = create(T_EVIEW, "overlay-due.gif");
+	public static final ImageDescriptor OVERLAY_OVER_DUE = create(T_EVIEW, "overlay-over-due.gif");
 
 	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
 
@@ -140,6 +140,8 @@ public class TasksUiImages {
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");
+
+	public static final ImageDescriptor OVERLAY_INCOMMING_NEW = create(T_EVIEW, "overlay-incoming-new.gif");
 
 	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif");
 
@@ -207,20 +209,20 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor PRIORITY_2 = create(T_EVIEW, "priority-2.gif");
 
-	public static final ImageDescriptor PRIORITY_3 = createSize(create(T_EVIEW, "priority-3.gif"), SIZE);
+	public static final ImageDescriptor PRIORITY_3 = create(T_EVIEW, "priority-3.gif");
 
-	public static final ImageDescriptor PRIORITY_4 = createSize(create(T_EVIEW, "priority-4.gif"), SIZE);
+	public static final ImageDescriptor PRIORITY_4 = create(T_EVIEW, "priority-4.gif");
 
-	public static final ImageDescriptor PRIORITY_5 = createSize(create(T_EVIEW, "priority-5.gif"), SIZE);
+	public static final ImageDescriptor PRIORITY_5 = create(T_EVIEW, "priority-5.gif");
 
-	public static final ImageDescriptor CALENDAR = create(T_TOOL, "calendar.gif");
+	public static final ImageDescriptor CALENDAR = createSize(create(T_TOOL, "calendar.gif"), SIZE);
 
 	public static final ImageDescriptor CALENDAR_SMALL = create(T_OBJ, "calendar-small.gif");
 
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 
 	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(T_WIZBAN, "banner-repository-settings.gif");
-	
+
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");
 
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
@@ -247,16 +249,28 @@ public class TasksUiImages {
 		return new TaskListImageDescriptor(base, overlay, top, left);
 	}
 
+	public static Image getImage(ImageDescriptor imageDescriptor) {
+		return getImage(imageDescriptor, false);
+	}
+
 	/**
 	 * Lazily initializes image map.
 	 */
-	public static Image getImage(ImageDescriptor imageDescriptor) {
-		ImageRegistry imageRegistry = getImageRegistry();
+	public static Image getImage(ImageDescriptor imageDescriptor, boolean wide) {
+		String suffix = "";
+		if (wide) {
+			suffix = ".wide";
+		}
 
-		Image image = imageRegistry.get("" + imageDescriptor.hashCode());
+		ImageRegistry imageRegistry = getImageRegistry();
+		Image image = imageRegistry.get(imageDescriptor.hashCode() + suffix);
+
 		if (image == null) {
-			image = imageDescriptor.createImage();
-			imageRegistry.put("" + imageDescriptor.hashCode(), image);
+			if (wide && imageDescriptor instanceof TaskListImageDescriptor) {
+				((TaskListImageDescriptor) imageDescriptor).setImageSize(SIZE_WIDE);
+			}
+			image = imageDescriptor.createImage(true);
+			imageRegistry.put(imageDescriptor.hashCode() + suffix, image);
 		}
 		return image;
 	}
@@ -279,21 +293,20 @@ public class TasksUiImages {
 		return new URL(baseURL, buffer.toString());
 	}
 
-
 	private static Image[] progressImages;
-	
+
 	public static Image[] getProgressImages() {
 
-		if(progressImages != null)
+		if (progressImages != null)
 			return progressImages;
-		
+
 		progressImages = new Image[8];
 
 		for (int i = 1; i <= 8; i++) {
 			ImageDescriptor imageDescriptor = create(T_EVIEW + "/progress", i + ".png");
 			progressImages[i - 1] = getImage(imageDescriptor);
 		}
-		
+
 		return progressImages;
 
 	}

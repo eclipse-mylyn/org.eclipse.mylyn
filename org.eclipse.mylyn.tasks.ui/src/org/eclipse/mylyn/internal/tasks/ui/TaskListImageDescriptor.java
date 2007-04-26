@@ -25,11 +25,11 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData overlay;
 
-	private Point fSize;
-
 	private boolean top;
 
 	private boolean left;
+
+	protected Point size;
 
 	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
 			boolean left) {
@@ -81,11 +81,11 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 	 * @see ImageDescriptor#createImage()
 	 */
 	public void setImageSize(Point size) {
-		fSize = size;
+		this.size = size;
 	}
 
 	@Override
 	protected Point getSize() {
-		return new Point(24, fSize.y);
+		return new Point(size.x, size.y);
 	}
 }

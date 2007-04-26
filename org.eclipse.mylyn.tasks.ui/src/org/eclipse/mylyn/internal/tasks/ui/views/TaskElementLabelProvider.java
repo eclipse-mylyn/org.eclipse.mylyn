@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,7 +28,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -46,65 +46,52 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
+	private boolean wide = false;
+
+	public TaskElementLabelProvider() {
+		super();
+	}
+	
+	/**
+	 * @parma 	wide 	set true for wide images, with whitespace to right of icon.
+	 */
+	public TaskElementLabelProvider(boolean wide) {
+		super();
+		this.wide = wide;
+	}
+
 	@Override
 	public Image getImage(Object element) {
+		return TasksUiImages.getImage(getImageDescriptor(element), wide);
+	}
+
+	public ImageDescriptor getImageDescriptor(Object element) {
 		if (element instanceof TaskArchive) {
-			return TasksUiImages.getImage(TasksUiImages.CATEGORY_ARCHIVE);
+			return TasksUiImages.CATEGORY_ARCHIVE;
 		} else if (element instanceof TaskCategory) {
-			return TasksUiImages.getImage(TasksUiImages.CATEGORY);
+			return TasksUiImages.CATEGORY;
 		} else if (element instanceof AbstractRepositoryQuery) {
-			return TasksUiImages.getImage(TasksUiImages.QUERY);
+			return TasksUiImages.QUERY;
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
-				return getImage(hit.getCorrespondingTask());
+				return getImageDescriptor(hit.getCorrespondingTask());
 			} else {
-				return TasksUiImages.getImage(TasksUiImages.TASK_REMOTE);
+				return TasksUiImages.TASK_REMOTE;
 			}
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			// TODO: fix this mess that delaying decoration got us into
 			if (task.isCompleted()) {
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
-					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TasksUiImages.getImage(TasksUiImages.TASK_COMPLETED);
-					} else {
-						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_COMPLETED);
-					}
-				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK_COMPLETED);
-				}
+				return TasksUiImages.TASK_COMPLETED;
 			} else if (task.getNotes() != null && !task.getNotes().trim().equals("")) {
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
-					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
-					} else {
-						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY_NOTES);
-					} 
-				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK_NOTES);
-				}
+				return TasksUiImages.TASK_NOTES;
 			} else {
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-							.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
-					if (connectorUi != null && !connectorUi.hasRichEditor()) {
-						return TasksUiImages.getImage(TasksUiImages.TASK);
-					} else {
-						return TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY);
-					}
-				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK);
-				}
+				return TasksUiImages.TASK;
 			}
 		}
 		return null;
 	}
-
+	
 	@Override
 	public String getText(Object object) {
 		if (object instanceof AbstractQueryHit) {

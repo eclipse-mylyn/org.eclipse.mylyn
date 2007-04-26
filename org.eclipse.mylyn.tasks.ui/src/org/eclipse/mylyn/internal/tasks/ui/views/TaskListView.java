@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -33,11 +32,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -124,7 +121,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
@@ -228,7 +224,7 @@ public class TaskListView extends ViewPart {
 
 	private PriorityDropDownAction filterOnPriority;
 
-	private PreviousTaskDropDownAction previousTaskAction;
+	PreviousTaskDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
@@ -242,7 +238,7 @@ public class TaskListView extends ViewPart {
 
 	protected String[] columnNames = new String[] { " Summary", " ?", " !" };
 
-	protected int[] columnWidths = new int[] { 100, 14, 16 };
+	protected int[] columnWidths = new int[] { 100, 14, 15 };
 
 	private TreeColumn[] columns;
 
@@ -326,11 +322,16 @@ public class TaskListView extends ViewPart {
 				Color oldBackground = gc.getBackground();
 
 				gc.setForeground(categoryGradientStart);
-				gc.setBackground(categoryGradientEnd);
+				gc.setBackground(TaskListView.this.getViewer().getControl().getParent().getBackground());
+				
+//				gc.setForeground(categoryGradientStart);
+//				gc.setBackground(categoryGradientEnd);
+				
 				gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
 
 				/* Bottom Line */
-				gc.setForeground(categoryGradientEnd);
+				gc.setForeground(TaskListView.this.getViewer().getControl().getParent().getBackground());
+//				gc.setForeground(categoryGradientEnd);
 				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
 
 				gc.setForeground(oldForeground);
@@ -603,151 +604,6 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	class TaskListCellModifier implements ICellModifier {
-
-		public boolean canModify(Object element, String property) {
-			int columnIndex = Arrays.asList(columnNames).indexOf(property);
-			if (columnIndex == 2) {
-				return true;
-			} else if (columnIndex == 0 && isInRenameAction) {
-				return !(element instanceof AbstractRepositoryTask);
-			} 
-//			else if (element instanceof ITaskListElement && isInRenameAction) {
-//				switch (columnIndex) {
-//				case 0:
-//					return element instanceof AbstractTaskContainer
-//							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
-//				}
-//			}
-			return false;
-		}
-
-		public Object getValue(Object element, String property) {
-			try {
-				int columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (element instanceof ITaskListElement) {
-					final ITaskListElement taskListElement = (ITaskListElement) element;
-					ITask task = null;
-					if (taskListElement instanceof ITask) {
-						task = (ITask) taskListElement;
-					} else if (taskListElement instanceof AbstractQueryHit) {
-						if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
-							task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
-						}
-					}
-					switch (columnIndex) {
-					case 0:
-						if (task == null) {
-							return Boolean.TRUE;
-						} else {
-							return Boolean.valueOf(task.isCompleted());
-						}
-					case 1:
-						return "";
-					case 2:
-						String priorityString = taskListElement.getPriority().substring(1);
-						int priorityInt = new Integer(priorityString);
-						return priorityInt - 1;
-					case 3:
-						return "";
-					case 4:
-						return taskListElement.getSummary();
-					}
-				} else if (element instanceof AbstractTaskContainer) {
-					AbstractTaskContainer cat = (AbstractTaskContainer) element;
-					switch (columnIndex) {
-					case 0:
-						return Boolean.FALSE;
-					case 1:
-						return "";
-					case 2:
-						return "";
-					case 3:
-						return cat.getSummary();
-					}
-				} else if (element instanceof AbstractRepositoryQuery) {
-					AbstractRepositoryQuery cat = (AbstractRepositoryQuery) element;
-					switch (columnIndex) {
-					case 0:
-						return Boolean.FALSE;
-					case 1:
-						return "";
-					case 2:
-						return "";
-					case 3:
-						return cat.getSummary();
-					}
-				}
-			} catch (Exception e) {
-				MylarStatusHandler.log(e, e.getMessage());
-			}
-			return "";
-		}
-
-		public void modify(Object element, String property, Object value) {
-			int columnIndex = -1;
-			try {
-				columnIndex = Arrays.asList(columnNames).indexOf(property);
-				if (((TreeItem) element).getData() instanceof AbstractTaskContainer) {
-					AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
-					switch (columnIndex) {
-					case 0:
-						TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(container,
-								((String) value).trim());
-					case 1:
-						break;
-					case 2:
-						break;
-					}
-				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
-					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
-					ITask task = null;
-					if (taskListElement instanceof ITask) {
-						task = (ITask) taskListElement;
-					} else if (taskListElement instanceof AbstractQueryHit) {
-						if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
-							task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
-						}
-					}
-					switch (columnIndex) {
-					case 0:
-						if (!(task instanceof AbstractRepositoryTask)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
-									((String) value).trim());
-						}
-						break;
-					case 1:
-						break;
-					case 2:
-						if (taskListElement instanceof AbstractQueryHit) {
-							task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
-						}
-						if (task != null) {
-							if (task.isActive()) {
-								new TaskDeactivateAction().run(task);
-								previousTaskAction.setButtonStatus();
-							} else {
-								new TaskActivateAction().run(task);
-								addTaskToHistory(task);
-								previousTaskAction.setButtonStatus();
-							}
-						}
-						break;
-					// if (!(task instanceof AbstractRepositoryTask)) {
-					// Integer intVal = (Integer) value;
-					// task.setPriority("P" + (intVal + 1));
-					// TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-					// }
-					// break;
-					}
-				}
-			} catch (Exception e) {
-				MylarStatusHandler.fail(e, e.getMessage(), true);
-			}
-			getViewer().refresh();
-		}
-	}
-
 	public void addTaskToHistory(ITask task) {
 		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
@@ -851,7 +707,7 @@ public class TaskListView extends ViewPart {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
@@ -862,11 +718,11 @@ public class TaskListView extends ViewPart {
 		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
 		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
 		editors[1] = null;
-//		editors[2] = null;
-		editors[2] = new CheckboxCellEditor();
+		editors[2] = null;
+//		editors[2] = new CheckboxCellEditor();
 
 		getViewer().setCellEditors(editors);
-		getViewer().setCellModifier(new TaskListCellModifier());
+		getViewer().setCellModifier(new TaskListCellModifier(this));
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
 		getViewer().setSorter(tableSorter);
 
@@ -1279,7 +1135,8 @@ public class TaskListView extends ViewPart {
 		newLocalTaskAction = new NewLocalTaskAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
-
+		filteredTree.getViewer().addSelectionChangedListener(renameAction);
+		
 		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);
@@ -1451,7 +1308,7 @@ public class TaskListView extends ViewPart {
 		}
 	}
 
-	private boolean isInRenameAction = false;
+	boolean isInRenameAction = false;
 
 	public void setInRenameAction(boolean b) {
 		isInRenameAction = b;

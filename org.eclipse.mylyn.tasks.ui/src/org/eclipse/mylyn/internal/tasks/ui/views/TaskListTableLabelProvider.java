@@ -86,15 +86,12 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		}
 		if (columnIndex == 0) {
 			if (element instanceof DateRangeContainer) {
-				return TasksUiImages.getImage(TasksUiImages.CALENDAR);
+				return TasksUiImages.getImage(TasksUiImages.CALENDAR, true);
 			} else {
 				return super.getImage(element);
+//				TaskElementLabelProvider taskElementProvider = (TaskElementLabelProvider) super.getLabelProvider();
+//				return TasksUiImages.getImage(taskElementProvider.getImageDescriptor(element), true);
 			}
-//		} else if (columnIndex == 1) {
-//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-//				ITaskListElement taskElement = (ITaskListElement) element;
-//				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
-//			}
 		} else if (columnIndex == 1) {
 			return getSynchronizationStateImage(element);
 		} else if (columnIndex == 2) {
@@ -107,13 +104,16 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 
 	private Image getSynchronizationStateImage(Object element) {
 		AbstractRepositoryTask repositoryTask = null;
+		ImageDescriptor image = null;
 		if (element instanceof AbstractQueryHit) {
 			repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
+			if (repositoryTask == null) {
+//				return TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING_NEW, true);
+			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			repositoryTask = (AbstractRepositoryTask) element;
 		}
 		if (repositoryTask != null) {
-			ImageDescriptor image = null;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				image = TasksUiImages.STATUS_NORMAL_OUTGOING;
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
@@ -122,23 +122,23 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				image = TasksUiImages.STATUS_NORMAL_CONFLICT;
 			}
 			if (image == null && repositoryTask.getStatus() != null) {
-				return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING);
+				return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING, true);
 			} else if (image != null) {
-				return TasksUiImages.getImage(image);
+				return TasksUiImages.getImage(image, true);
 			}
 		} else if (element instanceof AbstractQueryHit) {
-			return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
+			return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING, true);
 		} else if (element instanceof AbstractTaskContainer) {
 			AbstractTaskContainer container = (AbstractTaskContainer) element;
 			if (container instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
 				if (query.getStatus() != null) {
-					return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING);
+					return TasksUiImages.getImage(TasksUiImages.STATUS_WARNING, true);
 				}
 			}
 			if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
 					&& hasIncoming(container)) {
-				return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
+				return TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING, true);
 			}
 		}
 		return null;
@@ -148,16 +148,16 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
 		if (task != null) {
 			if (task.isActive()) {
-				return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+				return TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE, true);
 			} else {
 				if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT, true);
 				} else {
-					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+					return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE, true);
 				}
 			}
 		} else {
-			return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+			return TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE, true);
 		}
 	}
 

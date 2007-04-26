@@ -87,21 +87,13 @@ public class TasksUiUtil {
 	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;
+		} else {
+			ImageDescriptor imageDescriptor = getImageDescriptorForPriority(priorityLevel);
+			if (imageDescriptor != null) {
+				return TasksUiImages.getImage(imageDescriptor);
+			}
 		}
-		switch (priorityLevel) {
-		case P1:
-			return TasksUiImages.getImage(TasksUiImages.PRIORITY_1);
-		case P2:
-			return TasksUiImages.getImage(TasksUiImages.PRIORITY_2);
-		case P3:
-			return TasksUiImages.getImage(TasksUiImages.PRIORITY_3);
-		case P4:
-			return TasksUiImages.getImage(TasksUiImages.PRIORITY_4);
-		case P5:
-			return TasksUiImages.getImage(TasksUiImages.PRIORITY_5);
-		default:
-			return null;
-		}
+		return null;
 	}
 
 	public static ImageDescriptor getImageDescriptorForPriority(Task.PriorityLevel priorityLevel) {

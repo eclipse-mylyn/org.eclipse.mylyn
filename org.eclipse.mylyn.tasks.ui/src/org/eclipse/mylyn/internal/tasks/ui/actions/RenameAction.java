@@ -10,24 +10,26 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class RenameAction extends Action {
+public class RenameAction extends BaseSelectionListenerAction {
+
+	private static final String LABEL_NAME = "Rename";
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.rename";
 
 	private TaskListView view;
 
 	public RenameAction(TaskListView view) {
+		super(LABEL_NAME);
 		this.view = view;
-		setText("Rename");
 		setId(ID);
 		setAccelerator(SWT.F2);
 	}
@@ -38,8 +40,16 @@ public class RenameAction extends Action {
 		if (selectedObject instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) selectedObject;
 			view.setInRenameAction(true);
-			view.getViewer().editElement(element, 4);
+			view.getViewer().editElement(element, 0);
 			view.setInRenameAction(false);
 		}
+	}
+
+	@Override
+	protected boolean updateSelection(IStructuredSelection selection) {
+//		Object selected = selection.getFirstElement();
+		setEnabled(false);
+		return false;
+//		return super.updateSelection(selection);
 	}
 }
