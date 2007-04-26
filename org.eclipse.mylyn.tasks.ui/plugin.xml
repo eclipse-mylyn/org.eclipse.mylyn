@@ -179,13 +179,6 @@
           name="Task Planner"/>     
   </extension>
   
-  	<extension
-          point="org.eclipse.mylar.tasks.ui.editors">
-       <hyperlinkDetector
-             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
-             id="org.eclipse.mylar.java.hyperlink.detector.tasks"/>
-    </extension>
-  
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
                <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
@@ -595,12 +588,20 @@
             menuPath="tasks"/>
    </extension>
    
-   <extension
+  <extension
          point="org.eclipse.mylar.tasks.ui.editors">
       <hyperlinkDetector
-            class="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorUrlHyperlinkDetector"
-            id="org.eclipse.mylar.tasklist.hyperlinkdetector.url"/>
+            class="org.eclipse.mylar.tasks.ui.editors.MylarUrlHyperlinkDetector"
+            id="org.eclipse.mylar.tasks.ui.hyperlink.detector.url"/>
+      
    </extension>
+   <extension
+          point="org.eclipse.mylar.tasks.ui.editors">
+       <hyperlinkDetector
+             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
+             id="org.eclipse.mylar.tasks.ui.hyperlink.detector.tasks"/>
+    </extension>
+   
    <extension
          point="org.eclipse.mylar.context.core.handlers">
       <status class="org.eclipse.mylar.internal.tasks.ui.RepositoryAwareStatusHandler"/>
@@ -760,11 +761,19 @@
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector            
             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
-            id="org.eclipse.mylar.jira.ui.hyperlinkdetector"
+            id="org.eclipse.mylar.tasks.ui.taskhyperlinkdetector"
             name="Mylar Task"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
+      <hyperlinkDetector
+            class="org.eclipse.mylar.tasks.ui.editors.MylarUrlHyperlinkDetector"
+            description="Mylar enabled URL hyperlink detector"
+            id="org.eclipse.mylar.tasks.ui.mylarurlhyperlink"
+            name="Mylar URL"
+            targetId="org.eclipse.ui.DefaultTextEditor">
+      </hyperlinkDetector>
    </extension>
+   
   
 </plugin>
 

@@ -169,7 +169,7 @@ public class TasksUiUtil {
 		if (fullUrl != null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
 		}
-		if (task == null && taskId != null) {
+		if (task == null && repositoryUrl != null && taskId != null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 		}
 
@@ -182,7 +182,15 @@ public class TasksUiUtil {
 			if (connector != null) {
 				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
 						.getRepositoryUi(connector.getRepositoryType());
-				opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
+				if (repositoryUrl != null && taskId != null) {
+					opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
+				} else {
+					repositoryUrl = connector.getRepositoryUrlFromTaskUrl(fullUrl);
+					taskId = connector.getTaskIdFromTaskUrl(fullUrl);
+					if (repositoryUrl != null && taskId != null) {
+						opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
+					}
+				}
 			}
 		}
 		if (!opened) {
@@ -227,8 +235,8 @@ public class TasksUiUtil {
 
 				if (connector != null) {
 
-					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager()
-							.getNewTaskData(task.getHandleIdentifier());
+					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+							task.getHandleIdentifier());
 
 					if (taskData != null) {
 						TasksUiUtil.openEditor(task, true, false);
