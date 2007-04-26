@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -222,9 +221,9 @@ public class TaskListView extends ViewPart {
 	private FilterCompletedTasksAction filterCompleteTask;
 
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
-	
+
 	private OpenTasksUiPreferencesAction openPreferencesAction;
-	
+
 	private FilterArchiveContainerAction filterArchiveCategory;
 
 	private PriorityDropDownAction filterOnPriority;
@@ -241,9 +240,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { " Summary", "!", "", "" };
+	protected String[] columnNames = new String[] { " Summary", "", "" };
 
-	protected int[] columnWidths = new int[] { 160, 14, 14, 16 };
+	protected int[] columnWidths = new int[] { 100, 14, 16 };
 
 	private TreeColumn[] columns;
 
@@ -608,15 +607,15 @@ public class TaskListView extends ViewPart {
 
 		public boolean canModify(Object element, String property) {
 			int columnIndex = Arrays.asList(columnNames).indexOf(property);
-			if (columnIndex == 0 && element instanceof ITaskListElement) {
-				return element instanceof ITask || element instanceof AbstractQueryHit;
-			} else if (columnIndex == 2 && element instanceof ITask) {
+			// if (columnIndex == 0 && element instanceof ITaskListElement) {
+			// return element instanceof ITask || element instanceof
+			// AbstractQueryHit;
+			// } else
+			if (columnIndex == 0 && element instanceof ITask) {
 				return !(element instanceof AbstractRepositoryTask);
 			} else if (element instanceof ITaskListElement && isInRenameAction) {
 				switch (columnIndex) {
-				case 4:
-					// return element instanceof TaskCategory || element
-					// instanceof AbstractRepositoryQuery
+				case 0:
 					return element instanceof AbstractTaskContainer
 							|| (element instanceof ITask && !(element instanceof AbstractRepositoryTask));
 				}
@@ -694,28 +693,22 @@ public class TaskListView extends ViewPart {
 					AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
-						break;
+						TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(container,
+								((String) value).trim());
 					case 1:
 						break;
 					case 2:
-						break;
-					case 4:
-						TasksUiPlugin.getTaskListManager().getTaskList().renameContainer(container,
-								((String) value).trim());
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof AbstractRepositoryQuery) {
 					AbstractRepositoryQuery query = (AbstractRepositoryQuery) ((TreeItem) element).getData();
 					switch (columnIndex) {
 					case 0:
-						break;
+						TasksUiPlugin.getTaskListManager().getTaskList()
+								.renameContainer(query, ((String) value).trim());
 					case 1:
 						break;
 					case 2:
-						break;
-					case 4:
-						TasksUiPlugin.getTaskListManager().getTaskList()
-								.renameContainer(query, ((String) value).trim());
 						break;
 					}
 				} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
@@ -731,6 +724,14 @@ public class TaskListView extends ViewPart {
 					}
 					switch (columnIndex) {
 					case 0:
+						if (!(task instanceof AbstractRepositoryTask)) {
+							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
+									((String) value).trim());
+						}
+						break;
+					case 1:
+						break;
+					case 2:
 						if (taskListElement instanceof AbstractQueryHit) {
 							task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
 						}
@@ -745,21 +746,12 @@ public class TaskListView extends ViewPart {
 							}
 						}
 						break;
-					case 1:
-						break;
-					case 2:
-						if (!(task instanceof AbstractRepositoryTask)) {
-							Integer intVal = (Integer) value;
-							task.setPriority("P" + (intVal + 1));
-							TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-						}
-						break;
-					case 4:
-						if (!(task instanceof AbstractRepositoryTask)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
-									((String) value).trim());
-						}
-						break;
+					// if (!(task instanceof AbstractRepositoryTask)) {
+					// Integer intVal = (Integer) value;
+					// task.setPriority("P" + (intVal + 1));
+					// TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+					// }
+					// break;
 					}
 				}
 			} catch (Exception e) {
@@ -785,12 +777,12 @@ public class TaskListView extends ViewPart {
 
 	@Override
 	public void saveState(IMemento memento) {
-//		IMemento colMemento = memento.createChild(columnWidthIdentifier);
+		// IMemento colMemento = memento.createChild(columnWidthIdentifier);
 
-//		for (int i = 0; i < columnWidths.length; i++) {
-//			IMemento m = colMemento.createChild("col" + i);
-//			m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
-//		}
+		// for (int i = 0; i < columnWidths.length; i++) {
+		// IMemento m = colMemento.createChild("col" + i);
+		// m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
+		// }
 
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
@@ -803,17 +795,18 @@ public class TaskListView extends ViewPart {
 
 	private void restoreState() {
 		if (taskListMemento != null) {
-//			IMemento taskListWidth = taskListMemento.getChild(columnWidthIdentifier);
-//			if (taskListWidth != null) {
-//				for (int i = 0; i < columnWidths.length - 1; i++) {
-//					IMemento m = taskListWidth.getChild("col" + i);
-//					if (m != null) {
-//						int width = m.getInteger(MEMENTO_KEY_WIDTH);
-//						columnWidths[i] = width;
-//						columns[i].setWidth(width);
-//					}
-//				}
-//			}
+			// IMemento taskListWidth =
+			// taskListMemento.getChild(columnWidthIdentifier);
+			// if (taskListWidth != null) {
+			// for (int i = 0; i < columnWidths.length - 1; i++) {
+			// IMemento m = taskListWidth.getChild("col" + i);
+			// if (m != null) {
+			// int width = m.getInteger(MEMENTO_KEY_WIDTH);
+			// columnWidths[i] = width;
+			// columns[i].setWidth(width);
+			// }
+			// }
+			// }
 			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
 			if (sorterMemento != null) {
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
@@ -879,10 +872,11 @@ public class TaskListView extends ViewPart {
 		TextCellEditor textEditor = new TextCellEditor(getViewer().getTree());
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = textEditor;
-		editors[1] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
-		editors[2] = null;
-		editors[3] = new CheckboxCellEditor();
-		
+		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
+		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
+		editors[1] = null;
+		editors[2] = new CheckboxCellEditor();
+
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
@@ -993,8 +987,8 @@ public class TaskListView extends ViewPart {
 				layout.setColumnData(columns[i], new ColumnWeightData(100));
 			} else {
 				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
-			} 
-			
+			}
+
 			final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {
 
@@ -1030,8 +1024,10 @@ public class TaskListView extends ViewPart {
 				FileTransfer.getInstance(), // PluginTransfer.getInstance(),
 				RTFTransfer.getInstance() };
 
-		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes, new TaskListDragSourceListener(this));
-		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT, dropTypes, new TaskListDropAdapter(getViewer()));
+		getViewer().addDragSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK, dragTypes,
+				new TaskListDragSourceListener(this));
+		getViewer().addDropSupport(DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT, dropTypes,
+				new TaskListDropAdapter(getViewer()));
 	}
 
 	void expandToActiveTasks() {
@@ -1074,19 +1070,19 @@ public class TaskListView extends ViewPart {
 		manager.add(filterOnPriority);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
-		
+
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 
 		manager.add(synchronizeAutomatically);
-		
+
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		
+
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
 				filterOnPriority.updateCheckedState();
 			}
 		});
-		
+
 		manager.add(new Separator());
 		manager.add(openPreferencesAction);
 	}
@@ -1339,7 +1335,7 @@ public class TaskListView extends ViewPart {
 	/**
 	 * Recursive function that checks for the occurrence of a certain task
 	 * taskId. All children of the supplied node will be checked.
-	 *
+	 * 
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
@@ -1392,11 +1388,12 @@ public class TaskListView extends ViewPart {
 				}
 				if (object instanceof TaskCategory || object instanceof AbstractRepositoryQuery) {
 					TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) object);
-//					if(getViewer().getExpandedState(object)){
-//						getViewer().collapseToLevel(object, TreeViewer.ALL_LEVELS);
-//					} else {
-//						getViewer().expandToLevel(object, TreeViewer.ALL_LEVELS);
-//					}
+					// if(getViewer().getExpandedState(object)){
+					// getViewer().collapseToLevel(object,
+					// TreeViewer.ALL_LEVELS);
+					// } else {
+					// getViewer().expandToLevel(object, TreeViewer.ALL_LEVELS);
+					// }
 				}
 			}
 		});

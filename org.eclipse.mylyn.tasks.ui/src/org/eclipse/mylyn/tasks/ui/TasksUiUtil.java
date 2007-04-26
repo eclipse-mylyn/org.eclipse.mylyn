@@ -29,6 +29,7 @@ import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -103,6 +104,26 @@ public class TasksUiUtil {
 		}
 	}
 
+	public static ImageDescriptor getImageDescriptorForPriority(Task.PriorityLevel priorityLevel) {
+		if (priorityLevel == null) {
+			return null;
+		}
+		switch (priorityLevel) {
+		case P1:
+			return TasksUiImages.PRIORITY_1;
+		case P2:
+			return TasksUiImages.PRIORITY_2;
+		case P3:
+			return TasksUiImages.PRIORITY_3;
+		case P4:
+			return TasksUiImages.PRIORITY_4;
+		case P5:
+			return TasksUiImages.PRIORITY_5;
+		default:
+			return null;
+		}
+	}
+	
 	public static void closeEditorInActivePage(ITask task) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {

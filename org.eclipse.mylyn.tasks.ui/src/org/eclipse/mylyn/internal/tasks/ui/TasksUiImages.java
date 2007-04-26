@@ -203,9 +203,9 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REPLY = create(T_ELCL, "reply.gif");
 
-	public static final ImageDescriptor PRIORITY_1 = createSize(create(T_EVIEW, "priority-1.gif"), SIZE);
+	public static final ImageDescriptor PRIORITY_1 = create(T_EVIEW, "priority-1.gif");
 
-	public static final ImageDescriptor PRIORITY_2 = createSize(create(T_EVIEW, "priority-2.gif"), SIZE);
+	public static final ImageDescriptor PRIORITY_2 = create(T_EVIEW, "priority-2.gif");
 
 	public static final ImageDescriptor PRIORITY_3 = createSize(create(T_EVIEW, "priority-3.gif"), SIZE);
 
