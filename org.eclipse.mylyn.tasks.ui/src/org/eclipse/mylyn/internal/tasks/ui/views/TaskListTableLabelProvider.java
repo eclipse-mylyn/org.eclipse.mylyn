@@ -91,22 +91,18 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 				return TasksUiImages.getImage(TasksUiImages.CALENDAR);
 			} else {
 				return super.getImage(element);
-			} 
-//		} else if (columnIndex == 1) {
-//			if (element instanceof AbstractTaskContainer) {
-//				return null;
-//			}
-//			return super.getImage(element);
+			}
 		} else if (columnIndex == 1) {
 			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
 				ITaskListElement taskElement = (ITaskListElement) element;
 				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		} else if (columnIndex == 2) {
+			return getSynchronizationStateImage(element);
+		} else if (columnIndex == 3) {
 			if (!(element instanceof AbstractTaskContainer)) {
-				return geContextActivationImage(element);
+				return getContextActivationImage(element);
 			}
-//			return getSynchronizationStateImage(element);
 		}
 		return null;
 	}
@@ -150,7 +146,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		return null;
 	}
 
-	private Image geContextActivationImage(Object element) {
+	private Image getContextActivationImage(Object element) {
 		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
 		if (task != null) {
 			if (task.isActive()) {

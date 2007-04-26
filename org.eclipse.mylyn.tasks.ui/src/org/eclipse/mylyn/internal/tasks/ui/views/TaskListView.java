@@ -241,9 +241,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { " Summary", "!", "" };
+	protected String[] columnNames = new String[] { " Summary", "!", "", "" };
 
-	protected int[] columnWidths = new int[] { 160, 14, 16 };
+	protected int[] columnWidths = new int[] { 160, 14, 14, 16 };
 
 	private TreeColumn[] columns;
 
@@ -880,8 +880,9 @@ public class TaskListView extends ViewPart {
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = textEditor;
 		editors[1] = new ComboBoxCellEditor(getViewer().getTree(), PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
-		editors[2] = new CheckboxCellEditor();
-
+		editors[2] = null;
+		editors[3] = new CheckboxCellEditor();
+		
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(new TaskListCellModifier());
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);

@@ -86,7 +86,6 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	protected Point getSize() {
-		return new Point(24, fSize.y);
+		return new Point(fSize.x, fSize.y);
 	}
-
 }
