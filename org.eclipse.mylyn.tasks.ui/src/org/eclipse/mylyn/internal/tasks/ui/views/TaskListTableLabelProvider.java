@@ -92,14 +92,14 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			} else {
 				return super.getImage(element);
 			}
+//		} else if (columnIndex == 1) {
+//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
+//				ITaskListElement taskElement = (ITaskListElement) element;
+//				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+//			}
 		} else if (columnIndex == 1) {
-			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-				ITaskListElement taskElement = (ITaskListElement) element;
-				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
-			}
-		} else if (columnIndex == 2) {
 			return getSynchronizationStateImage(element);
-		} else if (columnIndex == 3) {
+		} else if (columnIndex == 2) {
 			if (!(element instanceof AbstractTaskContainer)) {
 				return getContextActivationImage(element);
 			}
