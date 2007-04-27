@@ -43,7 +43,7 @@ public class TasksUiImages {
 
 	public static final Point SIZE = new Point(16, 16);
 
-	public static final Point SIZE_WIDE = new Point(26, 16);
+	public static final Point SIZE_WIDE = new Point(23, 16);
 
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
