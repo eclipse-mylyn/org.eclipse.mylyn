@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
@@ -54,6 +55,7 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -115,7 +117,7 @@ public class TasksUiUtil {
 			return null;
 		}
 	}
-	
+
 	public static void closeEditorInActivePage(ITask task) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
@@ -381,6 +383,38 @@ public class TasksUiUtil {
 		return false;
 	}
 
+	/**
+	 * If task is open, force inplace refresh
+	 * Must be called from UI thread.
+	 */
+	public static boolean forceRefreshInplace(ITask task) {
+		if (task instanceof AbstractRepositoryTask) {
+			String handleTarget = task.getHandleIdentifier();
+			for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
+				if (editor.getEditorInput() instanceof AbstractTaskEditorInput) {
+					AbstractTaskEditorInput input = (AbstractTaskEditorInput) editor.getEditorInput();
+					if (input.getTaskData() != null) {
+						String handle = RepositoryTaskHandleUtil.getHandle(input.getTaskData().getRepositoryUrl(),
+								input.getTaskData().getId());
+						if (handle.equals(handleTarget)) {
+							editor.refreshEditorContents();
+							editor.getEditorSite().getPage().activate(editor);
+							return true;
+						}
+					}
+				} else if (editor.getEditorInput() instanceof TaskEditorInput) {
+					TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
+					if (input.getTask().getHandleIdentifier().equals(handleTarget)) {
+						editor.refreshEditorContents();
+						editor.getEditorSite().getPage().activate(editor);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
 			return page.openEditor(input, editorId);
@@ -451,6 +485,7 @@ public class TasksUiUtil {
 					dialog.close();
 					return Dialog.CANCEL;
 				}
+
 			}
 
 			if (TaskRepositoriesView.getFromActivePerspective() != null) {

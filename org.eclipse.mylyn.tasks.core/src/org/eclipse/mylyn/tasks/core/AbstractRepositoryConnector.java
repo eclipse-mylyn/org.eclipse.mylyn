@@ -237,6 +237,7 @@ public abstract class AbstractRepositoryConnector {
 			}
 
 			try {
+				task.setSubmitting(true);
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
 						APPLICATION_OCTET_STREAM, false);

@@ -209,6 +209,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			openWithBrowserAction.selectionChanged(selection);
 			copyTaskDetailsAction.selectionChanged(selection);
 			attachFileAction.selectionChanged(selection);
+			attachFileAction.setEditor(editor);
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 
 			manager.add(openWithBrowserAction);

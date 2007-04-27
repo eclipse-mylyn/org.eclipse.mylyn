@@ -1367,6 +1367,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				} else {
 					AttachFileAction attachFileAction = new AttachFileAction();
 					attachFileAction.selectionChanged(new StructuredSelection(task));
+					attachFileAction.setEditor(parentEditor);
 					attachFileAction.run();
 				}
 			}
@@ -2588,10 +2589,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public void showBusy(boolean busy) {
-		if (busy != formBusy) {
-			parentEditor.showBusy(busy);
+		if (!isDisposed() && busy != formBusy) {
+			// parentEditor.showBusy(busy);
 			if (synchronizeEditorAction != null) {
 				synchronizeEditorAction.setEnabled(!busy);
+			}
+
+			if (submitButton != null && !submitButton.isDisposed()) {
+				submitButton.setEnabled(!busy);
 			}
 
 			setEnabledState(editorComposite, !busy);
@@ -2612,9 +2617,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
+	public void setGlobalBusy(boolean busy) {
+		if (parentEditor != null) {
+			parentEditor.showBusy(busy);
+		} else {
+			showBusy(busy);
+		}
+	}
+
 	public void submitToRepository() {
-		submitButton.setEnabled(false);
-		showBusy(true);
+		setGlobalBusy(true);
 		updateTask();
 		if (isDirty()) {
 			saveTaskOffline(new NullProgressMonitor());
@@ -2699,7 +2711,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					MylarStatusHandler.fail(e, e.getMessage(), true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							enableButtons();
+							setGlobalBusy(false);// enableButtons();
 						}
 					});
 				}
@@ -2724,7 +2736,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (this.isDirty) {
 					this.doSave(new NullProgressMonitor());
 				}
-				showBusy(true);
+				setGlobalBusy(true);
 				changedAttributes.clear();
 				commentStyleText.clear();
 				textHash.clear();
@@ -2774,7 +2786,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 		} finally {
 			if (!this.isDisposed) {
-				showBusy(false);
+				setGlobalBusy(false);
 			}
 		}
 	}
@@ -2811,10 +2823,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (!isDisposed && newCommentTextViewer != null && !newCommentTextViewer.getControl().isDisposed()) {
 						newCommentTextViewer.getControl().setFocus();
 					}
+				} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+					if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
+						submitToRepository();
+						return;
+					}
 				} else {
 					MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
 				}
-				enableButtons();
+				setGlobalBusy(false);// enableButtons();
 			}
 
 		});
@@ -2838,13 +2855,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		return newTask;
 
-	}
-
-	private void enableButtons() {
-		if (!isDisposed() && !submitButton.isDisposed()) {
-			submitButton.setEnabled(true);
-			showBusy(false);
-		}
 	}
 
 	/**

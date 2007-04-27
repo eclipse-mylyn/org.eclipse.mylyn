@@ -8,11 +8,13 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -21,6 +23,8 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class AttachFileAction extends BaseSelectionListenerAction {
 
+	private TaskEditor editor;
+
 	public AttachFileAction() {
 		super("Attach File...");
 		setId("org.eclipse.mylar.tasks.ui.actions.add.attachment");
@@ -28,17 +32,28 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
+		if (editor != null) {
+			editor.showBusy(true);
+		}
 		Object selection = super.getStructuredSelection().getFirstElement();
 		if (selection instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)selection;
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-			
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) selection;
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+
 			NewAttachmentWizard attachmentWizard = new NewAttachmentWizard(repository, repositoryTask);
-			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), attachmentWizard);
+			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell(), attachmentWizard);
 			attachmentWizard.setDialog(dialog);
 			dialog.create();
-			dialog.open();
+			int result = dialog.open();
+			if (result != MessageDialog.OK && editor != null) {
+				editor.showBusy(false);
+			}
 		}
 	}
-	
+
+	public void setEditor(TaskEditor taskEditor) {
+		this.editor = taskEditor;
+	}
 }
