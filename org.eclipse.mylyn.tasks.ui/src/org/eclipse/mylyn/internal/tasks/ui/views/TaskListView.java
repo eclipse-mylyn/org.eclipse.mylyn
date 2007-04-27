@@ -668,8 +668,10 @@ public class TaskListView extends ViewPart {
 				sortIndex = 2; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
-			tableSorter.setColumn(columnNames[sortIndex]);
-			getViewer().refresh(false);
+			if (sortIndex < 2) {
+				tableSorter.setColumn(columnNames[sortIndex]);
+				getViewer().refresh(false);
+			}
 			// getViewer().setSorter(new TaskListTableSorter(this,
 			// columnNames[sortIndex]));
 		}
