@@ -10,6 +10,7 @@ package org.eclipse.mylar.tasks.ui.editors;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -37,7 +38,8 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final Control control;
 
-	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor abstractRepositoryTaskEditor, FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
+	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor abstractRepositoryTaskEditor,
+			FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
 		this.abstractRepositoryTaskEditor = abstractRepositoryTaskEditor;
 		this.fileTransfer = fileTransfer;
 		this.textTransfer = textTransfer;
@@ -100,36 +102,46 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(this.abstractRepositoryTaskEditor.repository.getUrl(),
+			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+					this.abstractRepositoryTaskEditor.repository.getUrl(),
 					this.abstractRepositoryTaskEditor.taskData.getId());
 			if (!(task instanceof AbstractRepositoryTask)) {
 				// Should not happen
 				return;
 			}
 
-			NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository, (AbstractRepositoryTask) task, text);
-			NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
-			naw.setDialog(dialog);
-			dialog.create();
-			dialog.open();
+			abstractRepositoryTaskEditor.setGlobalBusy(true);
+			NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository,
+					(AbstractRepositoryTask) task, text);
+			openDialog(naw);
 		}
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(this.abstractRepositoryTaskEditor.repository.getUrl(),
+				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						this.abstractRepositoryTaskEditor.repository.getUrl(),
 						this.abstractRepositoryTaskEditor.taskData.getId());
 				if (!(task instanceof AbstractRepositoryTask)) {
 					// Should not happen
 					return;
 				}
 
-				NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository, (AbstractRepositoryTask) task,
-						new File(files[0]));
-				NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
-				naw.setDialog(dialog);
-				dialog.create();
-				dialog.open();
+				NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository,
+						(AbstractRepositoryTask) task, new File(files[0]));
+				openDialog(naw);
+
 			}
+		}
+	}
+
+	private void openDialog(NewAttachmentWizard naw) {
+		abstractRepositoryTaskEditor.setGlobalBusy(true);
+		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
+		naw.setDialog(dialog);
+		dialog.create();
+		int result = dialog.open();
+		if (result != MessageDialog.OK) {
+			abstractRepositoryTaskEditor.setGlobalBusy(false);
 		}
 	}
 }
