@@ -1615,7 +1615,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					for (String cc : ccList.getItems()) {
 						int index = ccList.indexOf(cc);
 						if (ccList.isSelected(index)) {
-							taskData.addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+							List<String > remove = taskData.getAttributeValues(RepositoryTaskAttribute.REMOVE_CC);
+							if(!remove.contains(cc)) {
+								taskData.addAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
+							}
 						} else {
 							taskData.removeAttributeValue(RepositoryTaskAttribute.REMOVE_CC, cc);
 						}
