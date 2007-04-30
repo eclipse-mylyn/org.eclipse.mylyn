@@ -183,6 +183,11 @@ public class TracHyperlinkUtilTest extends TestCase {
 		assertNotNull(links);
 		assertEquals(1, links.length);
 		assertEquals("http://localhost/browser/trunk/foo?rev=123#L456", ((WebHyperlink) links[0]).getURLString());
+
+		links = TracHyperlinkUtil.findHyperlinks(repository, "source:/tags/foo_bar-1.1", 1, 0);
+		assertNotNull(links);
+		assertEquals(1, links.length);
+		assertEquals("http://localhost/browser/tags/foo_bar-1.1", ((WebHyperlink) links[0]).getURLString());
 	}
 
 }

@@ -56,7 +56,7 @@ public class TracHyperlinkUtil {
 
 	static Pattern attachmentPattern = Pattern.compile("attachment:ticket:(\\d+):([\\w\\.]+)");
 
-	static Pattern filesPattern = Pattern.compile("source:([\\w\\./]+)(@(\\d+)(#L(\\d+))?)?");
+	static Pattern filesPattern = Pattern.compile("source:/*([\\w\\./\\-_]+)(@(\\d+)(#L(\\d+))?)?");
 
 	/**
 	 * <ul>
