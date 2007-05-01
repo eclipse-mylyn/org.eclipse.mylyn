@@ -99,7 +99,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			if (element instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
-				compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
+				if (connectorUi != null) {
+					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
+				}
 				if (showActivation) {
 					compositeDescriptor.contextToggle = getContextActivationImage(element);
 				}
