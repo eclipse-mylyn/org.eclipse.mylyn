@@ -53,12 +53,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	private class CompositeImageDescriptor {
 
 		ImageDescriptor icon;
-		
+
 		ImageDescriptor overlayKind;
-		
+
 		ImageDescriptor contextToggle;
 	};
-	
+
 	public TaskElementLabelProvider() {
 		super();
 	}
@@ -73,22 +73,18 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public Image getImage(Object element) {
-		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
-		if (compositeImages) {
-			if (element instanceof ITask || element instanceof AbstractQueryHit) {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind, compositeDescriptor.contextToggle);
-			} else if (element instanceof AbstractTaskContainer) {
-//				return null;
-				return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, null);
-			} else {
-				return TasksUiImages.getImage(compositeDescriptor.icon);
-			}
+		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element, compositeImages);
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
+					compositeDescriptor.contextToggle);
+		} else if (element instanceof AbstractTaskContainer) {
+			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, null);
 		} else {
-			return super.getImage(element);
+			return TasksUiImages.getImage(compositeDescriptor.icon);
 		}
 	}
 
-	private CompositeImageDescriptor getImageDescriptor(Object object) {
+	private CompositeImageDescriptor getImageDescriptor(Object object, boolean showActivation) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
 		if (object instanceof TaskArchive) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
@@ -97,52 +93,60 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 			return compositeDescriptor;
 		} else if (object instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement)object;
-			
+			ITaskListElement element = (ITaskListElement) object;
+
 			AbstractRepositoryConnectorUi connectorUi = null;
 			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)element).getRepositoryKind());
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
 				compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
-//				compositeDescriptor.overlayPriority = connectorUi.getTaskPriorityOverlay(repositoryTask);
-				compositeDescriptor.contextToggle = getContextActivationImage(element);
+				if (showActivation) {
+					compositeDescriptor.contextToggle = getContextActivationImage(element);
+				}
 			} else if (element instanceof AbstractQueryHit) {
-				AbstractRepositoryTask repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
+				AbstractRepositoryTask repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
 				if (repositoryTask != null) {
-					return getImageDescriptor(repositoryTask);
+					return getImageDescriptor(repositoryTask, showActivation);
 				}
 			} else if (element instanceof AbstractTaskContainer) {
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery)element).getRepositoryKind());
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
-			
+
 			if (connectorUi != null) {
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
-				return compositeDescriptor;				
+				return compositeDescriptor;
 			} else {
 				if (element instanceof ITask) {
-//					compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
-					compositeDescriptor.contextToggle = getContextActivationImage(element);
+// compositeDescriptor.overlayPriority =
+// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
+					if (showActivation) {
+						compositeDescriptor.contextToggle = getContextActivationImage(element);
+					}
 				} else if (element instanceof AbstractQueryHit) {
-//					ITask correspondingTask = getCorrespondingTask(element);
-//					if (correspondingTask != null) {
-//						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
-//					} else {
-//						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
-//					}
-					compositeDescriptor.contextToggle = getContextActivationImage(element);
+// ITask correspondingTask = getCorrespondingTask(element);
+// if (correspondingTask != null) {
+// compositeDescriptor.overlayPriority =
+// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
+// } else {
+// compositeDescriptor.overlayPriority =
+// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
+// }
+					if (showActivation) {
+						compositeDescriptor.contextToggle = getContextActivationImage(element);
+					}
 				}
 				if (element instanceof ITask || element instanceof AbstractQueryHit) {
-					
+
 				}
 				if (element instanceof AbstractRepositoryQuery) {
-					compositeDescriptor.icon =  TasksUiImages.QUERY;
+					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof AbstractQueryHit) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				}
 				return compositeDescriptor;
-			}	
+			}
 		}
 		return null;
 	}
@@ -164,7 +168,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return TasksUiImages.TASK_INACTIVE;
 		}
 	}
-	
+
 	@Override
 	public String getText(Object object) {
 		if (object instanceof AbstractQueryHit) {
@@ -205,7 +209,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return super.getText(object);
 		}
 	}
-	
+
 	public Color getForeground(Object object) {
 		if (object instanceof AbstractTaskContainer) {
 			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {

@@ -32,18 +32,16 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private final TaskListView view;
 
-	private String column;
-
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
+	private boolean sortByPriority = true;
+	
 	public TaskListTableSorter(TaskListView view, String column) {
 		super();
 		this.view = view;
-		this.column = column;
 	}
 
 	public void setColumn(String column) {
-		this.column = column;
 		if (view.isFocusedMode()) {
 			MessageDialog
 					.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -103,8 +101,17 @@ public class TaskListTableSorter extends ViewerSorter {
 	}
 
 	private int compareElements(ITaskListElement element1, ITaskListElement element2) {
-		if (column != null && column.equals(this.view.columnNames[1])) {
-			return 0;
+		if (sortByPriority) {
+			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
+		} else {
+			String summary1 = getSortableSummaryFromElement(element1);
+			String summary2 = getSortableSummaryFromElement(element2);
+			element2.getSummary();
+			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
+		} 
+		
+//		if (column != null && column.equals(this.view.columnNames[1])) {
+//			return 0;
 //		} else if (column == this.view.columnNames[2]) {
 //			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 //		} else if (column == this.view.columnNames[3]) {
@@ -112,9 +119,9 @@ public class TaskListTableSorter extends ViewerSorter {
 //			String summary2 = getSortableSummaryFromElement(element2);
 //			element2.getSummary();
 //			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
-		} else {
-			return 0;
-		}
+//		} else {
+//			return 0;
+//		}
 	}
 
 	public static String getSortableSummaryFromElement(ITaskListElement element) {

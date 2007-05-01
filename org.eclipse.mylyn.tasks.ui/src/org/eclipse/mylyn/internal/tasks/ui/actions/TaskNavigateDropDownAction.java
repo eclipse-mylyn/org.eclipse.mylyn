@@ -68,8 +68,10 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 			setText(taskDescription);
 			setEnabled(true);
 			setToolTipText(task.getSummary());
-			Image image = labelProvider.getImage(task);
-			setImageDescriptor(ImageDescriptor.createFromImage(image));
+			if (task != null) {
+				Image image = labelProvider.getImage(task);
+				setImageDescriptor(ImageDescriptor.createFromImage(image));
+			}
 		}
 
 		@Override
