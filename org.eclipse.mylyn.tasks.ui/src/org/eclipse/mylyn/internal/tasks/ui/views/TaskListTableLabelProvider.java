@@ -50,8 +50,6 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	private Color categoryBackgroundColor;
 
 	private TaskListView view;
-	
-	private boolean wideImages = false;
 
 	/**
 	 * @param view
@@ -62,7 +60,6 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		super(provider, decorator);
 		this.categoryBackgroundColor = parentBackground;
 		this.view = view;
-		this.wideImages = wideImages;
 	}
 
 	public String getColumnText(Object obj, int columnIndex) {

@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -64,15 +63,14 @@ public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
 			
 //			decoration.addOverlay(getPriorityImageDescriptor(element), IDecoration.BOTTOM_RIGHT);
 //			decoration.addOverlay(getContextActivationImage(element), IDecoration.BOTTOM_RIGHT);
-			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					task.getRepositoryKind());
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
-					task.getRepositoryUrl());
-//			if (connectorUi != null) {
-				if (connector != null && connector.hasRepositoryContext(repository, task)) {
-					decoration.addOverlay(TasksUiImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_LEFT);
-				} 
-//			}
+			
+//			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+//					task.getRepositoryKind());
+//			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+//					task.getRepositoryUrl());
+//				if (connector != null && connector.hasRepositoryContext(repository, task)) {
+//					decoration.addOverlay(TasksUiImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_RIGHT);
+//				} 
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			decorate(correspondingTask, decoration);

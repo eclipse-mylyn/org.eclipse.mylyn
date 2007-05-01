@@ -20,7 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 
 /**
  * @author Mik Kersten
@@ -268,16 +267,13 @@ public class TasksUiImages {
 	 * 
 	 * @param	icon	cannot be null
 	 */
-	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor overlayPriority, ImageDescriptor contextToggle) {	
+	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor contextToggle) {	
 		if (icon == null) {
 			return null;
 		}
 		String key = "" + icon.hashCode();
 		if (overlayKind != null) {
 			key += overlayKind.hashCode();
-		}
-		if (overlayPriority != null) {
-			key += overlayPriority.hashCode();
 		}
 		if (contextToggle != null) {
 			key += contextToggle.hashCode();
@@ -286,7 +282,7 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 
 		if (image == null) {
-			CompositeTaskImageDescriptor imageDescriptor = new CompositeTaskImageDescriptor(icon, overlayKind, overlayPriority, contextToggle);
+			CompositeTaskImageDescriptor imageDescriptor = new CompositeTaskImageDescriptor(icon, overlayKind, contextToggle);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

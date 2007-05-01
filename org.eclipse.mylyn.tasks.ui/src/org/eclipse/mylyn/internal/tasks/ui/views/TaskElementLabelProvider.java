@@ -29,10 +29,8 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -58,8 +56,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		
 		ImageDescriptor overlayKind;
 		
-		ImageDescriptor overlayPriority;
-		
 		ImageDescriptor contextToggle;
 	};
 	
@@ -80,7 +76,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
 		if (compositeImages) {
 			if (element instanceof ITask || element instanceof AbstractQueryHit) {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind, compositeDescriptor.overlayPriority, compositeDescriptor.contextToggle);
+				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind, compositeDescriptor.contextToggle);
 			} else if (element instanceof AbstractTaskContainer) {
 //				return null;
 				return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, null);
@@ -108,7 +104,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)element).getRepositoryKind());
 				compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
-				compositeDescriptor.overlayPriority = connectorUi.getTaskPriorityOverlay(repositoryTask);
+//				compositeDescriptor.overlayPriority = connectorUi.getTaskPriorityOverlay(repositoryTask);
 				compositeDescriptor.contextToggle = getContextActivationImage(element);
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractRepositoryTask repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
@@ -124,15 +120,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return compositeDescriptor;				
 			} else {
 				if (element instanceof ITask) {
-					compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
+//					compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
 					compositeDescriptor.contextToggle = getContextActivationImage(element);
 				} else if (element instanceof AbstractQueryHit) {
-					ITask correspondingTask = getCorrespondingTask(element);
-					if (correspondingTask != null) {
-						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
-					} else {
-						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
-					}
+//					ITask correspondingTask = getCorrespondingTask(element);
+//					if (correspondingTask != null) {
+//						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
+//					} else {
+//						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
+//					}
 					compositeDescriptor.contextToggle = getContextActivationImage(element);
 				}
 				if (element instanceof ITask || element instanceof AbstractQueryHit) {
