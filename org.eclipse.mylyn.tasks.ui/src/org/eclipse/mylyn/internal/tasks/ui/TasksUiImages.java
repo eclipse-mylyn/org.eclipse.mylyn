@@ -108,7 +108,7 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
 
-	public static final ImageDescriptor OVERLAY_OVER_DUE = create(T_EVIEW, "overlay-over-due.gif");
+	public static final ImageDescriptor OVERLAY_OVER_DUE = create(T_EVIEW, "overlay-overdue.gif");
 
 	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
 
@@ -314,7 +314,6 @@ public class TasksUiImages {
 		}
 				
 		Image image = getImageRegistry().get(key);
-
 		if (image == null) {
 			CompositeSynchronizationImageDescriptor imageDescriptor = new CompositeSynchronizationImageDescriptor(icon, overlay);
 			image = imageDescriptor.createImage(true);

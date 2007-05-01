@@ -137,13 +137,13 @@
 
    <extension point="org.eclipse.ui.decorators">
       <decorator
-            class="org.eclipse.mylar.internal.tasks.ui.RepositoryTaskDecorator"
+            class="org.eclipse.mylar.internal.tasks.ui.TaskLabelDecorator"
             id="org.eclipse.mylar.tasklist.ui.decorator.repositories"
-            label="Task Decorator"
+            label="Mylar Task Decorator"
             lightweight="true"
             state="true">
          <description>
-			Task Decorator
+			Overlays information such as due date notifications
 		 </description>
          <enablement>
             <or>

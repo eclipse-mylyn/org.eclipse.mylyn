@@ -33,7 +33,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private static final int WIDTH_PRIORITY = 0;//5;
 	
-	private static final int WIDTH_CONTEXT = 8;
+	private static final int WIDTH_CONTEXT = 9;
 	
 	private static final int WIDTH_SQUISH = 0;
 	

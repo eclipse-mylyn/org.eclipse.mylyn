@@ -28,7 +28,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 /**
  * @author Mik Kersten
  */
-public class RepositoryTaskDecorator implements ILightweightLabelDecorator {
+public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof AbstractRepositoryQuery) {
