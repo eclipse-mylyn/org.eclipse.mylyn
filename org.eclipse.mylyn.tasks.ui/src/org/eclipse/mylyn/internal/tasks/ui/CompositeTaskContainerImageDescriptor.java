@@ -23,7 +23,7 @@ public class CompositeTaskContainerImageDescriptor extends CompositeImageDescrip
 
 	private ImageData base;
 	
-	private ImageData overlay;
+	ImageData overlay;
 	
 	protected Point size;
 	
@@ -38,9 +38,9 @@ public class CompositeTaskContainerImageDescriptor extends CompositeImageDescrip
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);
-//		if (overlay != null) {
-//			drawImage(overlay, base.width, 0);
-//		}
+		if (overlay != null) {
+			drawImage(overlay, base.width, 0);
+		}
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {

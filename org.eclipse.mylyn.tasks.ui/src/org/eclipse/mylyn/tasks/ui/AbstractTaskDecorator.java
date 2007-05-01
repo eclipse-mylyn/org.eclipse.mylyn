@@ -24,6 +24,6 @@ public abstract class AbstractTaskDecorator implements ILightweightLabelDecorato
 	 * enhancement).
 	 */
 	protected int getQuadrantForKind() {
-		return IDecoration.BOTTOM_LEFT;
+		return IDecoration.BOTTOM_RIGHT;
 	}
 }

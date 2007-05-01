@@ -27,7 +27,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData kind;
 	
-	private ImageData priority;
+//	private ImageData priority;
 	
 	protected Point size;
 
@@ -41,14 +41,14 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	static int WIDTH = WIDTH_CONTEXT + WIDTH_PRIORITY + WIDTH_ICON - WIDTH_SQUISH;
 	
-	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor overlayPriority, ImageDescriptor contextToggle) {
+	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor contextToggle) {
 		this.base = getImageData(icon);
 		if (overlayKind != null) {
 			this.kind = getImageData(overlayKind);
 		}
-		if (overlayPriority != null) {
-			this.priority = getImageData(overlayPriority);
-		}
+//		if (overlayPriority != null) {
+//			this.priority = getImageData(overlayPriority);
+//		}
 		if (contextToggle != null) {
 			this.context = getImageData(contextToggle);
 		} 
