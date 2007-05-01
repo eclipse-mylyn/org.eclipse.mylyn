@@ -106,7 +106,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				if (!taskListView.getFilters().contains(taskListInterestFilter)) {
 					taskListView.addFilter(taskListInterestFilter);
 				}
-				taskListView.getViewer().getTree().setHeaderVisible(false);
+//				taskListView.getViewer().getTree().setHeaderVisible(false);
 				taskListView.setFocusedMode(true);
 				taskListView.setManualFiltersEnabled(false);
 				taskListView.refreshAndFocus(true);
@@ -132,7 +132,7 @@ public class FocusTaskListAction extends AbstractFocusViewAction implements IFil
 				for (AbstractTaskListFilter filter : previousFilters) {
 					TaskListView.getFromActivePerspective().addFilter(filter);
 				}
-				taskListView.getViewer().getTree().setHeaderVisible(true);
+//				taskListView.getViewer().getTree().setHeaderVisible(true);
 				taskListView.setFocusedMode(false);
 				taskListView.getViewer().collapseAll();
 				taskListView.refreshAndFocus(false);
