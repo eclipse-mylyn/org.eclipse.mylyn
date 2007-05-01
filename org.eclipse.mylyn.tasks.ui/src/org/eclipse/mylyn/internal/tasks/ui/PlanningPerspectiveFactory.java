@@ -38,14 +38,14 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 	public void defineLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 
-		IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.4, editorArea);//$NON-NLS-1$
-		topLeft.addView(TaskListView.ID);
+		IFolderLayout topRight = layout.createFolder("topRight", IPageLayout.RIGHT, (float) 0.6, editorArea);//$NON-NLS-1$
+		topRight.addView(TaskListView.ID);
 
 		// IFolderLayout bottomLeft = layout.createFolder(
 		// "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
 		// "topLeft");//$NON-NLS-1$
 		// bottomLeft.addView(TaskActivityView.ID);
-		topLeft.addPlaceholder(IPageLayout.ID_RES_NAV);
+		topRight.addPlaceholder(IPageLayout.ID_RES_NAV);
 
 		// IFolderLayout bottomRight = layout.createFolder(
 		// "bottomRight", IPageLayout.BOTTOM, (float) 0.66,//$NON-NLS-1$
