@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -25,6 +26,7 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylar.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -43,6 +45,30 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
  */
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	private static final int TASK_NUM_GROUP = 3;
+
+	@Override
+	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+		if (task instanceof BugzillaTask) {
+			BugzillaTask bugzillaTask = (BugzillaTask)task;
+			String severity = bugzillaTask.getSeverity();
+	
+			if (severity != null) {
+				// XXX: refactor to use configuration
+				if ("blocker".equals(severity) || "critical".equals(severity)) {
+					return BugzillaImages.OVERLAY_CRITICAL;
+				} else if ("major".equals(severity)) {
+					return BugzillaImages.OVERLAY_MAJOR;
+				} else if ("enhancement".equals(severity)) {
+					return BugzillaImages.OVERLAY_ENHANCEMENT;
+				} else if ("trivial".equals(severity) || "minor".equals(severity)) {
+					return BugzillaImages.OVERLAY_MINOR;
+				} else {
+					return null;
+				}
+			}
+		}
+		return super.getTaskKindOverlay(task);
+	}
 
 	private static final String regexp = "(duplicate of|bug|task)(\\s#|#|#\\s|\\s|)(\\s\\d+|\\d+)";
 
@@ -96,7 +122,6 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		}
 	}
 	
-
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}

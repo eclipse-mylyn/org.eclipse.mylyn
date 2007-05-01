@@ -19,47 +19,28 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class TaskListImageDescriptor extends CompositeImageDescriptor {
+public class CompositeTaskContainerImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
-
+	
 	private ImageData overlay;
-
-	private boolean top;
-
-	private boolean left;
-
+	
 	protected Point size;
-
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
-			boolean left) {
-		this.base = getImageData(baseDesc);
-		this.top = top;
-		this.left = left;
-		if (overlayDesc != null) {
-			this.overlay = getImageData(overlayDesc);
+	
+	public CompositeTaskContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay) {
+		this.base = getImageData(icon);
+		if (overlay != null) {
+			this.overlay = getImageData(overlay);
 		}
-		Point size = new Point(base.width, base.height);
-		setImageSize(size);
-	}
-
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
-		this.base = getImageData(baseDesc);
-		setImageSize(size);
+		this.size = new Point(CompositeTaskImageDescriptor.WIDTH, base.height);
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);
-		int x = 0;
-		int y = 0;
-		if (!left)
-			x = 8;// base.width - overlay.width;
-		if (!top)
-			y = 8;// base.height - overlay.height;
-		if (overlay != null) {
-			drawImage(overlay, x, y);
-		}
+//		if (overlay != null) {
+//			drawImage(overlay, base.width, 0);
+//		}
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
@@ -69,10 +50,6 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 			data = DEFAULT_IMAGE_DATA;
 		}
 		return data;
-	}
-
-	public void setImageSize(Point size) {
-		this.size = size;
 	}
 
 	@Override

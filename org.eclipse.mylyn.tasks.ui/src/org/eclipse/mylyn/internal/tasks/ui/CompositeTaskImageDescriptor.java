@@ -19,46 +19,53 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class TaskListImageDescriptor extends CompositeImageDescriptor {
+public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 
-	private ImageData overlay;
+	private ImageData context;
 
-	private boolean top;
-
-	private boolean left;
-
+	private ImageData kind;
+	
+	private ImageData priority;
+	
 	protected Point size;
 
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, ImageDescriptor overlayDesc, boolean top,
-			boolean left) {
-		this.base = getImageData(baseDesc);
-		this.top = top;
-		this.left = left;
-		if (overlayDesc != null) {
-			this.overlay = getImageData(overlayDesc);
+	private static final int WIDTH_PRIORITY = 0;//5;
+	
+	private static final int WIDTH_CONTEXT = 8;
+	
+	private static final int WIDTH_SQUISH = 1;
+	
+	private static final int WIDTH_ICON = 16;
+	
+	static int WIDTH = WIDTH_CONTEXT + WIDTH_PRIORITY + WIDTH_ICON - WIDTH_SQUISH;
+	
+	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor overlayPriority, ImageDescriptor contextToggle) {
+		this.base = getImageData(icon);
+		if (overlayKind != null) {
+			this.kind = getImageData(overlayKind);
 		}
-		Point size = new Point(base.width, base.height);
-		setImageSize(size);
-	}
-
-	public TaskListImageDescriptor(ImageDescriptor baseDesc, Point size) {
-		this.base = getImageData(baseDesc);
-		setImageSize(size);
+		if (overlayPriority != null) {
+			this.priority = getImageData(overlayPriority);
+		}
+		if (contextToggle != null) {
+			this.context = getImageData(contextToggle);
+		} 
+		this.size = new Point(WIDTH, base.height);
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, 0, 0);
-		int x = 0;
-		int y = 0;
-		if (!left)
-			x = 8;// base.width - overlay.width;
-		if (!top)
-			y = 8;// base.height - overlay.height;
-		if (overlay != null) {
-			drawImage(overlay, x, y);
+		if (context != null) {
+			drawImage(context, 0, 0);
+		}
+//		if (priority != null) {
+//			drawImage(priority, WIDTH_CONTEXT+2, 0);
+//		}
+		drawImage(base, WIDTH_CONTEXT + WIDTH_PRIORITY - WIDTH_SQUISH, 0);
+		if (kind != null) {
+			drawImage(kind, WIDTH_CONTEXT + WIDTH_PRIORITY + 3, 5);
 		}
 	}
 
@@ -69,10 +76,6 @@ public class TaskListImageDescriptor extends CompositeImageDescriptor {
 			data = DEFAULT_IMAGE_DATA;
 		}
 		return data;
-	}
-
-	public void setImageSize(Point size) {
-		this.size = size;
 	}
 
 	@Override

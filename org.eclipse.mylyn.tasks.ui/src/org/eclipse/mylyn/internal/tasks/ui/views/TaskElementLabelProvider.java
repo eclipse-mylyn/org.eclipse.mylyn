@@ -17,6 +17,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
@@ -28,7 +29,10 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -46,50 +50,123 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
-	private boolean wide = false;
+	private boolean compositeImages = false;
 
+	private class CompositeImageDescriptor {
+
+		ImageDescriptor icon;
+		
+		ImageDescriptor overlayKind;
+		
+		ImageDescriptor overlayPriority;
+		
+		ImageDescriptor contextToggle;
+	};
+	
 	public TaskElementLabelProvider() {
 		super();
 	}
-	
+
 	/**
-	 * @parma 	wide 	set true for wide images, with whitespace to right of icon.
+	 * @parma wide set true for wide images, with whitespace to right of icon.
 	 */
-	public TaskElementLabelProvider(boolean wide) {
+	public TaskElementLabelProvider(boolean compositeImages) {
 		super();
-		this.wide = wide;
+		this.compositeImages = compositeImages;
 	}
 
 	@Override
 	public Image getImage(Object element) {
-		return TasksUiImages.getImage(getImageDescriptor(element), wide);
+		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
+		if (compositeImages) {
+			if (element instanceof ITask || element instanceof AbstractQueryHit) {
+				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind, compositeDescriptor.overlayPriority, compositeDescriptor.contextToggle);
+			} else if (element instanceof AbstractTaskContainer) {
+//				return null;
+				return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, null);
+			} else {
+				return TasksUiImages.getImage(compositeDescriptor.icon);
+			}
+		} else {
+			return super.getImage(element);
+		}
 	}
 
-	public ImageDescriptor getImageDescriptor(Object element) {
-		if (element instanceof TaskArchive) {
-			return TasksUiImages.CATEGORY_ARCHIVE;
-		} else if (element instanceof TaskCategory) {
-			return TasksUiImages.CATEGORY;
-		} else if (element instanceof AbstractRepositoryQuery) {
-			return TasksUiImages.QUERY;
-		} else if (element instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) element;
-			if (hit.getCorrespondingTask() != null) {
-				return getImageDescriptor(hit.getCorrespondingTask());
-			} else {
-				return TasksUiImages.TASK_REMOTE;
+	private CompositeImageDescriptor getImageDescriptor(Object object) {
+		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
+		if (object instanceof TaskArchive) {
+			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
+			return compositeDescriptor;
+		} else if (object instanceof TaskCategory) {
+			compositeDescriptor.icon = TasksUiImages.CATEGORY;
+			return compositeDescriptor;
+		} else if (object instanceof ITaskListElement) {
+			ITaskListElement element = (ITaskListElement)object;
+			
+			AbstractRepositoryConnectorUi connectorUi = null;
+			if (element instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)element).getRepositoryKind());
+				compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
+				compositeDescriptor.overlayPriority = connectorUi.getTaskPriorityOverlay(repositoryTask);
+				compositeDescriptor.contextToggle = getContextActivationImage(element);
+			} else if (element instanceof AbstractQueryHit) {
+				AbstractRepositoryTask repositoryTask = ((AbstractQueryHit)element).getCorrespondingTask();
+				if (repositoryTask != null) {
+					return getImageDescriptor(repositoryTask);
+				}
+			} else if (element instanceof AbstractTaskContainer) {
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery)element).getRepositoryKind());
 			}
-		} else if (element instanceof ITask) {
-			ITask task = (ITask) element;
-			if (task.isCompleted()) {
-				return TasksUiImages.TASK_COMPLETED;
-			} else if (task.getNotes() != null && !task.getNotes().trim().equals("")) {
-				return TasksUiImages.TASK_NOTES;
+			
+			if (connectorUi != null) {
+				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
+				return compositeDescriptor;				
 			} else {
-				return TasksUiImages.TASK;
-			}
+				if (element instanceof ITask) {
+					compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
+					compositeDescriptor.contextToggle = getContextActivationImage(element);
+				} else if (element instanceof AbstractQueryHit) {
+					ITask correspondingTask = getCorrespondingTask(element);
+					if (correspondingTask != null) {
+						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
+					} else {
+						compositeDescriptor.overlayPriority = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
+					}
+					compositeDescriptor.contextToggle = getContextActivationImage(element);
+				}
+				if (element instanceof ITask || element instanceof AbstractQueryHit) {
+					
+				}
+				if (element instanceof AbstractRepositoryQuery) {
+					compositeDescriptor.icon =  TasksUiImages.QUERY;
+				} else if (element instanceof AbstractQueryHit) {
+					compositeDescriptor.icon = TasksUiImages.TASK;
+				} else if (element instanceof ITask) {
+					compositeDescriptor.icon = TasksUiImages.TASK;
+				}
+				return compositeDescriptor;
+			}	
 		}
 		return null;
+	}
+
+	private ImageDescriptor getContextActivationImage(Object element) {
+		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+		if (task != null) {
+			if (task.isActive()) {
+				return TasksUiImages.TASK_ACTIVE;
+			} else {
+				// XXX: should not be reading from disk when refreshing
+				if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+					return TasksUiImages.TASK_INACTIVE_CONTEXT;
+				} else {
+					return TasksUiImages.TASK_INACTIVE;
+				}
+			}
+		} else {
+			return TasksUiImages.TASK_INACTIVE;
+		}
 	}
 	
 	@Override
@@ -122,9 +199,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else {
 					return task.getSummary();
 				}
-				// return
-				// AbstractRepositoryTask.getTaskId(task.getHandleIdentifier())
-				// + ": " + task.getDescription();
 			} else {
 				return task.getSummary();
 			}
@@ -135,7 +209,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return super.getText(object);
 		}
 	}
-
+	
 	public Color getForeground(Object object) {
 		if (object instanceof AbstractTaskContainer) {
 			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {
@@ -250,7 +324,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				}
 			}
 		} else if (element instanceof AbstractQueryHit) {
-			if (((AbstractQueryHit)element).isCompleted()) {
+			if (((AbstractQueryHit) element).isCompleted()) {
 				return TaskListColorsAndFonts.STRIKETHROUGH;
 			}
 		}

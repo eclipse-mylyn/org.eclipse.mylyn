@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -105,6 +106,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -121,6 +124,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
@@ -178,6 +182,8 @@ public class TaskListView extends ViewPart {
 
 	private boolean focusedMode = false;
 
+	private TaskListCellModifier taskListCellModifier = new TaskListCellModifier(this);
+	
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -236,9 +242,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { " Summary", " ?", " !" };
+	protected String[] columnNames = new String[] { "Summary", " " };
 
-	protected int[] columnWidths = new int[] { 100, 14, 15 };
+	protected int[] columnWidths = new int[] { 200, 29 };
 
 	private TreeColumn[] columns;
 
@@ -250,7 +256,7 @@ public class TaskListView extends ViewPart {
 
 	private static final int DEFAULT_SORT_DIRECTION = 1;
 
-	private int sortIndex = 2;
+	private int sortIndex = 0;
 
 	private ITaskListPresentation currentPresentation;
 
@@ -321,19 +327,23 @@ public class TaskListView extends ViewPart {
 				Color oldForeground = gc.getForeground();
 				Color oldBackground = gc.getBackground();
 
+				gc.setForeground(categoryGradientEnd);
+				gc.drawLine(0, rect.y, area.width, rect.y);
+				
 				gc.setForeground(categoryGradientStart);
-				gc.setBackground(TaskListView.this.getViewer().getControl().getParent().getBackground());
+				gc.setBackground(categoryGradientEnd);
 				
 //				gc.setForeground(categoryGradientStart);
 //				gc.setBackground(categoryGradientEnd);
+//				gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
 				
-				gc.fillGradientRectangle(0, rect.y, area.width, rect.height, true);
+				gc.fillGradientRectangle(0, rect.y+1, area.width, rect.height, true);
 
 				/* Bottom Line */
-				gc.setForeground(TaskListView.this.getViewer().getControl().getParent().getBackground());
-//				gc.setForeground(categoryGradientEnd);
+//				gc.setForeground();
+				gc.setForeground(categoryGradientEnd);
 				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
-
+				
 				gc.setForeground(oldForeground);
 				gc.setBackground(oldBackground);
 
@@ -697,11 +707,11 @@ public class TaskListView extends ViewPart {
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | SWT.H_SCROLL | SWT.V_SCROLL
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /*SWT.H_SCROLL |*/ SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 
-		getViewer().getTree().setHeaderVisible(true);
-		getViewer().getTree().setLinesVisible(true);
+		getViewer().getTree().setHeaderVisible(false);
+//		getViewer().getTree().setLinesVisible(true);
 		getViewer().setUseHashlookup(true);
 
 		configureColumns(columnNames, columnWidths);
@@ -710,7 +720,7 @@ public class TaskListView extends ViewPart {
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this);
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this, true);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
@@ -720,11 +730,11 @@ public class TaskListView extends ViewPart {
 		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
 		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
 		editors[1] = null;
-		editors[2] = null;
+//		editors[2] = null;
 //		editors[2] = new CheckboxCellEditor();
-
+		
 		getViewer().setCellEditors(editors);
-		getViewer().setCellModifier(new TaskListCellModifier(this));
+		getViewer().setCellModifier(taskListCellModifier);
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
 		getViewer().setSorter(tableSorter);
 
@@ -732,6 +742,29 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
+		
+		getViewer().getTree().addMouseListener(new MouseListener() {
+
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+
+			public void mouseDown(MouseEvent e) {
+				TreeItem[] selected = getViewer().getTree().getSelection();
+				if (selected.length == 1) {
+					Object selectedObject = selected[0].getData();
+					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
+						if (e.x < selected[0].getBounds(0).x + 10) {
+							taskListCellModifier.toggleTaskActivation((ITaskListElement)selectedObject);
+						}
+					}
+				}
+			}
+
+			public void mouseUp(MouseEvent e) {
+			}
+			
+		});
+		
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {

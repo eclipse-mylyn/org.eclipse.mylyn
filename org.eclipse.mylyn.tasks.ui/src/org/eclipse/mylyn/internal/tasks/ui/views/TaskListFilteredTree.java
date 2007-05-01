@@ -60,9 +60,11 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		// Use a single Composite for the Tree to being able to use the
 		// TreeColumnLayout. See Bug 177891 for more details.
 		Composite container = new Composite(parent, SWT.None);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gridData.verticalIndent = 0;
+		gridData.horizontalIndent = 0;
+		container.setLayoutData(gridData);
 		container.setLayout(new TreeColumnLayout());
-
 		return super.doCreateTreeViewer(container, style);
 	}
 

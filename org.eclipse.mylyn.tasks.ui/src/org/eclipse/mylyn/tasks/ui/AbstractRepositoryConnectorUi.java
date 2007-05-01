@@ -9,19 +9,26 @@
 package org.eclipse.mylar.tasks.ui;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
+import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -39,7 +46,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	private static final String LABEL_TASK_DEFAULT = "Task";
 
 	private boolean customNotificationHandling = false;
-	
+
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
@@ -76,6 +83,29 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
 		return LABEL_TASK_DEFAULT;
+	}
+
+	public ImageDescriptor getTaskListElementIcon(ITaskListElement element) {
+		if (element instanceof AbstractRepositoryQuery) {
+			return TasksUiImages.QUERY;
+		} else if (element instanceof AbstractQueryHit) {
+			return TasksUiImages.TASK;
+		} else if (element instanceof ITask) {
+			return TasksUiImages.TASK;
+		} else {
+			return null;
+		}
+	}
+
+	public ImageDescriptor getTaskPriorityOverlay(AbstractRepositoryTask task) {
+		return TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+	}
+
+	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+		if (!hasRichEditor() || task instanceof WebTask) {
+			return TasksUiImages.OVERLAY_WEB;
+		}
+		return null;
 	}
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {
@@ -151,7 +181,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public void setCustomNotificationHandling(boolean customNotifications) {
 		this.customNotificationHandling = customNotifications;
 	}
-	
+
 	public boolean hasCustomNotificationHandling() {
 		return customNotificationHandling;
 	}

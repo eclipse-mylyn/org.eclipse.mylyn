@@ -38,19 +38,4 @@
                <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
-
-   <extension 
-   		point="org.eclipse.ui.decorators">
-      <decorator
-            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskDecorator"
-            id="org.eclipse.mylar.bugzilla.ui.decorator.task"
-            label="Mylar Bugzilla Task Decorator"
-            lightweight="true"
-            objectClass="org.eclipse.mylar.tasks.core.ITaskListElement"
-            state="true">
-         <description>
-			Mylar Bugzilla Task Decorator
-		 </description>
-      </decorator>
-   </extension>
 </plugin>

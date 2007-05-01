@@ -532,18 +532,18 @@
            id="org.eclipse.mylar.tasks.ui.colors.category.gradient.start"
            isEditable="true"
            label="Task List - Category Gradient Top"
-           value="247,247,247"> 
+           value="240,240,240"> 
          <description>
             Background start color for Task List category gradients.
          </description>
      </colorDefinition> 
-
+ 
      <colorDefinition
            categoryId="org.eclipse.mylar.tasklist.ui.presentation"
            id="org.eclipse.mylar.tasks.ui.colors.category.gradient.end"
            isEditable="true"
            label="Task List - Category Gradient Bottom"
-           value="234,233,237"> <!-- was all 220 -->
+           value="220,220,220"> <!-- was all 220, 234,233,237 -->
          <description>
             Background end color for Task List category gradients.
          </description>

@@ -93,19 +93,7 @@ class TaskListCellModifier implements ICellModifier {
 				case 1:
 					break;
 				case 2:
-					if (taskListElement instanceof AbstractQueryHit) {
-						task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
-					}
-					if (task != null) {
-						if (task.isActive()) {
-							new TaskDeactivateAction().run(task);
-							this.taskListView.previousTaskAction.setButtonStatus();
-						} else {
-							new TaskActivateAction().run(task);
-							this.taskListView.addTaskToHistory(task);
-							this.taskListView.previousTaskAction.setButtonStatus();
-						}
-					}
+					toggleTaskActivation(taskListElement);
 					break;
 				}
 			}
@@ -113,5 +101,30 @@ class TaskListCellModifier implements ICellModifier {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}
 		this.taskListView.getViewer().refresh();
+	}
+
+	public void toggleTaskActivation(ITaskListElement taskListElement) {
+		ITask task = null;
+		if (taskListElement instanceof ITask) {
+			task = (ITask) taskListElement;
+		} else if (taskListElement instanceof AbstractQueryHit) {
+			if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
+				task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
+			}
+		}
+		
+		if (taskListElement instanceof AbstractQueryHit) {
+			task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
+		}
+		if (task != null) {
+			if (task.isActive()) {
+				new TaskDeactivateAction().run(task);
+				this.taskListView.previousTaskAction.setButtonStatus();
+			} else {
+				new TaskActivateAction().run(task);
+				this.taskListView.addTaskToHistory(task);
+				this.taskListView.previousTaskAction.setButtonStatus();
+			}
+		}
 	}
 }
