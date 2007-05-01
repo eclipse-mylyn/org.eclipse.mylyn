@@ -163,6 +163,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
+	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and re-try.";
+
 	private static final String LABEL_HISTORY = "History";
 
 	private static final String LABEL_REPLY = "Reply";
@@ -2821,7 +2823,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected IStatus handleSubmitError(final CoreException exception) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
+				if (exception.getStatus().getCode() == IMylarStatusConstants.IO_ERROR) {
+					parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
+					MylarStatusHandler.log(exception.getStatus());
+				} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
 					MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
 					if (!isDisposed && newCommentTextViewer != null && !newCommentTextViewer.getControl().isDisposed()) {
 						newCommentTextViewer.getControl().setFocus();
@@ -2834,7 +2839,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				} else {
 					MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
 				}
-				setGlobalBusy(false);// enableButtons();
+				setGlobalBusy(false);
 			}
 
 		});
