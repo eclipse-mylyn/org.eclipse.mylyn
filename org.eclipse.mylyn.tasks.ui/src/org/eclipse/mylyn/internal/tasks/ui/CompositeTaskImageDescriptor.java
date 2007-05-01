@@ -65,7 +65,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 //		}
 		drawImage(base, WIDTH_CONTEXT + WIDTH_PRIORITY - WIDTH_SQUISH, 0);
 		if (kind != null) {
-			drawImage(kind, WIDTH_CONTEXT + WIDTH_PRIORITY + 3, 5);
+			drawImage(kind, WIDTH_CONTEXT + WIDTH_PRIORITY + 4 - WIDTH_SQUISH, 5);
 		}
 	}
 
