@@ -25,6 +25,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
@@ -110,7 +111,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (repositoryTask != null) {
 					return getImageDescriptor(repositoryTask, showActivation);
 				}
-			} else if (element instanceof AbstractTaskContainer) {
+			} else if (element instanceof AbstractRepositoryQuery) {
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
 
@@ -146,6 +147,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof ITask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
+				} else if (element instanceof DateRangeContainer) {
+					compositeDescriptor.icon = TasksUiImages.CALENDAR;
 				}
 				return compositeDescriptor;
 			}

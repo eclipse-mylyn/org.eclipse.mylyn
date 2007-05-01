@@ -89,22 +89,26 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			AbstractRepositoryConnectorUi connectorUi = null;
 			ImageDescriptor priorityOverlay = null;
 			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)element).getRepositoryKind());
-				priorityOverlay = connectorUi.getTaskPriorityOverlay(repositoryTask);
-			} 
-			
-			if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
-				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);
-				if (task != null) {
-					priorityOverlay = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
+				if (connectorUi != null) {
+					priorityOverlay = connectorUi.getTaskPriorityOverlay(repositoryTask);
 				}
 			}
-			return TasksUiImages.getCompositeSynchronizationImage(getSynchronizationImageDescriptor(element), priorityOverlay);
-		} 
+
+			if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
+				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+				if (task != null) {
+					priorityOverlay = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(task
+							.getPriority()));
+				}
+			}
+			return TasksUiImages.getCompositeSynchronizationImage(getSynchronizationImageDescriptor(element),
+					priorityOverlay);
+		}
 		return null;
 	}
-	
+
 	private ImageDescriptor getSynchronizationImageDescriptor(Object element) {
 		AbstractRepositoryTask repositoryTask = null;
 		ImageDescriptor imageDescriptor = null;
@@ -145,7 +149,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			}
 		}
 		// HACK: need blank image
-		return TasksUiImages.PRIORITY_3; 
+		return TasksUiImages.PRIORITY_3;
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
