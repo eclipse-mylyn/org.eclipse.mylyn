@@ -37,6 +37,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContextManager;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -53,6 +54,8 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -705,6 +708,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
 		}
+		refactorOfflineHandles(newUrl);
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 
 		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(),
@@ -733,7 +737,36 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		}
+
 		saveTaskList();
+	}
+
+	private void refactorOfflineHandles(String newRepositoryUrl) {
+		TaskDataManager taskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		for (ITask task : taskList.getAllTasks()) {
+			if (task instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+
+				RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getHandleIdentifier());
+				RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getHandleIdentifier());
+				Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getHandleIdentifier());
+				taskDataManager.remove(repositoryTask.getHandleIdentifier());
+
+				String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, repositoryTask.getTaskId());
+
+				if (newTaskData != null) {
+					newTaskData.setRepositoryURL(newRepositoryUrl);
+					taskDataManager.setNewTaskData(newHandle, newTaskData);
+				}
+				if (oldTaskData != null) {
+					oldTaskData.setRepositoryURL(newRepositoryUrl);
+					taskDataManager.setOldTaskData(newHandle, oldTaskData);
+				}
+				if (!edits.isEmpty()) {
+					taskDataManager.saveEdits(newHandle, edits);
+				}
+			}
+		}
 	}
 
 	public boolean readExistingOrCreateNewList() {

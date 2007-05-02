@@ -321,6 +321,10 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	public String getTaskKind() {
 		return taskKind;
 	}
+
+	public void setRepositoryURL(String repositoryURL) {
+		this.repositoryURL = repositoryURL;
+	}
 	
 //	public final String getHandleIdentifier() {
 //		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
