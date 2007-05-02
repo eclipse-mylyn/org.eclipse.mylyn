@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -23,8 +22,11 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -36,6 +38,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 
+	private Clipboard clipboard;
+	
 	public CopyTaskDetailsAction(boolean setAccelerator) {
 		super(LABEL);
 		setToolTipText(LABEL);
@@ -44,6 +48,9 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		if (setAccelerator) {
 			setAccelerator(SWT.MOD1 + 'c');
 		}
+		
+		Display display = PlatformUI.getWorkbench().getDisplay();
+	    clipboard = new Clipboard(display);
 	}
 
 	@Override
@@ -52,13 +59,10 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		String text = getTextForTask(object);
 
-		// HACK: this should be done using proper copying
-		Composite dummyComposite = TaskListView.getFromActivePerspective().getFilteredTree();
-		StyledText styledText = new StyledText(dummyComposite, SWT.NULL);
-		styledText.setText(text);
-		styledText.selectAll();
-		styledText.copy();
-		styledText.dispose();
+	
+		TextTransfer textTransfer = TextTransfer.getInstance();
+        clipboard.setContents(new Object[] { text },
+            new Transfer[] { textTransfer });
 	}
 
 	public static String getTextForTask(Object object) {
