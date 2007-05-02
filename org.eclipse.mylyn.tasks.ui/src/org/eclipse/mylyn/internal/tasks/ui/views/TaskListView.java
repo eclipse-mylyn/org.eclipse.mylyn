@@ -752,7 +752,7 @@ public class TaskListView extends ViewPart {
 				if (selected.length == 1) {
 					Object selectedObject = selected[0].getData();
 					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
-						if (e.x < selected[0].getBounds(0).x + 10) {
+						if (e.x < selected[0].getBounds(0).x + 13 && e.x > selected[0].getBounds(0).x - 3) {
 							taskListCellModifier.toggleTaskActivation((ITaskListElement)selectedObject);
 						}
 					}
