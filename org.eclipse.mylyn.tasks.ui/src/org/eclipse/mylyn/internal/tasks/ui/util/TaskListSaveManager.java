@@ -24,6 +24,7 @@ import java.util.Queue;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -40,10 +41,11 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Rob Elves
  */
 public class TaskListSaveManager implements ITaskListChangeListener, IBackgroundSaveListener {
 
-	private final static int DEFAULT_SAVE_INTERVAL = 5 * 60 * 1000;
+	private final static int DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
 
 	private BackgroundSaveTimer saveTimer;
 
@@ -51,16 +53,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 	private boolean initializationWarningDialogShow = false;
 
-	/**
-	 * Fort testing.
-	 */
-	private boolean forceBackgroundSave = false;
-
 	public TaskListSaveManager() {
 		saveTimer = new BackgroundSaveTimer(this);
 		saveTimer.setSaveIntervalMillis(DEFAULT_SAVE_INTERVAL);
 		saveTimer.start();
-		
+
 		taskListSaverJob = new TaskListSaverJob();
 		taskListSaverJob.schedule();
 	}
@@ -69,23 +66,25 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 * Called periodically by the save timer
 	 */
 	public void saveRequested() {
-		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isShellActive() || forceBackgroundSave) {
+		if (TasksUiPlugin.getDefault() != null && Platform.isRunning()) {// &&
+			// TasksUiPlugin.getDefault().isShellActive()
 			try {
-				saveTaskList(true, true);
+				taskListSaverJob.runRequested();
 			} catch (Exception e) {
 				MylarStatusHandler.fail(e, "Could not auto save task list", false);
 			}
 		}
 	}
 
-	public void saveTaskList(boolean saveContext) {
-		saveTaskList(saveContext, false);
-	}
-	
+	/**
+	 * Should only be used by TaskListManager and unit tests 
+	 * @param saveContext
+	 * @param async
+	 */
 	public void saveTaskList(boolean saveContext, boolean async) {
 		if (TasksUiPlugin.getDefault() != null && TasksUiPlugin.getDefault().isInitialized()) {
 			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
-			if(async) {
+			if (async) {
 				if (saveContext) {
 					for (ITask task : taskListManager.getTaskList().getActiveTasks()) {
 						taskListSaverJob.addTaskContext(task);
@@ -96,8 +95,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				taskListSaverJob.waitSaveCompleted();
 				MylarContextManager contextManager = ContextCorePlugin.getContextManager();
 				if (saveContext) {
-					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList()
-							.getActiveTasks())) {
+					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList().getActiveTasks())) {
 						contextManager.saveContext(task.getHandleIdentifier());
 					}
 				}
@@ -124,8 +122,8 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			}
 		}
 	}
-	
-	private void internalSaveTaskList() {
+
+	private synchronized void internalSaveTaskList() {
 		TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 		taskListManager.getTaskListWriter().writeTaskList(taskListManager.getTaskList(),
 				taskListManager.getTaskListFile());
@@ -137,7 +135,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	 */
 	public void copyDataDirContentsTo(String targetFolderPath) {
 		saveTaskList(true, false);
-		
+
 		File mainDataDir = new File(TasksUiPlugin.getDefault().getDataDirectory());
 
 		for (File currFile : mainDataDir.listFiles()) {
@@ -234,13 +232,13 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		// ignore
 	}
 
-	/**
-	 * For testing.
-	 */
-	public void setForceBackgroundSave(boolean on) {
-		forceBackgroundSave = on;
-		saveTimer.setForceSyncExec(on);
-	}
+// /**
+// * For testing.
+// */
+// public void setForceBackgroundSave(boolean on) {
+// forceBackgroundSave = on;
+// // saveTimer.setForceSyncExec(on);
+// }
 
 	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 		saveTaskList(false, true);
@@ -274,16 +272,15 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 	public void synchronizationCompleted() {
 		// ignore
 	}
-	
+
 	private class TaskListSaverJob extends Job {
 
 		private final Queue<ITask> taskQueue = new LinkedList<ITask>();
 
 		private volatile boolean saveRequested = false;
 
-		private volatile boolean saveCompleted = true; 
-		
-		
+		private volatile boolean saveCompleted = true;
+
 		TaskListSaverJob() {
 			super("Task List Saver");
 			setPriority(Job.LONG);
@@ -291,21 +288,21 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			while(true) {
-				if(saveRequested) {
+			while (true) {
+				if (saveRequested) {
 					saveRequested = false;
 					saveCompleted = false;
 					MylarContextManager contextManager = ContextCorePlugin.getContextManager();
-					while(!taskQueue.isEmpty()) {
+					while (!taskQueue.isEmpty()) {
 						ITask task = taskQueue.poll();
-						if(task!=null) {
+						if (task != null) {
 							contextManager.saveContext(task.getHandleIdentifier());
 						}
 					}
 					internalSaveTaskList();
 				}
-				
-				if(!saveRequested) {
+
+				if (!saveRequested) {
 					synchronized (this) {
 						saveCompleted = true;
 						notifyAll();
@@ -318,20 +315,23 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				}
 			}
 		}
-		
+
 		void addTaskContext(ITask task) {
 			taskQueue.add(task);
 		}
-		
+
 		void requestSave() {
 			saveRequested = true;
+		}
+
+		void runRequested() {
 			synchronized (this) {
 				notifyAll();
 			}
 		}
 
 		void waitSaveCompleted() {
-			while(!saveCompleted) {
+			while (!saveCompleted) {
 				synchronized (this) {
 					try {
 						wait();
@@ -342,5 +342,5 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			}
 		}
 	}
-	
+
 }

@@ -248,6 +248,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
+			// This is the sole call to save the tasklist upon workbench
+			// shutdown!
 			taskListManager.saveTaskList();
 		}
 	};
@@ -430,7 +432,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
-			
+
 			// Run before async so that connectorUi are preloaded
 			TasksUiExtensionReader.initWorkbenchUiExtensions();
 
@@ -439,7 +441,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					// NOTE: failure in one part of the initialization should
 					// not prevent others
 					try {
-						//TasksUiExtensionReader.initWorkbenchUiExtensions();
+						// TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
 						// Needs to happen asynchronously to avoid bug 159706
@@ -508,7 +510,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private void checkForCredentials() {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
 			if (!repository.isAnonymous()
-					&& (repository.getUserName() == null || repository.getPassword() == null || "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
+					&& (repository.getUserName() == null || repository.getPassword() == null
+							|| "".equals(repository.getUserName()) || "".equals(repository.getPassword()))) {
 				try {
 					EditRepositoryWizard wizard = new EditRepositoryWizard(repository);
 					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -536,8 +539,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		INSTANCE = null;
 		try {
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
@@ -553,9 +554,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							PREFERENCE_LISTENER);
 				}
 				PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
+				INSTANCE = null;
 			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, "Mylar Task List stop terminated abnormally");
+		} finally {
+			super.stop(context);
 		}
 	}
 
@@ -569,8 +573,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public void setDataDirectory(String newPath) {
 		getTaskListManager().saveTaskList();
-		// getTaskListSaveManager().saveTaskList(true);
-		// taskListSaveManager.saveTaskList(true, false);
 		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().contextStoreMoved();

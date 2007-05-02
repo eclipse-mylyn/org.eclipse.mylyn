@@ -16,7 +16,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -58,6 +60,10 @@ import org.xml.sax.SAXException;
  * @author Rob Elves
  */
 public class TaskListWriter {
+
+	private static final String TRANSFORM_PROPERTY_VERSION = "version";
+
+	private static final String XML_VERSION = "1.1";
 
 	public static final String ATTRIBUTE_VERSION = "Version";
 
@@ -221,10 +227,9 @@ public class TaskListWriter {
 		// the transformation output to a variety of sinks
 
 		Transformer xformer = null;
-		try {
+		try {			
 			xformer = TransformerFactory.newInstance().newTransformer();
-			// Transform the XML Source to a Result
-			//
+			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			e.printStackTrace();
@@ -342,12 +347,6 @@ public class TaskListWriter {
 			// if exception was caught, write out the new task file, so that it
 			// doesn't happen again.
 			// this is OK, since the original (corrupt) tasklist is saved.
-			// TODO: The problem with this is that if the orignal tasklist has
-			// tasks and bug reports, but a
-			// task is corrupted, the new tasklist that is written will not
-			// include the bug reports (since the
-			// bugzilla externalizer is not loaded. So there is a potentila that
-			// we can lose bug reports.
 			writeTaskList(taskList, inFile);
 		}
 	}
@@ -418,7 +417,10 @@ public class TaskListWriter {
 	private void handleException(File inFile, Node child, Exception e) {
 		hasCaughtException = true;
 		String name = inFile.getAbsolutePath();
-		name = name.substring(0, name.lastIndexOf('.')) + "-save.zip";
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		sdf.applyPattern("yy-MM-dd-ss");		
+		name = name.substring(0, name.lastIndexOf('.')) + "-failed-"+sdf.format(date)+".zip";
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
