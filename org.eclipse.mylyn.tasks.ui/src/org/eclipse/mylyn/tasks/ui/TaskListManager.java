@@ -35,7 +35,7 @@ import org.eclipse.mylar.context.core.IMylarContext;
 import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
@@ -359,8 +359,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-				if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+			if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+				if (!event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 
 					ITask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 							event.getStructureHandle());
@@ -391,7 +391,7 @@ public class TaskListManager implements IPropertyChangeListener {
 						currentTaskStart = calendar;
 						currentHandle = event.getStructureHandle();
 					}
-				} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				} else if (event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					if (currentTask != null && !currentHandle.equals("")) {
 						long active = event.getEndDate().getTime() - event.getDate().getTime();
 
@@ -412,15 +412,15 @@ public class TaskListManager implements IPropertyChangeListener {
 						}
 					}
 				}
-			} else if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
-				if (!event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)
+			} else if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
+				if (!event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)
 						&& currentHandle.equals(event.getStructureHandle())) {
 					GregorianCalendar calendarEnd = new GregorianCalendar();
 					calendarEnd.setFirstDayOfWeek(startDay);
 					calendarEnd.setTime(event.getDate());
 					calendarEnd.getTime();
 					taskDeactivated(calendarEnd);
-				} else if (event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				} else if (event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					// Deactivated attention events not currently used (ignored)
 				}
 			}
@@ -720,7 +720,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					String storedHandle;
 					try {
 						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
-								MylarContextManager.CONTEXT_FILENAME_ENCODING);
+								ContextManager.CONTEXT_FILENAME_ENCODING);
 						int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
 						if (delimIndex != -1) {
 							String storedUrl = storedHandle.substring(0, delimIndex);

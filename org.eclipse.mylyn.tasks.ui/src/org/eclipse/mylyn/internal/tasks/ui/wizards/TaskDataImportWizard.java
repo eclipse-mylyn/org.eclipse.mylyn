@@ -27,7 +27,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -136,12 +136,12 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 				if (!importPage.importActivationHistory()
 						&& entry.getName().endsWith(
-								MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-										+ MylarContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
+								ContextManager.CONTEXT_HISTORY_FILE_NAME
+										+ ContextManager.CONTEXT_FILE_EXTENSION_OLD)) {
 					continue;
 				}
 				if (!importPage.importTaskContexts()
-						&& entry.getName().matches(".*-\\d*" + MylarContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
+						&& entry.getName().matches(".*-\\d*" + ContextManager.CONTEXT_FILE_EXTENSION_OLD + "$")) {
 					continue;
 				}
 

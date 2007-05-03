@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.core.util.ZipFileUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -165,15 +165,15 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		if (exportActivationHistory) {
 			try {
 				File sourceActivationHistoryFile = new File(contextsDirectory,
-						MylarContextManager.CONTEXT_HISTORY_FILE_NAME + MylarContextManager.CONTEXT_FILE_EXTENSION);
+						ContextManager.CONTEXT_HISTORY_FILE_NAME + ContextManager.CONTEXT_FILE_EXTENSION);
 
 				if (sourceActivationHistoryFile.exists()) {
 
 					ContextCorePlugin.getContextManager().saveActivityHistoryContext();
 
 					File destActivationHistoryFile = new File(destinationDirectory + File.separator
-							+ MylarContextManager.CONTEXT_HISTORY_FILE_NAME
-							+ MylarContextManager.CONTEXT_FILE_EXTENSION);
+							+ ContextManager.CONTEXT_HISTORY_FILE_NAME
+							+ ContextManager.CONTEXT_FILE_EXTENSION);
 
 					if (zip) {
 						filesToZip.add(sourceActivationHistoryFile);
