@@ -116,6 +116,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -543,8 +544,11 @@ public class TaskListView extends ViewPart {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			
 			// TODO: weird override of custom gradients
-//			categoryGradientEnd = getViewer().getTree().getParent().getBackground();
-//			categoryGradientEnd = getViewer().getTree().getParent().getBackground();
+			categoryGradientStart = getViewer().getTree().getParent().getBackground();
+			int red = (int)(categoryGradientStart.getRed()/1.2);
+			int green = (int)(categoryGradientStart.getGreen()/1.2);
+			int blue = (int)(categoryGradientStart.getBlue()/1.2);
+			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
