@@ -36,6 +36,8 @@ public abstract class AbstractContextStructureBridge {
 	 * For XML, this could be an xpath, but due to the fact that xpaths
 	 * rely on element ordering for identity they are not robust to
 	 * element order switching.
+	 * 
+	 * @return	null if the given object does not participate in the task context
 	 */
 	public abstract String getHandleIdentifier(Object object);
 
