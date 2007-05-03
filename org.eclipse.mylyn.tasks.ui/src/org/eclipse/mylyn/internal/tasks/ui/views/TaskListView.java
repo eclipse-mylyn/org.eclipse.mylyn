@@ -146,6 +146,64 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart {
 
+	private final class CONTEXT_ACTIVATION_DRAWER implements Listener {
+		private final int activationImageOffset;
+
+		private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+
+		private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+
+		private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+
+		private CONTEXT_ACTIVATION_DRAWER(int activationImageOffset) {
+			this.activationImageOffset = activationImageOffset;
+		}
+
+		/*
+		 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
+		 * Therefore, it is critical for performance that these methods be
+		 * as efficient as possible.
+		 */
+		public void handleEvent(Event event) {
+			Object data = event.item.getData();
+			ITask task = null;
+			Image image = null;
+			if (data instanceof ITask) {
+				task = (ITask)data;
+			} else if (data instanceof AbstractQueryHit) {
+				task = ((AbstractQueryHit)data).getCorrespondingTask();
+			}
+			if (task != null) {
+				if (task.isActive()) {
+					image = taskActive;
+				} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+					image = taskInactiveContext;
+				} else {
+					image = taskInactive;
+				}
+			} else if (data instanceof AbstractQueryHit) {
+				image = taskInactive;
+			}
+			if (image != null) {	
+				switch (event.type) {
+				case SWT.PaintItem: {
+					drawImage(activationImageOffset, event, image);
+				}
+				case SWT.EraseItem: {
+					drawImage(activationImageOffset, event, image);
+					break;
+				}
+				}
+			}
+		}
+
+		private void drawImage(final int activationImageOffset, Event event, Image image) {
+			Rectangle rect = image.getBounds();
+			int offset = Math.max(0, (event.height - rect.height) / 2);
+			event.gc.drawImage(image, activationImageOffset, event.y + offset);
+		}
+	}
+
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
 	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
@@ -544,9 +602,9 @@ public class TaskListView extends ViewPart {
 			
 			// TODO: weird override of custom gradients
 			categoryGradientStart = getViewer().getTree().getParent().getBackground();
-			int red = (int)(categoryGradientStart.getRed()/1.15);
-			int green = (int)(categoryGradientStart.getGreen()/1.15);
-			int blue = (int)(categoryGradientStart.getBlue()/1.15);
+			int red = (int)(categoryGradientStart.getRed()/1.13);
+			int green = (int)(categoryGradientStart.getGreen()/1.13);
+			int blue = (int)(categoryGradientStart.getBlue()/1.13);
 			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			
 			gradientListenerAdded = true;
@@ -752,57 +810,9 @@ public class TaskListView extends ViewPart {
 		getViewer().setInput(getViewSite());
 
 		final int activationImageOffset = 12;
-		getViewer().getTree().addListener(SWT.EraseItem, new Listener() {
-			private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
-
-			private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
-
-			private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
-
-			/*
-			 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
-			 * Therefore, it is critical for performance that these methods be
-			 * as efficient as possible.
-			 */
-			public void handleEvent(Event event) {
-				Object data = event.item.getData();
-				ITask task = null;
-				Image image = null;
-				if (data instanceof ITask) {
-					task = (ITask)data;
-				} else if (data instanceof AbstractQueryHit) {
-					task = ((AbstractQueryHit)data).getCorrespondingTask();
-				}
-				if (task != null) {
-					if (task.isActive()) {
-						image = taskActive;
-					} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-						image = taskInactiveContext;
-					} else {
-						image = taskInactive;
-					}
-				} else if (data instanceof AbstractQueryHit) {
-					image = taskInactive;
-				}
-				if (image != null) {	
-					switch (event.type) {
-//					case SWT.PaintItem: {
-//						Rectangle rect = image.getBounds();
-//						int offset = Math.max(0, (event.height - rect.height) / 2);
-//						event.gc.drawImage(image, activationImageOffset, event.y + offset);
-//						break;
-//					}
-					case SWT.EraseItem: {
-						Rectangle rect = image.getBounds();
-						int offset = Math.max(0, (event.height - rect.height) / 2);
-						event.gc.drawImage(image, activationImageOffset, event.y + offset);
-						break;
-					}
-					}
-				}
-			}
-		});
-
+		getViewer().getTree().addListener(SWT.EraseItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
+		getViewer().getTree().addListener(SWT.PaintItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
+		
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
