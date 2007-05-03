@@ -545,9 +545,9 @@ public class TaskListView extends ViewPart {
 			
 			// TODO: weird override of custom gradients
 			categoryGradientStart = getViewer().getTree().getParent().getBackground();
-			int red = (int)(categoryGradientStart.getRed()/1.1);
-			int green = (int)(categoryGradientStart.getGreen()/1.1);
-			int blue = (int)(categoryGradientStart.getBlue()/1.1);
+			int red = (int)(categoryGradientStart.getRed()/1.15);
+			int green = (int)(categoryGradientStart.getGreen()/1.15);
+			int blue = (int)(categoryGradientStart.getBlue()/1.15);
 			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			
 			gradientListenerAdded = true;
@@ -752,7 +752,7 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 12;
+		final int activationImageOffset = 18;
 		getViewer().getTree().addListener(SWT.PaintItem, new Listener() {
 
 			private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
