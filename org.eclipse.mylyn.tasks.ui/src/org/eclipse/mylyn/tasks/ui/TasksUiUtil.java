@@ -75,8 +75,6 @@ public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
-	public static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.net.ui.NetPreferences";
-
 	/**
 	 * Resolves a rich editor for the task if available. Must be called from UI
 	 * thread.

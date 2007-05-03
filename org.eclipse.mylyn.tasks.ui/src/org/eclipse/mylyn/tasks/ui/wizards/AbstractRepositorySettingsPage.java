@@ -67,6 +67,8 @@ import org.eclipse.ui.internal.net.ProxyPreferencePage;
  */
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
+	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences";
+	
 	protected static final String LABEL_REPOSITORY_LABEL = "Label: ";
 
 	protected static final String LABEL_SERVER = "Server: ";
@@ -546,7 +548,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			public void linkActivated(HyperlinkEvent e) {
 				ProxyPreferencePage page = new ProxyPreferencePage();
 				page.init(PlatformUI.getWorkbench());
-				TasksUiUtil.showPreferencePage(TasksUiUtil.PREFS_PAGE_ID_NET_PROXY, page);
+				TasksUiUtil.showPreferencePage(PREFS_PAGE_ID_NET_PROXY, page);
 			}
 
 			public void linkEntered(HyperlinkEvent e) {
