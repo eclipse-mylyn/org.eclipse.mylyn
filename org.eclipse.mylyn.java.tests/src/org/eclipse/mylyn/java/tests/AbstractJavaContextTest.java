@@ -22,7 +22,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -35,7 +35,7 @@ import org.eclipse.mylar.resources.tests.ResourceTestUtil;
  */
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
-	protected MylarContextManager manager = ContextCorePlugin.getContextManager();
+	protected ContextManager manager = ContextCorePlugin.getContextManager();
 
 	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
 

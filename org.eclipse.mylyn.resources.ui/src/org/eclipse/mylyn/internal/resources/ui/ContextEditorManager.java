@@ -186,7 +186,8 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 					IEditorReference[] references = page.getEditorReferences();
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 					for (int i = 0; i < references.length; i++) {
-						if (!isActiveTaskEditor(references[i]) && !isUnsubmittedTaskEditor(references[i])) {
+						if (!isActiveTaskEditor(references[i]) && !isUnsubmittedTaskEditor(references[i])
+							&&!isContextIgnoringEditor(references[i])) {
 							toClose.add(references[i]);
 						}
 					}
@@ -196,6 +197,14 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not auto close editor.", false);
 		}
+	}
+
+	private boolean isContextIgnoringEditor(IEditorReference editorReference) {
+		IEditorPart editor = editorReference.getEditor(false);
+		if (editor instanceof IContextAwareEditor) {
+			return ((IContextAwareEditor)editor).canClose();
+		}
+		return true;
 	}
 
 	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {

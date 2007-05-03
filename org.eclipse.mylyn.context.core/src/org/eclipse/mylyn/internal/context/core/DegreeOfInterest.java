@@ -163,7 +163,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		allCollapsed.addAll(collapsedEvents.values());
 		if (!allCollapsed.isEmpty()) {
 			allCollapsed.add(0, new InteractionEvent(InteractionEvent.Kind.MANIPULATION, allCollapsed.get(0)
-					.getStructureKind(), allCollapsed.get(0).getStructureHandle(), MylarContextManager.SOURCE_ID_DECAY,
+					.getStructureKind(), allCollapsed.get(0).getStructureHandle(), ContextManager.SOURCE_ID_DECAY,
 					-getDecayValue()));
 		}
 		return allCollapsed;

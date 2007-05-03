@@ -21,7 +21,7 @@ import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 
 /**
@@ -117,7 +117,7 @@ public class MylarJavaProposalProcessor {
 			IMylarElement mylarElement = ContextCorePlugin.getContextManager().getElement(
 					javaElement.getHandleIdentifier());
 			float interest = mylarElement.getInterest().getValue();
-			if (interest > MylarContextManager.getScalingFactors().getInteresting()) {
+			if (interest > ContextManager.getScalingFactors().getInteresting()) {
 				// TODO: losing precision here, only going to one decimal place
 				proposal.setRelevance(THRESHOLD_INTEREST + (int) (interest * 10));
 				hasInteresting = true;

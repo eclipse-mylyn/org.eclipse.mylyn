@@ -24,7 +24,7 @@ import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -137,7 +137,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 			return JavaWriteAccessProvider.NAME;
 		} else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
 			return JavaReadAccessProvider.NAME;
-		} else if (relationshipHandle.equals(MylarContextManager.CONTAINMENT_PROPAGATION_ID)) {
+		} else if (relationshipHandle.equals(ContextManager.CONTAINMENT_PROPAGATION_ID)) {
 			return "Containment"; // TODO: make this generic?
 		} else {
 			return null;

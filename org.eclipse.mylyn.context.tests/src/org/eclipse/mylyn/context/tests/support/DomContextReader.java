@@ -26,7 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.mylar.context.core.IContextReader;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
@@ -53,7 +53,7 @@ public class DomContextReader implements IContextReader {
 			Element root = doc.getDocumentElement();
 			// readVersion = Integer.parseInt(root.getAttribute("Version"));
 			// String id = root.getAttribute("Id");
-			MylarContext t = new MylarContext(handle, MylarContextManager.getScalingFactors());
+			MylarContext t = new MylarContext(handle, ContextManager.getScalingFactors());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

@@ -26,7 +26,7 @@ import org.eclipse.mylar.context.core.IAlwaysIntersting;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.swt.widgets.Tree;
 
 /**
@@ -101,7 +101,7 @@ public class InterestFilter extends ViewerFilter {
 		if (element.getInterest().isPredicted()) {
 			return false;
 		} else {
-			return element.getInterest().getValue() > MylarContextManager.getScalingFactors().getInteresting();
+			return element.getInterest().getValue() > ContextManager.getScalingFactors().getInteresting();
 		}
 	}
 

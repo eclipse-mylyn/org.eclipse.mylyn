@@ -55,7 +55,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 		case EXPECTING_ROOT:
 			// String id = attributes.getValue(MylarContextExternalizer.ATR_ID);
 			// String version = attributes.getValue(1);
-			context = new MylarContext(contextHandleIdentifier, MylarContextManager.getScalingFactors());
+			context = new MylarContext(contextHandleIdentifier, ContextManager.getScalingFactors());
 			state = EXPECTING_EVENT;
 			break;
 		case EXPECTING_EVENT:

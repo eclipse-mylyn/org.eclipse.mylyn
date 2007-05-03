@@ -36,7 +36,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.java.InterestInducingProblemListener;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
@@ -136,8 +136,8 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 
 	public void testShellLifecycleActivityStart() {
 		List<InteractionEvent> events = manager.getActivityHistoryMetaContext().getInteractionHistory();
-		assertEquals(MylarContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
-		assertEquals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
+		assertEquals(ContextManager.ACTIVITY_DELTA_STARTED, events.get(0).getDelta());
+		assertEquals(ContextManager.ACTIVITY_DELTA_ACTIVATED, events.get(1).getDelta());
 	}
 	
 	public void testActivityHistory() {

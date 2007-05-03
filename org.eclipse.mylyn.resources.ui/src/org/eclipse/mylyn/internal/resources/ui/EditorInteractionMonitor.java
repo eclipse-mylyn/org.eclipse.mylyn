@@ -88,7 +88,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !Workbench.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.REUSE_EDITORS_BOOLEAN)
 				&& !otherEditorsOpenForResource(editorPart)
 				&& !(editorPart instanceof CompareEditor)
-				&& !(editorPart instanceof IContextIgnoringEditor)) {
+				&& !(editorPart instanceof IContextAwareEditor)) {
 			IMylarElement element = null;
 			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);

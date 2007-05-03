@@ -15,7 +15,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -38,7 +38,7 @@ public class UiUtil {
 			return null;
 		} else if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
 			return null;
-		} else if (node.getInterest().getEncodedValue() <= MylarContextManager.getScalingFactors().getInteresting()) {
+		} else if (node.getInterest().getEncodedValue() <= ContextManager.getScalingFactors().getInteresting()) {
 			return null;
 		}
 
@@ -67,7 +67,7 @@ public class UiUtil {
 		if (node == null)
 			return null;
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-			if (node.getInterest().getValue() >= MylarContextManager.getScalingFactors().getLandmark() / 3) {
+			if (node.getInterest().getValue() >= ContextManager.getScalingFactors().getLandmark() / 3) {
 				return ColorMap.GRAY_DARK;
 			} else if (node.getInterest().getValue() >= 10) {
 				return ColorMap.GRAY_MEDIUM;

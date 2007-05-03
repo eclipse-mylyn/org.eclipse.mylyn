@@ -18,7 +18,7 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.context.core.CompositeContext;
 import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
@@ -59,7 +59,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 	public IMylarElement getElement(String handle, String kind) {
 		IMylarElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager().handleInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / MylarContextManager.getScalingFactors().getLandmark()) * -2),
+				mockUserEvent(handle, kind, source, (1 / ContextManager.getScalingFactors().getLandmark()) * -2),
 				true);
 		// context.addEvent(mockUserEvent(handle, kind, source,
 		// (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
@@ -83,7 +83,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private InteractionEvent mockUserEvent(String handle, String kind, String origin, float scale) {
 		InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale
-				* MylarContextManager.getScalingFactors().getLandmark());
+				* ContextManager.getScalingFactors().getLandmark());
 		e.getInterestContribution();
 		return e;
 	}

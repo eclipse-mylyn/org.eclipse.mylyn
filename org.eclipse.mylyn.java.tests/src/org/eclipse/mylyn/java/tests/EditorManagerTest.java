@@ -26,7 +26,7 @@ import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -98,7 +98,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = MylarContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();	
+		float selectionFactor = ContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();	
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());

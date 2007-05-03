@@ -12,8 +12,13 @@
 package org.eclipse.mylar.internal.resources.ui;
 
 /**
- * Tag interface for editors that do not get opened or closed with interest.
+ * Tag interface for editors that do not get closed when a context is deactivated.  The editor
+ * can specify whether or not it should closed based on its input.
  * 
  * @author Mik Kersten
  */
-public interface IContextIgnoringEditor { }
+public interface IContextAwareEditor { 
+	
+	public boolean canClose();
+	
+}

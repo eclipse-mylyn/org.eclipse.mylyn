@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.mylar.core.IStatusHandler;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -48,7 +48,7 @@ public class ContextCorePlugin extends Plugin {
 
 	private static ContextCorePlugin INSTANCE;
 
-	private static MylarContextManager contextManager;
+	private static ContextManager contextManager;
 
 	private static AbstractContextStore contextStore;
 
@@ -133,7 +133,7 @@ public class ContextCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		contextManager = new MylarContextManager();
+		contextManager = new ContextManager();
 		lazyLoadExtensions();
 	}
 
@@ -189,7 +189,7 @@ public class ContextCorePlugin extends Plugin {
 		return INSTANCE;
 	}
 
-	public static MylarContextManager getContextManager() {
+	public static ContextManager getContextManager() {
 		return contextManager;
 	}
 

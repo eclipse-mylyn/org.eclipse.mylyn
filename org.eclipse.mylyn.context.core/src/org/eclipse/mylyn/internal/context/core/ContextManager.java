@@ -44,7 +44,7 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
  * 
  * @author Mik Kersten
  */
-public class MylarContextManager {
+public class ContextManager {
 
 	// TODO: move constants
 
@@ -114,7 +114,7 @@ public class MylarContextManager {
 
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
-	public MylarContextManager() {
+	public ContextManager() {
 
 	}
 
@@ -155,7 +155,7 @@ public class MylarContextManager {
 	}
 
 	public void resetActivityHistory() {
-		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager.getScalingFactors());
+		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager.getScalingFactors());
 		saveActivityHistoryContext();
 	}
 
@@ -537,12 +537,15 @@ public class MylarContextManager {
 		}
 	}
 
-	private void eraseContext(String id, boolean notify) {
-		MylarContext context = currentContext.getContextMap().get(id);
+	private void eraseContext(String handleIdentifier, boolean notify) {
+		MylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		if (context == null)
 			return;
 		currentContext.getContextMap().remove(context);
 		context.reset();
+		if (contextFiles != null) {
+			contextFiles.remove(handleIdentifier);
+		}
 		if (notify) {
 			for (IMylarContextListener listener : listeners)
 				listener.presentationSettingsChanging(IMylarContextListener.UpdateKind.UPDATE);
@@ -556,7 +559,7 @@ public class MylarContextManager {
 		MylarContext loadedContext = externalizer.readContextFromXML(handleIdentifier,
 				getFileForContext(handleIdentifier));
 		if (loadedContext == null) {
-			return new MylarContext(handleIdentifier, MylarContextManager.getScalingFactors());
+			return new MylarContext(handleIdentifier, ContextManager.getScalingFactors());
 		} else {
 			return loadedContext;
 		}
@@ -573,6 +576,7 @@ public class MylarContextManager {
 				return;
 			context.collapse();
 			externalizer.writeContextToXml(context, getFileForContext(handleIdentifier));
+			contextFiles.add(handleIdentifier);
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
@@ -595,11 +599,11 @@ public class MylarContextManager {
 			List<InteractionEvent> attention = new ArrayList<InteractionEvent>();
 
 			MylarContext context = getActivityHistoryMetaContext();
-			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, MylarContextManager
+			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager
 					.getScalingFactors());
 			for (InteractionEvent event : context.getInteractionHistory()) {
-				if (event.getDelta().equals(MylarContextManager.ACTIVITY_DELTA_ACTIVATED)
-						&& event.getStructureHandle().equals(MylarContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_ACTIVATED)
+						&& event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					attention.add(event);
 				} else {
 					addAttentionEvents(attention, tempContext);
@@ -696,7 +700,7 @@ public class MylarContextManager {
 	}
 
 	public static ScalingFactors getScalingFactors() {
-		return MylarContextManager.scalingFactors;
+		return ContextManager.scalingFactors;
 	}
 
 	public boolean isContextActive() {
@@ -775,13 +779,13 @@ public class MylarContextManager {
 				}
 			}
 		} else {
-			if (!forceLandmark && (originalValue > MylarContextManager.getScalingFactors().getLandmark())) {
+			if (!forceLandmark && (originalValue > ContextManager.getScalingFactors().getLandmark())) {
 				changeValue = 0;
 			} else {
 				// make it a landmark by setting interest to 2 x landmark
 				// interest
 				if (element != null && bridge.canBeLandmark(element.getHandleIdentifier())) {
-					changeValue = (2 * MylarContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
+					changeValue = (2 * ContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
 				} else {
 					return false;
 				}
@@ -874,7 +878,7 @@ public class MylarContextManager {
 	}
 
 	public boolean isValidContextFile(File file) {
-		if (file.exists() && file.getName().endsWith(MylarContextManager.CONTEXT_FILE_EXTENSION)) {
+		if (file.exists() && file.getName().endsWith(ContextManager.CONTEXT_FILE_EXTENSION)) {
 			MylarContext context = externalizer.readContextFromXML("temp", file);
 			return context != null;
 		}
