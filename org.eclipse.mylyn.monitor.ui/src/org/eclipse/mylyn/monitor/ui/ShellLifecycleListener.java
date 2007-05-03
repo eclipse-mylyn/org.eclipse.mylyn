@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.monitor.ui;
 
-import org.eclipse.mylar.internal.context.core.MylarContextManager;
+import org.eclipse.mylar.internal.context.core.ContextManager;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
@@ -21,22 +21,22 @@ import org.eclipse.swt.events.ShellListener;
  */
 class ShellLifecycleListener implements ShellListener {
 
-	private final MylarContextManager manager;
+	private final ContextManager manager;
 
-	public ShellLifecycleListener(MylarContextManager manager) {
+	public ShellLifecycleListener(ContextManager manager) {
 		this.manager = manager;
-		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
-				MylarContextManager.ACTIVITY_HANDLE_LIFECYCLE, MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_STARTED, 1f));
+		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ContextManager.ACTIVITY_STRUCTURE_KIND,
+				ContextManager.ACTIVITY_HANDLE_LIFECYCLE, ContextManager.ACTIVITY_ORIGIN_ID, null, ContextManager.ACTIVITY_DELTA_STARTED, 1f));
 	}
 
 	public void shellClosed(ShellEvent shellEvent) {
-		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
-				MylarContextManager.ACTIVITY_HANDLE_ATTENTION, MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
+		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ContextManager.ACTIVITY_STRUCTURE_KIND,
+				ContextManager.ACTIVITY_HANDLE_ATTENTION, ContextManager.ACTIVITY_ORIGIN_ID, null, ContextManager.ACTIVITY_DELTA_DEACTIVATED, 1f));
 
 		manager.deactivateAllContexts();
 		
-		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, MylarContextManager.ACTIVITY_STRUCTURE_KIND,
-				MylarContextManager.ACTIVITY_HANDLE_LIFECYCLE, MylarContextManager.ACTIVITY_ORIGIN_ID, null, MylarContextManager.ACTIVITY_DELTA_STOPPED, 1f));
+		manager.handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ContextManager.ACTIVITY_STRUCTURE_KIND,
+				ContextManager.ACTIVITY_HANDLE_LIFECYCLE, ContextManager.ACTIVITY_ORIGIN_ID, null, ContextManager.ACTIVITY_DELTA_STOPPED, 1f));
 	
 	}
 
