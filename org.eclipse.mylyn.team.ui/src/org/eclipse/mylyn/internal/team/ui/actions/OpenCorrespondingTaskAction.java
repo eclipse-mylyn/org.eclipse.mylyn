@@ -280,16 +280,6 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
-						// TODO: temporary work-around for bug 166174
-//						if (!info.getTaskId().contains(AbstractRepositoryTask.HANDLE_DELIM)) {
-//							if (TasksUiUtil.openRepositoryTask(repository, info.getTaskId())) {
-//								return Status.OK_STATUS;
-//							}
-//						} else {
-//							MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-//								ITasksUiConstants.TITLE_DIALOG,
-//								"Could not resolve task, use Navigate -> Open Task... and enter the task ID or key.");
-//						}
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
 						if (connectorUi != null) {
 							connectorUi.openRepositoryTask(repository.getUrl(), taskId);
@@ -299,7 +289,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				}
 				final String taskFullUrl = info.getTaskFullUrl();
 				if (taskFullUrl != null) {
-					TasksUiUtil.openBrowser(taskFullUrl);
+					TasksUiUtil.openUrl(taskFullUrl, false);
 					return Status.OK_STATUS;
 				}
 			}
