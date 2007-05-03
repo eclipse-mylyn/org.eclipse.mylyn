@@ -27,7 +27,7 @@ import org.eclipse.mylar.context.tests.MylarCoreTestsPlugin;
 public class MylarTestUtils {
 
 	public enum PrivilegeLevel {
-		ANONYMOUS, USER, ADMIN
+		ANONYMOUS, GUEST, USER, ADMIN
 	};
 
 	public static class Credentials {
@@ -41,16 +41,10 @@ public class MylarTestUtils {
 			this.password = password;
 		}
 
-		public Credentials(Properties properties, String prefix) {
-			this.username = properties.getProperty(prefix + "user");
-			this.password = properties.getProperty(prefix + "pass");
-
-			if (username == null || password == null) {
-				throw new AssertionFailedError(
-						"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
-			}
+		@Override
+		public String toString() {
+			return getClass().getName() + " [username=" + username + ",password=" + password + "]";
 		}
-
 	}
 
 	public static Credentials readCredentials() {
@@ -62,10 +56,6 @@ public class MylarTestUtils {
 	}
 
 	public static Credentials readCredentials(PrivilegeLevel level, String realm) {
-		if (level == PrivilegeLevel.ANONYMOUS) {
-			return new Credentials("", "");
-		}
-
 		Properties properties = new Properties();
 		try {
 			URL localURL = FileLocator.toFileURL(MylarCoreTestsPlugin.getDefault().getBundle().getEntry(
@@ -75,12 +65,41 @@ public class MylarTestUtils {
 			throw new AssertionFailedError("must define credentials in <plug-in dir>/credentials.properties");
 		}
 
+		String defaultPassword = properties.getProperty("pass");
+		
 		realm = (realm != null) ? realm + "." : "";
-		if (level == PrivilegeLevel.ADMIN) {
-			return new Credentials(properties, realm + "admin.");
-		} else {
-			return new Credentials(properties, "");
+		switch (level) {
+		case ANONYMOUS:
+			return createCredentials(properties, realm + "anon.", "", "");
+		case GUEST:
+			return createCredentials(properties, realm + "guest.", "guest@mylar.eclipse.org", defaultPassword);
+		case USER:
+			return createCredentials(properties, realm, "tests@mylar.eclipse.org", defaultPassword);
+		case ADMIN:
+			return createCredentials(properties, realm + "admin.", "admin@mylar.eclipse.org", null);
 		}
+		
+		throw new AssertionFailedError("invalid privilege level");
+	}
+	
+	private static Credentials createCredentials(Properties properties, String prefix, String defaultUsername, String defaultPassword) {
+		String username = properties.getProperty(prefix + "user");
+		String password = properties.getProperty(prefix + "pass");
+
+		if (username == null) {
+			username = defaultUsername;
+		}
+
+		if (password == null) {
+			password = defaultPassword;
+		}
+
+		if (username == null || password == null) {
+			throw new AssertionFailedError(
+					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
+		}
+		
+		return new Credentials(username, password);
 	}
 
 }
