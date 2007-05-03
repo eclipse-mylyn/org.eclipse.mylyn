@@ -225,6 +225,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
 				}
 			}
+		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
+			AbstractQueryHit hit = (AbstractQueryHit) object;
+			if ((hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted()) || hit.isCompleted()) {
+				return themeManager.getCurrentTheme().getColorRegistry().get(
+						TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
+			}
 		} else if (object instanceof AbstractRepositoryQuery) {
 			// FIXME AbstractRepositoryQuery is a subclass of
 			// AbstractTaskContainer so this is probably a dead branch!
@@ -233,12 +239,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (task != null && task.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				}
-			}
-		} else if (object instanceof AbstractQueryHit && ((AbstractQueryHit) object).getCorrespondingTask() == null) {
-			AbstractQueryHit hit = (AbstractQueryHit) object;
-			if ((hit.getCorrespondingTask() != null && hit.getCorrespondingTask().isCompleted()) || hit.isCompleted()) {
-				return themeManager.getCurrentTheme().getColorRegistry().get(
-						TaskListColorsAndFonts.THEME_COLOR_COMPLETED);
 			}
 		} else if (object instanceof ITaskListElement) {
 			ITask task = getCorrespondingTask((ITaskListElement) object);
