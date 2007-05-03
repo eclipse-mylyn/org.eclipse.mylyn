@@ -24,6 +24,7 @@ public class AllMiscTests {
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(SharedTaskFolderTest.class);
 		// suite.addTestSuite(BugzillaSearchPluginTest.class);
+		suite.addTestSuite(UrlExclusionTest.class);
 		suite.addTestSuite(AssertionsEnabledTest.class);
 		suite.addTestSuite(HypertextStructureBridgeTest.class);
 		suite.addTestSuite(GetFaviconForUrlTest.class);
