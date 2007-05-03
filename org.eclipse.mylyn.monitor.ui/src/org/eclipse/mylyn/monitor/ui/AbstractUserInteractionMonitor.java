@@ -59,22 +59,25 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		}
 	}
 
-	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext);
+	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext);
 
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
+	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement,
+			boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
 			return null;
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		InteractionEvent selectionEvent;
-		if (bridge.getContentType() != null) {
-			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					bridge.getContentType(), bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
+		String handleIdentifier = bridge.getHandleIdentifier(bridge.getHandleIdentifier(selectedElement));
+		if (handleIdentifier != null && bridge.getContentType() != null) {
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge.getContentType(),
+					handleIdentifier, part.getSite().getId());
 		} else {
-			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					null, null, part.getSite().getId());			
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, null, null, part.getSite().getId());
+			contributeToContext = false;
 		}
 		if (contributeToContext) {
 			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
@@ -90,12 +93,15 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (selectedElement == null)
 			return;
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
-		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
-				bridge.getHandleIdentifier(selectedElement), part.getSite().getId());
-		if (contributeToContext) {
-			ContextCorePlugin.getContextManager().handleInteractionEvent(editEvent);
+		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
+		if (handleIdentifier != null) {
+			InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
+					handleIdentifier, part.getSite().getId());
+			if (contributeToContext) {
+				ContextCorePlugin.getContextManager().handleInteractionEvent(editEvent);
+			}
+			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
 		}
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
 
 	/**
@@ -104,12 +110,15 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	protected void handleNavigation(IWorkbenchPart part, Object targetElement, String kind, boolean contributeToContext) {
 		AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
-			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
-					.getContentType(), adapter.getHandleIdentifier(targetElement), part.getSite().getId(), kind);
-			if (contributeToContext) {
-				ContextCorePlugin.getContextManager().handleInteractionEvent(navigationEvent);
+			String handleIdentifier = adapter.getHandleIdentifier(targetElement);
+			if (handleIdentifier != null) {
+				InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
+						.getContentType(), handleIdentifier, part.getSite().getId(), kind);
+				if (contributeToContext) {
+					ContextCorePlugin.getContextManager().handleInteractionEvent(navigationEvent);
+				}
+				MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 			}
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}
 	}
 
