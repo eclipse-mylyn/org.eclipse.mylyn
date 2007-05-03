@@ -18,11 +18,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -31,6 +35,27 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
+		
+		AbstractRepositoryConnectorUi connectorUi = null;
+		ImageDescriptor priorityOverlay = null;
+		if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
+			if (connectorUi != null) {
+				priorityOverlay = connectorUi.getTaskPriorityOverlay(repositoryTask);
+			}
+		}
+		if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
+			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+			if (task != null) {
+				priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
+						.getPriority()));
+			}
+		}
+		if (priorityOverlay != null) {
+			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
+		}
+		
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
@@ -49,44 +74,19 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
-//			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(task.getRepositoryKind());
-//			if (connectorUi != null) {
-//				if (!connectorUi.hasRichEditor()) {
-//					decoration.addOverlay(TasksUiImages.OVERLAY_WEB, IDecoration.BOTTOM_RIGHT);
-//				}
-//			}
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_RIGHT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_LEFT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_RIGHT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_LEFT);
 			}
-			
-//			decoration.addOverlay(getPriorityImageDescriptor(element), IDecoration.BOTTOM_RIGHT);
-//			decoration.addOverlay(getContextActivationImage(element), IDecoration.BOTTOM_RIGHT);
-			
-//			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-//					task.getRepositoryKind());
-//			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
-//					task.getRepositoryUrl());
-//				if (connector != null && connector.hasRepositoryContext(repository, task)) {
-//					decoration.addOverlay(TasksUiImages.OVERLAY_REPOSITORY_CONTEXT, IDecoration.BOTTOM_RIGHT);
-//				} 
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			decorate(correspondingTask, decoration);
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
-//			String url = task.getTaskUrl();
-//			if (url != null && !url.trim().equals("") && !url.equals("http://")) {
-//				decoration.addOverlay(TasksUiImages.OVERLAY_WEB, IDecoration.BOTTOM_RIGHT);
-//			}
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_RIGHT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_LEFT);
 			}
-			
-//			decoration.addOverlay(getPriorityImageDescriptor(element), IDecoration.BOTTOM_RIGHT);
-//			decoration.addOverlay(getContextActivationImage(element), IDecoration.BOTTOM_LEFT);
-			
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository) element).getKind());
 			if (overlay != null) {

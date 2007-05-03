@@ -23,7 +23,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 
-	private ImageData context;
+	private ImageData synchState;
 
 	private ImageData kind;
 	
@@ -31,17 +31,17 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	protected Point size;
 
-	private static final int WIDTH_PRIORITY = 0;//5;
+	private static final int WIDTH_DECORATION = 4;//5;
 	
-	private static final int WIDTH_CONTEXT = 9;
+	private static final int WIDTH_SYNCH = 9;//5;
 	
-	private static final int WIDTH_SQUISH = 0;
+	private static final int WIDTH_SQUISH = 1;
 	
 	private static final int WIDTH_ICON = 16;
+		
+	static int WIDTH = WIDTH_DECORATION + WIDTH_ICON + WIDTH_SYNCH - WIDTH_SQUISH -1;
 	
-	static int WIDTH = WIDTH_CONTEXT + WIDTH_PRIORITY + WIDTH_ICON - WIDTH_SQUISH;
-	
-	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor contextToggle) {
+	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor synchState) {
 		this.base = getImageData(icon);
 		if (overlayKind != null) {
 			this.kind = getImageData(overlayKind);
@@ -49,23 +49,23 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 //		if (overlayPriority != null) {
 //			this.priority = getImageData(overlayPriority);
 //		}
-		if (contextToggle != null) {
-			this.context = getImageData(contextToggle);
+		if (synchState != null) {
+			this.synchState = getImageData(synchState);
 		} 
 		this.size = new Point(WIDTH, base.height);
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		if (context != null) {
-			drawImage(context, 0, 0);
-		}
 //		if (priority != null) {
 //			drawImage(priority, WIDTH_CONTEXT+2, 0);
 //		}
-		drawImage(base, WIDTH_CONTEXT + WIDTH_PRIORITY - WIDTH_SQUISH, 0);
+		drawImage(base, WIDTH_DECORATION, 0);
 		if (kind != null) {
-			drawImage(kind, WIDTH_CONTEXT + WIDTH_PRIORITY + 4 - WIDTH_SQUISH, 5);
+			drawImage(kind, WIDTH_DECORATION+5, 5);
+		}
+		if (synchState != null) {
+			drawImage(synchState, WIDTH_ICON - WIDTH_SQUISH, 4);
 		}
 	}
 

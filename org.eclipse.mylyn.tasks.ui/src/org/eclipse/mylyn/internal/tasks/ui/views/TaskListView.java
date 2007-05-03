@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -182,7 +183,7 @@ public class TaskListView extends ViewPart {
 	private boolean focusedMode = false;
 
 	private TaskListCellModifier taskListCellModifier = new TaskListCellModifier(this);
-	
+
 	private IThemeManager themeManager;
 
 	private TaskListFilteredTree filteredTree;
@@ -241,9 +242,9 @@ public class TaskListView extends ViewPart {
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
-	protected String[] columnNames = new String[] { "Summary", " " };
+	protected String[] columnNames = new String[] { "Summary" };
 
-	protected int[] columnWidths = new int[] { 200, 29 };
+	protected int[] columnWidths = new int[] { 200 };
 
 	private TreeColumn[] columns;
 
@@ -328,21 +329,21 @@ public class TaskListView extends ViewPart {
 
 				gc.setForeground(categoryGradientEnd);
 				gc.drawLine(0, rect.y, area.width, rect.y);
-				
+
 				gc.setForeground(categoryGradientStart);
 				gc.setBackground(categoryGradientEnd);
-				
-//				gc.setForeground(categoryGradientStart);
-//				gc.setBackground(categoryGradientEnd);
-//				gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
-				
-				gc.fillGradientRectangle(0, rect.y+1, area.width, rect.height, true);
+
+// gc.setForeground(categoryGradientStart);
+// gc.setBackground(categoryGradientEnd);
+// gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
+
+				gc.fillGradientRectangle(0, rect.y + 1, area.width, rect.height, true);
 
 				/* Bottom Line */
-//				gc.setForeground();
+// gc.setForeground();
 				gc.setForeground(categoryGradientEnd);
 				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
-				
+
 				gc.setForeground(oldForeground);
 				gc.setBackground(oldBackground);
 
@@ -540,6 +541,11 @@ public class TaskListView extends ViewPart {
 		if (gradientListenerAdded == false && categoryGradientStart != null
 				&& !categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
+			
+			// TODO: weird override of custom gradients
+//			categoryGradientEnd = getViewer().getTree().getParent().getBackground();
+//			categoryGradientEnd = getViewer().getTree().getParent().getBackground();
+			
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
@@ -641,8 +647,8 @@ public class TaskListView extends ViewPart {
 		m.putInteger(MEMENTO_KEY_SORT_INDEX, sortIndex);
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 
-		// TODO: move to task list save policy		
-		///TasksUiPlugin.getTaskListManager().saveTaskList();
+		// TODO: move to task list save policy
+		// /TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
 
 	private void restoreState() {
@@ -706,11 +712,11 @@ public class TaskListView extends ViewPart {
 		themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		themeManager.addPropertyChangeListener(THEME_CHANGE_LISTENER);
 
-		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /*SWT.H_SCROLL |*/ SWT.V_SCROLL
+		filteredTree = new TaskListFilteredTree(parent, SWT.MULTI | SWT.VERTICAL | /* SWT.H_SCROLL | */SWT.V_SCROLL
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 
 		getViewer().getTree().setHeaderVisible(false);
-//		getViewer().getTree().setLinesVisible(true);
+// getViewer().getTree().setLinesVisible(true);
 		getViewer().setUseHashlookup(true);
 
 		configureColumns(columnNames, columnWidths);
@@ -728,10 +734,10 @@ public class TaskListView extends ViewPart {
 		editors[0] = textEditor;
 		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
 		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
-		editors[1] = null;
-//		editors[2] = null;
-//		editors[2] = new CheckboxCellEditor();
-		
+//		editors[1] = null;
+// editors[2] = null;
+// editors[2] = new CheckboxCellEditor();
+
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(taskListCellModifier);
 		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
@@ -741,7 +747,59 @@ public class TaskListView extends ViewPart {
 
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
-		
+
+		final int activationImageOffset = 12;
+		getViewer().getTree().addListener(SWT.PaintItem, new Listener() {
+
+			private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
+
+			private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
+
+			private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
+
+			/*
+			 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
+			 * Therefore, it is critical for performance that these methods be
+			 * as efficient as possible.
+			 */
+			public void handleEvent(Event event) {
+				Object data = event.item.getData();
+				ITask task = null;
+				Image image = null;
+				if (data instanceof ITask) {
+					task = (ITask)data;
+				} else if (data instanceof AbstractQueryHit) {
+					task = ((AbstractQueryHit)data).getCorrespondingTask();
+				}
+				if (task != null) {
+					if (task.isActive()) {
+						image = taskActive;
+					} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
+						image = taskInactiveContext;
+					} else {
+						image = taskInactive;
+					}
+				} else if (data instanceof AbstractQueryHit) {
+					image = taskInactive;
+				}
+				if (image != null) {	
+					switch (event.type) {
+					case SWT.MeasureItem: {
+						event.width = 16;
+						event.height = 16; 
+						break;
+					}
+					case SWT.PaintItem: {
+						Rectangle rect = image.getBounds();
+						int offset = Math.max(0, (event.height - rect.height) / 2);
+						event.gc.drawImage(image, activationImageOffset, event.y + offset);
+						break;
+					}
+					}
+				}
+			}
+		});
+
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -752,8 +810,8 @@ public class TaskListView extends ViewPart {
 				if (selected.length == 1) {
 					Object selectedObject = selected[0].getData();
 					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
-						if (e.x < selected[0].getBounds(0).x + 13 && e.x > selected[0].getBounds(0).x - 3) {
-							taskListCellModifier.toggleTaskActivation((ITaskListElement)selectedObject);
+						if (e.x > activationImageOffset-2 && e.x < activationImageOffset-2+18) {
+							taskListCellModifier.toggleTaskActivation((ITaskListElement) selectedObject);
 						}
 					}
 				}
@@ -761,9 +819,9 @@ public class TaskListView extends ViewPart {
 
 			public void mouseUp(MouseEvent e) {
 			}
-			
+
 		});
-		
+
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -1170,7 +1228,7 @@ public class TaskListView extends ViewPart {
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 		filteredTree.getViewer().addSelectionChangedListener(renameAction);
-		
+
 		deleteAction = new DeleteAction();
 		collapseAll = new CollapseAllAction(this);
 		expandAll = new ExpandAllAction(this);

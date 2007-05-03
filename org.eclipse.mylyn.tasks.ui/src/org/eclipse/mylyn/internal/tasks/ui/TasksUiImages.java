@@ -285,7 +285,8 @@ public class TasksUiImages {
 		if (image == null) {
 			CompositeTaskImageDescriptor imageDescriptor = new CompositeTaskImageDescriptor(icon, overlayKind, contextToggle);
 			image = imageDescriptor.createImage(true);
-			getImageRegistry().put(key, image);
+			// XXX: put back
+//			getImageRegistry().put(key, image);
 		}
 		return image;
 	}

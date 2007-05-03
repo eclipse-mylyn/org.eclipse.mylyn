@@ -13,9 +13,6 @@
  */
 package org.eclipse.mylar.internal.tasks.ui.views;
 
-import java.util.Arrays;
-
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -23,19 +20,11 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -84,92 +73,8 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 		}
 		if (columnIndex == 0) {
 			return super.getImage(element);
-		} else if (columnIndex == 1) {
-			AbstractRepositoryConnectorUi connectorUi = null;
-			ImageDescriptor priorityOverlay = null;
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
-				if (connectorUi != null) {
-					priorityOverlay = connectorUi.getTaskPriorityOverlay(repositoryTask);
-				}
-			}
-
-			if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
-				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
-				if (task != null) {
-					priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
-							.getPriority()));
-				}
-			}
-			return TasksUiImages.getCompositeSynchronizationImage(getSynchronizationImageDescriptor(element),
-					priorityOverlay);
 		}
 		return null;
-	}
-
-	private ImageDescriptor getSynchronizationImageDescriptor(Object element) {
-		AbstractRepositoryTask repositoryTask = null;
-		ImageDescriptor imageDescriptor = null;
-		if (element instanceof AbstractQueryHit) {
-			repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
-			if (repositoryTask == null) {
-				return TasksUiImages.STATUS_OVERLAY_INCOMMING_NEW;
-			}
-		} else if (element instanceof AbstractRepositoryTask) {
-			repositoryTask = (AbstractRepositoryTask) element;
-		}
-		if (repositoryTask != null) {
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-				imageDescriptor = TasksUiImages.STATUS_NORMAL_OUTGOING;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-				imageDescriptor = TasksUiImages.STATUS_NORMAL_INCOMING;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-				imageDescriptor = TasksUiImages.STATUS_NORMAL_CONFLICT;
-			}
-			if (imageDescriptor == null && repositoryTask.getStatus() != null) {
-				return TasksUiImages.STATUS_WARNING;
-			} else if (imageDescriptor != null) {
-				return imageDescriptor;
-			}
-		} else if (element instanceof AbstractQueryHit) {
-			return TasksUiImages.STATUS_NORMAL_INCOMING;
-		} else if (element instanceof AbstractTaskContainer) {
-			AbstractTaskContainer container = (AbstractTaskContainer) element;
-			if (container instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-				if (query.getStatus() != null) {
-					return TasksUiImages.STATUS_WARNING;
-				}
-			}
-			if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
-					&& hasIncoming(container)) {
-				return TasksUiImages.STATUS_NORMAL_INCOMING;
-			}
-		}
-		// HACK: need blank image
-		return TasksUiImages.PRIORITY_3;
-	}
-
-	private boolean hasIncoming(AbstractTaskContainer container) {
-		for (ITask task : container.getChildren()) {
-			if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask) task;
-				if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					return true;
-				}
-			}
-		}
-		if (container instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-			for (AbstractQueryHit hit : query.getHits()) { // FIXME should not
-				// create new tasks!
-				if (hit.getCorrespondingTask() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public Font getFont(Object element, int columnIndex) {
