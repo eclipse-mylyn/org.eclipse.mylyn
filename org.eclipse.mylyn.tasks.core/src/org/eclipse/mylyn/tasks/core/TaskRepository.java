@@ -98,6 +98,11 @@ public class TaskRepository {
 
 	private Map<String, String> properties = new LinkedHashMap<String, String>();
 
+	/*
+	 * TODO: should be externalized and added to extension point, see bug 183606 
+	 */
+	private boolean isBugRepository = false;
+
 	/**
 	 * for testing purposes
 	 */
@@ -431,5 +436,13 @@ public class TaskRepository {
 
 	public boolean isAnonymous() {
 		return getProperty(ANONYMOUS_LOGIN) == null || "true".equals(getProperty(ANONYMOUS_LOGIN));
+	}
+
+	public boolean isBugRepository() {
+		return isBugRepository;
+	}
+
+	public void setBugRepository(boolean isBugRepository) {
+		this.isBugRepository = isBugRepository;
 	}
 }

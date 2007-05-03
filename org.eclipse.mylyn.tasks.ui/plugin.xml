@@ -648,6 +648,17 @@
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="Open Task"/>
+     
+        <action
+              class="org.eclipse.mylar.internal.tasks.ui.actions.ReportBugAction"
+              icon="icons/etool16/bug-report.gif"
+              id="org.eclipse.mylar.tasks.ui.bug.report"
+              label="Report Bug"
+              menubarPath="help/helpStart"
+              style="push"
+              tooltip="Report Bug or Feature Request"> 
+      	</action>
+     
       </actionSet>
    </extension>
    <extension
@@ -773,8 +784,6 @@
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
    </extension>
-   
-  
 </plugin>
 
    <!--
