@@ -92,6 +92,8 @@ public class MylarContextManager {
 
 	private List<String> errorElementHandles = new ArrayList<String>();
 
+	private Set<String> contextFiles = null;
+	
 	private boolean contextCapturePaused = false;
 
 	private CompositeContext currentContext = new CompositeContext();
@@ -463,11 +465,21 @@ public class MylarContextManager {
 	}
 
 	/**
-	 * Could load in the context and inspect it, but this is cheaper.
+	 * Lazily loads set of handles with corresponding contexts.
 	 */
-	public boolean hasContext(String path) {
-		File contextFile = getFileForContext(path);
-		return contextFile.exists() && contextFile.length() > 0;
+	public boolean hasContext(String handleIdentifier) {
+		if (contextFiles == null) {
+			contextFiles = new HashSet<String>();
+			File contextDirectory = ContextCorePlugin.getDefault().getContextStore().getContextDirectory();
+			String[] files = contextDirectory.list();
+			for (String fileName : files) {
+				contextFiles.add(fileName);
+			}
+		}
+		File file = getFileForContext(handleIdentifier);
+		return contextFiles.contains(file.getName());
+//		File contextFile = getFileForContext(path);
+//		return contextFile.exists() && contextFile.length() > 0;
 	}
 
 	public void deactivateAllContexts() {
