@@ -1560,7 +1560,7 @@ public class TaskListView extends ViewPart {
 	public Image[] getPirorityImages() {
 		Image[] images = new Image[Task.PriorityLevel.values().length];
 		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
-			images[i] = TasksUiUtil.getImageForPriority(Task.PriorityLevel.values()[i]);
+			images[i] = TasksUiImages.getImageForPriority(Task.PriorityLevel.values()[i]);
 		}
 		return images;
 	}

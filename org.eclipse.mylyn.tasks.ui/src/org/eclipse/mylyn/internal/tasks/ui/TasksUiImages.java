@@ -18,6 +18,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
@@ -357,4 +358,37 @@ public class TasksUiImages {
 		return progressImages;
 
 	}
+	
+	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
+		if (priorityLevel == null) {
+			return null;
+		} else {
+			ImageDescriptor imageDescriptor = getImageDescriptorForPriority(priorityLevel);
+			if (imageDescriptor != null) {
+				return TasksUiImages.getImage(imageDescriptor);
+			}
+		}
+		return null;
+	}
+
+	public static ImageDescriptor getImageDescriptorForPriority(Task.PriorityLevel priorityLevel) {
+		if (priorityLevel == null) {
+			return null;
+		}
+		switch (priorityLevel) {
+		case P1:
+			return TasksUiImages.PRIORITY_1;
+		case P2:
+			return TasksUiImages.PRIORITY_2;
+		case P3:
+			return TasksUiImages.PRIORITY_3;
+		case P4:
+			return TasksUiImages.PRIORITY_4;
+		case P5:
+			return TasksUiImages.PRIORITY_5;
+		default:
+			return null;
+		}
+	}
+		
 }

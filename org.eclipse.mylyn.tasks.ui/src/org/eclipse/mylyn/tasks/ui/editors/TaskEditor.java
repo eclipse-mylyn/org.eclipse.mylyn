@@ -356,7 +356,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			webBrowser.setUrl(url);
 			revealBrowser();
 		} else {
-			TasksUiUtil.openBrowser(url);
+			TasksUiUtil.openUrl(url, false);
 		}
 	}
 

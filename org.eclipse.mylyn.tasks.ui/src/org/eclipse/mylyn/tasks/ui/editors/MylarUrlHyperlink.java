@@ -23,10 +23,7 @@ public class MylarUrlHyperlink extends URLHyperlink {
 	@Override
 	public void open() {
 		String url = getURLString();
-		if(TasksUiUtil.openRepositoryTask(null, null, url)) {
-			return;
-		}
-		super.open();
+		TasksUiUtil.openUrl(url, true);
 	}
 
 }

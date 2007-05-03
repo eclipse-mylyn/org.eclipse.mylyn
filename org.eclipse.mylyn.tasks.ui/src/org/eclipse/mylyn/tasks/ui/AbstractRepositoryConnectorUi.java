@@ -98,7 +98,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	}
 
 	public ImageDescriptor getTaskPriorityOverlay(AbstractRepositoryTask task) {
-		return TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
 	}
 
 	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {

@@ -29,16 +29,13 @@ import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -51,15 +48,12 @@ import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -84,53 +78,48 @@ public class TasksUiUtil {
 	public static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.net.ui.NetPreferences";
 
 	/**
-	 * TODO: move
+	 * Resolves a rich editor for the task if available. Must be called from UI
+	 * thread.
 	 */
-	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
-		if (priorityLevel == null) {
-			return null;
-		} else {
-			ImageDescriptor imageDescriptor = getImageDescriptorForPriority(priorityLevel);
-			if (imageDescriptor != null) {
-				return TasksUiImages.getImage(imageDescriptor);
+	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
+		try {
+			if (useRichEditorIfAvailable) {
+				AbstractRepositoryTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
+				if (task != null) {
+					refreshAndOpenTaskListElement(task);
+				} else {
+					openUrl(url, false);
+				}
+			} else {
+				if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
+					try {
+						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+						support.getExternalBrowser().openURL(new URL(url));
+					} catch (Exception e) {
+						MylarStatusHandler.fail(e, "could not open task url", true);
+					}
+				} else {
+					IWebBrowser browser = null;
+					int flags = 0;
+					if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
+						flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
+								| WorkbenchBrowserSupport.NAVIGATION_BAR;
+
+					} else {
+						flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
+								| WorkbenchBrowserSupport.NAVIGATION_BAR;
+					}
+
+					String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
+					browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
+					browser.openURL(new URL(url));
+				}
 			}
-		}
-		return null;
-	}
-
-	public static ImageDescriptor getImageDescriptorForPriority(Task.PriorityLevel priorityLevel) {
-		if (priorityLevel == null) {
-			return null;
-		}
-		switch (priorityLevel) {
-		case P1:
-			return TasksUiImages.PRIORITY_1;
-		case P2:
-			return TasksUiImages.PRIORITY_2;
-		case P3:
-			return TasksUiImages.PRIORITY_3;
-		case P4:
-			return TasksUiImages.PRIORITY_4;
-		case P5:
-			return TasksUiImages.PRIORITY_5;
-		default:
-			return null;
-		}
-	}
-
-	public static void closeEditorInActivePage(ITask task) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null) {
-			return;
-		}
-		IWorkbenchPage page = window.getActivePage();
-		if (page == null) {
-			return;
-		}
-		IEditorInput input = new TaskEditorInput(task, false);
-		IEditorPart editor = page.findEditor(input);
-		if (editor != null) {
-			page.closeEditor(editor, false);
+		} catch (PartInitException e) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
+					"Browser could not be initiated");
+		} catch (MalformedURLException e) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
 		}
 	}
 
@@ -188,7 +177,7 @@ public class TasksUiUtil {
 			}
 		}
 		if (!opened) {
-			TasksUiUtil.openBrowser(fullUrl);
+			TasksUiUtil.openUrl(fullUrl, false);
 			opened = true;
 		}
 		return opened;
@@ -234,10 +223,6 @@ public class TasksUiUtil {
 
 					if (taskData != null) {
 						TasksUiUtil.openEditor(task, true, false);
-						// Synchronization now happens AFTER editor opened and
-						// marked read.
-						// TasksUiPlugin.getSynchronizationManager().synchronize(connector,
-						// repositoryTask, false, null);
 					} else {
 						Job refreshJob = TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 								repositoryTask, true, new JobChangeAdapter() {
@@ -314,7 +299,7 @@ public class TasksUiUtil {
 					if (window != null) {
 						boolean wasOpen = false;
 						if (openWithBrowser) {
-							openBrowser(task.getTaskUrl());
+							openUrl(task.getTaskUrl(), false);
 						} else {
 							IWorkbenchPage page = window.getActivePage();
 							wasOpen = refreshIfOpen(task, editorInput);
@@ -350,7 +335,7 @@ public class TasksUiUtil {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
 				if (openWithBrowser) {
-					openBrowser(task.getTaskUrl());
+					openUrl(task.getTaskUrl(), false);
 				} else {
 					IWorkbenchPage page = window.getActivePage();
 					openEditor(editorInput, taskEditorId, page);
@@ -383,38 +368,6 @@ public class TasksUiUtil {
 		return false;
 	}
 
-	/**
-	 * If task is open, force inplace refresh
-	 * Must be called from UI thread.
-	 */
-	public static boolean forceRefreshInplace(ITask task) {
-		if (task instanceof AbstractRepositoryTask) {
-			String handleTarget = task.getHandleIdentifier();
-			for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
-				if (editor.getEditorInput() instanceof AbstractTaskEditorInput) {
-					AbstractTaskEditorInput input = (AbstractTaskEditorInput) editor.getEditorInput();
-					if (input.getTaskData() != null) {
-						String handle = RepositoryTaskHandleUtil.getHandle(input.getTaskData().getRepositoryUrl(),
-								input.getTaskData().getId());
-						if (handle.equals(handleTarget)) {
-							editor.refreshEditorContents();
-							editor.getEditorSite().getPage().activate(editor);
-							return true;
-						}
-					}
-				} else if (editor.getEditorInput() instanceof TaskEditorInput) {
-					TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
-					if (input.getTask().getHandleIdentifier().equals(handleTarget)) {
-						editor.refreshEditorContents();
-						editor.getEditorSite().getPage().activate(editor);
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
 	public static IEditorPart openEditor(IEditorInput input, String editorId, IWorkbenchPage page) {
 		try {
 			return page.openEditor(input, editorId);
@@ -435,42 +388,6 @@ public class TasksUiUtil {
 				}
 			}
 		});
-	}
-
-	/**
-	 * Must be called from UI thread
-	 */
-	public static void openBrowser(String url) {
-		try {
-			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
-				try {
-					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-					support.getExternalBrowser().openURL(new URL(url));
-				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not open task url", true);
-				}
-			} else {
-				IWebBrowser browser = null;
-				int flags = 0;
-				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-					flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-							| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
-				} else {
-					flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-							| WorkbenchBrowserSupport.NAVIGATION_BAR;
-				}
-
-				String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
-				browser.openURL(new URL(url));
-			}
-		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
-					"Browser could not be initiated");
-		} catch (MalformedURLException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
-		}
 	}
 
 	public static int openEditRepositoryWizard(TaskRepository repository) {
@@ -595,5 +512,21 @@ public class TasksUiUtil {
 				result[0] = (dialog.open() == Window.OK);
 			}
 		});
+	}
+	
+	public static void closeEditorInActivePage(ITask task) {
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if (window == null) {
+			return;
+		}
+		IWorkbenchPage page = window.getActivePage();
+		if (page == null) {
+			return;
+		}
+		IEditorInput input = new TaskEditorInput(task, false);
+		IEditorPart editor = page.findEditor(input);
+		if (editor != null) {
+			page.closeEditor(editor, false);
+		}
 	}
 }

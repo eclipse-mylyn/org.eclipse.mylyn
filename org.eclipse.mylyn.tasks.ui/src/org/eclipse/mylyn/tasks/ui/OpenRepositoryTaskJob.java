@@ -67,7 +67,7 @@ public class OpenRepositoryTaskJob extends Job {
 							.openError(null, "Repository Not Found", "Could not find repository configuration for "
 									+ serverUrl + ". \nPlease set up repository via "
 									+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".");
-					TasksUiUtil.openBrowser(taskUrl);
+					TasksUiUtil.openUrl(taskUrl, false);
 				}
 
 			});
@@ -90,7 +90,7 @@ public class OpenRepositoryTaskJob extends Job {
 			} else {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						TasksUiUtil.openBrowser(taskUrl);
+						TasksUiUtil.openUrl(taskUrl, false);
 					}
 				});
 			}
@@ -110,7 +110,7 @@ public class OpenRepositoryTaskJob extends Job {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (taskData == null) {
-					TasksUiUtil.openBrowser(taskUrl);
+					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
 					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskData.getId());
 					AbstractTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, handle, taskUrl, taskId);

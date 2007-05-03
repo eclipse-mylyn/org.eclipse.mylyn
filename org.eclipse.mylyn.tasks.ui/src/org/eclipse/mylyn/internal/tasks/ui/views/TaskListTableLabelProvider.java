@@ -36,7 +36,6 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncSta
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -99,7 +98,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 			if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
 				if (task != null) {
-					priorityOverlay = TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(task
+					priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
 							.getPriority()));
 				}
 			}

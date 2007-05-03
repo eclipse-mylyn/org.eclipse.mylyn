@@ -61,7 +61,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 		}
 		
 		if (urlString != null) {
-			TasksUiUtil.openBrowser(urlString);
+			TasksUiUtil.openUrl(urlString, false);
 		}
 	}
 }

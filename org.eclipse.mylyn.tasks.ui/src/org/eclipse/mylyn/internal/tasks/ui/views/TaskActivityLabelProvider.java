@@ -29,7 +29,6 @@ import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -63,7 +62,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 		} else if (columnIndex == 1) {
 			if (element instanceof DateRangeActivityDelegate) {
 				DateRangeActivityDelegate taskElement = (DateRangeActivityDelegate) element;
-				return TasksUiUtil.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
+				return TasksUiImages.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		}
 		return null;

@@ -29,17 +29,22 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -204,7 +209,7 @@ public class NewAttachmentWizard extends Wizard {
 										ITasksUiConstants.TITLE_DIALOG, event.getResult().getMessage());
 
 							}
-							TasksUiUtil.forceRefreshInplace(task);
+							forceRefreshInplace(task);
 						}
 					});
 				}
@@ -228,6 +233,38 @@ public class NewAttachmentWizard extends Wizard {
 		return true;
 	}
 
+	/**
+	 * If task is open, force inplace refresh Must be called from UI thread.
+	 */
+	public static boolean forceRefreshInplace(ITask task) {
+		if (task instanceof AbstractRepositoryTask) {
+			String handleTarget = task.getHandleIdentifier();
+			for (TaskEditor editor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
+				if (editor.getEditorInput() instanceof AbstractTaskEditorInput) {
+					AbstractTaskEditorInput input = (AbstractTaskEditorInput) editor.getEditorInput();
+					if (input.getTaskData() != null) {
+						String handle = RepositoryTaskHandleUtil.getHandle(input.getTaskData().getRepositoryUrl(),
+								input.getTaskData().getId());
+						if (handle.equals(handleTarget)) {
+							editor.refreshEditorContents();
+							editor.getEditorSite().getPage().activate(editor);
+							return true;
+						}
+					}
+				} else if (editor.getEditorInput() instanceof TaskEditorInput) {
+					TaskEditorInput input = (TaskEditorInput) editor.getEditorInput();
+					if (input.getTask().getHandleIdentifier().equals(handleTarget)) {
+						editor.refreshEditorContents();
+						editor.getEditorSite().getPage().activate(editor);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	
 	private void handleSubmitError(final CoreException exception) {
 		if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
 			if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
