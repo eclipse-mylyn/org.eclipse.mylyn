@@ -127,12 +127,4 @@ public abstract class AbstractContextChangeSetManager implements IMylarContextLi
 	public void relationsChanged(IMylarElement node) {
 		// ignore
 	}
-
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
 }

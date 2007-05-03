@@ -92,14 +92,6 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 	public void elementDeleted(IMylarElement element) {
 		// ignore
 	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
 	
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore

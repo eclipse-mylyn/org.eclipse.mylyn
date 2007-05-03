@@ -63,16 +63,6 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 		updateWorkingSet();
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// don't care about this event
-
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// don't care about this event
-
-	}
-
 	public void interestChanged(List<IMylarElement> nodes) {
 		updateWorkingSet();
 

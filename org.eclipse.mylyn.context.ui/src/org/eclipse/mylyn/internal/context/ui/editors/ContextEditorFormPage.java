@@ -117,14 +117,6 @@ public class ContextEditorFormPage extends FormPage {
 			refresh();
 		}
 
-		public void presentationSettingsChanged(UpdateKind kind) {
-			refresh();
-		}
-
-		public void presentationSettingsChanging(UpdateKind kind) {
-			refresh();
-		}
-
 		public void relationsChanged(IMylarElement element) {
 			refresh();
 		}

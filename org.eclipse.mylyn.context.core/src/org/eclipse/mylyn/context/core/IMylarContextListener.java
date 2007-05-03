@@ -19,33 +19,9 @@ import java.util.List;
  */
 public interface IMylarContextListener {
 
-	/**
-	 * TODO: refactor, mixes presentation
-	 */
-	public enum UpdateKind {
-		HIGHLIGHTER, SCALING, UPDATE
-	}
-
 	public void contextActivated(IMylarContext context);
 
 	public void contextDeactivated(IMylarContext context);
-
-	/**
-	 * E.g. highlighters or scaling factors are being actively modified (for
-	 * active updating).
-	 * 
-	 * @param kind
-	 *            TODO
-	 */
-	public void presentationSettingsChanging(UpdateKind kind);
-
-	/**
-	 * Modification completed (for slow updating).
-	 * 
-	 * @param kind
-	 *            TODO
-	 */
-	public void presentationSettingsChanged(UpdateKind kind);
 
 	/**
 	 * Called when the interest level for multiple elements changes, sorted

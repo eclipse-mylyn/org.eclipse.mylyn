@@ -99,12 +99,4 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		// ignore
 	}
 
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore	
-	}
-	
 }

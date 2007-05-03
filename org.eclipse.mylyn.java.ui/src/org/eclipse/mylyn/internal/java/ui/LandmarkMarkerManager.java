@@ -154,14 +154,6 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		// don't care when the relationships changed
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// don't care when there is a presentations setting change
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// don't care when there is a presentation setting change
-	}
-
 	public void elementDeleted(IMylarElement node) {
 		// don't care when a node is deleted
 	}

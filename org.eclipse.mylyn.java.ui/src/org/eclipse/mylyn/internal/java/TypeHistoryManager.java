@@ -101,14 +101,6 @@ public class TypeHistoryManager implements IMylarContextListener {
 		updateTypeHistory(node, false);
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
-
 	public void landmarkAdded(IMylarElement node) {
 		// ignore
 	}

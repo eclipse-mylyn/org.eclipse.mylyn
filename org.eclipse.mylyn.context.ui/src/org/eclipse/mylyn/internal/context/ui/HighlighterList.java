@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -73,11 +70,6 @@ public class HighlighterList {
 				ColorMap.HIGLIGHTER_RED_INTERSECTION, false);
 		intersectionHighlighter.setIntersection(true);
 		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
-
-		if (ContextCorePlugin.getContextManager() != null && Platform.isRunning()) {
-			ContextCorePlugin.getContextManager().notifyPostPresentationSettingsChange(
-					IMylarContextListener.UpdateKind.HIGHLIGHTER);
-		}
 	}
 
 	public void add(Highlighter hl) {
@@ -151,8 +143,6 @@ public class HighlighterList {
 		} else if (res > 0) {
 			darkenAllColors(Math.abs(res));
 		}
-		ContextCorePlugin.getContextManager().notifyPostPresentationSettingsChange(
-				IMylarContextListener.UpdateKind.HIGHLIGHTER);
 	}
 
 	private void darkenAllColors(int degree) {

@@ -88,14 +88,6 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 			// don't care about this event
 		}
 
-		public void presentationSettingsChanging(UpdateKind kind) {
-			// don't care about this event
-		}
-
-		public void presentationSettingsChanged(UpdateKind kind) {
-			// don't care about this event
-		}
-
 		public void elementDeleted(IMylarElement node) {
 			// don't care about this event
 		}

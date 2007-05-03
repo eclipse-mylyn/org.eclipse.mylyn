@@ -30,9 +30,7 @@ import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
@@ -57,7 +55,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
 /**
  * @author Mik Kersten
  */
-public class ContextEditorManager implements IMylarContextListener, ITaskActivityListener {
+public class ContextEditorManager implements IMylarContextListener {
 
 	private static final String PREFS_PREFIX = "editors.task.";
 
@@ -66,7 +64,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(
 			IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 
-	public void taskActivated(ITask task) {
+	public void contextActivated(IMylarContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
@@ -82,6 +80,8 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
 				String mementoString = null;
+				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+				if (task != null) {
 				try {
 					mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
 							PREFS_PREFIX + task.getHandleIdentifier());
@@ -94,8 +94,8 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 				} catch (Exception e) {
 					MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
 				}
-
-				IMylarElement activeNode = ContextCorePlugin.getContextManager().getActiveContext().getActiveNode();
+				}
+				IMylarElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
 					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
@@ -107,7 +107,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		}
 	}
 
-	public void taskDeactivated(ITask task) {
+	public void contextDeactivated(IMylarContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
@@ -115,24 +115,23 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
 					.saveState(memento);
 
-			// TODO: avoid storing with preferneces due to bloat?
-			StringWriter writer = new StringWriter();
-			try {
-				memento.save(writer);
-				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(
-						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
-			} catch (IOException e) {
-				MylarStatusHandler.fail(e, "Could not store editor state", false);
-			}
+			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+			if (task != null) {
+				// TODO: avoid storing with preferneces due to bloat?
+				StringWriter writer = new StringWriter();
+				try {
+					memento.save(writer);
+					MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(
+							PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Could not store editor state", false);
+				}
 
-			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
-					previousCloseEditorsSetting);
+				Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+						previousCloseEditorsSetting);
+			}
 			closeAllEditors();
 		}
-	}
-
-	public void contextActivated(IMylarContext context) {
-		// ignore, using task activation
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,7 +151,8 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
 			for (int x = 0; x < editorMementos.length; x++) {
-				//				editorManager.restoreEditorState(editorMementos[x], visibleEditors, activeEditor, result);
+				// editorManager.restoreEditorState(editorMementos[x],
+				// visibleEditors, activeEditor, result);
 				method.invoke(editorManager, new Object[] { editorMementos[x], visibleEditors, activeEditor, result });
 			}
 
@@ -171,10 +171,6 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		}
 	}
 
-	public void contextDeactivated(IMylarContext context) {
-		// ignore, using task activation
-	}
-
 	public void closeAllEditors() {
 		try {
 			if (PlatformUI.getWorkbench().isClosing()) {
@@ -187,7 +183,7 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 					for (int i = 0; i < references.length; i++) {
 						if (!isActiveTaskEditor(references[i]) && !isUnsubmittedTaskEditor(references[i])
-							&&!isContextIgnoringEditor(references[i])) {
+								&& canClose(references[i])) {
 							toClose.add(references[i]);
 						}
 					}
@@ -199,10 +195,10 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		}
 	}
 
-	private boolean isContextIgnoringEditor(IEditorReference editorReference) {
+	private boolean canClose(IEditorReference editorReference) {
 		IEditorPart editor = editorReference.getEditor(false);
 		if (editor instanceof IContextAwareEditor) {
-			return ((IContextAwareEditor)editor).canClose();
+			return ((IContextAwareEditor) editor).canClose();
 		}
 		return true;
 	}
@@ -239,14 +235,6 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 		return false;
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// ignore
-	}
-
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
 			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -279,21 +267,4 @@ public class ContextEditorManager implements IMylarContextListener, ITaskActivit
 	public void relationsChanged(IMylarElement node) {
 		// ignore
 	}
-
-	public void activityChanged(DateRangeContainer week) {
-		// ignore
-	}
-
-	public void calendarChanged() {
-		// ignore
-	}
-
-	public void taskListRead() {
-		// ignore
-	}
-
-	public void tasksActivated(List<ITask> tasks) {
-		// ignore
-	}
-
 }

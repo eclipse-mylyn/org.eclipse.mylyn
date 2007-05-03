@@ -96,10 +96,6 @@ public class CompositeContext implements IMylarContext {
 		}
 	}
 
-	public Collection<MylarContext> getContexts() {
-		return contexts.values();
-	}
-
 	Map<String, MylarContext> getContextMap() {
 		return contexts;
 	}
@@ -129,5 +125,18 @@ public class CompositeContext implements IMylarContext {
 			context.updateElementHandle(element, newHandle);
 		}
 		element.setHandleIdentifier(newHandle);
+	}
+
+	/**
+	 * Composite contexts do not have a unique handle identifier.
+	 * 
+	 * @return	null if no unique handle
+	 */
+	public String getHandleIdentifier() {
+		if (contexts.values().size() == 1) {
+			return contexts.keySet().iterator().next();
+		} else {
+			return null;
+		}
 	}
 }

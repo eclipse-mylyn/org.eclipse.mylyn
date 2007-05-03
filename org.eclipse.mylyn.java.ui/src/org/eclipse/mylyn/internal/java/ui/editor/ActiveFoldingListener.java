@@ -185,14 +185,6 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		}
 	}
 
-	public void presentationSettingsChanging(IMylarContextListener.UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(IMylarContextListener.UpdateKind kind) {
-		updateFolding();
-	}
-
 	public void landmarkAdded(IMylarElement element) {
 		// ignore
 	}

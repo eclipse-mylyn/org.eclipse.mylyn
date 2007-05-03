@@ -111,14 +111,6 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// ignore
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		refreshViewers();
-	}
-
 	protected void refreshViewers() {
 		List<IMylarElement> toRefresh = Collections.emptyList();
 		refreshViewers(toRefresh, true);

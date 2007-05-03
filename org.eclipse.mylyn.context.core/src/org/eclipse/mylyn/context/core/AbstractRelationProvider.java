@@ -144,14 +144,6 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 		// we don't care when this happens
 	}
 
-	public void presentationSettingsChanging(UpdateKind kind) {
-		// we don't care about this event
-	}
-
-	public void presentationSettingsChanged(UpdateKind kind) {
-		// we don't care about this event
-	}
-
 	public void contextDeactivated(IMylarContext taskscape) {
 		// we don't care about this event
 	}

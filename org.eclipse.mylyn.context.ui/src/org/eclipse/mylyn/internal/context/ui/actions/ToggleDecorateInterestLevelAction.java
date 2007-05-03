@@ -12,8 +12,6 @@
 package org.eclipse.mylar.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContextListener;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 
@@ -43,6 +41,6 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		if (store)
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
 		ContextUiPlugin.getDefault().setDecorateInterestMode(on);
-		ContextCorePlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
+//		ContextCorePlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 	}
 }

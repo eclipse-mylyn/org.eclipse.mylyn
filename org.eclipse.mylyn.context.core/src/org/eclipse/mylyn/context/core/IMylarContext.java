@@ -20,6 +20,11 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
  */
 public interface IMylarContext {
 
+	/**
+	 * @return	null if no unique handle, e.g. if a composite context
+	 */
+	public abstract String getHandleIdentifier();
+	
 	public abstract List<InteractionEvent> getInteractionHistory();
 
 	public List<IMylarElement> getInteresting();

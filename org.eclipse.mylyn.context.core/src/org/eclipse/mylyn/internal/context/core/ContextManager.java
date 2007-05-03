@@ -412,16 +412,6 @@ public class ContextManager {
 		listeners.clear();
 	}
 
-	public void notifyPostPresentationSettingsChange(IMylarContextListener.UpdateKind kind) {
-		for (IMylarContextListener listener : listeners)
-			listener.presentationSettingsChanged(kind);
-	}
-
-	public void notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind kind) {
-		for (IMylarContextListener listener : listeners)
-			listener.presentationSettingsChanging(kind);
-	}
-
 	/**
 	 * Public for testing, activiate via handle
 	 */
@@ -520,7 +510,6 @@ public class ContextManager {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
 		if (context != null) {
-			// TODO: this notification is redundant with eraseContext's
 			setContextCapturePaused(true);
 			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
 				listener.contextDeactivated(context);
@@ -545,10 +534,6 @@ public class ContextManager {
 		context.reset();
 		if (contextFiles != null) {
 			contextFiles.remove(handleIdentifier);
-		}
-		if (notify) {
-			for (IMylarContextListener listener : listeners)
-				listener.presentationSettingsChanging(IMylarContextListener.UpdateKind.UPDATE);
 		}
 	}
 

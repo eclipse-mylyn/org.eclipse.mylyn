@@ -91,10 +91,6 @@ public class ActiveSearchView extends ViewPart {
 			refresh(null, true);
 		}
 
-		public void presentationSettingsChanging(UpdateKind kind) {
-			refresh(null, true);
-		}
-
 		public void landmarkAdded(IMylarElement node) {
 			refresh(null, true);
 		}
@@ -111,12 +107,6 @@ public class ActiveSearchView extends ViewPart {
 			refresh(null, true);
 		}
 
-		public void presentationSettingsChanged(UpdateKind kind) {
-			if (viewer != null && !viewer.getTree().isDisposed()) {
-				if (kind == IMylarContextListener.UpdateKind.HIGHLIGHTER)
-					viewer.refresh();
-			}
-		}
 	};
 
 	public static ActiveSearchView getFromActivePerspective() {
