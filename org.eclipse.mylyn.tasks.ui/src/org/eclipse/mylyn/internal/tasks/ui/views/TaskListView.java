@@ -334,20 +334,19 @@ public class TaskListView extends ViewPart {
 				gc.setForeground(categoryGradientStart);
 				gc.setBackground(categoryGradientEnd);
 
-// gc.setForeground(categoryGradientStart);
-// gc.setBackground(categoryGradientEnd);
-// gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
+				// gc.setForeground(categoryGradientStart);
+				// gc.setBackground(categoryGradientEnd);
+				// gc.setForeground(new Color(Display.getCurrent(), 255, 0, 0));
 
 				gc.fillGradientRectangle(0, rect.y + 1, area.width, rect.height, true);
 
 				/* Bottom Line */
-// gc.setForeground();
+				// gc.setForeground();
 				gc.setForeground(categoryGradientEnd);
 				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
 
 				gc.setForeground(oldForeground);
-				gc.setBackground(oldBackground);
-
+				gc.setBackground(oldBackground);				
 				/* Mark as Background being handled */
 				event.detail &= ~SWT.BACKGROUND;
 			}
@@ -752,9 +751,8 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 18;
-		getViewer().getTree().addListener(SWT.PaintItem, new Listener() {
-
+		final int activationImageOffset = 12;
+		getViewer().getTree().addListener(SWT.EraseItem, new Listener() {
 			private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
 
 			private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
@@ -788,12 +786,13 @@ public class TaskListView extends ViewPart {
 				}
 				if (image != null) {	
 					switch (event.type) {
-					case SWT.MeasureItem: {
-						event.width = 16;
-						event.height = 16; 
-						break;
-					}
-					case SWT.PaintItem: {
+//					case SWT.PaintItem: {
+//						Rectangle rect = image.getBounds();
+//						int offset = Math.max(0, (event.height - rect.height) / 2);
+//						event.gc.drawImage(image, activationImageOffset, event.y + offset);
+//						break;
+//					}
+					case SWT.EraseItem: {
 						Rectangle rect = image.getBounds();
 						int offset = Math.max(0, (event.height - rect.height) / 2);
 						event.gc.drawImage(image, activationImageOffset, event.y + offset);
