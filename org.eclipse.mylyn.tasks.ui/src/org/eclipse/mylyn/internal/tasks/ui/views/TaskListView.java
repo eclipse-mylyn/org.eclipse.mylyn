@@ -525,7 +525,7 @@ public class TaskListView extends ViewPart {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
 					|| TaskListColorsAndFonts.isTaskListTheme(event.getProperty())) {
-				updateGradientColors();
+				configureGradientColors();
 				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry()
 						.get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
@@ -533,7 +533,7 @@ public class TaskListView extends ViewPart {
 		}
 	};
 
-	private void updateGradientColors() {
+	private void configureGradientColors() {
 		categoryGradientStart = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_CATEGORY_GRADIENT_START);
 		categoryGradientEnd = themeManager.getCurrentTheme().getColorRegistry().get(
@@ -545,9 +545,9 @@ public class TaskListView extends ViewPart {
 			
 			// TODO: weird override of custom gradients
 			categoryGradientStart = getViewer().getTree().getParent().getBackground();
-			int red = (int)(categoryGradientStart.getRed()/1.2);
-			int green = (int)(categoryGradientStart.getGreen()/1.2);
-			int blue = (int)(categoryGradientStart.getBlue()/1.2);
+			int red = (int)(categoryGradientStart.getRed()/1.1);
+			int green = (int)(categoryGradientStart.getGreen()/1.1);
+			int blue = (int)(categoryGradientStart.getBlue()/1.1);
 			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			
 			gradientListenerAdded = true;
@@ -879,7 +879,7 @@ public class TaskListView extends ViewPart {
 		// http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg29614.html
 		getViewer().getTree().setToolTipText("");
 
-		updateGradientColors();
+		configureGradientColors();
 
 		initDragAndDrop(parent);
 		expandToActiveTasks();
