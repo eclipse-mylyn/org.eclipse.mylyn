@@ -63,7 +63,7 @@ public class TaskListWriter {
 
 	private static final String TRANSFORM_PROPERTY_VERSION = "version";
 
-	private static final String XML_VERSION = "1.1";
+	private static final String XML_VERSION = "1.0";
 
 	public static final String ATTRIBUTE_VERSION = "Version";
 
@@ -391,7 +391,7 @@ public class TaskListWriter {
 			// TODO: Use TaskListBackupManager to attempt restore from backup
 			MessageDialog
 					.openWarning(null, "Mylar task list corrupt",
-							"Unable to read the Mylar task list. Please restore from backup via File > Import > Mylar Task Data");
+							"Unable to read the Mylar task list. Please restore from previous backup via File > Import > Mylar Task Data");
 			// String message = "Restoring the tasklist failed. Would you like
 			// to attempt to restore from the backup?\n\nTasklist XML File
 			// location: "
