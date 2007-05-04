@@ -123,6 +123,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_SYNC_STATE = "offlineSyncState";
 
+	public static final String KEY_OWNER = "Owner";
+
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
 
 	/**
@@ -206,8 +208,15 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 			}
 
-			node.setAttribute(KEY_SYNC_STATE, abstractTask.getSyncState().toString());
+			if (abstractTask.getSyncState() != null) {
+				node.setAttribute(KEY_SYNC_STATE, abstractTask.getSyncState().toString());
+			} else {
+				node.setAttribute(KEY_SYNC_STATE, RepositoryTaskSyncState.SYNCHRONIZED.toString());
+			}
 
+			if (abstractTask.getOwner() != null) {
+				node.setAttribute(KEY_OWNER, abstractTask.getOwner());
+			}
 			// if (abstractTask.isDirty()) {
 			// node.setAttribute(KEY_DIRTY, VAL_TRUE);
 			// } else {
@@ -446,23 +455,16 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				abstractTask.setLastSyncDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 			}
 
-			// if (VAL_TRUE.equals(element.getAttribute(KEY_DIRTY))) {
-			// abstractTask.setDirty(true);
-			// } else {
-			// abstractTask.setDirty(false);
-			// }
+			if (element.hasAttribute(KEY_OWNER)) {
+				((AbstractRepositoryTask) task).setOwner(element.getAttribute(KEY_OWNER));
+			}
+
 
 			if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
 				abstractTask.setNotified(true);
 			} else {
 				abstractTask.setNotified(false);
 			}
-
-			// try {
-			// readTaskData(abstractTask);
-			// } catch (Exception e) {
-			// MylarStatusHandler.log(e, "Failed to read bug report");
-			// }
 
 			if (element.hasAttribute(KEY_SYNC_STATE)) {
 				String syncState = element.getAttribute(KEY_SYNC_STATE);
