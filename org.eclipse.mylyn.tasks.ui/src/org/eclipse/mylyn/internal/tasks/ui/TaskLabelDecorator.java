@@ -94,31 +94,6 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			}
 		}
 	}
-
-//	private ImageDescriptor getContextActivationImage(Object element) {
-//		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
-//		if (task != null) {
-//			if (task.isActive()) {
-//				return TasksUiImages.TASK_ACTIVE;
-//			} else {
-//				if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-//					return TasksUiImages.TASK_INACTIVE_CONTEXT;
-//				} else {
-//					return TasksUiImages.TASK_INACTIVE;
-//				}
-//			}
-//		} else {
-//			return TasksUiImages.TASK_INACTIVE;
-//		}
-//	}
-//	
-//	private ImageDescriptor getPriorityImageDescriptor(Object element) {
-//		if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-//			ITaskListElement taskElement = (ITaskListElement) element;
-//			return TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(taskElement.getPriority()));
-//		}
-//		return null;
-//	}
 	
 	public void addListener(ILabelProviderListener listener) {
 		// ignore

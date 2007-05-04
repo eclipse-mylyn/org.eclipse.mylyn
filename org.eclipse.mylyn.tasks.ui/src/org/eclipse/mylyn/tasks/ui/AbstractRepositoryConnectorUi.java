@@ -84,28 +84,40 @@ public abstract class AbstractRepositoryConnectorUi {
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
 		return LABEL_TASK_DEFAULT;
 	}
-
+	
+	/**
+	 * Connector-specific task icons.  
+	 * Not recommended to override unless providing custom icons and kind overlays.
+	 * 
+	 * For connectors that have a decorator that they want to reuse, the connector can 
+	 * maintain a reference to the label provider and get the descriptor from the images it returns.
+	 */
 	public ImageDescriptor getTaskListElementIcon(ITaskListElement element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			return TasksUiImages.QUERY;
-		} else if (element instanceof AbstractQueryHit) {
-			return TasksUiImages.TASK;
-		} else if (element instanceof ITask) {
+		} else if (element instanceof AbstractQueryHit || element instanceof ITask) {
 			return TasksUiImages.TASK;
 		} else {
 			return null;
 		}
 	}
 
-	public ImageDescriptor getTaskPriorityOverlay(AbstractRepositoryTask task) {
-		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
-	}
-
+	/**
+	 * Task kind overlay, recommended to override with connector-specific overlay.
+	 */
 	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
 		if (!hasRichEditor() || task instanceof WebTask) {
 			return TasksUiImages.OVERLAY_WEB;
 		}
 		return null;
+	}
+	
+	/**
+	 * Connector-specific priority icons.  Not recommended to override since priority
+	 * icons are used elsewhere in the Task List UI (e.g. filter selection in view menu).
+	 */
+	public ImageDescriptor getTaskPriorityOverlay(AbstractRepositoryTask task) {
+		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
 	}
 
 	public void openEditQueryDialog(AbstractRepositoryQuery query) {

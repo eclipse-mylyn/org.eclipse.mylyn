@@ -11,12 +11,14 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
@@ -50,6 +52,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
 	private boolean compositeImages = false;
+	
+	private TreeViewer treeViewer;
 
 	private class CompositeImageDescriptor {
 
@@ -65,11 +69,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	/**
-	 * @parma wide set true for wide images, with whitespace to right of icon.
+	 * @param 	compositeImages set true for wide images
+	 * @param	treeViewer	can be null
 	 */
-	public TaskElementLabelProvider(boolean compositeImages) {
+	public TaskElementLabelProvider(boolean compositeImages, TreeViewer treeViewer) {
 		super();
 		this.compositeImages = compositeImages;
+		this.treeViewer = treeViewer;
 	}
 
 	@Override
@@ -79,7 +85,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
 					compositeDescriptor.overlaySynch);
 		} else if (element instanceof AbstractTaskContainer) {
-			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, null);
+			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, compositeDescriptor.overlaySynch);
 		} else {
 			return TasksUiImages.getImage(compositeDescriptor.icon);
 		}
@@ -92,8 +98,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			return compositeDescriptor;
 		} else if (object instanceof TaskCategory) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
-			return compositeDescriptor;
-		} else if (object instanceof ITaskListElement) {
+		} 
+		
+		if (object instanceof ITaskListElement) {
 			ITaskListElement element = (ITaskListElement) object;
 
 			AbstractRepositoryConnectorUi connectorUi = null;
@@ -115,32 +122,27 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
 
+			if (element instanceof AbstractTaskContainer) {
+				if (treeViewer != null && !Arrays.asList(treeViewer.getExpandedElements()).contains(element)
+						&& hasIncoming((AbstractTaskContainer)element)) {
+					compositeDescriptor.overlaySynch = TasksUiImages.STATUS_NORMAL_INCOMING;
+				}
+			}
+			
 			if (connectorUi != null) {
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
 				return compositeDescriptor;
 			} else {
 				if (element instanceof ITask) {
-// compositeDescriptor.overlayPriority =
-// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((ITask)element).getPriority()));
 					if (showSynchState) {
 						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element);
 					}
 				} else if (element instanceof AbstractQueryHit) {
-// ITask correspondingTask = getCorrespondingTask(element);
-// if (correspondingTask != null) {
-// compositeDescriptor.overlayPriority =
-// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(correspondingTask.getPriority()));
-// } else {
-// compositeDescriptor.overlayPriority =
-// TasksUiUtil.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element).getPriority()));
-// }
 					if (showSynchState) {
 						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element);
 					}
 				}
-				if (element instanceof ITask || element instanceof AbstractQueryHit) {
-
-				}
+				
 				if (element instanceof AbstractRepositoryQuery) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof AbstractQueryHit) {
@@ -153,7 +155,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return compositeDescriptor;
 			}
 		}
-		return null;
+		return compositeDescriptor;
 	}
 
 	private ImageDescriptor getSynchronizationImageDescriptor(Object element) {
@@ -190,13 +192,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					return TasksUiImages.STATUS_WARNING;
 				}
 			}
-//			if (view != null && !Arrays.asList(view.getViewer().getExpandedElements()).contains(element)
-//					&& hasIncoming(container)) {
-//				return TasksUiImages.STATUS_NORMAL_INCOMING;
-//			}
 		}
-		// HACK: need blank image
-		return TasksUiImages.PRIORITY_3;
+		return null;
 	}
 	
 	private boolean hasIncoming(AbstractTaskContainer container) {
@@ -210,8 +207,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 		if (container instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-			for (AbstractQueryHit hit : query.getHits()) { // FIXME should not
-				// create new tasks!
+			for (AbstractQueryHit hit : query.getHits()) {
 				if (hit.getCorrespondingTask() == null) {
 					return true;
 				}
@@ -219,24 +215,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		}
 		return false;
 	}
-	
-//	private ImageDescriptor getContextActivationImage(Object element) {
-//		ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
-//		if (task != null) {
-//			if (task.isActive()) {
-//				return TasksUiImages.TASK_ACTIVE;
-//			} else {
-//				// XXX: should not be reading from disk when refreshing
-//				if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-//					return TasksUiImages.TASK_INACTIVE_CONTEXT;
-//				} else {
-//					return TasksUiImages.TASK_INACTIVE;
-//				}
-//			}
-//		} else {
-//			return TasksUiImages.TASK_INACTIVE;
-//		}
-//	}
 
 	@Override
 	public String getText(Object object) {

@@ -41,10 +41,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -785,7 +787,7 @@ public class TaskListView extends ViewPart {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true, getViewer()), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this, true);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
@@ -863,6 +865,25 @@ public class TaskListView extends ViewPart {
 			public void keyReleased(KeyEvent e) {
 			}
 
+		});
+		
+		getViewer().addTreeListener(new ITreeViewerListener() {
+
+			public void treeCollapsed(final TreeExpansionEvent event) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getViewer().refresh(event.getElement());
+					}
+				});
+			}
+
+			public void treeExpanded(final TreeExpansionEvent event) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						getViewer().refresh(event.getElement());
+					}
+				});
+			}
 		});
 
 		// HACK: shouldn't need to update explicitly
@@ -1369,10 +1390,10 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void refreshAndFocus(boolean expand) {
-		refresh(null);
 		if (expand) {
 			getViewer().expandAll();
 		}
+		refresh(null);
 		selectedAndFocusTask(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
 	}
 
@@ -1592,34 +1613,9 @@ public class TaskListView extends ViewPart {
 							refresh(query);
 						}
 					} else if (element instanceof AbstractTaskContainer) {
-						// check if the container should appear or disappear
-						// List<?> visibleElements =
-						// Arrays.asList(getViewer().getVisibleExpandedElements());
-						// boolean containerVisible =
-						// visibleElements.contains(element);
-						// AbstractTaskContainer container =
-						// (AbstractTaskContainer) element;
-						// boolean refreshRoot = false;
-						// if (refreshRoot) {
-						// getViewer().refresh();
-						// } else {
-						// refresh(element);
 						getViewer().refresh(element, true);
-						// }
 					} else {
-						// getViewer().refresh(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 						getViewer().refresh(element, true);
-						// if (element instanceof AbstractTaskContainer
-						// && !((AbstractTaskContainer)
-						// element).equals(TasksUiPlugin.getTaskListManager()
-						// .getTaskList().getArchiveContainer())) {
-						// List<?> visibleElements =
-						// Arrays.asList(getViewer().getVisibleExpandedElements());
-						// if (!visibleElements.contains(element)) {
-						// getViewer().refresh();
-						// // refresh(null);
-						// }
-						// }
 					}
 				} catch (SWTException e) {
 					MylarStatusHandler.log(e, "Failed to refresh Task List");

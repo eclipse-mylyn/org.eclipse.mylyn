@@ -38,6 +38,8 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	private static final int WIDTH_SQUISH = 1;
 	
 	private static final int WIDTH_ICON = 16;
+	
+	static final int OFFSET_SYNCH = 4;
 		
 	static int WIDTH = WIDTH_DECORATION + WIDTH_ICON + WIDTH_SYNCH - WIDTH_SQUISH -1;
 	
@@ -65,7 +67,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 			drawImage(kind, WIDTH_DECORATION+5, 5);
 		}
 		if (synchState != null) {
-			drawImage(synchState, WIDTH_ICON - WIDTH_SQUISH, 4);
+			drawImage(synchState, WIDTH_ICON - WIDTH_SQUISH, OFFSET_SYNCH);
 		}
 	}
 
