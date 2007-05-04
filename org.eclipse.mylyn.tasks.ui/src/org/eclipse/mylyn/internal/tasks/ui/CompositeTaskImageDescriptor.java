@@ -27,8 +27,6 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData kind;
 	
-//	private ImageData priority;
-	
 	protected Point size;
 
 	private static final int WIDTH_DECORATION = 4;//5;
@@ -48,9 +46,6 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 		if (overlayKind != null) {
 			this.kind = getImageData(overlayKind);
 		}
-//		if (overlayPriority != null) {
-//			this.priority = getImageData(overlayPriority);
-//		}
 		if (synchState != null) {
 			this.synchState = getImageData(synchState);
 		} 
@@ -59,15 +54,12 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-//		if (priority != null) {
-//			drawImage(priority, WIDTH_CONTEXT+2, 0);
-//		}
 		drawImage(base, WIDTH_DECORATION, 0);
 		if (kind != null) {
 			drawImage(kind, WIDTH_DECORATION+5, 5);
 		}
 		if (synchState != null) {
-			drawImage(synchState, WIDTH_ICON - WIDTH_SQUISH, OFFSET_SYNCH);
+			drawImage(synchState, WIDTH_ICON - WIDTH_SQUISH + 1, OFFSET_SYNCH);
 		}
 	}
 

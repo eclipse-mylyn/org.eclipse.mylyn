@@ -39,7 +39,7 @@ public class CompositeTaskContainerImageDescriptor extends CompositeImageDescrip
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, 0, 0);
 		if (overlay != null) {
-			drawImage(overlay, base.width, CompositeTaskImageDescriptor.OFFSET_SYNCH);
+			drawImage(overlay, base.width+2, CompositeTaskImageDescriptor.OFFSET_SYNCH);
 		}
 	}
 

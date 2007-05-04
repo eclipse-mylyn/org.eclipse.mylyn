@@ -33,32 +33,12 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
-
-			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
-			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
-			return entry1.getPriority().compareTo(entry2.getPriority());
-
-			// Code below based on relative position within list of priorities
-
-			// BugzillaQueryHit entry1 = (BugzillaQueryHit) e1;
-			// String[] priorityLevels =
-			// BugzillaUiPlugin.getQueryOptions(IBugzillaConstants.VALUES_PRIORITY,
-			// null, entry1
-			// .getRepositoryUrl());
-			// if (priorityLevels != null && priorityLevels.length > 0) {
-			// List<String> levels = Arrays.asList(priorityLevels);
-			// Integer pr1 = new Integer(levels.indexOf(entry1.getPriority()));
-			//
-			// BugzillaQueryHit entry2 = (BugzillaQueryHit) e2;
-			// Integer pr2 = new Integer(levels.indexOf(entry2.getPriority()));
-			// if (pr1 != null && pr2 != null) {
-			// return pr1.compareTo(pr2);
-			// }
-			// }
+			AbstractQueryHit hit1 = (AbstractQueryHit) e1;
+			AbstractQueryHit hit2 = (AbstractQueryHit) e2;
+			return hit1.getPriority().compareTo(hit2.getPriority());
 		} catch (Exception ignored) {
 			// do nothing
 		}
-
 		// if that didn't work, use the default compare method
 		return super.compare(viewer, e1, e2);
 	}

@@ -50,6 +50,9 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			if (task != null) {
 				priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
 						.getPriority()));
+			} else if (element instanceof AbstractQueryHit){
+				priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element)
+						.getPriority()));
 			}
 		}
 		if (priorityOverlay != null) {

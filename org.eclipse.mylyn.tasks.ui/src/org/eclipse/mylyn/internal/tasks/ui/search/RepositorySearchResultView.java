@@ -118,17 +118,15 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
-		// The tree layout is not used, so this function does not need to do
-		// anything.
-
+		// The tree layout is not used
 	}
 
 	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 		viewer.setUseHashlookup(true);
-		String[] columnNames = new String[] { "", "!", "Summary" };
+		String[] columnNames = new String[] { "Summary" };
 		TableColumn[] columns = new TableColumn[columnNames.length];
-		int[] columnWidths = new int[] { 20, 20, 500 };
+		int[] columnWidths = new int[] { 300 };
 		viewer.setColumnProperties(columnNames);
 
 		viewer.getTable().setHeaderVisible(false);
@@ -151,9 +149,9 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-
+		
 		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
-				new TaskElementLabelProvider(), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
+				new TaskElementLabelProvider(true, null), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
 				categoryBackground);
 
 		viewer.setLabelProvider(taskListTableLabelProvider);
@@ -243,32 +241,18 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		public Image getColumnImage(Object element, int columnIndex) {
 			switch (columnIndex) {
 			case 0:
-				++columnIndex;
-				break;
-			case 1:
-				++columnIndex;
-				break;
-			case 2:
-				columnIndex = 2 + columnIndex;
-				break;
+				return super.getColumnImage(element, columnIndex);
 			}
-			return super.getColumnImage(element, columnIndex);
+			return null;
 		}
 
 		@Override
-		public String getColumnText(Object obj, int columnIndex) {
+		public String getColumnText(Object element, int columnIndex) {
 			switch (columnIndex) {
 			case 0:
-				++columnIndex;
-				break;
-			case 1:
-				++columnIndex;
-				break;
-			case 2:
-				columnIndex = 2 + columnIndex;
-				break;
+				return super.getColumnText(element, columnIndex);
 			}
-			return super.getColumnText(obj, columnIndex);
+			return null;
 		}
 
 		@Override
@@ -276,7 +260,6 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 			// Note: see bug 142889
 			return null;
 		}
-
 	}
 
 }
