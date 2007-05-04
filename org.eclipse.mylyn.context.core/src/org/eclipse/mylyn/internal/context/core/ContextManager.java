@@ -92,7 +92,7 @@ public class ContextManager {
 
 	private List<String> errorElementHandles = new ArrayList<String>();
 
-	private Set<String> contextFiles = null;
+	private Set<File> contextFiles = null;
 	
 	private boolean contextCapturePaused = false;
 
@@ -417,6 +417,7 @@ public class ContextManager {
 	 */
 	public void activateContext(MylarContext context) {
 		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
+		contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 		if (!activationHistorySuppressed) {
 			handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_STRUCTURE_KIND,
 					context.getHandleIdentifier(), ACTIVITY_ORIGIN_ID, null, ACTIVITY_DELTA_ACTIVATED, 1f));
@@ -458,16 +459,23 @@ public class ContextManager {
 	 * Lazily loads set of handles with corresponding contexts.
 	 */
 	public boolean hasContext(String handleIdentifier) {
+		if (handleIdentifier == null) {
+			return false;
+		}
 		if (contextFiles == null) {
-			contextFiles = new HashSet<String>();
+			contextFiles = new HashSet<File>();
 			File contextDirectory = ContextCorePlugin.getDefault().getContextStore().getContextDirectory();
-			String[] files = contextDirectory.list();
-			for (String fileName : files) {
-				contextFiles.add(fileName);
+			File[] files = contextDirectory.listFiles();
+			for (File file : files) {
+				contextFiles.add(file);
 			}
 		}
-		File file = getFileForContext(handleIdentifier);
-		return contextFiles.contains(file.getName());
+		if (getActiveContext() != null && handleIdentifier.equals(getActiveContext().getHandleIdentifier())) {
+			return !getActiveContext().getAllElements().isEmpty();
+		} else {
+			File file = getFileForContext(handleIdentifier);
+			return contextFiles.contains(file);
+		}
 //		File contextFile = getFileForContext(path);
 //		return contextFile.exists() && contextFile.length() > 0;
 	}
@@ -527,14 +535,14 @@ public class ContextManager {
 	}
 
 	private void eraseContext(String handleIdentifier, boolean notify) {
+		if (contextFiles != null) {
+			contextFiles.remove(getFileForContext(handleIdentifier));
+		}
 		MylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		if (context == null)
 			return;
 		currentContext.getContextMap().remove(context);
 		context.reset();
-		if (contextFiles != null) {
-			contextFiles.remove(handleIdentifier);
-		}
 	}
 
 	/**
@@ -561,7 +569,7 @@ public class ContextManager {
 				return;
 			context.collapse();
 			externalizer.writeContextToXml(context, getFileForContext(handleIdentifier));
-			contextFiles.add(handleIdentifier);
+			contextFiles.add(getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
