@@ -433,14 +433,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
 
-			// Run before async so that connectorUi are preloaded
-			TasksUiExtensionReader.initWorkbenchUiExtensions();
-
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					// NOTE: failure in one part of the initialization should
 					// not prevent others
 					try {
+						// Needs to run after workbench is loaded because it relies on images.
+						TasksUiExtensionReader.initWorkbenchUiExtensions();
+						
 						// TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 

@@ -779,7 +779,6 @@ public class TaskListView extends ViewPart {
 				| SWT.FULL_SELECTION | SWT.HIDE_SELECTION, new TaskListPatternFilter());
 
 		getViewer().getTree().setHeaderVisible(false);
-// getViewer().getTree().setLinesVisible(true);
 		getViewer().setUseHashlookup(true);
 
 		configureColumns(columnNames, columnWidths);
@@ -796,10 +795,7 @@ public class TaskListView extends ViewPart {
 		((Text) textEditor.getControl()).setOrientation(SWT.LEFT_TO_RIGHT);
 		editors[0] = textEditor;
 		// editors[1] = new ComboBoxCellEditor(getViewer().getTree(),
-		// PRIORITY_LEVEL_DESCRIPTIONS, SWT.READ_ONLY);
-//		editors[1] = null;
-// editors[2] = null;
-// editors[2] = new CheckboxCellEditor();
+		// editors[2] = new CheckboxCellEditor();
 
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(taskListCellModifier);
