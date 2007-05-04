@@ -33,7 +33,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	private static final int WIDTH_SYNCH = 9;//5;
 	
-	private static final int WIDTH_SQUISH = 1;
+	private static final int WIDTH_SQUISH = 0;
 	
 	private static final int WIDTH_ICON = 16;
 	

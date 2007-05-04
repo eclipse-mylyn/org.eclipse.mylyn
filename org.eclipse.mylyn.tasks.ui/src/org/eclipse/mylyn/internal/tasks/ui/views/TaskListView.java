@@ -289,8 +289,10 @@ public class TaskListView extends ViewPart {
 
 	private FilterArchiveContainerAction filterArchiveCategory;
 
-	private PriorityDropDownAction filterOnPriority;
+	private PriorityDropDownAction filterOnPriorityAction;
 
+	private SortyByDropDownAction sortByAction;
+	
 	PreviousTaskDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
@@ -1033,7 +1035,7 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
-		manager.add(filterOnPriority);
+		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
 
@@ -1045,7 +1047,7 @@ public class TaskListView extends ViewPart {
 
 		manager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				filterOnPriority.updateCheckedState();
+				filterOnPriorityAction.updateCheckedState();
 			}
 		});
 
@@ -1269,7 +1271,7 @@ public class TaskListView extends ViewPart {
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
-		filterOnPriority = new PriorityDropDownAction(this);
+		filterOnPriorityAction = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
 		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
@@ -1646,7 +1648,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void setManualFiltersEnabled(boolean enabled) {
-		filterOnPriority.setEnabled(enabled);
+		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
 		filterArchiveCategory.setEnabled(enabled);
 	}
