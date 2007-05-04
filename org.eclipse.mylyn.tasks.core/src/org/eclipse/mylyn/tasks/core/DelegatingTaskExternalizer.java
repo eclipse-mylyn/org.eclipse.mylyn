@@ -456,9 +456,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 
 			if (element.hasAttribute(KEY_OWNER)) {
-				((AbstractRepositoryTask) task).setOwner(element.getAttribute(KEY_OWNER));
+				abstractTask.setOwner(element.getAttribute(KEY_OWNER));
 			}
-
 
 			if (VAL_TRUE.equals(element.getAttribute(KEY_NOTIFIED_INCOMING))) {
 				abstractTask.setNotified(true);
