@@ -2435,8 +2435,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				Arrays.sort(a);
 				for (int j = 0; j < a.length; j++) {
 					((CCombo) radioOptions[i]).add((String) a[j]);
+					if (((String) a[j]).equals(o.getOptionSelection())) {
+						((CCombo) radioOptions[i]).select(j);
+					}
 				}
-				((CCombo) radioOptions[i]).select(0);
 				((CCombo) radioOptions[i]).addSelectionListener(new RadioButtonListener());
 			} else if (o.isInput()) {
 				radioData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
