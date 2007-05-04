@@ -41,10 +41,6 @@ public class TasksUiImages {
 
 	private static final String T_OVR = "ovr16";
 
-//	public static final Point SIZE = new Point(16, 16);
-
-//	public static final Point SIZE_WIDE = new Point(30, 16);
-
 	private static final URL baseURL = TasksUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor TASK_ACTIVE = create(T_TOOL, "task-active.gif");
@@ -166,15 +162,6 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor STATUS_NORMAL_CONFLICT = createWithOverlay(STATUS_NORMAL, OVERLAY_CONFLICT,
 			true, true);
-
-//	public static final ImageDescriptor STATUS_CONTEXT_INCOMING = createWithOverlay(STATUS_CONTEXT, OVERLAY_INCOMMING,
-//			true, true);
-//
-//	public static final ImageDescriptor STATUS_CONTEXT_OUTGOING = createWithOverlay(STATUS_CONTEXT, OVERLAY_OUTGOING,
-//			true, true);
-//
-//	public static final ImageDescriptor STATUS_CONTEXT_CONFLICT = createWithOverlay(STATUS_CONTEXT, OVERLAY_CONFLICT,
-//			true, true);
 
 	public static final ImageDescriptor QUERY = create(T_TOOL, "query.gif");
 
@@ -299,24 +286,6 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
 			CompositeTaskContainerImageDescriptor imageDescriptor = new CompositeTaskContainerImageDescriptor(icon, overlay);
-			image = imageDescriptor.createImage(true);
-			getImageRegistry().put(key, image);
-		}
-		return image;
-	}
-
-	public static Image getCompositeSynchronizationImage(ImageDescriptor icon, ImageDescriptor overlay) {
-		if (icon == null) {
-			return null;
-		}
-		String key = "" + icon.hashCode();
-		if (overlay != null) {
-			key += overlay.hashCode();
-		}
-				
-		Image image = getImageRegistry().get(key);
-		if (image == null) {
-			CompositeSynchronizationImageDescriptor imageDescriptor = new CompositeSynchronizationImageDescriptor(icon, overlay);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

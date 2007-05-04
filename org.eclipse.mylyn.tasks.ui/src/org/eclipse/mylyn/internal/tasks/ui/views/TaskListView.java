@@ -115,6 +115,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Composite;
@@ -815,22 +816,23 @@ public class TaskListView extends ViewPart {
 		
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
-			public void mouseDoubleClick(MouseEvent e) {
-			}
-
 			public void mouseDown(MouseEvent e) {
-				TreeItem[] selected = getViewer().getTree().getSelection();
-				if (selected.length == 1) {
-					Object selectedObject = selected[0].getData();
-					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
-						if (e.x > activationImageOffset-2 && e.x < activationImageOffset-2+18) {
-							taskListCellModifier.toggleTaskActivation((ITaskListElement) selectedObject);
+				Object selected = ((Tree)e.widget).getItem(new Point(e.x, e.y));
+				if (selected instanceof TreeItem) {
+					if (((TreeItem)selected).getData() instanceof ITask || ((TreeItem)selected).getData() instanceof AbstractQueryHit) {
+						if (e.x > activationImageOffset-8 && e.x < activationImageOffset-2+18) {
+							taskListCellModifier.toggleTaskActivation((ITaskListElement)((TreeItem)selected).getData());
 						}
 					}
 				}
 			}
+			
+			public void mouseDoubleClick(MouseEvent e) {
+				// ignore
+			}
 
 			public void mouseUp(MouseEvent e) {
+				// ignore
 			}
 
 		});
