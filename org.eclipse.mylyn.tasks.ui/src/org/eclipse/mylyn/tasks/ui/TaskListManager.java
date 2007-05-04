@@ -700,7 +700,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		for (ITask task : new ArrayList<ITask>(activeTasks)) {
 			deactivateTask(task);
 		}
-		refactorOfflineHandles(newUrl);
+		refactorOfflineHandles(oldUrl, newUrl);
 		taskList.refactorRepositoryUrl(oldUrl, newUrl);
 
 		File dataDir = new File(TasksUiPlugin.getDefault().getDataDirectory(),
@@ -733,29 +733,32 @@ public class TaskListManager implements IPropertyChangeListener {
 		saveTaskList();
 	}
 
-	private void refactorOfflineHandles(String newRepositoryUrl) {
+	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
 		TaskDataManager taskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		for (ITask task : taskList.getAllTasks()) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
+					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask
+							.getHandleIdentifier());
+					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask
+							.getHandleIdentifier());
+					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getHandleIdentifier());
+					taskDataManager.remove(repositoryTask.getHandleIdentifier());
 
-				RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getHandleIdentifier());
-				RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getHandleIdentifier());
-				Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getHandleIdentifier());
-				taskDataManager.remove(repositoryTask.getHandleIdentifier());
+					String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, repositoryTask.getTaskId());
 
-				String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, repositoryTask.getTaskId());
-
-				if (newTaskData != null) {
-					newTaskData.setRepositoryURL(newRepositoryUrl);
-					taskDataManager.setNewTaskData(newHandle, newTaskData);
-				}
-				if (oldTaskData != null) {
-					oldTaskData.setRepositoryURL(newRepositoryUrl);
-					taskDataManager.setOldTaskData(newHandle, oldTaskData);
-				}
-				if (!edits.isEmpty()) {
-					taskDataManager.saveEdits(newHandle, edits);
+					if (newTaskData != null) {
+						newTaskData.setRepositoryURL(newRepositoryUrl);
+						taskDataManager.setNewTaskData(newHandle, newTaskData);
+					}
+					if (oldTaskData != null) {
+						oldTaskData.setRepositoryURL(newRepositoryUrl);
+						taskDataManager.setOldTaskData(newHandle, oldTaskData);
+					}
+					if (!edits.isEmpty()) {
+						taskDataManager.saveEdits(newHandle, edits);
+					}
 				}
 			}
 		}
