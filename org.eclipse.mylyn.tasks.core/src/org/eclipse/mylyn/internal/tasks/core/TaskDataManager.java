@@ -86,14 +86,14 @@ public class TaskDataManager {
 		saveTimer.schedule(new CheckSaveRequired(), SAVE_INTERVAL, SAVE_INTERVAL);
 	}
 
-	private Map<String, RepositoryTaskData> getOldDataMap() {
+	private synchronized Map<String, RepositoryTaskData> getOldDataMap() {
 		if (oldTaskDataMap == null) {
 			oldTaskDataMap = dataStore.getOldDataMap();
 		}
 		return oldTaskDataMap;
 	}
 
-	private Map<String, Set<RepositoryTaskAttribute>> getLocalChangesMap() {
+	private synchronized Map<String, Set<RepositoryTaskAttribute>> getLocalChangesMap() {
 		if (localChangesMap == null) {
 			localChangesMap = dataStore.getLocalEdits();
 		}
@@ -171,18 +171,16 @@ public class TaskDataManager {
 	 *         new unsubmitted repository tasks. Incremented each time this
 	 *         method is called.
 	 */
-	public String getNewRepositoryTaskId() {
+	public synchronized String getNewRepositoryTaskId() {
 		dataStateChanged();
 		return "" + dataStore.getNextTaskId();
 	}
 
 	private Set<RepositoryTaskAttribute> getLocalChanges(String handle) {
 		Set<RepositoryTaskAttribute> localChanges;
-		synchronized (file) {
-			localChanges = getLocalChangesMap().get(handle);
-			if (localChanges != null) {
-				return Collections.unmodifiableSet(localChanges);
-			}
+		localChanges = getLocalChangesMap().get(handle);
+		if (localChanges != null) {
+			return Collections.unmodifiableSet(localChanges);
 		}
 		return Collections.emptySet();
 	}
