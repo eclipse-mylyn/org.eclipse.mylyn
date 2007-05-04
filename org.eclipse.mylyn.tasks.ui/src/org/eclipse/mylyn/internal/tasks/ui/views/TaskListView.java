@@ -788,7 +788,7 @@ public class TaskListView extends ViewPart {
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true, getViewer()), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground, this, true);
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];

@@ -37,17 +37,13 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 
 	private Color categoryBackgroundColor;
 
-	private TaskListView view;
-
 	/**
 	 * @param view
 	 *            can be null
 	 */
-	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground,
-			TaskListView view, boolean wideImages) {
+	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
 		super(provider, decorator);
 		this.categoryBackgroundColor = parentBackground;
-		this.view = view;
 	}
 
 	public String getColumnText(Object obj, int columnIndex) {

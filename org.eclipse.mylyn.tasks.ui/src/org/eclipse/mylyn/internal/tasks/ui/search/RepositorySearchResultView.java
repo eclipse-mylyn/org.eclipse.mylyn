@@ -236,7 +236,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	class SearchViewTableLabelProvider extends TaskListTableLabelProvider {
 
 		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
-			super(provider, decorator, parentBackground, null, true);
+			super(provider, decorator, parentBackground);
 		}
 
 		@Override
