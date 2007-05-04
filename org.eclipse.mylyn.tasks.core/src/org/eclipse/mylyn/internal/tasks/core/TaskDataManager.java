@@ -52,18 +52,6 @@ public class TaskDataManager {
 
 	private OfflineDataStore dataStore;
 
-	/** Older version of Task Data */
-	private Map<String, Set<RepositoryTaskAttribute>> localChangesMap;
-
-	/** Older version of Task Data */
-	private Map<String, RepositoryTaskData> oldTaskDataMap;
-
-	/** Newest version of the task data */
-	private Map<String, RepositoryTaskData> newTaskDataMap;
-
-	/** Unsubmitted tasks data */
-	private Map<String, RepositoryTaskData> unsubmittedTaskData;
-
 	private TaskRepositoryManager taskRepositoryManager;
 
 	private Job saveJob;
@@ -86,34 +74,6 @@ public class TaskDataManager {
 		saveTimer.schedule(new CheckSaveRequired(), SAVE_INTERVAL, SAVE_INTERVAL);
 	}
 
-	private synchronized Map<String, RepositoryTaskData> getOldDataMap() {
-		if (oldTaskDataMap == null) {
-			oldTaskDataMap = dataStore.getOldDataMap();
-		}
-		return oldTaskDataMap;
-	}
-
-	private synchronized Map<String, Set<RepositoryTaskAttribute>> getLocalChangesMap() {
-		if (localChangesMap == null) {
-			localChangesMap = dataStore.getLocalEdits();
-		}
-		return localChangesMap;
-	}
-
-	private synchronized Map<String, RepositoryTaskData> getNewDataMap() {
-		if (newTaskDataMap == null) {
-			newTaskDataMap = dataStore.getNewDataMap();
-		}
-		return newTaskDataMap;
-	}
-
-	private synchronized Map<String, RepositoryTaskData> getUnsubmittedTaskData() {
-		if (unsubmittedTaskData == null) {
-			unsubmittedTaskData = dataStore.getUnsubmittedTaskData();
-		}
-		return unsubmittedTaskData;
-	}
-
 	/**
 	 * Add a RepositoryTaskData to the offline reports file. Previously stored
 	 * taskData is held and can be retrieved via getOldTaskData()
@@ -122,9 +82,7 @@ public class TaskDataManager {
 		if (taskHandle == null || newEntry == null) {
 			return;
 		}
-		synchronized (file) {
-			getNewDataMap().put(taskHandle, newEntry);
-		}
+		dataStore.getNewDataMap().put(taskHandle, newEntry);
 		dataStateChanged();
 	}
 
@@ -132,9 +90,7 @@ public class TaskDataManager {
 		if (taskHandle == null || oldEntry == null) {
 			return;
 		}
-		synchronized (file) {
-			getOldDataMap().put(taskHandle, oldEntry);
-		}
+		dataStore.getOldDataMap().put(taskHandle, oldEntry);
 		dataStateChanged();
 	}
 
@@ -144,7 +100,7 @@ public class TaskDataManager {
 	 * @return offline task data, null if no data found
 	 */
 	public RepositoryTaskData getNewTaskData(String handle) {
-		RepositoryTaskData data = getNewDataMap().get(handle);
+		RepositoryTaskData data = dataStore.getNewDataMap().get(handle);
 		return data;
 	}
 
@@ -152,17 +108,15 @@ public class TaskDataManager {
 	 * Returns the old copy if exists, null otherwise.
 	 */
 	public RepositoryTaskData getOldTaskData(String handle) {
-		return getOldDataMap().get(handle);
+		return dataStore.getOldDataMap().get(handle);
 	}
 
 	public Map<String, RepositoryTaskData> getUnsubmitted() {
-		return Collections.unmodifiableMap(getUnsubmittedTaskData());
+		return Collections.unmodifiableMap(dataStore.getUnsubmittedTaskData());
 	}
 
 	public void removeUnsubmitted(String handle) {
-		synchronized (file) {
-			getUnsubmittedTaskData().remove(handle);
-		}
+		dataStore.getUnsubmittedTaskData().remove(handle);
 		dataStateChanged();
 	}
 
@@ -178,7 +132,7 @@ public class TaskDataManager {
 
 	private Set<RepositoryTaskAttribute> getLocalChanges(String handle) {
 		Set<RepositoryTaskAttribute> localChanges;
-		localChanges = getLocalChangesMap().get(handle);
+		localChanges = dataStore.getLocalEdits().get(handle);
 		if (localChanges != null) {
 			return Collections.unmodifiableSet(localChanges);
 		}
@@ -230,11 +184,11 @@ public class TaskDataManager {
 
 	public void saveEdits(String handle, Set<RepositoryTaskAttribute> attributes) {
 		synchronized (file) {
-			Set<RepositoryTaskAttribute> edits = getLocalChangesMap().get(handle);
+			Set<RepositoryTaskAttribute> edits = dataStore.getLocalEdits().get(handle);
 			if (edits == null) {
 				edits = new HashSet<RepositoryTaskAttribute>();
 				edits.addAll(attributes);
-				getLocalChangesMap().put(handle, edits);
+				dataStore.getLocalEdits().put(handle, edits);
 			} else {
 				edits.removeAll(attributes);
 				edits.addAll(attributes);
@@ -244,7 +198,7 @@ public class TaskDataManager {
 	}
 
 	public Set<RepositoryTaskAttribute> getEdits(String handle) {
-		Set<RepositoryTaskAttribute> changes = getLocalChangesMap().get(handle);
+		Set<RepositoryTaskAttribute> changes = dataStore.getLocalEdits().get(handle);
 		if (changes == null) {
 			return Collections.emptySet();
 		} else {
@@ -254,9 +208,7 @@ public class TaskDataManager {
 	}
 
 	public void discardEdits(String handle) {
-		synchronized (file) {
-			getLocalChangesMap().remove(handle);
-		}
+		dataStore.getLocalEdits().remove(handle);
 		dataStateChanged();
 	}
 
@@ -267,33 +219,16 @@ public class TaskDataManager {
 	 *            An array of the indicies of the bugs to be removed
 	 */
 	public void remove(List<String> handlesToRemove) {
-		synchronized (file) {
-			for (String handle : handlesToRemove) {
-				remove(handle);
-			}
+		for (String handle : handlesToRemove) {
+			remove(handle);
 		}
 	}
 
 	public void remove(String handle) {
-		synchronized (file) {
-			getNewDataMap().remove(handle);
-			getOldDataMap().remove(handle);
-		}
+		dataStore.getNewDataMap().remove(handle);
+		dataStore.getOldDataMap().remove(handle);
 		discardEdits(handle);
 	}
-
-	// /**
-	// * Make both new and old the same so that no deltas will be revealed.
-	// */
-	// public void clearIncoming(String handle) {
-	// RepositoryTaskData newData = getNewDataMap().get(handle);
-	// if (newData != null) {
-	// synchronized (file) {
-	// getOldDataMap().put(handle, newData);
-	// }
-	// }
-	// dataStateChanged();
-	// }
 
 	/**
 	 * force a reset of all data maps
@@ -301,10 +236,6 @@ public class TaskDataManager {
 	public void clear() {
 		synchronized (file) {
 			dataStore = new OfflineDataStore();
-			oldTaskDataMap = null;
-			newTaskDataMap = null;
-			unsubmittedTaskData = null;
-			localChangesMap = null;
 			saveRequested = false;
 		}
 	}
@@ -337,10 +268,10 @@ public class TaskDataManager {
 			try {
 				in = new ObjectInputStream(new FileInputStream(file));
 				dataStore = (OfflineDataStore) in.readObject();
-				for (RepositoryTaskData taskData : getNewDataMap().values()) {
+				for (RepositoryTaskData taskData : dataStore.getNewDataMap().values()) {
 					updateAttributeFactory(taskData);
 				}
-				for (RepositoryTaskData taskData : getOldDataMap().values()) {
+				for (RepositoryTaskData taskData : dataStore.getOldDataMap().values()) {
 					updateAttributeFactory(taskData);
 				}
 			} finally {
