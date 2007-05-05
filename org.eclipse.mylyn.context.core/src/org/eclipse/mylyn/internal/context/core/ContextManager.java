@@ -417,7 +417,9 @@ public class ContextManager {
 	 */
 	public void activateContext(MylarContext context) {
 		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
-		contextFiles.add(getFileForContext(context.getHandleIdentifier()));
+		if (contextFiles != null) {
+			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
+		}
 		if (!activationHistorySuppressed) {
 			handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_STRUCTURE_KIND,
 					context.getHandleIdentifier(), ACTIVITY_ORIGIN_ID, null, ACTIVITY_DELTA_ACTIVATED, 1f));
