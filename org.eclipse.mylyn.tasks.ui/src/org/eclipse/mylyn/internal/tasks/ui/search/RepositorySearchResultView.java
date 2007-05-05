@@ -126,7 +126,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		viewer.setUseHashlookup(true);
 		String[] columnNames = new String[] { "Summary" };
 		TableColumn[] columns = new TableColumn[columnNames.length];
-		int[] columnWidths = new int[] { 300 };
+		int[] columnWidths = new int[] { 500 };
 		viewer.setColumnProperties(columnNames);
 
 		viewer.getTable().setHeaderVisible(false);

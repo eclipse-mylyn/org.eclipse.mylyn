@@ -36,9 +36,10 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private boolean sortByPriority = true;
 	
-	public TaskListTableSorter(TaskListView view, String column) {
+	public TaskListTableSorter(TaskListView view, boolean byPriority) {
 		super();
 		this.view = view;
+		this.sortByPriority = byPriority;
 	}
 
 	public void setColumn(String column) {
@@ -102,13 +103,16 @@ public class TaskListTableSorter extends ViewerSorter {
 
 	private int compareElements(ITaskListElement element1, ITaskListElement element2) {
 		if (sortByPriority) {
-			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
-		} else {
-			String summary1 = getSortableSummaryFromElement(element1);
-			String summary2 = getSortableSummaryFromElement(element2);
-			element2.getSummary();
-			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
+			int result = this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
+			if (result != 0) {
+				return result;
+			} 
 		} 
+		
+		String summary1 = getSortableSummaryFromElement(element1);
+		String summary2 = getSortableSummaryFromElement(element2);
+		element2.getSummary();
+		return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
 		
 //		if (column != null && column.equals(this.view.columnNames[1])) {
 //			return 0;

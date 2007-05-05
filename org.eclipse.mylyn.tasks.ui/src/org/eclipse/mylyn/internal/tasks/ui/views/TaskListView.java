@@ -164,17 +164,17 @@ public class TaskListView extends ViewPart {
 
 		/*
 		 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
-		 * Therefore, it is critical for performance that these methods be
-		 * as efficient as possible.
+		 * Therefore, it is critical for performance that these methods be as
+		 * efficient as possible.
 		 */
 		public void handleEvent(Event event) {
 			Object data = event.item.getData();
 			ITask task = null;
 			Image image = null;
 			if (data instanceof ITask) {
-				task = (ITask)data;
+				task = (ITask) data;
 			} else if (data instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit)data).getCorrespondingTask();
+				task = ((AbstractQueryHit) data).getCorrespondingTask();
 			}
 			if (task != null) {
 				if (task.isActive()) {
@@ -187,7 +187,7 @@ public class TaskListView extends ViewPart {
 			} else if (data instanceof AbstractQueryHit) {
 				image = taskInactive;
 			}
-			if (image != null) {	
+			if (image != null) {
 				switch (event.type) {
 				case SWT.PaintItem: {
 					drawImage(activationImageOffset, event, image);
@@ -293,7 +293,7 @@ public class TaskListView extends ViewPart {
 	private PriorityDropDownAction filterOnPriorityAction;
 
 	private SortyByDropDownAction sortByAction;
-	
+
 	PreviousTaskDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
@@ -329,7 +329,7 @@ public class TaskListView extends ViewPart {
 	private TaskListTableSorter tableSorter;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
-
+	
 	private Color categoryGradientStart;
 
 	private Color categoryGradientEnd;
@@ -409,7 +409,7 @@ public class TaskListView extends ViewPart {
 				gc.drawLine(0, rect.y + rect.height - 1, area.width, rect.y + rect.height - 1);
 
 				gc.setForeground(oldForeground);
-				gc.setBackground(oldBackground);				
+				gc.setBackground(oldBackground);
 				/* Mark as Background being handled */
 				event.detail &= ~SWT.BACKGROUND;
 			}
@@ -604,23 +604,23 @@ public class TaskListView extends ViewPart {
 		if (gradientListenerAdded == false && categoryGradientStart != null
 				&& !categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
-			
+
 			// TODO: weird override of custom gradients
 			Color parentBackground = getViewer().getTree().getParent().getBackground();
 			double GRADIENT_TOP = 1.02;
 			double GRADIENT_BOTTOM = 1.035;
-			
-			int red = Math.min(255, (int)(parentBackground.getRed()*GRADIENT_TOP));
-			int green = Math.min(255, (int)(parentBackground.getGreen()*GRADIENT_TOP));
-			int blue = Math.min(255, (int)(parentBackground.getBlue()*GRADIENT_TOP));
-			
+
+			int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
+			int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
+			int blue = Math.min(255, (int) (parentBackground.getBlue() * GRADIENT_TOP));
+
 			categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
-			
-			red = Math.max(0, (int)(parentBackground.getRed()/GRADIENT_BOTTOM));
-			green = Math.max(0, (int)(parentBackground.getGreen()/GRADIENT_BOTTOM));
-			blue = Math.max(0, (int)(parentBackground.getBlue()/GRADIENT_BOTTOM));
+
+			red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
+			green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
+			blue = Math.max(0, (int) (parentBackground.getBlue() / GRADIENT_BOTTOM));
 			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
-			
+
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
@@ -662,7 +662,7 @@ public class TaskListView extends ViewPart {
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
 		}
-		
+
 		categoryGradientStart.dispose();
 		categoryGradientEnd.dispose();
 	}
@@ -713,64 +713,41 @@ public class TaskListView extends ViewPart {
 
 	@Override
 	public void saveState(IMemento memento) {
-		// IMemento colMemento = memento.createChild(columnWidthIdentifier);
-
-		// for (int i = 0; i < columnWidths.length; i++) {
-		// IMemento m = colMemento.createChild("col" + i);
-		// m.putInteger(MEMENTO_KEY_WIDTH, columnWidths[i]);
-		// }
-
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
 		m.putInteger(MEMENTO_KEY_SORT_INDEX, sortIndex);
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
-
-		// TODO: move to task list save policy
-		// /TasksUiPlugin.getTaskListManager().saveTaskList();
 	}
 
 	private void restoreState() {
 		if (taskListMemento != null) {
-			// IMemento taskListWidth =
-			// taskListMemento.getChild(columnWidthIdentifier);
-			// if (taskListWidth != null) {
-			// for (int i = 0; i < columnWidths.length - 1; i++) {
-			// IMemento m = taskListWidth.getChild("col" + i);
-			// if (m != null) {
-			// int width = m.getInteger(MEMENTO_KEY_WIDTH);
-			// columnWidths[i] = width;
-			// columns[i].setWidth(width);
-			// }
-			// }
-			// }
 			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
 			if (sorterMemento != null) {
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
 				if (m != null) {
-					sortIndex = m.getInteger(MEMENTO_KEY_SORT_INDEX);
+					Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
+					if (sortIndexInt != null) {
+						this.sortIndex = sortIndexInt.intValue();
+					}
 					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
 					}
 				} else {
-					sortIndex = 2;
+					sortIndex = 0;
 					sortDirection = DEFAULT_SORT_DIRECTION;
 				}
-
 			} else {
-				sortIndex = 2; // default priority
+				sortIndex = 0; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
-			if (sortIndex < 2) {
-				tableSorter.setColumn(columnNames[sortIndex]);
-				getViewer().refresh(false);
+			if (sortIndex == 1) {
+				setSortByPriority(false);
+			} else {
+				setSortByPriority(true);
 			}
-			// getViewer().setSorter(new TaskListTableSorter(this,
-			// columnNames[sortIndex]));
 		}
 		addFilter(FILTER_PRIORITY);
-		// if (MylarTaskListPlugin.getDefault().isFilterInCompleteMode())
-		// MylarTaskListPlugin.getTaskListManager().getTaskList().addFilter(inCompleteFilter);
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
 			addFilter(FILTER_COMPLETE);
 
@@ -779,7 +756,6 @@ public class TaskListView extends ViewPart {
 
 		if (TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
-			// toggleNextAction(false);
 		}
 
 		getViewer().refresh();
@@ -801,8 +777,8 @@ public class TaskListView extends ViewPart {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true, getViewer()), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true, getViewer()),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
@@ -814,7 +790,8 @@ public class TaskListView extends ViewPart {
 
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(taskListCellModifier);
-		tableSorter = new TaskListTableSorter(this, columnNames[sortIndex]);
+
+		tableSorter = new TaskListTableSorter(this, true);
 		getViewer().setSorter(tableSorter);
 
 		applyPresentation(catagorizedPresentation);
@@ -825,21 +802,24 @@ public class TaskListView extends ViewPart {
 		final int activationImageOffset = 12;
 		getViewer().getTree().addListener(SWT.EraseItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
 		getViewer().getTree().addListener(SWT.PaintItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
-		
+
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
 			public void mouseDown(MouseEvent e) {
-				// NOTE: need e.x offset for Linux/GTK, which does not see left-aligned items in tree
-				Object selected = ((Tree)e.widget).getItem(new Point(e.x+70, e.y));
+				// NOTE: need e.x offset for Linux/GTK, which does not see
+				// left-aligned items in tree
+				Object selected = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
 				if (selected instanceof TreeItem) {
-					if (((TreeItem)selected).getData() instanceof ITask || ((TreeItem)selected).getData() instanceof AbstractQueryHit) {
-						if (e.x > activationImageOffset-8 && e.x < activationImageOffset-2+18) {
-							taskListCellModifier.toggleTaskActivation((ITaskListElement)((TreeItem)selected).getData());
+					if (((TreeItem) selected).getData() instanceof ITask
+							|| ((TreeItem) selected).getData() instanceof AbstractQueryHit) {
+						if (e.x > activationImageOffset - 8 && e.x < activationImageOffset - 2 + 18) {
+							taskListCellModifier.toggleTaskActivation((ITaskListElement) ((TreeItem) selected)
+									.getData());
 						}
 					}
 				}
 			}
-			
+
 			public void mouseDoubleClick(MouseEvent e) {
 				// ignore
 			}
@@ -879,7 +859,7 @@ public class TaskListView extends ViewPart {
 			}
 
 		});
-		
+
 		getViewer().addTreeListener(new ITreeViewerListener() {
 
 			public void treeCollapsed(final TreeExpansionEvent event) {
@@ -1050,6 +1030,7 @@ public class TaskListView extends ViewPart {
 		manager.add(collapseAll);
 		manager.add(expandAll);
 		manager.add(new Separator(ID_SEPARATOR_FILTERS));
+		manager.add(sortByAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
@@ -1286,6 +1267,7 @@ public class TaskListView extends ViewPart {
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
+		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
@@ -1663,6 +1645,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public void setManualFiltersEnabled(boolean enabled) {
+		sortByAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
 		filterArchiveCategory.setEnabled(enabled);
@@ -1674,5 +1657,18 @@ public class TaskListView extends ViewPart {
 
 	public void setFocusedMode(boolean focusedMode) {
 		this.focusedMode = focusedMode;
+	}
+
+	public void setSortByPriority(boolean byPriority) {
+		if (byPriority) {
+			sortIndex = 0;
+		} else {
+			sortIndex = 1;
+		}
+		getViewer().setSorter(new TaskListTableSorter(this, byPriority));
+	}
+	
+	public boolean isSortByPriority() {
+		return sortIndex == 0;
 	}
 }

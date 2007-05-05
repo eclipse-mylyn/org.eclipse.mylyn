@@ -12,9 +12,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -23,9 +20,6 @@ import org.eclipse.swt.widgets.Menu;
  */
 class SortyByDropDownAction extends Action implements IMenuCreator {
 
-	/**
-	 * 
-	 */
 	private final TaskListView taskListView;
 
 	private static final String LABEL = "Sort by";
@@ -41,7 +35,6 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		this.taskListView = taskListView;
 		setText(LABEL);
 		setToolTipText(LABEL);
-//		setImageDescriptor(TasksUiImages.FILTER_PRIORITY);
 		setMenuCreator(this);
 	}
 
@@ -74,15 +67,13 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byPriority = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
-				SortyByDropDownAction.this.taskListView.getViewer().refresh();
+				taskListView.setSortByPriority(true);
+				byPriority.setChecked(true);
+				bySummary.setChecked(false);
 			}
 		};
 		byPriority.setEnabled(true);
-		byPriority.setText(Task.PriorityLevel.P1.getDescription());
+		byPriority.setText("Priority");
 		byPriority.setImageDescriptor(TasksUiImages.PRIORITY_1);
 		ActionContributionItem item = new ActionContributionItem(byPriority);
 		item.fill(dropDownMenu, -1);
@@ -90,20 +81,21 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		bySummary = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
-//				updateCheckedState(priority1, priority2, priority3, priority4, priority5);
-				SortyByDropDownAction.this.taskListView.getViewer().refresh();
+				taskListView.setSortByPriority(false);
+				byPriority.setChecked(false);
+				bySummary.setChecked(true);
 			}
 		};
 		bySummary.setEnabled(true);
-		bySummary.setText(Task.PriorityLevel.P2.getDescription());
-		bySummary.setImageDescriptor(TasksUiImages.PRIORITY_2);
+		bySummary.setText("Summary");
 		item = new ActionContributionItem(bySummary);
 		item.fill(dropDownMenu, -1);
-//		updateCheckedState(priority1, priority2, priority3, priority4, priority5);
+		
+		if (taskListView.isSortByPriority()) {
+			byPriority.setChecked(true);
+		} else {
+			bySummary.setChecked(true);
+		}
 	}
 
 	@Override
