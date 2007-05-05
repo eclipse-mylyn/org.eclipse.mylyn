@@ -336,6 +336,7 @@ public class HtmlTag {
 		tags.put("SCRIPT", Tag.SCRIPT);
 		tags.put("SELECT", Tag.SELECT);
 		tags.put("SMALL", Tag.SMALL);
+		tags.put("SPAN", Tag.SPAN);
 		tags.put("STRONG", Tag.STRONG);
 		tags.put("STYLE", Tag.STYLE);
 		tags.put("SUB", Tag.SUB);
