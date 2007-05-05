@@ -788,11 +788,12 @@
 	<extension
 		point="org.eclipse.ui.workingSets">
 		<workingSet
-                 elementAdapterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
-                 id="org.eclipse.mylar.tasks.ui.workingSet"
-                 name="Tasks"
-                 pageClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetPage"
-                 updaterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
+        elementAdapterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
+        icon="icons/etool16/open-task.gif"
+        id="org.eclipse.mylar.tasks.ui.workingSet"
+        name="Tasks"
+        pageClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetPage"
+        updaterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
 		</workingSet>
 	</extension>
    

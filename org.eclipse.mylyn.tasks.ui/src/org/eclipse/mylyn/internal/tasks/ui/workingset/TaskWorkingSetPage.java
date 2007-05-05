@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -175,8 +176,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
         tree.setContentProvider(treeContentProvider);
 
-        // XXX get real label provider from the task list
-        // tree.setLabelProvider(new TaskListLabelProvider());
+        tree.setLabelProvider(new TaskElementLabelProvider());
         
 		ArrayList<Object> containers = new ArrayList<Object>();
 		for (ITaskListElement element : (Set<ITaskListElement>) TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {

@@ -9,8 +9,10 @@
 package org.eclipse.mylar.internal.tasks.ui.workingset;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
@@ -62,11 +64,27 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public void containerDeleted(AbstractTaskContainer container) {
-		// XXX remove container from working set
+		synchronized (workingSets) {
+			for (IWorkingSet workingSet : workingSets) {
+				// TODO could filter by working set id
+				ArrayList<IAdaptable> remove = new ArrayList<IAdaptable>(); 
+				for (IAdaptable adaptable : workingSet.getElements()) {
+					if (adaptable instanceof AbstractTaskContainer
+							&& ((AbstractTaskContainer) adaptable).getHandleIdentifier().equals(
+									container.getHandleIdentifier())) {
+						remove.add(adaptable);
+					}
+				}
+				if(!remove.isEmpty()) {
+					ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+					elements.removeAll(remove);
+					workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+				}
+			}
+		}
 	}
 
 	public void containerInfoChanged(AbstractTaskContainer container) {
-		// XXX need to do anything?
 	}
 
 	public void localInfoChanged(ITask task) {
