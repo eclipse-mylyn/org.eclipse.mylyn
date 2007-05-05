@@ -606,10 +606,19 @@ public class TaskListView extends ViewPart {
 			getViewer().getTree().addListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
 			
 			// TODO: weird override of custom gradients
-			categoryGradientStart = getViewer().getTree().getParent().getBackground();
-			int red = (int)(categoryGradientStart.getRed()/1.13);
-			int green = (int)(categoryGradientStart.getGreen()/1.13);
-			int blue = (int)(categoryGradientStart.getBlue()/1.13);
+			Color parentBackground = getViewer().getTree().getParent().getBackground();
+			double GRADIENT_TOP = 1.02;
+			double GRADIENT_BOTTOM = 1.035;
+			
+			int red = Math.min(255, (int)(parentBackground.getRed()*GRADIENT_TOP));
+			int green = Math.min(255, (int)(parentBackground.getGreen()*GRADIENT_TOP));
+			int blue = Math.min(255, (int)(parentBackground.getBlue()*GRADIENT_TOP));
+			
+			categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
+			
+			red = Math.max(0, (int)(parentBackground.getRed()/GRADIENT_BOTTOM));
+			green = Math.max(0, (int)(parentBackground.getGreen()/GRADIENT_BOTTOM));
+			blue = Math.max(0, (int)(parentBackground.getBlue()/GRADIENT_BOTTOM));
 			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			
 			gradientListenerAdded = true;
@@ -653,6 +662,9 @@ public class TaskListView extends ViewPart {
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
 		}
+		
+		categoryGradientStart.dispose();
+		categoryGradientEnd.dispose();
 	}
 
 	/**
