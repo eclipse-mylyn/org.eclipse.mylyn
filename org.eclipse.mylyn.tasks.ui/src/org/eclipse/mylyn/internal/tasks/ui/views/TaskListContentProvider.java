@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,6 +30,9 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some
@@ -37,12 +43,19 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * 
  * @author Mik Kersten
  */
-public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider, IPropertyChangeListener {
 
 	protected final TaskListView view;
+	
+	private final IWorkingSetManager workingSetManager;
+
+	private IWorkingSet currentWorkingSet;
 
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
+		
+		this.workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
+		this.workingSetManager.addPropertyChangeListener(this);
 	}
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -50,7 +63,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public void dispose() {
-		// ignore
+		workingSetManager.removePropertyChangeListener(this);
 	}
 
 	public Object[] getElements(Object parent) {
@@ -118,11 +131,15 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					if (selectQuery((AbstractRepositoryQuery) element)) {
-						filteredRoots.add(element);
+						if(selectWorkingSet((AbstractRepositoryQuery) element)) {
+							filteredRoots.add(element);
+						}
 					}
 				} else if (element instanceof AbstractTaskContainer) {
 					if (selectContainer((AbstractTaskContainer) element)) {
-						filteredRoots.add(element);
+						if(selectWorkingSet((AbstractTaskContainer) element)) {
+							filteredRoots.add(element);
+						}
 					}
 				}
 			}
@@ -132,6 +149,22 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		}
 	}
 
+	private boolean selectWorkingSet(AbstractTaskContainer container) {
+		if(currentWorkingSet==null) {
+			return true;
+		}
+		boolean seenTaskWorkingSets = false;
+		for (IAdaptable adaptable : currentWorkingSet.getElements()) {
+			if(adaptable instanceof AbstractTaskContainer) {
+				seenTaskWorkingSets = true;
+				if(container.getHandleIdentifier().equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
+					return true;
+				}
+			}
+		}
+		return !seenTaskWorkingSets;
+	}
+	
 	/**
 	 * See bug 109693
 	 */
@@ -261,6 +294,23 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			}
 		}
 		return false;
+	}
+
+	
+	// IPropertyChangeListener
+	
+	public void propertyChange(PropertyChangeEvent event) {
+		// System.err.println(event.getProperty() + " : " + event.getNewValue());
+		
+		if(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
+			currentWorkingSet = (IWorkingSet) event.getNewValue();
+			// for (IAdaptable adaptable : currentWorkingSet.getElements()) {
+			//	System.err.println("  " + adaptable);
+			// }
+		}
+		
+		// System.err.println(Arrays.toString(currentWorkingSets));
+		this.view.refreshAndFocus(true);
 	}
 
 }
