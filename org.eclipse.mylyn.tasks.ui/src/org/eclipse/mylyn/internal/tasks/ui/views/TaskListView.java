@@ -829,7 +829,8 @@ public class TaskListView extends ViewPart {
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
 			public void mouseDown(MouseEvent e) {
-				Object selected = ((Tree)e.widget).getItem(new Point(e.x, e.y));
+				// NOTE: need e.x offset for Linux/GTK, which does not see left-aligned items in tree
+				Object selected = ((Tree)e.widget).getItem(new Point(e.x+70, e.y));
 				if (selected instanceof TreeItem) {
 					if (((TreeItem)selected).getData() instanceof ITask || ((TreeItem)selected).getData() instanceof AbstractQueryHit) {
 						if (e.x > activationImageOffset-8 && e.x < activationImageOffset-2+18) {
