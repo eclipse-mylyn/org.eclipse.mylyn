@@ -413,16 +413,6 @@
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
           tooltip="Automatically Fold Uninteresting Elements">
       	</action> 
-      	<action
-           class="org.eclipse.mylar.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
-           id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
-           style="toggle"
-	       label="Apply Mylar" 
-	       icon="icons/elcl16/interest-filtering-browsing.gif"
-	       tooltip="Focus Java Browsing Views on Active Task"
-	       toolbarPath="mylar"
-	       enablesFor="*">
-	    </action>
       	<!--
         <action
                definitionId="org.eclipse.mylar.java.ui.search.context"
