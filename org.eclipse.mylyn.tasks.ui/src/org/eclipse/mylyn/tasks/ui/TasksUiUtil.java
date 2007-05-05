@@ -19,6 +19,9 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -292,10 +295,11 @@ public class TasksUiUtil {
 
 		if (asyncExec) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				private boolean wasOpen = false;
+
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						boolean wasOpen = false;
+					if (window != null) {						
 						if (openWithBrowser) {
 							openUrl(task.getTaskUrl(), false);
 						} else {
@@ -311,20 +315,29 @@ public class TasksUiUtil {
 							}
 						}
 
-						if (task instanceof AbstractRepositoryTask) {
-							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-							if (!wasOpen) {
-								TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
-							}
-							// Synchronization must happen after marked read.
-							AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-									.getRepositoryConnector(repositoryTask.getRepositoryKind());
-							if (connector != null) {
-								TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false,
-										null);
-							}
+						Job updateTaskData = new Job("Update Task State") {
 
-						}
+							@Override
+							protected IStatus run(IProgressMonitor monitor) {
+								if (task instanceof AbstractRepositoryTask) {
+									AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+									if (!wasOpen) {
+										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
+									}
+									// Synchronization must happen after marked read.
+									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+											.getRepositoryConnector(repositoryTask.getRepositoryKind());
+									if (connector != null) {
+										TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false,
+												null);
+									}
+
+								}
+								return Status.OK_STATUS;
+							}};
+							
+							updateTaskData.setSystem(true);
+							updateTaskData.schedule();
 
 					}
 				}
