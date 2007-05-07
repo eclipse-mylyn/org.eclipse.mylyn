@@ -51,6 +51,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 
 	public AbstractTracClientTest() {
+		this(null, PrivilegeLevel.USER);
 	}
 	
 	public ITracClient connect096() throws Exception {
