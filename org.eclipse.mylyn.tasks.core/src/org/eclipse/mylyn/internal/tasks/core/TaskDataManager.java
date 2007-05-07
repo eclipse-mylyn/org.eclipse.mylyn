@@ -231,6 +231,7 @@ public class TaskDataManager {
 	}
 
 	/**
+	 * Public for testing only
 	 * force a reset of all data maps
 	 */
 	public void clear() {

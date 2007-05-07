@@ -95,7 +95,7 @@ public abstract class AbstractRepositoryConnector {
 				// Use connector task factory
 				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
 
-				updateTask(repository, repositoryTask, taskData);
+				updateTaskFromTaskData(repository, repositoryTask, taskData);
 
 				taskList.addTask(repositoryTask);
 				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
@@ -156,7 +156,7 @@ public abstract class AbstractRepositoryConnector {
 	 *             thrown in case of error while synchronizing
 	 * @see {@link #getTaskDataHandler()}
 	 */
-	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask)
+	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask)
 			throws CoreException;
 
 	/**
@@ -164,7 +164,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @since 2.0
 	 */
-	public abstract void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public abstract void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
 			RepositoryTaskData taskData);
 
 	public String[] repositoryPropertyNames() {

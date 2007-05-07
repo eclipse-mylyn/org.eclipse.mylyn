@@ -122,16 +122,16 @@ class SynchronizeTaskJob extends Job {
 
 			if (downloadedTaskData != null) {
 				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forceSync);
-				connector.updateTask(repository, repositoryTask, downloadedTaskData);
+				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
 			} else {
-				connector.updateTask(repository, repositoryTask);
+				connector.updateTaskFromRepository(repository, repositoryTask);
 			}
 		} else {
-			connector.updateTask(repository, repositoryTask);
+			connector.updateTaskFromRepository(repository, repositoryTask);
 		}
 	}
 }

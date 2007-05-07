@@ -115,7 +115,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
 		// ignore
 	}
 
@@ -138,7 +138,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
 		// ignore
 		
 	}

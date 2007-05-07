@@ -171,7 +171,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMigrateTaskHandles() {
 		AbstractRepositoryTask task = new MockRepositoryTask("http://a", "123");
-		AbstractRepositoryTask task2 = new MockRepositoryTask("http://asdf", "asdf");
+		AbstractRepositoryTask task2 = new MockRepositoryTask("http://other", "other");
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().addTask(task2);
 		
@@ -180,6 +180,7 @@ public class TaskListManagerTest extends TestCase {
 		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier()));
 		
 		RepositoryTaskData taskData2 = new RepositoryTaskData(new MockAttributeFactory(), task2.getRepositoryKind(), task2.getRepositoryUrl(), task2.getTaskId(), task2.getTaskKind());
+		taskData2.setNewComment("TEST");
 		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(task2.getHandleIdentifier(), taskData2);
 		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task2.getHandleIdentifier()));
 		
@@ -187,7 +188,9 @@ public class TaskListManagerTest extends TestCase {
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
 		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData("http://b-123"));
-		assertNotNull(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task2.getHandleIdentifier()));
+		RepositoryTaskData otherData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task2.getHandleIdentifier());
+		assertNotNull(otherData);
+		assertEquals("TEST", otherData.getNewComment());
 	} 
 	
 	public void testMigrateTaskHandlesWithExplicitSet() {

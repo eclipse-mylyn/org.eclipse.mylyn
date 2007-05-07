@@ -101,7 +101,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return new BugzillaTask(repositoryUrl, id, summary, true);
 	}
 
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
 			// Summary
@@ -354,7 +354,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
 		// ignore
 	}
 

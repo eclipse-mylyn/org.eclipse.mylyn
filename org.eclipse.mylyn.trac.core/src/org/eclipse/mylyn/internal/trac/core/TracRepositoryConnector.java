@@ -111,7 +111,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
 			// String taskId =
 			// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
@@ -217,7 +217,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return new TracTask(repositoryUrl, id, "<description not set>", true);
 	}
 
-	public void updateTask(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
 		if (taskData != null) {
 			repositoryTask.setSummary(getTicketDescription(taskData));
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
