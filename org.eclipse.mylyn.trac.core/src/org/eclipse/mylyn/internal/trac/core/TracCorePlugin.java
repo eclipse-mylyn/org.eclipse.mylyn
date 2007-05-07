@@ -93,9 +93,9 @@ public class TracCorePlugin extends Plugin {
 
 	public static IStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
-			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)");
+			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)", e);
 		} else if (e instanceof TracPermissionDeniedException) {
-			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)");
+			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)", e);
 		} else if (e instanceof TracException) {
 			String message = e.getMessage();
 			if (message == null) {
