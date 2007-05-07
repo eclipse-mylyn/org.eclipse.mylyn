@@ -87,7 +87,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(historyContext);
 		assertTrue(taskList.getAllTasks().size() == 0);
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
-		assertEquals(0, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
+		assertEquals(1, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
 
 		wizardPage.setParameters(true, true, true, true, true, "", sourceZipFile.getPath());
 		wizard.performFinish();

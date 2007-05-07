@@ -23,7 +23,6 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -46,7 +45,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			byte[] data = client.getAttachmentData(attachment.getId());
 			return data;
 		} catch (IOException e) {
-			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));			
 		}
 	}
@@ -90,7 +89,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			client.postAttachment(bugId, comment, description, file, contentType, isPatch);
 		} catch (IOException e) {
-			throw new CoreException(new MylarStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
 		}
 	}

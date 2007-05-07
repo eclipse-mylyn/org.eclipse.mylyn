@@ -29,10 +29,9 @@ import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -84,8 +83,8 @@ class SynchronizeQueryJob extends Job {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
 			if (repository == null) {
-				repositoryQuery.setStatus(new MylarStatus(Status.ERROR, TasksUiPlugin.PLUGIN_ID,
-						IMylarStatusConstants.REPOSITORY_NOT_FOUND, repositoryQuery.getRepositoryUrl()));
+				repositoryQuery.setStatus(RepositoryStatus.createNotFoundError(repositoryQuery.getRepositoryUrl(),
+						TasksUiPlugin.PLUGIN_ID));
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
@@ -204,7 +203,8 @@ class SynchronizeQueryJob extends Job {
 							continue;
 						}
 						if (taskData != null) {
-							TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(hit.getHandleIdentifier(), taskData);
+							TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(hit.getHandleIdentifier(),
+									taskData);
 						}
 						monitor.worked(1);
 					}

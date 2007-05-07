@@ -11,98 +11,77 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public class MylarStatus extends Status implements IMylarStatusConstants {
 
-	private String errorMessage;
+	private String htmlMessage;
 
-	private String repositoryUrl = "";
-
-	public MylarStatus(int severity, String pluginId, int code) {
-		super(severity, pluginId, code, "MylarStatus", null);
-		this.errorMessage = null;
+	/**
+	 * Constructs a status object with a message.
+	 */
+	public MylarStatus(int severity, String pluginId, int code, String message) {
+		super(severity, pluginId, code, message, null);
 	}
 
-	public MylarStatus(int severity, String pluginId, int code, String errorMessage) {
-		super(severity, pluginId, code, "MylarStatus", null);
-		this.errorMessage = errorMessage;
-	}
-
-	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, Throwable e) {
-		super(severity, pluginId, code, "MylarStatus", e);
-		this.repositoryUrl = repositoryUrl;
-		this.errorMessage = e.getMessage();
-	}
-
-	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage) {
-		super(severity, pluginId, code, "MylarStatus", null);
-		this.errorMessage = errorMessage;
-		this.repositoryUrl = repositoryUrl;
-	}
-
-	public MylarStatus(int severity, String pluginId, int code, String repositoryUrl, String errorMessage, Throwable e) {
-		super(severity, pluginId, code, "MylarStatus", e);
-		this.errorMessage = errorMessage;
-		this.repositoryUrl = repositoryUrl;
+	/**
+	 * Constructs a status object with a message and an exception. that caused
+	 * the error.
+	 */
+	public MylarStatus(int severity, String pluginId, int code, String message, Throwable e) {
+		super(severity, pluginId, code, message, e);
 	}
 
 	/**
 	 * Returns the message that is relevant to the code of this status.
 	 */
 	public String getMessage() {
-
-		switch (getCode()) {
-		case REPOSITORY_LOGIN_ERROR:
-			return MylarMessages
-					.bind(MylarMessages.repository_login_failure, this.getRepositoryUrl(), this.errorMessage);
-		case REPOSITORY_NOT_FOUND:
-			return MylarMessages.bind(MylarMessages.repository_not_found, this.errorMessage);
-		case REPOSITORY_ERROR:
-			return MylarMessages.bind(MylarMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
-		case IO_ERROR:
-			String string1 = "Unknown IO error occurred";
-			String string2 = "No message provided";
-			if(getException() != null) {
-				string1 = getException().getClass().getSimpleName();
-				string2 = getException().getMessage();
-			}
-			Object[] strings = { getRepositoryUrl(), string1, string2 };
-			return MylarMessages.bind(MylarMessages.io_error, strings);
-		case INTERNAL_ERROR:
-			return MylarMessages.bind(MylarMessages.internal_error, this.errorMessage);
-		case OPERATION_CANCELLED:
-			return MylarMessages.bind(MylarMessages.operation_cancelled, this.errorMessage);
-		case REPOSITORY_COLLISION:
-			return MylarMessages.bind(MylarMessages.repository_collision, this.errorMessage);
-		case REPOSITORY_COMMENT_REQD:
-			if (errorMessage == null) {
-				return MylarMessages.repository_comment_reqd;
-			} else {
-				return errorMessage;
-			}
+		String message = super.getMessage();
+		if (message != null && !"".equals(message)) {
+			return message;
 		}
-		if (errorMessage != null) {
-			return errorMessage;
-		} else if (getException() != null) {
-			String message = getException().getMessage();
-			if (message != null) {
-				return message;
-			} else {
-				return getException().toString();
+
+		Throwable exception = getException();
+		if (exception != null) {
+			if (exception.getMessage() != null) {
+				return exception.getMessage();
 			}
+			return exception.toString();
 		}
-		return "Unknown";
+
+		return "";
 	}
 
-	public String getRepositoryUrl() {
-		return repositoryUrl;
+	protected void setHtmlMessage(String htmlMessage) {
+		this.htmlMessage = htmlMessage;
 	}
 
-	public void setRepositoryUrl(String repositoryUrl) {
-		this.repositoryUrl = repositoryUrl;
+	public String getHtmlMessage() {
+		return htmlMessage;
 	}
+
+	public boolean isHtmlMessage() {
+		return htmlMessage != null;
+	}
+
+	public static MylarStatus createInternalError(String pluginId, String message, Throwable t) {
+		return new MylarStatus(IStatus.ERROR, pluginId, IMylarStatusConstants.INTERNAL_ERROR, message, t);
+	}
+
+	public static MylarStatus createHtmlStatus(int severity, String pluginId, int code, String message,
+			String htmlMessage) {
+		if (htmlMessage == null) {
+			throw new IllegalArgumentException("htmlMessage must not be null");
+		}
+
+		MylarStatus status = new MylarStatus(severity, pluginId, code, message);
+		status.setHtmlMessage(htmlMessage);
+		return status;
+	}
+
 }

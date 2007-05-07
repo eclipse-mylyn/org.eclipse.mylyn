@@ -17,6 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.MylarStatus;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
@@ -78,25 +81,33 @@ public class TracCorePlugin extends Plugin {
 		return cacheFile;
 	}
 
-	public static TracStatus toStatus(Throwable e, TaskRepository repository) {
-		TracStatus status = toStatus(e);
-		status.setRepositoryUrl(repository.getUrl());
-		return status;
+	public static IStatus toStatus(Throwable e, TaskRepository repository) {
+		if (e instanceof TracLoginException) {
+			return RepositoryStatus.createLoginError(repository.getUrl(), PLUGIN_ID);
+		} else if (e instanceof TracPermissionDeniedException) {
+			return TracStatus.createPermissionDeniedError(repository.getUrl(), PLUGIN_ID);
+		}
+		
+		return toStatus(e);
 	}
 
-	public static TracStatus toStatus(Throwable e) {
+	public static IStatus toStatus(Throwable e) {
 		if (e instanceof TracLoginException) {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.REPOSITORY_LOGIN_ERROR);
+			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)");
 		} else if (e instanceof TracPermissionDeniedException) {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.PERMISSION_DENIED_ERROR);
+			throw new RuntimeException("Invoke TracCorePlugin.toStatus(Throwable, TaskRepository)");
 		} else if (e instanceof TracException) {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, e.getMessage());
+			String message = e.getMessage();
+			if (message == null) {
+				message = "I/O error has occured";
+			}
+			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, message, e);
 		} else if (e instanceof ClassCastException) {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, "Unexpected server response: " + e.getMessage(), e);
+			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, "Unexpected server response: " + e.getMessage(), e);
 		} else if (e instanceof MalformedURLException) {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.IO_ERROR, "Repository URL is invalid", e);
+			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, "Repository URL is invalid", e);
 		} else {
-			return new TracStatus(Status.ERROR, PLUGIN_ID, TracStatus.INTERNAL_ERROR, "Unexpected error", e);
+			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.INTERNAL_ERROR, "Unexpected error", e);
 		}
 	}
 

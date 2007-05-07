@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.tasks.core;
 
-
 /**
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 public interface IMylarStatusConstants {
 
@@ -45,5 +45,7 @@ public interface IMylarStatusConstants {
 	public final static int LOGGED_OUT_OF_REPOSITORY = 10;
 	
 	public final static int NETWORK_ERROR = 11;
+	
+	public final static int PERMISSION_DENIED_ERROR = 12;
 
 }

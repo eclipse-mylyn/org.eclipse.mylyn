@@ -20,6 +20,7 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -64,7 +65,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		final ITaskDataHandler taskDataHandler = (ITaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
 			MylarStatusHandler.displayStatus("Error creating new task", new MylarStatus(IStatus.ERROR,
-					TasksUiPlugin.PLUGIN_ID, MylarStatus.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));
+					TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));
 			return false;
 		}
 
@@ -80,7 +81,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 					try {
 						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
 							throw new CoreException(new MylarStatus(IStatus.ERROR,
-									TasksUiPlugin.PLUGIN_ID, MylarStatus.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));						}
+									TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

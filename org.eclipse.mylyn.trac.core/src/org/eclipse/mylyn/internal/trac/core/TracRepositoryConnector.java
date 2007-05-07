@@ -37,6 +37,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -323,8 +324,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
-			throw new CoreException(new TracStatus(IStatus.INFO, TracCorePlugin.PLUGIN_ID, Status.WARNING,
-					"Could not update attributes", null));
+			throw new CoreException(RepositoryStatus.createStatus(repository.getUrl(), IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "Could not update attributes"));
 		}
 	}
 

@@ -25,11 +25,11 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylar.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -346,15 +346,15 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 		private void displayError(final String serverUrl, Throwable e) {
 			IStatus status;
 			if (e instanceof MalformedURLException) {
-				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
 						"Server URL is invalid.");
 			} else if (e instanceof CoreException) {
 				status = ((CoreException) e).getStatus();
 			} else if (e instanceof IOException) {
-				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.IO_ERROR,
+				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.IO_ERROR,
 						serverUrl, e.getMessage());
 			} else {
-				status = new MylarStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
+				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.NETWORK_ERROR,
 						serverUrl, e.getMessage());
 			}
 			MylarStatusHandler.displayStatus("Validation failed", status);

@@ -19,8 +19,8 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -89,8 +89,8 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= QueryHitCollector.MAX_HITS) {
-			MylarStatusHandler.displayStatus("Maximum hits reached", new MylarStatus(Status.WARNING,
-					TasksUiPlugin.PLUGIN_ID, MylarStatus.INTERNAL_ERROR, MAX_HITS_REACHED));
+			MylarStatusHandler.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getUrl(),
+					IStatus.WARNING, TasksUiPlugin.PLUGIN_ID, MAX_HITS_REACHED));
 		}
 		return searchResult;
 	}

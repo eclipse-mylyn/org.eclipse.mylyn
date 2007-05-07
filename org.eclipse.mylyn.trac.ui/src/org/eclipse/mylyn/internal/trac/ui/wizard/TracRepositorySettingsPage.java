@@ -23,9 +23,9 @@ import org.eclipse.mylar.internal.trac.core.TracClientFactory;
 import org.eclipse.mylar.internal.trac.core.TracException;
 import org.eclipse.mylar.internal.trac.core.TracLoginException;
 import org.eclipse.mylar.internal.trac.core.TracPermissionDeniedException;
-import org.eclipse.mylar.internal.trac.core.TracStatus;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -168,7 +168,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	// public for testing
 	public class TracValidator extends Validator {
 
-		final String serverUrl;
+		final String repositoryUrl;
 
 		final Version version;
 
@@ -181,7 +181,7 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 		private Version result;
 
 		public TracValidator(TaskRepository repository, Version version) {
-			this.serverUrl = repository.getUrl();
+			this.repositoryUrl = repository.getUrl();
 			this.username = repository.getUserName();
 			this.password = repository.getPassword();
 			this.proxy = repository.getProxy();
@@ -192,43 +192,47 @@ public class TracRepositorySettingsPage extends AbstractRepositorySettingsPage {
 			try {
 				validate();
 			} catch (MalformedURLException e) {
-				throw new CoreException(new TracStatus(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, INVALID_REPOSITORY_URL));
+				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
+						TracUiPlugin.PLUGIN_ID, INVALID_REPOSITORY_URL));
 			} catch (TracLoginException e) {
-				throw new CoreException(new TracStatus(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, INVALID_LOGIN));
-			} catch(TracPermissionDeniedException e) {
-				throw new CoreException(new TracStatus(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, 
-						"Insufficient permissions for selected access type."));
+				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
+						TracUiPlugin.PLUGIN_ID, INVALID_LOGIN));
+			} catch (TracPermissionDeniedException e) {
+				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
+						TracUiPlugin.PLUGIN_ID, "Insufficient permissions for selected access type."));
 			} catch (TracException e) {
 				String message = "No Trac repository found at url";
 				if (e.getMessage() != null) {
 					message += ": " + e.getMessage();
 				}
-				throw new CoreException(new TracStatus(IStatus.ERROR, TracUiPlugin.PLUGIN_ID, 0, message));
+				throw new CoreException(RepositoryStatus.createStatus(repositoryUrl, IStatus.ERROR,
+						TracUiPlugin.PLUGIN_ID, message));
 			}
 		}
 
 		public void validate() throws MalformedURLException, TracException {
 			if (version != null) {
-				ITracClient client = TracClientFactory.createClient(serverUrl, version, username, password, proxy);
+				ITracClient client = TracClientFactory.createClient(repositoryUrl, version, username, password, proxy);
 				client.validate();
 			} else {
 				// probe version: XML-RPC access first, then web
 				// access
 				try {
-					ITracClient client = TracClientFactory.createClient(serverUrl, Version.XML_RPC, username, password,
-							proxy);
+					ITracClient client = TracClientFactory.createClient(repositoryUrl, Version.XML_RPC, username,
+							password, proxy);
 					client.validate();
 					result = Version.XML_RPC;
 				} catch (TracException e) {
 					try {
-						ITracClient client = TracClientFactory.createClient(serverUrl, Version.TRAC_0_9, username,
+						ITracClient client = TracClientFactory.createClient(repositoryUrl, Version.TRAC_0_9, username,
 								password, proxy);
 						client.validate();
 						result = Version.TRAC_0_9;
 
 						if (e instanceof TracPermissionDeniedException) {
-							setStatus(new TracStatus(IStatus.INFO, TracUiPlugin.PLUGIN_ID, IStatus.OK,
-									"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
+							setStatus(RepositoryStatus
+									.createStatus(repositoryUrl, IStatus.INFO, TracUiPlugin.PLUGIN_ID,
+											"Authentication credentials are valid. Note: Insufficient permissions for XML-RPC access, falling back to web access."));
 						}
 					} catch (TracLoginException e2) {
 						throw e;

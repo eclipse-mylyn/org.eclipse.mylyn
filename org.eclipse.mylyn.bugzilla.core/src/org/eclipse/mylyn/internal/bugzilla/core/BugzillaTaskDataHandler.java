@@ -23,7 +23,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESO
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -97,7 +96,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 			return null;
 
 		} catch (IOException e) {
-			throw new CoreException(new MylarStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
 		}
 	}
@@ -118,7 +117,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 			}
 
 		} catch (IOException e) {
-			throw new CoreException(new MylarStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
 		}
 	}
