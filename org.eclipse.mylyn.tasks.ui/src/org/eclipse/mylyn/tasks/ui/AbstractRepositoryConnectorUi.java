@@ -26,6 +26,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
@@ -82,6 +83,14 @@ public abstract class AbstractRepositoryConnectorUi {
 	 *            can be null
 	 */
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+		return LABEL_TASK_DEFAULT;
+	}
+	
+	/**
+	 * @param taskData
+	 *            can be null
+	 */
+	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return LABEL_TASK_DEFAULT;
 	}
 	
@@ -200,5 +209,9 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public boolean handlesDueDates(AbstractRepositoryTask task) {
 		return false;
+	}
+
+	public String getKindLabel(String kindLabel) {
+		return null;
 	}
 }

@@ -748,7 +748,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		RepositoryTaskAttribute priorityAttribute = taskData.getAttribute(RepositoryTaskAttribute.PRIORITY);
 		addNameValue(headerInfoComposite, priorityAttribute);
 
-		String idLabel = (repositoryTask != null) ? repositoryTask.getTaskKey() : taskData.getId();
+		String idLabel = (repositoryTask != null) ? repositoryTask.getTaskKey() : taskData.getTaskKey();
 		if (idLabel != null) {
 
 			Composite nameValue = toolkit.createComposite(headerInfoComposite);

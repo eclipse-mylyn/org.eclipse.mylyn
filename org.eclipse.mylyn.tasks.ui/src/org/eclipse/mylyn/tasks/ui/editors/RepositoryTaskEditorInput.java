@@ -15,7 +15,7 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
-/** 
+/**
  * @author Mik Kersten
  * @author Rob Elves
  */
@@ -30,7 +30,7 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl, String taskId) {
 		super(repository, handle);
 		this.taskId = taskId;
-		this.url = taskUrl;		
+		this.url = taskUrl;
 		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
 		if (task != null && task instanceof AbstractRepositoryTask) {
 			this.repositoryTask = (AbstractRepositoryTask) task;
@@ -40,19 +40,19 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	public AbstractRepositoryTask getRepositoryTask() {
 		return repositoryTask;
 	}
-		
+
 	public String getName() {
-		if(repositoryTask != null) {
+		if (repositoryTask != null) {
 			String idLabel = repositoryTask.getTaskKey();
-			
+
 			String label = "";
 			if (idLabel != null) {
 				label += idLabel + ": ";
 			}
 			label += repositoryTask.getSummary();
-			return label;			
+			return label;
 		} else if (getTaskData() != null && getTaskData().getLabel() != null) {
-			return getTaskData().getId()+": "+getTaskData().getLabel();
+			return getTaskData().getTaskKey() + ": " + getTaskData().getLabel();
 		} else if (taskId != null) {
 			return taskId;
 		} else {
@@ -96,8 +96,8 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 	}
 
 	/**
-	 * @return url for the repositoryTask/hit. Used by TaskEditor when
-	 *         opening browser
+	 * @return url for the repositoryTask/hit. Used by TaskEditor when opening
+	 *         browser
 	 */
 	public String getUrl() {
 		return url;

@@ -270,6 +270,14 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return reportID;
 	}
 
+	public String getTaskKey() {
+		RepositoryTaskAttribute attr = getAttribute(RepositoryTaskAttribute.TASK_KEY);
+		if (attr != null) {
+			return attr.getValue();
+		}
+		return getId();
+	}
+	
 	/**
 	 * @return the server for this report
 	 */

@@ -90,6 +90,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String NEW_CC = "task.common.newcc";
 
 	public static final String REMOVE_CC = "task.common.removecc";
+	
+	public static final String TASK_KEY = "task.common.key";
 
 	/**
 	 * String constant used to represent true for boolean attributes.

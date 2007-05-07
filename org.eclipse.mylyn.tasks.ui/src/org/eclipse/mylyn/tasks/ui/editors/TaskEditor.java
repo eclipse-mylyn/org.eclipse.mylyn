@@ -596,15 +596,21 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
 
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskData.getRepositoryKind());
+		
 		String kindLabel = taskData.getTaskKind();
-		String idLabel = taskData.getId();
+		
+		if(connectorUi != null) {
+			kindLabel =  connectorUi.getTaskKindLabel(taskData);
+		}		
+		
+		String idLabel = taskData.getTaskKey();
 
 		if (taskData.isNew()) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskData.getRepositoryKind());
 			if (connectorUi != null) {
-				kindLabel = "New " + connectorUi.getTaskKindLabel(null);
+				kindLabel = "New " + connectorUi.getTaskKindLabel(taskData);
 			} else {
-				kindLabel = "New Task";
+				kindLabel = "New "+taskData.getTaskKind();
 			}
 			idLabel = "";
 		}
