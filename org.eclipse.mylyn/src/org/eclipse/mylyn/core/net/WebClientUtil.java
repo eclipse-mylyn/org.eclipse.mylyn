@@ -244,7 +244,7 @@ public class WebClientUtil {
 		URL favUrl = new URL(favString);
 		try {
 			ImageDescriptor desc = ImageDescriptor.createFromURL(favUrl);
-			if (desc.getImageData() != null) {
+			if (desc != null && desc.getImageData() != null) {
 				if ((desc.getImageData().width != 16) && (desc.getImageData().height != 16)) {
 					ImageData data = desc.getImageData().scaledTo(16, 16);
 					return ImageDescriptor.createFromImageData(data);
