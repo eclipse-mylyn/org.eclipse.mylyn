@@ -280,9 +280,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				return children;
 			} else if (parent instanceof AbstractQueryHit) {
 				AbstractRepositoryTask task = ((AbstractQueryHit) parent).getCorrespondingTask();
-				for (ITask t : task.getChildren()) {
-					if (!filter(parent, t)) {
-						children.add(t);
+				if (task != null) {
+					for (ITask t : task.getChildren()) {
+						if (!filter(parent, t)) {
+							children.add(t);
+						}
 					}
 				}
 				return children;
