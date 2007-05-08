@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylar_feature"
       label="Mylar Task List (Required)"
-      version="2.0.0.v20070503-1930"
+      version="2.0.0.v20070506-2200"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylar">
 
@@ -225,63 +225,63 @@ litigation.
          id="org.eclipse.mylar.doc"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.context.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.tasks.web"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.monitor.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070503-1930"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylar.web"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070506-2200"
          unpack="false"/>
 
 </feature>
