@@ -147,7 +147,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				resultCollector.accept(hit);
 			}
 		} catch (Throwable e) {
-			return TracCorePlugin.toStatus(e);
+			return TracCorePlugin.toStatus(e, repository);
 		}
 
 		return Status.OK_STATUS;
