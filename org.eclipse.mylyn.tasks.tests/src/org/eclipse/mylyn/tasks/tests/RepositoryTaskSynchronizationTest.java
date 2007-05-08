@@ -365,6 +365,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return false;
 		}
 
+
 		// private final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 		//
 		// private final SimpleDateFormat format = new

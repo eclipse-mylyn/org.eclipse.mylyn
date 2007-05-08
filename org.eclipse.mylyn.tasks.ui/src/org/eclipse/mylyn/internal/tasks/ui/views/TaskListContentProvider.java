@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -43,17 +44,18 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider, IPropertyChangeListener {
+public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider,
+		IPropertyChangeListener {
 
 	protected final TaskListView view;
-	
+
 	private final IWorkingSetManager workingSetManager;
 
 	private IWorkingSet currentWorkingSet;
 
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
-		
+
 		this.workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 		this.workingSetManager.addPropertyChangeListener(this);
 	}
@@ -104,6 +106,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			return cat.getChildren() != null && cat.getChildren().size() > 0;
 		} else if (parent instanceof ITask) {
 			return taskHasUnfilteredChildren((ITask) parent);
+		} else if (parent instanceof AbstractQueryHit) {
+			if (((AbstractQueryHit) parent).getCorrespondingTask() != null) {
+				return taskHasUnfilteredChildren(((AbstractQueryHit) parent).getCorrespondingTask());
+			} else {
+				return false;
+			}
 		}
 		return false;
 	}
@@ -131,13 +139,13 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					if (selectQuery((AbstractRepositoryQuery) element)) {
-						if(selectWorkingSet((AbstractRepositoryQuery) element)) {
+						if (selectWorkingSet((AbstractRepositoryQuery) element)) {
 							filteredRoots.add(element);
 						}
 					}
 				} else if (element instanceof AbstractTaskContainer) {
 					if (selectContainer((AbstractTaskContainer) element)) {
-						if(selectWorkingSet((AbstractTaskContainer) element)) {
+						if (selectWorkingSet((AbstractTaskContainer) element)) {
 							filteredRoots.add(element);
 						}
 					}
@@ -150,21 +158,21 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean selectWorkingSet(AbstractTaskContainer container) {
-		if(currentWorkingSet==null) {
+		if (currentWorkingSet == null) {
 			return true;
 		}
 		boolean seenTaskWorkingSets = false;
 		for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			if(adaptable instanceof AbstractTaskContainer) {
+			if (adaptable instanceof AbstractTaskContainer) {
 				seenTaskWorkingSets = true;
-				if(container.getHandleIdentifier().equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
+				if (container.getHandleIdentifier().equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
 					return true;
 				}
 			}
 		}
 		return !seenTaskWorkingSets;
 	}
-	
+
 	/**
 	 * See bug 109693
 	 */
@@ -270,6 +278,14 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				}
 				return children;
+			} else if (parent instanceof AbstractQueryHit) {
+				AbstractRepositoryTask task = ((AbstractQueryHit) parent).getCorrespondingTask();
+				for (ITask t : task.getChildren()) {
+					if (!filter(parent, t)) {
+						children.add(t);
+					}
+				}
+				return children;
 			}
 		} else {
 			List<Object> children = new ArrayList<Object>();
@@ -296,19 +312,19 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	
 	// IPropertyChangeListener
-	
+
 	public void propertyChange(PropertyChangeEvent event) {
-		// System.err.println(event.getProperty() + " : " + event.getNewValue());
-		
-		if(IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
+		// System.err.println(event.getProperty() + " : " +
+		// event.getNewValue());
+
+		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
 			currentWorkingSet = (IWorkingSet) event.getNewValue();
 			// for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			//	System.err.println("  " + adaptable);
+			// System.err.println(" " + adaptable);
 			// }
 		}
-		
+
 		// System.err.println(Arrays.toString(currentWorkingSets));
 		this.view.refreshAndFocus(true);
 	}

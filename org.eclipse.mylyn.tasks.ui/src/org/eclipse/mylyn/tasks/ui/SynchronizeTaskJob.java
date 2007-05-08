@@ -122,7 +122,7 @@ class SynchronizeTaskJob extends Job {
 
 			if (downloadedTaskData != null) {
 				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forceSync);
-				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
+				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData, true);
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);

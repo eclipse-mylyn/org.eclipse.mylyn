@@ -261,6 +261,10 @@ public class Task extends PlatformObject implements ITask {
 	public void removeSubTask(ITask t) {
 		children.remove(t);
 	}
+	
+	public void dropSubTasks() {
+		children.clear();
+	}
 
 	public void setContainer(AbstractTaskContainer cat) {
 		this.parentCategory = cat;

@@ -124,6 +124,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals("http://mylar.eclipse.org/bugs222/show_bug.cgi?id=3", task.getTaskUrl());
 	}
 
+	public void testUpdateWithSubTasks() throws Exception {
+		init222();
+		String taskNumber = "23";
+		TasksUiPlugin.getDefault().getTaskDataManager().clear();
+		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks().size());
+		BugzillaTask task = this.generateLocalTaskAndDownload(taskNumber);
+		assertNotNull(task.getChildren());
+		assertEquals(2, task.getChildren().size());
+	}
+	
 	public void testContextAttachFailure() throws Exception {
 		init218();
 		BugzillaTask task = this.generateLocalTaskAndDownload("3");

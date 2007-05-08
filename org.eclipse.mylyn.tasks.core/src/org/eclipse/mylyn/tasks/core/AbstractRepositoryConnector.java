@@ -75,6 +75,13 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean canCreateNewTask(TaskRepository repository);
 
 	/**
+	 * create task and necessary subtasks (1 level nesting)
+	 */
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id) throws CoreException {
+		return createTaskFromExistingId(repository, id, true);
+	}
+	
+	/**
 	 * Create new repository task, storing necessary task data
 	 * 
 	 * @param taskId
@@ -83,7 +90,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @throws CoreException
 	 *             TODO
 	 */
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id) throws CoreException {
+	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks) throws CoreException {
 		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
 		if (task instanceof AbstractRepositoryTask) {
@@ -94,14 +101,13 @@ public abstract class AbstractRepositoryConnector {
 			if (taskData != null) {
 				// Use connector task factory
 				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
-
-				updateTaskFromTaskData(repository, repositoryTask, taskData);
-
+				updateTaskFromTaskData(repository, repositoryTask, taskData, retrieveSubTasks);
+				
 				taskList.addTask(repositoryTask);
 				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
 			}
 		} // TODO: Handle case similar to web tasks (no taskDataHandler but
-			// have tasks)
+		// have tasks)
 
 		return repositoryTask;
 	}
@@ -161,11 +167,15 @@ public abstract class AbstractRepositoryConnector {
 
 	/**
 	 * Sets all fields on the given task
+	 * @param TaskRepository
+	 * @param repositoryTask to update
+	 * @param RepositoryTaskData new repository task data from which to update task information
+	 * @param retrieveSubTasks true if method should result in construction of missing subtasks, false otherwise
 	 * 
 	 * @since 2.0
 	 */
 	public abstract void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
-			RepositoryTaskData taskData);
+			RepositoryTaskData taskData, boolean retrieveSubTasks);
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,

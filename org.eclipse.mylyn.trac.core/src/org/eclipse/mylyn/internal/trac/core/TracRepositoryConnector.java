@@ -218,7 +218,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return new TracTask(repositoryUrl, id, "<description not set>", true);
 	}
 
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData, boolean retrieveSubTasks) {
 		if (taskData != null) {
 			repositoryTask.setSummary(getTicketDescription(taskData));
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));

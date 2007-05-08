@@ -65,11 +65,12 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 		return new ITaskDataHandler() {
 
-			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
+			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
+					String taskKind) {
 				// we don't care about the repository information right now
 				return new MockAttributeFactory();
 			}
-			
+
 			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
 				// ignore
 				return null;
@@ -84,7 +85,9 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 					IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return false;
-			}};
+			}
+
+		};
 	}
 
 	@Override
@@ -138,9 +141,10 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			RepositoryTaskData taskData, boolean retrieveSubTasks) {
 		// ignore
-		
+
 	}
 
 }

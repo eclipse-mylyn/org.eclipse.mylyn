@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -101,9 +102,32 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return new BugzillaTask(repositoryUrl, id, summary, true);
 	}
 
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			RepositoryTaskData taskData, boolean retrieveSubTasks) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
+
+			// subtasks
+			repositoryTask.dropSubTasks();
+			List<String> subTaskIds = getSubTaskIds(taskData);
+			if (subTaskIds != null && !subTaskIds.isEmpty()) {
+				for (String subId : subTaskIds) {
+					ITask subTask = taskList.getTask(repository.getUrl(), subId);
+					if (subTask == null && retrieveSubTasks) {
+						if (!subId.trim().equals(taskData.getId()) && !subId.equals("")) {
+							try {
+								subTask = createTaskFromExistingId(repository, subId, false);
+							} catch (CoreException e) {
+								// ignore
+							}
+						}
+					}
+					if (subTask != null) {
+						bugzillaTask.addSubTask(subTask);
+					}
+				}
+			}
+
 			// Summary
 			String summary = taskData.getSummary();
 			bugzillaTask.setSummary(summary);
@@ -141,10 +165,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 				} catch (Exception e) {
 
 				}
-				
-				if(bugzillaTask.getCompletionDate() != null && completionDate != null) {
+
+				if (bugzillaTask.getCompletionDate() != null && completionDate != null) {
 					// if changed:
-					// TODO: get taskListManger.setDueDate(ITask task, Date dueDate)
+					// TODO: get taskListManger.setDueDate(ITask task, Date
+					// dueDate)
 				}
 				bugzillaTask.setCompletionDate(completionDate);
 
@@ -193,6 +218,21 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 		}
+	}
+	
+	
+	// TODO: Move to ITaskDataHandler
+	private List<String> getSubTaskIds(RepositoryTaskData taskData) {
+		ArrayList<String> result = new ArrayList<String>();
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
+		if (attribute != null) {
+			String[] ids = attribute.getValue().split(",");
+			for (String id : ids) {
+				result.add(id.trim());
+			}
+		}
+		return result;
+		
 	}
 
 	@Override
