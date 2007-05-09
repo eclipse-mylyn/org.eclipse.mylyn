@@ -27,7 +27,6 @@ import org.eclipse.ui.IWorkingSetUpdater;
 public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener {
 
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
-
 	
 	public TaskWorkingSetUpdater() {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);

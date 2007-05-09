@@ -320,18 +320,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	// IPropertyChangeListener
 
 	public void propertyChange(PropertyChangeEvent event) {
-		// System.err.println(event.getProperty() + " : " +
-		// event.getNewValue());
-
 		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
 			currentWorkingSet = (IWorkingSet) event.getNewValue();
-			// for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			// System.err.println(" " + adaptable);
-			// }
 		}
 
-		// System.err.println(Arrays.toString(currentWorkingSets));
-		this.view.refreshAndFocus(true);
+		this.view.getViewer().collapseAll();
+		this.view.getViewer().refresh();
 	}
 
 }
