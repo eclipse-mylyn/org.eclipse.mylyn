@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -121,8 +122,20 @@ class SynchronizeTaskJob extends Job {
 			RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
 
 			if (downloadedTaskData != null) {
+				// HACK: part of hack below
+				Date oldDueDate = repositoryTask.getDueDate();
+				
 				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forceSync);
 				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData, true);
+				
+				// HACK: Remove once connectors can get access to TaskDataManager and do this themselves
+				if((oldDueDate == null && repositoryTask.getDueDate() != null) || (oldDueDate != null && repositoryTask.getDueDate() == null)) {
+					TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
+				} else if(oldDueDate != null && repositoryTask.getDueDate() != null && oldDueDate.compareTo(repositoryTask.getDueDate()) != 0) {
+					TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
+				}
+				
+				
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
