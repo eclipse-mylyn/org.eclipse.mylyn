@@ -788,14 +788,31 @@
 	<extension
 		point="org.eclipse.ui.workingSets">
 		<workingSet
-        elementAdapterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
+                 elementAdapterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
         icon="icons/etool16/open-task.gif"
-        id="org.eclipse.mylar.tasks.ui.workingSet"
-        name="Tasks"
-        pageClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetPage"
-        updaterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
+                 id="org.eclipse.mylar.tasks.ui.workingSet"
+                 name="Tasks"
+                 pageClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetPage"
+                 updaterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
 		</workingSet>
 	</extension>
+ <extension
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.eclipse.mylar.tasks.core.AbstractTaskContainer"
+          class="org.eclipse.mylar.internal.tasks.ui.workingset.TaskAdapterFactory">
+       <adapter
+             type="org.eclipse.ui.IPersistableElement">
+       </adapter>
+    </factory>
+ </extension>
+ <extension
+       point="org.eclipse.ui.elementFactories">
+    <factory
+          class="org.eclipse.mylar.internal.tasks.ui.workingset.TaskElementFactory"
+          id="org.eclipse.mylar.tasks.ui.elementFactory">
+    </factory>
+ </extension>
    
 </plugin>
 
