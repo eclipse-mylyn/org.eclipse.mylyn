@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -175,8 +176,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		};
 
         tree.setContentProvider(treeContentProvider);
-
         tree.setLabelProvider(new TaskElementLabelProvider());
+        tree.setSorter(new ViewerSorter());
         
 		ArrayList<Object> containers = new ArrayList<Object>();
 		for (ITaskListElement element : (Set<ITaskListElement>) TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
