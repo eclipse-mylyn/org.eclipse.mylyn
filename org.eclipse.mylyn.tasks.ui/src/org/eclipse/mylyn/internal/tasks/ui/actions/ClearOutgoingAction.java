@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -29,7 +28,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  * TODO: Enable multi task discard?
  * @author Rob Elves
  */
-public class DiscardOutgoingAction extends Action {
+public class ClearOutgoingAction extends Action {
 
 	private static final String ACTION_NAME = "Clear outgoing";
 
@@ -37,12 +36,11 @@ public class DiscardOutgoingAction extends Action {
 
 	private List<ITaskListElement> selectedElements;
 	
-	public DiscardOutgoingAction(List<ITaskListElement> selectedElements) {
+	public ClearOutgoingAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.STATUS_NORMAL);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
 			setEnabled(task.getSyncState().equals(RepositoryTaskSyncState.OUTGOING));

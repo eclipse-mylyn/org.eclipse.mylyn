@@ -35,11 +35,15 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.STATUS_NORMAL_INCOMING);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
-			Task task = (Task) selectedElements.get(0);
-			setEnabled(!task.isLocal());
+		if (containsArchiveContainer(selectedElements)) {
+			setEnabled(false);
 		} else {
-			setEnabled(true);
+			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
+				Task task = (Task) selectedElements.get(0);
+				setEnabled(!task.isLocal());
+			} else {
+				setEnabled(true);
+			}
 		}
 	}
 

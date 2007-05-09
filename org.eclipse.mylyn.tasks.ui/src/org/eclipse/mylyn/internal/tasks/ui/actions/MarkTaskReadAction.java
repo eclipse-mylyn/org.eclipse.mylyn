@@ -28,17 +28,20 @@ public class MarkTaskReadAction extends AbstractRepositoryTasksAction {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.read";
 
 	public MarkTaskReadAction(List<ITaskListElement> selectedElements) {
-		this.selectedElements = selectedElements;
+		super.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
-		// setImageDescriptor(TaskListImages...);
-		setEnabled(selectedElements.size() > 0);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
-			Task task = (Task) selectedElements.get(0);
-			setEnabled(!task.isLocal());
+		if (containsArchiveContainer(selectedElements)) {
+			setEnabled(false);
 		} else {
-			setEnabled(true);
+			setEnabled(selectedElements.size() > 0);
+			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
+				Task task = (Task) selectedElements.get(0);
+				setEnabled(!task.isLocal());
+			} else {
+				setEnabled(true);
+			}
 		}
 	}
 

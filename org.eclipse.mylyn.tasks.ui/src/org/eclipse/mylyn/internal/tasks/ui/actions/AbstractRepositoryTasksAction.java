@@ -17,6 +17,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -58,5 +59,9 @@ public abstract class AbstractRepositoryTasksAction extends Action {
 	}	
 	
 	protected abstract void performActionOnTask(AbstractRepositoryTask repositoryTask);
+	
+	protected boolean containsArchiveContainer(List<ITaskListElement> selectedElements) {
+		return selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
+	}
 	
 }
