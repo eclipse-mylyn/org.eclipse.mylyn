@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -117,6 +118,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	private boolean taskHasUnfilteredChildren(ITask parent) {
+		boolean filterSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS);
+		if(filterSubtasks) return false;
 		Set<ITask> children = parent.getChildren();
 		if (children != null) {
 			for (ITask task : children) {
@@ -231,7 +234,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private boolean shouldAlwaysShow(Object parent, ITask task) {
 		for (AbstractTaskListFilter filter : this.view.getFilters()) {
-			if (filter.shouldAlwaysShow(parent, task)) {
+			if (filter.shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS))) {
 				return true;
 			}
 		}

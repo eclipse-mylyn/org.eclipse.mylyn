@@ -66,6 +66,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.DeleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.ExpandAllAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.FilterArchiveContainerAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.FilterCompletedTasksAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.FilterSubTasksAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
@@ -284,6 +285,8 @@ public class TaskListView extends ViewPart {
 
 	private FilterCompletedTasksAction filterCompleteTask;
 
+	private FilterSubTasksAction showSubTasksAction;
+	
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
 	private OpenTasksUiPreferencesAction openPreferencesAction;
@@ -1033,6 +1036,7 @@ public class TaskListView extends ViewPart {
 		manager.add(sortByAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
+		manager.add(showSubTasksAction);
 		manager.add(filterArchiveCategory);
 
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
@@ -1264,6 +1268,7 @@ public class TaskListView extends ViewPart {
 		propertiesAction = new TaskListElementPropertiesAction(this.getViewer());
 		openWithBrowser = new OpenWithBrowserAction();
 		filterCompleteTask = new FilterCompletedTasksAction(this);
+		showSubTasksAction = new FilterSubTasksAction(this);
 		synchronizeAutomatically = new SynchronizeAutomaticallyAction();
 		openPreferencesAction = new OpenTasksUiPreferencesAction();
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
@@ -1648,6 +1653,7 @@ public class TaskListView extends ViewPart {
 		sortByAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
+		showSubTasksAction.setEnabled(enabled);
 		filterArchiveCategory.setEnabled(enabled);
 	}
 

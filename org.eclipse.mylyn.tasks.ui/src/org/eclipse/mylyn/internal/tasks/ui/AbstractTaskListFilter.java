@@ -22,7 +22,7 @@ public abstract class AbstractTaskListFilter {
 
 	public abstract boolean select(Object parent, Object element);
 
-	public boolean shouldAlwaysShow(Object parent, ITask task) {
+	public boolean shouldAlwaysShow(Object parent, ITask task, boolean exposeSubTasks) {
 		return task.isActive();
 	}
 }

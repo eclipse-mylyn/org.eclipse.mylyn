@@ -12,6 +12,7 @@ package org.eclipse.mylar.internal.tasks.ui;
 
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -20,16 +21,17 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 
 	@Override
 	public boolean select(Object parent, Object element) {
+		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS);
 		if (element instanceof ITask) {
 			ITask task = (ITask) element;
-			if (shouldAlwaysShow(parent, task)) {
+			if (shouldAlwaysShow(parent, task, exposeSubTasks)) {
 				return true;
 			}
 			return !task.isCompleted();
 		} else if (element instanceof AbstractQueryHit) {
 			AbstractQueryHit hit = (AbstractQueryHit) element;
 			if (hit.getCorrespondingTask() != null) {
-				if (shouldAlwaysShow(parent, hit.getCorrespondingTask())) {
+				if (shouldAlwaysShow(parent, hit.getCorrespondingTask(), exposeSubTasks)) {
 					return true;
 				} else {
 					return !hit.getCorrespondingTask().isCompleted();

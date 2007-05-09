@@ -35,9 +35,11 @@ public class TaskListPreferenceConstants {
 	public static final String TASK_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.taskEditor";
 
 	public static final String CATEGORY_EDITOR_ID = "org.eclipse.mylar.tasklist.ui.catEditor";
-
+	
 	public static final String SELECTED_PRIORITY = "org.eclipse.mylar.tasklist.filter.priority";
 
+	public static final String FILTER_SUBTASKS = "org.eclipse.mylar.tasklist.filter.subtasks";
+	
 	public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylar.tasklist.filter.complete";
 
 	public static final String FILTER_ARCHIVE_MODE = "org.eclipse.mylar.tasklist.filter.archive";

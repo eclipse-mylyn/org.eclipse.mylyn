@@ -77,7 +77,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			DateRangeContainer dateRangeTaskCategory = (DateRangeContainer) parent;
 			return dateRangeTaskCategory.getChildren() != null && dateRangeTaskCategory.getChildren().size() > 0;
 		} else {
-			return false;
+			return super.hasChildren(parent);
 		}
 	}
 }
