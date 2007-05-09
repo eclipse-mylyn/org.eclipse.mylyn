@@ -286,7 +286,7 @@ public class TaskListView extends ViewPart {
 	private FilterCompletedTasksAction filterCompleteTask;
 
 	private FilterSubTasksAction showSubTasksAction;
-	
+
 	private SynchronizeAutomaticallyAction synchronizeAutomatically;
 
 	private OpenTasksUiPreferencesAction openPreferencesAction;
@@ -332,7 +332,7 @@ public class TaskListView extends ViewPart {
 	private TaskListTableSorter tableSorter;
 
 	int sortDirection = DEFAULT_SORT_DIRECTION;
-	
+
 	private Color categoryGradientStart;
 
 	private Color categoryGradientEnd;
@@ -836,7 +836,11 @@ public class TaskListView extends ViewPart {
 		getViewer().getTree().addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.F2 && e.stateMask == 0) {
+				if (e.keyCode == SWT.INSERT) {
+					newLocalTaskAction.run();
+				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
+					// Do nothing here since it is key code
+				} else if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (renameAction.isEnabled()) {
 						renameAction.run();
 					}
@@ -844,8 +848,6 @@ public class TaskListView extends ViewPart {
 					copyDetailsAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
-				} else if (e.keyCode == SWT.INSERT) {
-					newLocalTaskAction.run();
 				} else if (e.keyCode == 'f' && e.stateMask == SWT.MOD1) {
 					filteredTree.getFilterControl().setFocus();
 				} else if (e.stateMask == 0) {
@@ -1673,7 +1675,7 @@ public class TaskListView extends ViewPart {
 		}
 		getViewer().setSorter(new TaskListTableSorter(this, byPriority));
 	}
-	
+
 	public boolean isSortByPriority() {
 		return sortIndex == 0;
 	}
