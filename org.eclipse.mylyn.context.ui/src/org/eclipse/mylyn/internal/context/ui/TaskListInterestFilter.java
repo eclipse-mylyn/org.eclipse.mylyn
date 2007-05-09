@@ -15,6 +15,7 @@ import java.util.Calendar;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -65,7 +66,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	protected boolean isUninteresting(Object parent, ITask task) {
-		return !task.isActive()
+		return !task.isActive() && !hasInterestingSubTasks(parent, task, true) 
 				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(
 						parent, task)) || (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task))
 						&& !hasChanges(parent, task));
@@ -73,33 +74,52 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, ITask task) {
-		return shouldAlwaysShow(parent, task);
+		return shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.FILTER_SUBTASKS));
 	}
 
 	@Override
-	public boolean shouldAlwaysShow(Object parent, ITask task) {
-		return super.shouldAlwaysShow(parent, task) || hasChanges(parent, task)
+	public boolean shouldAlwaysShow(Object parent, ITask task, boolean checkSubTasks) {
+		return super.shouldAlwaysShow(parent, task, checkSubTasks) || hasChanges(parent, task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
+				|| hasInterestingSubTasks(parent, task, checkSubTasks)
 				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
 		// || isCurrentlySelectedInEditor(task);
 	}
 
+	private boolean hasInterestingSubTasks(Object parent, ITask task, boolean checkSubTasks) {
+		if (!checkSubTasks) {
+			return false;
+		}
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS)) {
+			return false;
+		}
+		if (task.getChildren() != null && task.getChildren().size() > 0) {
+			for (ITask subTask : task.getChildren()) {
+				if (shouldAlwaysShow(parent, subTask, false)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
 		if (parent instanceof DateRangeContainer) {
-			
+
 			if (TasksUiPlugin.getTaskListManager().isOverdue(task) || task.isPastReminder())
 				return true;
-			
+
 			DateRangeContainer container = (DateRangeContainer) parent;
 			Calendar previousCal = TasksUiPlugin.getTaskListManager().getActivityPrevious().getEnd();
 			Calendar nextCal = TasksUiPlugin.getTaskListManager().getActivityNextWeek().getStart();
 			if (container.getEnd().compareTo(previousCal) > 0 && container.getStart().compareTo(nextCal) < 0) {
 				// within workweek
 				return true;
-			} 
+			}
 		}
 
 		return false;
