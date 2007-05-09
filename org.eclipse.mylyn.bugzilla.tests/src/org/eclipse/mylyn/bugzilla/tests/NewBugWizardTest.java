@@ -59,9 +59,12 @@ public class NewBugWizardTest extends TestCase {
 			assertEquals("AIX", newReport.getAttribute(BugzillaReportElement.OP_SYS.getKeyString()).getValue());
 
 		String platform = Platform.getOSArch();
-		if (platform.equals("x86"))
-			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("x86_64"))
+		if (platform.equals("x86")) {
+			if (os.equals("macosx"))
+				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+			else
+				assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+		} else if (platform.equals("x86_64"))
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("ia64"))
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
