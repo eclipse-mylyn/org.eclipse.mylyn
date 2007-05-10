@@ -78,6 +78,8 @@ public class TasksUiUtil {
 
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
+	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
+	
 	/**
 	 * Resolves a rich editor for the task if available. Must be called from UI
 	 * thread.
@@ -104,11 +106,10 @@ public class TasksUiUtil {
 					int flags = 0;
 					if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
 						flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR;
-
+								| WorkbenchBrowserSupport.NAVIGATION_BAR | FLAG_NO_RICH_EDITOR;
 					} else {
 						flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR;
+								| WorkbenchBrowserSupport.NAVIGATION_BAR | FLAG_NO_RICH_EDITOR;
 					}
 
 					String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
