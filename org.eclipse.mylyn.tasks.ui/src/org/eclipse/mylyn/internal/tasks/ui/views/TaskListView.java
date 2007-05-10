@@ -802,7 +802,7 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 12;
+		final int activationImageOffset = 24;
 		getViewer().getTree().addListener(SWT.EraseItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
 		getViewer().getTree().addListener(SWT.PaintItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
 
@@ -811,13 +811,12 @@ public class TaskListView extends ViewPart {
 			public void mouseDown(MouseEvent e) {
 				// NOTE: need e.x offset for Linux/GTK, which does not see
 				// left-aligned items in tree
-				Object selected = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
-				if (selected instanceof TreeItem) {
-					if (((TreeItem) selected).getData() instanceof ITask
-							|| ((TreeItem) selected).getData() instanceof AbstractQueryHit) {
-						if (e.x > activationImageOffset - 8 && e.x < activationImageOffset - 2 + 18) {
-							taskListCellModifier.toggleTaskActivation((ITaskListElement) ((TreeItem) selected)
-									.getData());
+				Object selectedNode = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
+				if (selectedNode instanceof TreeItem) {
+					Object selectedObject = ((TreeItem) selectedNode).getData();
+					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
+						if (e.x > activationImageOffset - 2 && e.x < activationImageOffset + 16) {
+							taskListCellModifier.toggleTaskActivation((ITaskListElement)selectedObject);
 						}
 					}
 				}
