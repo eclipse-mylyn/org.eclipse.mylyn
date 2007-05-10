@@ -51,9 +51,9 @@ public class WindowChangeMonitor implements IWindowListener {
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
-		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
-				WINDOW_DEACTIVATED);
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+//		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
+//				WINDOW_DEACTIVATED);
+//		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {
@@ -63,6 +63,6 @@ public class WindowChangeMonitor implements IWindowListener {
 	}
 
 	protected String getWindowOrigin(IWorkbenchWindow window) {
-		return window.getClass().getCanonicalName() + "@" + window.hashCode();
+		return window.getClass().getCanonicalName();// + "@" + window.hashCode();
 	}
 }
