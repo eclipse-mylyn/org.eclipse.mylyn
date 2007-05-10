@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ISaveContext;
+import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -145,6 +147,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private boolean eclipse_3_3_workbench = false;
 
+	private ISaveParticipant saveParticipant;
+
 	private static final class OrderComparator implements Comparator<AbstractTaskRepositoryLinkProvider> {
 		public int compare(AbstractTaskRepositoryLinkProvider p1, AbstractTaskRepositoryLinkProvider p2) {
 			return p1.getOrder() - p2.getOrder();
@@ -248,9 +252,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void windowClosed(IWorkbenchWindow window) {
-			// This is the sole call to save the tasklist upon workbench
-			// shutdown!
-			taskListManager.saveTaskList();
+			// ignore
 		}
 	};
 
@@ -401,6 +403,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 
+			// instantiates taskDataManager
 			readOfflineReports();
 
 			// add the automatically created templates
@@ -432,15 +435,36 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
+			
+			saveParticipant = new ISaveParticipant() {
+
+				public void doneSaving(ISaveContext context) {
+				}
+
+				public void prepareToSave(ISaveContext context) throws CoreException {
+				}
+
+				public void rollback(ISaveContext context) {
+				}
+
+				public void saving(ISaveContext context) throws CoreException {
+					if (context.getKind() == ISaveContext.FULL_SAVE) {
+						taskListManager.saveTaskList();
+						taskDataManager.saveNow();
+					}
+				}
+			};
+			ResourcesPlugin.getWorkspace().addSaveParticipant(this, saveParticipant);
 
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					// NOTE: failure in one part of the initialization should
 					// not prevent others
 					try {
-						// Needs to run after workbench is loaded because it relies on images.
+						// Needs to run after workbench is loaded because it
+						// relies on images.
 						TasksUiExtensionReader.initWorkbenchUiExtensions();
-						
+
 						// TasksUiExtensionReader.initWorkbenchUiExtensions();
 						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
 
@@ -540,6 +564,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
+
+			if (ResourcesPlugin.getWorkspace() != null) {
+				ResourcesPlugin.getWorkspace().removeSaveParticipant(this);
+			}
+
 			if (PlatformUI.isWorkbenchRunning()) {
 				getPreferenceStore().removePropertyChangeListener(taskListNotificationManager);
 				getPreferenceStore().removePropertyChangeListener(taskListBackupManager);

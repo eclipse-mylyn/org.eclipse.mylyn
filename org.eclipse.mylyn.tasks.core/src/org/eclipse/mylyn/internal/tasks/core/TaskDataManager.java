@@ -28,9 +28,7 @@ import java.util.TimerTask;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
@@ -52,13 +50,11 @@ public class TaskDataManager {
 
 	private OfflineDataStore dataStore;
 
+	private TaskDataSaverJob saverJob;
+
 	private TaskRepositoryManager taskRepositoryManager;
 
-	private Job saveJob;
-
 	private Timer saveTimer;
-
-	private boolean saveRequested = false;
 
 	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, File file, boolean read) throws IOException,
 			ClassNotFoundException {
@@ -71,7 +67,9 @@ public class TaskDataManager {
 		}
 
 		saveTimer = new Timer();
-		saveTimer.schedule(new CheckSaveRequired(), SAVE_INTERVAL, SAVE_INTERVAL);
+		saveTimer.schedule(new RequestSaveTimerTask(), SAVE_INTERVAL, SAVE_INTERVAL);
+		saverJob = new TaskDataSaverJob();
+		saverJob.schedule();
 	}
 
 	/**
@@ -183,16 +181,14 @@ public class TaskDataManager {
 	}
 
 	public void saveEdits(String handle, Set<RepositoryTaskAttribute> attributes) {
-		synchronized (file) {
-			Set<RepositoryTaskAttribute> edits = dataStore.getLocalEdits().get(handle);
-			if (edits == null) {
-				edits = new HashSet<RepositoryTaskAttribute>();
-				edits.addAll(attributes);
-				dataStore.getLocalEdits().put(handle, edits);
-			} else {
-				edits.removeAll(attributes);
-				edits.addAll(attributes);
-			}
+		Set<RepositoryTaskAttribute> edits = dataStore.getLocalEdits().get(handle);
+		if (edits == null) {
+			edits = new HashSet<RepositoryTaskAttribute>();
+			edits.addAll(attributes);
+			dataStore.getLocalEdits().put(handle, edits);
+		} else {
+			edits.removeAll(attributes);
+			edits.addAll(attributes);
 		}
 		dataStateChanged();
 	}
@@ -231,14 +227,14 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Public for testing only
-	 * force a reset of all data maps
+	 * Public for testing only force a reset of all data maps Does not signal
+	 * data changed (doesn't request save)
 	 */
 	public void clear() {
-		synchronized (file) {
-			dataStore = new OfflineDataStore();
-			saveRequested = false;
+		if (saverJob != null) {
+			saverJob.waitSaveCompleted();
 		}
+		dataStore = new OfflineDataStore();
 	}
 
 	/**
@@ -288,71 +284,116 @@ public class TaskDataManager {
 	}
 
 	private void dataStateChanged() {
-		synchronized (saveTimer) {
-			saveRequested = true;
+		if (saverJob != null) {
+			saverJob.requestSave();
 		}
 	}
 
 	/**
-	 * PUBLIC FOR TESTING ONLY Launch a save job Saving is managed by
-	 * TaskDataManager
+	 * Force save of offline task data
 	 */
-	public void save(boolean force) {
-
-		if (!force) {
-			saveJob = new TaskDataSaveJob();
-			saveJob.setPriority(Job.LONG);
-			saveJob.setSystem(true);
-			saveJob.schedule();
-		} else {
-			new TaskDataSaveJob().run(new NullProgressMonitor());
-		}
+	public void saveNow() {
+		saverJob.waitSaveCompleted();
+		writeFile();
 	}
 
-	private class TaskDataSaveJob extends Job {
-
-		public TaskDataSaveJob() {
-			super("Saving task data");
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			synchronized (file) {
-				if (Platform.isRunning()) {
-					ObjectOutputStream out = null;
-					try {
-						out = new ObjectOutputStream(new FileOutputStream(file));
-						out.writeObject(dataStore);
-						out.close();
-					} catch (IOException e) {
-						MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
-					} finally {
-						if (out != null) {
-							try {
-								out.close();
-							} catch (IOException e) {
-								// ignore
-							}
-						}
-					}
-				}
-			}
-			return Status.OK_STATUS;
-		}
-
-	};
-
-	class CheckSaveRequired extends TimerTask {
+	private class RequestSaveTimerTask extends TimerTask {
 
 		@Override
 		public void run() {
 			if (!Platform.isRunning()) {
 				return;
 			} else {
-				synchronized (saveTimer) {
-					if (saveRequested) {
-						save(false);
-						saveRequested = false;
+				saverJob.runRequested();
+			}
+		}
+	}
+
+	public boolean hasOutgoing(String handleIdentifier) {
+		return getLocalChanges(handleIdentifier).size() > 0;
+	}
+
+	private void writeFile() {
+		synchronized (file) {
+			if (Platform.isRunning()) {
+				ObjectOutputStream out = null;
+				try {
+					out = new ObjectOutputStream(new FileOutputStream(file));
+					out.writeObject(dataStore);
+					out.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
+				} finally {
+					if (out != null) {
+						try {
+							out.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private class TaskDataSaverJob extends Job {
+
+		// private final Queue<RepositoryTaskData> dataQueue = new
+		// LinkedList<RepositoryTaskData>();
+
+		private volatile boolean saveRequested = false;
+
+		private volatile boolean saveCompleted = true;
+
+		TaskDataSaverJob() {
+			super("Task Data Saver");
+			setPriority(Job.LONG);
+			setSystem(true);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			while (true) {
+				if (saveRequested) {
+					saveRequested = false;
+					saveCompleted = false;
+					writeFile();
+				}
+
+				if (!saveRequested) {
+					synchronized (this) {
+						saveCompleted = true;
+						notifyAll();
+						try {
+							wait();
+						} catch (InterruptedException ex) {
+							// ignore
+						}
+					}
+				}
+			}
+		}
+
+		// void addDataToQueue(RepositoryTaskData data) {
+		// dataQueue.add(data);
+		// }
+
+		void requestSave() {
+			saveRequested = true;
+		}
+
+		void runRequested() {
+			synchronized (this) {
+				notifyAll();
+			}
+		}
+
+		void waitSaveCompleted() {
+			while (!saveCompleted) {
+				synchronized (this) {
+					try {
+						wait();
+					} catch (InterruptedException ex) {
+						// ignore
 					}
 				}
 			}
@@ -362,7 +403,7 @@ public class TaskDataManager {
 	// HACK: until we get proper offline storage....
 	// Reference:
 	// http://www.javaworld.com/javaworld/javatips/jw-javatip76.html?page=2
-	public static class ObjectCloner {
+	static class ObjectCloner {
 
 		private ObjectCloner() {
 			// can not instantiate
@@ -391,7 +432,4 @@ public class TaskDataManager {
 
 	}
 
-	public boolean hasOutgoing(String handleIdentifier) {
-		return getLocalChanges(handleIdentifier).size() > 0;
-	}
 }

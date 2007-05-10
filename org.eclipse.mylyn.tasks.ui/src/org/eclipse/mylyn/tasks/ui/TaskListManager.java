@@ -762,6 +762,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		}
+		TasksUiPlugin.getDefault().getTaskDataManager().saveNow();
 	}
 
 	public boolean readExistingOrCreateNewList() {

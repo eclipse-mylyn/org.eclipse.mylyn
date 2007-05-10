@@ -37,6 +37,7 @@ public class TaskDataManagerTest extends TestCase {
 		super.setUp();
 		offlineTaskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		offlineTaskDataManager.clear();
+		offlineTaskDataManager.saveNow();
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class TaskDataManagerTest extends TestCase {
 		super.tearDown();
 		if (offlineTaskDataManager != null) {
 			offlineTaskDataManager.clear();
-			offlineTaskDataManager.save(true);
+			offlineTaskDataManager.saveNow();
 		}
 	}
 
@@ -84,7 +85,7 @@ public class TaskDataManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "2")));
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		offlineTaskDataManager.clear();
 		assertNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
@@ -114,7 +115,7 @@ public class TaskDataManagerTest extends TestCase {
 	public void testGetNextOfflineBugId() throws IOException, ClassNotFoundException {
 		assertEquals("1", offlineTaskDataManager.getNewRepositoryTaskId());
 		assertEquals("2", offlineTaskDataManager.getNewRepositoryTaskId());
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.readOfflineData();
 		assertEquals("3", offlineTaskDataManager.getNewRepositoryTaskId());
@@ -137,7 +138,7 @@ public class TaskDataManagerTest extends TestCase {
 		offlineTaskDataManager.setNewTaskData(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "1"),
 				taskData);
 		
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.readOfflineData();
 		assertEquals("version 2", offlineTaskDataManager.getNewTaskData(
@@ -176,7 +177,7 @@ public class TaskDataManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "2", Task.DEFAULT_TASK_KIND);
 		offlineTaskDataManager.setNewTaskData(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "2"),
 				taskData);
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
@@ -186,7 +187,7 @@ public class TaskDataManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
 		assertNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "2")));
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.readOfflineData();
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
@@ -206,7 +207,7 @@ public class TaskDataManagerTest extends TestCase {
 				Task.DEFAULT_TASK_KIND);
 		offlineTaskDataManager.setNewTaskData(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "2"),
 				taskData2);
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
@@ -219,7 +220,7 @@ public class TaskDataManagerTest extends TestCase {
 				MockRepositoryConnector.REPOSITORY_URL, "1")));
 		assertNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "2")));
-		offlineTaskDataManager.save(true);
+		offlineTaskDataManager.saveNow();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.readOfflineData();
 		assertNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
