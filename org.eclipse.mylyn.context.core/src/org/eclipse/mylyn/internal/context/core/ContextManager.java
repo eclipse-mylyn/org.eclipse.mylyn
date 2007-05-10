@@ -503,6 +503,9 @@ public class ContextManager {
 						MylarStatusHandler.fail(e, "context listener failed", false);
 					}
 				}
+				if (context.getAllElements().size() == 0) {
+					contextFiles.remove(getFileForContext(context.getHandleIdentifier()));
+				}				
 				setContextCapturePaused(false);
 			}
 			if (!activationHistorySuppressed) {
