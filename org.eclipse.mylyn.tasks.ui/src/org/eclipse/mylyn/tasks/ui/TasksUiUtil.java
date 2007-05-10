@@ -91,37 +91,41 @@ public class TasksUiUtil {
 				if (task != null) {
 					refreshAndOpenTaskListElement(task);
 				} else {
-					openUrl(url, false);
+					openUrl(url, 0);
 				}
 			} else {
-				if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
-					try {
-						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-						support.getExternalBrowser().openURL(new URL(url));
-					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "could not open task url", true);
-					}
-				} else {
-					IWebBrowser browser = null;
-					int flags = 0;
-					if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-						flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR | FLAG_NO_RICH_EDITOR;
-					} else {
-						flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
-								| WorkbenchBrowserSupport.NAVIGATION_BAR | FLAG_NO_RICH_EDITOR;
-					}
-
-					String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
-					browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
-					browser.openURL(new URL(url));
-				}
+				openUrl(url, FLAG_NO_RICH_EDITOR);
 			}
 		} catch (PartInitException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");
 		} catch (MalformedURLException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
+		}
+	}
+
+	private static void openUrl(String url, int customFlags) throws PartInitException, MalformedURLException {
+		if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
+			try {
+				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+				support.getExternalBrowser().openURL(new URL(url));
+			} catch (Exception e) {
+				MylarStatusHandler.fail(e, "could not open task url", true);
+			}
+		} else {
+			IWebBrowser browser = null;
+			int flags = 0;
+			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
+				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
+						| WorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
+			} else {
+				flags = WorkbenchBrowserSupport.AS_EXTERNAL | WorkbenchBrowserSupport.LOCATION_BAR
+						| WorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
+			}
+
+			String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
+			browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
+			browser.openURL(new URL(url));
 		}
 	}
 
