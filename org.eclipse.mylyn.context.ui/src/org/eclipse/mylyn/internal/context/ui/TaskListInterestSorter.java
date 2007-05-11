@@ -22,6 +22,7 @@ import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
+import org.eclipse.mylar.tasks.core.UncategorizedCategory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -50,6 +51,13 @@ public class TaskListInterestSorter extends ViewerSorter {
 				return -1;
 			}
 		}
+
+		if (o1 instanceof UncategorizedCategory && o2 instanceof AbstractTaskContainer) {
+			return -1;
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedCategory) {
+			return 1;
+		}
+
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof ITask) {
 			return 1;
 		}
