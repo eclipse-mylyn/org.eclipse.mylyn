@@ -120,7 +120,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 							&& hasIncoming((AbstractTaskContainer) element)) {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
 						offsetX = 24;
-						offsetY += 0;
 					}
 				}
 			} else {
@@ -129,7 +128,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 //						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
-				System.err.println(">>>> " + event.height);
 				event.gc.drawImage(image, offsetX, event.y + offsetY);
 //				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
