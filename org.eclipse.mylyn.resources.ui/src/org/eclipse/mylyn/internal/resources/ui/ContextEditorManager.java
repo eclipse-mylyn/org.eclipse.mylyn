@@ -136,6 +136,29 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
+	public void contextCleared(IMylarContext context) {
+		if (context == null) {
+			return;
+		}
+		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
+		if (task != null) {
+			// TODO: avoid storing with preferneces due to bloat?
+			StringWriter writer = new StringWriter();
+			try {
+				memento.save(writer);
+				MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(
+						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
+			} catch (IOException e) {
+				MylarStatusHandler.fail(e, "Could not store editor state", false);
+			}
+
+			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
+					previousCloseEditorsSetting);
+		}
+		closeAllEditors();
+	}
+	
 	/**
 	 * HACK: uses reflection for 3.2 compatibility. HACK: will fail to restore
 	 * different parts with same name

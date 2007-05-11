@@ -37,9 +37,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class FocusedViewerManager implements IMylarContextListener, ISelectionListener { // ,
-																							// IPropertyChangeListener
-																							// {
+public class FocusedViewerManager implements IMylarContextListener, ISelectionListener { 
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -109,6 +107,10 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 				((TreeViewer) structuredViewer).collapseAll();
 			}
 		}
+	}
+	
+	public void contextCleared(IMylarContext context) {
+		contextDeactivated(context);
 	}
 
 	protected void refreshViewers() {

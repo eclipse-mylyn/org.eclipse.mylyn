@@ -77,6 +77,10 @@ public abstract class AbstractRelationProvider implements IMylarContextListener 
 
 	}
 
+	public void contextCleared(IMylarContext context) {
+		// ignore
+	}
+	
 	public void landmarkAdded(IMylarElement node) {
 		if (enabled) {
 			findRelated(node, degreeOfSeparation);

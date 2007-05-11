@@ -90,6 +90,10 @@ public class ActiveSearchView extends ViewPart {
 		public void contextDeactivated(IMylarContext taskscape) {
 			refresh(null, true);
 		}
+		
+		public void contextCleared(IMylarContext context) {
+			refresh(null, true);
+		}
 
 		public void landmarkAdded(IMylarElement node) {
 			refresh(null, true);

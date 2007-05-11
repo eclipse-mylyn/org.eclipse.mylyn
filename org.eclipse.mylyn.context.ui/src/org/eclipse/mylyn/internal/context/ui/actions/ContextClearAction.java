@@ -40,9 +40,9 @@ public class ContextClearAction extends TaskContextAction {
 				return;
 			
 			if (task.isActive()) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+//				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
-				TasksUiPlugin.getTaskListManager().activateTask(task);
+//				TasksUiPlugin.getTaskListManager().activateTask(task);
 			} else {
 				ContextCorePlugin.getContextManager().deleteContext((task).getHandleIdentifier());
 			}

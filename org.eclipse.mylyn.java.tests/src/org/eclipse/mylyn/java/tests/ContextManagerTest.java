@@ -96,6 +96,10 @@ public class ContextManagerTest extends AbstractJavaContextTest {
 			// don't care about this event
 		}
 
+		public void contextCleared(IMylarContext context) {
+			// ignore
+		}
+		
 		public void contextDeactivated(IMylarContext taskscapeDeactivated) {
 			// don't care about this event
 		}

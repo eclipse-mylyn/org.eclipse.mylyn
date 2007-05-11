@@ -80,6 +80,10 @@ public class TypeHistoryManager implements IMylarContextListener {
 	public void contextDeactivated(IMylarContext context) {
 		clearTypeHistory();
 	}
+	
+	public void contextCleared(IMylarContext context) {
+		clearTypeHistory();
+	}
 
 	/**
 	 * Public for testing

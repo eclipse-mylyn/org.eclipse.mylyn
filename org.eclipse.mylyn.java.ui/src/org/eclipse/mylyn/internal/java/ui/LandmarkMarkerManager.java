@@ -42,6 +42,7 @@ import org.eclipse.mylar.internal.java.JavaStructureBridge;
 public class LandmarkMarkerManager implements IMylarContextListener {
 
 	private static final String MARKER_ID_LANDMARK = "org.eclipse.mylar.ui.landmark";
+
 	private Map<IMylarElement, Long> markerMap = new HashMap<IMylarElement, Long>();
 
 	public LandmarkMarkerManager() {
@@ -53,6 +54,10 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 	}
 
 	public void contextDeactivated(IMylarContext taskscape) {
+		modelUpdated();
+	}
+
+	public void contextCleared(IMylarContext context) {
 		modelUpdated();
 	}
 
@@ -97,7 +102,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 									markerMap.put(node, marker.getId());
 								}
 							}
-						}; 
+						};
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (JavaModelException e) {
@@ -117,9 +122,9 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 			if (!element.exists())
 				return;
 			if (element.getAncestor(IJavaElement.COMPILATION_UNIT) != null // stuff
-																			// from
-																			// .class
-																			// files
+					// from
+					// .class
+					// files
 					&& element instanceof ISourceReference) {
 				try {
 					final IResource resource = element.getUnderlyingResource();
@@ -142,7 +147,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 					resource.getWorkspace().run(runnable, null);
 				} catch (JavaModelException e) {
 					// ignore the Java Model errors
-//					MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
+// MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				} catch (CoreException e) {
 					MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				}

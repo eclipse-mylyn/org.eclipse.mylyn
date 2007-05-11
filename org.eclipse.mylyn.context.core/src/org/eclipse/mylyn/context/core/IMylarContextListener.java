@@ -19,9 +19,20 @@ import java.util.List;
  */
 public interface IMylarContextListener {
 
+	/**
+	 * The context is now active, e.g. as a result of a task activation.
+	 */
 	public void contextActivated(IMylarContext context);
 
+	/**
+	 * The context has been deactivated, e.g. as a result of a task deactivation.
+	 */
 	public void contextDeactivated(IMylarContext context);
+	
+	/**
+	 * The context has been cleared, typically done by the user.
+	 */
+	public void contextCleared(IMylarContext context);
 
 	/**
 	 * Called when the interest level for multiple elements changes, sorted

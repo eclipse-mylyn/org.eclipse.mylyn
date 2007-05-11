@@ -84,6 +84,10 @@ public class ActiveHierarchyView extends ViewPart {
 		public void contextDeactivated(IMylarContext taskscape) {
 			refreshHierarchy();
 		}
+		
+		public void contextCleared(IMylarContext context) {
+			refreshHierarchy();
+		}
 
 		public void interestChanged(List<IMylarElement> nodes) {
 		}

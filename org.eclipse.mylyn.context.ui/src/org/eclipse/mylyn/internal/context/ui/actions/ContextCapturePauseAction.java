@@ -69,6 +69,10 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 		}
 	}
 
+	public void contextCleared(IMylarContext context) {
+		// ignore
+	}
+	
 	public void contextDeactivated(IMylarContext context) {
 		// ignore
 	}

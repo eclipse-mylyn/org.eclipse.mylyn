@@ -522,17 +522,18 @@ public class ContextManager {
 	public void deleteContext(String handleIdentifier) {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
-		if (context != null) {
-			setContextCapturePaused(true);
-			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-				listener.contextDeactivated(context);
-			}
-			setContextCapturePaused(false);
-		}
-		try {
+		try {			
 			File file = getFileForContext(handleIdentifier);
 			if (file.exists()) {
 				file.delete();
+			}
+			setContextCapturePaused(true);
+			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+				listener.contextCleared(context);
+			}
+			setContextCapturePaused(false);
+			if (contextFiles != null) {
+				contextFiles.add(getFileForContext(handleIdentifier));
 			}
 		} catch (SecurityException e) {
 			MylarStatusHandler.fail(e, "Could not delete context file", false);

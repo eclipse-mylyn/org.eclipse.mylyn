@@ -210,6 +210,10 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
+	public void contextCleared(IMylarContext context) {
+		// ignore
+	}
+	
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(

@@ -55,11 +55,15 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 		// nothing to do here
 	}
 
-	public void contextActivated(IMylarContext taskscape) {
+	public void contextActivated(IMylarContext context) {
 		updateWorkingSet();
 	}
 
-	public void contextDeactivated(IMylarContext taskscape) {
+	public void contextDeactivated(IMylarContext context) {
+		updateWorkingSet();
+	}
+	
+	public void contextCleared(IMylarContext context) {
 		updateWorkingSet();
 	}
 
