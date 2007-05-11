@@ -29,7 +29,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	protected Point size;
 
-	public static final int WIDTH_DECORATION = 4;
+	public static final int WIDTH_DECORATION = 5;
 	
 //	private static final int WIDTH_SYNCH = 9;//5;
 	
@@ -37,7 +37,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	private static final int WIDTH_ICON = 16;
 	
-	static final int OFFSET_SYNCH = 4;
+	static final int OFFSET_SYNCH = 5;
 		
 	static int WIDTH;
 	
@@ -64,7 +64,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, WIDTH_DECORATION, -1);
+		drawImage(base, WIDTH_DECORATION, 1);
 		if (kind != null) {
 			drawImage(kind, WIDTH_DECORATION+5, 5);
 		}

@@ -35,7 +35,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		
 		ImageDescriptor priorityOverlay = TaskElementLabelProvider.getPriorityImageDescriptor(element);
 		if (priorityOverlay != null) {
-//			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
+			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
 		
 		if (element instanceof AbstractRepositoryQuery) {

@@ -207,7 +207,7 @@ public class TaskListView extends ViewPart {
 				case SWT.PaintItem: {
 					drawActivationImage(activationImageOffset, event, image);
 					drawSyncronizationImage(task, event);
-					drawPriorityImage(task, event);
+//					drawPriorityImage(task, event);
 					break;
 				}
 				}
