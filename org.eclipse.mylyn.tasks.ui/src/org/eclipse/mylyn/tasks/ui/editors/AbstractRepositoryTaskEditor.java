@@ -51,6 +51,7 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -63,6 +64,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylar.internal.tasks.ui.PersonProposalLabelProvider;
+import org.eclipse.mylar.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
@@ -980,6 +983,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (hasContentAssist(attribute)) {
 						ContentAssistCommandAdapter adapter = applyContentAssist(text,
 								createContentProposalProvider(attribute));
+						
+						ILabelProvider propsalLabelProvider = createProposalLabelProvider(attribute);
+						if(propsalLabelProvider != null){
+							adapter.setLabelProvider(propsalLabelProvider);
+						}
 						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 					}
 				}
@@ -1024,7 +1032,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
 				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
-
+		
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})", bindingService
 				.getBestActiveBindingFormattedFor(adapter.getCommandId())));
@@ -1041,7 +1049,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryTaskAttribute attribute) {
-		return null;
+		return new PersonProposalProvider(repositoryTask, taskData);
 	}
 
 	/**
@@ -1053,7 +1061,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
-		return null;
+	
+		return new PersonProposalProvider(repositoryTask, taskData);
+	}
+	
+	protected ILabelProvider createProposalLabelProvider(RepositoryTaskAttribute attribute) {
+		return new PersonProposalLabelProvider();
+	}
+	
+	protected ILabelProvider createProposalLabelProvider(RepositoryOperation operation) {
+	
+		return new PersonProposalLabelProvider();
 	}
 
 	/**
@@ -1600,6 +1618,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (hasContentAssist(addCCattribute)) {
 				ContentAssistCommandAdapter adapter = applyContentAssist(text,
 						createContentProposalProvider(addCCattribute));
+				ILabelProvider propsalLabelProvider = createProposalLabelProvider(addCCattribute);
+				if(propsalLabelProvider != null){
+					adapter.setLabelProvider(propsalLabelProvider);
+				}
 				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 			}
 		}
@@ -2484,6 +2506,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (hasContentAssist(o)) {
 					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i],
 							createContentProposalProvider(o));
+					ILabelProvider propsalLabelProvider = createProposalLabelProvider(o);
+					if(propsalLabelProvider != null){
+						adapter.setLabelProvider(propsalLabelProvider);
+					}
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 				}
 			}
@@ -2590,7 +2616,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData
 				.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
-		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON));
+		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
