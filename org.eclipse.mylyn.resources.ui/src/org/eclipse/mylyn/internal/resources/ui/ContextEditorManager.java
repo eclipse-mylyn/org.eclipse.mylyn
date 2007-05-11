@@ -16,7 +16,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -34,7 +37,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -82,18 +84,18 @@ public class ContextEditorManager implements IMylarContextListener {
 				String mementoString = null;
 				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 				if (task != null) {
-				try {
-					mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
-							PREFS_PREFIX + task.getHandleIdentifier());
-					if (mementoString != null && !mementoString.trim().equals("")) {
-						IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
-						if (memento != null) {
-							restoreEditors(page, memento);
+					try {
+						mementoString = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(
+								PREFS_PREFIX + task.getHandleIdentifier());
+						if (mementoString != null && !mementoString.trim().equals("")) {
+							IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
+							if (memento != null) {
+								restoreEditors(page, memento);
+							}
 						}
+					} catch (Exception e) {
+						MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
 					}
-				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
-				}
 				}
 				IMylarElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
@@ -134,6 +136,10 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
+	/**
+	 * HACK: uses reflection for 3.2 compatibility. HACK: will fail to restore
+	 * different parts with same name
+	 */
 	@SuppressWarnings("unchecked")
 	private void restoreEditors(WorkbenchPage page, IMemento memento) {
 		EditorManager editorManager = page.getEditorManager();
@@ -150,10 +156,23 @@ public class ContextEditorManager implements IMylarContextListener {
 			method.setAccessible(true);
 
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
-			for (int x = 0; x < editorMementos.length; x++) {
-				// editorManager.restoreEditorState(editorMementos[x],
-				// visibleEditors, activeEditor, result);
-				method.invoke(editorManager, new Object[] { editorMementos[x], visibleEditors, activeEditor, result });
+			Set<IMemento> editorMementoSet = new HashSet<IMemento>();
+			editorMementoSet.addAll(Arrays.asList(editorMementos));
+			// HACK: same parts could have different editors
+			Set<String> restoredPartNames = new HashSet<String>();
+			List<IEditorReference> alreadyVisibleEditors = Arrays.asList(editorManager.getEditors());
+			for (IEditorReference editorReference : alreadyVisibleEditors) {
+				restoredPartNames.add(editorReference.getPartName());	
+			}
+			for (IMemento editorMemento : editorMementoSet) {
+				String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
+				if (!restoredPartNames.contains(partName)) {
+					editorManager.restoreEditorState(editorMemento, visibleEditors, activeEditor, result);
+					// method.invoke(editorManager, new Object[] { editorMemento, visibleEditors,
+					// activeEditor, result });
+				} else {
+					restoredPartNames.add(partName);
+				}
 			}
 
 			for (int i = 0; i < visibleEditors.size(); i++) {
@@ -182,8 +201,7 @@ public class ContextEditorManager implements IMylarContextListener {
 					IEditorReference[] references = page.getEditorReferences();
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 					for (int i = 0; i < references.length; i++) {
-						if (!isActiveTaskEditor(references[i]) && !isUnsubmittedTaskEditor(references[i])
-								&& canClose(references[i])) {
+						if (canClose(references[i]) && !isUnsubmittedTaskEditor(references[i])) {
 							toClose.add(references[i]);
 						}
 					}
@@ -218,22 +236,25 @@ public class ContextEditorManager implements IMylarContextListener {
 		return false;
 	}
 
-	private boolean isActiveTaskEditor(IEditorReference editorReference) {
-		ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-		try {
-			IEditorInput input = editorReference.getEditorInput();
-			if (input instanceof TaskEditorInput) {
-				TaskEditorInput taskEditorInput = (TaskEditorInput) input;
-				if (activeTask != null && taskEditorInput.getTask() != null
-						&& taskEditorInput.getTask().getHandleIdentifier().equals(activeTask.getHandleIdentifier())) {
-					return true;
-				}
-			}
-		} catch (PartInitException e) {
-			// ignore
-		}
-		return false;
-	}
+// private boolean isActiveTaskEditor(IEditorReference editorReference) {
+// ITask activeTask =
+// TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+// try {
+// IEditorInput input = editorReference.getEditorInput();
+// if (input instanceof TaskEditorInput) {
+// TaskEditorInput taskEditorInput = (TaskEditorInput) input;
+// if (activeTask != null && taskEditorInput.getTask() != null
+// &&
+// taskEditorInput.getTask().getHandleIdentifier().equals(activeTask.getHandleIdentifier()))
+// {
+// return true;
+// }
+// }
+// } catch (PartInitException e) {
+// // ignore
+// }
+// return false;
+// }
 
 	public void interestChanged(List<IMylarElement> elements) {
 		for (IMylarElement element : elements) {
