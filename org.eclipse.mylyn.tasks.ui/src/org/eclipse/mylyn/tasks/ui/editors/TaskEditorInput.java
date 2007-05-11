@@ -131,9 +131,10 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	@Override
 	public int hashCode() {
-		final int PRIME = 31;
+		final int prime = 31;
 		int result = 1;
-		result = PRIME * result + ((task == null) ? 0 : task.hashCode());
+		result = prime * result + (newTask ? 1231 : 1237);
+		result = prime * result + ((task == null) ? 0 : task.hashCode());
 		return result;
 	}
 
@@ -146,6 +147,8 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 		if (getClass() != obj.getClass())
 			return false;
 		final TaskEditorInput other = (TaskEditorInput) obj;
+		if (newTask != other.newTask)
+			return false;
 		if (task == null) {
 			if (other.task != null)
 				return false;

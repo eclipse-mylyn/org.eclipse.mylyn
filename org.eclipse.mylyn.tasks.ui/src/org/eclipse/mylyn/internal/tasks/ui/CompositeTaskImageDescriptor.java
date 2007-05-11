@@ -50,7 +50,6 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 		WIDTH = WIDTH_DECORATION + WIDTH_ICON - WIDTH_SQUISH;
 	}
 	
-	
 	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind) {
 		this.base = getImageData(icon);
 		if (overlayKind != null) {
@@ -66,7 +65,7 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	protected void drawCompositeImage(int width, int height) {
 		drawImage(base, WIDTH_DECORATION, 1);
 		if (kind != null) {
-			drawImage(kind, WIDTH_DECORATION+5, 5);
+			drawImage(kind, WIDTH_DECORATION+5, 6);
 		}
 		if (synchState != null) {
 			drawImage(synchState, WIDTH_ICON /*WIDTH_SQUISH + 1*/, OFFSET_SYNCH);

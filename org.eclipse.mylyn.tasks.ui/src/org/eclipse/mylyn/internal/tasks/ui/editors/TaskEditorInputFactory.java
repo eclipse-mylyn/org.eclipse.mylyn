@@ -36,7 +36,6 @@ public class TaskEditorInputFactory implements IElementFactory {
 		return null;
 	}
 	
-
 	public static void saveState(IMemento memento, TaskEditorInput input) {
 		if(memento != null && input != null && input.getTask() != null) {
 			memento.putString(TAG_TASK_HANDLE, input.getTask().getHandleIdentifier());
