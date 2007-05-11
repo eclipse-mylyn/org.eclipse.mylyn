@@ -895,7 +895,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
 		// Attributes Composite- this holds all the combo fields and text fields
-		Composite attributesComposite = toolkit.createComposite(attributesSection);
+		final Composite attributesComposite = toolkit.createComposite(attributesSection);
+
+		attributesComposite.addListener(SWT.MouseDown, new Listener() {
+			public void handleEvent(Event event) {
+				Control focus = event.display.getFocusControl();
+				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
+					form.setFocus();
+				}
+			}
+		});
+
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
 		attributesLayout.horizontalSpacing = 5;
