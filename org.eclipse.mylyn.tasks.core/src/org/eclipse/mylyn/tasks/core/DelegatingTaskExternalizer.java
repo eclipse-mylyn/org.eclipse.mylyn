@@ -154,7 +154,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = doc.createElement(getTaskTagName());
-		node.setAttribute(KEY_LABEL, cleanString(task.getSummary()));
+		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
 		if (task.getContainer() != null) {
@@ -184,7 +184,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		if (task.getTaskUrl() != null) {
 			node.setAttribute(KEY_ISSUEURL, task.getTaskUrl());
 		}
-		node.setAttribute(KEY_NOTES, cleanString(task.getNotes()));
+		node.setAttribute(KEY_NOTES, stripControlCharacters(task.getNotes()));
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
 		node.setAttribute(KEY_DATE_END, formatExternDate(task.getCompletionDate()));
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
@@ -231,11 +231,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node;
 	}
 
-	private String cleanString(String notes) {
-		if(notes == null) return "";
-		StringBuilder builder = new StringBuilder(notes.length());
-		for(int x = 0; x < notes.length(); x++) {
-			char temp = notes.charAt(x);
+	protected String stripControlCharacters(String text) {
+		if(text == null) return "";
+		StringBuilder builder = new StringBuilder(text.length());
+		for(int x = 0; x < text.length(); x++) {
+			char temp = text.charAt(x);
 			if (!Character.isISOControl(temp)) {
 				builder.append(temp);
 			} else if (temp == '\n' || temp == '\r') {
