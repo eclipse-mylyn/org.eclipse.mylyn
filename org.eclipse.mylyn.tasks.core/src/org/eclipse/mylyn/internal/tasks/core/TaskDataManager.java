@@ -44,7 +44,7 @@ import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
  */
 public class TaskDataManager {
 
-	private static final int SAVE_INTERVAL = 30 * 1000;
+	private static final int SAVE_INTERVAL = 60 * 1000;
 
 	private File file;
 
