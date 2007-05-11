@@ -110,7 +110,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 //		} else {
 			Image image = null;
 			int offsetX = 7;
-			int offsetY = 4;
+			int offsetY = (event.height / 2) - 5;
 			if (this.taskListView.synchronizationOverlaid) {
 				offsetX = event.x + 3;
 			}
@@ -129,6 +129,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 //						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
+				System.err.println(">>>> " + event.height);
 				event.gc.drawImage(image, offsetX, event.y + offsetY);
 //				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
