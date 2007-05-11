@@ -80,8 +80,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				if (data instanceof ITaskListElement) {
-					drawSyncronizationImage((ITaskListElement) data, event);
+				if (!this.taskListView.synchronizationOverlaid) {
+					if (data instanceof ITaskListElement) {
+						drawSyncronizationImage((ITaskListElement) data, event);
+					}
 				}
 //				currWidth = event.width;
 				break;
@@ -100,22 +102,25 @@ class CustomTaskListDecorationDrawer implements Listener {
 	}
 
 	private void drawSyncronizationImage(ITaskListElement element, Event event) {
-		if (this.taskListView.synchronizationOverlaid) {
-			Image image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element));
-			if (image != null) {
-				event.gc.drawImage(image, event.x + 3, event.y + 4);
-			}
-		} else {
+//		if (this.taskListView.synchronizationOverlaid) {
+//			Image image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element));
+//			if (image != null) {
+//				event.gc.drawImage(image, event.x + 3, event.y + 4);
+//			}
+//		} else {
 			Image image = null;
 			int offsetX = 0;
 			int offsetY = 0;
+			if (this.taskListView.synchronizationOverlaid) {
+				offsetX += event.x - 2;
+			}
 			if (element instanceof AbstractTaskContainer) {
 				if (element instanceof AbstractTaskContainer) {
 					if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 							&& hasIncoming((AbstractTaskContainer) element)) {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
 						offsetX = 17;
-						offsetY = 1;
+						offsetY = 0;
 					}
 				}
 			} else {
@@ -124,10 +129,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 //						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
-				event.gc.drawImage(image, 5 + offsetX, event.y + 2 + offsetY);
+				event.gc.drawImage(image, 5 + offsetX, event.y + 4 + offsetY);
 //				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
-		}
+//		}
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
