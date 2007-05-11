@@ -2616,7 +2616,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		final Button addSelfButton = toolkit.createButton(composite, "Add me to CC", SWT.CHECK);
 		addSelfButton.setSelection(RepositoryTaskAttribute.TRUE.equals(taskData
 				.getAttributeValue(RepositoryTaskAttribute.ADD_SELF_CC)));
-		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME));
+		addSelfButton.setImage(TasksUiImages.getImage(TasksUiImages.PERSON));
 		addSelfButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
