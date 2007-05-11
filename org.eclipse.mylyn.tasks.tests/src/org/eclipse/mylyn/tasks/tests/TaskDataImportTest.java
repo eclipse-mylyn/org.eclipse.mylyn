@@ -58,7 +58,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertNotNull(wizardPage);
 
 		manager.resetTaskList();
-		assertTrue(manager.getTaskList().getRootElements().size() == 1);
+		assertEquals(2, manager.getTaskList().getRootElements().size());
 
 		sourceZipFile = TaskTestUtil.getLocalFile(sourceZipPath);
 		assertTrue(sourceZipFile.exists());

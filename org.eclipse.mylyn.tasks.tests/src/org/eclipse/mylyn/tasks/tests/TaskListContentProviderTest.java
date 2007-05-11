@@ -10,9 +10,11 @@ package org.eclipse.mylar.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Felix Schwarz
@@ -29,6 +31,7 @@ public class TaskListContentProviderTest extends TestCase {
 		TaskListView.openInActivePerspective();
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS, false);
 		view.clearFilters(true);
 		view.addFilter(view.getCompleteFilter());
 	}

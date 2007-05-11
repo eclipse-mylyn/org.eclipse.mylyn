@@ -81,7 +81,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 						view.getDrilledIntoCategory());
 			} else {
 				TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-						TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+						TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
@@ -93,7 +93,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 								"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
 			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
-					TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory());
+					TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
 		}
 
 		TasksUiUtil.openEditor(newTask, true);

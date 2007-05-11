@@ -469,7 +469,7 @@ public class TaskListView extends ViewPart {
 					// category might appear or disappear
 					refresh(null);
 					AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-							.getRootCategory();
+							.getUncategorizedCategory();
 					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
 						refresh(null);
 					} else {
@@ -519,7 +519,7 @@ public class TaskListView extends ViewPart {
 					if (container == null) {
 						// HACK: should be part of policy
 						getViewer().refresh(false);
-					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory())) {
+					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory())) {
 						refresh(null);
 					} else {
 						refresh(container);
@@ -1533,7 +1533,7 @@ public class TaskListView extends ViewPart {
 					if (element instanceof ITask) {
 						ITask task = (ITask) element;
 						AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-								.getRootCategory();
+								.getUncategorizedCategory();
 						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
 								.getQueriesForHandle(task.getHandleIdentifier());
 						if (task.getContainer() == null || task.getContainer().equals(rootCategory)

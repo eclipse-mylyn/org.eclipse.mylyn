@@ -42,6 +42,7 @@ import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.UncategorizedCategory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
 import org.eclipse.mylar.tasks.tests.connector.MockQueryHit;
@@ -294,7 +295,7 @@ public class TaskListManagerTest extends TestCase {
 		Task task1 = new Task("t1", "t1", true);
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		assertEquals(TaskList.LABEL_ROOT, task1.getContainer().getHandleIdentifier());
+		assertEquals(UncategorizedCategory.LABEL, task1.getContainer().getHandleIdentifier());
 
 		TaskCategory cat1 = new TaskCategory("c1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
@@ -306,7 +307,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(0, cat1.getChildren().size());
-		assertEquals(TaskList.LABEL_ROOT, task1.getContainer().getHandleIdentifier());
+		assertEquals(UncategorizedCategory.LABEL, task1.getContainer().getHandleIdentifier());
 	}
 
 	public void testEmpty() {
@@ -346,9 +347,9 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addTask(task, category);
 		manager.getTaskList().addCategory(category);
-		assertEquals(0, manager.getTaskList().getRootCategory().getChildren().size());
+		assertEquals(0, manager.getTaskList().getUncategorizedCategory().getChildren().size());
 		manager.getTaskList().deleteCategory(category);
-		assertEquals(1, manager.getTaskList().getRootCategory().getChildren().size());
+		assertEquals(1, manager.getTaskList().getUncategorizedCategory().getChildren().size());
 	}
 
 	public void testRenameCategory() {

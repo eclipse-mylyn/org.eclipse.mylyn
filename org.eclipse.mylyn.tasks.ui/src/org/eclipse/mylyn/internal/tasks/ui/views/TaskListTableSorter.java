@@ -23,6 +23,7 @@ import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
+import org.eclipse.mylar.tasks.core.UncategorizedCategory;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -35,7 +36,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
 	private boolean sortByPriority = true;
-	
+
 	public TaskListTableSorter(TaskListView view, boolean byPriority) {
 		super();
 		this.view = view;
@@ -68,6 +69,13 @@ public class TaskListTableSorter extends ViewerSorter {
 				return -1;
 			}
 		}
+
+		if (o1 instanceof UncategorizedCategory && o2 instanceof AbstractTaskContainer) {
+			return -1;
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedCategory) {
+			return 1;
+		}
+
 		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
 		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
@@ -106,26 +114,28 @@ public class TaskListTableSorter extends ViewerSorter {
 			int result = this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 			if (result != 0) {
 				return result;
-			} 
-		} 
-		
+			}
+		}
+
 		String summary1 = getSortableSummaryFromElement(element1);
 		String summary2 = getSortableSummaryFromElement(element2);
 		element2.getSummary();
 		return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
-		
-//		if (column != null && column.equals(this.view.columnNames[1])) {
-//			return 0;
-//		} else if (column == this.view.columnNames[2]) {
-//			return this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
-//		} else if (column == this.view.columnNames[3]) {
-//			String summary1 = getSortableSummaryFromElement(element1);
-//			String summary2 = getSortableSummaryFromElement(element2);
-//			element2.getSummary();
-//			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
-//		} else {
-//			return 0;
-//		}
+
+// if (column != null && column.equals(this.view.columnNames[1])) {
+// return 0;
+// } else if (column == this.view.columnNames[2]) {
+// return this.view.sortDirection *
+// element1.getPriority().compareTo(element2.getPriority());
+// } else if (column == this.view.columnNames[3]) {
+// String summary1 = getSortableSummaryFromElement(element1);
+// String summary2 = getSortableSummaryFromElement(element2);
+// element2.getSummary();
+// return this.view.sortDirection * taskKeyComparator.compare(summary1,
+// summary2);
+// } else {
+// return 0;
+// }
 	}
 
 	public static String getSortableSummaryFromElement(ITaskListElement element) {

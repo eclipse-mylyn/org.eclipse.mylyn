@@ -158,7 +158,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
 		if (task.getContainer() != null) {
-			if (task.getContainer().getHandleIdentifier().equals(TaskList.LABEL_ROOT)) {
+			if (task.getContainer().getHandleIdentifier().equals(UncategorizedCategory.LABEL)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
 				node.setAttribute(KEY_CATEGORY, task.getContainer().getHandleIdentifier());

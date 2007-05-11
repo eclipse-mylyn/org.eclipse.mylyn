@@ -34,6 +34,7 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylar.tasks.core.UncategorizedCategory;
 import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -384,7 +385,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			}
 
 		});
-		categoryChooser.add("<root>");
+		categoryChooser.add(UncategorizedCategory.LABEL);
 		for (AbstractTaskContainer category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
@@ -420,7 +421,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			if (index == 0) {
-				return TasksUiPlugin.getTaskListManager().getTaskList().getRootCategory();
+				return TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory();
 			}
 			return ((List<AbstractTaskContainer>) categoryChooser.getData()).get(index - 1);
 		}
