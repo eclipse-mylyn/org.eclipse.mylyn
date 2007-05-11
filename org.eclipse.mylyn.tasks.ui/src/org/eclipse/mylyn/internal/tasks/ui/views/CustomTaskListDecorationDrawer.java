@@ -78,9 +78,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 		if (data instanceof ITaskListElement) {
 			switch (event.type) {
-			case SWT.MeasureItem: {
-				break;
-			}
 			case SWT.EraseItem: {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
@@ -105,23 +102,27 @@ class CustomTaskListDecorationDrawer implements Listener {
 		if (this.taskListView.synchronizationOverlaid) {
 			Image image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element));
 			if (image != null) {
-				event.gc.drawImage(image, event.x + 15, event.y + 2);
+				event.gc.drawImage(image, event.x + 3, event.y + 4);
 			}
 		} else {
 			Image image = null;
+			int offset = 0;
 			if (element instanceof AbstractTaskContainer) {
 				if (element instanceof AbstractTaskContainer) {
 					if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 							&& hasIncoming((AbstractTaskContainer) element)) {
-						image = TasksUiImages.getCompositeSynchImage(TasksUiImages.STATUS_NORMAL_INCOMING, false);
+						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
+						offset = 18;
 					}
 				}
 			} else {
-				image = TasksUiImages.getCompositeSynchImage(TaskElementLabelProvider
-						.getSynchronizationImageDescriptor(element), true);
+				image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element));
+//				image = TasksUiImages.getCompositeSynchImage(TaskElementLabelProvider
+//						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
-				event.gc.drawImage(image, currWidth - 16, event.y + 1);
+				event.gc.drawImage(image, 5 + offset, event.y + 2);
+//				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
 		}
 	}
