@@ -19,58 +19,30 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
+public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 
-	private ImageData synchState;
+	private ImageData background;
 
-	private ImageData kind;
-	
 	protected Point size;
-
-	public static final int WIDTH_DECORATION = 4;
 	
-//	private static final int WIDTH_SYNCH = 9;//5;
-	
-	private static final int WIDTH_SQUISH = 0;
-	
-	private static final int WIDTH_ICON = 16;
-	
-	static final int OFFSET_SYNCH = 4;
-		
 	static int WIDTH;
 	
-	static {
-//		if (SWT.getPlatform().equals("win32")) {
-//			WIDTH_DECORATION = 0;
-//		} else {
-//			WIDTH_DECORATION = 4;
-//		}
-		WIDTH = WIDTH_DECORATION + WIDTH_ICON - WIDTH_SQUISH;
-	}
-	
-	
-	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind) {
+	public CompositeSynchImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
 		this.base = getImageData(icon);
-		if (overlayKind != null) {
-			this.kind = getImageData(overlayKind);
+		if (fillBackground) {
+			this.background = getImageData(TasksUiImages.OVERLAY_SOLID_WHITE);
+			this.size = new Point(background.width, background.height);
+		} else {
+			this.size = new Point(base.width, base.height);
 		}
-//		if (synchState != null) {
-//			this.synchState = getImageData(synchState);
-//		} 
-		this.size = new Point(WIDTH, base.height);
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, WIDTH_DECORATION, -1);
-		if (kind != null) {
-			drawImage(kind, WIDTH_DECORATION+5, 5);
-		}
-		if (synchState != null) {
-			drawImage(synchState, WIDTH_ICON /*WIDTH_SQUISH + 1*/, OFFSET_SYNCH);
-		}
+		drawImage(background, 0, 0);
+		drawImage(base, 3, 2);
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {

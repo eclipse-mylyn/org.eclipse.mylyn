@@ -168,9 +168,9 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Tasks: " + completeTasks + " of "
-							+ totalTasks + " scheduled" + "\n     Hours: " + completeTime + " of "
-							+ (completeTime + incompleteTime) + " estimated");
+					taskProgressBar.setToolTipText("Workweek Progress" 
+							+ "\n     Hours: " + completeTime + " of " + (completeTime + incompleteTime) + " estimated"
+							+ "\n     Tasks: " + completeTasks + " of " + totalTasks + " scheduled" );
 				}
 			}
 		});

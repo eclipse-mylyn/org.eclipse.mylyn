@@ -23,10 +23,7 @@ import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -36,27 +33,9 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		
-		AbstractRepositoryConnectorUi connectorUi = null;
-		ImageDescriptor priorityOverlay = null;
-		if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
-			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
-			if (connectorUi != null) {
-				priorityOverlay = connectorUi.getTaskPriorityOverlay(repositoryTask);
-			}
-		}
-		if (priorityOverlay == null && (element instanceof ITask || element instanceof AbstractQueryHit)) {
-			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
-			if (task != null) {
-				priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
-						.getPriority()));
-			} else if (element instanceof AbstractQueryHit){
-				priorityOverlay = TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element)
-						.getPriority()));
-			}
-		}
+		ImageDescriptor priorityOverlay = TaskElementLabelProvider.getPriorityImageDescriptor(element);
 		if (priorityOverlay != null) {
-			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
+//			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
 		
 		if (element instanceof AbstractRepositoryQuery) {
@@ -78,9 +57,9 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_RIGHT);
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_RIGHT);
 			}
 		} else if (element instanceof AbstractQueryHit) {
 			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
@@ -88,7 +67,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
-				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_LEFT);
+				decoration.addOverlay(TasksUiImages.OVERLAY_OVER_DUE, IDecoration.TOP_RIGHT);
 			}
 		} else if (element instanceof TaskRepository) {
 			ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(((TaskRepository) element).getKind());

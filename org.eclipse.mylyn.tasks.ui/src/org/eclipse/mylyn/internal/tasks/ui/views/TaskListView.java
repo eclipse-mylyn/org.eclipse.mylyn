@@ -52,6 +52,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylar.internal.tasks.ui.CompositeTaskImageDescriptor;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskCompletionFilter;
@@ -150,7 +151,8 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class TaskListView extends ViewPart {
 
-	private final class CONTEXT_ACTIVATION_DRAWER implements Listener {
+	private final class CUSTOM_DECORATION_DRAWER implements Listener {
+
 		private final int activationImageOffset;
 
 		private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
@@ -159,9 +161,13 @@ public class TaskListView extends ViewPart {
 
 		private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
-		private CONTEXT_ACTIVATION_DRAWER(int activationImageOffset) {
+		boolean overlaySynchronization = false;
+
+		private CUSTOM_DECORATION_DRAWER(int activationImageOffset) {
 			this.activationImageOffset = activationImageOffset;
 		}
+
+		private int currWidth = 0;
 
 		/*
 		 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
@@ -190,18 +196,51 @@ public class TaskListView extends ViewPart {
 			}
 			if (image != null) {
 				switch (event.type) {
-				case SWT.PaintItem: {
-					drawImage(activationImageOffset, event, image);
+				case SWT.MeasureItem: {
+					break;
 				}
 				case SWT.EraseItem: {
-					drawImage(activationImageOffset, event, image);
+					drawActivationImage(activationImageOffset, event, image);
+					currWidth = event.width;
+					break;
+				}
+				case SWT.PaintItem: {
+					drawActivationImage(activationImageOffset, event, image);
+					drawSyncronizationImage(task, event);
+					drawPriorityImage(task, event);
 					break;
 				}
 				}
 			}
 		}
 
-		private void drawImage(final int activationImageOffset, Event event, Image image) {
+		private void drawSyncronizationImage(ITask task, Event event) {
+			if (overlaySynchronization) {
+				Image image = TasksUiImages.getImage(TaskElementLabelProvider
+						.getSynchronizationImageDescriptor(task));
+				if (image != null) {
+					event.gc.drawImage(image, event.x + 17, event.y + 3);
+				}
+			} else {
+				Image image = TasksUiImages.getCompositeSynchImage(TaskElementLabelProvider
+						.getSynchronizationImageDescriptor(task), true);
+				if (image != null) {
+					event.gc.drawImage(image, currWidth - 16, event.y);
+				}
+			}
+		}
+
+		private void drawPriorityImage(ITask task, Event event) {
+			ImageDescriptor descriptor = TaskElementLabelProvider.getPriorityImageDescriptor(task);
+			if (descriptor != null) {
+				Image image = TasksUiImages.getImage(descriptor);
+				if (image != null) {
+					event.gc.drawImage(image, event.x + CompositeTaskImageDescriptor.WIDTH_DECORATION-4, event.y);
+				}
+			}
+		}
+
+		private void drawActivationImage(final int activationImageOffset, Event event, Image image) {
 			Rectangle rect = image.getBounds();
 			int offset = Math.max(0, (event.height - rect.height) / 2);
 			event.gc.drawImage(image, activationImageOffset, event.y + offset);
@@ -802,9 +841,11 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 24;
-		getViewer().getTree().addListener(SWT.EraseItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
-		getViewer().getTree().addListener(SWT.PaintItem, new CONTEXT_ACTIVATION_DRAWER(activationImageOffset));
+		final int activationImageOffset = 20;
+		CUSTOM_DECORATION_DRAWER customDrawer = new CUSTOM_DECORATION_DRAWER(activationImageOffset);
+		getViewer().getTree().addListener(SWT.MeasureItem, customDrawer);
+		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
+		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
 
 		getViewer().getTree().addMouseListener(new MouseListener() {
 
@@ -816,7 +857,7 @@ public class TaskListView extends ViewPart {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
 					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
 						if (e.x > activationImageOffset - 2 && e.x < activationImageOffset + 16) {
-							taskListCellModifier.toggleTaskActivation((ITaskListElement)selectedObject);
+							taskListCellModifier.toggleTaskActivation((ITaskListElement) selectedObject);
 						}
 					}
 				}
@@ -943,7 +984,6 @@ public class TaskListView extends ViewPart {
 
 	private void configureColumns(final String[] columnNames, final int[] columnWidths) {
 		TreeColumnLayout layout = (TreeColumnLayout) getViewer().getTree().getParent().getLayout();
-
 		getViewer().setColumnProperties(columnNames);
 		columns = new TreeColumn[columnNames.length];
 		for (int i = 0; i < columnNames.length; i++) {

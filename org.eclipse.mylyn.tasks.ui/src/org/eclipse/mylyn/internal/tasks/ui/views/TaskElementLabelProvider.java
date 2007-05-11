@@ -32,6 +32,7 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
@@ -69,8 +70,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	/**
-	 * @param compositeImages
-	 *            set true for wide images
 	 * @param treeViewer
 	 *            can be null
 	 */
@@ -165,7 +164,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return compositeDescriptor;
 	}
 
-	private ImageDescriptor getSynchronizationImageDescriptor(Object element) {
+	public static ImageDescriptor getSynchronizationImageDescriptor(Object element) {
 		AbstractRepositoryTask repositoryTask = null;
 		ImageDescriptor imageDescriptor = null;
 		if (element instanceof AbstractQueryHit) {
@@ -204,6 +203,28 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return TasksUiImages.PRIORITY_3;
 	}
 
+	public static ImageDescriptor getPriorityImageDescriptor(Object element) {
+		AbstractRepositoryConnectorUi connectorUi;
+		if (element instanceof AbstractRepositoryTask) {
+			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
+			if (connectorUi != null) {
+				return connectorUi.getTaskPriorityOverlay(repositoryTask);
+			}
+		}
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+			if (task != null) {
+				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
+						.getPriority()));
+			} else if (element instanceof AbstractQueryHit){
+				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element)
+						.getPriority()));
+			}
+		}
+		return null;
+	}
+	
 	private boolean hasIncoming(AbstractTaskContainer container) {
 		for (ITask task : container.getChildren()) {
 			if (task instanceof AbstractRepositoryTask) {

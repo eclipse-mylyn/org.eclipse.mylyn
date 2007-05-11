@@ -109,6 +109,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_OVER_DUE = create(T_EVIEW, "overlay-overdue.gif");
 
+	public static final ImageDescriptor OVERLAY_SOLID_WHITE = create(T_OVR, "solid-white.gif");
+	
 	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
 
 	public static final ImageDescriptor TASK_WEB_REMOTE = create(T_TOOL, "overlay-web.gif");
@@ -272,7 +274,7 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 
 		if (image == null) {
-			CompositeTaskImageDescriptor imageDescriptor = new CompositeTaskImageDescriptor(icon, overlayKind, contextToggle);
+			CompositeTaskImageDescriptor imageDescriptor = new CompositeTaskImageDescriptor(icon, overlayKind);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}
@@ -288,6 +290,21 @@ public class TasksUiImages {
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
 			CompositeTaskContainerImageDescriptor imageDescriptor = new CompositeTaskContainerImageDescriptor(icon, overlay);
+			image = imageDescriptor.createImage(true);
+			getImageRegistry().put(key, image);
+		}
+		return image;
+	}
+	
+	public static Image getCompositeSynchImage(ImageDescriptor icon, boolean background) {
+		String key = "" + icon.hashCode();
+		if (background) {
+			key += ".background";
+		}
+				
+		Image image = getImageRegistry().get(key);
+		if (image == null) {
+			CompositeSynchImageDescriptor imageDescriptor = new CompositeSynchImageDescriptor(icon, background);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}
