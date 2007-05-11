@@ -282,6 +282,9 @@ public class TasksUiImages {
 	}
 
 	public static Image getCompositeContainerImage(ImageDescriptor icon, ImageDescriptor overlay) {
+		if (icon == null) {
+			return null;
+		}
 		String key = "" + icon.hashCode();
 		if (overlay != null) {
 			key += overlay.hashCode();
