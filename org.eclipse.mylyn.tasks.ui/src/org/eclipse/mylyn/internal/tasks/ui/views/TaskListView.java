@@ -160,7 +160,7 @@ public class TaskListView extends ViewPart {
 
 		private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
-		boolean overlaySynchronization = false;
+		boolean overlaySynchronization = true;
 
 		private CUSTOM_DECORATION_DRAWER(int activationImageOffset) {
 			this.activationImageOffset = activationImageOffset;
