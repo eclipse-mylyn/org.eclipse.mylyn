@@ -52,7 +52,10 @@ public class AttributeContainer implements Serializable {
 			return;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
-		if (!attributes.containsKey(mapped)) {
+		if(mapped == null) {
+			MylarStatusHandler.log("Mylar Error: mapped value for "+key+" returned null.", this);
+			return;
+		} if (!attributes.containsKey(mapped)) {
 			attributeKeys.add(mapped);
 		}
 		attributes.put(mapped, attribute);

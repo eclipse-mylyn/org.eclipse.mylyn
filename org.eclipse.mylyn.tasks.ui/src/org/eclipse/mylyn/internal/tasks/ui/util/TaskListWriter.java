@@ -63,6 +63,8 @@ public class TaskListWriter {
 
 	private static final String TRANSFORM_PROPERTY_VERSION = "version";
 
+	// May 2007: There was a bug when reading in 1.1
+	// Result was an infinite loop within the parser
 	private static final String XML_VERSION = "1.0";
 
 	public static final String ATTRIBUTE_VERSION = "Version";
