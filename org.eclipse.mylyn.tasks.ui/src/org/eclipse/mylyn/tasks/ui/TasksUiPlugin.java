@@ -450,7 +450,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				public void saving(ISaveContext context) throws CoreException {
 					if (context.getKind() == ISaveContext.FULL_SAVE) {
 						taskListManager.saveTaskList();
-						taskDataManager.saveNow();
+						taskDataManager.stop();
 					}
 				}
 			};
