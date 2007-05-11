@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
@@ -149,104 +148,6 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Ken Sueda
  */
 public class TaskListView extends ViewPart {
-
-	private final class CUSTOM_DECORATION_DRAWER implements Listener {
-
-		private final int activationImageOffset;
-
-		private Image taskActive = TasksUiImages.getImage(TasksUiImages.TASK_ACTIVE);
-
-		private Image taskInactive = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE);
-
-		private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
-
-		boolean overlaySynchronization = true;
-
-		private CUSTOM_DECORATION_DRAWER(int activationImageOffset) {
-			this.activationImageOffset = activationImageOffset;
-		}
-
-		private int currWidth = 0;
-
-		/*
-		 * NOTE: MeasureItem, PaintItem and EraseItem are called repeatedly.
-		 * Therefore, it is critical for performance that these methods be as
-		 * efficient as possible.
-		 */
-		public void handleEvent(Event event) {
-			Object data = event.item.getData();
-			ITask task = null;
-			Image image = null;
-			if (data instanceof ITask) {
-				task = (ITask) data;
-			} else if (data instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit) data).getCorrespondingTask();
-			}
-			if (task != null) {
-				if (task.isActive()) {
-					image = taskActive;
-				} else if (ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
-					image = taskInactiveContext;
-				} else {
-					image = taskInactive;
-				}
-			} else if (data instanceof AbstractQueryHit) {
-				image = taskInactive;
-			}
-			if (image != null) {
-				switch (event.type) {
-				case SWT.MeasureItem: {
-					break;
-				}
-				case SWT.EraseItem: {
-					drawActivationImage(activationImageOffset, event, image);
-					currWidth = event.width;
-					break;
-				}
-				case SWT.PaintItem: {
-					drawActivationImage(activationImageOffset, event, image);
-					if (data instanceof ITaskListElement) {
-						drawSyncronizationImage((ITaskListElement)data, event);
-					}
-//					drawPriorityImage(task, event);
-					break;
-				}
-				}
-			}
-		}
-
-		private void drawSyncronizationImage(ITaskListElement task, Event event) {
-			if (overlaySynchronization) {
-				Image image = TasksUiImages.getImage(TaskElementLabelProvider
-						.getSynchronizationImageDescriptor(task));
-				if (image != null) {
-					event.gc.drawImage(image, event.x + 18, event.y + 4);
-				}
-			} else {
-				Image image = TasksUiImages.getCompositeSynchImage(TaskElementLabelProvider
-						.getSynchronizationImageDescriptor(task), true);
-				if (image != null) {
-					event.gc.drawImage(image, currWidth - 16, event.y);
-				}
-			}
-		}
-
-//		private void drawPriorityImage(ITask task, Event event) {
-//			ImageDescriptor descriptor = TaskElementLabelProvider.getPriorityImageDescriptor(task);
-//			if (descriptor != null) {
-//				Image image = TasksUiImages.getImage(descriptor);
-//				if (image != null) {
-//					event.gc.drawImage(image, event.x + CompositeTaskImageDescriptor.WIDTH_DECORATION-4, event.y);
-//				}
-//			}
-//		}
-
-		private void drawActivationImage(final int activationImageOffset, Event event, Image image) {
-			Rectangle rect = image.getBounds();
-			int offset = Math.max(0, (event.height - rect.height) / 2);
-			event.gc.drawImage(image, activationImageOffset, event.y + offset);
-		}
-	}
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
@@ -417,6 +318,8 @@ public class TaskListView extends ViewPart {
 	 * True if the view should indicate that interaction monitoring is paused
 	 */
 	protected boolean isPaused = false;
+
+	boolean synchronizationOverlaid = false;
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
@@ -820,7 +723,7 @@ public class TaskListView extends ViewPart {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true, getViewer()),
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
@@ -842,8 +745,8 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 23;
-		CUSTOM_DECORATION_DRAWER customDrawer = new CUSTOM_DECORATION_DRAWER(activationImageOffset);
+		final int activationImageOffset = 22;
+		CustomTaskListDecorationDrawer customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
 		getViewer().getTree().addListener(SWT.MeasureItem, customDrawer);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
 		getViewer().getTree().addListener(SWT.PaintItem, customDrawer);
@@ -857,7 +760,7 @@ public class TaskListView extends ViewPart {
 				if (selectedNode instanceof TreeItem) {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
 					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
-						if (e.x > activationImageOffset - 2 && e.x < activationImageOffset + 16) {
+						if (e.x > activationImageOffset && e.x < activationImageOffset + 13) {
 							taskListCellModifier.toggleTaskActivation((ITaskListElement) selectedObject);
 						}
 					}
@@ -1718,5 +1621,10 @@ public class TaskListView extends ViewPart {
 
 	public boolean isSortByPriority() {
 		return sortIndex == 0;
+	}
+
+	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {
+		this.synchronizationOverlaid = synchronizationOverlaid;
+		getViewer().refresh();
 	}
 }

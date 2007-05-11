@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author Mik Kersten
  */
-public class CompositeTaskContainerImageDescriptor extends CompositeImageDescriptor {
+public class CompositeContainerImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 	
@@ -27,7 +27,7 @@ public class CompositeTaskContainerImageDescriptor extends CompositeImageDescrip
 	
 	protected Point size;
 	
-	public CompositeTaskContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay) {
+	public CompositeContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay) {
 		this.base = getImageData(icon);
 		if (overlay != null) {
 			this.overlay = getImageData(overlay);

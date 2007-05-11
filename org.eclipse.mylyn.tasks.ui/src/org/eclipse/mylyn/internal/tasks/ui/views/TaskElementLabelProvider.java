@@ -11,14 +11,12 @@
 
 package org.eclipse.mylar.internal.tasks.ui.views;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
@@ -54,8 +52,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private boolean compositeImages = false;
 
-	private TreeViewer treeViewer;
-
 	private class CompositeImageDescriptor {
 
 		ImageDescriptor icon;
@@ -73,10 +69,9 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	 * @param treeViewer
 	 *            can be null
 	 */
-	public TaskElementLabelProvider(boolean compositeImages, TreeViewer treeViewer) {
+	public TaskElementLabelProvider(boolean compositeImages) {
 		super();
 		this.compositeImages = compositeImages;
-		this.treeViewer = treeViewer;
 	}
 
 	@Override
@@ -128,12 +123,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
 
-			if (element instanceof AbstractTaskContainer) {
-				if (treeViewer != null && !Arrays.asList(treeViewer.getExpandedElements()).contains(element)
-						&& hasIncoming((AbstractTaskContainer) element)) {
-					compositeDescriptor.overlaySynch = TasksUiImages.STATUS_NORMAL_INCOMING;
-				}
-			}
+//			if (element instanceof AbstractTaskContainer) {
+//				if (treeViewer != null && !Arrays.asList(treeViewer.getExpandedElements()).contains(element)
+//						&& hasIncoming((AbstractTaskContainer) element)) {
+//					compositeDescriptor.overlaySynch = TasksUiImages.STATUS_NORMAL_INCOMING;
+//				}
+//			}
 
 			if (connectorUi != null) {
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
@@ -225,26 +220,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return null;
 	}
 	
-	private boolean hasIncoming(AbstractTaskContainer container) {
-		for (ITask task : container.getChildren()) {
-			if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask) task;
-				if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-					return true;
-				}
-			}
-		}
-		if (container instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-			for (AbstractQueryHit hit : query.getHits()) {
-				if (hit.getCorrespondingTask() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public String getText(Object object) {
 		if (object instanceof AbstractQueryHit) {

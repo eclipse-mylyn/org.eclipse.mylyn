@@ -289,7 +289,7 @@ public class TasksUiImages {
 				
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
-			CompositeTaskContainerImageDescriptor imageDescriptor = new CompositeTaskContainerImageDescriptor(icon, overlay);
+			CompositeContainerImageDescriptor imageDescriptor = new CompositeContainerImageDescriptor(icon, overlay);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

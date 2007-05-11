@@ -18,6 +18,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -90,6 +91,8 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private Button notificationEnabledButton = null;
 
+	private Button incomingOverlaysButton = null;
+	
 	private Text backupScheduleTimeText;
 
 	private Text backupFolderText;
@@ -168,6 +171,14 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		backupNow.setEnabled(true);
+		
+		getPreferenceStore().setValue(TaskListPreferenceConstants.INCOMING_OVERLAID,
+				incomingOverlaysButton.getSelection());
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			view.setSynchronizationOverlaid(incomingOverlaysButton.getSelection());
+		}
+		
 		return true;
 	}
 
@@ -245,7 +256,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private void createTaskRefreshScheduleGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Automatic Synchronization");
+		group.setText("Synchronization");
 		GridLayout gridLayout = new GridLayout(1, false);
 		group.setLayout(gridLayout);
 		
@@ -280,6 +291,11 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		Label label = new Label(enableSynch, SWT.NONE);
 		label.setText("minutes");
 
+		notificationEnabledButton = new Button(group, SWT.CHECK);
+		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
+		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+		
 		// synchQueries = new Button(group, SWT.CHECK);
 		// synchQueries.setText("Synchronize on startup");
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
@@ -423,13 +439,13 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private void createNotificationsGroup(Composite parent) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Notifications");
+		group.setText("Layout");
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		notificationEnabledButton = new Button(group, SWT.CHECK);
-		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
-		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+		incomingOverlaysButton = new Button(group, SWT.CHECK);
+		incomingOverlaysButton.setText("Overlay synchronization state on task icons (for wide view)");
+		incomingOverlaysButton.setSelection(getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.INCOMING_OVERLAID));
 	}
 
 	private void createSchedulingGroup(Composite container) {

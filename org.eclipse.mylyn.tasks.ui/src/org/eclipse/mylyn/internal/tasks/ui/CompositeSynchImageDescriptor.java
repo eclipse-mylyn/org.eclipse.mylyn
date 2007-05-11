@@ -24,6 +24,8 @@ public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 	private ImageData base;
 
 	private ImageData background;
+	
+	private boolean fillBackground;
 
 	protected Point size;
 	
@@ -31,17 +33,16 @@ public class CompositeSynchImageDescriptor extends CompositeImageDescriptor {
 	
 	public CompositeSynchImageDescriptor(ImageDescriptor icon, boolean fillBackground) {
 		this.base = getImageData(icon);
-		if (fillBackground) {
-			this.background = getImageData(TasksUiImages.OVERLAY_SOLID_WHITE);
-			this.size = new Point(background.width, background.height);
-		} else {
-			this.size = new Point(base.width, base.height);
-		}
+		this.background = getImageData(TasksUiImages.OVERLAY_SOLID_WHITE);
+		this.size = new Point(background.width, background.height);
+		this.fillBackground = fillBackground;
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(background, 0, 0);
+		if (fillBackground) {
+			drawImage(background, 0, 0);
+		}
 		drawImage(base, 3, 2);
 	}
 
