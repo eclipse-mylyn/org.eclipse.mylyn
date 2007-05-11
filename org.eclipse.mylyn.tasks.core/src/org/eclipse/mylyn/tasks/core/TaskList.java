@@ -179,7 +179,7 @@ public class TaskList {
 	}
 
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
-		if (!(container instanceof TaskArchive)) {
+		if (!(container instanceof TaskArchive) && !(container instanceof UncategorizedCategory)) {
 			if (queries.remove(container.getHandleIdentifier()) != null) {
 				container.setDescription(newDescription);
 				if (container instanceof AbstractRepositoryQuery) {
@@ -359,7 +359,7 @@ public class TaskList {
 	public Set<AbstractTaskContainer> getTaskContainers() {
 		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 		for (AbstractTaskContainer container : categories.values()) {
-			if (container instanceof TaskCategory || container instanceof TaskArchive) {
+			if (container instanceof TaskCategory || container instanceof TaskArchive || container instanceof UncategorizedCategory) {
 				containers.add(container);
 			}
 		}

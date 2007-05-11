@@ -137,6 +137,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
 		if (category instanceof TaskArchive) {
 			return parent;
+		} else if (category instanceof UncategorizedCategory) {
+			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
 			node.setAttribute(KEY_NAME, category.getSummary());
@@ -232,9 +234,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	protected String stripControlCharacters(String text) {
-		if(text == null) return "";
+		if (text == null)
+			return "";
 		StringBuilder builder = new StringBuilder(text.length());
-		for(int x = 0; x < text.length(); x++) {
+		for (int x = 0; x < text.length(); x++) {
 			char temp = text.charAt(x);
 			if (!Character.isISOControl(temp)) {
 				builder.append(temp);

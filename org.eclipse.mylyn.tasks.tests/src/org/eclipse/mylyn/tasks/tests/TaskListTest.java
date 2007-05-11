@@ -22,7 +22,7 @@ public class TaskListTest extends TestCase {
 	public void testGetUserCategories() {
 		TaskList taskList = new TaskList();
 		taskList.addCategory(new TaskCategory("a", taskList));
-		assertEquals(1, taskList.getUserCategories().size());
+		assertEquals(2, taskList.getUserCategories().size());
 	}
 	
 }
