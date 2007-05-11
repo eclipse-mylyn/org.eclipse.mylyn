@@ -220,7 +220,7 @@ public class TaskListView extends ViewPart {
 				Image image = TasksUiImages.getImage(TaskElementLabelProvider
 						.getSynchronizationImageDescriptor(task));
 				if (image != null) {
-					event.gc.drawImage(image, event.x + 17, event.y + 3);
+					event.gc.drawImage(image, event.x + 18, event.y + 4);
 				}
 			} else {
 				Image image = TasksUiImages.getCompositeSynchImage(TaskElementLabelProvider
