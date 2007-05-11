@@ -59,6 +59,7 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
@@ -943,8 +944,8 @@ public class BugzillaClient {
 				}
 			}
 
-			throw new CoreException(new BugzillaStatus(IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.REPOSITORY_ERROR_HTML, repositoryUrl.toString(), body));
+			throw new CoreException(RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
+					IMylarStatusConstants.REPOSITORY_ERROR, "A repository error has occurred.", body));
 
 		} catch (ParseException e) {
 			authenticated = false;

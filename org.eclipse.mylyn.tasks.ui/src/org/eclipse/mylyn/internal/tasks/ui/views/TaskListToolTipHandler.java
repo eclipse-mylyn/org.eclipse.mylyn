@@ -28,6 +28,7 @@ import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -206,7 +207,11 @@ public class TaskListToolTipHandler {
 				tooltip += " (synched: " + syncStamp + ")\n";
 			}
 			if (query.getStatus() != null) {
-				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage() + "\n";
+				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage();
+				if (query.getStatus() instanceof MylarStatus && ((MylarStatus) query.getStatus()).isHtmlMessage()) {
+					tooltip += " Please synchronize manually for full error message.";
+				}
+				tooltip += "\n";
 			}
 
 			// Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide

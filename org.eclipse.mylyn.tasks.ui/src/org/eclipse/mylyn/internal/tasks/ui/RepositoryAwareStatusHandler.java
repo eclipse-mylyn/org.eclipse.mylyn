@@ -17,6 +17,7 @@ import org.eclipse.mylar.core.IStatusHandler;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.util.WebBrowserDialog;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -68,11 +69,12 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
 
-						if (status.getCode() == IMylarStatusConstants.REPOSITORY_ERROR_HTML) {
-							WebBrowserDialog.openAcceptAgreement(shell, title, "", status.getMessage());
-							MylarStatusHandler.log(status);
+						if (status instanceof MylarStatus && ((MylarStatus) status).isHtmlMessage()) {
+							WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
+									((MylarStatus) status).getHtmlMessage());
 							return;
 						}
+
 						switch (status.getSeverity()) {
 						case IStatus.CANCEL:
 						case IStatus.INFO:

@@ -124,7 +124,7 @@ public class ScheduledTaskListSynchJob extends Job {
 							}
 						};
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queries, jobAdapter,
-								Job.DECORATE, 0, false);
+								Job.DECORATE, 0, false, false);
 					}
 				} else {
 					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);

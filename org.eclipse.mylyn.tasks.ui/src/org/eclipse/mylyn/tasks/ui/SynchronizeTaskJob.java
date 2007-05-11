@@ -46,7 +46,7 @@ class SynchronizeTaskJob extends Job {
 
 	private Set<AbstractRepositoryTask> repositoryTasks;
 
-	private boolean forceSync = false;
+	private boolean forced = false;
 
 	public SynchronizeTaskJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks) {
 		super(LABEL_SYNCHRONIZE_TASK + " (" + repositoryTasks.size() + " tasks)");
@@ -54,8 +54,20 @@ class SynchronizeTaskJob extends Job {
 		this.repositoryTasks = repositoryTasks;
 	}
 
-	public void setForceSynch(boolean forceUpdate) {
-		this.forceSync = forceUpdate;
+	/**
+	 * Returns true, if synchronization was triggered manually and not by an
+	 * automatic background job.
+	 */
+	public boolean isForced() {
+		return forced;
+	}
+	
+	/**
+	 * Indicates a manual synchronization. If set to true, a dialog will be
+	 * displayed in case of errors.
+	 */
+	public void setForced(boolean forced) {
+		this.forced = forced;
 	}
 
 	@Override
@@ -75,10 +87,10 @@ class SynchronizeTaskJob extends Job {
 					syncTask(monitor, repositoryTask);
 				} catch (final CoreException e) {
 					repositoryTask.setStatus(e.getStatus());
-					if (forceSync) {
+					if (forced) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								MylarStatusHandler.displayStatus("Task synchronization failed", e.getStatus());
+								MylarStatusHandler.displayStatus("Task Synchronization Failed", e.getStatus());
 							}
 						});
 					}
@@ -125,7 +137,7 @@ class SynchronizeTaskJob extends Job {
 				// HACK: part of hack below
 				Date oldDueDate = repositoryTask.getDueDate();
 				
-				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forceSync);
+				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
 				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData, true);
 				
 				// HACK: Remove once connectors can get access to TaskDataManager and do this themselves

@@ -63,7 +63,7 @@ public class QueryHitCollector {
 	}
 
 	
-	public void accept(AbstractQueryHit hit) throws CoreException {
+	public void accept(AbstractQueryHit hit) {
 
 		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
 		if (correspondingTask instanceof AbstractRepositoryTask) {

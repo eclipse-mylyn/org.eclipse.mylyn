@@ -35,6 +35,7 @@ import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
 /**
@@ -58,7 +59,9 @@ class SynchronizeQueryJob extends Job {
 	private boolean synchTasks;
 
 	private TaskList taskList;
-
+	
+	private boolean forced = false;
+	
 	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
@@ -68,6 +71,22 @@ class SynchronizeQueryJob extends Job {
 		this.repositories = new HashSet<TaskRepository>();
 		this.hitsToSynch = new HashMap<TaskRepository, Set<AbstractQueryHit>>();
 
+	}
+
+	/**
+	 * Returns true, if synchronization was triggered manually and not by an
+	 * automatic background job.
+	 */
+	public boolean isForced() {
+		return forced;
+	}
+	
+	/**
+	 * Indicates a manual synchronization. If set to true, a dialog will be
+	 * displayed in case of errors.
+	 */
+	public void setForced(boolean forced) {
+		this.forced = forced;
 	}
 
 	@Override
@@ -88,7 +107,7 @@ class SynchronizeQueryJob extends Job {
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-				IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
+				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 
 				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
 					// do nothing
@@ -129,6 +148,13 @@ class SynchronizeQueryJob extends Job {
 					repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 				} else {
 					repositoryQuery.setStatus(resultingStatus);
+					if (isForced()) {
+						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								MylarStatusHandler.displayStatus("Query Synchronization Failed", resultingStatus);
+							}
+						});
+					}
 				}
 			}
 

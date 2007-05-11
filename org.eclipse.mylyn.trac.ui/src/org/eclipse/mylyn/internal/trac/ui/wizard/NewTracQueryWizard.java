@@ -57,7 +57,7 @@ public class NewTracQueryWizard extends Wizard {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 			if (connector != null) {
-				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null);
+				TasksUiPlugin.getSynchronizationManager().synchronize(connector, query, null, true);
 			}
 		}
 		return true;

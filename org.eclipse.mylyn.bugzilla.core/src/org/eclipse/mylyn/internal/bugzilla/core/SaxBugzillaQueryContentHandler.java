@@ -13,8 +13,6 @@ package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.util.Locale;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.Task;
@@ -127,7 +125,6 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				description = parsedText;
 				break;
 			case LI:
-				try {
 					if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {						
 						hit = new BugzillaQueryHit(taskList, description, priority, repositoryUrl, id, null, state);						
 						collector.accept(hit);
@@ -135,9 +132,6 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 					} else {
 						break;
 					}
-				} catch (CoreException e) {
-					MylarStatusHandler.fail(e, "Problem recording Bugzilla search hit information", false);
-				}
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {

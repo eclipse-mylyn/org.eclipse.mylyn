@@ -28,7 +28,6 @@ import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -73,7 +72,7 @@ public class RepositorySynchronizationManager {
 			boolean forceSynch, final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(connector, repositoryTasks);
-		synchronizeJob.setForceSynch(forceSynch);
+		synchronizeJob.setForced(forceSynch);
 		synchronizeJob.setPriority(Job.DECORATE);
 		synchronizeJob.setRule(taskRule);
 		if (listener != null) {
@@ -103,18 +102,19 @@ public class RepositorySynchronizationManager {
 	 * IJobChangeListener) if synchronizing multiple queries at a time.
 	 */
 	public final Job synchronize(AbstractRepositoryConnector connector, final AbstractRepositoryQuery repositoryQuery,
-			IJobChangeListener listener) {
+			IJobChangeListener listener, boolean forceSync) {
 		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
 		items.add(repositoryQuery);
-		return synchronize(connector, items, listener, Job.LONG, 0, true);
+		return synchronize(connector, items, listener, Job.LONG, 0, true, forceSync);
 	}
 
 	public final Job synchronize(AbstractRepositoryConnector connector,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
-			long delay, boolean syncTasks) {
+			long delay, boolean syncTasks, boolean forceSync) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
 		job.setSynchTasks(syncTasks);
+		job.setForced(forceSync);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setCurrentlySynchronizing(true);
 			// TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
@@ -202,16 +202,8 @@ public class RepositorySynchronizationManager {
 				});
 
 			} catch (final CoreException e) {
-				if (e.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_ERROR_HTML) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							MylarStatusHandler.displayStatus("Synchronization Error", e.getStatus());
-						}
-					});
-				} else {
-					// ignore, indicates working offline
-					// error reported in ui (tooltip and warning icon)
-				}
+				// ignore, indicates working offline
+				// error reported in ui (tooltip and warning icon)
 			}
 			return Status.OK_STATUS;
 		};

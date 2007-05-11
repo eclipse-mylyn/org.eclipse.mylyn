@@ -22,12 +22,6 @@ public interface IMylarStatusConstants {
 	 */
 	public final static int REPOSITORY_ERROR = 1;
 
-	/**
-	 * Operation failed with html error from repository.
-	 * 
-	 */
-	public final static int REPOSITORY_ERROR_HTML = 2;
-
 	public final static int REPOSITORY_LOGIN_ERROR = 3;
 
 	public final static int REPOSITORY_NOT_FOUND = 4;

@@ -113,7 +113,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
 					if (queriesToSync != null && queriesToSync.size() > 0) {
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
-								false);
+								false, true);
 					}
 					
 					for (TaskRepository taskRepository : repositoriesToSync.get(connector.getRepositoryType())) {
