@@ -76,6 +76,8 @@ public class TasksUiImages {
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
 	public static final ImageDescriptor REPOSITORY = create("eview16", "repository.gif");
+	
+	public static final ImageDescriptor REPOSITORY_SUBMIT = create(T_TOOL, "repository-submit.gif");
 
 	public static final ImageDescriptor REPOSITORY_SMALL = create(T_OBJ, "repository-small.gif");
 

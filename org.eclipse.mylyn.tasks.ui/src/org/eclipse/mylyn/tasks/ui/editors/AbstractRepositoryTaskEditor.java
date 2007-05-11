@@ -438,6 +438,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
+	private Action submitAction;
+
+	private Action historyAction;
+
 	protected class ComboSelectionListener extends SelectionAdapter {
 
 		private CCombo combo;
@@ -657,14 +661,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			if (getActivityUrl() != null) {
-				Action historyAction = new Action() {
+				historyAction = new Action() {
 
 					@Override
 					public void run() {
-						if (AbstractRepositoryTaskEditor.this.getEditor() instanceof TaskEditor) {
-							TaskEditor mylarTaskEditor = (TaskEditor) AbstractRepositoryTaskEditor.this.getEditor();
-							mylarTaskEditor.displayInBrowser(getActivityUrl());
-						}
+						parentEditor.displayInBrowser(getActivityUrl());
 					}
 
 				};
@@ -673,6 +674,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				historyAction.setToolTipText(LABEL_HISTORY);
 				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
+
+			submitAction = new Action() {
+
+				@Override
+				public void run() {
+					submitToRepository();
+				}
+
+			};
+
+			submitAction.setImageDescriptor(TasksUiImages.REPOSITORY_SUBMIT);
+			submitAction.setToolTipText(LABEL_BUTTON_SUBMIT);
+			parentEditor.getTopForm().getToolBarManager().add(submitAction);
 
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
@@ -1947,6 +1961,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		submitButton = toolkit.createButton(buttonComposite, LABEL_BUTTON_SUBMIT, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButtonData.widthHint = 100;
+		submitButton.setImage(TasksUiImages.getImage(TasksUiImages.REPOSITORY_SUBMIT));
 		submitButton.setLayoutData(submitButtonData);
 		submitButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -2600,6 +2615,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			// parentEditor.showBusy(busy);
 			if (synchronizeEditorAction != null) {
 				synchronizeEditorAction.setEnabled(!busy);
+			}
+
+			if (submitAction != null) {
+				submitAction.setEnabled(!busy);
+			}
+
+			if (historyAction != null) {
+				historyAction.setEnabled(!busy);
 			}
 
 			if (submitButton != null && !submitButton.isDisposed()) {
