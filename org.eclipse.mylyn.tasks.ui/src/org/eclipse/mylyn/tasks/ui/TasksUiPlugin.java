@@ -287,35 +287,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							.getRepositoryTasks(repository.getUrl())) {
 						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 								&& repositoryTask.isNotified() == false) {
-							TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-
-							RepositoryTaskData taskData = getDefault().getTaskDataManager().getNewTaskData(
-									repositoryTask.getHandleIdentifier());
-
-							if (taskData != null) {
-								List<TaskComment> taskComments = taskData.getComments();
-								if (taskComments != null && taskComments.size() > 0) {
-									TaskComment lastComment = taskComments.get(taskComments.size() - 1);
-									if (lastComment != null) {
-										notification.setDescription(lastComment.getText());
-									}
-								} else {
-									String description = taskData.getDescription();
-									if (description != null) {
-										notification.setDescription(description);
-									}
-								}
-
-								if (connector != null) {
-									ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
-									if (offlineHandler != null && taskData.getLastModified() != null) {
-										Date modified = taskData.getAttributeFactory().getDateForAttributeType(
-												RepositoryTaskAttribute.DATE_MODIFIED, taskData.getLastModified());
-										notification.setDate(modified);
-									}
-								}
-
-							}
+							TaskListNotificationIncoming notification = getIncommingNotification(connector,
+									repositoryTask);
 							notifications.add(notification);
 							repositoryTask.setNotified(true);
 						}
@@ -933,6 +906,91 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public String getNextNewRepositoryTaskId() {
 		return getTaskDataManager().getNewRepositoryTaskId();
+	}
+
+	public static TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
+			AbstractRepositoryTask repositoryTask) {
+		
+		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
+
+		RepositoryTaskData newTaskData = getDefault().getTaskDataManager().getNewTaskData(
+				repositoryTask.getHandleIdentifier());
+
+		RepositoryTaskData oldTaskData = getDefault().getTaskDataManager().getOldTaskData(
+				repositoryTask.getHandleIdentifier());
+
+		
+		if (newTaskData != null && oldTaskData != null) {
+			
+			String descriptionText = getChangedDescription(newTaskData, oldTaskData);
+			if(descriptionText != null){
+				notification.setDescription(descriptionText);
+			}
+			
+			if (connector != null) {
+				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+				if (offlineHandler != null && newTaskData.getLastModified() != null) {
+					Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
+							RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());
+					notification.setDate(modified);
+				}
+			}
+
+		} else {
+			notification.setDescription("Open to view changes");
+		}
+		return notification;
+	}
+	
+	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData){
+		
+		String descriptionText = "";
+		
+		if(newTaskData.getComments().size() > oldTaskData.getComments().size()){
+			List<TaskComment> taskComments = newTaskData.getComments();
+			if (taskComments != null && taskComments.size() > 0) {
+				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
+				if (lastComment != null) {
+					descriptionText += "Comment by " + lastComment.getAuthor() + ":\n  ";
+					String commentText = lastComment.getText();
+					if (commentText.length() > 60) {
+						commentText = commentText.substring(0, 55) + "...";
+					}
+					descriptionText += commentText;
+				}
+			}
+		}
+		
+		boolean attributeChanged = false;
+		
+		for(RepositoryTaskAttribute newAttribute: newTaskData.getAttributes()){
+			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
+			if (oldAttribute == null){
+				attributeChanged = true;
+				break;
+			}
+			if (oldAttribute.getValue() != null && !oldAttribute.getValue().equals(newAttribute.getValue())) {
+				attributeChanged = true;
+				break;
+			} else if (oldAttribute.getValues() != null && !oldAttribute.getValues().equals(newAttribute.getValues())) {
+				attributeChanged = true;
+				break;
+			}
+		}
+		
+		if(attributeChanged){
+			if (descriptionText.equals("")){
+				descriptionText += "Attributes changed";
+			} 
+		}
+//		else {
+//			String description = taskData.getDescription();
+//			if (description != null) {
+//				notification.setDescription(description);
+//			}
+//		}
+		
+		return descriptionText;
 	}
 
 }

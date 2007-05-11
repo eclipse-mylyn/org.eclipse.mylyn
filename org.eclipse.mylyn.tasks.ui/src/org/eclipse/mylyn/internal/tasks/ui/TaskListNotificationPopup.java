@@ -109,10 +109,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 				});
 
 				String descriptionText = null;
-				if (notification.getDescription() != null && notification.getDescription().length() > 40) {
-					String truncated = notification.getDescription().substring(0, 35);
-					descriptionText = truncated + "...";
-				} else if (notification.getDescription() != null) {
+				if (notification.getDescription() != null) {
 					descriptionText = notification.getDescription();
 				}
 				if (descriptionText != null) {
