@@ -109,18 +109,18 @@ class CustomTaskListDecorationDrawer implements Listener {
 //			}
 //		} else {
 			Image image = null;
-			int offsetX = 0;
-			int offsetY = 0;
+			int offsetX = 7;
+			int offsetY = 4;
 			if (this.taskListView.synchronizationOverlaid) {
-				offsetX += event.x - 2;
+				offsetX = event.x + 3;
 			}
 			if (element instanceof AbstractTaskContainer) {
 				if (element instanceof AbstractTaskContainer) {
 					if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 							&& hasIncoming((AbstractTaskContainer) element)) {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-						offsetX = 17;
-						offsetY = 0;
+						offsetX = 24;
+						offsetY += 0;
 					}
 				}
 			} else {
@@ -129,7 +129,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 //						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
-				event.gc.drawImage(image, 5 + offsetX, event.y + 4 + offsetY);
+				event.gc.drawImage(image, offsetX, event.y + offsetY);
 //				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
 //		}
