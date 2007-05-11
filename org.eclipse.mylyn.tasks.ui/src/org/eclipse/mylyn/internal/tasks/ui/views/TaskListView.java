@@ -52,7 +52,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasks.ui.CompositeTaskImageDescriptor;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskCompletionFilter;
@@ -232,15 +231,15 @@ public class TaskListView extends ViewPart {
 			}
 		}
 
-		private void drawPriorityImage(ITask task, Event event) {
-			ImageDescriptor descriptor = TaskElementLabelProvider.getPriorityImageDescriptor(task);
-			if (descriptor != null) {
-				Image image = TasksUiImages.getImage(descriptor);
-				if (image != null) {
-					event.gc.drawImage(image, event.x + CompositeTaskImageDescriptor.WIDTH_DECORATION-4, event.y);
-				}
-			}
-		}
+//		private void drawPriorityImage(ITask task, Event event) {
+//			ImageDescriptor descriptor = TaskElementLabelProvider.getPriorityImageDescriptor(task);
+//			if (descriptor != null) {
+//				Image image = TasksUiImages.getImage(descriptor);
+//				if (image != null) {
+//					event.gc.drawImage(image, event.x + CompositeTaskImageDescriptor.WIDTH_DECORATION-4, event.y);
+//				}
+//			}
+//		}
 
 		private void drawActivationImage(final int activationImageOffset, Event event, Image image) {
 			Rectangle rect = image.getBounds();
@@ -843,7 +842,7 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 20;
+		final int activationImageOffset = 23;
 		CUSTOM_DECORATION_DRAWER customDrawer = new CUSTOM_DECORATION_DRAWER(activationImageOffset);
 		getViewer().getTree().addListener(SWT.MeasureItem, customDrawer);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
