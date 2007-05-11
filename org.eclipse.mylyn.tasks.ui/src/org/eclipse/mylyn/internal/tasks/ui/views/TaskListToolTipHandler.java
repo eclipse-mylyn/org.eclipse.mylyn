@@ -260,18 +260,6 @@ public class TaskListToolTipHandler {
 				}
 				tooltip += "\n";
 			}
-
-			// Set<AbstractQueryHit> hits = query.getHits(); // FIXME provide
-			// getHitsSize()
-			// method
-			// if (hits.size() == 1) {
-			// tooltip += "1 hit";
-			// } else {
-			// tooltip += hits.size() + " hits";
-			// }
-			// if (query.getMaxHits() != -1) {
-			// tooltip += " (max set to: " + query.getMaxHits() + ")";
-			// }
 			return tooltip;
 		}
 
@@ -293,7 +281,7 @@ public class TaskListToolTipHandler {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 				if (repository != null) {
-					tooltip += "\n" + repository.getRepositoryLabel();
+					tooltip += "  [" + repository.getRepositoryLabel() + "]";
 				}
 				
 				if (repositoryTask.getStatus() != null) {
