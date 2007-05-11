@@ -42,8 +42,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
-	private int currWidth = 0;
-
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
@@ -82,7 +80,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				currWidth = event.width;
+				if (data instanceof ITaskListElement) {
+					drawSyncronizationImage((ITaskListElement) data, event);
+				}
+//				currWidth = event.width;
 				break;
 			}
 			case SWT.PaintItem: {
@@ -106,13 +107,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 			}
 		} else {
 			Image image = null;
-			int offset = 0;
+			int offsetX = 0;
+			int offsetY = 0;
 			if (element instanceof AbstractTaskContainer) {
 				if (element instanceof AbstractTaskContainer) {
 					if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 							&& hasIncoming((AbstractTaskContainer) element)) {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-						offset = 18;
+						offsetX = 17;
+						offsetY = 1;
 					}
 				}
 			} else {
@@ -121,7 +124,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 //						.getSynchronizationImageDescriptor(element), true);
 			}
 			if (image != null) {
-				event.gc.drawImage(image, 5 + offset, event.y + 2);
+				event.gc.drawImage(image, 5 + offsetX, event.y + 2 + offsetY);
 //				event.gc.drawImage(image, currWidth - 16, event.y + 1);
 			}
 		}
