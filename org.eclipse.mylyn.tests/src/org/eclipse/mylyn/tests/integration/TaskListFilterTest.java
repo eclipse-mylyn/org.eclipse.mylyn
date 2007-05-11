@@ -60,23 +60,23 @@ public class TaskListFilterTest extends TestCase {
 		taskCompleted = new Task("completed-1", "completed", true);
 		taskCompleted.setCompleted(true);
 		taskCompleted.setCompletionDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
-		manager.getTaskList().addTask(taskCompleted, manager.getTaskList().getRootCategory());
+		manager.getTaskList().addTask(taskCompleted, manager.getTaskList().getUncategorizedCategory());
 		
 		taskIncomplete = new Task("incomplete-2", "t-incomplete", true);
-		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getRootCategory());
+		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getUncategorizedCategory());
 		
 		taskOverdue = new Task("overdue-3", "t-overdue", true);
 		taskOverdue.setScheduledForDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
-		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getRootCategory());
+		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getUncategorizedCategory());
 		
 		taskDueToday = new Task("today-4", "t-today", true);
 		taskDueToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
-		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getRootCategory());
+		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getUncategorizedCategory());
 		
 		taskCompletedToday = new Task("donetoday-5", "t-donetoday", true);
 		taskCompletedToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
-		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getRootCategory());
+		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getUncategorizedCategory());
 	}
  
 	@Override
