@@ -206,7 +206,9 @@ public class TaskListView extends ViewPart {
 				}
 				case SWT.PaintItem: {
 					drawActivationImage(activationImageOffset, event, image);
-					drawSyncronizationImage(task, event);
+					if (data instanceof ITaskListElement) {
+						drawSyncronizationImage((ITaskListElement)data, event);
+					}
 //					drawPriorityImage(task, event);
 					break;
 				}
@@ -214,7 +216,7 @@ public class TaskListView extends ViewPart {
 			}
 		}
 
-		private void drawSyncronizationImage(ITask task, Event event) {
+		private void drawSyncronizationImage(ITaskListElement task, Event event) {
 			if (overlaySynchronization) {
 				Image image = TasksUiImages.getImage(TaskElementLabelProvider
 						.getSynchronizationImageDescriptor(task));
