@@ -746,7 +746,7 @@ public class TaskListView extends ViewPart {
 		drillDownAdapter = new DrillDownAdapter(getViewer());
 		getViewer().setInput(getViewSite());
 
-		final int activationImageOffset = 22;
+		final int activationImageOffset = 20;
 		CustomTaskListDecorationDrawer customDrawer = new CustomTaskListDecorationDrawer(this, activationImageOffset);
 		getViewer().getTree().addListener(SWT.MeasureItem, customDrawer);
 		getViewer().getTree().addListener(SWT.EraseItem, customDrawer);
