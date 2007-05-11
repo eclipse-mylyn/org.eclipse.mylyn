@@ -171,6 +171,10 @@ public class TaskListManager implements IPropertyChangeListener {
 			// ignore
 		}
 
+		public void contextCleared(IMylarContext context) {
+			// ignore
+		}
+		
 		public void interestChanged(List<IMylarElement> elements) {
 			List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
 					.getInteractionHistory();
