@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.monitor.core;
 
-
 /**
  * @author Mik Kersten
  */

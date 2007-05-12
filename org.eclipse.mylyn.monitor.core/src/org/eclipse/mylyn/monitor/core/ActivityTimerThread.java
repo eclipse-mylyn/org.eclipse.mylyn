@@ -62,16 +62,16 @@ public class ActivityTimerThread extends Thread implements Runnable {
 				while (elapsed < timeout && !killed) {
 					elapsed += sleepInterval;
 					sleep(sleepInterval);
-					
-//					if (!suspended) {
-//						for (IActivityTimerListener listener : listeners) {
-//							listener.intervalElapsed();
-//						}
-//					}
+
+					// if (!suspended) {
+					// for (IActivityTimerListener listener : listeners) {
+					// listener.intervalElapsed();
+					// }
+					// }
 				}
-				
+
 				// if interaction
-				
+
 				if (elapsed >= timeout && !killed) {
 					if (!suspended) {
 						for (IActivityTimerListener listener : listeners)

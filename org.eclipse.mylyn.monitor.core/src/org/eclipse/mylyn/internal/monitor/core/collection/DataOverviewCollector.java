@@ -198,4 +198,21 @@ public class DataOverviewCollector implements IUsageCollector {
 		return -1;
 	}
 
+	public List<String> getPlainTextReport() {
+		List<String> report = new ArrayList<String>();
+		report.add("Data Overview");
+		report.add("Number of Users: " + interactionHistorySizes.keySet().size());
+		for (Map.Entry<Integer, Integer> entry : interactionHistorySizes.entrySet()) {
+			report.add(entry.getKey() + ": " + entry.getValue() + " events; ");
+			report.add(InteractionEventClassifier.formatDuration(interactionHistoryActiveDuration.get(entry.getKey()))
+					+ " active use; ");
+			List<Date> dateRange = interactionHistoryRanges.get(entry.getKey());
+			long duration = dateRange.get(endDatePosition).getTime() - dateRange.get(startDatePosition).getTime();
+			report.add(dateRange.get(startDatePosition) + " to " + dateRange.get(endDatePosition) + ", a period of "
+					+ InteractionEventClassifier.formatDuration(duration) + " hours.");
+
+		}
+		return report;
+	}
+
 }

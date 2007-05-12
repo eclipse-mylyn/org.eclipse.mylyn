@@ -15,13 +15,15 @@ package org.eclipse.mylar.monitor.core;
  * @author Mik Kersten
  */
 public interface IActivityTimerListener {
-	
+
 	/**
-	 * @param start time in milliseconds
-	 * @param end time in milliseconds
+	 * @param start
+	 *            time in milliseconds
+	 * @param end
+	 *            time in milliseconds
 	 */
 	public void fireActive(long start, long end);
-	
+
 	public void fireInactive();
 
 }

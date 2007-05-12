@@ -21,7 +21,7 @@ public class InteractionEventUtil {
 	public static String getCleanOriginId(InteractionEvent event) {
 		String cleanOriginId = "";
 		String originId = event.getOriginId();
-	
+
 		if (event.getKind().equals(InteractionEvent.Kind.COMMAND)) {
 			for (int i = 0; i < originId.length(); i++) {
 				char curChar = originId.charAt(i);
