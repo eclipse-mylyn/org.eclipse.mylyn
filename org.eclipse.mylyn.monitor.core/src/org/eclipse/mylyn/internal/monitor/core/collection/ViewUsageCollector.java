@@ -56,7 +56,7 @@ public class ViewUsageCollector implements IUsageCollector {
 		}
 	}
 
-	public List<String> getSummary(int userId) {
+	public List<String> getSummary(int userId, boolean html) {
 		Map<String, Integer> normalViewSelections = usersNormalViewSelections.get(userId);
 
 		float numSelections = usersNumSelections.get(userId);
@@ -66,7 +66,11 @@ public class ViewUsageCollector implements IUsageCollector {
 		for (String view : normalViewSelections.keySet()) {
 			float viewUse = ((float) (normalViewSelections.get(view))) / numSelections;
 			String formattedViewUse = formatAsPercentage(viewUse);
-			viewUsage.add(formattedViewUse + ": " + view + " (" + normalViewSelections.get(view) + ")" + "<br>");
+			String ending = "";
+			if (html) {
+				ending = "<br>";
+			}
+			viewUsage.add(formattedViewUse + ": " + view + " (" + normalViewSelections.get(view) + ")" + ending);
 		}
 		Collections.sort(viewUsage, new PercentUsageComparator());
 		int numViewsToReport = 0;
@@ -100,7 +104,7 @@ public class ViewUsageCollector implements IUsageCollector {
 	public List<String> getReport() {
 		List<String> summaries = new ArrayList<String>();
 		for (int userId : usersNormalViewSelections.keySet()) {
-			summaries.addAll(getSummary(userId));
+			summaries.addAll(getSummary(userId, true));
 		}
 		return summaries;
 	}
@@ -131,5 +135,13 @@ public class ViewUsageCollector implements IUsageCollector {
 
 	public Map<Integer, Map<String, Integer>> getUsersNormalViewSelections() {
 		return usersNormalViewSelections;
+	}
+
+	public List<String> getPlainTextReport() {
+		List<String> summaries = new ArrayList<String>();
+		for (int userId : usersNormalViewSelections.keySet()) {
+			summaries.addAll(getSummary(userId, false));
+		}
+		return summaries;
 	}
 }

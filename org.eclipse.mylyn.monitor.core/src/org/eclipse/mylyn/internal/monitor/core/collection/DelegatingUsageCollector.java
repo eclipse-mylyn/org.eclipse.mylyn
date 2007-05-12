@@ -65,4 +65,13 @@ public class DelegatingUsageCollector implements IUsageCollector {
 	public void setReportTitle(String reportTitle) {
 		this.reportTitle = reportTitle;
 	}
+
+	public List<String> getPlainTextReport() {
+		List<String> combinedReports = new ArrayList<String>();
+		for (IUsageCollector collector : delegates) {
+			combinedReports.add(collector.getReportTitle());
+			combinedReports.addAll(collector.getPlainTextReport());
+		}
+		return combinedReports;
+	}
 }

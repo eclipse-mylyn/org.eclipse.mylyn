@@ -51,4 +51,8 @@ public class CommandUsageCollector implements IUsageCollector {
 	public InteractionByTypeSummary getCommands() {
 		return commands;
 	}
+
+	public List<String> getPlainTextReport() {
+		return Collections.emptyList();
+	}
 }

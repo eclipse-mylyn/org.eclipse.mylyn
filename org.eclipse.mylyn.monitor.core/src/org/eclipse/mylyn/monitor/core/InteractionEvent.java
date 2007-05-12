@@ -124,8 +124,8 @@ public class InteractionEvent {
 	 */
 	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
 		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(), originalEvent
-				.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), originalEvent.getDelta(),
-				newInterestContribution, originalEvent.getDate(), originalEvent.getEndDate());
+				.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), originalEvent
+				.getDelta(), newInterestContribution, originalEvent.getDate(), originalEvent.getEndDate());
 	}
 
 	/**

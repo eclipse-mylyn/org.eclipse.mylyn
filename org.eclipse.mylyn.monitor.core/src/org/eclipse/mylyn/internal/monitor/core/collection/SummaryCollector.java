@@ -75,4 +75,16 @@ public class SummaryCollector implements IUsageCollector {
 
 	}
 
+	public List<String> getPlainTextReport() {
+		List<String> summaries = new ArrayList<String>();
+
+		summaries.add("Start date: " + leastRecentDate + ", End date: " + mostRecentDate);
+
+		summaries.add("Number of events: " + numUserEvents);
+		summaries.add("Number of commands: " + numCommands);
+		summaries.add("Number of preference changes: " + numPreference);
+		summaries.add("Number of selections: " + numSelections);
+		return summaries;
+	}
+
 }

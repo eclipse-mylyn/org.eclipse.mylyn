@@ -33,6 +33,13 @@ public interface IUsageCollector {
 	public abstract List<String> getReport();
 
 	/**
+	 * return report as plain text
+	 * 
+	 * @return a list corresponding to all of the lines of the report
+	 */
+	public abstract List<String> getPlainTextReport();
+
+	/**
 	 * Implementors will need to generate a unique filename given the directory
 	 * in which to place the file
 	 * 
