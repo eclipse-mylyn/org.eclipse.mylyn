@@ -324,8 +324,16 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			currentWorkingSet = (IWorkingSet) event.getNewValue();
 		}
 
-		this.view.getViewer().collapseAll();
-		this.view.getViewer().refresh();
+		try {
+			view.getViewer().getControl().setRedraw(false);
+			view.getViewer().collapseAll();
+			if (view.isFocusedMode()) {
+				view.getViewer().expandAll();
+			} 
+			view.getViewer().refresh();
+		} finally {
+			view.getViewer().getControl().setRedraw(true);
+		}
 	}
 
 }
