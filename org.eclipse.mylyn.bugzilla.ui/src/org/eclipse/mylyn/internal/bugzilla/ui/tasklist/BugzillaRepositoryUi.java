@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylar.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -44,6 +46,30 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
  * @author Eugene Kuleshov
  */
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
+	
+	@Override
+	public List<ITaskListElement> getLegendItems() {
+		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
+		
+		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker", false);
+		blocker.setSeverity("critical");		
+		legendItems.add(blocker);
+		
+		BugzillaTask major = new BugzillaTask("", "major", "Major", false);
+		major.setSeverity("major");		
+		legendItems.add(major);
+		
+		BugzillaTask enhancement = new BugzillaTask("", "enhancement", "Enhancement", false);
+		enhancement.setSeverity("enhancement");		
+		legendItems.add(enhancement);
+		
+		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial or Minor", false);
+		trivial.setSeverity("trivial");		
+		legendItems.add(trivial);
+		
+		return legendItems;
+	}
+
 	private static final int TASK_NUM_GROUP = 3;
 
 	@Override

@@ -8,6 +8,9 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -78,6 +81,10 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public abstract boolean hasSearchPage();
 
+	public List<ITaskListElement> getLegendItems() {
+		return Collections.emptyList();
+	}
+	
 	/**
 	 * @param repositoryTask
 	 *            can be null
