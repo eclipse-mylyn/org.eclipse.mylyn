@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Team Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.team;singleton:=true
-Bundle-Version: 2.0.0.v20070511-2000
+Bundle-Version: 2.0.0.v20070511-2100
 Bundle-Activator: org.eclipse.mylar.team.MylarTeamPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.team.core,
