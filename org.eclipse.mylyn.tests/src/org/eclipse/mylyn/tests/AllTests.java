@@ -15,7 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
-import org.eclipse.mylar.context.tests.AllCoreTests;
+import org.eclipse.mylar.context.tests.AllContextTests;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.ide.tests.AllIdeTests;
 import org.eclipse.mylar.java.tests.AllJavaTests;
@@ -45,7 +45,7 @@ public class AllTests {
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIntegrationTests.suite());
-		suite.addTest(AllCoreTests.suite());
+		suite.addTest(AllContextTests.suite());
 		suite.addTest(AllIdeTests.suite());
 		suite.addTest(AllJavaTests.suite());
 		suite.addTest(AllTasksTests.suite());

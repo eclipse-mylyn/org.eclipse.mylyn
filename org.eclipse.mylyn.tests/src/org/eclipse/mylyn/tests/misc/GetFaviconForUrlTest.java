@@ -37,7 +37,7 @@ public class GetFaviconForUrlTest extends TestCase {
 	public void testEclipseDotOrg() {
 		Image img = null;
 		try {
-			img = WebClientUtil.getFaviconForUrl("http://www.eclipse.org");
+			img = WebClientUtil.getFaviconForUrl("http://www.eclipse.org").createImage(false);
 		} catch (MalformedURLException e) {
 			fail();
 		}
@@ -45,16 +45,10 @@ public class GetFaviconForUrlTest extends TestCase {
 		ImageData data = img.getImageData();
 		assertEquals(data.height, 16);
 		assertEquals(data.width, 16);
+		img.dispose();
 	}
 	
-	public void testNoFavicon() {
-		Image img = null;
-		try {
-			img = WebClientUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp");
-		} catch (MalformedURLException e) {
-			fail();
-		}
-		assertNull(img);
-	}
-	
+	public void testNoFavicon() throws MalformedURLException {
+		assertNull(WebClientUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp"));
+	}	
 }
