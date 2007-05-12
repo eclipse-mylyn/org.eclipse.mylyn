@@ -93,7 +93,7 @@ public class ContextManager {
 	private List<String> errorElementHandles = new ArrayList<String>();
 
 	private Set<File> contextFiles = null;
-	
+
 	private boolean contextCapturePaused = false;
 
 	private CompositeContext currentContext = new CompositeContext();
@@ -478,8 +478,8 @@ public class ContextManager {
 			File file = getFileForContext(handleIdentifier);
 			return contextFiles.contains(file);
 		}
-//		File contextFile = getFileForContext(path);
-//		return contextFile.exists() && contextFile.length() > 0;
+// File contextFile = getFileForContext(path);
+// return contextFile.exists() && contextFile.length() > 0;
 	}
 
 	public void deactivateAllContexts() {
@@ -505,7 +505,7 @@ public class ContextManager {
 				}
 				if (context.getAllElements().size() == 0) {
 					contextFiles.remove(getFileForContext(context.getHandleIdentifier()));
-				}				
+				}
 				setContextCapturePaused(false);
 			}
 			if (!activationHistorySuppressed) {
@@ -522,7 +522,7 @@ public class ContextManager {
 	public void deleteContext(String handleIdentifier) {
 		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
-		try {			
+		try {
 			File file = getFileForContext(handleIdentifier);
 			if (file.exists()) {
 				file.delete();
@@ -598,8 +598,7 @@ public class ContextManager {
 			List<InteractionEvent> attention = new ArrayList<InteractionEvent>();
 
 			MylarContext context = getActivityHistoryMetaContext();
-			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager
-					.getScalingFactors());
+			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager.getScalingFactors());
 			for (InteractionEvent event : context.getInteractionHistory()) {
 				if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_ACTIVATED)
 						&& event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
@@ -722,16 +721,18 @@ public class ContextManager {
 
 	public Collection<IMylarElement> getInterestingDocuments(IMylarContext context) {
 		Set<IMylarElement> set = new HashSet<IMylarElement>();
-		List<IMylarElement> allIntersting = context.getInteresting();
-		for (IMylarElement node : allIntersting) {
-			if (ContextCorePlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(
-					node.getHandleIdentifier())) {
-				set.add(node);
+		if (context == null) {
+			return set;
+		} else {
+			List<IMylarElement> allIntersting = context.getInteresting();
+			for (IMylarElement node : allIntersting) {
+				if (ContextCorePlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(
+						node.getHandleIdentifier())) {
+					set.add(node);
+				}
 			}
+			return set;
 		}
-		// List<IMylarElement> list = new ArrayList<IMylarElement>(set);
-		// Collections.sort(list, new InterestComparator<IMylarElement>());
-		return set;
 	}
 
 	public Collection<IMylarElement> getInterestingDocuments() {
