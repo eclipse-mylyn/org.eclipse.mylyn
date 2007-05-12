@@ -447,7 +447,9 @@ public class TaskListToolTipHandler {
 
 			@Override
 			public void mouseHover(MouseEvent event) {
-				
+				if (tipShell.isDisposed()) {
+					return;
+				}
 				widgetPosition = new Point(event.x, event.y);
 				Widget widget = event.widget;
 				if (widget instanceof ToolBar) {
@@ -495,12 +497,12 @@ public class TaskListToolTipHandler {
 				tipLabelText.setText(baseText + progressText);
 				tipLabelImage.setImage(repositoryImage); // accepts null
 
-				if(scheduledText != null){
+				if (scheduledText != null){
 					scheduledTipLabelText.setText(scheduledText);
 					scheduledTipLabelImage.setImage(activityImage); // accepts null
 				}
 
-				if(incommingText != null){
+				if (incommingText != null){
 					incommingTipLabelText.setText(incommingText);
 					incommingTipLabelImage.setImage(incommingImage); // accepts null
 				}

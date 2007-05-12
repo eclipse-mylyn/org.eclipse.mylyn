@@ -982,11 +982,10 @@ public class TaskListView extends ViewPart {
 		manager.add(sortByAction);
 		manager.add(filterOnPriorityAction);
 		manager.add(filterCompleteTask);
-		manager.add(showSubTasksAction);
 		manager.add(filterArchiveCategory);
-
+		manager.add(showSubTasksAction);
+		
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
-
 		manager.add(synchronizeAutomatically);
 
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -1599,7 +1598,6 @@ public class TaskListView extends ViewPart {
 		sortByAction.setEnabled(enabled);
 		filterOnPriorityAction.setEnabled(enabled);
 		filterCompleteTask.setEnabled(enabled);
-		showSubTasksAction.setEnabled(enabled);
 		filterArchiveCategory.setEnabled(enabled);
 	}
 

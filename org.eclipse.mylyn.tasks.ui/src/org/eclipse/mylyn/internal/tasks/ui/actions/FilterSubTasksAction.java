@@ -22,7 +22,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class FilterSubTasksAction extends Action {
 
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.filter.subtasks";
-	
+
 	private static final String LABEL = "Filter SubTasks";
 
 	private final TaskListView view;
@@ -32,19 +32,25 @@ public class FilterSubTasksAction extends Action {
 		setText(LABEL);
 		setToolTipText(LABEL);
 		setId(ID);
-		//setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
-		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS));
+		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
+		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.FILTER_SUBTASKS));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS, isChecked());
-		if (!isChecked()) {
-			this.view.getViewer().refresh();
-		} else {
-			// TODO: refresh not getting rid of subtasks
-			//this.view.getViewer().refresh();
-			this.view.getViewer().collapseAll();
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS,
+				isChecked());
+		// TODO: refresh not getting rid of subtasks
+		try {
+			view.getViewer().getControl().setRedraw(false);
+			view.getViewer().collapseAll();
+			if (view.isFocusedMode()) {
+				view.getViewer().expandAll();
+			} 
+			view.getViewer().refresh();
+		} finally {
+			view.getViewer().getControl().setRedraw(true);
 		}
 	}
 }
