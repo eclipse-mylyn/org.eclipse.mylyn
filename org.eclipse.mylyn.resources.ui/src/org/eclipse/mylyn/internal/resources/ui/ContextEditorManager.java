@@ -14,7 +14,6 @@ package org.eclipse.mylar.internal.resources.ui;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -172,11 +171,11 @@ public class ContextEditorManager implements IMylarContextListener {
 				WorkbenchMessages.EditorManager_problemsRestoringEditors, null);
 
 		// HACK: using reflection to gain accessibility
-		Class<?> clazz = editorManager.getClass();
+//		Class<?> clazz = editorManager.getClass();
 		try {
-			Method method = clazz.getDeclaredMethod("restoreEditorState", IMemento.class, ArrayList.class,
-					IEditorReference[].class, MultiStatus.class);
-			method.setAccessible(true);
+//			Method method = clazz.getDeclaredMethod("restoreEditorState", IMemento.class, ArrayList.class,
+//					IEditorReference[].class, MultiStatus.class);
+//			method.setAccessible(true);
 
 			IMemento[] editorMementos = memento.getChildren(IWorkbenchConstants.TAG_EDITOR);
 			Set<IMemento> editorMementoSet = new HashSet<IMemento>();
