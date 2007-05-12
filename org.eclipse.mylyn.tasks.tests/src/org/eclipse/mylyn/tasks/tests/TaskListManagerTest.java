@@ -295,7 +295,7 @@ public class TaskListManagerTest extends TestCase {
 		Task task1 = new Task("t1", "t1", true);
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		assertEquals(UncategorizedCategory.LABEL, task1.getContainer().getHandleIdentifier());
+		assertEquals(UncategorizedCategory.HANDLE, task1.getContainer().getHandleIdentifier());
 
 		TaskCategory cat1 = new TaskCategory("c1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
@@ -307,7 +307,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(0, cat1.getChildren().size());
-		assertEquals(UncategorizedCategory.LABEL, task1.getContainer().getHandleIdentifier());
+		assertEquals(UncategorizedCategory.HANDLE, task1.getContainer().getHandleIdentifier());
 	}
 
 	public void testEmpty() {
@@ -323,23 +323,23 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(category);
 		manager.getTaskList().moveToContainer(category, task);
 		assertNotNull(manager.getTaskList());
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 
 		manager.saveTaskList();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
-		assertEquals("" + manager.getTaskList().getCategories(), 2, manager.getTaskList().getCategories().size());
+		assertEquals("" + manager.getTaskList().getCategories(), 3, manager.getTaskList().getCategories().size());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 	}
 
 	public void testDeleteCategory() {
 		assertNotNull(manager.getTaskList());
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		manager.getTaskList().deleteCategory(category);
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 	}
 
 	public void testDeleteCategoryMovesTasksToRoot() {
@@ -358,37 +358,37 @@ public class TaskListManagerTest extends TestCase {
 
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		String newDesc = "newDescription";
 		manager.getTaskList().renameContainer(category, newDesc);
 		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle(newDesc);
 		assertNotNull(container);
 		assertEquals(newDesc, container.getSummary());
 		manager.getTaskList().deleteCategory(container);
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 	}
 
 	public void testDeleteCategoryAfterRename() {
 		String newDesc = "newDescription";
 		assertNotNull(manager.getTaskList());
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		manager.getTaskList().renameContainer(category, newDesc);
 		manager.getTaskList().deleteCategory(category);
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 	}
 
 	public void testCreateSameCategoryName() {
 		assertNotNull(manager.getTaskList());
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 		TaskCategory category = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		TaskCategory category2 = new TaskCategory("cat", manager.getTaskList());
 		manager.getTaskList().addCategory(category2);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle("cat");
 		assertEquals(container, category);
 	}
@@ -407,7 +407,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
-		assertEquals(1, manager.getTaskList().getCategories().size());
+		assertEquals(2, manager.getTaskList().getCategories().size());
 
 		ITask task = new Task("task-1", "label", true);
 		TaskCategory category = new TaskCategory("handleAndDescription", manager.getTaskList());
@@ -416,7 +416,7 @@ public class TaskListManagerTest extends TestCase {
 
 		manager.getTaskList().addCategory(category);
 		manager.getTaskList().moveToContainer(category, task);
-		assertEquals(2, manager.getTaskList().getCategories().size());
+		assertEquals(3, manager.getTaskList().getCategories().size());
 		assertEquals(1, category.getChildren().size());
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
@@ -508,9 +508,11 @@ public class TaskListManagerTest extends TestCase {
 		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
+		
 		Task sub1 = new Task(manager.genUniqueTaskHandle(), "sub 1", true);
 		task1.addSubTask(sub1);
 		sub1.setParent(task1);
+		
 		Task task2 = new Task(manager.genUniqueTaskHandle(), "task 2", true);
 		manager.getTaskList().moveToRoot(task2);
 		rootTasks.add(task2);
@@ -540,7 +542,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveToRoot(reportInRoot);
 		rootTasks.add(reportInRoot);
 
-		assertEquals("" + manager.getTaskList().getRootElements(), 5, manager.getTaskList().getRootElements().size());
+		assertEquals(3, manager.getTaskList().getRootElements().size());
 
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());

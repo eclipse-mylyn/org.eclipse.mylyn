@@ -379,7 +379,7 @@ public class TaskList {
 	}
 
 	public boolean isEmpty() {
-		boolean archiveIsEmpty = getCategories().size() == 1
+		boolean archiveIsEmpty = getCategories().size() == 2
 				&& getCategories().iterator().next().equals(archiveContainer)
 				&& archiveContainer.getChildren().isEmpty();
 		return getAllTasks().size() == 0 && archiveIsEmpty && getQueries().size() == 0;
