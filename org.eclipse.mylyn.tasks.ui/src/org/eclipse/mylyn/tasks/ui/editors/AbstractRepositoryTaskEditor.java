@@ -166,7 +166,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
-	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and re-try.";
+	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
 	private static final String LABEL_HISTORY = "History";
 
