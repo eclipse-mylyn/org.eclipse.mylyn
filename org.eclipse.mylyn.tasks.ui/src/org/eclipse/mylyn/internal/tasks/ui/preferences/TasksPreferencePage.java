@@ -443,7 +443,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		incomingOverlaysButton = new Button(group, SWT.CHECK);
-		incomingOverlaysButton.setText("Overlay synchronization state on task icons (for wide view)");
+		incomingOverlaysButton.setText("Use Synchronize View style incoming overlays and placement");
 		incomingOverlaysButton.setSelection(getPreferenceStore().getBoolean(
 				TaskListPreferenceConstants.INCOMING_OVERLAID));
 	}

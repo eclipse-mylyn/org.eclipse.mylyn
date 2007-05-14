@@ -23,31 +23,18 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 
 	private ImageData base;
 
-	private ImageData synchState;
-
 	private ImageData kind;
 	
 	protected Point size;
 
-	public static final int WIDTH_DECORATION = 5;
-	
-//	private static final int WIDTH_SYNCH = 9;//5;
-	
-	private static final int WIDTH_SQUISH = 0;
+	public static final int WIDTH_DECORATION = 6;
 	
 	private static final int WIDTH_ICON = 16;
-	
-	static final int OFFSET_SYNCH = 5;
 		
 	static int WIDTH;
 	
 	static {
-//		if (SWT.getPlatform().equals("win32")) {
-//			WIDTH_DECORATION = 0;
-//		} else {
-//			WIDTH_DECORATION = 4;
-//		}
-		WIDTH = WIDTH_DECORATION + WIDTH_ICON - WIDTH_SQUISH;
+		WIDTH = WIDTH_DECORATION + WIDTH_ICON;
 	}
 	
 	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind) {
@@ -55,9 +42,6 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 		if (overlayKind != null) {
 			this.kind = getImageData(overlayKind);
 		}
-//		if (synchState != null) {
-//			this.synchState = getImageData(synchState);
-//		} 
 		this.size = new Point(WIDTH, base.height);
 	}
 	
@@ -66,9 +50,6 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 		drawImage(base, WIDTH_DECORATION, 1);
 		if (kind != null) {
 			drawImage(kind, WIDTH_DECORATION+5, 6);
-		}
-		if (synchState != null) {
-			drawImage(synchState, WIDTH_ICON /*WIDTH_SQUISH + 1*/, OFFSET_SYNCH);
 		}
 	}
 

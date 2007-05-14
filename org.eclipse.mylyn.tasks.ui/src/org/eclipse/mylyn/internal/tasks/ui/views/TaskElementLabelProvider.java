@@ -78,19 +78,14 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	@Override
 	public Image getImage(Object element) {
 		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element, compositeImages);
-//		if (!compositeImages) {
-//			return TasksUiImages.getCompositeImage(compositeDescriptor.icon);
-//		} else {
-			if (element instanceof ITask || element instanceof AbstractQueryHit) {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
-						compositeDescriptor.overlaySynch);
-			} else if (element instanceof AbstractTaskContainer) {
-				return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon,
-						compositeDescriptor.overlaySynch);
-			} else {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null, null);
-			}
-//		}
+		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
+					compositeDescriptor.overlaySynch);
+		} else if (element instanceof AbstractTaskContainer) {
+			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, compositeDescriptor.overlaySynch);
+		} else {
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null, null);
+		}
 	}
 
 	private CompositeImageDescriptor getImageDescriptor(Object object, boolean showSynchState) {
@@ -113,7 +108,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
 				if (showSynchState) {
-					compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element);
+					compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element, false);
 				}
 			} else if (element instanceof AbstractQueryHit) {
 				AbstractRepositoryTask repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
@@ -124,24 +119,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
 
-//			if (element instanceof AbstractTaskContainer) {
-//				if (treeViewer != null && !Arrays.asList(treeViewer.getExpandedElements()).contains(element)
-//						&& hasIncoming((AbstractTaskContainer) element)) {
-//					compositeDescriptor.overlaySynch = TasksUiImages.STATUS_NORMAL_INCOMING;
-//				}
-//			}
-
 			if (connectorUi != null) {
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
 				return compositeDescriptor;
 			} else {
 				if (element instanceof ITask) {
 					if (showSynchState) {
-						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element);
+						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element, false);
 					}
 				} else if (element instanceof AbstractQueryHit) {
 					if (showSynchState) {
-						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element);
+						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element, false);
 					}
 				}
 
@@ -160,22 +148,34 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		return compositeDescriptor;
 	}
 
-	public static ImageDescriptor getSynchronizationImageDescriptor(Object element) {
+	public static ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
 		AbstractRepositoryTask repositoryTask = null;
 		ImageDescriptor imageDescriptor = null;
 		if (element instanceof AbstractQueryHit) {
 			repositoryTask = ((AbstractQueryHit) element).getCorrespondingTask();
 			if (repositoryTask == null) {
-				return TasksUiImages.STATUS_OVERLAY_INCOMMING_NEW;
+				if (synchViewStyle) {
+					return TasksUiImages.OVERLAY_SYNCH_INCOMMING_NEW;
+				} else {
+					return TasksUiImages.STATUS_OVERLAY_INCOMMING_NEW;
+				}
 			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			repositoryTask = (AbstractRepositoryTask) element;
 		}
 		if (repositoryTask != null) {
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
-				imageDescriptor = TasksUiImages.STATUS_NORMAL_OUTGOING;
+				if (synchViewStyle) {
+					imageDescriptor = TasksUiImages.OVERLAY_SYNCH_OUTGOING;
+				} else {
+					imageDescriptor = TasksUiImages.STATUS_NORMAL_OUTGOING;
+				}
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-				imageDescriptor = TasksUiImages.STATUS_NORMAL_INCOMING;
+				if (synchViewStyle) {
+					imageDescriptor = TasksUiImages.OVERLAY_SYNCH_INCOMMING;
+				} else {
+					imageDescriptor = TasksUiImages.STATUS_NORMAL_INCOMING;
+				}
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 				imageDescriptor = TasksUiImages.STATUS_NORMAL_CONFLICT;
 			}
@@ -185,7 +185,11 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				return imageDescriptor;
 			}
 		} else if (element instanceof AbstractQueryHit) {
-			return TasksUiImages.STATUS_NORMAL_INCOMING;
+			if (synchViewStyle) {
+				return TasksUiImages.OVERLAY_SYNCH_INCOMMING;
+			} else {
+				return TasksUiImages.STATUS_NORMAL_INCOMING;
+			}
 		} else if (element instanceof AbstractTaskContainer) {
 			AbstractTaskContainer container = (AbstractTaskContainer) element;
 			if (container instanceof AbstractRepositoryQuery) {
@@ -211,16 +215,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		if (element instanceof ITask || element instanceof AbstractQueryHit) {
 			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
 			if (task != null) {
-				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task
-						.getPriority()));
-			} else if (element instanceof AbstractQueryHit){
-				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(((AbstractQueryHit)element)
-						.getPriority()));
+				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
+			} else if (element instanceof AbstractQueryHit) {
+				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel
+						.fromString(((AbstractQueryHit) element).getPriority()));
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String getText(Object object) {
 		if (object instanceof AbstractQueryHit) {
@@ -336,8 +339,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		} else if (element instanceof AbstractQueryHit) {
 			return getBackground(((AbstractQueryHit) element).getCorrespondingTask());
 		}
-		// return
-		// Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 		return null;
 	}
 

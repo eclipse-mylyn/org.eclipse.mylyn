@@ -447,7 +447,7 @@ public class TaskListToolTipHandler {
 
 			@Override
 			public void mouseHover(MouseEvent event) {
-				if (tipShell.isDisposed()) {
+				if (tipShell.isDisposed() || incommingTipLabelText.isDisposed()) {
 					return;
 				}
 				widgetPosition = new Point(event.x, event.y);
@@ -529,6 +529,7 @@ public class TaskListToolTipHandler {
 		Rectangle shellBounds = shell.getBounds();
 
 		// We need to find the exact monitor we're mousing over
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=166990
 		Monitor[] array = PlatformUI.getWorkbench().getDisplay().getMonitors();
 		for (Monitor m : array) {
 			Rectangle monitorBounds = m.getBounds();

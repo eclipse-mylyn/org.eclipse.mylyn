@@ -145,6 +145,12 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_OUTGOING = create(T_EVIEW, "overlay-outgoing.gif");
 
+	public static final ImageDescriptor OVERLAY_SYNCH_INCOMMING = create(T_EVIEW, "overlay-synch-incoming.gif");
+
+	public static final ImageDescriptor OVERLAY_SYNCH_INCOMMING_NEW = create(T_EVIEW, "overlay-synch-incoming-new.gif");
+
+	public static final ImageDescriptor OVERLAY_SYNCH_OUTGOING = create(T_EVIEW, "overlay-synch-outgoing.gif");
+	
 	public static final ImageDescriptor OVERLAY_CONFLICT = create(T_EVIEW, "overlay-conflicting.gif");
 
 	public static final ImageDescriptor OVERLAY_REPOSITORY = create(T_EVIEW, "overlay-repository.gif");
