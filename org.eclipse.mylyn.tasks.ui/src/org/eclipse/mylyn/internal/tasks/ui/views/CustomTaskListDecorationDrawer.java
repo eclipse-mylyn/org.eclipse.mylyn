@@ -42,11 +42,20 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
+	private int squish = 0;
+	
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				TaskListPreferenceConstants.INCOMING_OVERLAID);
+		
+		if (SWT.getPlatform().equals("gtk")) {
+			squish = 5;
+		} else if (SWT.getPlatform().equals("macos")) {
+			System.err.println(">>>>> mac");
+			squish = 3;
+		}
 	}
 
 	/*
@@ -104,7 +113,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 	private void drawSyncronizationImage(ITaskListElement element, Event event) {
 		Image image = null;
 		int offsetX = 6;
-		int offsetY = (event.height / 2) - 5;
+		int offsetY = (event.height / 2) - 5 - squish;
 		if (taskListView.synchronizationOverlaid) {
 			offsetX = event.x + 19;
 			offsetY += 2;
