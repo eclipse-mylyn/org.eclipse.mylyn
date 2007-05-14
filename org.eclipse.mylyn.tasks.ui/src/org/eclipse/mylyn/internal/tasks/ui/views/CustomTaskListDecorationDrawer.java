@@ -51,11 +51,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				TaskListPreferenceConstants.INCOMING_OVERLAID);
 		
-		System.err.println(">>> " + SWT.getPlatform());
 		if (SWT.getPlatform().equals("gtk")) {
-			platformSpecificSquish = 5;
-		} else if (SWT.getPlatform().equals("macos")) {
-			System.err.println(">>>>> mac");
+			platformSpecificSquish = 8;
+		} else if (SWT.getPlatform().equals("carbon")) {
 			platformSpecificSquish = 3;
 		}
 	}
@@ -114,10 +112,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private void drawSyncronizationImage(ITaskListElement element, Event event) {
 		Image image = null;
-		int offsetX = 6 - platformSpecificSquish;
+		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
 		if (taskListView.synchronizationOverlaid) {
-			offsetX = event.x + 19;
+			offsetX = event.x + 19 - platformSpecificSquish;
 			offsetY += 2;
 		}
 		if (element instanceof AbstractTaskContainer) {
