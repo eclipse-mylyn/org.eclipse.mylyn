@@ -447,7 +447,7 @@ public class TaskListToolTipHandler {
 
 			@Override
 			public void mouseHover(MouseEvent event) {
-				if (tipShell.isDisposed() || incommingTipLabelText.isDisposed()) {
+				if (tipShell.isDisposed()) {
 					return;
 				}
 				widgetPosition = new Point(event.x, event.y);
