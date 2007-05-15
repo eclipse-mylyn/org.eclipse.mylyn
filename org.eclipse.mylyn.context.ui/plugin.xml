@@ -454,7 +454,7 @@
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
-           label="Focus on Active Task"
+           label="Focus on Active Task (Alt+click to reveal filtered elements)"
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"

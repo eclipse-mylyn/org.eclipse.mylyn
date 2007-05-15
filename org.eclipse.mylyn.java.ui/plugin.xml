@@ -324,7 +324,7 @@
            menubarPath="mylar"
            style="toggle"
            toolbarPath="mylar"
-           tooltip="Focus on Active Task"> 
+           tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
   		</action> 
       </viewContribution>
  	  <viewContribution
