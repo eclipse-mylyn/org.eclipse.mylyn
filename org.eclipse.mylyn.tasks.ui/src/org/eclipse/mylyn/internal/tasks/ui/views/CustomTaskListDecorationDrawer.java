@@ -124,6 +124,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 					int additionalSquish = 0;
 					if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 						additionalSquish = platformSpecificSquish + 3;
+					} else if (platformSpecificSquish >0) {
+						additionalSquish = platformSpecificSquish / 2;
 					}
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
