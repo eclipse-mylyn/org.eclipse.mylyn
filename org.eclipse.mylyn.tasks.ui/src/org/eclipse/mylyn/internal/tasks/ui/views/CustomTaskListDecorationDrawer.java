@@ -94,7 +94,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 						drawSyncronizationImage((ITaskListElement) data, event);
 					}
 				}
-// currWidth = event.width;
 				break;
 			}
 			case SWT.PaintItem: {
@@ -127,7 +126,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						offsetX = 42 - platformSpecificSquish;
 					} else {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-						offsetX = 24;						
+						offsetX = 24 - platformSpecificSquish;						
 					}
 				}
 			}
