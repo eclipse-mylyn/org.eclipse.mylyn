@@ -114,7 +114,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
 		if (taskListView.synchronizationOverlaid) {
-			offsetX = event.x + 19 - platformSpecificSquish;
+			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
 		if (element instanceof AbstractTaskContainer) {

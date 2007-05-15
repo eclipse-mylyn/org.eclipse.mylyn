@@ -53,7 +53,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			if (element instanceof DateRangeContainer) {
-				return TasksUiImages.getImage(TasksUiImages.CALENDAR);
+				super.getImage((DateRangeContainer)element);
 			} else if (element instanceof DateRangeActivityDelegate) {
 				return super.getImage(((DateRangeActivityDelegate) element).getCorrespondingTask());
 			} else {
