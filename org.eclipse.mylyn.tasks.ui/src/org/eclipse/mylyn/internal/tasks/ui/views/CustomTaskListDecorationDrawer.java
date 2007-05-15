@@ -122,7 +122,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 						&& hasIncoming((AbstractTaskContainer) element)) {
 					int additionalSquish = 0;
-					if (platformSpecificSquish > 0) {
+					if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 						additionalSquish = platformSpecificSquish + 3;
 					}
 					if (taskListView.synchronizationOverlaid) {
