@@ -121,12 +121,16 @@ class CustomTaskListDecorationDrawer implements Listener {
 			if (element instanceof AbstractTaskContainer) {
 				if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
 						&& hasIncoming((AbstractTaskContainer) element)) {
+					int additionalSquish = 0;
+					if (platformSpecificSquish > 0) {
+						additionalSquish = platformSpecificSquish + 3;
+					}
 					if (taskListView.synchronizationOverlaid) {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
-						offsetX = 42 - platformSpecificSquish;
+						offsetX = 42 - additionalSquish;
 					} else {
 						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
-						offsetX = 24 - platformSpecificSquish;						
+						offsetX = 24 - additionalSquish;						
 					}
 				}
 			}

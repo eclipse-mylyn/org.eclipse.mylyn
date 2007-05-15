@@ -555,7 +555,7 @@ public class TaskListView extends ViewPart {
 			// TODO: weird override of custom gradients
 			Color parentBackground = getViewer().getTree().getParent().getBackground();
 			double GRADIENT_TOP = 1.05;//1.02;
-			double GRADIENT_BOTTOM = .99;//1.035;
+			double GRADIENT_BOTTOM = .995;//1.035;
 
 			int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
 			int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
