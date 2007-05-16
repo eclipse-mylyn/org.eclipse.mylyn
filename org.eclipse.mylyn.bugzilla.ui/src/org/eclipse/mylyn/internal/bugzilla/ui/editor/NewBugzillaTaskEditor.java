@@ -14,7 +14,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.fieldassist.ContentAssistCommandAdapter;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -78,11 +81,22 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		Composite textFieldComposite = toolkit.createComposite(peopleComposite);
 		GridLayout textLayout = new GridLayout();
 		textFieldComposite.setLayout(textLayout);
-		Text textField = createTextField(textFieldComposite, taskData
-				.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED), SWT.FLAT);
+
+		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
+
+		Text textField = createTextField(textFieldComposite, attribute, SWT.FLAT);
 		toolkit.paintBordersFor(textFieldComposite);
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(textField);
 		peopleSection.setClient(peopleComposite);
+
+		ContentAssistCommandAdapter adapter = applyContentAssist(textField, createContentProposalProvider(attribute));
+
+		ILabelProvider propsalLabelProvider = createProposalLabelProvider(attribute);
+		if (propsalLabelProvider != null) {
+			adapter.setLabelProvider(propsalLabelProvider);
+		}
+		adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+
 		toolkit.paintBordersFor(peopleComposite);
 	}
 
@@ -110,17 +124,19 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	@Override
 	public void submitToRepository() {
 		if (summaryText.getText().equals("")) {
-			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please provide a brief summary with new reports.");
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
+					"Please provide a brief summary with new reports.");
 			summaryText.setFocus();
 			return;
 		} else if (descriptionTextViewer.getTextWidget().getText().equals("")) {
-			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error", "Please proved a detailed summary with new reports");
+			MessageDialog.openInformation(this.getSite().getShell(), "Submit Error",
+					"Please proved a detailed summary with new reports");
 			descriptionTextViewer.getTextWidget().setFocus();
 			return;
 		}
 		super.submitToRepository();
 	}
-	
+
 	/**
 	 * Break text up into lines so that it is displayed properly in bugzilla
 	 */

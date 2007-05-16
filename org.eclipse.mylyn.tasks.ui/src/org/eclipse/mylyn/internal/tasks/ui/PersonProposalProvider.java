@@ -62,7 +62,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		Set<String> addressSet = new TreeSet<String>(new Comparator<String>() {
 			public int compare(String s1, String s2) {
 				if (currentUser != null) {
-					if(s1.compareToIgnoreCase(s2) == 0 && currentUser.compareToIgnoreCase(s1) == 0){
+					if (s1.compareToIgnoreCase(s2) == 0 && currentUser.compareToIgnoreCase(s1) == 0) {
 						return 0;
 					} else if (currentUser.compareToIgnoreCase(s1) == 0) {
 						return -1;
@@ -74,23 +74,41 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			}
 		});
 
-		if(currentTask != null){
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					currentTask.getRepositoryKind(), currentTask.getRepositoryUrl());
+		String repositoryUrl = null;
+		String repositoryKind = null;
+
+		if (currentTask != null) {
+			repositoryUrl = currentTask.getRepositoryUrl();
+			repositoryKind = currentTask.getRepositoryKind();
+		}
+
+		if (repositoryUrl == null || repositoryKind == null) {
+			if (currentTaskData != null) {
+				repositoryUrl = currentTaskData.getRepositoryUrl();
+				repositoryKind = currentTaskData.getRepositoryKind();
+			}
+		}
+
+		if (repositoryUrl != null && repositoryKind != null) {
+			Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
+					repositoryUrl);
+
 			if (repository != null) {
 				currentUser = repository.getUserName();
 				if (currentUser != null && !repository.isAnonymous())
 					addressSet.add(currentUser);
 			}
-		
-			Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
-			tasks.add(currentTask);
+
+			if (currentTask != null) {
+				tasks.add(currentTask);
+			}
 
 			Collection<ITask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			for (ITask task : allTasks) {
 				if (task instanceof AbstractRepositoryTask) {
 					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
-					if (repositoryTask.getRepositoryUrl().equals(currentTask.getRepositoryUrl())) {
+					if (repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
 						tasks.add(repositoryTask);
 					}
 				}
@@ -100,7 +118,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				addEmailAddresses(task, addressSet);
 			}
 		}
-		
+
 		if (currentTaskData != null) {
 			java.util.List<TaskComment> comments = currentTaskData.getComments();
 			for (TaskComment comment : comments) {
