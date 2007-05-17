@@ -575,6 +575,9 @@ public class ContextManager {
 				return;
 			context.collapse();
 			externalizer.writeContextToXml(context, getFileForContext(handleIdentifier));
+			if (contextFiles == null) {
+				contextFiles = new HashSet<File>();
+			}
 			contextFiles.add(getFileForContext(handleIdentifier));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
