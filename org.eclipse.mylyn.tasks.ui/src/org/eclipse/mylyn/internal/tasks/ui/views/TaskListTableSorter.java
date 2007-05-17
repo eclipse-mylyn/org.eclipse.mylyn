@@ -31,16 +31,20 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListTableSorter extends ViewerSorter {
 
+	public enum SortByIndex {
+		PRIORITY, SUMMARY, DATE_CREATED;
+	}
+
 	private final TaskListView view;
 
 	private TaskKeyComparator taskKeyComparator = new TaskKeyComparator();
 
-	private boolean sortByPriority = true;
+	private SortByIndex sortByIndex;
 
-	public TaskListTableSorter(TaskListView view, boolean byPriority) {
+	public TaskListTableSorter(TaskListView view, SortByIndex sortByIndex) {
 		super();
 		this.view = view;
-		this.sortByPriority = byPriority;
+		this.sortByIndex = sortByIndex;
 	}
 
 	public void setColumn(String column) {
@@ -110,32 +114,36 @@ public class TaskListTableSorter extends ViewerSorter {
 	}
 
 	private int compareElements(ITaskListElement element1, ITaskListElement element2) {
-		if (sortByPriority) {
+		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
 			int result = this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 			if (result != 0) {
 				return result;
 			}
+		} else if (SortByIndex.DATE_CREATED.equals(sortByIndex)) {
+			ITask t1 = null;
+			ITask t2 = null;
+			if (element1 instanceof ITask) {
+				t1 = (ITask)element1;
+			} else if (element1 instanceof AbstractQueryHit) {
+				t1 = ((AbstractQueryHit)element1).getCorrespondingTask();
+			} 
+			if (element2 instanceof ITask) {
+				t2 = (ITask)element2;
+			}else if (element2 instanceof AbstractQueryHit) {
+				t2 = ((AbstractQueryHit)element2).getCorrespondingTask();
+			}
+			if (t1 != null && t2 != null) {
+				if (t1.getCreationDate() != null) {
+					return t1.getCreationDate().compareTo(t2.getCreationDate());
+				}
+			}
+		} else {
+			String summary1 = getSortableSummaryFromElement(element1);
+			String summary2 = getSortableSummaryFromElement(element2);
+			element2.getSummary();
+			return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
 		}
-
-		String summary1 = getSortableSummaryFromElement(element1);
-		String summary2 = getSortableSummaryFromElement(element2);
-		element2.getSummary();
-		return this.view.sortDirection * taskKeyComparator.compare(summary1, summary2);
-
-// if (column != null && column.equals(this.view.columnNames[1])) {
-// return 0;
-// } else if (column == this.view.columnNames[2]) {
-// return this.view.sortDirection *
-// element1.getPriority().compareTo(element2.getPriority());
-// } else if (column == this.view.columnNames[3]) {
-// String summary1 = getSortableSummaryFromElement(element1);
-// String summary2 = getSortableSummaryFromElement(element2);
-// element2.getSummary();
-// return this.view.sortDirection * taskKeyComparator.compare(summary1,
-// summary2);
-// } else {
-// return 0;
-// }
+		return 0;
 	}
 
 	public static String getSortableSummaryFromElement(ITaskListElement element) {

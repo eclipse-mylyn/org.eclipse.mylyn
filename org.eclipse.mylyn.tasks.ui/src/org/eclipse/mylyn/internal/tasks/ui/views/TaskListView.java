@@ -82,6 +82,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAutomaticallyActio
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskListElementPropertiesAction;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -265,7 +266,7 @@ public class TaskListView extends ViewPart {
 
 	private static final int DEFAULT_SORT_DIRECTION = 1;
 
-	private int sortIndex = 0;
+	private SortByIndex sortByIndex = SortByIndex.PRIORITY;
 
 	private ITaskListPresentation currentPresentation;
 
@@ -520,7 +521,8 @@ public class TaskListView extends ViewPart {
 					if (container == null) {
 						// HACK: should be part of policy
 						getViewer().refresh(false);
-					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory())) {
+					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList()
+							.getUncategorizedCategory())) {
 						refresh(null);
 					} else {
 						refresh(container);
@@ -554,8 +556,8 @@ public class TaskListView extends ViewPart {
 
 			// TODO: weird override of custom gradients
 			Color parentBackground = getViewer().getTree().getParent().getBackground();
-			double GRADIENT_TOP = 1.05;//1.02;
-			double GRADIENT_BOTTOM = .995;//1.035;
+			double GRADIENT_TOP = 1.05;// 1.02;
+			double GRADIENT_BOTTOM = .995;// 1.035;
 
 			int red = Math.min(255, (int) (parentBackground.getRed() * GRADIENT_TOP));
 			int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
@@ -662,36 +664,49 @@ public class TaskListView extends ViewPart {
 	public void saveState(IMemento memento) {
 		IMemento sorter = memento.createChild(tableSortIdentifier);
 		IMemento m = sorter.createChild(MEMENTO_KEY_SORTER);
-		m.putInteger(MEMENTO_KEY_SORT_INDEX, sortIndex);
+		switch (sortByIndex) {
+		case SUMMARY:
+			m.putInteger(MEMENTO_KEY_SORT_INDEX, 1);
+			break;
+		case DATE_CREATED:
+			m.putInteger(MEMENTO_KEY_SORT_INDEX, 2);
+			break;
+		default:
+			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
+		}
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
 	}
 
 	private void restoreState() {
 		if (taskListMemento != null) {
 			IMemento sorterMemento = taskListMemento.getChild(tableSortIdentifier);
+			int restoredSortIndex = 0;
 			if (sorterMemento != null) {
 				IMemento m = sorterMemento.getChild(MEMENTO_KEY_SORTER);
 				if (m != null) {
 					Integer sortIndexInt = m.getInteger(MEMENTO_KEY_SORT_INDEX);
 					if (sortIndexInt != null) {
-						this.sortIndex = sortIndexInt.intValue();
+						restoredSortIndex = sortIndexInt.intValue();
 					}
 					Integer sortDirInt = m.getInteger(MEMENTO_KEY_SORT_DIRECTION);
 					if (sortDirInt != null) {
 						sortDirection = sortDirInt.intValue();
 					}
 				} else {
-					sortIndex = 0;
 					sortDirection = DEFAULT_SORT_DIRECTION;
 				}
 			} else {
-				sortIndex = 0; // default priority
 				sortDirection = DEFAULT_SORT_DIRECTION;
 			}
-			if (sortIndex == 1) {
-				setSortByPriority(false);
-			} else {
-				setSortByPriority(true);
+			switch (restoredSortIndex) {
+			case 1:
+				this.sortByIndex = SortByIndex.SUMMARY;
+				break;
+			case 2:
+				this.sortByIndex = SortByIndex.DATE_CREATED;
+				break;
+			default:
+				this.sortByIndex = SortByIndex.PRIORITY;
 			}
 		}
 		addFilter(FILTER_PRIORITY);
@@ -724,8 +739,8 @@ public class TaskListView extends ViewPart {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true),
-				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
+				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
@@ -738,7 +753,7 @@ public class TaskListView extends ViewPart {
 		getViewer().setCellEditors(editors);
 		getViewer().setCellModifier(taskListCellModifier);
 
-		tableSorter = new TaskListTableSorter(this, true);
+		tableSorter = new TaskListTableSorter(this, TaskListTableSorter.SortByIndex.PRIORITY);
 		getViewer().setSorter(tableSorter);
 
 		applyPresentation(catagorizedPresentation);
@@ -901,14 +916,14 @@ public class TaskListView extends ViewPart {
 				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
 			}
 
-			final int index = i;
+//			final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					sortIndex = index;
+//					sortByIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
-					tableSorter.setColumn(columnNames[sortIndex]);
+//					tableSorter.setColumn(columnNames[sortByIndex]);
 					getViewer().refresh(false);
 				}
 			});
@@ -984,7 +999,7 @@ public class TaskListView extends ViewPart {
 		manager.add(filterCompleteTask);
 		manager.add(filterArchiveCategory);
 		manager.add(showSubTasksAction);
-		
+
 		manager.add(new Separator(ID_SEPARATOR_TASKS));
 		manager.add(synchronizeAutomatically);
 
@@ -1609,17 +1624,13 @@ public class TaskListView extends ViewPart {
 		this.focusedMode = focusedMode;
 	}
 
-	public void setSortByPriority(boolean byPriority) {
-		if (byPriority) {
-			sortIndex = 0;
-		} else {
-			sortIndex = 1;
-		}
-		getViewer().setSorter(new TaskListTableSorter(this, byPriority));
+	public void setSortBy(SortByIndex sortByIndex) {
+		this.sortByIndex = sortByIndex;
+		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
 	}
 
-	public boolean isSortByPriority() {
-		return sortIndex == 0;
+	public SortByIndex getSortByIndex() {
+		return sortByIndex;
 	}
 
 	public void setSynchronizationOverlaid(boolean synchronizationOverlaid) {

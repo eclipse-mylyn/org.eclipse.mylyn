@@ -12,6 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -25,9 +26,11 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 	private static final String LABEL = "Sort by";
 
 	private Action byPriority;
-	
+
 	private Action bySummary;
-	
+
+	private Action byDateCreated;
+
 	private Menu dropDownMenu = null;
 
 	public SortyByDropDownAction(TaskListView taskListView) {
@@ -62,14 +65,15 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		addActionsToMenu();
 		return dropDownMenu;
 	}
-	
+
 	public void addActionsToMenu() {
 		byPriority = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortByPriority(true);
+				taskListView.setSortBy(SortByIndex.PRIORITY);
 				byPriority.setChecked(true);
 				bySummary.setChecked(false);
+				byDateCreated.setChecked(false);
 			}
 		};
 		byPriority.setEnabled(true);
@@ -81,20 +85,42 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		bySummary = new Action("", AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				taskListView.setSortByPriority(false);
+				taskListView.setSortBy(SortByIndex.SUMMARY);
 				byPriority.setChecked(false);
 				bySummary.setChecked(true);
+				byDateCreated.setChecked(false);
 			}
 		};
 		bySummary.setEnabled(true);
 		bySummary.setText("Summary");
 		item = new ActionContributionItem(bySummary);
 		item.fill(dropDownMenu, -1);
-		
-		if (taskListView.isSortByPriority()) {
+
+		byDateCreated = new Action("", AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				taskListView.setSortBy(SortByIndex.DATE_CREATED);
+				byPriority.setChecked(false);
+				bySummary.setChecked(false);
+				byDateCreated.setChecked(true);
+			}
+		};
+		byDateCreated.setEnabled(true);
+		byDateCreated.setText("Date Created");
+		byDateCreated.setImageDescriptor(TasksUiImages.CALENDAR_SMALL);
+		item = new ActionContributionItem(byDateCreated);
+		item.fill(dropDownMenu, -1);
+
+		switch (taskListView.getSortByIndex()) {
+		case PRIORITY:
 			byPriority.setChecked(true);
-		} else {
+			break;
+		case SUMMARY:
 			bySummary.setChecked(true);
+			break;
+		case DATE_CREATED:
+			byDateCreated.setChecked(true);
+			break;
 		}
 	}
 

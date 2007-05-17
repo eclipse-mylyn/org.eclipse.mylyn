@@ -24,7 +24,7 @@ import org.eclipse.mylar.tasks.core.TaskList;
 public class TableSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
-		TaskListTableSorter sorter = new TaskListTableSorter(null, false);
+		TaskListTableSorter sorter = new TaskListTableSorter(null, TaskListTableSorter.SortByIndex.SUMMARY);
 		 		
 		Task task = new Task("1", "", true);
 		TaskCategory category = new TaskCategory("cat", new TaskList());
