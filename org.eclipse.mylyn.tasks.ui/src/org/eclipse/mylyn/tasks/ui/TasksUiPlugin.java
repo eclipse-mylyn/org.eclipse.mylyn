@@ -763,33 +763,33 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: clean-up
 	private void readOfflineReports() {
-		IPath offlineReportsPath = getOfflineReportsFilePath();
+		IPath offlineReportsPath = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
 
-		try {
-			taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), true);
-		} catch (Throwable t) {
-			MylarStatusHandler.log("Recreating offline task cache due to format update.", this);
-			boolean deleted = offlineReportsPath.toFile().delete();
-			if (!deleted) {
-				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
-			}
-			try {
-				taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath.toFile(), false);
-			} catch (Exception e1) {
-				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
-			}
-		}
+//		try {
+			taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath);//, true);
+//		} catch (Throwable t) {
+//			MylarStatusHandler.log("Recreating offline task cache due to format update.", this);
+//			boolean deleted = offlineReportsPath.toFile().delete();
+//			if (!deleted) {
+//				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
+//			}
+//			try {
+//				taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath, false);
+//			} catch (Exception e1) {
+//				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
+//			}
+//		}
 	}
 
-	/**
-	 * Returns the path to the file caching the offline bug reports. PUBLIC FOR
-	 * TESTING
-	 */
-	public IPath getOfflineReportsFilePath() {
-		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
-		IPath configFile = stateLocation.append("offlineReports");
-		return configFile;
-	}
+//	/**
+//	 * Returns the path to the file caching the offline bug reports. PUBLIC FOR
+//	 * TESTING
+//	 */
+//	public IPath getOfflineReportsFilePath() {
+//		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
+//		IPath configFile = stateLocation.append("offlineReports");
+//		return configFile;
+//	}
 
 	public TaskDataManager getTaskDataManager() {
 		if (taskDataManager == null) {

@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -44,9 +45,13 @@ import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
  */
 public class TaskDataManager {
 
+	private static final String OFFLINE_REPORTS = "offlineReports";
+
 	private static final int SAVE_INTERVAL = 30 * 1000;
 
-	private File file;
+	private File primaryFile;
+
+	private File backupFile;
 
 	private OfflineDataStore dataStore;
 
@@ -56,20 +61,73 @@ public class TaskDataManager {
 
 	private Timer saveTimer;
 
-	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, File file, boolean read) throws IOException,
-			ClassNotFoundException {
+	private IPath primaryPath;
+
+	private IPath backupPath;
+
+	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, IPath path) {
+		this.primaryPath = path.append(OFFLINE_REPORTS);
+		this.backupPath = path.append(OFFLINE_REPORTS+".bak");
 		this.taskRepositoryManager = taskRepositoryManager;
-		this.file = file;
-		if (file.exists() && read) {
-			readOfflineData();
+		this.primaryFile = primaryPath.toFile();
+		this.backupFile = backupPath.toFile();
+
+		if (primaryFile.exists()) {
+			try {
+				readOfflineData();
+			} catch (Throwable e) {
+				MylarStatusHandler.fail(e, "Error loading offline task data", false);
+				if (restoreFromBackup()) {
+					try {
+						readOfflineData();
+					} catch (Throwable e1) {
+						dataStore = new OfflineDataStore();
+					}
+				} else {
+					dataStore = new OfflineDataStore();
+				}
+			}
 		} else {
-			dataStore = new OfflineDataStore();
+			if (restoreFromBackup()) {
+				try {
+					readOfflineData();
+				} catch (Throwable e1) {
+					dataStore = new OfflineDataStore();
+				}
+			} else {
+				dataStore = new OfflineDataStore();
+			}
 		}
 
 		saveTimer = new Timer();
 		saveTimer.schedule(new RequestSaveTimerTask(), SAVE_INTERVAL, SAVE_INTERVAL);
 		saverJob = new TaskDataSaverJob();
 		saverJob.schedule();
+	}
+
+	private boolean restoreFromBackup() {
+		MylarStatusHandler.log("Restoring offline data from backup", this);
+		this.primaryFile = primaryPath.toFile();
+		this.backupFile = backupPath.toFile();
+
+		if (backupFile.exists()) {
+			if (primaryFile.exists()) {
+				if (!primaryFile.delete()) {
+					MylarStatusHandler.log("Unable to retire primary offline data", this);
+				}
+			}
+			this.primaryFile = primaryPath.toFile();
+			if (backupFile.renameTo(primaryFile)) {
+				this.primaryFile = primaryPath.toFile();
+				this.backupFile = backupPath.toFile();
+				return true;
+			} else {
+				MylarStatusHandler.log("Unable to restore from offline backup", this);
+			}
+		} else {
+			MylarStatusHandler.log("No offline backup found", this);
+		}
+		return false;
 	}
 
 	/**
@@ -260,10 +318,12 @@ public class TaskDataManager {
 	 */
 	public void readOfflineData() throws IOException, ClassNotFoundException {
 		clear();
-		synchronized (file) {
+		synchronized (primaryFile) {
 			ObjectInputStream in = null;
+			FileInputStream fileInputStream = null;
 			try {
-				in = new ObjectInputStream(new FileInputStream(file));
+				fileInputStream = new FileInputStream(primaryFile);
+				in = new ObjectInputStream(fileInputStream);
 				dataStore = (OfflineDataStore) in.readObject();
 				for (RepositoryTaskData taskData : dataStore.getNewDataMap().values()) {
 					updateAttributeFactory(taskData);
@@ -279,7 +339,15 @@ public class TaskDataManager {
 						MylarStatusHandler.fail(e, "Could not close stream", false);
 					}
 				}
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close();
+					} catch (IOException e) {
+						MylarStatusHandler.fail(e, "Could not close stream", false);
+					}
+				}
 			}
+
 		}
 	}
 
@@ -314,21 +382,42 @@ public class TaskDataManager {
 	}
 
 	private void writeFile() {
-		synchronized (file) {
+		synchronized (primaryFile) {
 			if (Platform.isRunning()) {
 				ObjectOutputStream out = null;
+				FileOutputStream fileOuputStream = null;
 				try {
-					out = new ObjectOutputStream(new FileOutputStream(file));
+					if (backupFile.exists()) {
+						if (!backupFile.delete()) {
+							MylarStatusHandler.log("Unable to retire old offline backup.", this);
+							return;
+						}
+					}
+
+					if (primaryFile.exists() && !primaryFile.renameTo(backupFile)) {
+						MylarStatusHandler.log("Unable to backup offline data.", this);
+						return;
+					}
+
+					fileOuputStream = new FileOutputStream(primaryPath.toFile());
+					out = new ObjectOutputStream(fileOuputStream);
 					out.writeObject(dataStore);
-					out.close();
-				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Could not write to offline reports file.", false);
+				} catch (Exception e) {
+					MylarStatusHandler.fail(e, "Error occurred during save of offline task data.", false);
+					restoreFromBackup();
 				} finally {
 					if (out != null) {
 						try {
 							out.close();
 						} catch (IOException e) {
-							e.printStackTrace();
+							MylarStatusHandler.fail(e, "Could not close stream", false);
+						}
+					}
+					if (fileOuputStream != null) {
+						try {
+							fileOuputStream.close();
+						} catch (IOException e) {
+							MylarStatusHandler.fail(e, "Could not close stream", false);
 						}
 					}
 				}
@@ -435,9 +524,18 @@ public class TaskDataManager {
 	public void stop() {
 		saveTimer.cancel();
 		saverJob.cancel();
-		// TODO: Save job getting axed during workbench shutdown resulting in corrupt task data file
+		saveNow();
+// saverJob.runRequested();
+// try {
+// saverJob.join();
+// System.err.println(">> join complete");
+// } catch (InterruptedException e) {
+// // ignore
+// }
+		// TODO: Save job getting axed during workbench shutdown resulting in
+		// corrupt task data file
 		// bug#186553
-		//saveNow();		
+		// saveNow();
 	}
 
 }
