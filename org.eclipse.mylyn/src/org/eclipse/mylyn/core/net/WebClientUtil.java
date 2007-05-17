@@ -39,6 +39,8 @@ import org.eclipse.swt.graphics.ImageData;
  */
 public class WebClientUtil {
 
+	public static final String USER_AGENT = "Eclipse Mylar (HttpClient 3.0.1)";
+
 	public static final int CONNNECT_TIMEOUT = 30000;
 
 	public static final int SOCKET_TIMEOUT = 17000;
@@ -76,11 +78,11 @@ public class WebClientUtil {
 			end = requestPath;
 
 		String port = repositoryUrl.substring(colonPort + 1, end);
-		
-		if(port.length() == 0){
+
+		if (port.length() == 0) {
 			return repositoryUsesHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
 		}
-		
+
 		return Integer.parseInt(port);
 	}
 
@@ -140,6 +142,8 @@ public class WebClientUtil {
 		// "trace");
 
 		client.getParams().setBooleanParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
+		client.getParams().setParameter(HttpClientParams.USER_AGENT, USER_AGENT);
+
 		client.getHttpConnectionManager().getParams().setSoTimeout(WebClientUtil.SOCKET_TIMEOUT);
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(WebClientUtil.CONNNECT_TIMEOUT);
 
