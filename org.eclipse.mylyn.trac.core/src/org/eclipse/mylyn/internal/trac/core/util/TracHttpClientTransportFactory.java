@@ -67,6 +67,11 @@ public class TracHttpClientTransportFactory implements XmlRpcTransportFactory {
 			getHttpClient().getParams().setAuthenticationPreemptive(config.getBasicUserName() != null);
 		}
 
+		@Override
+		protected String getUserAgent() {
+			return WebClientUtil.USER_AGENT;
+		}
+		
 		public HttpClient getHttpClient() {
 			return (HttpClient) getValue("client");
 		}
