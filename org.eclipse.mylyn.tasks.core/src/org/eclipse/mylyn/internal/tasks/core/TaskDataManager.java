@@ -47,7 +47,7 @@ public class TaskDataManager {
 
 	private static final String OFFLINE_REPORTS = "offlineReports";
 
-	private static final int SAVE_INTERVAL = 30 * 1000;
+	private static final int SAVE_INTERVAL = 60 * 1000;
 
 	private File primaryFile;
 
