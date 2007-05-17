@@ -36,7 +36,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	public enum Attribute {
 		CC(Key.CC, "CC:", RepositoryTaskAttribute.USER_CC, true, false), 
 		CHANGE_TIME(Key.CHANGE_TIME, "Last Modification:", RepositoryTaskAttribute.DATE_MODIFIED, true, true),
-		COMPONENT(Key.COMPONENT, "Component:", null),
+		COMPONENT(Key.COMPONENT, "Component:", RepositoryTaskAttribute.PRODUCT),
 		DESCRIPTION(Key.DESCRIPTION, "Description:", RepositoryTaskAttribute.DESCRIPTION, true, false),
 		ID(Key.ID, "<used by search engine>", null, true),
 		KEYWORDS(Key.KEYWORDS, "Keywords:", RepositoryTaskAttribute.KEYWORDS),
