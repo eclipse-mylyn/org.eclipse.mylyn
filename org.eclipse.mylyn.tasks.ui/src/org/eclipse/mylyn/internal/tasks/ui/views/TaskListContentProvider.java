@@ -12,12 +12,10 @@
 package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -32,9 +30,6 @@ import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.IWorkingSetManager;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some
@@ -45,20 +40,12 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider,
-		IPropertyChangeListener {
+public class TaskListContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 
 	protected final TaskListView view;
 
-	private final IWorkingSetManager workingSetManager;
-
-	private IWorkingSet currentWorkingSet;
-
 	public TaskListContentProvider(TaskListView view) {
 		this.view = view;
-
-		this.workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
-		this.workingSetManager.addPropertyChangeListener(this);
 	}
 
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -66,7 +53,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public void dispose() {
-		workingSetManager.removePropertyChangeListener(this);
 	}
 
 	public Object[] getElements(Object parent) {
@@ -142,15 +128,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				} else if (element instanceof AbstractRepositoryQuery) {
 					if (selectQuery((AbstractRepositoryQuery) element)) {
-						if (selectWorkingSet((AbstractRepositoryQuery) element)) {
-							filteredRoots.add(element);
-						}
+						filteredRoots.add(element);
 					}
 				} else if (element instanceof AbstractTaskContainer) {
 					if (selectContainer((AbstractTaskContainer) element)) {
-						if (selectWorkingSet((AbstractTaskContainer) element)) {
-							filteredRoots.add(element);
-						}
+						filteredRoots.add(element);
 					}
 				}
 			}
@@ -159,23 +141,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			return new ArrayList<ITaskListElement>(roots);
 		}
 	}
-
-	private boolean selectWorkingSet(AbstractTaskContainer container) {
-		if (currentWorkingSet == null) {
-			return true;
-		}
-		boolean seenTaskWorkingSets = false;
-		for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			if (adaptable instanceof AbstractTaskContainer) {
-				seenTaskWorkingSets = true;
-				if (container.getHandleIdentifier().equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
-					return true;
-				}
-			}
-		}
-		return !seenTaskWorkingSets;
-	}
-
+	
 	/**
 	 * See bug 109693
 	 */
@@ -241,9 +207,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	private List<Object> getFilteredChildrenFor(Object parent) {
+	private List<ITaskListElement> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.view.getFilteredTree().getFilterControl()).getText())) {
-			List<Object> children = new ArrayList<Object>();
+			List<ITaskListElement> children = new ArrayList<ITaskListElement>();
 			if (parent instanceof AbstractTaskContainer && ((AbstractTaskContainer) parent).isLocal()) {
 				if (filter(null, parent)) {
 					if (((AbstractTaskContainer) parent) instanceof TaskArchive) {
@@ -293,7 +259,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				return children;
 			}
 		} else {
-			List<Object> children = new ArrayList<Object>();
+			List<ITaskListElement> children = new ArrayList<ITaskListElement>();
 			if (parent instanceof AbstractRepositoryQuery) {
 				children.addAll(((AbstractRepositoryQuery) parent).getHits());
 				return children;
@@ -305,7 +271,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				return children;
 			}
 		}
-		return new ArrayList<Object>();
+		return Collections.emptyList();
 	}
 
 	private boolean filter(Object parent, Object object) {
@@ -315,25 +281,6 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			}
 		}
 		return false;
-	}
-
-	// IPropertyChangeListener
-
-	public void propertyChange(PropertyChangeEvent event) {
-		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(event.getProperty())) {
-			currentWorkingSet = (IWorkingSet) event.getNewValue();
-		}
-
-		try {
-			view.getViewer().getControl().setRedraw(false);
-			view.getViewer().collapseAll();
-			if (view.isFocusedMode()) {
-				view.getViewer().expandAll();
-			} 
-			view.getViewer().refresh();
-		} finally {
-			view.getViewer().getControl().setRedraw(true);
-		}
 	}
 
 }

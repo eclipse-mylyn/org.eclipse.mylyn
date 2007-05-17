@@ -58,6 +58,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylar.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
@@ -139,6 +140,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -148,8 +150,9 @@ import org.eclipse.ui.themes.IThemeManager;
 /**
  * @author Mik Kersten
  * @author Ken Sueda
+ * @author Eugene Kuleshov
  */
-public class TaskListView extends ViewPart {
+public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
@@ -244,11 +247,13 @@ public class TaskListView extends ViewPart {
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
-	static TaskPriorityFilter FILTER_PRIORITY = new TaskPriorityFilter();
+	private TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
-	private static TaskCompletionFilter FILTER_COMPLETE = new TaskCompletionFilter();
+	private TaskCompletionFilter filterComplete = new TaskCompletionFilter();
 
-	private static TaskArchiveFilter FILTER_ARCHIVE = new TaskArchiveFilter();
+	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
+	
+	private TaskWorkingSetFilter filterWorkingSet = new TaskWorkingSetFilter();
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
 
@@ -599,6 +604,8 @@ public class TaskListView extends ViewPart {
 	public TaskListView() {
 		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVITY_LISTENER);
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_REFERESH_LISTENER);
+
+		PlatformUI.getWorkbench().getWorkingSetManager().addPropertyChangeListener(this);
 	}
 
 	@Override
@@ -607,6 +614,8 @@ public class TaskListView extends ViewPart {
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_REFERESH_LISTENER);
 		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
+		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
+		
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
@@ -709,12 +718,16 @@ public class TaskListView extends ViewPart {
 				this.sortByIndex = SortByIndex.PRIORITY;
 			}
 		}
-		addFilter(FILTER_PRIORITY);
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE))
-			addFilter(FILTER_COMPLETE);
 
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE))
-			addFilter(FILTER_ARCHIVE);
+		addFilter(filterWorkingSet);
+		addFilter(filterPriority);
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
+			addFilter(filterComplete);
+		}
+
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE)) {
+			addFilter(filterArchive);
+		}
 
 		if (TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
@@ -1362,11 +1375,11 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TaskCompletionFilter getCompleteFilter() {
-		return FILTER_COMPLETE;
+		return filterComplete;
 	}
 
 	public TaskPriorityFilter getPriorityFilter() {
-		return FILTER_PRIORITY;
+		return filterPriority;
 	}
 
 	public void addFilter(AbstractTaskListFilter filter) {
@@ -1378,8 +1391,9 @@ public class TaskListView extends ViewPart {
 	public void clearFilters(boolean preserveArchiveFilter) {
 		filters.clear();
 		if (preserveArchiveFilter) {
-			filters.add(FILTER_ARCHIVE);
+			filters.add(filterArchive);
 		}
+		filters.add(filterWorkingSet);
 	}
 
 	public void removeFilter(AbstractTaskListFilter filter) {
@@ -1606,7 +1620,7 @@ public class TaskListView extends ViewPart {
 	}
 
 	public TaskArchiveFilter getArchiveFilter() {
-		return FILTER_ARCHIVE;
+		return filterArchive;
 	}
 
 	public void setManualFiltersEnabled(boolean enabled) {
@@ -1637,4 +1651,34 @@ public class TaskListView extends ViewPart {
 		this.synchronizationOverlaid = synchronizationOverlaid;
 		getViewer().refresh();
 	}
+
+	public void displayPrioritiesAbove(String priority) {
+		filterPriority.displayPrioritiesAbove(priority);
+		getViewer().refresh();
+	}
+
+	
+	// IPropertyChangeListener
+
+	public void propertyChange(PropertyChangeEvent event) {
+		String property = event.getProperty();
+		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
+				|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
+			if(getSite()!=null && getSite().getPage()!=null) {
+				filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
+			}
+		}
+
+		try {
+			getViewer().getControl().setRedraw(false);
+			getViewer().collapseAll();
+			if (isFocusedMode()) {
+				getViewer().expandAll();
+			}
+			getViewer().refresh();
+		} finally {
+			getViewer().getControl().setRedraw(true);
+		}
+	}
+	
 }

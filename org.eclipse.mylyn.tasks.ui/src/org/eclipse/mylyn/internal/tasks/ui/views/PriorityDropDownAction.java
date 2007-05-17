@@ -82,9 +82,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P1);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
-				PriorityDropDownAction.this.taskListView.getViewer().refresh();
+				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
 			}
 		};
 		priority1.setEnabled(true);
@@ -98,10 +96,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P2);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
-//				updateCheckedState(priority1, priority2, priority3, priority4, priority5);
-				PriorityDropDownAction.this.taskListView.getViewer().refresh();
+				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
 			}
 		};
 		priority2.setEnabled(true);
@@ -115,10 +110,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P3);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
-//				updateCheckedState(priority1, priority2, priority3, priority4, priority5);
-				PriorityDropDownAction.this.taskListView.getViewer().refresh();
+				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
 			}
 		};
 		priority3.setEnabled(true);
@@ -132,10 +124,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P4);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
-//				updateCheckedState(priority1, priority2, priority3, priority4, priority5);
-				PriorityDropDownAction.this.taskListView.getViewer().refresh();
+				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
 			}
 		};
 		priority4.setEnabled(true);
@@ -149,10 +138,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
 						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
-				// MylarTaskListPlugin.setCurrentPriorityLevel(Task.PriorityLevel.P5);
-				TaskListView.FILTER_PRIORITY.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
-//				updateCheckedState(priority1, priority2, priority3, priority4, priority5);
-				PriorityDropDownAction.this.taskListView.getViewer().refresh();
+				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
 			}
 		};
 		priority5.setEnabled(true);
