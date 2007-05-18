@@ -119,7 +119,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			try {
 				ITracClient connection = getClientManager().getRepository(repository);
 				TracTicket ticket = connection.getTicket(Integer.parseInt(repositoryTask.getTaskId()));
-				updateTaskDetails((TracTask) repositoryTask, ticket, false);
+				updateTaskFromTicket((TracTask) repositoryTask, ticket, false);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e));
 			}
@@ -204,7 +204,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				TracTicket ticket = connection.getTicket(taskIdInt);
 
 				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket), true);
-				updateTaskDetails((TracTask)task, ticket, false);
+				updateTaskFromTicket((TracTask)task, ticket, false);
 				taskList.addTask(task);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -226,9 +226,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setTaskUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
 			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY
 					.getTracKey())));
-			
-			// TODO: Completion Date
-			
+			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
+			repositoryTask.setKind(kind.toString());
+			// TODO: Completion Date			
 		}
 	}
 
@@ -269,7 +269,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
-	public void updateTaskDetails(TracTask task, TracTicket ticket, boolean notify) {
+	public void updateTaskFromTicket(TracTask task, TracTicket ticket, boolean notify) {
 		if (ticket.getValue(Key.SUMMARY) != null) {
 			task.setSummary(getTicketDescription(ticket));
 		}
@@ -293,7 +293,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static String getTicketDescription(RepositoryTaskData taskData) {
-		return taskData.getId() + ":" + taskData.getSummary();
+		return /*taskData.getId() + ":" + */taskData.getSummary();
 	}
 
 	public static boolean hasChangedSince(TaskRepository repository) {

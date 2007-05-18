@@ -8,6 +8,10 @@
 
 package org.eclipse.mylar.internal.trac.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -16,12 +20,15 @@ import org.eclipse.mylar.internal.trac.core.ITracClient;
 import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylar.internal.trac.core.TracTask;
+import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
@@ -43,17 +50,17 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
 		return "Ticket";
 	}
-	
+
 	@Override
 	public String getTaskKindLabel(RepositoryTaskData taskData) {
 		return "Ticket";
 	}
-	
+
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new TracRepositorySettingsPage(this);
 	}
-	
+
 	@Override
 	public boolean hasRichEditor() {
 		return true;
@@ -68,7 +75,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	public boolean hasSearchPage() {
 		return true;
 	}
-	
+
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository repository) {
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
@@ -77,7 +84,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 			return new NewWebTaskWizard(repository, repository.getUrl() + ITracClient.NEW_TICKET_URL);
 		}
 	}
-	
+
 	@Override
 	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
 		if (query instanceof TracRepositoryQuery) {
@@ -90,6 +97,38 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public String getRepositoryType() {
 		return TracCorePlugin.REPOSITORY_KIND;
+	}
+
+	@Override
+	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+		Kind kind = Kind.fromString(task.getTaskKind());
+		if (kind == Kind.DEFECT) {
+			return TracImages.OVERLAY_DEFECT;
+		} else if (kind == Kind.ENHANCEMENT) {
+			return TracImages.OVERLAY_ENHANCEMENT;
+		} else if (kind == Kind.TASK) {
+			return null;
+		}
+		return super.getTaskKindOverlay(task);
+	}
+
+	@Override
+	public List<ITaskListElement> getLegendItems() {
+		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
+		
+		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString(), false);
+		defect.setKind(Kind.DEFECT.toString());		
+		legendItems.add(defect);
+
+		TracTask enhancement = new TracTask("", Kind.ENHANCEMENT.name(), Kind.ENHANCEMENT.toString(), false);
+		enhancement.setKind(Kind.ENHANCEMENT.toString());		
+		legendItems.add(enhancement);
+
+		TracTask task = new TracTask("", Kind.TASK.name(), Kind.TASK.toString(), false);
+		task.setKind(Kind.TASK.toString());		
+		legendItems.add(task);
+		
+		return legendItems;
 	}
 
 }

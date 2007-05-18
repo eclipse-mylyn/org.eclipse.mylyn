@@ -86,6 +86,18 @@ public class TracTask extends AbstractRepositoryTask {
 			return null;
 		}
 
+		public static Kind fromString(String type) {
+			if (type == null)
+				return null;
+			if (type.equals("Defect"))
+				return DEFECT;
+			if (type.equals("Enhancement"))
+				return ENHANCEMENT;
+			if (type.equals("Task"))
+				return TASK;
+			return null;
+		}
+
 	}
 
 	public enum Status {
