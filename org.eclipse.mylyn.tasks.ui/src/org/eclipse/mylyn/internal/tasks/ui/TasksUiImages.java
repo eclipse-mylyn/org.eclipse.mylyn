@@ -97,6 +97,10 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor FILTER = create(T_TOOL, "view-filter.gif");
 
+	public static final ImageDescriptor FIND_CLEAR = create(T_TOOL, "find-clear.gif");
+	
+	public static final ImageDescriptor FIND_CLEAR_DISABLED = create(T_TOOL, "find-clear-disabled.gif");
+	
 	public static final ImageDescriptor WARNING = create(T_ELCL, "warning.gif");
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");

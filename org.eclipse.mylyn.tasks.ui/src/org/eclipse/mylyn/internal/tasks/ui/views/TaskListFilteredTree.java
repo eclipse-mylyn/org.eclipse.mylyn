@@ -72,9 +72,9 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	protected Composite createProgressComposite(Composite container) {
 		Composite progressComposite = new Composite(container, SWT.NONE);
 		GridLayout progressLayout = new GridLayout(1, false);
-		progressLayout.marginWidth = 2;
+		progressLayout.marginWidth = 4;
 		progressLayout.marginHeight = 0;
-		progressLayout.marginBottom = 2;
+		progressLayout.marginBottom = 0;
 		progressLayout.horizontalSpacing = 0;
 		progressLayout.verticalSpacing = 0;
 		progressComposite.setLayout(progressLayout);
@@ -168,9 +168,9 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			public void run() {
 				if (PlatformUI.isWorkbenchRunning() && !taskProgressBar.isDisposed()) {
 					taskProgressBar.reset(completeTime, (completeTime + incompleteTime));
-					taskProgressBar.setToolTipText("Workweek Progress" 
-							+ "\n     Hours: " + completeTime + " of " + (completeTime + incompleteTime) + " estimated"
-							+ "\n     Tasks: " + completeTasks + " of " + totalTasks + " scheduled" );
+					taskProgressBar.setToolTipText("Workweek Progress" + "\n     Hours: " + completeTime + " of "
+							+ (completeTime + incompleteTime) + " estimated" + "\n     Tasks: " + completeTasks
+							+ " of " + totalTasks + " scheduled");
 				}
 			}
 		});

@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AdaptiveRefreshPolicy {
 
-	private static final int DELAY_REFRESH = 700;
+	private static final int DELAY_REFRESH = 1000;
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 	

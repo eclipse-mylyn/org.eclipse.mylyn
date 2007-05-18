@@ -14,7 +14,11 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 import java.lang.reflect.Field;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -26,6 +30,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * @author Mik Kersten
@@ -34,7 +39,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	private static final int filterWidth = 70;
 
-	public static final String LABEL_FIND = "Find:";
+	public static final String LABEL_FIND = " Find:";
 
 	private Job refreshJob;
 
@@ -82,7 +87,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	@Override
 	protected Composite createFilterControls(Composite parent) {
 		GridLayout gridLayout = new GridLayout(4, false);
-		gridLayout.marginWidth = 2;
+		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 2;
 		gridLayout.verticalSpacing = 0;
 		parent.setLayout(gridLayout);
@@ -90,7 +95,14 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(LABEL_FIND);
 
-		super.createFilterControls(parent);
+		// from super
+		createFilterText(parent);
+		createClearText(parent);
+		if (filterToolBar != null) {
+			filterToolBar.update(false);
+			// initially there is no text to clear
+			filterToolBar.getControl().setVisible(false);
+		}
 
 		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
 		gd.minimumWidth = filterWidth;
@@ -109,6 +121,31 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 		return parent;
 	}
 
+	private void createClearText(Composite parent) {
+		// only create the button if the text widget doesn't support one
+		// natively
+		if ((filterText.getStyle() & SWT.CANCEL) == 0) {
+			filterToolBar = new ToolBarManager(SWT.FLAT | SWT.HORIZONTAL);
+			filterToolBar.createControl(parent);
+
+			IAction clearTextAction = new Action("", IAction.AS_PUSH_BUTTON) {//$NON-NLS-1$
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see org.eclipse.jface.action.Action#run()
+				 */
+				public void run() {
+					clearText();
+				}
+			};
+
+			clearTextAction.setToolTipText(WorkbenchMessages.FilteredTree_ClearToolTip);
+			clearTextAction.setImageDescriptor(TasksUiImages.FIND_CLEAR);
+			clearTextAction.setDisabledImageDescriptor(TasksUiImages.FIND_CLEAR_DISABLED);
+			filterToolBar.add(clearTextAction);
+		}
+	}
+	
 	protected abstract Composite createProgressComposite(Composite container);
 
 	protected abstract Composite createStatusComposite(Composite container);
