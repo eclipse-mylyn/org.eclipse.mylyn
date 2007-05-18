@@ -19,11 +19,9 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.wizard.BugzillaProductPage;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mik Kersten
@@ -39,8 +37,7 @@ public class NewBugWizardTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND,
 				IBugzillaConstants.TEST_BUGZILLA_220_URL);
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, newReport);
-		BugzillaProductPage page = new BugzillaProductPage(PlatformUI.getWorkbench(), null, repository);
-		page.setPlatformOptions(newReport);
+		BugzillaCorePlugin.getDefault().setPlatformOptions(newReport);
 
 		String os = Platform.getOS();
 		if (os.equals("win32"))

@@ -17,15 +17,12 @@ import java.net.URLDecoder;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -52,7 +49,6 @@ import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -81,13 +77,6 @@ import org.eclipse.ui.progress.UIJob;
  * Product selection page of new bug wizard
  */
 public class BugzillaProductPage extends WizardPage {
-
-	private static final String OPTION_ALL = "All";
-
-	// A Map from Java's OS and Platform to Buzilla's
-	private Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
-
-	private Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
 
 	private static final String NEW_BUGZILLA_TASK_ERROR_TITLE = "New Bugzilla Task Error";
 
@@ -138,20 +127,6 @@ public class BugzillaProductPage extends WizardPage {
 		setImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.ui",
 				"icons/wizban/bug-wizard.gif"));
 
-		java2buzillaPlatformMap.put("x86", "PC");
-		java2buzillaPlatformMap.put("x86_64", "PC");
-		java2buzillaPlatformMap.put("ia64", "PC");
-		java2buzillaPlatformMap.put("ia64_32", "PC");
-		java2buzillaPlatformMap.put("sparc", "Sun");
-		java2buzillaPlatformMap.put("ppc", "Power");
-
-		java2buzillaOSMap.put("aix", "AIX");
-		java2buzillaOSMap.put("hpux", "HP-UX");
-		java2buzillaOSMap.put("linux", "Linux");
-		java2buzillaOSMap.put("macosx", "Mac OS");
-		java2buzillaOSMap.put("qnx", "QNX-Photon");
-		java2buzillaOSMap.put("solaris", "Solaris");
-		java2buzillaOSMap.put("win32", "Windows XP");
 	}
 
 	public void createControl(Composite parent) {
@@ -316,7 +291,7 @@ public class BugzillaProductPage extends WizardPage {
 
 		Object element = selection.getFirstElement();
 		if (element instanceof BugzillaTask) {
-			BugzillaTask bugzillaTask = (BugzillaTask) element;			
+			BugzillaTask bugzillaTask = (BugzillaTask) element;
 			if (bugzillaTask.getProduct() != null) {
 				products.add(bugzillaTask.getProduct());
 			}
@@ -415,7 +390,7 @@ public class BugzillaProductPage extends WizardPage {
 		model.setAttributeValue(BugzillaReportElement.PRODUCT.getKeyString(),
 				(String) ((IStructuredSelection) productList.getViewer().getSelection()).getFirstElement());
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
-		setPlatformOptions(model);
+		BugzillaCorePlugin.getDefault().setPlatformOptions(model);
 	}
 
 	@Override
@@ -423,123 +398,5 @@ public class BugzillaProductPage extends WizardPage {
 		bugWizard.completed = !productList.getViewer().getSelection().isEmpty();
 		return bugWizard.completed;
 	}
-
-	public void setPlatformOptions(RepositoryTaskData newBugModel) {
-		try {
-
-			// Get OS Lookup Map
-			// Check that the result is in Values, if it is not, set it to other
-			RepositoryTaskAttribute opSysAttribute = newBugModel.getAttribute(BugzillaReportElement.OP_SYS
-					.getKeyString());
-			RepositoryTaskAttribute platformAttribute = newBugModel.getAttribute(BugzillaReportElement.REP_PLATFORM
-					.getKeyString());
-
-			String OS = Platform.getOS();
-			String platform = Platform.getOSArch();
-
-			String bugzillaOS = null; // Bugzilla String for OS
-			String bugzillaPlatform = null; // Bugzilla String for Platform
-
-			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null
-					&& opSysAttribute.getOptions() != null) {
-				bugzillaOS = java2buzillaOSMap.get(OS);
-				if (opSysAttribute != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
-					// If the OS we found is not in the list of available
-					// options, set bugzillaOS
-					// to null, and just use "other"
-					bugzillaOS = null;
-				}
-			} else {
-				// If we have a strangeOS, then just set buzillaOS to null, and
-				// use "other"
-				bugzillaOS = null;
-			}
-
-			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
-				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
-				if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
-					// If the platform we found is not int the list of available
-					// optinos, set the
-					// Bugzilla Platform to null, and juse use "other"
-					bugzillaPlatform = null;
-				}
-			} else {
-				// If we have a strange platform, then just set bugzillaPatforrm
-				// to null, and use "other"
-				bugzillaPlatform = null;
-			}
-			if (bugzillaPlatform!= null && bugzillaPlatform.compareTo("PC")== 0 &&
-				bugzillaOS!= null       && bugzillaOS.compareTo("Mac OS")== 0)
-				// Intel Mac's return PC as Platform because the OSArch == "x86"
-				// so we change the Plaform if the bugzilla OS tell us it is an Mac OS
-				//
-				// btw bugzilla 3.0rc1 set Platform to PC in enter_bug.cgi pickplatform
-				// move line 225 before 202 to fix this.
-				bugzillaPlatform = "Macintosh";
-			// Set the OS and the Platform in the taskData
-			if (bugzillaOS != null && opSysAttribute != null) {
-				opSysAttribute.setValue(bugzillaOS);
-			} else if (opSysAttribute != null && opSysAttribute.getOptionParameter(OPTION_ALL) != null) {
-				opSysAttribute.setValue(OPTION_ALL);
-			}
-
-			if (bugzillaPlatform != null && platformAttribute != null) {
-				platformAttribute.setValue(bugzillaPlatform);
-			} else if (platformAttribute != null && platformAttribute.getOptionParameter(OPTION_ALL) != null) {
-				opSysAttribute.setValue(OPTION_ALL);
-			}
-
-		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not set platform options", false);
-		}
-	}
-
-	// @Override
-	// public IWizardPage getNextPage() {
-	// // save the product information to the taskData
-	// saveDataToModel();
-	// NewBugzillaTaskWizard wizard = (NewBugzillaTaskWizard) getWizard();
-	// NewBugzillaTaskData taskData = wizard.model;
-	//
-	// // try to get the attributes from the bugzilla server
-	// try {
-	// if (!taskData.hasParsedAttributes() ||
-	// !taskData.getProduct().equals(prevProduct)) {
-	// BugzillaRepositoryUtil.setupNewBugAttributes(repository.getUrl(),
-	// MylarTaskListPlugin.getDefault()
-	// .getProxySettings(), repository.getUserName(), repository.getPassword(),
-	// taskData, repository
-	// .getCharacterEncoding());
-	// taskData.setParsedAttributesStatus(true);
-	// }
-	//
-	// // if (prevProduct == null) {
-	// // bugWizard.setAttributePage(new WizardAttributesPage(workbench));
-	// // bugWizard.addPage(bugWizard.getAttributePage());
-	// // } else {
-	// // // selected product has changed
-	// // // will createControl again with new attributes in taskData
-	// // bugWizard.getAttributePage().setControl(null);
-	// // }
-	//
-	// } catch (final Exception e) {
-	// e.printStackTrace();
-	// PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-	// public void run() {
-	// MessageDialog.openError(Display.getDefault().getActiveShell(),
-	// NEW_BUGZILLA_TASK_ERROR_TITLE, e
-	// .getLocalizedMessage()
-	// + " Ensure proper repository configuration in " +
-	// TaskRepositoriesView.NAME + ".");
-	// }
-	// });
-	// // MylarStatusHandler.fail(e, e.getLocalizedMessage()+" Ensure
-	// // proper repository configuration in
-	// // "+TaskRepositoriesView.NAME+".", true);
-	// // BugzillaPlugin.getDefault().logAndShowExceptionDetailsDialog(e,
-	// // "occurred.", "Bugzilla Error");
-	// }
-	// return super.getNextPage();
-	// }
 
 }
