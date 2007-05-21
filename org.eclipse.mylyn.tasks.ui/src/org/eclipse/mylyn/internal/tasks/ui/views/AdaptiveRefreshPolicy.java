@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AdaptiveRefreshPolicy {
 
-	private static final int DELAY_REFRESH = 1000;
+	private int refreshThreshold = 2000;
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 	
@@ -86,7 +86,8 @@ public class AdaptiveRefreshPolicy {
 		int refreshDelay = 0;
 		int textLength = text.length();
 		if (textLength > 0) {
-			refreshDelay = DELAY_REFRESH / textLength;
+			refreshDelay = (int)(refreshThreshold /(textLength*0.6));
+			System.err.println(">>> " + refreshDelay);
 		}
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		refreshJob.schedule(refreshDelay);
@@ -98,6 +99,10 @@ public class AdaptiveRefreshPolicy {
 
 	public void removeListener(IFilteredTreeListener listener) {
 		listeners.remove(listener);
+	}
+
+	public void setRefreshDelay(int refreshDelay) {
+		this.refreshThreshold = refreshDelay;
 	}
 	
 }
