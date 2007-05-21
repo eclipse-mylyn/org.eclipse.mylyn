@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class AdaptiveRefreshPolicy {
 
-	private int refreshThreshold = 2000;
+	private int refreshThreshold = 1500;
 
 	private Set<IFilteredTreeListener> listeners = new HashSet<IFilteredTreeListener>();
 	
@@ -87,7 +87,6 @@ public class AdaptiveRefreshPolicy {
 		int textLength = text.length();
 		if (textLength > 0) {
 			refreshDelay = (int)(refreshThreshold /(textLength*0.6));
-			System.err.println(">>> " + refreshDelay);
 		}
 		refreshJob.addJobChangeListener(REFRESH_JOB_LISTENER);
 		refreshJob.schedule(refreshDelay);
