@@ -227,7 +227,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY
 					.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
-			repositoryTask.setKind(kind.toString());
+			repositoryTask.setKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date			
 		}
 	}
