@@ -53,7 +53,8 @@ import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
 import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.internal.tasks.ui.PlanningPerspectiveFactory;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -266,17 +267,19 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		initializeActions();
 
 		viewerManager = new FocusedViewerManager();
-
+		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
+		
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					ContextCorePlugin.getContextManager().addListener(viewerManager);
-					MylarMonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
+					MonitorUiPlugin.getDefault().addWindowPartListener(contentOutlineManager);
 
 					// NOTE: task list must have finished initializing
 					TasksUiPlugin.getDefault().setHighlighter(DEFAULT_HIGHLIGHTER);
 					TasksUiPlugin.getTaskListManager().addActivityListener(perspectiveManager);
+					MonitorUiPlugin.getDefault().addWindowPerspectiveListener(perspectiveManager);
 					TasksUiPlugin.getTaskListManager().addActivityListener(TASK_ACTIVATION_LISTENER);
 
 					workbench.addWindowListener(activeSearchViewTracker);
@@ -302,10 +305,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
+			perspectiveManager.removeManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
 			ContextCorePlugin.getContextManager().removeListener(viewerManager);
-			MylarMonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
+			MonitorUiPlugin.getDefault().removeWindowPartListener(contentOutlineManager);
 
 			TasksUiPlugin.getTaskListManager().removeActivityListener(perspectiveManager);
+			MonitorUiPlugin.getDefault().removeWindowPerspectiveListener(perspectiveManager);
 			TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVATION_LISTENER);
 
 			IWorkbench workbench = PlatformUI.getWorkbench();
@@ -776,5 +781,9 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		} else {
 			return Collections.emptySet();
 		}
+	}
+
+	public ContextPerspectiveManager getPerspectiveManager() {
+		return perspectiveManager;
 	}
 }

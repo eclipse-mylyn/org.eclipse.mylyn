@@ -11,19 +11,45 @@
 
 package org.eclipse.mylar.internal.context.ui;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener4;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Perspective;
+import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 /**
  * @author Mik Kersten
  */
-public class ContextPerspectiveManager implements ITaskActivityListener {
+public class ContextPerspectiveManager implements ITaskActivityListener, IPerspectiveListener4 {
+
+	private Set<String> managedPerspectiveIds = new HashSet<String>();
+
+	private Set<String> actionSetsToSuppress = new HashSet<String>();
+
+	public ContextPerspectiveManager() {
+		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
+		actionSetsToSuppress.add("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
+		actionSetsToSuppress.add("org.eclipse.ui.externaltools.ExternalToolsSet");
+	}
+
+	public void addManagedPerspective(String id) {
+		managedPerspectiveIds.add(id);
+	}
+
+	public void removeManagedPerspective(String id) {
+		managedPerspectiveIds.remove(id);
+	}
 
 	public void taskActivated(ITask task) {
 		try {
@@ -63,7 +89,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().setRedraw(false);
 				PlatformUI.getWorkbench().showPerspective(perspectiveId,
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow()); 
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 			} catch (Exception e) {
 				// ignore, perspective i spreserved if ID not found
 			} finally {
@@ -85,6 +111,58 @@ public class ContextPerspectiveManager implements ITaskActivityListener {
 	}
 
 	public void calendarChanged() {
+		// ignore
+	}
+
+	public void perspectivePreDeactivate(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+		// ignore
+	}
+
+	public void perspectiveClosed(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+		// ignore
+	}
+
+	public void perspectiveDeactivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+		// ignore
+	}
+
+	public void perspectiveOpened(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+		cleanActionSets(page, perspective);
+	}
+
+	public void perspectiveSavedAs(IWorkbenchPage page, IPerspectiveDescriptor oldPerspective,
+			IPerspectiveDescriptor newPerspective) {
+		// ignore
+	}
+
+	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective,
+			IWorkbenchPartReference partRef, String changeId) {
+		// ignore
+	}
+
+	public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
+		cleanActionSets(page, perspectiveDescriptor);
+	}
+
+	private void cleanActionSets(IWorkbenchPage page, IPerspectiveDescriptor perspectiveDescriptor) {
+		if (managedPerspectiveIds.contains(perspectiveDescriptor.getId())) {
+			if (page instanceof WorkbenchPage) {
+				Perspective perspective = ((WorkbenchPage) page).getActivePerspective();
+				
+				Set<IActionSetDescriptor> toRemove = new HashSet<IActionSetDescriptor>();
+				IActionSetDescriptor[] actionSetDescriptors = ((WorkbenchPage) page).getActionSets();
+				for (IActionSetDescriptor actionSetDescriptor : actionSetDescriptors) {
+					if (actionSetsToSuppress.contains(actionSetDescriptor.getId())) {
+						toRemove.add(actionSetDescriptor);
+					}
+				}
+				perspective.turnOffActionSets((IActionSetDescriptor[]) toRemove
+						.toArray(new IActionSetDescriptor[toRemove.size()]));
+			}
+		}
+	}
+
+	public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 		// ignore
 	}
 }

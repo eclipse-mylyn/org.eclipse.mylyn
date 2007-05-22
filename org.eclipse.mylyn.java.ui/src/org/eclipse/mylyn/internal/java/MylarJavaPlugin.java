@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -96,7 +96,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 //					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
 
 					javaEditingMonitor = new JavaEditingMonitor();
-					MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
+					MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
 
 					// TODO: race conditions prevents this from running?
@@ -147,7 +147,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
 			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 
-			MylarMonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
+			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 
 //			if (FocusPackageExplorerAction.getDefault() != null) {
 //				getPreferenceStore().removePropertyChangeListener(FocusPackageExplorerAction.getDefault());

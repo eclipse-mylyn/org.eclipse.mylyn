@@ -34,7 +34,7 @@ import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInterestUpdater;
 import org.eclipse.mylar.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -82,7 +82,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		initPreferenceDefaults();
 
 		ContextCorePlugin.getContextManager().addListener(editorManager);
-		MylarMonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
+		MonitorUiPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 				IResourceChangeEvent.POST_CHANGE);
@@ -121,7 +121,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 			
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 			ContextCorePlugin.getContextManager().removeListener(editorManager);
-			MylarMonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
+			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Mylar XML stop failed", false);
 		}

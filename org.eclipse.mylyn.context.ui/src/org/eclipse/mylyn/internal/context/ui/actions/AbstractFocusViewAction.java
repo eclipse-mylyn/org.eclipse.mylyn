@@ -30,7 +30,7 @@ import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -175,9 +175,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (on) {
 			wasLinkingEnabled = isDefaultLinkingEnabled();
 			setDefaultLinkingEnabled(false);
-			MylarMonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
+			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} else {
-			MylarMonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 			setDefaultLinkingEnabled(wasLinkingEnabled);
 		}
 	}
@@ -340,7 +340,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
-		MylarMonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 	}
 
 	public void runWithEvent(IAction action, Event event) {
