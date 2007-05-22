@@ -25,7 +25,7 @@ import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -87,7 +87,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
 	private static final String DESCRIPTION_ESTIMATED = "Time that the task has been actively worked on in Eclipse.\n Inactivity timeout is "
-			+ MylarMonitorUiPlugin.getDefault().getInactivityTimeout() / (60 * 1000) + " minutes.";
+			+ MonitorUiPlugin.getDefault().getInactivityTimeout() / (60 * 1000) + " minutes.";
 
 	public static final String LABEL_INCOMPLETE = "Incomplete";
 

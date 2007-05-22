@@ -492,8 +492,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						MylarStatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
 					}
 				}
-			});
-
+			});			
+			
 			Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
 			if (bundle.getLocation().contains("_3.3.")) {
 				eclipse_3_3_workbench = true;

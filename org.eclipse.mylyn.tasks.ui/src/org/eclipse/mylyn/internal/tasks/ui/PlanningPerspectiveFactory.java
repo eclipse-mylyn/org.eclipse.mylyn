@@ -11,16 +11,21 @@
 
 package org.eclipse.mylar.internal.tasks.ui;
 
+import java.util.ArrayList;
+
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.internal.PageLayout;
 
 /**
  * @author Mik Kersten
  */
 public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
+	public static final String ID_PERSPECTIVE = "org.eclipse.mylar.tasklist.ui.perspectives.planning";
+	
 	public void createInitialLayout(IPageLayout layout) {
 		defineActions(layout);
 		defineLayout(layout);
@@ -33,6 +38,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		// layout.addShowViewShortcut(TaskActivityView.ID);
 
 		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
+		removeUninterestingActionSets(layout);
 	}
 
 	public void defineLayout(IPageLayout layout) {
@@ -53,5 +59,13 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		//		
 		// bottomRight.addView(IPageLayout.ID_TASK_LIST);
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void removeUninterestingActionSets(IPageLayout layout) {
+		ArrayList actionSets = ((PageLayout)layout).getActionSets();
+		actionSets.remove("org.eclipse.ui.edit.text.actionSet.annotationNavigation");
+		actionSets.remove("org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo");
+		actionSets.remove("org.eclipse.ui.externaltools.ExternalToolsSet");
 	}
 }
