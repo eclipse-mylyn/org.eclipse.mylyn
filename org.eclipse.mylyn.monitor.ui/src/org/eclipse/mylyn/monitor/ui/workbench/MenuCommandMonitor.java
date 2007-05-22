@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Listener;
@@ -93,7 +93,7 @@ public class MenuCommandMonitor implements Listener {
 				delta = TOOLBAR_ITEM_SELECTED;
 			}
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(id, delta);
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "Could not log selection", false);

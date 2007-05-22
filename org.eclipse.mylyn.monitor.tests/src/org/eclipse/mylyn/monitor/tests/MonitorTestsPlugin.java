@@ -17,14 +17,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class MylarMonitorTestsPlugin extends Plugin {
-	// The shared instance.
-	private static MylarMonitorTestsPlugin plugin;
+public class MonitorTestsPlugin extends Plugin {
+	
+	private static MonitorTestsPlugin plugin;
 
 	/**
 	 * The constructor.
 	 */
-	public MylarMonitorTestsPlugin() {
+	public MonitorTestsPlugin() {
 		super();
 		plugin = this;
 	}
@@ -43,7 +43,7 @@ public class MylarMonitorTestsPlugin extends Plugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarMonitorTestsPlugin getDefault() {
+	public static MonitorTestsPlugin getDefault() {
 		return plugin;
 	}
 

@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.monitor.ui.workbench;
 
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -22,11 +22,11 @@ import org.eclipse.ui.IWorkbenchPart;
 public abstract class AbstractPartTracker implements IPartListener {
 
 	public void install(IWorkbench workbench) {
-		MylarMonitorUiPlugin.getDefault().addWindowPartListener(this);
+		MonitorUiPlugin.getDefault().addWindowPartListener(this);
 	}
 
 	public void dispose(IWorkbench workbench) {
-		MylarMonitorUiPlugin.getDefault().removeWindowPartListener(this);
+		MonitorUiPlugin.getDefault().removeWindowPartListener(this);
 	}
 
 	public abstract void partActivated(IWorkbenchPart part);

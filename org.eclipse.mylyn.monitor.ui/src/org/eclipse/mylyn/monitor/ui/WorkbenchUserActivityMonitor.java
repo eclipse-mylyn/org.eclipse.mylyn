@@ -28,7 +28,7 @@ public class WorkbenchUserActivityMonitor extends AbstractUserActivityMonitor {
 
 	@Override
 	public void start() {
-		display = MylarMonitorUiPlugin.getDefault().getWorkbench().getDisplay();
+		display = MonitorUiPlugin.getDefault().getWorkbench().getDisplay();
 		interactionActivityListener = new Listener() {
 			public void handleEvent(Event event) {
 				setLastEventTime(System.currentTimeMillis());

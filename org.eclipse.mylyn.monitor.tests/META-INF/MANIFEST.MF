@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Monitor Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylar.monitor.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin
+Bundle-Activator: org.eclipse.mylar.monitor.tests.MonitorTestsPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,

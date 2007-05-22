@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.monitor.core.AbstractMonitorLog;
-import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
+import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
 import org.eclipse.mylar.monitor.usage.ReportGenerator;
 
 /**
@@ -67,10 +67,10 @@ public class DataOverviewCollectorTest extends TestCase {
 		List<File> interactionHistoryFiles = new ArrayList<File>();
 
 		// Access two interaction history files that are copies of each other
-		File firstInteractionHistoryFile = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(
+		File firstInteractionHistoryFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
 				"testdata/USAGE-1.1.1-usage-1-2005-12-05-1-1-1.zip"));
 		interactionHistoryFiles.add(firstInteractionHistoryFile);
-		File secondInteractionHistoryFile = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(
+		File secondInteractionHistoryFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
 				"testdata/USAGE-1.1.1-usage-2-2005-12-05-1-1-1.zip"));
 		interactionHistoryFiles.add(secondInteractionHistoryFile);
 

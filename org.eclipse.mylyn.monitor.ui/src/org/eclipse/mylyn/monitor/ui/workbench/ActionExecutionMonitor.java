@@ -14,7 +14,7 @@ package org.eclipse.mylar.monitor.ui.workbench;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.ui.IActionExecutionListener;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -23,6 +23,6 @@ public class ActionExecutionMonitor implements IActionExecutionListener {
 
 	public void actionObserved(IAction action) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 }

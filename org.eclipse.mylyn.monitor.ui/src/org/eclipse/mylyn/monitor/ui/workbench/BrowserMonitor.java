@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
@@ -61,7 +61,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 			if (accept) {
 				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
 						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0);
-				MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
+				MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
 																						// move
 			}
 		}

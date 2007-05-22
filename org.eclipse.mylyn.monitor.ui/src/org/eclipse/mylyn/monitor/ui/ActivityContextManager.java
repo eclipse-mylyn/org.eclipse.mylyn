@@ -120,7 +120,7 @@ public class ActivityContextManager {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				if (Platform.isRunning()) {
-					if (!MylarMonitorUiPlugin.getDefault().getWorkbench().isClosing()) {
+					if (!MonitorUiPlugin.getDefault().getWorkbench().isClosing()) {
 
 						long localLastEventTime = getLastEventTime();
 						long localStartTime = getStartTime();

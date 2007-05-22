@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylar.monitor.usage.ReportGenerator;
 import org.eclipse.mylar.monitor.usage.UsageStatisticsSummary;
 
@@ -76,17 +76,17 @@ public class StatisticsReportingTest extends TestCase {
 	protected InteractionEvent mockExplorerSelection(String handle) {
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", handle,
 				JavaUI.ID_PACKAGES);
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(event);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(event);
 		return event;
 	}
 
 	protected void mockEdit(String handle) {
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(
 				new InteractionEvent(InteractionEvent.Kind.EDIT, "java", handle, JavaUI.ID_PACKAGES));
 	}
 
 	protected void mockTypesSelection(String handle) {
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(
 				new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", handle, JavaUI.ID_TYPES_VIEW));
 	}
 
@@ -113,7 +113,7 @@ public class StatisticsReportingTest extends TestCase {
 
 		mockEdit("A.java");
 
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(
 				InteractionEvent.makeCommand(TaskActivateAction.ID, ""));
 
 		mockExplorerSelection("A.java");

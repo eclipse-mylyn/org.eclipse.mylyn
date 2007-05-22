@@ -23,7 +23,7 @@ import org.eclipse.mylar.internal.context.core.ScalingFactor;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
+import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
 
 /**
  * @author Mik Kersten
@@ -38,8 +38,8 @@ public class ContextParsingTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		File file;
-		if (MylarMonitorTestsPlugin.getDefault() != null) {
-			file = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(PATH_USAGE_FILE));
+		if (MonitorTestsPlugin.getDefault() != null) {
+			file = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(PATH_USAGE_FILE));
 		} else {
 			file = new File(PATH_USAGE_FILE);
 		}

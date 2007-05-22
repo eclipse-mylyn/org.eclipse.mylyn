@@ -35,7 +35,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 	 */
 	public AbstractUserInteractionMonitor() {
 		try {
-			MylarMonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
+			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log("Monitors can not be instantiated until the workbench is active", this);
 		}
@@ -43,7 +43,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 
 	public void dispose() {
 		try {
-			MylarMonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
 			MylarStatusHandler.log(npe, "Could not dispose monitor.");
 		}
@@ -80,7 +80,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (handleIdentifier != null && contributeToContext) {
 			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
 		}
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(selectionEvent);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
 	}
 
@@ -97,7 +97,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		if (handleIdentifier != null && contributeToContext) {
 			ContextCorePlugin.getContextManager().handleInteractionEvent(editEvent);
 		}
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 			if (handleIdentifier != null && contributeToContext) {
 				ContextCorePlugin.getContextManager().handleInteractionEvent(navigationEvent);
 			}
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}
 	}
 

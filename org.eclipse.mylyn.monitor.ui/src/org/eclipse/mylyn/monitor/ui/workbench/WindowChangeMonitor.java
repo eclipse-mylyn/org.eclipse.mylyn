@@ -12,7 +12,7 @@
 package org.eclipse.mylar.monitor.ui.workbench;
 
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -41,13 +41,13 @@ public class WindowChangeMonitor implements IWindowListener {
 	public void windowOpened(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_OPENED);
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowClosed(IWorkbenchWindow window) {
 			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 					WINDOW_CLOSED);
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
@@ -59,7 +59,7 @@ public class WindowChangeMonitor implements IWindowListener {
 	public void windowActivated(IWorkbenchWindow window) {
 		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
 				WINDOW_ACTIVATED);
-		MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	protected String getWindowOrigin(IWorkbenchWindow window) {

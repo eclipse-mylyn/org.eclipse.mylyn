@@ -40,13 +40,13 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarMonitorUiPlugin extends AbstractUIPlugin {
+public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public static final int TIMEOUT_INACTIVITY_MILLIS = 1 * 60 * 1000;
 
 	private int inactivityTimeout = TIMEOUT_INACTIVITY_MILLIS;
 
-	private static MylarMonitorUiPlugin INSTANCE;
+	private static MonitorUiPlugin INSTANCE;
 
 	private ShellLifecycleListener shellLifecycleListener;
 
@@ -96,7 +96,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	public MylarMonitorUiPlugin() {
+	public MonitorUiPlugin() {
 		INSTANCE = this;
 	}
 
@@ -221,7 +221,7 @@ public class MylarMonitorUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static MylarMonitorUiPlugin getDefault() {
+	public static MonitorUiPlugin getDefault() {
 		return INSTANCE;
 	}
 

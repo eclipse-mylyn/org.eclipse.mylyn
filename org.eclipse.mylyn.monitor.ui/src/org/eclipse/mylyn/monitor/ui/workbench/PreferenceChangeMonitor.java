@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -26,13 +26,13 @@ public class PreferenceChangeMonitor implements IPropertyChangeListener {
 		String newValue = obfuscateValueIfContainsPath(event.getNewValue().toString());
 		InteractionEvent interactionEvent = InteractionEvent.makePreference(event.getProperty(), newValue);
 		if (ContextCorePlugin.getDefault() != null) {
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 		}
 	}
 
 	private String obfuscateValueIfContainsPath(String preferenceValue) {
 		if (preferenceValue.indexOf(java.io.File.separator) != -1 || preferenceValue.indexOf('/') != -1) {
-			return MylarMonitorUiPlugin.OBFUSCATED_LABEL;
+			return MonitorUiPlugin.OBFUSCATED_LABEL;
 		} else {
 			return preferenceValue;
 		}

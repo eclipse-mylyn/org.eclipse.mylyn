@@ -18,7 +18,7 @@ import java.util.Calendar;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.tests.support.FileTool;
 import org.eclipse.mylar.internal.monitor.usage.FileDisplayDialog;
-import org.eclipse.mylar.monitor.tests.MylarMonitorTestsPlugin;
+import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
 
 import junit.framework.TestCase;
 
@@ -33,7 +33,7 @@ public class FileDisplayDialogTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		monitorFile = FileTool.getFileInPlugin(MylarMonitorTestsPlugin.getDefault(), new Path(
+		monitorFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
 				"testdata/monitor-log.xml"));
 	}
 

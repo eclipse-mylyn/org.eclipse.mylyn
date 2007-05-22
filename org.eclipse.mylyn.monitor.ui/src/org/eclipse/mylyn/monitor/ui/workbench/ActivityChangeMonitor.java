@@ -12,7 +12,7 @@
 package org.eclipse.mylar.monitor.ui.workbench;
 
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MylarMonitorUiPlugin;
+import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.activities.ActivityManagerEvent;
 import org.eclipse.ui.activities.IActivityManagerListener;
 
@@ -29,7 +29,7 @@ public class ActivityChangeMonitor implements IActivityManagerListener {
 			String delta = activityManagerEvent.getActivityManager().getEnabledActivityIds().toString();
 			InteractionEvent interactionEvent = InteractionEvent.makePreference(source, ACTIVITIES_CHANGED + ": "
 					+ delta);
-			MylarMonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 		}
 	}
 }

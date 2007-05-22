@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MylarMonitorPreferenceConstants;
+import org.eclipse.mylar.internal.monitor.usage.MonitorPreferenceConstants;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
@@ -40,7 +40,7 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 	}
 
 	public void testManualExternalization() throws IOException {
-		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
+		MylarUsageMonitorPlugin.getPrefs().setValue(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, false);
 
 		List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 		File f = new File(PATH);
@@ -69,6 +69,6 @@ public class InteractionEventExternalizationTest extends AbstractContextTest {
 		}
 
 		infile.delete();
-		MylarUsageMonitorPlugin.getPrefs().setValue(MylarMonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
+		MylarUsageMonitorPlugin.getPrefs().setValue(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE, true);
 	}
 }
