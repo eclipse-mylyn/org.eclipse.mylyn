@@ -20,7 +20,7 @@ public class EditorBusyIndicator {
 	private IBusyEditor editor;
 
 	private Image oldImage;
-	
+
 	public EditorBusyIndicator(IBusyEditor editor) {
 		this.editor = editor;
 	}
@@ -38,7 +38,7 @@ public class EditorBusyIndicator {
 			animateTask.cancel();
 			animateTask = null;
 		}
-		
+
 		updateTitleImage(oldImage);
 	}
 
@@ -53,10 +53,12 @@ public class EditorBusyIndicator {
 		showingBusy = true;
 
 		oldImage = editor.getTitleImage();
-		
+
 		try {
 			if (images == null) {
-				images = TasksUiImages.getProgressImages();// If we fail to load do not continue
+				images = TasksUiImages.getProgressImages();// If we fail to
+															// load do not
+															// continue
 				if (images == null) {
 					showingBusy = false;
 					return;
@@ -109,8 +111,9 @@ public class EditorBusyIndicator {
 					}
 				} catch (SWTException ex) {
 					WorkbenchPlugin.log(ex);
-				} catch(NullPointerException e){
-					// we will get this if the timer continues to run after the images have been disposed
+				} catch (NullPointerException e) {
+					// we will get this if the timer continues to run after the
+					// images have been disposed
 				} finally {
 
 				}
@@ -122,19 +125,22 @@ public class EditorBusyIndicator {
 	}
 
 	private void updateTitleImage(final Image image) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				if ((image == null || !image.isDisposed()) && !isDisposed() && showingBusy) {
-					editor.setTitleImage(image);
-				} else{
-					if(oldImage != null && !oldImage.isDisposed()){
-						editor.setTitleImage(oldImage);
+		if (PlatformUI.getWorkbench().isClosing()) {
+			return;
+		} else {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					if ((image == null || !image.isDisposed()) && !isDisposed() && showingBusy) {
+						editor.setTitleImage(image);
+					} else {
+						if (oldImage != null && !oldImage.isDisposed()) {
+							editor.setTitleImage(oldImage);
+						}
 					}
-				}
-					
-			}
 
-		});
+				}
+			});
+		}
 	}
 
 	private boolean isDisposed = false;
@@ -143,12 +149,12 @@ public class EditorBusyIndicator {
 		if (!isDisposed) {
 			if (animateTask != null)
 				animateTask.cancel();
-//			if (images != null) {
-//				for (int i = 0; i < images.length; i++) {
-//					images[i].dispose();
-//				}
-//			}
-//			images = null;
+			// if (images != null) {
+			// for (int i = 0; i < images.length; i++) {
+			// images[i].dispose();
+			// }
+			// }
+			// images = null;
 			isDisposed = true;
 		}
 	}
