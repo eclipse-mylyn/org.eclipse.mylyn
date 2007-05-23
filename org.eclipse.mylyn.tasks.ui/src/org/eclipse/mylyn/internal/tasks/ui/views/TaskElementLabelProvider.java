@@ -79,6 +79,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	public Image getImage(Object element) {
 		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element, compositeImages);
 		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+			if (compositeDescriptor.overlayKind == null) {
+				// TODO: need a blank kind overlay
+				compositeDescriptor.overlayKind = TasksUiImages.PRIORITY_3;
+			}
 			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
 					compositeDescriptor.overlaySynch);
 		} else if (element instanceof AbstractTaskContainer) {
