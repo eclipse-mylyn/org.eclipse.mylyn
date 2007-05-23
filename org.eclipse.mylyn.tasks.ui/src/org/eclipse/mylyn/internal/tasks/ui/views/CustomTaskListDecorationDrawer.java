@@ -131,7 +131,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
 						offsetX = 42 - additionalSquish;
 					} else {
-						image = TasksUiImages.getImage(TasksUiImages.STATUS_NORMAL_INCOMING);
+						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
 						offsetX = 24 - additionalSquish;						
 					}
 				}

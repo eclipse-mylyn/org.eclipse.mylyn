@@ -275,7 +275,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private ITaskListPresentation currentPresentation;
 
-	private TaskListTableLabelProvider taskListTableLabelProvider;
+	private TaskTableLabelProvider taskListTableLabelProvider;
 
 	private TaskListTableSorter tableSorter;
 
@@ -752,7 +752,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskListTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
+		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(true), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 

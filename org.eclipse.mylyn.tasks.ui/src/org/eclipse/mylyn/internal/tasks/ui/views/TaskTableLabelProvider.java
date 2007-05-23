@@ -32,7 +32,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Mik Kersten
  */
-public class TaskListTableLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider,
+public class TaskTableLabelProvider extends DecoratingLabelProvider implements ITableLabelProvider,
 		ITableColorProvider, ITableFontProvider {
 
 	private Color categoryBackgroundColor;
@@ -41,7 +41,7 @@ public class TaskListTableLabelProvider extends DecoratingLabelProvider implemen
 	 * @param view
 	 *            can be null
 	 */
-	public TaskListTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
+	public TaskTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
 		super(provider, decorator);
 		this.categoryBackgroundColor = parentBackground;
 	}

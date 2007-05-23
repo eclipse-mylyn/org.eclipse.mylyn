@@ -34,7 +34,7 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 		setToolTipText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
-		setImageDescriptor(TasksUiImages.STATUS_NORMAL_INCOMING);
+		setImageDescriptor(TasksUiImages.OVERLAY_INCOMMING);
 		if (containsArchiveContainer(selectedElements)) {
 			setEnabled(false);
 		} else {

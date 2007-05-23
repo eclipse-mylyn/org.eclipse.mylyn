@@ -163,21 +163,23 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_WARNING = create(T_OVR, "overlay-warning.gif");
 
+	public static final ImageDescriptor OVERLAY_BLANK = create(T_OVR, "overlay-blank.gif");
+	
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif");
 
-	public static final ImageDescriptor STATUS_OVERLAY_INCOMMING_NEW = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING_NEW,
-			true, true);
-	
-	public static final ImageDescriptor STATUS_NORMAL_INCOMING = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING,
-			true, true);
-
-	public static final ImageDescriptor STATUS_NORMAL_OUTGOING = createWithOverlay(STATUS_NORMAL, OVERLAY_OUTGOING,
-			true, true);
-
-	public static final ImageDescriptor STATUS_NORMAL_CONFLICT = createWithOverlay(STATUS_NORMAL, OVERLAY_CONFLICT,
-			true, true);
+//	public static final ImageDescriptor STATUS_OVERLAY_INCOMMING_NEW = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING_NEW,
+//			true, true);
+//	
+//	public static final ImageDescriptor STATUS_NORMAL_INCOMING = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING,
+//			true, true);
+//
+//	public static final ImageDescriptor STATUS_NORMAL_OUTGOING = createWithOverlay(STATUS_NORMAL, OVERLAY_OUTGOING,
+//			true, true);
+//
+//	public static final ImageDescriptor STATUS_NORMAL_CONFLICT = createWithOverlay(STATUS_NORMAL, OVERLAY_CONFLICT,
+//			true, true);
 
 	public static final ImageDescriptor QUERY = create(T_TOOL, "query.gif");
 
@@ -230,9 +232,6 @@ public class TasksUiImages {
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");
 
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
-
-	public static final ImageDescriptor STATUS_WARNING = createWithOverlay(TasksUiImages.STATUS_NORMAL,
-			TasksUiImages.OVERLAY_WARNING, false, true);
 
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 

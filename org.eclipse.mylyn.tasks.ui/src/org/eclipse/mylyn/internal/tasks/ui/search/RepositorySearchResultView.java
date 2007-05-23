@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableLabelProvider;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskTableLabelProvider;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -231,7 +231,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		mgr.appendToGroup(IContextMenuConstants.GROUP_OPEN, openInEditorAction);
 	}
 
-	class SearchViewTableLabelProvider extends TaskListTableLabelProvider {
+	class SearchViewTableLabelProvider extends TaskTableLabelProvider {
 
 		public SearchViewTableLabelProvider(ILabelProvider provider, ILabelDecorator decorator, Color parentBackground) {
 			super(provider, decorator, parentBackground);
