@@ -218,7 +218,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
-	private static final String REASSIGN_BUG_TO = "Reassign to";
+//	private static final String REASSIGN_BUG_TO = "Reassign to";
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
@@ -2493,9 +2493,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				radioData.widthHint = RADIO_OPTION_WIDTH - 10;
 
 				String assignmentValue = "";
-				if (opName.equals(REASSIGN_BUG_TO)) {
-					assignmentValue = repository.getUserName();
-				}
+				// NOTE: removed this because we now have content assit
+//				if (opName.equals(REASSIGN_BUG_TO)) {
+//					assignmentValue = repository.getUserName();
+//				}
 				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
