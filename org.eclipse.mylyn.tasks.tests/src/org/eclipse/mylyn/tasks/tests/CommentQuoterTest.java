@@ -61,4 +61,10 @@ public class CommentQuoterTest extends TestCase {
 		assertEquals("> bababa\n> bobobo\n", quotedText);
 	}
 
+	public void testBlankLineQuoting() {
+		CommentQuoter quoter = new CommentQuoter(10);
+		String quotedText = quoter.quote("bababa\n\nbobobo");
+		assertEquals("> bababa\n> \n> bobobo\n", quotedText);
+	}
+
 }

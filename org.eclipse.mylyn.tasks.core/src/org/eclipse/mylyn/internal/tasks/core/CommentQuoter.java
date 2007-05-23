@@ -53,6 +53,11 @@ public class CommentQuoter {
 
 		String[] lines = text.split("\n");
 		for (String line : lines) {
+			if (line.trim().equals("")) {
+				sb.append("> \n");
+				continue;
+			}
+
 			int pos = 0;
 			while (pos < line.length()) {
 				int wrapPos = pos + lineSize;
