@@ -57,6 +57,11 @@ public class MylarStatus extends Status implements IMylarStatusConstants {
 		return "";
 	}
 
+	@Override
+	protected void setMessage(String message) {
+		super.setMessage((message != null) ? message : "");
+	}
+	
 	protected void setHtmlMessage(String htmlMessage) {
 		this.htmlMessage = htmlMessage;
 	}
