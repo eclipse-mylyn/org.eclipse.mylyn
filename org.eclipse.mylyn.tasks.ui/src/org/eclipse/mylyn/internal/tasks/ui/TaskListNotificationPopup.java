@@ -125,7 +125,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 					@Override
 					public void linkActivated(HyperlinkEvent e) {
-						TaskListView.getFromActivePerspective().setFocus();
+						TaskListView.openInActivePerspective().setFocus();
 						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						if (window != null) {
 							Shell windowShell = window.getShell();
