@@ -205,11 +205,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(final ITask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					ContextCorePlugin.getContextManager().activateContext(task.getHandleIdentifier());
-				}
-			});
+			ContextCorePlugin.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
 		public void tasksActivated(List<ITask> tasks) {
@@ -219,11 +215,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		public void taskDeactivated(final ITask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					ContextCorePlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
-				}
-			});
+			ContextCorePlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
 		public void activityChanged(DateRangeContainer week) {
