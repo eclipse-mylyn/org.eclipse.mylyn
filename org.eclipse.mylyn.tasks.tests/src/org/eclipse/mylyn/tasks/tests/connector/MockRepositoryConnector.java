@@ -87,6 +87,11 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 				return false;
 			}
 
+			public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+				// ignore
+				return null;
+			}
+
 		};
 	}
 

@@ -35,4 +35,6 @@ public interface ITaskDataHandler {
 	 */
 	public boolean initializeTaskData(TaskRepository repository, RepositoryTaskData data, IProgressMonitor monitor) throws CoreException;
 
+	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData);
+
 }

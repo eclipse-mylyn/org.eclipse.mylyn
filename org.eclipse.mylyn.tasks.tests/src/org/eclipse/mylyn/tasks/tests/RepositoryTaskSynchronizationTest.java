@@ -365,6 +365,11 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return false;
 		}
 
+		public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+			// ignore
+			return null;
+		}
+
 
 		// private final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";
 		//

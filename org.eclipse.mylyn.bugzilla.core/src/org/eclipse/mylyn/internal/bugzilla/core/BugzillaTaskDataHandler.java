@@ -126,6 +126,10 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
+	
+	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
+	}
 
 	private void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 		connector.updateAttributeOptions(repository, taskData);
@@ -231,5 +235,6 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		// Bugzilla needs a product to create task data
 		return false;
 	}
+
 
 }

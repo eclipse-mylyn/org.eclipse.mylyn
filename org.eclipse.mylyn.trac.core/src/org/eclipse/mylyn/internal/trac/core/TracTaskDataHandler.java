@@ -81,6 +81,10 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
+	
+	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
+		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
+	}
 
 	public Date getDateForAttributeType(String attributeKey, String dateString) {
 		if (dateString == null || dateString.length() == 0) {
