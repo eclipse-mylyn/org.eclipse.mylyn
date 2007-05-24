@@ -12,12 +12,11 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
@@ -57,18 +56,26 @@ public class AbstractReportFactory {
 			return;
 		}
 
-		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-
-		copyAndCleanByteStream(inStream, byteStream);
-
-		BufferedReader in;
+		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
+		
+		// Remove control characters other than \\n and \\r
+		InputStream iis = new InputStream() {
+			public int read() throws IOException {
+				int c;
+				while ((c = is.read()) != -1) {
+					if (!Character.isISOControl(c) || c == '\n' || c == '\r') {
+						return c;
+					}
+				}
+				return -1;
+			}
+		};
+		
+		Reader in;
 		if (characterEncoding != null) {
-			// in = new BufferedReader(new InputStreamReader(inStream,
-			// characterEncoding));
-			in = new BufferedReader(new StringReader(byteStream.toString(characterEncoding)));
+			in = new InputStreamReader(iis, characterEncoding);
 		} else {
-			// in = new BufferedReader(new InputStreamReader(inStream));
-			in = new BufferedReader(new StringReader(byteStream.toString()));
+			in = new InputStreamReader(iis);
 		}
 
 		if (in != null && clean) {
@@ -120,44 +127,6 @@ public class AbstractReportFactory {
 			throw new IOException(e.getMessage());
 			// }
 		}
-	}
-
-	// Copy and remove control characters other than \n and \r
-	private void copyAndCleanByteStream(InputStream in, OutputStream out) throws IOException {
-		try {
-			if (in != null && out != null) {
-				BufferedInputStream inBuffered = new BufferedInputStream(in);
-
-				int bufferSize = 1000;
-				byte[] buffer = new byte[bufferSize];
-
-				int readCount;
-
-				BufferedOutputStream outStream = new BufferedOutputStream(out);
-
-				while ((readCount = inBuffered.read(buffer)) != -1) {
-					for (int x = 0; x < readCount; x++) {
-
-						if (!Character.isISOControl(buffer[x])) {
-							outStream.write(buffer[x]);
-						} else if (buffer[x] == '\n' || buffer[x] == '\r') {
-							outStream.write(buffer[x]);
-						}
-					}
-					// if (readCount < bufferSize) {
-					// outStream.write(buffer, 0, readCount);
-					// } else {
-					// outStream.write(buffer);
-					// }
-				}
-				outStream.flush();
-				outStream.close();
-
-			}
-		} finally {
-			in.close();
-		}
-
 	}
 
 }

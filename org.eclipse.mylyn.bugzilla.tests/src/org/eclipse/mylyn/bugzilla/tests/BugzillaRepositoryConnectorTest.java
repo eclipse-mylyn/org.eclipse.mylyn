@@ -49,7 +49,7 @@ import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
  * @author Nathan Hapke
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
-
+	
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
@@ -631,6 +631,36 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	private boolean validateAttachmentAttributes(RepositoryAttachment att, boolean isPatch, boolean isObsolete) {
 		return (att.isPatch() == isPatch) && (att.isObsolete() == isObsolete);
 	}
+	
+	
+//	public void testSimpleLoad() throws Exception {
+//		repository = new TaskRepository(DEFAULT_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+//		//Credentials credentials = MylarTestUtils.readCredentials();
+//		//repository.setAuthenticationCredentials(credentials.username, credentials.password);
+//
+//		//repository.setTimeZoneId("Canada/Eastern");
+//		assertNotNull(manager);
+//		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+//
+//		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//
+//		AbstractRepositoryConnector abstractRepositoryConnector = manager.getRepositoryConnector(DEFAULT_KIND);
+//
+//		assertEquals(abstractRepositoryConnector.getRepositoryType(), DEFAULT_KIND);
+//
+//		connector = (BugzillaRepositoryConnector) abstractRepositoryConnector;
+//		
+//		long start = System.currentTimeMillis();
+//		BugzillaTask task = null;
+//		for(int x = 1; x < 5; x++) {
+//			if(task != null) 
+//				taskList.deleteTask(task);
+//			
+//			task = this.generateLocalTaskAndDownload("154100");
+//			assertNotNull(task);
+//		}
+//		System.err.println("Total: "+((System.currentTimeMillis() - start)/1000));
+//	}
 
 	// class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
 	//
