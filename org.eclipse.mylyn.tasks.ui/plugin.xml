@@ -273,10 +273,10 @@
           enablesFor="*"
           icon="icons/etool16/repository-synchronize.gif"
           id="org.eclipse.mylar.tasklist.synchronize"
-          label="Synchronize All"
+          label="Synchronize Changed"
           menubarPath="tasks"
           toolbarPath="new"
-          tooltip="Synchronize All Tasks and Queries">
+          tooltip="Synchronize Changed">
          </action>
 
   		<action

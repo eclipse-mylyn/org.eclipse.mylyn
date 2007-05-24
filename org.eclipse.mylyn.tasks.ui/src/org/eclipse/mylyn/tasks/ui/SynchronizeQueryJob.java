@@ -11,9 +11,11 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +31,8 @@ import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryStatus;
@@ -46,6 +50,8 @@ class SynchronizeQueryJob extends Job {
 
 	// private static final int NUM_HITS_TO_PRIME = 20;
 
+	private boolean forceSyncExecForTesting = false;
+
 	private final AbstractRepositoryConnector connector;
 
 	private static final String JOB_LABEL = "Synchronizing queries";
@@ -56,12 +62,12 @@ class SynchronizeQueryJob extends Job {
 
 	private Map<TaskRepository, Set<AbstractQueryHit>> hitsToSynch;
 
-	private boolean synchTasks;
+	private boolean synchChangedTasks;
 
 	private TaskList taskList;
-	
+
 	private boolean forced = false;
-	
+
 	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager,
 			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
@@ -73,6 +79,10 @@ class SynchronizeQueryJob extends Job {
 
 	}
 
+	public void setSynchChangedTasks(boolean syncChangedTasks) {
+		this.synchChangedTasks = syncChangedTasks;
+	}
+
 	/**
 	 * Returns true, if synchronization was triggered manually and not by an
 	 * automatic background job.
@@ -80,10 +90,11 @@ class SynchronizeQueryJob extends Job {
 	public boolean isForced() {
 		return forced;
 	}
-	
+
 	/**
-	 * Indicates a manual synchronization. If set to true, a dialog will be
-	 * displayed in case of errors.
+	 * Indicates a manual synchronization (User initiated). If set to true, a
+	 * dialog will be displayed in case of errors. Any tasks with missing data
+	 * will be retrieved.
 	 */
 	public void setForced(boolean forced) {
 		this.forced = forced;
@@ -119,30 +130,28 @@ class SynchronizeQueryJob extends Job {
 					}
 
 					repositoryQuery.updateHits(collector.getHits(), taskList);
-					Set<AbstractQueryHit> temp = hitsToSynch.get(repository);
-					if (temp == null) {
-						temp = new HashSet<AbstractQueryHit>();
-						hitsToSynch.put(repository, temp);
-					}
-					if (connector.getTaskDataHandler() != null) {
-						for (AbstractQueryHit hit : collector.getHits()) {
-							if (!temp.contains(hit)
-									&& hit.getCorrespondingTask() == null
-									&& TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
-											hit.getHandleIdentifier()) == null) {
-								temp.add(hit);
-							}
-							// if (temp.size() > NUM_HITS_TO_PRIME)
-							// break;
-						}
-					}
+					List<AbstractQueryHit> returnedHits = collector.getHits();
+					addHitsToPrime(repository, returnedHits, false);
 
-					if (synchTasks) {
+					if (synchChangedTasks) {
 						repositories.add(repository);
 						// TODO: Should sync changed per repository not per
 						// query
 						// TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector,
 						// repository);
+					}
+
+					if (forced) {
+						// Force synch of all tasks held within query
+						Set<AbstractRepositoryTask> repositoryTasksToSych = new HashSet<AbstractRepositoryTask>();
+						for (ITask task : repositoryQuery.getChildren()) {
+							repositoryTasksToSych.add((AbstractRepositoryTask) task);
+						}
+
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTasksToSych, forced,
+								null);
+						// Force update of all hits held by query
+						addHitsToPrime(repository, new ArrayList<AbstractQueryHit>(repositoryQuery.getHits()), forced);
 					}
 
 					repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
@@ -164,9 +173,17 @@ class SynchronizeQueryJob extends Job {
 			monitor.worked(1);
 		}
 
-		PrimeTaskData job = new PrimeTaskData();
+		final PrimeTaskData job = new PrimeTaskData();
 		job.setPriority(Job.LONG);
-		job.schedule();
+		if (!forceSyncExecForTesting) {
+			job.schedule();
+		} else {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					job.run(new NullProgressMonitor());
+				}
+			});
+		}
 
 		for (TaskRepository repository : repositories) {
 			TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
@@ -182,8 +199,25 @@ class SynchronizeQueryJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	public void setSynchTasks(boolean syncTasks) {
-		this.synchTasks = syncTasks;
+	private void addHitsToPrime(TaskRepository repository, List<AbstractQueryHit> hits, boolean force) {
+		Set<AbstractQueryHit> temp = hitsToSynch.get(repository);
+		if (temp == null) {
+			temp = new HashSet<AbstractQueryHit>();
+			hitsToSynch.put(repository, temp);
+		}
+		if (connector.getTaskDataHandler() != null) {
+			for (AbstractQueryHit hit : hits) {
+				if (!temp.contains(hit)
+						&& hit.getCorrespondingTask() == null
+						&& ((!force && TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+								hit.getHandleIdentifier()) == null) || force)) {
+					temp.add(hit);
+				}
+				// if (temp.size() > NUM_HITS_TO_PRIME)
+				// break;
+			}
+		}
+
 	}
 
 	class PrimeTaskData extends Job {
@@ -242,6 +276,10 @@ class SynchronizeQueryJob extends Job {
 			}
 			return Status.OK_STATUS;
 		}
+	}
+
+	public void setForceSyncExecForTesting(boolean forceSyncExecForTesting) {
+		this.forceSyncExecForTesting = forceSyncExecForTesting;
 	}
 
 }

@@ -110,11 +110,12 @@ public class RepositorySynchronizationManager {
 
 	public final Job synchronize(AbstractRepositoryConnector connector,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
-			long delay, boolean syncTasks, boolean forceSync) {
+			long delay, boolean syncChangedTasks, boolean userForcedSync) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
-		job.setSynchTasks(syncTasks);
-		job.setForced(forceSync);
+		job.setForceSyncExecForTesting(forceSyncExecForTesting);
+		job.setSynchChangedTasks(syncChangedTasks);
+		job.setForced(userForcedSync);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setCurrentlySynchronizing(true);
 			// TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);

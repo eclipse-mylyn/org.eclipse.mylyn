@@ -50,6 +50,35 @@ import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	
+	
+	
+	
+	public void testFocedQuerySynchronization() throws CoreException {
+		init222();
+		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
+		TasksUiPlugin.getDefault().getTaskDataManager().clear();
+		assertEquals(0, taskList.getAllTasks().size());
+		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, "http://mylar.eclipse.org/bugs222/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=Read+Only+Test+Cases&long_desc_type=allwordssubstr&long_desc=&bug_status=NEW&order=Importance",
+				"testFocedQuerySynchronization", taskList);
+
+		taskList.addQuery(bugQuery);
+		
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, false);
+		
+		assertEquals(1, bugQuery.getHits().size());
+		AbstractQueryHit hit = (AbstractQueryHit) bugQuery.getHits().toArray()[0];
+		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
+		TasksUiPlugin.getDefault().getTaskDataManager().remove(hit.getHandleIdentifier());
+		assertTrue(hit.getCorrespondingTask() == null);
+		
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, true);
+		assertEquals(1, bugQuery.getHits().size());
+		hit = (AbstractQueryHit) bugQuery.getHits().toArray()[0];
+		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
+		
+	}
+	
+	
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
