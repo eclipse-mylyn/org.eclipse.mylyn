@@ -148,7 +148,7 @@ class SynchronizeQueryJob extends Job {
 							repositoryTasksToSych.add((AbstractRepositoryTask) task);
 						}
 
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTasksToSych, forced,
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTasksToSych, false,
 								null);
 						// Force update of all hits held by query
 						addHitsToPrime(repository, new ArrayList<AbstractQueryHit>(repositoryQuery.getHits()), forced);
