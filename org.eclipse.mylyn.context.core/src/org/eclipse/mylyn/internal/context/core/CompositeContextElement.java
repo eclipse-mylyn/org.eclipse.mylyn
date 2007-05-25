@@ -51,11 +51,15 @@ public class CompositeContextElement implements IMylarElement {
 	}
 
 	public IDegreeOfInterest getInterest() {
-		CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
-		for (IMylarElement node : nodes) {
-			degreeOfInterest.getComposedDegreesOfInterest().add(node.getInterest());
+		if (nodes.size() == 1) {
+			return nodes.iterator().next().getInterest();
+		} else {
+			CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
+			for (IMylarElement node : nodes) {
+				degreeOfInterest.getComposedDegreesOfInterest().add(node.getInterest());
+			}
+			return degreeOfInterest;
 		}
-		return degreeOfInterest;
 	}
 
 	public String getHandleIdentifier() {
