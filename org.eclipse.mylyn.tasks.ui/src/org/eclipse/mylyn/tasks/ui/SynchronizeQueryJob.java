@@ -145,7 +145,9 @@ class SynchronizeQueryJob extends Job {
 						// Force synch of all tasks held within query
 						Set<AbstractRepositoryTask> repositoryTasksToSych = new HashSet<AbstractRepositoryTask>();
 						for (ITask task : repositoryQuery.getChildren()) {
-							repositoryTasksToSych.add((AbstractRepositoryTask) task);
+							if (!task.isCompleted()) {
+								repositoryTasksToSych.add((AbstractRepositoryTask) task);
+							}
 						}
 
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTasksToSych, false,
