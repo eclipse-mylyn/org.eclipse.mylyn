@@ -69,8 +69,13 @@ public class TaskDataManagerTest extends TestCase {
 		attrib1.putMetaDataValue("key2", "value2");
 		taskData.addAttribute("key", attrib1);
 
+
+		assertNotNull(taskData.getAttribute("key"));
+		
 		offlineTaskDataManager.setNewTaskData(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "1"),
 				taskData);
+		
+		
 		taskData = new RepositoryTaskData(new MockAttributeFactory(), MockRepositoryConnector.REPOSITORY_KIND,
 				MockRepositoryConnector.REPOSITORY_URL, "2", Task.DEFAULT_TASK_KIND);
 
@@ -79,6 +84,8 @@ public class TaskDataManagerTest extends TestCase {
 		attrib2.putMetaDataValue("key4", "value4");
 		taskData.addAttribute("key", attrib2);
 
+		assertNotNull(taskData.getAttribute("key"));
+		
 		offlineTaskDataManager.setNewTaskData(RepositoryTaskHandleUtil.getHandle(MockRepositoryConnector.REPOSITORY_URL, "2"),
 				taskData);
 		assertNotNull(offlineTaskDataManager.getNewTaskData(RepositoryTaskHandleUtil.getHandle(
