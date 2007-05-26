@@ -11,19 +11,13 @@
 
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.ContextUiUtil;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
@@ -60,34 +54,7 @@ public class ContextRetrieveWizard extends Wizard {
 	@Override
 	public final boolean performFinish() {
 		RepositoryAttachment attachment = wizardPage.getSelectedContext();
-		retrieveContext(task, attachment);
-		return true;
-	}
-
-	// TOOD: move to API?
-	public static void retrieveContext(AbstractRepositoryTask task, RepositoryAttachment attachment) {
-		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task);
-		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(attachment.getRepositoryUrl());
-
-		try {
-			if (task.isActive()) {
-				TasksUiPlugin.getTaskListManager().deactivateTask(task);
-			}
-			try {
-				if (!connector.retrieveContext(repository, task, attachment, TasksUiPlugin.getDefault().getDataDirectory())) {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							ITasksUiConstants.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
-									+ connector.getLabel());
-				} else {
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
-				}
-			} finally {
-				TasksUiPlugin.getTaskListManager().activateTask(task);
-			}
-		} catch (CoreException e) {
-			ErrorDialog.openError(null, ITasksUiConstants.TITLE_DIALOG, "Retrieval of task context FAILED.", e.getStatus());
-			MylarStatusHandler.log(e.getStatus());
-		}
+		return ContextUiUtil.downloadContext(task, attachment, getContainer());
 	}
 
 }
