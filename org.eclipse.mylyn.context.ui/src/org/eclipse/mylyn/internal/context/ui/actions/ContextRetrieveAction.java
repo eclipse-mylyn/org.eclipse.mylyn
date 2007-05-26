@@ -25,6 +25,7 @@ import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.ContextUiUtil;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.widgets.Shell;
@@ -45,7 +46,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	private TaskRepository repository;
 
 	private AbstractRepositoryConnector connector;
-	
+
 	private StructuredSelection selection;
 
 	public void init(IViewPart view) {
@@ -58,19 +59,21 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 		} else {
 			// TODO: consider refactoring to be based on object contributions
 			if (selection.getFirstElement() instanceof RepositoryAttachment) {
-				RepositoryAttachment attachment = (RepositoryAttachment)selection.getFirstElement();
-				
+				RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
+
 				// HACK: need better way of getting task
-				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.getActiveEditor();
 				ITask currentTask = null;
 				if (activeEditor instanceof TaskEditor) {
-					currentTask = ((TaskEditor)activeEditor).getTaskEditorInput().getTask();
+					currentTask = ((TaskEditor) activeEditor).getTaskEditorInput().getTask();
 				}
-				
+
 				if (currentTask instanceof AbstractRepositoryTask) {
-					ContextRetrieveWizard.retrieveContext((AbstractRepositoryTask)currentTask, attachment);
+					ContextUiUtil.downloadContext((AbstractRepositoryTask) currentTask, attachment, PlatformUI
+							.getWorkbench().getProgressService());
 				} else {
-					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Retrieve Context", "Can not retrieve contenxt for local tasks.");
 				}
 			}
@@ -94,12 +97,12 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		ITask selectedTask = TaskListView.getSelectedTask(selection);
-		
+
 		if (selectedTask == null) {
-			StructuredSelection structuredSelection = (StructuredSelection)selection;
+			StructuredSelection structuredSelection = (StructuredSelection) selection;
 			this.selection = structuredSelection;
 			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
-				RepositoryAttachment attachment = (RepositoryAttachment)structuredSelection.getFirstElement();
+				RepositoryAttachment attachment = (RepositoryAttachment) structuredSelection.getFirstElement();
 				if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
 					action.setEnabled(true);
 				} else {
