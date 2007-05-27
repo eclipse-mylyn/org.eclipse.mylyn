@@ -68,7 +68,7 @@ import org.eclipse.ui.internal.net.ProxyPreferencePage;
 public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected static final String PREFS_PAGE_ID_NET_PROXY = "org.eclipse.ui.net.NetPreferences";
-	
+
 	protected static final String LABEL_REPOSITORY_LABEL = "Label: ";
 
 	protected static final String LABEL_SERVER = "Server: ";
@@ -141,9 +141,13 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private Composite container;
 
+	private Composite advancedComp;
+
 	private Composite httpAuthComp;
 
 	private Composite proxyAuthComp;
+
+	private ExpandableComposite advancedExpComposite;
 
 	private ExpandableComposite httpAuthExpComposite;
 
@@ -261,8 +265,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			if (repository != null) {
 				anonymousButton.setSelection(repository.isAnonymous());
 			}
-			// Label anonymousLabel = new Label(container, SWT.NONE);
-			// anonymousLabel.setText("");
 		}
 
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
@@ -324,6 +326,59 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		}
 
+		final String accountCreationUrl = TasksUiPlugin.getRepositoryUi(repository.getKind()).getAccountCreationUrl(
+				repository);
+		final String accountManagementUrl = TasksUiPlugin.getRepositoryUi(repository.getKind())
+				.getAccountManagementUrl(repository);
+		if (accountCreationUrl != null || accountManagementUrl != null) {
+			Label accountLabel = new Label(container, SWT.NULL);
+			accountLabel.setText("Manage account: ");
+
+			Composite accountManagementComposite = new Composite(container, SWT.NULL);
+			GridLayout accountGridLayout = new GridLayout(2, false);
+			accountGridLayout.marginLeft = 0;
+			accountManagementComposite.setLayout(accountGridLayout);
+
+			if (accountCreationUrl != null) {
+				Hyperlink createAccountHyperlink = toolkit.createHyperlink(accountManagementComposite, "Create new",
+						SWT.NULL);
+				createAccountHyperlink.setBackground(accountManagementComposite.getBackground());
+				createAccountHyperlink.addHyperlinkListener(new IHyperlinkListener() {
+
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openUrl(accountCreationUrl, false);
+					}
+
+					public void linkEntered(HyperlinkEvent e) {
+						// ignore
+					}
+
+					public void linkExited(HyperlinkEvent e) {
+						// ignore
+					}
+				});
+			}
+
+			if (accountCreationUrl != null) {
+				Hyperlink manageAccountHyperlink = toolkit.createHyperlink(accountManagementComposite, "Change settings",
+						SWT.NULL);
+				manageAccountHyperlink.setBackground(accountManagementComposite.getBackground());
+				manageAccountHyperlink.addHyperlinkListener(new IHyperlinkListener() {
+
+					public void linkActivated(HyperlinkEvent e) {
+						TasksUiUtil.openUrl(accountManagementUrl, false);
+					}
+
+					public void linkEntered(HyperlinkEvent e) {
+						// ignore
+					}
+
+					public void linkExited(HyperlinkEvent e) {
+						// ignore
+					}
+				});
+			}
+		}
 		// TODO: put this back if we can't get the info from all connectors
 		// if (needsTimeZone()) {
 		// Label timeZoneLabel = new Label(container, SWT.NONE);
@@ -346,14 +401,40 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// }
 		// }
 
-		createAdditionalControls(container);
-
 		if (needsEncoding()) {
-			Label encodingLabel = new Label(container, SWT.HORIZONTAL);
+			advancedExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+					| Section.TITLE_BAR);
+			advancedExpComposite.clientVerticalSpacing = 0;
+			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gridData_2.horizontalIndent = -5;
+			advancedExpComposite.setLayoutData(gridData_2);
+			advancedExpComposite.setFont(container.getFont());
+			advancedExpComposite.setBackground(container.getBackground());
+			advancedExpComposite.setText("Additional Settings");
+			advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
+				@Override
+				public void expansionStateChanged(ExpansionEvent e) {
+					getControl().getShell().pack();
+				}
+			});
+
+			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(advancedExpComposite);
+
+			advancedComp = toolkit.createComposite(advancedExpComposite, SWT.NONE);
+			GridLayout gridLayout2 = new GridLayout();
+			gridLayout2.numColumns = 2;
+			gridLayout2.verticalSpacing = 5;
+			advancedComp.setLayout(gridLayout2);
+			advancedComp.setBackground(container.getBackground());
+			advancedExpComposite.setClient(advancedComp);
+
+			createAdditionalControls(advancedComp);
+
+			Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
 			encodingLabel.setText("Character Encoding:");
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(encodingLabel);
 
-			Composite encodingContainer = new Composite(container, SWT.NONE);
+			Composite encodingContainer = new Composite(advancedComp, SWT.NONE);
 			GridLayout gridLayout = new GridLayout(2, false);
 			gridLayout.marginWidth = 0;
 			gridLayout.marginHeight = 0;
@@ -412,7 +493,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (needsHttpAuth()) {
-
 			httpAuthExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
 					| Section.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
@@ -530,13 +610,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		proxyAuthComp.setBackground(container.getBackground());
 		proxyExpComposite.setClient(proxyAuthComp);
 
-		
 		Composite settingsComposite = new Composite(proxyAuthComp, SWT.NULL);
 		GridLayout gridLayout3 = new GridLayout();
 		gridLayout3.numColumns = 2;
 		gridLayout3.verticalSpacing = 0;
 		settingsComposite.setLayout(gridLayout3);
-		
+
 		systemProxyButton = new Button(settingsComposite, SWT.CHECK);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).span(2, SWT.DEFAULT).applyTo(settingsComposite);
 
@@ -558,8 +637,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			public void linkExited(HyperlinkEvent e) {
 				// ignore
 			}
-		});		
-		
+		});
+
 		systemProxyButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setUseDefaultProxy(systemProxyButton.getSelection());

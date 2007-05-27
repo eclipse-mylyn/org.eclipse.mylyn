@@ -168,7 +168,25 @@ public abstract class AbstractRepositoryConnectorUi {
 	public WizardPage getSearchPage(TaskRepository repository, IStructuredSelection selection) {
 		return null;
 	}
+	
+	/**
+	 * Override to return a URL that provides the user with an 
+	 * account creation page for the repository
+	 * @param taskRepository TODO
+	 */
+	public String getAccountCreationUrl(TaskRepository taskRepository) {
+		return null;
+	}
 
+	/**
+	 * Override to return a URL that provides the user with an 
+	 * account management page for the repository
+	 * @param taskRepository TODO
+	 */
+	public String getAccountManagementUrl(TaskRepository taskRepository) {
+		return null;
+	}
+	
 	/**
 	 * Only override if task should be opened by a custom editor, default
 	 * behavior is to open with a rich editor, falling back to the web browser
@@ -201,7 +219,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 		return true;
 	}
-
+	
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
 		return null;
 	}

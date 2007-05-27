@@ -48,6 +48,16 @@ import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	
 	@Override
+	public String getAccountCreationUrl(TaskRepository taskRepository) {
+		return taskRepository.getUrl() + "/createaccount.cgi";
+	}
+
+	@Override
+	public String getAccountManagementUrl(TaskRepository taskRepository) {
+		return taskRepository.getUrl() + "/userprefs.cgi";
+	}
+	
+	@Override
 	public List<ITaskListElement> getLegendItems() {
 		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
 		
