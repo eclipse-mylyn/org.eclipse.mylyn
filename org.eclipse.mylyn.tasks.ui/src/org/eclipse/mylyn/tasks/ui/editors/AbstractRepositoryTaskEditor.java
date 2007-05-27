@@ -718,8 +718,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void createSections() {
 		createReportHeaderLayout(editorComposite);
-		Composite attribComp = createAttributeLayout(editorComposite);
+		
+		Section attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
+		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
+
+		// Attributes Composite- this holds all the combo fields and text fields
+		final Composite attribComp = toolkit.createComposite(attributesSection);
+		attribComp.addListener(SWT.MouseDown, new Listener() {
+			public void handleEvent(Event event) {
+				Control focus = event.display.getFocusControl();
+				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
+					form.setFocus();
+				}
+			}
+		});
+		attributesSection.setClient(attribComp);
+
+	    createAttributeLayout(attribComp);
 		createCustomAttributeLayout(attribComp);
+		
 		if (showAttachments) {
 			createAttachmentLayout(editorComposite);
 		}
@@ -893,22 +910,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * Creates the attribute section, which contains most of the basic
 	 * attributes of the task (some of which are editable).
 	 */
-	protected Composite createAttributeLayout(Composite composite) {
-		Section attributesSection = createSection(composite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
-		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
-
-		// Attributes Composite- this holds all the combo fields and text fields
-		final Composite attributesComposite = toolkit.createComposite(attributesSection);
-
-		attributesComposite.addListener(SWT.MouseDown, new Listener() {
-			public void handleEvent(Event event) {
-				Control focus = event.display.getFocusControl();
-				if (focus instanceof Text && ((Text) focus).getEditable() == false) {
-					form.setFocus();
-				}
-			}
-		});
-
+	protected void createAttributeLayout(Composite attributesComposite) {
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
 		attributesLayout.horizontalSpacing = 5;
@@ -918,7 +920,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesData.horizontalSpan = 1;
 		attributesData.grabExcessVerticalSpace = false;
 		attributesComposite.setLayoutData(attributesData);
-		attributesSection.setClient(attributesComposite);
 
 		int currentCol = 1;
 
@@ -994,6 +995,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				currentCol += 2;
 			}
+
 			if (currentCol > attributesLayout.numColumns) {
 				currentCol -= attributesLayout.numColumns;
 			}
@@ -1006,7 +1008,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				currentCol++;
 			}
 		}
-		return attributesComposite;
 	}
 
 	/**
@@ -2012,7 +2013,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	private void setSubmitEnabled(boolean enabled) {
-		if (submitButton != null) {
+		if (submitButton != null && !submitButton.isDisposed()) {
 			submitButton.setEnabled(enabled);
 			if (enabled) {
 				submitButton.setToolTipText("Submit to " + this.repository.getUrl());
