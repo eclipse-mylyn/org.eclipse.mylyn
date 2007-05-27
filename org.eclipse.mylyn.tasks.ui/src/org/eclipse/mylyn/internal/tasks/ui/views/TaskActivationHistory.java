@@ -50,7 +50,7 @@ public class TaskActivationHistory {
 	public void loadPersistentHistory() {
 		int tasksAdded = 0;
 		history.clear();
-		for (int i = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
+		for (int i = ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory()
 				.size() - 1; i >= 0; i--) {
 			ITask prevTask = getHistoryTaskAt(i);
 
@@ -72,7 +72,7 @@ public class TaskActivationHistory {
 	 * the specified position
 	 */
 	protected ITask getHistoryTaskAt(int pos) {
-		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
+		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityMetaContext()
 				.getInteractionHistory().get(pos);
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}

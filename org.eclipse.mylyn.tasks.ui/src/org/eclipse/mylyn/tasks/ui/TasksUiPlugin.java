@@ -40,7 +40,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.internal.context.core.MylarPreferenceContstants;
+import org.eclipse.mylar.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
@@ -321,7 +321,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			}
 			// TODO: do we ever get here?
-			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
+			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
 					reloadDataDirectory(true);
 				}
@@ -333,7 +333,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private final org.eclipse.jface.util.IPropertyChangeListener PROPERTY_LISTENER = new org.eclipse.jface.util.IPropertyChangeListener() {
 
 		public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
-			if (event.getProperty().equals(MylarPreferenceContstants.PREF_DATA_DIR)) {
+			if (event.getProperty().equals(ContextPreferenceContstants.PREF_DATA_DIR)) {
 				if (event.getOldValue() instanceof String) {
 					reloadDataDirectory(true);
 				}
@@ -570,13 +570,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public String getDataDirectory() {
-		return getPreferenceStore().getString(MylarPreferenceContstants.PREF_DATA_DIR);
+		return getPreferenceStore().getString(ContextPreferenceContstants.PREF_DATA_DIR);
 	}
 
 	public void setDataDirectory(String newPath) {
 		getTaskListManager().saveTaskList();
-		ContextCorePlugin.getContextManager().saveActivityHistoryContext();
-		getPreferenceStore().setValue(MylarPreferenceContstants.PREF_DATA_DIR, newPath);
+		ContextCorePlugin.getContextManager().saveActivityContext();
+		getPreferenceStore().setValue(ContextPreferenceContstants.PREF_DATA_DIR, newPath);
 		ContextCorePlugin.getDefault().getContextStore().contextStoreMoved();
 	}
 
@@ -599,7 +599,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(MylarPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
+		store.setDefault(ContextPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
 		store.setDefault(TaskListPreferenceConstants.FILTER_SUBTASKS, true);
 		store.setDefault(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());

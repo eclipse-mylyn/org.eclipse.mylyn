@@ -31,11 +31,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
@@ -161,41 +161,41 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing */
 	public Date startTime = new Date();
 
-	private final IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
+	private final IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
-		public void contextActivated(IMylarContext context) {
+		public void contextActivated(IInteractionContext context) {
 			// ignore
 		}
 
-		public void contextDeactivated(IMylarContext context) {
+		public void contextDeactivated(IInteractionContext context) {
 			// ignore
 		}
 
-		public void contextCleared(IMylarContext context) {
+		public void contextCleared(IInteractionContext context) {
 			// ignore
 		}
 		
-		public void interestChanged(List<IMylarElement> elements) {
-			List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
+		public void interestChanged(List<IInteractionElement> elements) {
+			List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityMetaContext()
 					.getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
 			parseInteractionEvent(event);
 
 		}
 
-		public void elementDeleted(IMylarElement element) {
+		public void elementDeleted(IInteractionElement element) {
 			// ignore
 		}
 
-		public void landmarkAdded(IMylarElement element) {
+		public void landmarkAdded(IInteractionElement element) {
 			// ignore
 		}
 
-		public void landmarkRemoved(IMylarElement element) {
+		public void landmarkRemoved(IInteractionElement element) {
 			// ignore
 		}
 
-		public void relationsChanged(IMylarElement element) {
+		public void relationsChanged(IInteractionElement element) {
 			// ignore
 		}
 	};
@@ -268,7 +268,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (!TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 			return;
 		}
-		List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext()
+		List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityMetaContext()
 				.getInteractionHistory();
 		for (InteractionEvent event : events) {
 			parseInteractionEvent(event);
@@ -355,8 +355,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	/** public for testing * */
 	public void parseInteractionEvent(InteractionEvent event) {
 		try {
-			if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_ACTIVATED)) {
-				if (!event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+			if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)) {
+				if (!event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 
 					ITask activatedTask = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 							event.getStructureHandle());
@@ -387,7 +387,7 @@ public class TaskListManager implements IPropertyChangeListener {
 						currentTaskStart = calendar;
 						currentHandle = event.getStructureHandle();
 					}
-				} else if (event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				} else if (event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					if (currentTask != null && !currentHandle.equals("")) {
 						long active = event.getEndDate().getTime() - event.getDate().getTime();
 
@@ -399,7 +399,7 @@ public class TaskListManager implements IPropertyChangeListener {
 							if (taskActivityHistoryInitialized && timeTicks > 3) {
 								// Save incase of system failure.
 								// TODO: request asynchronous save
-								ContextCorePlugin.getContextManager().saveActivityHistoryContext();
+								ContextCorePlugin.getContextManager().saveActivityContext();
 								timeTicks = 0;
 							}
 
@@ -408,15 +408,15 @@ public class TaskListManager implements IPropertyChangeListener {
 						}
 					}
 				}
-			} else if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
-				if (!event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)
+			} else if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_DEACTIVATED)) {
+				if (!event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)
 						&& currentHandle.equals(event.getStructureHandle())) {
 					GregorianCalendar calendarEnd = new GregorianCalendar();
 					calendarEnd.setFirstDayOfWeek(startDay);
 					calendarEnd.setTime(event.getDate());
 					calendarEnd.getTime();
 					taskDeactivated(calendarEnd);
-				} else if (event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				} else if (event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					// Deactivated attention events not currently used (ignored)
 				}
 			}
@@ -716,7 +716,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					String storedHandle;
 					try {
 						storedHandle = URLDecoder.decode(file.getName().substring(0, dotIndex),
-								ContextManager.CONTEXT_FILENAME_ENCODING);
+								InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 						int delimIndex = storedHandle.lastIndexOf(RepositoryTaskHandleUtil.HANDLE_DELIM);
 						if (delimIndex != -1) {
 							String storedUrl = storedHandle.substring(0, delimIndex);

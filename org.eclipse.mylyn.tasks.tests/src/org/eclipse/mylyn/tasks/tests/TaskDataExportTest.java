@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
@@ -46,7 +46,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 
-	private MylarContext mockContext;
+	private InteractionContext mockContext;
 
 	@Override
 	protected void setUp() throws Exception {

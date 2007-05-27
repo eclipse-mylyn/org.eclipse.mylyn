@@ -15,7 +15,7 @@ import java.util.Collection;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizardPage;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -65,7 +65,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 		// make sure no tasks and categories exist prior to import tests
 		assertEquals(2, manager.getTaskList().getTaskContainers().size());
-		ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().reset();
+		ContextCorePlugin.getContextManager().getActivityMetaContext().reset();
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 	 */
 	public void testImportRepositoriesZip() {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		MylarContext historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
+		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
 		assertTrue(taskList.getAllTasks().size() == 0);
@@ -97,7 +97,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		for (ITask task : tasks) {
 			assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
-		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
+		historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(historyContext);
 		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
@@ -105,7 +105,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 
 	public void testImportOverwritesAllTasks() {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		MylarContext historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
+		InteractionContext historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(taskList);
 		assertNotNull(historyContext);
 		assertTrue(taskList.getAllTasks().size() == 0);
@@ -126,7 +126,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		for (ITask task : tasks) {
 			assertTrue(ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier()));
 		}
-		historyContext = ContextCorePlugin.getContextManager().getActivityHistoryMetaContext();
+		historyContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		assertNotNull(historyContext);
 		assertTrue(historyContext.getInteractionHistory().size() > 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());

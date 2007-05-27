@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -93,7 +93,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				taskListSaverJob.requestSave();
 			} else {
 				taskListSaverJob.waitSaveCompleted();
-				ContextManager contextManager = ContextCorePlugin.getContextManager();
+				InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
 				if (saveContext) {
 					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList().getActiveTasks())) {
 						contextManager.saveContext(task.getHandleIdentifier());
@@ -292,7 +292,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				if (saveRequested) {
 					saveRequested = false;
 					saveCompleted = false;
-					ContextManager contextManager = ContextCorePlugin.getContextManager();
+					InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
 					while (!taskQueue.isEmpty()) {
 						ITask task = taskQueue.poll();
 						if (task != null) {

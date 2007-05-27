@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IInteractionContext;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -36,7 +36,7 @@ public class InProgressTaskCollector implements ITaskCollector {
 	private Date periodStartDate;
 
 	protected static boolean hasActivitySince(ITask task, Date startDate) {
-		IMylarContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
+		IInteractionContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
 		if (mylarContext != null) {
 			List<InteractionEvent> events = mylarContext.getInteractionHistory();
 			if (events.size() > 0) {
