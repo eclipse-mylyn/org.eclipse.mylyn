@@ -37,6 +37,8 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	private RepositoryTaskData currentTaskData;
 
 	private String currentUser;
+	
+	private Set<String> addressSet = null;
 
 	public PersonProposalProvider(AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
 		this.currentTask = repositoryTask;
@@ -59,7 +61,11 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private Set<String> getAddressSet() {
-		Set<String> addressSet = new TreeSet<String>(new Comparator<String>() {
+		if(addressSet!=null) {
+			return addressSet;
+		}
+		
+		addressSet = new TreeSet<String>(new Comparator<String>() {
 			public int compare(String s1, String s2) {
 				if (currentUser != null) {
 					if (s1.compareToIgnoreCase(s2) == 0 && currentUser.compareToIgnoreCase(s1) == 0) {
@@ -73,6 +79,11 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				return s1.compareToIgnoreCase(s2);
 			}
 		});
+
+		if(currentTask!=null) {
+			addAddress(currentTask.getOwner(), addressSet);
+		}
+		addAddresses(currentTaskData, addressSet);
 
 		String repositoryUrl = null;
 		String repositoryKind = null;
@@ -91,6 +102,10 @@ public class PersonProposalProvider implements IContentProposalProvider {
 
 		if (repositoryUrl != null && repositoryKind != null) {
 			Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+			if (currentTask != null) {
+				tasks.add(currentTask);
+			}
+
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind,
 					repositoryUrl);
 
@@ -98,10 +113,6 @@ public class PersonProposalProvider implements IContentProposalProvider {
 				currentUser = repository.getUserName();
 				if (currentUser != null && !repository.isAnonymous())
 					addressSet.add(currentUser);
-			}
-
-			if (currentTask != null) {
-				tasks.add(currentTask);
 			}
 
 			Collection<ITask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
@@ -115,31 +126,43 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			}
 
 			for (AbstractRepositoryTask task : tasks) {
-				addEmailAddresses(task, addressSet);
-			}
-		}
-
-		if (currentTaskData != null) {
-			java.util.List<TaskComment> comments = currentTaskData.getComments();
-			for (TaskComment comment : comments) {
-				addressSet.add(comment.getAuthor());
+				addAddresses(task, addressSet);
 			}
 		}
 
 		return addressSet;
 	}
 
-	private void addEmailAddresses(AbstractRepositoryTask task, Set<String> addressSet) {
+	private void addAddresses(AbstractRepositoryTask task, Set<String> addressSet) {
 		// TODO: Owner, Creator, and CC should be stored on
 		// AbstractRepositoryTask
 		// RepositoryTaskData data =
 		// TasksUiPlugin.getDefault().getTaskData(task);
-		if (task.getOwner() != null) {
-			addressSet.add(task.getOwner());
-		}
-		// if (data != null) {
-		// addressSet.add(data.getAssignedTo());
-		// addressSet.addAll(data.getCC());
-		// }
+
+		addAddress(task.getOwner(), addressSet);
+
+		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager() //
+				.getOldTaskData(task.getHandleIdentifier());
+		addAddresses(data, addressSet);
 	}
+
+	private void addAddresses(RepositoryTaskData data, Set<String> addressSet) {
+		if (data != null) {
+			// addressSet.add(data.getAssignedTo());  // owner
+			addAddress(data.getReporter(), addressSet); // ??
+			for (String address : data.getCC()) {
+				addAddress(address, addressSet);
+			}
+			for (TaskComment comment : currentTaskData.getComments()) {
+				addAddress(comment.getAuthor(), addressSet);
+			}
+		}
+	}
+
+	private void addAddress(String address, Set<String> addressSet) {
+		if (address != null && address.trim().length() > 0) {
+			addressSet.add(address.trim());
+		}
+	}
+	
 }
