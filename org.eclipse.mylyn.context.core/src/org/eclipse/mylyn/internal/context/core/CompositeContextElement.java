@@ -16,20 +16,20 @@ package org.eclipse.mylar.internal.context.core;
 import java.util.*;
 
 import org.eclipse.mylar.context.core.IDegreeOfInterest;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class CompositeContextElement implements IMylarElement {
+public class CompositeContextElement implements IInteractionElement {
 
-	private Set<MylarContextElement> nodes = null;
+	private Set<InteractionContextElement> nodes = null;
 
 	private String handle = "<no handle>";
 
-	public CompositeContextElement(String handle, Set<MylarContextElement> nodes) {
+	public CompositeContextElement(String handle, Set<InteractionContextElement> nodes) {
 		this.nodes = nodes;
 		this.handle = handle;
 	}
@@ -37,9 +37,9 @@ public class CompositeContextElement implements IMylarElement {
 	/**
 	 * @return the taskscape with the hightest value TODO: is this always best?
 	 */
-	public IMylarContext getContext() {
-		IMylarElement highestValueNode = null;
-		for (IMylarElement node : nodes) {
+	public IInteractionContext getContext() {
+		IInteractionElement highestValueNode = null;
+		for (IInteractionElement node : nodes) {
 			if (highestValueNode == null || node.getInterest().getValue() < highestValueNode.getInterest().getValue())
 				highestValueNode = node;
 		}
@@ -55,7 +55,7 @@ public class CompositeContextElement implements IMylarElement {
 			return nodes.iterator().next().getInterest();
 		} else {
 			CompositeDegreeOfInterest degreeOfInterest = new CompositeDegreeOfInterest();
-			for (IMylarElement node : nodes) {
+			for (IInteractionElement node : nodes) {
 				degreeOfInterest.getComposedDegreesOfInterest().add(node.getInterest());
 			}
 			return degreeOfInterest;
@@ -68,12 +68,12 @@ public class CompositeContextElement implements IMylarElement {
 
 	public void setHandleIdentifier(String handle) {
 		this.handle = handle;
-		for (IMylarElement node : nodes) {
+		for (IInteractionElement node : nodes) {
 			node.setHandleIdentifier(handle);
 		}
 	}
 
-	public Set<MylarContextElement> getNodes() {
+	public Set<InteractionContextElement> getNodes() {
 		return nodes;
 	}
 
@@ -83,7 +83,7 @@ public class CompositeContextElement implements IMylarElement {
 	public String getContentType() {
 		Set<String> kinds = new HashSet<String>();
 		String lastKind = null;
-		for (IMylarElement node : nodes) {
+		for (IInteractionElement node : nodes) {
 			lastKind = node.getContentType();
 			kinds.add(lastKind);
 		}
@@ -97,9 +97,9 @@ public class CompositeContextElement implements IMylarElement {
 	/**
 	 * TODO: need composite edges here
 	 */
-	public MylarContextRelation getRelation(String targetHandle) {
-		Set<MylarContextRelation> edges = new HashSet<MylarContextRelation>();
-		for (IMylarElement node : nodes)
+	public InteractionContextRelation getRelation(String targetHandle) {
+		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
+		for (IInteractionElement node : nodes)
 			edges.add(node.getRelation(targetHandle));
 		if (edges.size() == 0) {
 			return null;
@@ -109,16 +109,16 @@ public class CompositeContextElement implements IMylarElement {
 		return edges.iterator().next();
 	}
 
-	public Collection<MylarContextRelation> getRelations() {
-		Set<MylarContextRelation> edges = new HashSet<MylarContextRelation>();
+	public Collection<InteractionContextRelation> getRelations() {
+		Set<InteractionContextRelation> edges = new HashSet<InteractionContextRelation>();
 
-		for (MylarContextElement node : nodes)
+		for (InteractionContextElement node : nodes)
 			edges.addAll(node.getRelations());
 		return edges;
 	}
 
 	public void clearRelations() {
-		for (MylarContextElement node : nodes)
+		for (InteractionContextElement node : nodes)
 			node.clearRelations();
 	}
 

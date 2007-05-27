@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -30,7 +30,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements IMylarContextListener { // IPropertyChangeListener, 
+public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements IInteractionContextListener { // IPropertyChangeListener, 
 
 	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters, boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
@@ -65,41 +65,41 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		});
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 			update(true);
 		} 
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 			update(false);
 		} 
 	}
 	
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement element) {
+	public void relationsChanged(IInteractionElement element) {
 		// ignore
 	}
 
-	public void interestChanged(List<IMylarElement> elements) {
+	public void interestChanged(List<IInteractionElement> elements) {
 		// ignore
 	}
 
-	public void landmarkAdded(IMylarElement element) {
+	public void landmarkAdded(IInteractionElement element) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement element) {
+	public void landmarkRemoved(IInteractionElement element) {
 		// ignore
 	}
 
-	public void elementDeleted(IMylarElement element) {
+	public void elementDeleted(IInteractionElement element) {
 		// ignore
 	}
 

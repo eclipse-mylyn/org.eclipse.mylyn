@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
@@ -31,13 +31,13 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 
-	private List<IMylarElement> results = null;
+	private List<IInteractionElement> results = null;
 
-	private IMylarElement node;
+	private IInteractionElement node;
 
 	private int degreeOfSeparation;
 
-	public XmlResultUpdaterSearchListener(AbstractRelationProvider prov, IMylarElement searchNode,
+	public XmlResultUpdaterSearchListener(AbstractRelationProvider prov, IInteractionElement searchNode,
 			int degreeOfSeparation) {
 		super(prov);
 		this.node = searchNode;
@@ -48,7 +48,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 
 	@Override
 	public void searchCompleted(List<?> l) {
-		results = new ArrayList<IMylarElement>();
+		results = new ArrayList<IInteractionElement>();
 
 		if (l.isEmpty())
 			return;
@@ -95,13 +95,13 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 		gathered = true;
 	}
 
-	protected void incrementInterest(IMylarElement node, String elementKind, String elementHandle,
+	protected void incrementInterest(IInteractionElement node, String elementKind, String elementHandle,
 			int degreeOfSeparation) {
 		int predictedInterest = 1;// (7-degreeOfSeparation) *
 									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				XmlJavaRelationProvider.SOURCE_ID, XmlJavaRelationProvider.SOURCE_ID, null, predictedInterest);
-		ContextCorePlugin.getContextManager().handleInteractionEvent(event);
+		ContextCorePlugin.getContextManager().processInteractionEvent(event);
 
 	}
 

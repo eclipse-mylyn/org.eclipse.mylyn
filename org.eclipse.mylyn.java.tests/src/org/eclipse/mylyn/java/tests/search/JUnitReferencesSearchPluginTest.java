@@ -15,7 +15,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -47,7 +47,7 @@ public class JUnitReferencesSearchPluginTest extends TestCase implements ISearch
 	// List<?> results = search(5);
 	// }
 
-	public List<?> search(int dos, IMylarElement node) {
+	public List<?> search(int dos, IInteractionElement node) {
 
 		if (node == null)
 			return null;

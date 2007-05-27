@@ -19,7 +19,7 @@ import org.eclipse.jdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
@@ -40,7 +40,7 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 					if (resource instanceof IFile) {
 						IJavaElement javaElement = (IJavaElement) resource.getAdapter(IJavaElement.class);
 						if (javaElement != null) {
-							IMylarElement element = ContextCorePlugin.getContextManager().getElement(
+							IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
 									javaElement.getHandleIdentifier());
 							if (!javaStructureBridge.containsProblem(element)) {
 								ContextCorePlugin.getContextManager().removeErrorPredictedInterest(

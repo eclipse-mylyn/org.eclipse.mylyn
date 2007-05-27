@@ -13,12 +13,12 @@ package org.eclipse.mylar.java.tests.search;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.context.core.CompositeContext;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
@@ -26,40 +26,40 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
  */
 public class ActiveSearchNotifier extends AbstractContextTest {
 
-	private CompositeContext context;
+	private CompositeInteractionContext context;
 
 	private String source;
 
-	public ActiveSearchNotifier(CompositeContext context, String source) {
+	public ActiveSearchNotifier(CompositeInteractionContext context, String source) {
 		this.context = context;
 		this.source = source;
 	}
 
-	public IMylarElement mockLowerInterest(IMylarElement node) {
+	public IInteractionElement mockLowerInterest(IInteractionElement node) {
 		return context.addEvent(mockUserEvent(node.getHandleIdentifier(), node.getContentType(), source, -3));
 	}
 
-	public IMylarElement mockRaiseInterest(IMylarElement node) {
+	public IInteractionElement mockRaiseInterest(IInteractionElement node) {
 		return context.addEvent(mockUserEvent(node.getHandleIdentifier(), node.getContentType(), source, 2));
 	}
 
-	public IMylarElement mockLowerInterest(String handle, String kind) {
+	public IInteractionElement mockLowerInterest(String handle, String kind) {
 		return mockLowerInterest(mockEditorSelection(handle, kind));
 	}
 
-	public IMylarElement mockRaiseInterest(String handle, String kind) {
+	public IInteractionElement mockRaiseInterest(String handle, String kind) {
 		return mockRaiseInterest(mockEditorSelection(handle, kind));
 	}
 
-	public IMylarElement mockEditorSelection(String handle, String kind) {
+	public IInteractionElement mockEditorSelection(String handle, String kind) {
 		context.addEvent(mockSelection(handle, kind, source));
 		return context.addEvent(mockSelection(handle, kind, source));
 	}
 
-	public IMylarElement getElement(String handle, String kind) {
-		IMylarElement node = context.addEvent(mockSelection(handle, kind, source));
-		ContextCorePlugin.getContextManager().handleInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / ContextManager.getScalingFactors().getLandmark()) * -2),
+	public IInteractionElement getElement(String handle, String kind) {
+		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
+		ContextCorePlugin.getContextManager().processInteractionEvent(
+				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getScalingFactors().getLandmark()) * -2),
 				true);
 		// context.addEvent(mockUserEvent(handle, kind, source,
 		// (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
@@ -69,9 +69,9 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 	public void clearContext() throws IOException, CoreException {
 		WorkspaceSetupHelper.clearDoiModel();
 		try {
-			MylarContext workspaceContext = WorkspaceSetupHelper.getContext();
+			InteractionContext workspaceContext = WorkspaceSetupHelper.getContext();
 			ContextCorePlugin.getContextManager().activateContext(workspaceContext.getHandleIdentifier());
-			context = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
+			context = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
 		} catch (Exception e) {
 			fail();
 		}
@@ -83,7 +83,7 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 
 	private InteractionEvent mockUserEvent(String handle, String kind, String origin, float scale) {
 		InteractionEvent e = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle, origin, scale
-				* ContextManager.getScalingFactors().getLandmark());
+				* InteractionContextManager.getScalingFactors().getLandmark());
 		e.getInterestContribution();
 		return e;
 	}

@@ -17,10 +17,10 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContextRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContextRelation;
 
 /**
  * @author Mik Kersten
@@ -41,11 +41,11 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 			// ignored, because we can add structure bridges during decoration
 		}
 		try {
-			IMylarElement node = null;
-			if (element instanceof MylarContextRelation) {
+			IInteractionElement node = null;
+			if (element instanceof InteractionContextRelation) {
 				decoration.setForegroundColor(ColorMap.RELATIONSHIP);
-			} else if (element instanceof IMylarElement) {
-				node = (IMylarElement) element;
+			} else if (element instanceof IInteractionElement) {
+				node = (IInteractionElement) element;
 			} else {
 				if (bridge != null && bridge.getContentType() != null) {
 					node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(element));

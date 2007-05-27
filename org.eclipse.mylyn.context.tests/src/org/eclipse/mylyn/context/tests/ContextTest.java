@@ -11,9 +11,9 @@
 
 package org.eclipse.mylar.context.tests;
 
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.mylar.internal.context.core.ScalingFactors;
  */
 public class ContextTest extends AbstractContextTest {
 
-	private MylarContext context;
+	private InteractionContext context;
 
 	private ScalingFactors scaling;
 
@@ -29,7 +29,7 @@ public class ContextTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		scaling = new ScalingFactors();
-		context = new MylarContext("0", scaling);
+		context = new InteractionContext("0", scaling);
 	}
 
 	@Override
@@ -38,9 +38,9 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testEquality() {
-		MylarContext context1 = new MylarContext("1", scaling);
+		InteractionContext context1 = new InteractionContext("1", scaling);
 		context1.parseEvent(mockSelection("1"));
-		MylarContext context2 = new MylarContext("2", scaling);
+		InteractionContext context2 = new InteractionContext("2", scaling);
 		context2.parseEvent(mockSelection("2"));
 		assertFalse(context1.equals(context2));
 	}
@@ -54,7 +54,7 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testManipulation() {
-		IMylarElement node = context.parseEvent(mockSelection("1"));
+		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockInterestContribution("1", 40));
 		assertEquals(42 - (scaling.getDecay().getValue() * 1), node.getInterest().getValue());
@@ -64,7 +64,7 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testPropagatedInterest() {
-		IMylarElement node = context.parseEvent(mockPropagation("1"));
+		IInteractionElement node = context.parseEvent(mockPropagation("1"));
 		assertTrue(node.getInterest().isPropagated());
 		context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockInterestContribution("1", -10));
@@ -75,16 +75,16 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testEdges() {
-		IMylarElement node = context.parseEvent(mockSelection("1"));
+		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockNavigation("2"));
-		IMylarRelation edge = node.getRelation("2");
+		IInteractionRelation edge = node.getRelation("2");
 		assertNotNull(edge);
 		assertEquals(edge.getTarget().getHandleIdentifier(), "2");
 	}
 
 	public void testDecay() {
 		float decay = scaling.getDecay().getValue();
-		IMylarElement node1 = context.parseEvent(mockSelection("1"));
+		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
 
 		context.parseEvent(mockSelection("2"));
 		for (int i = 0; i < 98; i++)
@@ -93,7 +93,7 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testLandmarkScaling() {
-		IMylarElement node1 = context.parseEvent(mockSelection("1"));
+		IInteractionElement node1 = context.parseEvent(mockSelection("1"));
 		for (int i = 0; i < scaling.getLandmark() - 2 + (scaling.getLandmark() * scaling.getDecay().getValue()); i++) {
 			context.parseEvent(mockSelection("1"));
 		}
@@ -105,10 +105,10 @@ public class ContextTest extends AbstractContextTest {
 	}
 
 	public void testSelections() {
-		IMylarElement missing = context.get("0");
+		IInteractionElement missing = context.get("0");
 		assertNull(missing);
 
-		IMylarElement node = context.parseEvent(mockSelection());
+		IInteractionElement node = context.parseEvent(mockSelection());
 		assertTrue(node.getInterest().isInteresting());
 		context.parseEvent(mockSelection());
 		assertTrue(node.getInterest().isInteresting());

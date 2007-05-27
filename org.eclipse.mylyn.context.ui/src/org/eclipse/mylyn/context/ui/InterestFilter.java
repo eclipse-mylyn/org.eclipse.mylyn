@@ -22,11 +22,11 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IAlwaysIntersting;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IImplicitlyIntersting;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.swt.widgets.Tree;
 
 /**
@@ -58,11 +58,11 @@ public class InterestFilter extends ViewerFilter {
 				}
 			}
 
-			IMylarElement element = null;
-			if (object instanceof IAlwaysIntersting) {
+			IInteractionElement element = null;
+			if (object instanceof IImplicitlyIntersting) {
 				return true;
-			} else if (object instanceof IMylarElement) {
-				element = (IMylarElement) object;
+			} else if (object instanceof IInteractionElement) {
+				element = (IInteractionElement) object;
 			} else {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 				if (bridge.getContentType() == null) {
@@ -97,11 +97,11 @@ public class InterestFilter extends ViewerFilter {
 		return false;
 	}
 
-	protected boolean isInteresting(IMylarElement element) {
+	protected boolean isInteresting(IInteractionElement element) {
 		if (element.getInterest().isPredicted()) {
 			return false;
 		} else {
-			return element.getInterest().getValue() > ContextManager.getScalingFactors().getInteresting();
+			return element.getInterest().getValue() > InteractionContextManager.getScalingFactors().getInteresting();
 		}
 	}
 

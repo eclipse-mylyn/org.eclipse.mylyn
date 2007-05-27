@@ -11,24 +11,15 @@
 
 package org.eclipse.mylar.context.core;
 
-import java.util.Collection;
-
-import org.eclipse.mylar.internal.context.core.MylarContextRelation;
-
 /**
+ * TODO: consider finding better name
+ * 
  * @author Mik Kersten
  */
-public interface IMylarElement extends IMylarObject {
+public interface IInteractionObject {
 
-	public abstract String getHandleIdentifier();
+	public abstract IDegreeOfInterest getInterest();
 
-	public abstract void setHandleIdentifier(String handle);
+	public abstract String getContentType();
 
-	public abstract IMylarContext getContext();
-
-	public abstract Collection<MylarContextRelation> getRelations();
-
-	public abstract MylarContextRelation getRelation(String targetHandle);
-
-	public abstract void clearRelations();
 }

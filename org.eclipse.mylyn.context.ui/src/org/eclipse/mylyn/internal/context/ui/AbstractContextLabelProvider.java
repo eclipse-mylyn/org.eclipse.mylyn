@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -25,36 +25,36 @@ import org.eclipse.swt.graphics.Image;
 public abstract class AbstractContextLabelProvider implements ILabelProvider {
 
 	public Image getImage(Object object) {
-		if (object instanceof IMylarRelation) {
-			return getImage((IMylarRelation) object);
-		} else if (object instanceof IMylarElement) {
-			return getImage((IMylarElement) object);
+		if (object instanceof IInteractionRelation) {
+			return getImage((IInteractionRelation) object);
+		} else if (object instanceof IInteractionElement) {
+			return getImage((IInteractionElement) object);
 		} else {
 			return getImageForObject(object);
 		}
 	}
 
 	public String getText(Object object) {
-		if (object instanceof IMylarRelation) {
-			return getText((IMylarRelation) object);
-		} else if (object instanceof IMylarElement) {
-			return getText((IMylarElement) object);
+		if (object instanceof IInteractionRelation) {
+			return getText((IInteractionRelation) object);
+		} else if (object instanceof IInteractionElement) {
+			return getText((IInteractionElement) object);
 		} else {
 			return getTextForObject(object);
 		}
 	}
 
-	protected abstract Image getImage(IMylarElement node);
+	protected abstract Image getImage(IInteractionElement node);
 
-	protected abstract Image getImage(IMylarRelation edge);
+	protected abstract Image getImage(IInteractionRelation edge);
 
 	protected abstract Image getImageForObject(Object object);
 
-	protected abstract String getText(IMylarElement node);
+	protected abstract String getText(IInteractionElement node);
 
 	protected abstract String getTextForObject(Object object);
 
-	protected abstract String getText(IMylarRelation edge);
+	protected abstract String getText(IInteractionRelation edge);
 
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub

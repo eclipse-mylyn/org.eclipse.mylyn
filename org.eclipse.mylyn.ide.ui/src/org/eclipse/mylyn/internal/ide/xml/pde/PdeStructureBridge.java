@@ -25,7 +25,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
@@ -333,7 +333,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 //		return null;
 //	}
 
-	public boolean containsProblem(IMylarElement node) {
+	public boolean containsProblem(IInteractionElement node) {
 		// TODO Auto-generated method stub
 		return false;
 	}

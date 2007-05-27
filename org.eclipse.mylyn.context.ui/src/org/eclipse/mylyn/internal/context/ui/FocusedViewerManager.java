@@ -22,9 +22,9 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.ui.ISelectionListener;
@@ -37,7 +37,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class FocusedViewerManager implements IMylarContextListener, ISelectionListener { 
+public class FocusedViewerManager implements IInteractionContextListener, ISelectionListener { 
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -96,11 +96,11 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		filteredViewers.remove(viewer);
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		refreshViewers();
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		refreshViewers();
 		for (StructuredViewer structuredViewer : managedViewers) {
 			if (structuredViewer instanceof TreeViewer) {
@@ -109,26 +109,26 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 	
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		contextDeactivated(context);
 	}
 
 	protected void refreshViewers() {
-		List<IMylarElement> toRefresh = Collections.emptyList();
+		List<IInteractionElement> toRefresh = Collections.emptyList();
 		refreshViewers(toRefresh, true);
 	}
 
-	protected void refreshViewers(IMylarElement node, boolean updateLabels) {
-		List<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
+	protected void refreshViewers(IInteractionElement node, boolean updateLabels) {
+		List<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 		toRefresh.add(node);
 		refreshViewers(toRefresh, updateLabels);
 	}
 
-	public void interestChanged(final List<IMylarElement> nodes) {
+	public void interestChanged(final List<IInteractionElement> nodes) {
 		refreshViewers(nodes, false);
 	}
 
-	protected void refreshViewers(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
+	protected void refreshViewers(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
 		if (syncRefreshMode) {
 			internalRefresh(nodesToRefresh, updateLabels);
 		} else {
@@ -140,7 +140,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	private void internalRefresh(final List<IMylarElement> nodesToRefresh, final boolean updateLabels) {
+	private void internalRefresh(final List<IInteractionElement> nodesToRefresh, final boolean updateLabels) {
 		try {
 			for (StructuredViewer viewer : new ArrayList<StructuredViewer>(managedViewers)) {
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
@@ -150,7 +150,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	private void refreshViewer(final List<IMylarElement> nodesToRefresh, final boolean minor, StructuredViewer viewer) {
+	private void refreshViewer(final List<IInteractionElement> nodesToRefresh, final boolean minor, StructuredViewer viewer) {
 		if (viewer == null) {
 			return;
 		} else if (viewer.getControl().isDisposed()) {
@@ -174,7 +174,7 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 					viewer.getControl().setRedraw(true);
 				} else { // don't need to worry about content changes
 					viewer.getControl().setRedraw(false);
-					for (IMylarElement node : nodesToRefresh) {
+					for (IInteractionElement node : nodesToRefresh) {
 						AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault()
 								.getStructureBridge(node.getContentType());
 						Object objectToRefresh = structureBridge.getObjectForHandle(node.getHandleIdentifier());
@@ -203,12 +203,12 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(
 				node.getContentType());
-		IMylarElement parent = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement parent = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getParentHandle(node.getHandleIdentifier()));
-		ArrayList<IMylarElement> toRefresh = new ArrayList<IMylarElement>();
+		ArrayList<IInteractionElement> toRefresh = new ArrayList<IInteractionElement>();
 
 		if (parent != null) {
 			toRefresh.add(parent);
@@ -216,15 +216,15 @@ public class FocusedViewerManager implements IMylarContextListener, ISelectionLi
 		}
 	}
 
-	public void landmarkAdded(IMylarElement node) {
+	public void landmarkAdded(IInteractionElement node) {
 		refreshViewers(node, true);
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
+	public void landmarkRemoved(IInteractionElement node) {
 		refreshViewers(node, true);
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
 

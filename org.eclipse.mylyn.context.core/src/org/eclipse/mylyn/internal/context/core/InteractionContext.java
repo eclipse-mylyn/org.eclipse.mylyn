@@ -19,50 +19,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  */
-public class MylarContext implements IMylarContext {
+public class InteractionContext implements IInteractionContext {
 
 	private String handleIdentifier;
 
-	private List<InteractionEvent> interactionHistory = new ArrayList<InteractionEvent>();
+	private List<InteractionEvent> interactionHistory = new CopyOnWriteArrayList<InteractionEvent>();
 
-	protected ConcurrentHashMap<String, MylarContextElement> elementMap;
+	protected ConcurrentHashMap<String, InteractionContextElement> elementMap;
 
-	protected Map<String, IMylarElement> landmarkMap;
+	protected Map<String, IInteractionElement> landmarkMap;
 	
-	protected MylarContextElement activeNode = null;
+	protected InteractionContextElement activeNode = null;
 
 	private InteractionEvent lastEdgeEvent = null;
 
-	private MylarContextElement lastEdgeNode = null;
+	private InteractionContextElement lastEdgeNode = null;
 
+	public String contentLimitedTo = null;
+	
 	private int numUserEvents = 0;
 
 	protected ScalingFactors scalingFactors;
 
 	void parseInteractionHistory() {
-		elementMap = new ConcurrentHashMap<String, MylarContextElement>();
-		landmarkMap = new HashMap<String, IMylarElement>();
+		elementMap = new ConcurrentHashMap<String, InteractionContextElement>();
+		landmarkMap = new HashMap<String, IInteractionElement>();
 		for (InteractionEvent event : interactionHistory)
 			parseInteractionEvent(event);
 		updateLandmarks();
 		activeNode = lastEdgeNode;
 	}
 
-	public MylarContext(String id, ScalingFactors scaling) {
+	public InteractionContext(String id, ScalingFactors scaling) {
 		this.handleIdentifier = id;
 		this.scalingFactors = scaling;
 		parseInteractionHistory();
 	}
 
-	public IMylarElement parseEvent(InteractionEvent event) {
+	public IInteractionElement parseEvent(InteractionEvent event) {
 		interactionHistory.add(event);
 		return parseInteractionEvent(event);
 	}
@@ -70,7 +73,7 @@ public class MylarContext implements IMylarContext {
 	/**
 	 * Propagations and predictions are not added as edges
 	 */
-	private IMylarElement parseInteractionEvent(InteractionEvent event) {
+	private IInteractionElement parseInteractionEvent(InteractionEvent event) {
 		if (event.getStructureHandle() == null) {
 			return null;
 		}
@@ -79,9 +82,9 @@ public class MylarContext implements IMylarContext {
 			numUserEvents++;
 		}
 		
-		MylarContextElement node = elementMap.get(event.getStructureHandle());
+		InteractionContextElement node = elementMap.get(event.getStructureHandle());
 		if (node == null) {
-			node = new MylarContextElement(event.getStructureKind(), event.getStructureHandle(), this);
+			node = new InteractionContextElement(event.getStructureKind(), event.getStructureHandle(), this);
 			elementMap.put(event.getStructureHandle(), node);
 		}
 
@@ -89,11 +92,11 @@ public class MylarContext implements IMylarContext {
 				&& lastEdgeNode != null && lastEdgeEvent.getStructureHandle() != null
 				&& event.getKind() != InteractionEvent.Kind.PROPAGATION
 				&& event.getKind() != InteractionEvent.Kind.PREDICTION) {
-			IMylarElement navigationSource = elementMap.get(lastEdgeEvent.getStructureHandle());
+			IInteractionElement navigationSource = elementMap.get(lastEdgeEvent.getStructureHandle());
 			if (navigationSource != null) {
-				MylarContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
+				InteractionContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
 				if (edge == null) {
-					edge = new MylarContextRelation(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node,
+					edge = new InteractionContextRelation(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node,
 							this);
 					lastEdgeNode.addEdge(edge);
 				}
@@ -119,13 +122,13 @@ public class MylarContext implements IMylarContext {
 
 	private void updateLandmarks() {
 		// landmarks = new HashMap<String, ITaskscapeNode>();
-		for (MylarContextElement node : elementMap.values()) {
+		for (InteractionContextElement node : elementMap.values()) {
 			if (node.getInterest().isLandmark())
 				landmarkMap.put(node.getHandleIdentifier(), node);
 		}
 	}
 
-	public IMylarElement get(String elementHandle) {
+	public IInteractionElement get(String elementHandle) {
 		if (elementHandle == null) {
 			return null;
 		} else {
@@ -133,12 +136,12 @@ public class MylarContext implements IMylarContext {
 		}
 	}
 
-	public List<IMylarElement> getInteresting() {
-		List<IMylarElement> elements = new ArrayList<IMylarElement>();
+	public List<IInteractionElement> getInteresting() {
+		List<IInteractionElement> elements = new ArrayList<IInteractionElement>();
 		synchronized (elementMap) {
 //			Set<String> keys = Collections.synchronizedSet(elementMap.keySet());
 			for (String key : elementMap.keySet()) {
-				MylarContextElement info = elementMap.get(key);
+				InteractionContextElement info = elementMap.get(key);
 				if (info != null && info.getInterest().isInteresting()) {
 					elements.add(info);
 				}
@@ -147,29 +150,29 @@ public class MylarContext implements IMylarContext {
 		return elements;
 	}
 
-	public List<IMylarElement> getLandmarkMap() {
-		return Collections.unmodifiableList(new ArrayList<IMylarElement>(landmarkMap.values()));
+	public List<IInteractionElement> getLandmarkMap() {
+		return Collections.unmodifiableList(new ArrayList<IInteractionElement>(landmarkMap.values()));
 	}
 
-	public void updateElementHandle(IMylarElement element, String newHandle) {
-		MylarContextElement currElement = elementMap.remove(element.getHandleIdentifier());
+	public void updateElementHandle(IInteractionElement element, String newHandle) {
+		InteractionContextElement currElement = elementMap.remove(element.getHandleIdentifier());
 		if (currElement != null) {
 			currElement.setHandleIdentifier(newHandle);
 			elementMap.put(newHandle, currElement);
 		}
 	}
 
-	public IMylarElement getActiveNode() {
+	public IInteractionElement getActiveNode() {
 		return activeNode;
 	}
 
-	public void delete(IMylarElement node) {
+	public void delete(IInteractionElement node) {
 		landmarkMap.remove(node.getHandleIdentifier());
 		elementMap.remove(node.getHandleIdentifier());
 	}
 
-	public synchronized List<IMylarElement> getAllElements() {
-		return new ArrayList<IMylarElement>(elementMap.values());
+	public synchronized List<IInteractionElement> getAllElements() {
+		return new ArrayList<IInteractionElement>(elementMap.values());
 	}
 
 	public String getHandleIdentifier() {
@@ -202,7 +205,7 @@ public class MylarContext implements IMylarContext {
 
 	public void collapse() {
 		List<InteractionEvent> collapsedHistory = new ArrayList<InteractionEvent>();
-		for (MylarContextElement node : elementMap.values()) {
+		for (InteractionContextElement node : elementMap.values()) {
 			if (!node.equals(activeNode)) {
 				collapseNode(collapsedHistory, node);
 			}
@@ -212,7 +215,7 @@ public class MylarContext implements IMylarContext {
 		interactionHistory.addAll(collapsedHistory);
 	}
 
-	private void collapseNode(List<InteractionEvent> collapsedHistory, MylarContextElement node) {
+	private void collapseNode(List<InteractionEvent> collapsedHistory, InteractionContextElement node) {
 		if (node != null) {
 			collapsedHistory.addAll(((DegreeOfInterest) node.getInterest()).getCollapsedEvents());
 		}
@@ -220,9 +223,9 @@ public class MylarContext implements IMylarContext {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null || !(object instanceof MylarContext))
+		if (object == null || !(object instanceof InteractionContext))
 			return false;
-		MylarContext context = (MylarContext) object;
+		InteractionContext context = (InteractionContext) object;
 
 		return (handleIdentifier == null ? context.handleIdentifier == null : handleIdentifier
 				.equals(context.handleIdentifier))
@@ -256,5 +259,13 @@ public class MylarContext implements IMylarContext {
 
 	public ScalingFactors getScalingFactors() {
 		return scalingFactors;
+	}
+
+	public String getContentLimitedTo() {
+		return contentLimitedTo;
+	}
+
+	public void setContentLimitedTo(String contentLimitedTo) {
+		this.contentLimitedTo = contentLimitedTo;
 	}
 }

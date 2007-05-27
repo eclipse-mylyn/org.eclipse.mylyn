@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
@@ -74,9 +74,9 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		if (currentSelection instanceof StructuredSelection) {
 			StructuredSelection selection = (StructuredSelection) currentSelection;
 			for (Object object : selection.toList()) {
-				IMylarElement node = null;
-				if (object instanceof IMylarElement) {
-					node = (IMylarElement) object;
+				IInteractionElement node = null;
+				if (object instanceof IInteractionElement) {
+					node = (IInteractionElement) object;
 				} else {
 					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 					String handle = bridge.getHandleIdentifier(object);
@@ -101,7 +101,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				}
 			}
 		} else {
-			IMylarElement node = ContextCorePlugin.getContextManager().getActiveElement();
+			IInteractionElement node = ContextCorePlugin.getContextManager().getActiveElement();
 			if (node != null) {
 				boolean manipulated = ContextCorePlugin.getContextManager().manipulateInterestForElement(node,
 						increment, false, SOURCE_ID);

@@ -15,8 +15,8 @@ package org.eclipse.mylar.internal.context.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarObject;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionObject;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
@@ -40,9 +40,9 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 	}
 
 	public Image getImage(Object element) {
-		if (element instanceof IMylarObject) {
+		if (element instanceof IInteractionObject) {
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(
-					((IMylarObject) element).getContentType());
+					((IInteractionObject) element).getContentType());
 			return provider.getImage(element);
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element);
@@ -54,8 +54,8 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 	}
 
 	public String getText(Object object) {
-		if (object instanceof IMylarObject) {
-			IMylarObject element = (IMylarObject) object;
+		if (object instanceof IInteractionObject) {
+			IInteractionObject element = (IInteractionObject) object;
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
 			if (ContextUiPlugin.getDefault().isDecorateInterestMode()) { // TODO:
 																		// move
@@ -68,7 +68,7 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null) {
 				if (ContextUiPlugin.getDefault().isDecorateInterestMode()) {
-					IMylarElement element = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleIdentifier(object));
 					return provider.getText(object) + " [" + element.getInterest().getValue() + "]";
 				} else {

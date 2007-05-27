@@ -23,28 +23,29 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * This is the core class resposible for context management.
  * 
- * TODO: fix synchronization instead of using ArrayList copies
- * 
  * @author Mik Kersten
  */
-public class ContextManager {
+public class InteractionContextManager {
 
 	// TODO: move constants
 
@@ -96,29 +97,31 @@ public class ContextManager {
 
 	private boolean contextCapturePaused = false;
 
-	private CompositeContext currentContext = new CompositeContext();
+	private CompositeInteractionContext activeContext = new CompositeInteractionContext();
 
-	private MylarContext activityMetaContext = null;
+	/**
+	 * Global contexts do not participate in the regular activation lifecycle
+	 * but are instead activated and deactivated by clients.
+	 */
+	private Map<String, InteractionContext> globalContexts = new HashMap<String, InteractionContext>();
 
-	private List<IMylarContextListener> activityMetaContextListeners = new ArrayList<IMylarContextListener>();
+	private InteractionContext activityMetaContext = null;
 
-	private List<IMylarContextListener> listeners = new ArrayList<IMylarContextListener>();
+	private List<IInteractionContextListener> activityMetaContextListeners = new ArrayList<IInteractionContextListener>();
 
-	private List<IMylarContextListener> waitingListeners = new ArrayList<IMylarContextListener>();
+	private List<IInteractionContextListener> listeners = new CopyOnWriteArrayList<IInteractionContextListener>();
+
+	private List<IInteractionContextListener> waitingListeners = new ArrayList<IInteractionContextListener>();
 
 	private boolean suppressListenerNotification = false;
 
-	private MylarContextExternalizer externalizer = new MylarContextExternalizer();
+	private InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
 	private boolean activationHistorySuppressed = false;
 
 	private static ScalingFactors scalingFactors = new ScalingFactors();
 
-	public ContextManager() {
-
-	}
-
-	public MylarContext getActivityHistoryMetaContext() {
+	public InteractionContext getActivityMetaContext() {
 		if (activityMetaContext == null) {
 			loadActivityMetaContext();
 		}
@@ -132,7 +135,7 @@ public class ContextManager {
 			if (activityMetaContext == null) {
 				resetActivityHistory();
 			}
-			for (IMylarContextListener listener : activityMetaContextListeners) {
+			for (IInteractionContextListener listener : activityMetaContextListeners) {
 				listener.contextActivated(activityMetaContext);
 			}
 		} else {
@@ -141,11 +144,11 @@ public class ContextManager {
 		}
 	}
 
-	public void handleActivityMetaContextEvent(InteractionEvent event) {
-		IMylarElement element = getActivityHistoryMetaContext().parseEvent(event);
-		for (IMylarContextListener listener : activityMetaContextListeners) {
+	public void processActivityMetaContextEvent(InteractionEvent event) {
+		IInteractionElement element = getActivityMetaContext().parseEvent(event);
+		for (IInteractionContextListener listener : activityMetaContextListeners) {
 			try {
-				List<IMylarElement> changed = new ArrayList<IMylarElement>();
+				List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
@@ -155,13 +158,14 @@ public class ContextManager {
 	}
 
 	public void resetActivityHistory() {
-		activityMetaContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager.getScalingFactors());
-		saveActivityHistoryContext();
+		activityMetaContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME, InteractionContextManager
+				.getScalingFactors());
+		saveActivityContext();
 	}
 
-	public IMylarElement getActiveElement() {
-		if (currentContext != null) {
-			return currentContext.getActiveNode();
+	public IInteractionElement getActiveElement() {
+		if (activeContext != null) {
+			return activeContext.getActiveNode();
 		} else {
 			return null;
 		}
@@ -169,11 +173,11 @@ public class ContextManager {
 
 	public void addErrorPredictedInterest(String handle, String kind, boolean notify) {
 		if (numInterestingErrors > scalingFactors.getMaxNumInterestingErrors()
-				|| currentContext.getContextMap().isEmpty())
+				|| activeContext.getContextMap().isEmpty())
 			return;
 		InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, kind, handle,
 				SOURCE_ID_MODEL_ERROR, scalingFactors.getErrorInterest());
-		handleInteractionEvent(errorEvent, true);
+		processInteractionEvent(errorEvent, true);
 		errorElementHandles.add(handle);
 		numInterestingErrors++;
 	}
@@ -182,67 +186,88 @@ public class ContextManager {
 	 * TODO: worry about decay-related change if predicted interest dacays
 	 */
 	public void removeErrorPredictedInterest(String handle, String kind, boolean notify) {
-		if (currentContext.getContextMap().isEmpty())
+		if (activeContext.getContextMap().isEmpty())
 			return;
 		if (handle == null)
 			return;
-		IMylarElement element = currentContext.get(handle);
+		IInteractionElement element = activeContext.get(handle);
 		if (element != null && element.getInterest().isInteresting() && errorElementHandles.contains(handle)) {
 			InteractionEvent errorEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, kind, handle,
 					SOURCE_ID_MODEL_ERROR, -scalingFactors.getErrorInterest());
-			handleInteractionEvent(errorEvent, true);
+			processInteractionEvent(errorEvent, true);
 			numInterestingErrors--;
 			errorElementHandles.remove(handle);
 			// TODO: this results in double-notification
 			if (notify)
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-					List<IMylarElement> changed = new ArrayList<IMylarElement>();
+				for (IInteractionContextListener listener : listeners) {
+					List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 					changed.add(element);
 					listener.interestChanged(changed);
 				}
 		}
 	}
 
-	public IMylarElement getElement(String elementHandle) {
-		if (currentContext != null && elementHandle != null) {
-			return currentContext.get(elementHandle);
+	public IInteractionElement getElement(String elementHandle) {
+		if (activeContext != null && elementHandle != null) {
+			return activeContext.get(elementHandle);
 		} else {
 			return null;
 		}
 	}
 
-	public IMylarElement handleInteractionEvent(InteractionEvent event) {
-		return handleInteractionEvent(event, true);
+	public IInteractionElement processInteractionEvent(InteractionEvent event) {
+		return processInteractionEvent(event, true);
 	}
 
-	public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
-		return handleInteractionEvent(event, propagateToParents, true);
+	public IInteractionElement processInteractionEvent(InteractionEvent event, boolean propagateToParents) {
+		return processInteractionEvent(event, propagateToParents, true);
 	}
 
-	public void handleInteractionEvents(List<InteractionEvent> events, boolean propagateToParents) {
-		Set<IMylarElement> compositeDelta = new HashSet<IMylarElement>();
+	public void processInteractionEvents(List<InteractionEvent> events, boolean propagateToParents) {
+		Set<IInteractionElement> compositeDelta = new HashSet<IInteractionElement>();
 		for (InteractionEvent event : events) {
-			compositeDelta.addAll(internalHandleInteractionEvent(event, propagateToParents));
+			if (isContextActive()) {
+				compositeDelta.addAll(internalProcessInteractionEvent(event, activeContext, propagateToParents));
+			}
+			for (InteractionContext globalContext : globalContexts.values()) {
+				if (globalContext.getContentLimitedTo().equals(event.getStructureKind())) {
+					internalProcessInteractionEvent(event, globalContext, propagateToParents);
+				}
+			}
 		}
-		notifyInterestDelta(new ArrayList<IMylarElement>(compositeDelta));
+		notifyInterestDelta(new ArrayList<IInteractionElement>(compositeDelta));
 	}
 
-	public IMylarElement handleInteractionEvent(InteractionEvent event, boolean propagateToParents,
+	public IInteractionElement processInteractionEvent(InteractionEvent event, boolean propagateToParents,
 			boolean notifyListeners) {
-		List<IMylarElement> interestDelta = internalHandleInteractionEvent(event, propagateToParents);
-		if (notifyListeners) {
-			notifyInterestDelta(interestDelta);
+		boolean alreadyNotified = false;
+		if (isContextActive()) {
+			List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, activeContext,
+					propagateToParents);
+			if (notifyListeners) {
+				notifyInterestDelta(interestDelta);
+			}
 		}
-		return currentContext.get(event.getStructureHandle());
+		for (InteractionContext globalContext : globalContexts.values()) {
+			if (globalContext.getContentLimitedTo().equals(event.getStructureKind())) {
+				List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, globalContext, propagateToParents);
+				if (notifyListeners && !alreadyNotified) {
+					notifyInterestDelta(interestDelta);
+				}
+			}
+		}
+
+		return activeContext.get(event.getStructureHandle());
 	}
 
-	private List<IMylarElement> internalHandleInteractionEvent(InteractionEvent event, boolean propagateToParents) {
-		if (contextCapturePaused || InteractionEvent.Kind.COMMAND.equals(event.getKind()) || !isContextActive()
+	private List<IInteractionElement> internalProcessInteractionEvent(InteractionEvent event,
+			IInteractionContext interactionContext, boolean propagateToParents) {
+		if (contextCapturePaused || InteractionEvent.Kind.COMMAND.equals(event.getKind())
 				|| suppressListenerNotification) {
 			return Collections.emptyList();
 		}
 
-		IMylarElement previous = currentContext.get(event.getStructureHandle());
+		IInteractionElement previous = interactionContext.get(event.getStructureHandle());
 		float previousInterest = 0;
 		boolean previouslyPredicted = false;
 		boolean previouslyPropagated = false;
@@ -253,16 +278,18 @@ public class ContextManager {
 			previouslyPropagated = previous.getInterest().isPropagated();
 		}
 		if (event.getKind().isUserEvent()) {
-			decayOffset = ensureIsInteresting(event.getStructureKind(), event.getStructureHandle(), previous,
-					previousInterest);
+			decayOffset = ensureIsInteresting(interactionContext, event.getStructureKind(), event.getStructureHandle(),
+					previous, previousInterest);
 		}
-		IMylarElement element = currentContext.addEvent(event);
-		List<IMylarElement> interestDelta = new ArrayList<IMylarElement>();
+		IInteractionElement element = addInteractionEvent(interactionContext, event);
+		List<IInteractionElement> interestDelta = new ArrayList<IInteractionElement>();
 		if (propagateToParents && !event.getKind().equals(InteractionEvent.Kind.MANIPULATION)) {
-			propegateInterestToParents(event.getKind(), element, previousInterest, decayOffset, 1, interestDelta);
+			propegateInterestToParents(interactionContext, event.getKind(), element, previousInterest, decayOffset, 1,
+					interestDelta);
 		}
-		if (event.getKind().isUserEvent())
-			currentContext.setActiveElement(element);
+		if (event.getKind().isUserEvent() && interactionContext instanceof CompositeInteractionContext) {
+			((CompositeInteractionContext) interactionContext).setActiveElement(element);
+		}
 
 		if (isInterestDelta(previousInterest, previouslyPredicted, previouslyPropagated, element)) {
 			interestDelta.add(element);
@@ -272,26 +299,37 @@ public class ContextManager {
 		return interestDelta;
 	}
 
-	private float ensureIsInteresting(String contentType, String handle, IMylarElement previous, float previousInterest) {
+	private IInteractionElement addInteractionEvent(IInteractionContext interactionContext, InteractionEvent event) {
+		if (interactionContext instanceof CompositeInteractionContext) {
+			return ((CompositeInteractionContext) interactionContext).addEvent(event);
+		} else if (interactionContext instanceof InteractionContext) {
+			return ((InteractionContext) interactionContext).parseEvent(event);
+		} else {
+			return null;
+		}
+	}
+
+	private float ensureIsInteresting(IInteractionContext interactionContext, String contentType, String handle,
+			IInteractionElement previous, float previousInterest) {
 		float decayOffset = 0;
 		if (previousInterest < 0) { // reset interest if not interesting
 			decayOffset = (-1) * (previous.getInterest().getValue());
-			currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION, contentType, handle,
-					SOURCE_ID_DECAY_CORRECTION, decayOffset));
+			addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					contentType, handle, SOURCE_ID_DECAY_CORRECTION, decayOffset));
 		}
 		return decayOffset;
 	}
 
-	private void notifyInterestDelta(List<IMylarElement> interestDelta) {
+	private void notifyInterestDelta(List<IInteractionElement> interestDelta) {
 		if (!interestDelta.isEmpty()) {
-			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			for (IInteractionContextListener listener : listeners) {
 				listener.interestChanged(interestDelta);
 			}
 		}
 	}
 
 	protected boolean isInterestDelta(float previousInterest, boolean previouslyPredicted,
-			boolean previouslyPropagated, IMylarElement node) {
+			boolean previouslyPropagated, IInteractionElement node) {
 		float currentInterest = node.getInterest().getValue();
 		if (previousInterest <= 0 && currentInterest > 0) {
 			return true;
@@ -306,23 +344,24 @@ public class ContextManager {
 		}
 	}
 
-	protected void checkForLandmarkDeltaAndNotify(float previousInterest, IMylarElement node) {
+	protected void checkForLandmarkDeltaAndNotify(float previousInterest, IInteractionElement node) {
 		// TODO: don't call interestChanged if it's a landmark?
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(node.getContentType());
 		if (bridge.canBeLandmark(node.getHandleIdentifier())) {
 			if (previousInterest >= scalingFactors.getLandmark() && !node.getInterest().isLandmark()) {
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners))
+				for (IInteractionContextListener listener : listeners)
 					listener.landmarkRemoved(node);
 			} else if (previousInterest < scalingFactors.getLandmark() && node.getInterest().isLandmark()) {
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners))
+				for (IInteractionContextListener listener : listeners)
 					listener.landmarkAdded(node);
 			}
 		}
 	}
 
-	private void propegateInterestToParents(InteractionEvent.Kind kind, IMylarElement node, float previousInterest,
-			float decayOffset, int level, List<IMylarElement> interestDelta) {
+	private void propegateInterestToParents(IInteractionContext interactionContext, InteractionEvent.Kind kind,
+			IInteractionElement node, float previousInterest, float decayOffset, int level,
+			List<IInteractionElement> interestDelta) {
 
 		if (level > MAX_PROPAGATION || node == null || node.getHandleIdentifier() == null
 				|| node.getInterest().getValue() <= 0) {
@@ -357,33 +396,36 @@ public class ContextManager {
 			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
 					.getContentType(node.getHandleIdentifier()), parentHandle, SOURCE_ID_MODEL_PROPAGATION,
 					CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
-			IMylarElement previous = currentContext.get(propagationEvent.getStructureHandle());
+			IInteractionElement previous = interactionContext.get(propagationEvent.getStructureHandle());
 			if (previous != null && previous.getInterest() != null) {
 				previousInterest = previous.getInterest().getValue();
 			}
-			CompositeContextElement parentNode = (CompositeContextElement) currentContext.addEvent(propagationEvent);
+			IInteractionElement parentNode = addInteractionEvent(interactionContext, propagationEvent);
 			if (kind.isUserEvent() && parentNode.getInterest().getEncodedValue() < scalingFactors.getInteresting()) {
 				float parentOffset = ((-1) * parentNode.getInterest().getEncodedValue()) + 1;
-				currentContext.addEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION, parentNode
-						.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION, parentOffset));
+				addInteractionEvent(interactionContext, new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION,
+						parentOffset));
 			}
-			if (isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
+			if (previous != null && isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
 					.isPropagated(), parentNode)) {
 				interestDelta.add(0, parentNode);
 			}
-			propegateInterestToParents(kind, parentNode, previousInterest, decayOffset, level, interestDelta);// adapter.getResourceExtension(),
+			propegateInterestToParents(interactionContext, kind, parentNode, previousInterest, decayOffset, level,
+					interestDelta);// adapter.getResourceExtension(),
 		}
 	}
 
-	public List<IMylarElement> findCompositesForNodes(List<MylarContextElement> nodes) {
-		List<IMylarElement> composites = new ArrayList<IMylarElement>();
-		for (MylarContextElement node : nodes) {
-			composites.add(currentContext.get(node.getHandleIdentifier()));
-		}
-		return composites;
-	}
+// public List<IInteractionElement>
+// findCompositesForNodes(List<InteractionContextElement> nodes) {
+// List<IInteractionElement> composites = new ArrayList<IInteractionElement>();
+// for (InteractionContextElement node : nodes) {
+// composites.add(aaactiveContext.get(node.getHandleIdentifier()));
+// }
+// return composites;
+// }
 
-	public void addListener(IMylarContextListener listener) {
+	public void addListener(IInteractionContextListener listener) {
 		if (listener != null) {
 			if (suppressListenerNotification && !waitingListeners.contains(listener)) {
 				waitingListeners.add(listener);
@@ -396,15 +438,15 @@ public class ContextManager {
 		}
 	}
 
-	public void removeListener(IMylarContextListener listener) {
+	public void removeListener(IInteractionContextListener listener) {
 		listeners.remove(listener);
 	}
 
-	public void addActivityMetaContextListener(IMylarContextListener listener) {
+	public void addActivityMetaContextListener(IInteractionContextListener listener) {
 		activityMetaContextListeners.add(listener);
 	}
 
-	public void removeActivityMetaContextListener(IMylarContextListener listener) {
+	public void removeActivityMetaContextListener(IInteractionContextListener listener) {
 		activityMetaContextListeners.remove(listener);
 	}
 
@@ -415,30 +457,31 @@ public class ContextManager {
 	/**
 	 * Public for testing, activiate via handle
 	 */
-	public void activateContext(MylarContext context) {
-		currentContext.getContextMap().put(context.getHandleIdentifier(), context);
+	public void activateContext(InteractionContext context) {
+		activeContext.getContextMap().put(context.getHandleIdentifier(), context);
 		if (contextFiles != null) {
 			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 		}
 		if (!activationHistorySuppressed) {
-			handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND, ACTIVITY_STRUCTURE_KIND,
-					context.getHandleIdentifier(), ACTIVITY_ORIGIN_ID, null, ACTIVITY_DELTA_ACTIVATED, 1f));
+			processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+					ACTIVITY_STRUCTURE_KIND, context.getHandleIdentifier(), ACTIVITY_ORIGIN_ID, null,
+					ACTIVITY_DELTA_ACTIVATED, 1f));
 		}
 	}
 
-	public List<MylarContext> getActiveContexts() {
-		return new ArrayList<MylarContext>(currentContext.getContextMap().values());
+	public Collection<InteractionContext> getActiveContexts() {
+		return Collections.unmodifiableCollection(activeContext.getContextMap().values());
 	}
 
 	public void activateContext(String handleIdentifier) {
 		try {
 			suppressListenerNotification = true;
-			MylarContext context = currentContext.getContextMap().get(handleIdentifier);
+			InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context == null)
 				context = loadContext(handleIdentifier);
 			if (context != null) {
 				activateContext(context);
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+				for (IInteractionContextListener listener : listeners) {
 					try {
 						listener.contextActivated(context);
 					} catch (Exception e) {
@@ -483,20 +526,20 @@ public class ContextManager {
 	}
 
 	public void deactivateAllContexts() {
-		for (String handleIdentifier : currentContext.getContextMap().keySet()) {
+		for (String handleIdentifier : activeContext.getContextMap().keySet()) {
 			deactivateContext(handleIdentifier);
 		}
 	}
 
 	public void deactivateContext(String handleIdentifier) {
 		try {
-			IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
+			IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 			if (context != null) {
 				saveContext(handleIdentifier);
-				currentContext.getContextMap().remove(handleIdentifier);
+				activeContext.getContextMap().remove(handleIdentifier);
 
 				setContextCapturePaused(true);
-				for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+				for (IInteractionContextListener listener : listeners) {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
@@ -509,18 +552,18 @@ public class ContextManager {
 				setContextCapturePaused(false);
 			}
 			if (!activationHistorySuppressed) {
-				handleActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
+				processActivityMetaContextEvent(new InteractionEvent(InteractionEvent.Kind.COMMAND,
 						ACTIVITY_STRUCTURE_KIND, handleIdentifier, ACTIVITY_ORIGIN_ID, null,
 						ACTIVITY_DELTA_DEACTIVATED, 1f));
 			}
-			saveActivityHistoryContext();
+			saveActivityContext();
 		} catch (Throwable t) {
 			MylarStatusHandler.log(t, "Could not deactivate context");
 		}
 	}
 
 	public void deleteContext(String handleIdentifier) {
-		IMylarContext context = currentContext.getContextMap().get(handleIdentifier);
+		IInteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 		eraseContext(handleIdentifier, false);
 		try {
 			File file = getFileForContext(handleIdentifier);
@@ -528,7 +571,7 @@ public class ContextManager {
 				file.delete();
 			}
 			setContextCapturePaused(true);
-			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			for (IInteractionContextListener listener : listeners) {
 				listener.contextCleared(context);
 			}
 			setContextCapturePaused(false);
@@ -544,41 +587,48 @@ public class ContextManager {
 		if (contextFiles != null) {
 			contextFiles.remove(getFileForContext(handleIdentifier));
 		}
-		MylarContext context = currentContext.getContextMap().get(handleIdentifier);
+		InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
 		if (context == null)
 			return;
-		currentContext.getContextMap().remove(context);
+		activeContext.getContextMap().remove(context);
 		context.reset();
 	}
 
 	/**
 	 * @return false if the map could not be read for any reason
 	 */
-	public MylarContext loadContext(String handleIdentifier) {
-		MylarContext loadedContext = externalizer.readContextFromXML(handleIdentifier,
+	public InteractionContext loadContext(String handleIdentifier) {
+		InteractionContext loadedContext = externalizer.readContextFromXML(handleIdentifier,
 				getFileForContext(handleIdentifier));
 		if (loadedContext == null) {
-			return new MylarContext(handleIdentifier, ContextManager.getScalingFactors());
+			return new InteractionContext(handleIdentifier, InteractionContextManager.getScalingFactors());
 		} else {
 			return loadedContext;
 		}
 	}
 
-	public synchronized void saveContext(String handleIdentifier) {
+	public void saveContext(String handleIdentifier) {
+		InteractionContext context = activeContext.getContextMap().get(handleIdentifier);
+		if (context == null) {
+			return;
+		} else {
+			saveContext(context);
+		}
+	}
+
+	public void saveContext(InteractionContext context) {
 		boolean wasPaused = contextCapturePaused;
 		try {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
-			MylarContext context = currentContext.getContextMap().get(handleIdentifier);
-			if (context == null)
-				return;
+			
 			context.collapse();
-			externalizer.writeContextToXml(context, getFileForContext(handleIdentifier));
+			externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
 			if (contextFiles == null) {
 				contextFiles = new HashSet<File>();
 			}
-			contextFiles.add(getFileForContext(handleIdentifier));
+			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 		} catch (Throwable t) {
 			MylarStatusHandler.fail(t, "could not save context", false);
 		} finally {
@@ -588,7 +638,7 @@ public class ContextManager {
 		}
 	}
 
-	public synchronized void saveActivityHistoryContext() {
+	public void saveActivityContext() {
 		if (ContextCorePlugin.getDefault().getContextStore() == null) {
 			return;
 		}
@@ -600,11 +650,12 @@ public class ContextManager {
 
 			List<InteractionEvent> attention = new ArrayList<InteractionEvent>();
 
-			MylarContext context = getActivityHistoryMetaContext();
-			MylarContext tempContext = new MylarContext(CONTEXT_HISTORY_FILE_NAME, ContextManager.getScalingFactors());
+			InteractionContext context = getActivityMetaContext();
+			InteractionContext tempContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME,
+					InteractionContextManager.getScalingFactors());
 			for (InteractionEvent event : context.getInteractionHistory()) {
-				if (event.getDelta().equals(ContextManager.ACTIVITY_DELTA_ACTIVATED)
-						&& event.getStructureHandle().equals(ContextManager.ACTIVITY_HANDLE_ATTENTION)) {
+				if (event.getDelta().equals(InteractionContextManager.ACTIVITY_DELTA_ACTIVATED)
+						&& event.getStructureHandle().equals(InteractionContextManager.ACTIVITY_HANDLE_ATTENTION)) {
 					attention.add(event);
 				} else {
 					addAttentionEvents(attention, tempContext);
@@ -626,7 +677,7 @@ public class ContextManager {
 		}
 	}
 
-	private void addAttentionEvents(List<InteractionEvent> attention, MylarContext temp) {
+	private void addAttentionEvents(List<InteractionEvent> attention, InteractionContext temp) {
 		InteractionEvent aggregateEvent = null;
 		try {
 			if (attention.size() > 1) {
@@ -668,22 +719,19 @@ public class ContextManager {
 		return null;
 	}
 
-	public IMylarContext getActiveContext() {
-		return currentContext;
+	public IInteractionContext getActiveContext() {
+		return activeContext;
 	}
 
-	/**
-	 * @param kind
-	 */
 	public void resetLandmarkRelationshipsOfKind(String reltationKind) {
-		for (IMylarElement landmark : currentContext.getLandmarks()) {
-			for (IMylarRelation edge : landmark.getRelations()) {
+		for (IInteractionElement landmark : activeContext.getLandmarks()) {
+			for (IInteractionRelation edge : landmark.getRelations()) {
 				if (edge.getRelationshipHandle().equals(reltationKind)) {
 					landmark.clearRelations();
 				}
 			}
 		}
-		for (IMylarContextListener listener : listeners)
+		for (IInteractionContextListener listener : listeners)
 			listener.relationsChanged(null);
 	}
 
@@ -692,26 +740,26 @@ public class ContextManager {
 	 * 
 	 * @param node
 	 */
-	public void notifyRelationshipsChanged(IMylarElement node) {
+	public void notifyRelationshipsChanged(IInteractionElement node) {
 		if (suppressListenerNotification)
 			return;
-		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+		for (IInteractionContextListener listener : listeners) {
 			listener.relationsChanged(node);
 		}
 	}
 
 	public static ScalingFactors getScalingFactors() {
-		return ContextManager.scalingFactors;
+		return InteractionContextManager.scalingFactors;
 	}
 
 	public boolean isContextActive() {
-		return !contextCapturePaused && currentContext.getContextMap().values().size() > 0;
+		return !contextCapturePaused && activeContext.getContextMap().values().size() > 0;
 	}
 
-	public List<IMylarElement> getActiveLandmarks() {
-		List<IMylarElement> allLandmarks = currentContext.getLandmarks();
-		List<IMylarElement> acceptedLandmarks = new ArrayList<IMylarElement>();
-		for (IMylarElement node : allLandmarks) {
+	public List<IInteractionElement> getActiveLandmarks() {
+		List<IInteractionElement> allLandmarks = activeContext.getLandmarks();
+		List<IInteractionElement> acceptedLandmarks = new ArrayList<IInteractionElement>();
+		for (IInteractionElement node : allLandmarks) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 					node.getContentType());
 
@@ -722,13 +770,13 @@ public class ContextManager {
 		return acceptedLandmarks;
 	}
 
-	public Collection<IMylarElement> getInterestingDocuments(IMylarContext context) {
-		Set<IMylarElement> set = new HashSet<IMylarElement>();
+	public Collection<IInteractionElement> getInterestingDocuments(IInteractionContext context) {
+		Set<IInteractionElement> set = new HashSet<IInteractionElement>();
 		if (context == null) {
 			return set;
 		} else {
-			List<IMylarElement> allIntersting = context.getInteresting();
-			for (IMylarElement node : allIntersting) {
+			List<IInteractionElement> allIntersting = context.getInteresting();
+			for (IInteractionElement node : allIntersting) {
 				if (ContextCorePlugin.getDefault().getStructureBridge(node.getContentType()).isDocument(
 						node.getHandleIdentifier())) {
 					set.add(node);
@@ -738,8 +786,8 @@ public class ContextManager {
 		}
 	}
 
-	public Collection<IMylarElement> getInterestingDocuments() {
-		return getInterestingDocuments(currentContext);
+	public Collection<IInteractionElement> getInterestingDocuments() {
+		return getInterestingDocuments(activeContext);
 	}
 
 	public boolean isActivationHistorySuppressed() {
@@ -753,7 +801,7 @@ public class ContextManager {
 	/**
 	 * @return true if interest was manipulated successfully
 	 */
-	public boolean manipulateInterestForElement(IMylarElement element, boolean increment, boolean forceLandmark,
+	public boolean manipulateInterestForElement(IInteractionElement element, boolean increment, boolean forceLandmark,
 			String sourceId) {
 		if (element == null) {
 			return false;
@@ -774,7 +822,7 @@ public class ContextManager {
 
 				// reduce interest of children
 				for (String childHandle : bridge.getChildHandles(element.getHandleIdentifier())) {
-					IMylarElement childElement = getElement(childHandle);
+					IInteractionElement childElement = getElement(childHandle);
 					if (childElement != null && childElement.getInterest().isInteresting()
 							&& !childElement.equals(element)) {
 						manipulateInterestForElement(childElement, increment, forceLandmark, sourceId);
@@ -782,13 +830,13 @@ public class ContextManager {
 				}
 			}
 		} else {
-			if (!forceLandmark && (originalValue > ContextManager.getScalingFactors().getLandmark())) {
+			if (!forceLandmark && (originalValue > InteractionContextManager.getScalingFactors().getLandmark())) {
 				changeValue = 0;
 			} else {
 				// make it a landmark by setting interest to 2 x landmark
 				// interest
 				if (element != null && bridge.canBeLandmark(element.getHandleIdentifier())) {
-					changeValue = (2 * ContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
+					changeValue = (2 * InteractionContextManager.getScalingFactors().getLandmark()) - originalValue + 1;
 				} else {
 					return false;
 				}
@@ -797,7 +845,7 @@ public class ContextManager {
 		if (changeValue != 0) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, element
 					.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
-			handleInteractionEvent(interactionEvent);
+			processInteractionEvent(interactionEvent);
 		}
 		return true;
 	}
@@ -813,51 +861,51 @@ public class ContextManager {
 	 * 
 	 * TODO: refactor this into better multiple context support
 	 */
-	public String getDominantContextHandleForElement(IMylarElement node) {
-		IMylarElement dominantNode = null;
+	public String getDominantContextHandleForElement(IInteractionElement node) {
+		IInteractionElement dominantNode = null;
 		if (node instanceof CompositeContextElement) {
 			CompositeContextElement compositeNode = (CompositeContextElement) node;
 			if (compositeNode.getNodes().isEmpty())
 				return null;
-			dominantNode = (IMylarElement) compositeNode.getNodes().toArray()[0];
+			dominantNode = (IInteractionElement) compositeNode.getNodes().toArray()[0];
 
-			for (IMylarElement concreteNode : compositeNode.getNodes()) {
+			for (IInteractionElement concreteNode : compositeNode.getNodes()) {
 				if (dominantNode != null
 						&& dominantNode.getInterest().getValue() < concreteNode.getInterest().getValue()) {
 					dominantNode = concreteNode;
 				}
 			}
-		} else if (node instanceof MylarContextElement) {
+		} else if (node instanceof InteractionContextElement) {
 			dominantNode = node;
 		}
 		if (node != null) {
-			return ((MylarContextElement) dominantNode).getContext().getHandleIdentifier();
+			return ((InteractionContextElement) dominantNode).getContext().getHandleIdentifier();
 		} else {
 			return null;
 		}
 	}
 
-	public void updateHandle(IMylarElement element, String newHandle) {
+	public void updateHandle(IInteractionElement element, String newHandle) {
 		if (element == null)
 			return;
 		getActiveContext().updateElementHandle(element, newHandle);
-		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
-			List<IMylarElement> changed = new ArrayList<IMylarElement>();
+		for (IInteractionContextListener listener : listeners) {
+			List<IInteractionElement> changed = new ArrayList<IInteractionElement>();
 			changed.add(element);
 			listener.interestChanged(changed);
 		}
 		if (element.getInterest().isLandmark()) {
-			for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+			for (IInteractionContextListener listener : listeners) {
 				listener.landmarkAdded(element);
 			}
 		}
 	}
 
-	public void delete(IMylarElement element) {
+	public void delete(IInteractionElement element) {
 		if (element == null)
 			return;
 		getActiveContext().delete(element);
-		for (IMylarContextListener listener : new ArrayList<IMylarContextListener>(listeners)) {
+		for (IInteractionContextListener listener : listeners) {
 			listener.elementDeleted(element);
 		}
 	}
@@ -876,13 +924,13 @@ public class ContextManager {
 	/**
 	 * For testing.
 	 */
-	public List<IMylarContextListener> getListeners() {
+	public List<IInteractionContextListener> getListeners() {
 		return Collections.unmodifiableList(listeners);
 	}
 
 	public boolean isValidContextFile(File file) {
-		if (file.exists() && file.getName().endsWith(ContextManager.CONTEXT_FILE_EXTENSION)) {
-			MylarContext context = externalizer.readContextFromXML("temp", file);
+		if (file.exists() && file.getName().endsWith(InteractionContextManager.CONTEXT_FILE_EXTENSION)) {
+			InteractionContext context = externalizer.readContextFromXML("temp", file);
 			return context != null;
 		}
 		return false;
@@ -908,5 +956,17 @@ public class ContextManager {
 		}
 		in.close();
 		out.close();
+	}
+
+	public void addGlobalContext(InteractionContext context) {
+		globalContexts.put(context.getHandleIdentifier(), context);
+	}
+
+	public void removeGlobalContext(InteractionContext context) {
+		globalContexts.remove(context.getHandleIdentifier());
+	}
+	
+	public Collection<InteractionContext> getGlobalContexts() {	
+		return globalContexts.values();
 	}
 }

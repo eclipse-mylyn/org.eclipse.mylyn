@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.ui.junit.MylarContextTestUtil;
+import org.eclipse.mylar.internal.java.ui.junit.InteractionContextTestUtil;
 
 /**
  * @author Mik Kersten
@@ -42,7 +42,7 @@ public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
 			IJavaElement parent = method.getParent();
 			if (parent instanceof IType) {
 				IType type = (IType) parent;
-				isTestCase = MylarContextTestUtil.isTestType(type);
+				isTestCase = InteractionContextTestUtil.isTestType(type);
 			}
 			return isTestMethod && isTestCase;
 		}

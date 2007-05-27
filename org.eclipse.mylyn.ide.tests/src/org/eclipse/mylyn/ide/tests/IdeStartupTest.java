@@ -16,7 +16,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContextListener;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
 import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
 
 /**
@@ -25,9 +25,9 @@ import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
 public class IdeStartupTest extends TestCase {
 
 	public void testChangeSetsStartup() {
-		List<IMylarContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
+		List<IInteractionContextListener> listeners = ContextCorePlugin.getContextManager().getListeners();
 		boolean containsManager = false;
-		for (IMylarContextListener listener : listeners) {
+		for (IInteractionContextListener listener : listeners) {
 			if (listener instanceof ContextActiveChangeSetManager) {
 				containsManager = true;
 			}

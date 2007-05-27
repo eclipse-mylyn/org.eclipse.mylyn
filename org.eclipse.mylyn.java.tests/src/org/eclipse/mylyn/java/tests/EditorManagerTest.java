@@ -20,13 +20,14 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.java.ActiveFoldingEditorTracker;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -35,9 +36,11 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
@@ -66,6 +69,37 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		super.tearDown();
 		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
 	}
+	
+	@SuppressWarnings("deprecation")
+	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException, PartInitException {
+		// need a task for mementos
+		Task task = new Task(contextId, contextId, true);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
+		manager.deleteContext(contextId);
+		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
+		assertEquals(0, page.getEditors().length);
+
+		manager.activateContext(contextId);
+		// assertEquals(0, page.getEditors().length);
+
+		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
+		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
+		
+		JavaUI.openInEditor(typeA);
+		JavaUI.openInEditor(typeB);
+//		monitor.selectionChanged(view, new StructuredSelection(typeA));
+//		monitor.selectionChanged(view, new StructuredSelection(typeB));
+		
+		assertEquals(2, page.getEditors().length);
+		
+		manager.deactivateContext(contextId);
+		assertEquals(0, page.getEditors().length);
+
+		manager.activateContext(contextId);
+		// TODO: verify number
+		assertEquals(2, page.getEditors().length);
+		TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+	}
 
 	public void testInterestCapturedForResourceOnFocus() throws CoreException, InvocationTargetException,
 			InterruptedException {
@@ -86,8 +120,8 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(fileA);
 		
-		IMylarElement elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		IMylarElement elementB = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileB));
+		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
+		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileB));
 		
 		assertFalse(elementA.getInterest().isInteresting());
 		assertFalse(elementB.getInterest().isInteresting());
@@ -98,7 +132,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = ContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();	
+		float selectionFactor = InteractionContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();	
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());
@@ -149,7 +183,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(m1));
 
 		int numListeners = ContextCorePlugin.getContextManager().getListeners().size();
-		IMylarElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		assertEquals(numListeners + 1, ContextCorePlugin.getContextManager().getListeners().size());
@@ -180,23 +214,23 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(m1));
-		IMylarElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeA));
-		IMylarElement elementA = ContextCorePlugin.getContextManager().getElement(typeA.getHandleIdentifier());
+		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(typeA.getHandleIdentifier());
 		bridge.open(elementA);
 
 		assertEquals(2, page.getEditors().length);
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
-			ContextCorePlugin.getContextManager().handleInteractionEvent(mockSelection());
+			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertFalse(element.getInterest().isInteresting());
 		assertFalse(elementA.getInterest().isInteresting());
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
-		IMylarElement elementB = ContextCorePlugin.getContextManager().getElement(typeB.getHandleIdentifier());
+		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(typeB.getHandleIdentifier());
 		bridge.open(elementB);
 		monitor.selectionChanged(view, new StructuredSelection(typeB));
 		assertEquals(1, page.getEditors().length);
@@ -209,33 +243,12 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
 		monitor.selectionChanged(view, new StructuredSelection(m1));
-		IMylarElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(type1.getHandleIdentifier());
 		bridge.open(element);
 
 		assertEquals(1, page.getEditors().length);
 		manager.deactivateContext(contextId);
 		assertEquals(0, page.getEditors().length);
-	}
-
-	@SuppressWarnings("deprecation")
-	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException {
-		manager.deleteContext(contextId);
-		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
-		assertEquals(0, page.getEditors().length);
-
-		manager.activateContext(contextId);
-		// assertEquals(0, page.getEditors().length);
-
-		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
-		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
-		monitor.selectionChanged(view, new StructuredSelection(typeA));
-		monitor.selectionChanged(view, new StructuredSelection(typeB));
-		manager.deactivateContext(contextId);
-		assertEquals(0, page.getEditors().length);
-
-		manager.activateContext(contextId);
-		assertTrue("num editors: " + page.getEditors().length, page.getEditors().length == 2
-				|| page.getEditors().length == 3);
 	}
 
 	public void testCloseOnUninteresting() {

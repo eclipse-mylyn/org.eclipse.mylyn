@@ -21,8 +21,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -42,10 +42,10 @@ public class ContextNodeOpenListener implements IOpenListener, IDoubleClickListe
 	public void open(OpenEvent event) {
 		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
 		Object object = selection.getFirstElement();
-		IMylarElement node = null;
-		if (object instanceof IMylarElement) {
-			node = (IMylarElement) object;
-		} else if (!(object instanceof IMylarRelation)) {
+		IInteractionElement node = null;
+		if (object instanceof IInteractionElement) {
+			node = (IInteractionElement) object;
+		} else if (!(object instanceof IInteractionRelation)) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
 			node = ContextCorePlugin.getContextManager().getElement(handle);

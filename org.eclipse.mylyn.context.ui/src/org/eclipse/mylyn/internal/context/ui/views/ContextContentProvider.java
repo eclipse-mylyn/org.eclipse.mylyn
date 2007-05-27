@@ -20,11 +20,11 @@ import java.util.Map;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.core.MylarContextRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -64,11 +64,11 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 
 	public Object[] getElements(Object parent) {
 		if (matchesParent(parent)) {
-			List<IMylarElement> nodes;
+			List<IInteractionElement> nodes;
 			if (landmarkOnlyMode) {
-				List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-				nodes = new ArrayList<IMylarElement>();
-				for (IMylarElement node : landmarks) {
+				List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+				nodes = new ArrayList<IInteractionElement>();
+				for (IInteractionElement node : landmarks) {
 					if (!node.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_ANY)
 							&& !node.getInterest().isPredicted()) {
 						// && node.getRelations().size() > 0) {
@@ -79,7 +79,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				nodes = ContextCorePlugin.getContextManager().getActiveContext().getAllElements();
 			}
 			List<Object> resolvedNodes = new ArrayList<Object>();
-			for (IMylarElement node : nodes) {
+			for (IInteractionElement node : nodes) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 				Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 				if (object != null)
@@ -107,16 +107,16 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 	public Object[] getChildren(Object parent) {
 		if (parent == null)
 			return new Object[0];
-		if (parent instanceof MylarContextRelation) {
-			IMylarRelation edge = (IMylarRelation) parent;
-			IMylarElement source = ContextCorePlugin.getContextManager().getElement(
-					((IMylarRelation) parent).getSource().getHandleIdentifier());
+		if (parent instanceof InteractionContextRelation) {
+			IInteractionRelation edge = (IInteractionRelation) parent;
+			IInteractionElement source = ContextCorePlugin.getContextManager().getElement(
+					((IInteractionRelation) parent).getSource().getHandleIdentifier());
 
 			return getAllTagetsForSource(source, edge.getRelationshipHandle());
 		} else {
-			IMylarElement node;
-			if (parent instanceof IMylarElement) {
-				node = (IMylarElement) parent;
+			IInteractionElement node;
+			if (parent instanceof IInteractionElement) {
+				node = (IInteractionElement) parent;
 			} else {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(parent);
 				node = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(parent));
@@ -140,12 +140,12 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		return isRootItem;
 	}
 
-	private Object[] getAllTagetsForSource(IMylarElement source, String kind) {
-		Collection<MylarContextRelation> edges = source.getRelations();
+	private Object[] getAllTagetsForSource(IInteractionElement source, String kind) {
+		Collection<InteractionContextRelation> edges = source.getRelations();
 		List<Object> targets = new ArrayList<Object>();
-		for (MylarContextRelation edge : edges) {
+		for (InteractionContextRelation edge : edges) {
 			if (edge.getRelationshipHandle().equals(kind)) {
-				IMylarElement target = edge.getTarget();
+				IInteractionElement target = edge.getTarget();
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(target.getContentType());
 				Object object = bridge.getObjectForHandle(target.getHandleIdentifier());
 				if (object != null)
@@ -156,10 +156,10 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		return targets.toArray();
 	}
 
-	private Object[] getAllEdgeTypes(Collection<MylarContextRelation> edges) {
-		Map<String, IMylarRelation> map = new HashMap<String, IMylarRelation>();
-		for (IMylarRelation edge : edges) {
-			IMylarRelation edgeType = map.get(edge.getRelationshipHandle());
+	private Object[] getAllEdgeTypes(Collection<InteractionContextRelation> edges) {
+		Map<String, IInteractionRelation> map = new HashMap<String, IInteractionRelation>();
+		for (IInteractionRelation edge : edges) {
+			IInteractionRelation edgeType = map.get(edge.getRelationshipHandle());
 			if (edgeType == null) {
 				edgeType = edge;
 				map.put(edge.getRelationshipHandle(), edgeType);
@@ -167,7 +167,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 		}
 		Object[] edgeTypes = new Object[map.size()];
 		int index = 0;
-		for (IMylarRelation value : map.values()) {
+		for (IInteractionRelation value : map.values()) {
 			edgeTypes[index] = value;
 			index++;
 		}
@@ -175,7 +175,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 	}
 
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof IMylarRelation) {
+		if (parent instanceof IInteractionRelation) {
 			return true;
 		} else {
 			return isRootItem(parent);

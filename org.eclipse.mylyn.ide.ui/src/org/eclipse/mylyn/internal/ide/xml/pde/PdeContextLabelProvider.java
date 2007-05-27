@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.ide.xml.pde;
 
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -28,23 +28,23 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 	public static final String LABEL_RELATION = "referenced by";
 	
 	@Override
-	protected Image getImage(IMylarElement node) {
+	protected Image getImage(IInteractionElement node) {
 		return ContextUiImages.getImage(ContextUiImages.FILE_XML);
 	}
 
 	@Override
-	protected Image getImage(IMylarRelation edge) {
+	protected Image getImage(IInteractionRelation edge) {
 		return ContextUiImages.getImage(MylarIdePlugin.EDGE_REF_XML);
 	}
 
 	@Override
-	protected String getText(IMylarElement node) {
+	protected String getText(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
 		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
-	protected String getText(IMylarRelation edge) {
+	protected String getText(IInteractionRelation edge) {
 		return LABEL_RELATION;
 	}
 

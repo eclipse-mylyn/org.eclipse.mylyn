@@ -44,8 +44,8 @@ public class ProblemsListTest extends AbstractJavaContextTest {
 		type1.createMethod("void m3() { c; }", null, true, null);
 		project.build();
 
-		manager.handleInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), 3f));
-		manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), 2f));
+		manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), 3f));
+		manager.processInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(), 2f));
 
 		TableViewer viewer = new TableViewer(new Table(problemsPart.getViewSite().getShell(), SWT.NULL));
 		viewer.setSorter(new MarkerViewerInterestSorter());

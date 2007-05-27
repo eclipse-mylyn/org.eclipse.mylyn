@@ -14,8 +14,8 @@ package org.eclipse.mylar.resources.tests;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
@@ -28,7 +28,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
  */
 public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
-	protected ContextManager manager = ContextCorePlugin.getContextManager();
+	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
 	protected ResourceInteractionMonitor monitor = new ResourceInteractionMonitor();
 
@@ -36,7 +36,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 
 	protected TestProject project;
 
-	protected MylarContext context;
+	protected InteractionContext context;
 
 	protected ScalingFactors scaling = new ScalingFactors();
 
@@ -49,7 +49,7 @@ public abstract class AbstractResourceContextTest extends AbstractContextTest {
 		super.setUp();
 		assertNotNull(MylarIdePlugin.getDefault());
 		project = new TestProject(this.getClass().getName());
-		context = new MylarContext(taskId, scaling);
+		context = new InteractionContext(taskId, scaling);
 		context.reset();
 		manager.activateContext(context);
 		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);

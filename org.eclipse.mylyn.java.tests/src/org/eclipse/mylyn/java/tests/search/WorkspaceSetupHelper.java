@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.support.ResourceHelper;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.java.tests.TestJavaProject;
 
@@ -35,7 +35,7 @@ public class WorkspaceSetupHelper {
 
 	private static boolean isSetup = false;
 
-	private static MylarContext taskscape;
+	private static InteractionContext taskscape;
 
 	private static IJavaProject project1;
 
@@ -57,7 +57,7 @@ public class WorkspaceSetupHelper {
 			clearDoiModel();
 			return workspaceRoot;
 		}
-		taskscape = new MylarContext(HELPER_CONTEXT_ID, new ScalingFactors());
+		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new ScalingFactors());
 
 		workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
@@ -80,10 +80,10 @@ public class WorkspaceSetupHelper {
 
 	public static void clearDoiModel() throws CoreException {
 		ContextCorePlugin.getContextManager().deleteContext(HELPER_CONTEXT_ID);
-		taskscape = new MylarContext(HELPER_CONTEXT_ID, new ScalingFactors());
+		taskscape = new InteractionContext(HELPER_CONTEXT_ID, new ScalingFactors());
 	}
 
-	public static MylarContext getContext() throws CoreException, IOException, InvocationTargetException,
+	public static InteractionContext getContext() throws CoreException, IOException, InvocationTargetException,
 			InterruptedException {
 		if (!isSetup)
 			setupWorkspace();

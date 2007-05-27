@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;
@@ -25,7 +25,7 @@ import org.eclipse.ui.views.markers.internal.ProblemMarker;
  */
 public class MarkerViewerInterestSorter extends ViewerSorter {
 
-	protected InterestComparator<IMylarElement> interestComparator = new InterestComparator<IMylarElement>();
+	protected InterestComparator<IInteractionElement> interestComparator = new InterestComparator<IInteractionElement>();
 
 	@Override
 	public int compare(Viewer viewer, Object obj1, Object obj2) {
@@ -41,9 +41,9 @@ public class MarkerViewerInterestSorter extends ViewerSorter {
 				if (ContextCorePlugin.getContextManager().isContextActive()) {
 					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 							marker1.getResource().getFileExtension());
-					IMylarElement node1 = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement node1 = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker1, 0));
-					IMylarElement node2 = ContextCorePlugin.getContextManager().getElement(
+					IInteractionElement node2 = ContextCorePlugin.getContextManager().getElement(
 							bridge.getHandleForOffsetInObject(marker2, 0));
 					return interestComparator.compare(node1, node2);
 				}

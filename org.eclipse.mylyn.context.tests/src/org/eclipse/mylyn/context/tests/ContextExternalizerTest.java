@@ -15,14 +15,14 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.context.tests.support.DomContextReader;
 import org.eclipse.mylar.context.tests.support.DomContextWriter;
 import org.eclipse.mylar.context.tests.support.FileTool;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextExternalizer;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextExternalizer;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.core.SaxContextReader;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 
@@ -31,7 +31,7 @@ import org.eclipse.mylar.internal.context.core.ScalingFactors;
  */
 public class ContextExternalizerTest extends AbstractContextTest {
 
-	private MylarContext context;
+	private InteractionContext context;
 
 	private ScalingFactors scaling;
 
@@ -39,7 +39,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		scaling = new ScalingFactors();
-		context = new MylarContext("context-externalization", new ScalingFactors());
+		context = new InteractionContext("context-externalization", new ScalingFactors());
 	}
 
 	@Override
@@ -47,16 +47,37 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		super.tearDown();
 	}
 
+	public void testContentAttributeExternalization() {
+		// Gets a file to write to and creates contexts folder if necessary
+		File file = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
+		file.deleteOnExit();
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
+		context.parseEvent(mockSelection("1"));
+		context.setContentLimitedTo("foobar");
+		
+		externalizer.writeContextToXml(context, file);
+
+		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
+		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
+		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
+		assertTrue(zippedContextFile.exists());
+		InteractionContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
+		assertNotNull(loaded);
+		
+		assertEquals("foobar", loaded.getContentLimitedTo());
+	}
+	
 	public void testSaxExternalizationAgainstDom() {
 		File file = FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), new Path(
 				"testdata/externalizer/testcontext.xml.zip"));
 		assertTrue(file.getAbsolutePath(), file.exists());
-		MylarContextExternalizer externalizer = new MylarContextExternalizer();
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		externalizer.setReader(new DomContextReader());
-		MylarContext domReadContext = externalizer.readContextFromXML("handle", file);
+		InteractionContext domReadContext = externalizer.readContextFromXML("handle", file);
 
 		externalizer.setReader(new SaxContextReader());
-		MylarContext saxReadContext = externalizer.readContextFromXML("handle", file);
+		InteractionContext saxReadContext = externalizer.readContextFromXML("handle", file);
 		assertEquals(284, saxReadContext.getInteractionHistory().size()); // known
 		// from
 		// testdata
@@ -74,15 +95,15 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertEquals(domOut.length(), saxOut.length());
 
 		externalizer.setReader(new DomContextReader());
-		MylarContext domReadAfterWrite = externalizer.readContextFromXML("handle", file);
+		InteractionContext domReadAfterWrite = externalizer.readContextFromXML("handle", file);
 		externalizer.setReader(new SaxContextReader());
-		MylarContext saxReadAfterWrite = externalizer.readContextFromXML("handle", file);
+		InteractionContext saxReadAfterWrite = externalizer.readContextFromXML("handle", file);
 
 		assertEquals(domReadAfterWrite, saxReadAfterWrite);
 	}
 
 	public void testContextSize() {
-		MylarContextExternalizer externalizer = new MylarContextExternalizer();
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		String path = "extern.xml";
 		File file = new File(path);
 		file.deleteOnExit();
@@ -111,11 +132,11 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		// Gets a file to write to and creates contexts folder if necessary
 		File file = ContextCorePlugin.getContextManager().getFileForContext(context.getHandleIdentifier());
 		file.deleteOnExit();
-		MylarContextExternalizer externalizer = new MylarContextExternalizer();
+		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 
-		IMylarElement node = context.parseEvent(mockSelection("1"));
+		IInteractionElement node = context.parseEvent(mockSelection("1"));
 		context.parseEvent(mockNavigation("2"));
-		IMylarRelation edge = node.getRelation("2");
+		IInteractionRelation edge = node.getRelation("2");
 		assertNotNull(edge);
 		assertEquals(1, node.getRelations().size());
 		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue() * 3));
@@ -132,17 +153,17 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
 		File contextsDirectory = new File(dataDirectory, "contexts"/*WorkspaceAwareContextStore.CONTEXTS_DIRECTORY*/);
 		File zippedContextFile = new File(contextsDirectory, context.getHandleIdentifier()
-				+ ContextManager.CONTEXT_FILE_EXTENSION);
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION);
 		assertTrue(zippedContextFile.exists());
-		MylarContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
+		InteractionContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
 		assertNotNull(loaded);
 		assertEquals(3, loaded.getInteractionHistory().size());
-		IMylarElement loadedNode = loaded.get("1");
-		IMylarRelation edgeNode = loadedNode.getRelation("2");
+		IInteractionElement loadedNode = loaded.get("1");
+		IInteractionRelation edgeNode = loadedNode.getRelation("2");
 		assertNotNull(edgeNode);
 		assertEquals(1, loadedNode.getRelations().size());
 
-		IMylarElement landmark = loaded.get("3");
+		IInteractionElement landmark = loaded.get("3");
 		assertNotNull(loadedNode);
 		assertEquals(doi, loadedNode.getInterest().getValue());
 		assertTrue(landmark.getInterest().isLandmark());

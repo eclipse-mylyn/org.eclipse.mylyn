@@ -22,9 +22,9 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -54,8 +54,8 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof IMylarElement) {
-			IMylarElement node = (IMylarElement) object;
+		if (object instanceof IInteractionElement) {
+			IInteractionElement node = (IInteractionElement) object;
 			if (JavaStructureBridge.CONTENT_TYPE.equals(node.getContentType())) {
 				IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 				if (element == null) {
@@ -64,8 +64,8 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 					return getTextForElement(element);
 				}
 			}
-		} else if (object instanceof IMylarRelation) {
-			return getNameForRelationship(((IMylarRelation) object).getRelationshipHandle());
+		} else if (object instanceof IInteractionRelation) {
+			return getNameForRelationship(((IInteractionRelation) object).getRelationshipHandle());
 		} else if (object instanceof IJavaElement) {
 			return getTextForElement((IJavaElement) object);
 		}
@@ -90,13 +90,13 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	@Override
 	public Image getImage(Object object) {
-		if (object instanceof IMylarElement) {
-			IMylarElement node = (IMylarElement) object;
+		if (object instanceof IInteractionElement) {
+			IInteractionElement node = (IInteractionElement) object;
 			if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 				return super.getImage(JavaCore.create(node.getHandleIdentifier()));
 			}
-		} else if (object instanceof IMylarRelation) {
-			ImageDescriptor descriptor = getIconForRelationship(((IMylarRelation) object).getRelationshipHandle());
+		} else if (object instanceof IInteractionRelation) {
+			ImageDescriptor descriptor = getIconForRelationship(((IInteractionRelation) object).getRelationshipHandle());
 			if (descriptor != null) {
 				return ContextUiImages.getImage(descriptor);
 			} else {
@@ -137,7 +137,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 			return JavaWriteAccessProvider.NAME;
 		} else if (relationshipHandle.equals(JavaReadAccessProvider.ID)) {
 			return JavaReadAccessProvider.NAME;
-		} else if (relationshipHandle.equals(ContextManager.CONTAINMENT_PROPAGATION_ID)) {
+		} else if (relationshipHandle.equals(InteractionContextManager.CONTAINMENT_PROPAGATION_ID)) {
 			return "Containment"; // TODO: make this generic?
 		} else {
 			return null;

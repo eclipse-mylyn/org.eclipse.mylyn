@@ -29,8 +29,8 @@ public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfigurationDeleg
 	
 	@Override
 	protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-		Set<IType> contextTestCases = MylarContextTestUtil.getTestCasesInContext();
-		MylarContextTestUtil.setupTestConfiguration(contextTestCases, configuration, monitor);
+		Set<IType> contextTestCases = InteractionContextTestUtil.getTestCasesInContext();
+		InteractionContextTestUtil.setupTestConfiguration(contextTestCases, configuration, monitor);
 
 		if (contextTestCases.isEmpty()) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 

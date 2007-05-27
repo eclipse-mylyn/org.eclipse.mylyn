@@ -12,15 +12,15 @@
 package org.eclipse.mylar.internal.context.core;
 
 import org.eclipse.mylar.context.core.IDegreeOfInterest;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 
 /**
  * TODO: make immutable?
  * 
  * @author Mik Kersten
  */
-public class MylarContextRelation implements IMylarRelation {
+public class InteractionContextRelation implements IInteractionRelation {
 
 	private DegreeOfInterest interest;
 
@@ -28,12 +28,12 @@ public class MylarContextRelation implements IMylarRelation {
 
 	private String relationshipHandle;
 
-	private IMylarElement source;
+	private IInteractionElement source;
 
-	private IMylarElement target;
+	private IInteractionElement target;
 
-	public MylarContextRelation(String kind, String edgeKind, IMylarElement source, IMylarElement target,
-			MylarContext context) {
+	public InteractionContextRelation(String kind, String edgeKind, IInteractionElement source, IInteractionElement target,
+			InteractionContext context) {
 		interest = new DegreeOfInterest(context, context.getScalingFactors());
 		this.structureKind = kind;
 		this.relationshipHandle = edgeKind;
@@ -41,7 +41,7 @@ public class MylarContextRelation implements IMylarRelation {
 		this.source = source;
 	}
 
-	public IMylarElement getTarget() {
+	public IInteractionElement getTarget() {
 		return target;
 	}
 
@@ -67,7 +67,7 @@ public class MylarContextRelation implements IMylarRelation {
 		return structureKind;
 	}
 
-	public IMylarElement getSource() {
+	public IInteractionElement getSource() {
 		return source;
 	}
 }

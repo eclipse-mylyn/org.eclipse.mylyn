@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
@@ -50,10 +50,10 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class AntUiBridge extends AbstractContextUiBridge {
 
 	/**
-	 * @see org.eclipse.mylar.context.ui.AbstractContextUiBridge#open(org.eclipse.mylar.context.core.IMylarElement)
+	 * @see org.eclipse.mylar.context.ui.AbstractContextUiBridge#open(org.eclipse.mylar.context.core.IInteractionElement)
 	 */
 	@Override
-	public void open(IMylarElement node) {
+	public void open(IInteractionElement node) {
 		// get the handle of the node
 		String handle = node.getHandleIdentifier();
 
@@ -131,7 +131,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void close(IMylarElement node) {
+	public void close(IInteractionElement node) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			IEditorReference[] references = page.getEditorReferences();
@@ -186,7 +186,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public IMylarElement getElement(IEditorInput input) {
+	public IInteractionElement getElement(IEditorInput input) {
 		return null;
 	}
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -24,15 +24,15 @@ import org.eclipse.ui.IEditorPart;
  */
 public abstract class AbstractContextUiBridge {
 
-	public abstract void open(IMylarElement element);
+	public abstract void open(IInteractionElement element);
 
 //	public abstract void restoreEditor(IMylarElement document);
 
-	public abstract void close(IMylarElement element);
+	public abstract void close(IInteractionElement element);
 
 	public abstract boolean acceptsEditor(IEditorPart editorPart);
 
-	public abstract IMylarElement getElement(IEditorInput input);
+	public abstract IInteractionElement getElement(IEditorInput input);
 	
 	/**
 	 * Note that a single editor part can correspond to multipe outlines (e.g.

@@ -15,7 +15,7 @@ import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
@@ -44,7 +44,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
 					.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
-			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
+			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		IWorkbenchPage page = editorPartOpened.getSite().getPage();
 		IEditorReference[] editorReferences = page.getEditorReferences();
 		for (int i = 0; i < editorReferences.length; i++) {
-			IMylarElement element = null;
+			IInteractionElement element = null;
 			Object adapter;
 			IEditorPart editorToClose = editorReferences[i].getEditor(false);
 			if (editorToClose != null) {
@@ -89,7 +89,7 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				&& !otherEditorsOpenForResource(editorPart)
 				&& !(editorPart instanceof CompareEditor)
 				&& !(editorPart instanceof IContextAwareEditor)) {
-			IMylarElement element = null;
+			IInteractionElement element = null;
 			AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 			Object object = uiBridge.getObjectForTextSelection(null, editorPart);
 			if (object != null) {

@@ -26,8 +26,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
@@ -131,10 +131,10 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
 	}
 
-	public List<IResource> getInterestingResources(IMylarContext context) {
+	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IMylarElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
-		for (IMylarElement element : resourceElements) {
+		Collection<IInteractionElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
+		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {
 				interestingResources.add(resource);
@@ -168,7 +168,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		return interestUpdater;
 	}
 	
-	public IResource getResourceForElement(IMylarElement element, boolean findContainingResource) {
+	public IResource getResourceForElement(IInteractionElement element, boolean findContainingResource) {
 		if (element == null)
 			return null;
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());

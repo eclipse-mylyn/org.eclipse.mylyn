@@ -37,8 +37,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
@@ -128,22 +128,22 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private static final AbstractContextLabelProvider DEFAULT_LABEL_PROVIDER = new AbstractContextLabelProvider() {
 
 		@Override
-		protected Image getImage(IMylarElement node) {
+		protected Image getImage(IInteractionElement node) {
 			return null;
 		}
 
 		@Override
-		protected Image getImage(IMylarRelation edge) {
+		protected Image getImage(IInteractionRelation edge) {
 			return null;
 		}
 
 		@Override
-		protected String getText(IMylarElement node) {
+		protected String getText(IInteractionElement node) {
 			return "? " + node;
 		}
 
 		@Override
-		protected String getText(IMylarRelation edge) {
+		protected String getText(IInteractionRelation edge) {
 			return "? " + edge;
 		}
 
@@ -162,12 +162,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private static final AbstractContextUiBridge DEFAULT_UI_BRIDGE = new AbstractContextUiBridge() {
 
 		@Override
-		public void open(IMylarElement node) {
+		public void open(IInteractionElement node) {
 			// ignore
 		}
 
 		@Override
-		public void close(IMylarElement node) {
+		public void close(IInteractionElement node) {
 			// ignore
 		}
 
@@ -187,7 +187,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 
 		@Override
-		public IMylarElement getElement(IEditorInput input) {
+		public IInteractionElement getElement(IEditorInput input) {
 			return null;
 		}
 
@@ -728,7 +728,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		ContextCorePlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
 		ContextUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
 		provider.setDegreeOfSeparation(degreeOfSeparation);
-		for (IMylarElement element : ContextCorePlugin.getContextManager().getActiveContext().getInteresting()) {
+		for (IInteractionElement element : ContextCorePlugin.getContextManager().getActiveContext().getInteresting()) {
 			if (element.getInterest().isLandmark()) {
 				provider.landmarkAdded(element);
 			}

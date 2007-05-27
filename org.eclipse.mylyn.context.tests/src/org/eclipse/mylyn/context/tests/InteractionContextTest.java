@@ -9,19 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.core;
+package org.eclipse.mylar.context.tests;
+
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.ScalingFactors;
+import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten
  */
-public interface IMylarRelation extends IMylarObject {
+public class InteractionContextTest extends AbstractContextTest {
 
-	public abstract String getLabel();
-
-	public abstract String getRelationshipHandle();
-
-	public abstract IMylarElement getTarget();
-
-	public abstract IMylarElement getSource();
-
+	public void testParseEventWithNullHandle() {
+		InteractionEvent event = mockSelection(null);
+		InteractionContext context = new InteractionContext("test", new ScalingFactors());
+		assertNull(context.parseEvent(event));
+	}
+	
 }

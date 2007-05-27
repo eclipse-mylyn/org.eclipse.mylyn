@@ -13,13 +13,13 @@ package org.eclipse.mylar.context.core;
 
 import java.io.File;
 
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 
 /**
  * @author Mik Kersten
  */
-public interface IContextReader {
+public interface IInteractionContextReader {
 
-	public abstract MylarContext readContext(String handleIdentifier, File file);
+	public abstract InteractionContext readContext(String handleIdentifier, File file);
 
 }

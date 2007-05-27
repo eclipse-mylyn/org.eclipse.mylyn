@@ -16,15 +16,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.mylar.context.core.IDegreeOfInterest;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 
 /**
  * Can only have one edge from a node to a particular target.
  * 
  * @author Mik Kersten
  */
-public class MylarContextElement implements IMylarElement {
+public class InteractionContextElement implements IInteractionElement {
 
 	private String handle;
 
@@ -32,11 +32,11 @@ public class MylarContextElement implements IMylarElement {
 
 	private DegreeOfInterest interest;
 
-	private MylarContext context;
+	private InteractionContext context;
 
-	private Map<String/* target handle */, MylarContextRelation> edges = new HashMap<String, MylarContextRelation>();
+	private Map<String/* target handle */, InteractionContextRelation> edges = new HashMap<String, InteractionContextRelation>();
 
-	public MylarContextElement(String kind, String elementHandle, MylarContext context) {
+	public InteractionContextElement(String kind, String elementHandle, InteractionContext context) {
 		if (elementHandle == null)
 			throw new RuntimeException("malformed context: null handle");
 		interest = new DegreeOfInterest(context, context.getScalingFactors()); 
@@ -61,18 +61,18 @@ public class MylarContextElement implements IMylarElement {
 		this.kind = kind;
 	}
 
-	public Collection<MylarContextRelation> getRelations() {
+	public Collection<InteractionContextRelation> getRelations() {
 		return edges.values();
 	}
 
-	public MylarContextRelation getRelation(String targetHandle) {
+	public InteractionContextRelation getRelation(String targetHandle) {
 		return edges.get(targetHandle);
 	}
 
 	/**
 	 * TODO: reduce visibility
 	 */
-	public void addEdge(MylarContextRelation edge) {
+	public void addEdge(InteractionContextRelation edge) {
 		edges.put(edge.getTarget().getHandleIdentifier(), edge);
 	}
 
@@ -80,7 +80,7 @@ public class MylarContextElement implements IMylarElement {
 		edges.clear();
 	}
 
-	void removeEdge(IMylarRelation edge) {
+	void removeEdge(IInteractionRelation edge) {
 		edges.remove(edge.getTarget().getHandleIdentifier());
 	}
 
@@ -90,8 +90,8 @@ public class MylarContextElement implements IMylarElement {
 			return false;
 		if (this.getHandleIdentifier() == null)
 			return false;
-		if (obj instanceof MylarContextElement) {
-			MylarContextElement node = (MylarContextElement) obj;
+		if (obj instanceof InteractionContextElement) {
+			InteractionContextElement node = (InteractionContextElement) obj;
 			return this.getHandleIdentifier().equals(node.getHandleIdentifier());
 		}
 		return false;
@@ -110,7 +110,7 @@ public class MylarContextElement implements IMylarElement {
 		return interest;
 	}
 
-	public MylarContext getContext() {
+	public InteractionContext getContext() {
 		return context;
 	}
 

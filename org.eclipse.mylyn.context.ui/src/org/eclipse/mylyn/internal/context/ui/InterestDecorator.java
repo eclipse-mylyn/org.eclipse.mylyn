@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.IFontDecorator;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.internal.context.core.MylarContextRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContextRelation;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -34,10 +34,10 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 		super();
 	}
 
-	private IMylarElement getNode(Object element) {
-		IMylarElement node = null;
-		if (element instanceof IMylarElement) {
-			node = (IMylarElement) element;
+	private IInteractionElement getNode(Object element) {
+		IInteractionElement node = null;
+		if (element instanceof IInteractionElement) {
+			node = (IInteractionElement) element;
 		} else {
 			AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(element);
 			node = ContextCorePlugin.getContextManager().getElement(adapter.getHandleIdentifier(element));
@@ -70,7 +70,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	}
 
 	public Font decorateFont(Object element) {
-		IMylarElement node = getNode(element);
+		IInteractionElement node = getNode(element);
 		if (node != null) {
 			if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
 				return ContextUiPrefContstants.BOLD;
@@ -80,8 +80,8 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	}
 
 	public Color decorateForeground(Object element) {
-		IMylarElement node = getNode(element);
-		if (element instanceof MylarContextRelation) {
+		IInteractionElement node = getNode(element);
+		if (element instanceof InteractionContextRelation) {
 			return ColorMap.RELATIONSHIP;
 		} else if (node != null) {
 			UiUtil.getForegroundForElement(node);
@@ -90,7 +90,7 @@ public class InterestDecorator implements ILabelDecorator, IFontDecorator, IColo
 	}
 
 	public Color decorateBackground(Object element) {
-		IMylarElement node = getNode(element);
+		IInteractionElement node = getNode(element);
 		if (node != null) {
 			return UiUtil.getBackgroundForElement(node);
 		} else {

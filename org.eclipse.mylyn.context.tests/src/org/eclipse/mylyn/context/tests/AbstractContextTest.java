@@ -15,7 +15,7 @@ package org.eclipse.mylar.context.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.IMylarContext;
+import org.eclipse.mylar.context.core.IInteractionContext;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
@@ -29,9 +29,9 @@ public abstract class AbstractContextTest extends TestCase {
 
 	private static final String MOCK_PROVIDER = "<mock-provider>";
 
-	private static final String MOCK_ORIGIN = "<mock-origin>";
+	protected static final String MOCK_ORIGIN = "<mock-origin>";
 
-	private static final String MOCK_KIND = "java";
+	protected static final String MOCK_KIND = "java";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -64,7 +64,7 @@ public abstract class AbstractContextTest extends TestCase {
 	}
 
 	protected InteractionEvent mockNavigation(String toHandle) {
-		return new InteractionEvent(InteractionEvent.Kind.SELECTION, "java", toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
+		return new InteractionEvent(InteractionEvent.Kind.SELECTION, MOCK_KIND, toHandle, MOCK_ORIGIN, MOCK_PROVIDER);
 	}
 
 	protected InteractionEvent mockInterestContribution(String handle, String kind, float value) {
@@ -81,7 +81,7 @@ public abstract class AbstractContextTest extends TestCase {
 		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
 	}
 
-	protected boolean compareTaskscapeEquality(IMylarContext t1, IMylarContext t2) {
+	protected boolean compareTaskscapeEquality(IInteractionContext t1, IInteractionContext t2) {
 		return false;
 	}
 

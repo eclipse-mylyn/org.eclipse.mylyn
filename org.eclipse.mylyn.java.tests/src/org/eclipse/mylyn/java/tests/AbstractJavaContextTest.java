@@ -21,8 +21,8 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.tests.AbstractContextTest;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.MylarJavaPlugin;
@@ -35,7 +35,7 @@ import org.eclipse.mylar.resources.tests.ResourceTestUtil;
  */
 public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
-	protected ContextManager manager = ContextCorePlugin.getContextManager();
+	protected InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
 	protected JavaEditingMonitor monitor = new JavaEditingMonitor();
 
@@ -47,7 +47,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 	protected String contextId = this.getClass().getSimpleName();
 
-	protected MylarContext context;
+	protected InteractionContext context;
 
 	protected ScalingFactors scaling = new ScalingFactors();
 
@@ -59,7 +59,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		project = new TestJavaProject(this.getClass().getSimpleName());
 		p1 = project.createPackage("p1");
 		type1 = project.createType(p1, "Type1.java", "public class Type1 { }");
-		context = new MylarContext(contextId, scaling);
+		context = new InteractionContext(contextId, scaling);
 		context.reset();
 		manager.activateContext(context);
 		assertNotNull(MylarJavaPlugin.getDefault());
@@ -80,7 +80,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 
 		ResourceTestUtil.deleteProject(project.getProject());
 
-		for (MylarContext context : manager.getActiveContexts()) {
+		for (InteractionContext context : manager.getActiveContexts()) {
 			manager.deactivateContext(context.getHandleIdentifier());
 		}
 		if (manager.isContextActive())

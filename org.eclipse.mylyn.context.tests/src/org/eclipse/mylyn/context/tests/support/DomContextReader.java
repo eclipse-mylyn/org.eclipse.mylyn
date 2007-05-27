@@ -23,10 +23,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.mylar.context.core.IContextReader;
+import org.eclipse.mylar.context.core.IInteractionContextReader;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
@@ -41,11 +41,11 @@ import org.xml.sax.SAXException;
  * 
  * TODO: merge into a single externalizer
  */
-public class DomContextReader implements IContextReader {
+public class DomContextReader implements IInteractionContextReader {
 
 	// private int readVersion;
 
-	public MylarContext readContext(String handle, File file) {
+	public InteractionContext readContext(String handle, File file) {
 		if (!file.exists())
 			return null;
 		try {
@@ -53,7 +53,7 @@ public class DomContextReader implements IContextReader {
 			Element root = doc.getDocumentElement();
 			// readVersion = Integer.parseInt(root.getAttribute("Version"));
 			// String id = root.getAttribute("Id");
-			MylarContext t = new MylarContext(handle, ContextManager.getScalingFactors());
+			InteractionContext t = new InteractionContext(handle, InteractionContextManager.getScalingFactors());
 			NodeList list = root.getChildNodes();
 			for (int i = 0; i < list.getLength(); i++) {
 				Node child = list.item(i);

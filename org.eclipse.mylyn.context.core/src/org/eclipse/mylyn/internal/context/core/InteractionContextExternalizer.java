@@ -22,18 +22,18 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylar.context.core.IContextReader;
-import org.eclipse.mylar.context.core.IContextWriter;
+import org.eclipse.mylar.context.core.IInteractionContextReader;
+import org.eclipse.mylar.context.core.IInteractionContextWriter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class MylarContextExternalizer {
+public class InteractionContextExternalizer {
 
-	private IContextReader reader = new SaxContextReader();
+	private IInteractionContextReader reader = new SaxContextReader();
 
-	private IContextWriter writer = new SaxContextWriter();
+	private IInteractionContextWriter writer = new SaxContextWriter();
 	
 	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
 
@@ -65,7 +65,7 @@ public class MylarContextExternalizer {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING, Locale.ENGLISH);
 
-	public void writeContextToXml(MylarContext context, File file) {
+	public void writeContextToXml(InteractionContext context, File file) {
 		if (context.getInteractionHistory().isEmpty())
 			return;
 		try {
@@ -73,9 +73,9 @@ public class MylarContextExternalizer {
 				file.createNewFile();
 			 }
 			String handleIdentifier = context.getHandleIdentifier();
-			String encoded = URLEncoder.encode(handleIdentifier, ContextManager.CONTEXT_FILENAME_ENCODING);		
+			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);		
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
-			ZipEntry zipEntry = new ZipEntry(encoded + ContextManager.CONTEXT_FILE_EXTENSION_OLD);
+			ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 			outputStream.putNextEntry(zipEntry);
 			outputStream.setMethod(ZipOutputStream.DEFLATED);
 
@@ -90,7 +90,7 @@ public class MylarContextExternalizer {
 		}
 	}
 
-	public MylarContext readContextFromXML(String handleIdentifier, File file) {
+	public InteractionContext readContextFromXML(String handleIdentifier, File file) {
 		try {
 			if (!file.exists()) {
 				return null;
@@ -103,19 +103,19 @@ public class MylarContextExternalizer {
 		return null;
 	}
 
-	public IContextReader getReader() {
+	public IInteractionContextReader getReader() {
 		return reader;
 	}
 
-	public void setReader(IContextReader reader) {
+	public void setReader(IInteractionContextReader reader) {
 		this.reader = reader;
 	}
 
-	public IContextWriter getWriter() {
+	public IInteractionContextWriter getWriter() {
 		return writer;
 	}
 
-	public void setWriter(IContextWriter writer) {
+	public void setWriter(IInteractionContextWriter writer) {
 		this.writer = writer;
 	}
 }

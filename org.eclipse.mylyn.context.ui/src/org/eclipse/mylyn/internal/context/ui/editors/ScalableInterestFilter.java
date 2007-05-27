@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.internal.context.ui.editors;
 
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.InterestFilter;
 
 /**
@@ -25,7 +25,7 @@ public class ScalableInterestFilter extends InterestFilter {
 	private float threshold = 0;
 	
 	@Override
-	protected boolean isInteresting(IMylarElement element) {
+	protected boolean isInteresting(IInteractionElement element) {
 		if (element.getInterest().getValue() == 0) {
 			// TOD: parametrize default value
 			return false;

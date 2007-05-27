@@ -22,13 +22,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.tests.support.ResourceHelper;
 import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.internal.context.core.CompositeContext;
+import org.eclipse.mylar.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.MylarContextRelation;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider;
 import org.eclipse.mylar.java.tests.search.ActiveSearchNotifier;
@@ -54,7 +54,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
-		MylarContext t = WorkspaceSetupHelper.getContext();
+		InteractionContext t = WorkspaceSetupHelper.getContext();
 		ContextCorePlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
 																					// t.getId());
 		helper = new SearchPluginTestHelper(this);
@@ -70,9 +70,9 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// we should get all results since we are searching the entire workspace
@@ -81,21 +81,21 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		//
 		//
 
-		Collection<MylarContextRelation> edges = searchNode.getRelations();
+		Collection<InteractionContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());
 
 		ResourceHelper.delete(plugin1);
 
-		Collection<MylarContextRelation> edgesAfterRemove = searchNode.getRelations();
+		Collection<InteractionContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());
 	}
 
 	public void testRemoveProject() throws Exception {
 		int dos = 4;
 
-		CompositeContext t = (CompositeContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IMylarElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// we should get all results since we are searching the entire workspace
@@ -104,17 +104,17 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		//
 		//
 
-		Collection<MylarContextRelation> edges = searchNode.getRelations();
+		Collection<InteractionContextRelation> edges = searchNode.getRelations();
 		assertEquals(3, edges.size());
 
 		ResourceHelper.deleteProject(jp1.getProject().getName());
 
-		Collection<MylarContextRelation> edgesAfterRemove = searchNode.getRelations();
+		Collection<InteractionContextRelation> edgesAfterRemove = searchNode.getRelations();
 		assertEquals(0, edgesAfterRemove.size());
 		;
 	}
 
-	public List<?> search(int dos, IMylarElement node) throws IOException, CoreException {
+	public List<?> search(int dos, IInteractionElement node) throws IOException, CoreException {
 		if (node == null)
 			return null;
 

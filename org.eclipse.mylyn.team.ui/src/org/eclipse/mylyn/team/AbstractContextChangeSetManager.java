@@ -11,8 +11,8 @@ package org.eclipse.mylar.team;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -23,7 +23,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractContextChangeSetManager implements IMylarContextListener {
+public abstract class AbstractContextChangeSetManager implements IInteractionContextListener {
 
 	protected boolean isEnabled = false;
 		
@@ -112,19 +112,19 @@ public abstract class AbstractContextChangeSetManager implements IMylarContextLi
 		}
 	};
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		// TODO: handle?
 	}
 
-	public void landmarkAdded(IMylarElement node) {
+	public void landmarkAdded(IInteractionElement node) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
+	public void landmarkRemoved(IInteractionElement node) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
 }

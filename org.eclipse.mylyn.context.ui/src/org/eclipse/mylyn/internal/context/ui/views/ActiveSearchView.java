@@ -30,9 +30,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -76,38 +76,38 @@ public class ActiveSearchView extends ViewPart {
 	 */
 	private boolean syncExecForTesting = true;
 
-	private final IMylarContextListener REFRESH_UPDATE_LISTENER = new IMylarContextListener() {
+	private final IInteractionContextListener REFRESH_UPDATE_LISTENER = new IInteractionContextListener() {
 
-		public void interestChanged(List<IMylarElement> nodes) {
+		public void interestChanged(List<IInteractionElement> nodes) {
 			refresh(nodes.get(nodes.size() - 1), false);
 		}
 
-		public void contextActivated(IMylarContext taskscape) {
+		public void contextActivated(IInteractionContext taskscape) {
 			ContextUiPlugin.getDefault().refreshRelatedElements();
 			refresh(null, true);
 		}
 
-		public void contextDeactivated(IMylarContext taskscape) {
+		public void contextDeactivated(IInteractionContext taskscape) {
 			refresh(null, true);
 		}
 		
-		public void contextCleared(IMylarContext context) {
+		public void contextCleared(IInteractionContext context) {
 			refresh(null, true);
 		}
 
-		public void landmarkAdded(IMylarElement node) {
+		public void landmarkAdded(IInteractionElement node) {
 			refresh(null, true);
 		}
 
-		public void landmarkRemoved(IMylarElement node) {
+		public void landmarkRemoved(IInteractionElement node) {
 			refresh(null, true);
 		}
 
-		public void relationsChanged(IMylarElement node) {
+		public void relationsChanged(IInteractionElement node) {
 			refresh(node, true);
 		}
 
-		public void elementDeleted(IMylarElement node) {
+		public void elementDeleted(IInteractionElement node) {
 			refresh(null, true);
 		}
 
@@ -145,7 +145,7 @@ public class ActiveSearchView extends ViewPart {
 	 * @param node
 	 * @param updateLabels
 	 */
-	void refresh(final IMylarElement node, final boolean updateLabels) {
+	void refresh(final IInteractionElement node, final boolean updateLabels) {
 		if (!syncExecForTesting) { // for testing
 			// if (viewer != null && !viewer.getTree().isDisposed()) {
 			// internalRefresh(node, updateLabels);
@@ -172,7 +172,7 @@ public class ActiveSearchView extends ViewPart {
 		}
 	}
 
-	private void internalRefresh(final IMylarElement node, boolean updateLabels) {
+	private void internalRefresh(final IInteractionElement node, boolean updateLabels) {
 		Object toRefresh = null;
 		if (node != null) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());

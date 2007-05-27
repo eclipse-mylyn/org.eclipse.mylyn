@@ -13,7 +13,7 @@ package org.eclipse.mylar.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.InterestComparator;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
@@ -27,18 +27,18 @@ public class InterestSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		IMylarElement element1 = getCorresponding(e1);
-		IMylarElement element2 = getCorresponding(e2);
-		if (element1 instanceof IMylarElement && element2 instanceof IMylarElement) {
+		IInteractionElement element1 = getCorresponding(e1);
+		IInteractionElement element2 = getCorresponding(e2);
+		if (element1 instanceof IInteractionElement && element2 instanceof IInteractionElement) {
 			return comparator.compare(element1, element2);
 		} else {
 			return 0;
 		}
 	} 
  
-	private IMylarElement getCorresponding(Object object) {
-		if (object instanceof IMylarElement) {
-			return(IMylarElement) object;
+	private IInteractionElement getCorresponding(Object object) {
+		if (object instanceof IInteractionElement) {
+			return(IInteractionElement) object;
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);

@@ -28,9 +28,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.context.core.IContextWriter;
+import org.eclipse.mylar.context.core.IInteractionContextWriter;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.w3c.dom.Document;
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * 
  * @author Mik Kersten
  */
-public class DomContextWriter implements IContextWriter {
+public class DomContextWriter implements IInteractionContextWriter {
 
 	private DocumentBuilderFactory dbf = null;
 
@@ -62,7 +62,7 @@ public class DomContextWriter implements IContextWriter {
 		}
 	}
 
-	public void writeContextToStream(MylarContext context) throws IOException {
+	public void writeContextToStream(InteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;

@@ -23,7 +23,7 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.tests.UiTestUtil;
 import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -68,7 +68,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("void m1() {\n m1(); \n}", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
-		IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling
+		IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling
 				.getLandmark()));
 
 		// force an edge on so that it shows up in the view
@@ -85,7 +85,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		// just make sure that the view didn't blow up.
 		assertEquals(1, collectedItems.size());
 		monitor.selectionChanged(part, sm1);
-		manager.handleInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));
+		manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), -scaling.getLandmark()));
 	}
 
 	public void testSearchNotRunIfViewDeactivated() throws PartInitException, JavaModelException {
@@ -121,7 +121,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 			IMethod m2 = type1.createMethod("void m2() { }", null, true, null);
 			StructuredSelection sm2 = new StructuredSelection(m2);
 			monitor.selectionChanged(part, sm2);
-			IMylarElement node = manager.handleInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(),
+			IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(),
 					scaling.getLandmark()));
 			assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
 
@@ -134,7 +134,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		}
 	}
 
-	public List<?> search(int dos, IMylarElement node) {
+	public List<?> search(int dos, IInteractionElement node) {
 		if (node == null) {
 			fail("null element");
 		}

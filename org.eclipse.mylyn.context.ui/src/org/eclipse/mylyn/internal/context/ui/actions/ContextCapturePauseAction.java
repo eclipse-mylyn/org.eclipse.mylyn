@@ -17,9 +17,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -30,7 +30,7 @@ import org.eclipse.ui.IViewPart;
  * 
  * @author Mik Kersten
  */
-public class ContextCapturePauseAction extends Action implements IViewActionDelegate, IMylarContextListener {
+public class ContextCapturePauseAction extends Action implements IViewActionDelegate, IInteractionContextListener {
 	
 	protected IAction initAction = null;
 	
@@ -61,7 +61,7 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 		}
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		resume();
 		setChecked(false);
 		if (initAction != null) {
@@ -69,31 +69,31 @@ public class ContextCapturePauseAction extends Action implements IViewActionDele
 		}
 	}
 
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
 	
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement element) {
+	public void relationsChanged(IInteractionElement element) {
 		// ignore
 	}
 
-	public void interestChanged(List<IMylarElement> elements) {
+	public void interestChanged(List<IInteractionElement> elements) {
 		// ignore
 	}
 
-	public void landmarkAdded(IMylarElement element) {
+	public void landmarkAdded(IInteractionElement element) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement element) {
+	public void landmarkRemoved(IInteractionElement element) {
 		// ignore
 	}
 
-	public void elementDeleted(IMylarElement element) {
+	public void elementDeleted(IInteractionElement element) {
 		// ignore
 	}
 	

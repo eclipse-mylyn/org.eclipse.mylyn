@@ -18,7 +18,7 @@ import org.eclipse.mylar.monitor.core.InteractionEvent;
 /**
  * @author Mik Kersten
  */
-public interface IMylarContext {
+public interface IInteractionContext {
 
 	/**
 	 * @return	null if no unique handle, e.g. if a composite context
@@ -27,16 +27,16 @@ public interface IMylarContext {
 	
 	public abstract List<InteractionEvent> getInteractionHistory();
 
-	public List<IMylarElement> getInteresting();
+	public List<IInteractionElement> getInteresting();
 
-	public abstract IMylarElement get(String element);
+	public abstract IInteractionElement get(String element);
 
-	public abstract IMylarElement getActiveNode();
+	public abstract IInteractionElement getActiveNode();
 
-	public abstract void delete(IMylarElement element);
+	public abstract void delete(IInteractionElement element);
 
-	public abstract void updateElementHandle(IMylarElement element, String newHandle);
+	public abstract void updateElementHandle(IInteractionElement element, String newHandle);
 
-	public abstract List<IMylarElement> getAllElements();
+	public abstract List<IInteractionElement> getAllElements();
 
 }

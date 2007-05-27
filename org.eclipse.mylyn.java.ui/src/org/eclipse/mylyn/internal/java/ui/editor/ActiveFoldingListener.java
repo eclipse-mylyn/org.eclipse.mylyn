@@ -28,9 +28,9 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider;
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
@@ -39,7 +39,7 @@ import org.eclipse.mylar.internal.java.JavaStructureBridge;
 /**
  * @author Mik Kersten
  */
-public class ActiveFoldingListener implements IMylarContextListener {
+public class ActiveFoldingListener implements IInteractionContextListener {
 	private final JavaEditor editor;
 
 	private IJavaFoldingStructureProviderExtension updater;
@@ -106,7 +106,7 @@ public class ActiveFoldingListener implements IMylarContextListener {
 					ICompilationUnit compilationUnit = (ICompilationUnit) element;
 					List<IJavaElement> allChildren = getAllChildren(compilationUnit);
 					for (IJavaElement child : allChildren) {
-						IMylarElement mylarElement = ContextCorePlugin.getContextManager().getElement(
+						IInteractionElement mylarElement = ContextCorePlugin.getContextManager().getElement(
 								bridge.getHandleIdentifier(child));
 						if (mylarElement != null && mylarElement.getInterest().isInteresting()) {
 							toExpand.add(child);
@@ -140,8 +140,8 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		return allChildren;
 	}
 
-	public void interestChanged(List<IMylarElement> elements) {
-		for (IMylarElement element : elements) {
+	public void interestChanged(List<IInteractionElement> elements) {
+		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
 				return;
 			} else {
@@ -173,37 +173,37 @@ public class ActiveFoldingListener implements IMylarContextListener {
 		}
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 	
-	public void landmarkAdded(IMylarElement element) {
+	public void landmarkAdded(IInteractionElement element) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement element) {
+	public void landmarkRemoved(IInteractionElement element) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		// ignore
 	}
 }

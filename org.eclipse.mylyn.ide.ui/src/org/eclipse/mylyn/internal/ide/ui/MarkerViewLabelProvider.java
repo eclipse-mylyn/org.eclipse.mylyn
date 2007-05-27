@@ -12,7 +12,7 @@
 package org.eclipse.mylar.internal.ide.ui;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylar.internal.context.ui.UiUtil;
@@ -36,7 +36,7 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
 					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
 					(element), 0);
-			IMylarElement node = ContextCorePlugin.getContextManager().getElement(handle);
+			IInteractionElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
 					return ContextUiPrefContstants.BOLD;

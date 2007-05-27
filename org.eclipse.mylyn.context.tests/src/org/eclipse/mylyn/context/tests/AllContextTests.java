@@ -22,7 +22,7 @@ public class AllContextTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
 		// $JUnit-BEGIN$
-		suite.addTestSuite(MylarContextTest.class);
+		suite.addTestSuite(InteractionContextTest.class);
 		suite.addTestSuite(ContextExternalizerTest.class);
 		suite.addTestSuite(DegreeOfInterestTest.class);
 		suite.addTestSuite(ContextTest.class);

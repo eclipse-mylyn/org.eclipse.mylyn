@@ -31,8 +31,8 @@ import org.eclipse.jdt.internal.junit.launcher.TestKindRegistry;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
@@ -40,7 +40,7 @@ import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
 /**
  * @author Mik Kersten
  */
-public class MylarContextTestUtil {
+public class InteractionContextTestUtil {
 
 	public static void setupTestConfiguration(Set<IType> contextTestCases, ILaunchConfiguration configuration, IProgressMonitor pm)
 			throws CoreException {
@@ -71,11 +71,11 @@ public class MylarContextTestUtil {
 
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
-		List<IMylarElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
+		List<IInteractionElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 				JavaStructureBridge.CONTENT_TYPE);
 		try {
-			for (IMylarElement element : interesting) {
+			for (IInteractionElement element : interesting) {
 				if (element.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 					Object javaElement = bridge.getObjectForHandle(element.getHandleIdentifier());
 					if (javaElement instanceof IType) {
@@ -84,9 +84,9 @@ public class MylarContextTestUtil {
 							testTypes.add(type);
 						}
 					}
-					for (IMylarRelation relation : element.getRelations()) {
+					for (IInteractionRelation relation : element.getRelations()) {
 						if (relation.getRelationshipHandle().equals(JUnitReferencesProvider.ID)) {
-							IMylarElement target = relation.getTarget();
+							IInteractionElement target = relation.getTarget();
 							Object targetObject = bridge.getObjectForHandle(target.getHandleIdentifier());
 							if (targetObject instanceof IMethod) {
 								IMethod testMethod = (IMethod) targetObject;

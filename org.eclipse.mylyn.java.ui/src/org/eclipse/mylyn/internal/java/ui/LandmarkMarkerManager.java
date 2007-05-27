@@ -29,9 +29,9 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.ISourceReference;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -39,35 +39,35 @@ import org.eclipse.mylar.internal.java.JavaStructureBridge;
 /**
  * @author Mik Kersten
  */
-public class LandmarkMarkerManager implements IMylarContextListener {
+public class LandmarkMarkerManager implements IInteractionContextListener {
 
 	private static final String MARKER_ID_LANDMARK = "org.eclipse.mylar.ui.landmark";
 
-	private Map<IMylarElement, Long> markerMap = new HashMap<IMylarElement, Long>();
+	private Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
 
 	public LandmarkMarkerManager() {
 		super();
 	}
 
-	public void contextActivated(IMylarContext taskscape) {
+	public void contextActivated(IInteractionContext taskscape) {
 		modelUpdated();
 	}
 
-	public void contextDeactivated(IMylarContext taskscape) {
+	public void contextDeactivated(IInteractionContext taskscape) {
 		modelUpdated();
 	}
 
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		modelUpdated();
 	}
 
 	private void modelUpdated() {
 		try {
-			for (IMylarElement node : markerMap.keySet()) {
+			for (IInteractionElement node : markerMap.keySet()) {
 				landmarkRemoved(node);
 			}
 			markerMap.clear();
-			for (IMylarElement node : ContextCorePlugin.getContextManager().getActiveLandmarks()) {
+			for (IInteractionElement node : ContextCorePlugin.getContextManager().getActiveLandmarks()) {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
@@ -75,11 +75,11 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		}
 	}
 
-	public void interestChanged(List<IMylarElement> nodes) {
+	public void interestChanged(List<IInteractionElement> nodes) {
 		// don't care when the interest changes
 	}
 
-	public void landmarkAdded(final IMylarElement node) {
+	public void landmarkAdded(final IInteractionElement node) {
 		if (node == null || node.getContentType() == null)
 			return;
 		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
@@ -114,7 +114,7 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		}
 	}
 
-	public void landmarkRemoved(final IMylarElement node) {
+	public void landmarkRemoved(final IInteractionElement node) {
 		if (node == null)
 			return;
 		if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
@@ -155,11 +155,11 @@ public class LandmarkMarkerManager implements IMylarContextListener {
 		}
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// don't care when the relationships changed
 	}
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		// don't care when a node is deleted
 	}
 }

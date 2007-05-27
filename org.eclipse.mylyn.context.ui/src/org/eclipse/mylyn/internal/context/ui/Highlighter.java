@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -82,7 +82,7 @@ public class Highlighter {
 		return highlightColor;
 	}
 
-	public Color getHighlight(IMylarElement info, boolean isLandmark) {
+	public Color getHighlight(IInteractionElement info, boolean isLandmark) {
 		if (info.getInterest().getValue() > 0) {
 			if (isGradient) {
 				return mapDoiToElevation(info);
@@ -94,7 +94,7 @@ public class Highlighter {
 		}
 	}
 
-	public Color mapDoiToElevation(IMylarElement element) {
+	public Color mapDoiToElevation(IInteractionElement element) {
 		if (element == null)
 			return ColorMap.COLOR_WHITE;
 		if (element.getInterest().getValue() < 0)
@@ -177,7 +177,7 @@ public class Highlighter {
 //		ColorMap.COLOR_WHITE = base;
 //	}
 
-	public static Color blend(List<Highlighter> highlighters, IMylarElement info, boolean isLandmark) {
+	public static Color blend(List<Highlighter> highlighters, IInteractionElement info, boolean isLandmark) {
 		int red = 0;
 		int green = 0;
 		int blue = 0;

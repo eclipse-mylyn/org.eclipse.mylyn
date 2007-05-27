@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
@@ -41,7 +41,7 @@ public class SearchPluginTestHelper extends TestCase {
 	}
 
 	public void searchResultsNotNull(ActiveSearchNotifier notifier, String handle, String kind,
-			IMylarElement searchNode, int dos, int expected) throws IOException, CoreException {
+			IInteractionElement searchNode, int dos, int expected) throws IOException, CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
@@ -51,7 +51,7 @@ public class SearchPluginTestHelper extends TestCase {
 	}
 
 	public void searchResultsNotNullInteresting(ActiveSearchNotifier notifier, String handle, String kind,
-			IMylarElement searchNode, int dos, int expected) throws IOException, CoreException {
+			IInteractionElement searchNode, int dos, int expected) throws IOException, CoreException {
 		notifier.mockEditorSelection(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
@@ -60,7 +60,7 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.clearContext();
 	}
 
-	public void searchResultsNotNull(ActiveSearchNotifier notifier, IMylarElement searchNode, int dos, int expected)
+	public void searchResultsNotNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos, int expected)
 			throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
 		assertNotNull("Results Null", results);
@@ -68,7 +68,7 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.clearContext();
 	}
 
-	public void searchResultsNull(ActiveSearchNotifier notifier, String handle, String kind, IMylarElement searchNode,
+	public void searchResultsNull(ActiveSearchNotifier notifier, String handle, String kind, IInteractionElement searchNode,
 			int dos) throws IOException, CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
@@ -77,7 +77,7 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.clearContext();
 	}
 
-	public void searchResultsNull(ActiveSearchNotifier notifier, IMylarElement searchNode, int dos) throws IOException,
+	public void searchResultsNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos) throws IOException,
 			CoreException {
 		List<?> results = test.search(dos, searchNode);
 		assertNull("Results Not Null", results);

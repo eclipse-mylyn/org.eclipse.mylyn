@@ -75,7 +75,7 @@ public class ActiveHierarchyTest extends AbstractJavaContextTest {
 	private void makeLandmark(IJavaElement element) {
 		StructuredSelection s1 = new StructuredSelection(element);
 		monitor.selectionChanged(view, s1);
-		manager.handleInteractionEvent(mockInterestContribution(element.getHandleIdentifier(), scaling.getLandmark()));
+		manager.processInteractionEvent(mockInterestContribution(element.getHandleIdentifier(), scaling.getLandmark()));
 		view.refreshHierarchy(false);
 	}
 

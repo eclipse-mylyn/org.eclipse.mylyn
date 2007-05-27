@@ -9,21 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylar.context.core;
 
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 
 /**
  * @author Mik Kersten
  */
-public class MylarContextTest extends AbstractContextTest {
+public interface IInteractionContextWriter {
 
-	public void testParseEventWithNullHandle() {
-		InteractionEvent event = mockSelection(null);
-		MylarContext context = new MylarContext("test", new ScalingFactors());
-		assertNull(context.parseEvent(event));
-	}
-	
+	public abstract void setOutputStream(OutputStream outputStream);
+
+	public abstract void writeContextToStream(InteractionContext context) throws IOException;
+
 }

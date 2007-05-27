@@ -40,9 +40,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylar.internal.context.ui.views.ActiveViewDelegatingDragAdapter;
@@ -75,35 +75,35 @@ public class ActiveHierarchyView extends ViewPart {
 
 	private Map<String, TreeParent> nodeMap = new HashMap<String, TreeParent>();
 
-	final IMylarContextListener MODEL_LISTENER = new IMylarContextListener() {
+	final IInteractionContextListener MODEL_LISTENER = new IInteractionContextListener() {
 
-		public void contextActivated(IMylarContext taskscape) {
+		public void contextActivated(IInteractionContext taskscape) {
 			refreshHierarchy();
 		}
 
-		public void contextDeactivated(IMylarContext taskscape) {
+		public void contextDeactivated(IInteractionContext taskscape) {
 			refreshHierarchy();
 		}
 		
-		public void contextCleared(IMylarContext context) {
+		public void contextCleared(IInteractionContext context) {
 			refreshHierarchy();
 		}
 
-		public void interestChanged(List<IMylarElement> nodes) {
+		public void interestChanged(List<IInteractionElement> nodes) {
 		}
 
-		public void landmarkAdded(IMylarElement element) {
+		public void landmarkAdded(IInteractionElement element) {
 			refreshHierarchy();
 		}
 
-		public void landmarkRemoved(IMylarElement element) {
+		public void landmarkRemoved(IInteractionElement element) {
 			refreshHierarchy();
 		}
 
-		public void relationsChanged(IMylarElement node) {
+		public void relationsChanged(IInteractionElement node) {
 		}
 
-		public void elementDeleted(IMylarElement node) {
+		public void elementDeleted(IInteractionElement node) {
 			// ignore
 		}
 
@@ -172,9 +172,9 @@ public class ActiveHierarchyView extends ViewPart {
 			if (root != null && root.getChildren().length > 0)
 				root.removeAllChildren();
 			nodeMap.clear();
-			List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-			for (Iterator<IMylarElement> it = landmarks.iterator(); it.hasNext();) {
-				IMylarElement node = it.next();
+			List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+			for (Iterator<IInteractionElement> it = landmarks.iterator(); it.hasNext();) {
+				IInteractionElement node = it.next();
 				IJavaElement element = null;
 				if (node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)) {
 					element = JavaCore.create(node.getHandleIdentifier());

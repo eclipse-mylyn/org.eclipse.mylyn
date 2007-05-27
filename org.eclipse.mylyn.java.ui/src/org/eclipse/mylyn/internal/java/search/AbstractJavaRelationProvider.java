@@ -44,7 +44,7 @@ import org.eclipse.jdt.ui.search.QuerySpecification;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
@@ -90,7 +90,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 	
 	@Override
-	protected void findRelated(final IMylarElement node, int degreeOfSeparation) {
+	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
 		if (node == null)
 			return;
 		if (node.getContentType() == null) {
@@ -110,13 +110,13 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 
 	private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
-		List<IMylarElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-		List<IMylarElement> interestingElements = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
+		List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
+		List<IInteractionElement> interestingElements = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
 
 		Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
-			for (IMylarElement landmark : landmarks) {
+			for (IInteractionElement landmark : landmarks) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
@@ -133,7 +133,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 			}
 		} else if (degreeOfSeparation == 2) {
-			for (IMylarElement interesting : interestingElements) {
+			for (IInteractionElement interesting : interestingElements) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
@@ -151,7 +151,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
-			for (IMylarElement interesting : interestingElements) {
+			for (IInteractionElement interesting : interestingElements) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 						.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
@@ -193,7 +193,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	/**
 	 * Only include Java elements and files.
 	 */
-	private boolean includeNodeInScope(IMylarElement interesting, AbstractContextStructureBridge bridge) {
+	private boolean includeNodeInScope(IInteractionElement interesting, AbstractContextStructureBridge bridge) {
 		if (interesting == null || bridge == null) {
 			return false;
 		} else {
@@ -216,7 +216,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		return javaElement != null && (javaElement instanceof IMember || javaElement instanceof IType);
 	}
 
-	private void runJob(final IMylarElement node, final int degreeOfSeparation, final String kind) {
+	private void runJob(final IInteractionElement node, final int degreeOfSeparation, final String kind) {
 
 		int limitTo = 0;
 		if (kind.equals(JavaReferencesProvider.ID)) {
@@ -274,7 +274,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 
 	@Override
-	public IMylarSearchOperation getSearchOperation(IMylarElement node, int limitTo, int degreeOfSeparation) {
+	public IMylarSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		if (javaElement == null || !javaElement.exists())
 			return null;

@@ -43,7 +43,7 @@ import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.AbstractRelationProvider;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
 import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
@@ -237,7 +237,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof JarPackageFragmentRoot) {
 					JarPackageFragmentRoot element = (JarPackageFragmentRoot) children[i];
-					IMylarElement node = ContextCorePlugin.getContextManager().getElement(element.getHandleIdentifier());
+					IInteractionElement node = ContextCorePlugin.getContextManager().getElement(element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
 						return false;
 					}
@@ -249,7 +249,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				IAdaptable[] elements = workingSet.getElements();
 				for (int i = 0; i < elements.length; i++) {
 					IAdaptable adaptable = elements[i];
-					IMylarElement element = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
+					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
 					if (element.getInterest().isInteresting())
 						return false;
 				}
@@ -315,7 +315,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	 * 
 	 * @see org.eclipse.jdt.ui.ProblemsLabelDecorator
 	 */
-	public boolean containsProblem(IMylarElement node) {
+	public boolean containsProblem(IInteractionElement node) {
 		try {
 			IJavaElement element = (IJavaElement) getObjectForHandle(node.getHandleIdentifier());
 			switch (element.getElementType()) {

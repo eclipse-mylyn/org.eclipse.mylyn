@@ -13,9 +13,9 @@ package org.eclipse.mylar.internal.context.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -29,16 +29,16 @@ public class UiUtil {
 				"Not a valid landmark, select an element within this resource instead.");
 	}
 
-	public static Color getBackgroundForElement(IMylarElement node) {
+	public static Color getBackgroundForElement(IInteractionElement node) {
 		return getBackgroundForElement(node, false);
 	}
 
-	public static Color getBackgroundForElement(IMylarElement node, boolean resolveContextColor) {
+	public static Color getBackgroundForElement(IInteractionElement node, boolean resolveContextColor) {
 		if (node == null) {
 			return null;
 		} else if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
 			return null;
-		} else if (node.getInterest().getEncodedValue() <= ContextManager.getScalingFactors().getInteresting()) {
+		} else if (node.getInterest().getEncodedValue() <= InteractionContextManager.getScalingFactors().getInteresting()) {
 			return null;
 		}
 
@@ -63,11 +63,11 @@ public class UiUtil {
 		}
 	}
 
-	public static Color getForegroundForElement(IMylarElement node) {
+	public static Color getForegroundForElement(IInteractionElement node) {
 		if (node == null)
 			return null;
 		if (node.getInterest().isPredicted() || node.getInterest().isPropagated()) {
-			if (node.getInterest().getValue() >= ContextManager.getScalingFactors().getLandmark() / 3) {
+			if (node.getInterest().getValue() >= InteractionContextManager.getScalingFactors().getLandmark() / 3) {
 				return ColorMap.GRAY_DARK;
 			} else if (node.getInterest().getValue() >= 10) {
 				return ColorMap.GRAY_MEDIUM;

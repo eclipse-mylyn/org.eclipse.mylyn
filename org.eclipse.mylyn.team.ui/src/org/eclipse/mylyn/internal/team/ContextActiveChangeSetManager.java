@@ -21,10 +21,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.resources.MylarResourcesPlugin;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -172,7 +172,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return null;
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		try {
 			ITask task = getTask(context);
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
@@ -194,7 +194,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		}
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
@@ -210,12 +210,12 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
 	
-	public void interestChanged(List<IMylarElement> elements) {
-		for (IMylarElement element : elements) {
+	public void interestChanged(List<IInteractionElement> elements) {
+		for (IInteractionElement element : elements) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 					element.getContentType());
 			try {
@@ -251,7 +251,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
 	}
 
-	private ITask getTask(IMylarContext context) {
+	private ITask getTask(IInteractionContext context) {
 		List<ITask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
 
 		// TODO: support multiple tasks
@@ -265,9 +265,9 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	/**
 	 * Ignores decay.
 	 */
-	private boolean shouldRemove(IMylarElement element) {
+	private boolean shouldRemove(IInteractionElement element) {
 		// TODO: generalize this logic?
-		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < ContextManager
+		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < InteractionContextManager
 				.getScalingFactors().getInteresting();
 	}
 }

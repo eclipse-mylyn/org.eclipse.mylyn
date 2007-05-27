@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
@@ -29,7 +29,7 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContextListener {
+public class MylarWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
 
 	/** Should only ever have 1 working set */
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
@@ -55,38 +55,38 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 		// nothing to do here
 	}
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		updateWorkingSet();
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		updateWorkingSet();
 	}
 	
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		updateWorkingSet();
 	}
 
-	public void interestChanged(List<IMylarElement> nodes) {
-		updateWorkingSet();
-
-	}
-
-	public void elementDeleted(IMylarElement node) {
-		updateWorkingSet();
-	}
-
-	public void landmarkAdded(IMylarElement node) {
+	public void interestChanged(List<IInteractionElement> nodes) {
 		updateWorkingSet();
 
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
+		updateWorkingSet();
+	}
+
+	public void landmarkAdded(IInteractionElement node) {
 		updateWorkingSet();
 
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void landmarkRemoved(IInteractionElement node) {
+		updateWorkingSet();
+
+	}
+
+	public void relationsChanged(IInteractionElement node) {
 		// don't care about this relationship
 
 	}
@@ -107,7 +107,7 @@ public class MylarWorkingSetManager implements IWorkingSetUpdater, IMylarContext
 
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 		// IMylarContext t = ContextCorePlugin.getContextManager().getActiveContext();
-		for (IMylarElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
+		for (IInteractionElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
 
 			// HACK comparing extension to string

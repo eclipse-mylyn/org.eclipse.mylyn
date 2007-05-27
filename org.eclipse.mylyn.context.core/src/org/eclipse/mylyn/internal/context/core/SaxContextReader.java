@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.mylar.context.core.IContextReader;
+import org.eclipse.mylar.context.core.IInteractionContextReader;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -26,9 +26,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Brock Janiczak
  * @author Mik Kersten (minor refactoring)
  */
-public class SaxContextReader implements IContextReader {
+public class SaxContextReader implements IInteractionContextReader {
 
-	public MylarContext readContext(String handleIdentifier, File file) {
+	public InteractionContext readContext(String handleIdentifier, File file) {
 		if (!file.exists())
 			return null;
 		ZipInputStream inputStream = null;

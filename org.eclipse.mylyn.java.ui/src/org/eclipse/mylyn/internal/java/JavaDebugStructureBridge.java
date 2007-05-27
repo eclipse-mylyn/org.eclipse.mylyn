@@ -26,7 +26,7 @@ import org.eclipse.jdt.internal.debug.core.model.JDIDebugElement;
 import org.eclipse.jdt.internal.debug.core.model.JDIStackFrame;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 
 /**
  * @author Mik Kersten
@@ -71,7 +71,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 						indexOfCurrentFrame = i;
 					}
 					
-					IMylarElement correspondingElement = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(frame));
+					IInteractionElement correspondingElement = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(frame));
 					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
 						indexOfInterestingFrame = i;
 					}

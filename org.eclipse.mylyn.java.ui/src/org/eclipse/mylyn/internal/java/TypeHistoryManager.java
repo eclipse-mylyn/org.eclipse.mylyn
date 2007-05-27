@@ -20,28 +20,28 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten
  */
-public class TypeHistoryManager implements IMylarContextListener {
+public class TypeHistoryManager implements IInteractionContextListener {
 
 //	private TypeInfoFactory factory = new TypeInfoFactory();
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		clearTypeHistory();
-		for (IMylarElement node : context.getInteresting())
+		for (IInteractionElement node : context.getInteresting())
 			updateTypeHistory(node, true);
 	}
 
 	/**
 	 * Path has to be compatible with ITypeNameRequestor
 	 */
-	private void updateTypeHistory(IMylarElement node, boolean add) {
+	private void updateTypeHistory(IInteractionElement node, boolean add) {
 		IJavaElement element = JavaCore.create(node.getHandleIdentifier());
 		if (element instanceof IType) {
 			IType type = (IType) element;
@@ -77,11 +77,11 @@ public class TypeHistoryManager implements IMylarContextListener {
 		}
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		clearTypeHistory();
 	}
 	
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		clearTypeHistory();
 	}
 
@@ -95,25 +95,25 @@ public class TypeHistoryManager implements IMylarContextListener {
 		} 
 	}
 
-	public void interestChanged(List<IMylarElement> nodes) {
-		for (IMylarElement node : nodes) {
+	public void interestChanged(List<IInteractionElement> nodes) {
+		for (IInteractionElement node : nodes) {
 			updateTypeHistory(node, true);
 		}
 	}
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		updateTypeHistory(node, false);
 	}
 
-	public void landmarkAdded(IMylarElement node) {
+	public void landmarkAdded(IInteractionElement node) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
+	public void landmarkRemoved(IInteractionElement node) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
 }

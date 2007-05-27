@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.InterestFilter;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -48,21 +48,21 @@ public class RemoveFromContextAction extends BaseSelectionListenerAction {
 
 	@Override
 	public void run() {
-		Set<IMylarElement> toRemove = new HashSet<IMylarElement>();
+		Set<IInteractionElement> toRemove = new HashSet<IInteractionElement>();
 		
 		for (Iterator<?> iterator = super.getStructuredSelection().iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			collectChildren(toRemove, object);
 		}
 		
-		for (IMylarElement element : toRemove) {
+		for (IInteractionElement element : toRemove) {
 			ContextCorePlugin.getContextManager().delete(element);
 		}
 		commonViewer.refresh();
  	}
 
-	private void collectChildren(Set<IMylarElement> toRemove, Object object) {
-		IMylarElement element = resolveElement(object);
+	private void collectChildren(Set<IInteractionElement> toRemove, Object object) {
+		IInteractionElement element = resolveElement(object);
 		if (element != null) {
 			toRemove.add(element);
 		}
@@ -76,10 +76,10 @@ public class RemoveFromContextAction extends BaseSelectionListenerAction {
 		}
 	}
 
-	private IMylarElement resolveElement(Object object) {
-		IMylarElement element = null;
-		if (object instanceof IMylarElement) {
-			element = (IMylarElement)object;
+	private IInteractionElement resolveElement(Object object) {
+		IInteractionElement element = null;
+		if (object instanceof IInteractionElement) {
+			element = (IInteractionElement)object;
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			if (bridge.getContentType() == null) {

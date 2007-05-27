@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.ui.IWorkbench;
@@ -53,11 +53,11 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			}
 
 			if (added != null && removed != null) {
-				IMylarElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
+				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
 				if (element != null)
 					resetHandle(element, added.getHandleIdentifier());
 			} else if (removed != null) {
-				IMylarElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
+				IInteractionElement element = ContextCorePlugin.getContextManager().getElement(removed.getHandleIdentifier());
 				if (element != null)
 					delete(element);
 			}
@@ -66,7 +66,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		}
 	}
 
-	private void resetHandle(final IMylarElement element, final String newHandle) {
+	private void resetHandle(final IInteractionElement element, final String newHandle) {
 		if (!asyncExecMode) {
 			ContextCorePlugin.getContextManager().updateHandle(element, newHandle);
 		} else {
@@ -81,7 +81,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		}
 	}
 
-	private void delete(final IMylarElement element) {
+	private void delete(final IInteractionElement element) {
 		if (!asyncExecMode) {
 			ContextCorePlugin.getContextManager().delete(element);
 		} else {

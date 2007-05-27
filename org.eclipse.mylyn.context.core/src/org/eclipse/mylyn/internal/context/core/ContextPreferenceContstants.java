@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.core;
+package org.eclipse.mylar.internal.context.core;
 
 /**
- * Tag interface to indicate elements that should not be filtered as uninteresting.
- * 
  * @author Mik Kersten
  */
-public interface IAlwaysIntersting {
+public class ContextPreferenceContstants {
+
+	public static final String PREF_DATA_DIR = "org.eclipse.mylar.data.dir";
 
 }

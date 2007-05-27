@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.internal.ide.MylarIdePlugin;
 import org.eclipse.mylar.internal.team.ContextChangeSet;
 import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
@@ -111,7 +111,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
-		IMylarElement fileElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(
 				structureBridge.getHandleIdentifier(file));
 		assertTrue(fileElement.getInterest().isInteresting());
 
@@ -123,7 +123,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertTrue("length: " + resources.length, resources.length <= 2); 
 
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
-			ContextCorePlugin.getContextManager().handleInteractionEvent(mockSelection());
+			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
 		assertTrue("length: " + resources.length, resources.length <= 2); 

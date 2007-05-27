@@ -20,7 +20,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
@@ -39,7 +39,7 @@ import org.eclipse.ui.ide.IDE;
 public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
-	public void open(IMylarElement element) {
+	public void open(IInteractionElement element) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		if (bridge == null) {
 			return;
@@ -73,7 +73,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void close(IMylarElement element) {
+	public void close(IInteractionElement element) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
@@ -112,7 +112,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public IMylarElement getElement(IEditorInput input) {
+	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
 			IFile javaElement = (IFile) adapter;

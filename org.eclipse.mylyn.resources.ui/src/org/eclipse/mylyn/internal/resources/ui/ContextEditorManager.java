@@ -24,9 +24,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -56,7 +56,7 @@ import org.eclipse.ui.internal.WorkbenchPage;
 /**
  * @author Mik Kersten
  */
-public class ContextEditorManager implements IMylarContextListener {
+public class ContextEditorManager implements IInteractionContextListener {
 
 	private static final String PREFS_PREFIX = "editors.task.";
 
@@ -65,7 +65,7 @@ public class ContextEditorManager implements IMylarContextListener {
 	private boolean previousCloseEditorsSetting = Workbench.getInstance().getPreferenceStore().getBoolean(
 			IPreferenceConstants.REUSE_EDITORS_BOOLEAN);
 
-	public void contextActivated(IMylarContext context) {
+	public void contextActivated(IInteractionContext context) {
 		if (!Workbench.getInstance().isStarting()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
@@ -96,7 +96,7 @@ public class ContextEditorManager implements IMylarContextListener {
 						MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
 					}
 				}
-				IMylarElement activeNode = context.getActiveNode();
+				IInteractionElement activeNode = context.getActiveNode();
 				if (activeNode != null) {
 					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
@@ -108,7 +108,7 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
-	public void contextDeactivated(IMylarContext context) {
+	public void contextDeactivated(IInteractionContext context) {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
@@ -135,7 +135,7 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
-	public void contextCleared(IMylarContext context) {
+	public void contextCleared(IInteractionContext context) {
 		if (context == null) {
 			return;
 		}
@@ -278,8 +278,8 @@ public class ContextEditorManager implements IMylarContextListener {
 // return false;
 // }
 
-	public void interestChanged(List<IMylarElement> elements) {
-		for (IMylarElement element : elements) {
+	public void interestChanged(List<IInteractionElement> elements) {
+		for (IInteractionElement element : elements) {
 			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 					ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 				if (!element.getInterest().isInteresting()) {
@@ -295,19 +295,19 @@ public class ContextEditorManager implements IMylarContextListener {
 		}
 	}
 
-	public void elementDeleted(IMylarElement node) {
+	public void elementDeleted(IInteractionElement node) {
 		// ignore
 	}
 
-	public void landmarkAdded(IMylarElement node) {
+	public void landmarkAdded(IInteractionElement node) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IMylarElement node) {
+	public void landmarkRemoved(IInteractionElement node) {
 		// ignore
 	}
 
-	public void relationsChanged(IMylarElement node) {
+	public void relationsChanged(IInteractionElement node) {
 		// ignore
 	}
 }

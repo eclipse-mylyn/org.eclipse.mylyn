@@ -17,43 +17,43 @@ import java.util.List;
 /**
  * @author Mik Kersten
  */
-public interface IMylarContextListener {
+public interface IInteractionContextListener {
 
 	/**
 	 * The context is now active, e.g. as a result of a task activation.
 	 */
-	public void contextActivated(IMylarContext context);
+	public void contextActivated(IInteractionContext context);
 
 	/**
 	 * The context has been deactivated, e.g. as a result of a task deactivation.
 	 */
-	public void contextDeactivated(IMylarContext context);
+	public void contextDeactivated(IInteractionContext context);
 	
 	/**
 	 * The context has been cleared, typically done by the user.
 	 */
-	public void contextCleared(IMylarContext context);
+	public void contextCleared(IInteractionContext context);
 
 	/**
 	 * Called when the interest level for multiple elements changes, sorted
 	 * according to the containment hierarchy. The last element is the element
 	 * invoking the change.
 	 */
-	public void interestChanged(List<IMylarElement> elements);
+	public void interestChanged(List<IInteractionElement> elements);
 
 	/**
 	 * @param newLandmarks
 	 *            list of IJavaElement(s)
 	 */
-	public void landmarkAdded(IMylarElement element);
+	public void landmarkAdded(IInteractionElement element);
 
 	/**
 	 * @param newLandmarks
 	 *            list of IJavaElement(s)
 	 */
-	public void landmarkRemoved(IMylarElement element);
+	public void landmarkRemoved(IInteractionElement element);
 
-	public void elementDeleted(IMylarElement element);
+	public void elementDeleted(IInteractionElement element);
 	
-	public void relationsChanged(IMylarElement element);
+	public void relationsChanged(IInteractionElement element);
 }

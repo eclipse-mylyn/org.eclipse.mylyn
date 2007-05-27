@@ -60,7 +60,7 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy config) {
 		if (!isPdeMode) {
-			Set<IType> types = MylarContextTestUtil.getTestCasesInContext();
+			Set<IType> types = InteractionContextTestUtil.getTestCasesInContext();
 			if (!types.isEmpty()) {
 				IType firstType = types.iterator().next();
 				String projectName = firstType.getJavaProject().getElementName();

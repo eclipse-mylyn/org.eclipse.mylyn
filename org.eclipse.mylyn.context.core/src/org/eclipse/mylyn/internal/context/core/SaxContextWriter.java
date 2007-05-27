@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.context.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -21,7 +20,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.context.core.IContextWriter;
+import org.eclipse.mylar.context.core.IInteractionContextWriter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.XmlStringConverter;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
@@ -41,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author Brock Janiczak
  * @author Mik Kersten (minor refactoring)
  */
-public class SaxContextWriter implements IContextWriter {
+public class SaxContextWriter implements IInteractionContextWriter {
 
 	private OutputStream outputStream;
 
@@ -49,7 +48,7 @@ public class SaxContextWriter implements IContextWriter {
 		this.outputStream = outputStream;
 	}
 
-	public void writeContextToStream(MylarContext context) throws IOException {
+	public void writeContextToStream(InteractionContext context) throws IOException {
 		if (outputStream == null) {
 			IOException ioe = new IOException("OutputStream not set");
 			throw ioe;
@@ -57,27 +56,26 @@ public class SaxContextWriter implements IContextWriter {
 
 		try {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
-			transformer.transform(new SAXSource(new SaxWriter(), new MylarContextInputSource(context)),
+			transformer.transform(new SAXSource(new SaxWriter(), new InteractionContextInputSource(context)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
 			MylarStatusHandler.fail(e, "could not write context", false);
 			throw new IOException(e.getMessage());
 		}
-
 	}
 
-	private static class MylarContextInputSource extends InputSource {
-		private MylarContext context;
+	private static class InteractionContextInputSource extends InputSource {
+		private InteractionContext context;
 
-		public MylarContextInputSource(MylarContext context) {
+		public InteractionContextInputSource(InteractionContext context) {
 			this.context = context;
 		}
 
-		public MylarContext getContext() {
+		public InteractionContext getContext() {
 			return this.context;
 		}
 
-		public void setContext(MylarContext context) {
+		public void setContext(InteractionContext context) {
 			this.context = context;
 		}
 	}
@@ -136,31 +134,35 @@ public class SaxContextWriter implements IContextWriter {
 		}
 
 		public void parse(InputSource input) throws IOException, SAXException {
-			if (!(input instanceof MylarContextInputSource)) {
+			if (!(input instanceof InteractionContextInputSource)) {
 				throw new SAXException("Can only parse writable input sources");
 			}
 
-			MylarContext context = ((MylarContextInputSource) input).getContext();
+			InteractionContext context = ((InteractionContextInputSource) input).getContext();
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_ID, MylarContextExternalizer.ATR_ID, "",
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_ID, InteractionContextExternalizer.ATR_ID, "",
 					context.getHandleIdentifier());
-			rootAttributes.addAttribute("", MylarContextExternalizer.ATR_VERSION, MylarContextExternalizer.ATR_VERSION,
+			if (context.getContentLimitedTo() != null) {
+				rootAttributes.addAttribute("", SaxContextContentHandler.ATTRIBUTE_CONTENT,
+						SaxContextContentHandler.ATTRIBUTE_CONTENT, "", context.getContentLimitedTo());
+			}
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_VERSION, InteractionContextExternalizer.ATR_VERSION,
 					"", "1");
 
-			handler.startElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY,
-					MylarContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
+			handler.startElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY,
+					InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
 			// List could get modified as we're writing
-			for (InteractionEvent ie : new ArrayList<InteractionEvent>(context.getInteractionHistory())) {
+			for (InteractionEvent ie : context.getInteractionHistory()) {
 				Attributes ieAttributes = createEventAttributes(ie);
 				handler.startElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT, ieAttributes);
 				handler.endElement("", SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT,
 						SaxContextContentHandler.ATTRIBUTE_INTERACTION_EVENT);
 			}
-			handler.endElement("", MylarContextExternalizer.ELMNT_INTERACTION_HISTORY,
-					MylarContextExternalizer.ELMNT_INTERACTION_HISTORY);
+			handler.endElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY,
+					InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY);
 
 			handler.endDocument();
 		}
@@ -173,29 +175,29 @@ public class SaxContextWriter implements IContextWriter {
 	public static Attributes createEventAttributes(InteractionEvent ie) {
 		AttributesImpl ieAttributes = new AttributesImpl();
 
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_DELTA, MylarContextExternalizer.ATR_DELTA,
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA, InteractionContextExternalizer.ATR_DELTA,
 				"", XmlStringConverter.convertToXmlString(ie.getDelta()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_END_DATE,
-				MylarContextExternalizer.ATR_END_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
+				InteractionContextExternalizer.ATR_END_DATE, "", InteractionContextExternalizer.DATE_FORMAT.format(ie
 						.getEndDate()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_INTEREST,
-				MylarContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_KIND, MylarContextExternalizer.ATR_KIND, "",
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
+				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND, "",
 				ie.getKind().toString());
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_NAVIGATION,
-				MylarContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NAVIGATION,
+				InteractionContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
 						.getNavigation()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_ORIGIN_ID,
-				MylarContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_ORIGIN_ID,
+				InteractionContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
 						.getOriginId()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_START_DATE,
-				MylarContextExternalizer.ATR_START_DATE, "", MylarContextExternalizer.DATE_FORMAT.format(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
+				InteractionContextExternalizer.ATR_START_DATE, "", InteractionContextExternalizer.DATE_FORMAT.format(ie
 						.getDate()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_HANDLE,
-				MylarContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter.convertToXmlString(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
+				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter.convertToXmlString(ie
 						.getStructureHandle()));
-		ieAttributes.addAttribute("", MylarContextExternalizer.ATR_STRUCTURE_KIND,
-				MylarContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND,
+				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
 						.getStructureKind()));
 		return ieAttributes;
 	}

@@ -11,18 +11,17 @@
 
 package org.eclipse.mylar.context.core;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import org.eclipse.mylar.internal.context.core.MylarContext;
-
 /**
  * @author Mik Kersten
  */
-public interface IContextWriter {
+public interface IInteractionRelation extends IInteractionObject {
 
-	public abstract void setOutputStream(OutputStream outputStream);
+	public abstract String getLabel();
 
-	public abstract void writeContextToStream(MylarContext context) throws IOException;
+	public abstract String getRelationshipHandle();
+
+	public abstract IInteractionElement getTarget();
+
+	public abstract IInteractionElement getSource();
 
 }

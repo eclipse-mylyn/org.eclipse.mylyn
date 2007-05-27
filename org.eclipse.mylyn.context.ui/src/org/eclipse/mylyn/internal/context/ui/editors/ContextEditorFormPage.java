@@ -22,9 +22,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarContext;
-import org.eclipse.mylar.context.core.IMylarContextListener;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionContext;
+import org.eclipse.mylar.context.core.IInteractionContextListener;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.context.ui.ContextUiImages;
 import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
@@ -84,7 +84,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private ITask task;
 
-	private IMylarContextListener CONTEXT_LISTENER = new IMylarContextListener() {
+	private IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
 		private void refresh() {
 			if (commonViewer != null && !commonViewer.getTree().isDisposed()) {
@@ -93,35 +93,35 @@ public class ContextEditorFormPage extends FormPage {
 			}
 		}
 
-		public void contextActivated(IMylarContext context) {
+		public void contextActivated(IInteractionContext context) {
 			refresh();
 		}
 
-		public void contextDeactivated(IMylarContext context) {
+		public void contextDeactivated(IInteractionContext context) {
 			refresh();
 		}
 		
-		public void contextCleared(IMylarContext context) {
+		public void contextCleared(IInteractionContext context) {
 			refresh();	
 		}
 
-		public void elementDeleted(IMylarElement element) {
+		public void elementDeleted(IInteractionElement element) {
 			refresh();
 		}
 
-		public void interestChanged(List<IMylarElement> elements) {
+		public void interestChanged(List<IInteractionElement> elements) {
 			refresh();
 		}
 
-		public void landmarkAdded(IMylarElement element) {
+		public void landmarkAdded(IInteractionElement element) {
 			refresh();
 		}
 
-		public void landmarkRemoved(IMylarElement element) {
+		public void landmarkRemoved(IInteractionElement element) {
 			refresh();
 		}
 
-		public void relationsChanged(IMylarElement element) {
+		public void relationsChanged(IInteractionElement element) {
 			refresh();
 		}
 	};

@@ -13,8 +13,8 @@ package org.eclipse.mylar.internal.resources.ui;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.context.core.IMylarRelation;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.context.core.IInteractionRelation;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
@@ -28,7 +28,7 @@ import org.eclipse.swt.graphics.Image;
 public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
-	public Image getImage(IMylarElement node) {
+	public Image getImage(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
@@ -55,19 +55,19 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	 * TODO: slow?
 	 */
 	@Override
-	public String getText(IMylarElement node) {
+	public String getText(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
 		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
-	protected Image getImage(IMylarRelation edge) {
+	protected Image getImage(IInteractionRelation edge) {
 		return null;
 	}
 
 	@Override
-	protected String getText(IMylarRelation edge) {
+	protected String getText(IInteractionRelation edge) {
 		return null;
 	}
 }

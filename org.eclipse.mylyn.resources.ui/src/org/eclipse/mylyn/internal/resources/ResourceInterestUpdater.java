@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -61,7 +61,7 @@ public class ResourceInterestUpdater {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
 				String handle = bridge.getHandleIdentifier(resource);
 				if (handle != null) {
-					IMylarElement element = ContextCorePlugin.getContextManager().getElement(handle);
+					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(handle);
 					if (element != null && !element.getInterest().isInteresting()) {
 						InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
 								.getContentType(), handle, SOURCE_ID);
@@ -71,9 +71,9 @@ public class ResourceInterestUpdater {
 			}
 		}  
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
-			ContextCorePlugin.getContextManager().handleInteractionEvents(interactionEvents, true);
+			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
 		} else {
-			ContextCorePlugin.getContextManager().handleInteractionEvents(interactionEvents, false);
+			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, false);
 		}
 	}
 

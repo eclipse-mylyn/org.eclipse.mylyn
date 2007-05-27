@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IEditorInput;
@@ -28,12 +28,12 @@ import org.eclipse.ui.IEditorPart;
 public class TaskUiBridge extends AbstractContextUiBridge {
 
 	@Override
-	public void open(IMylarElement node) {
+	public void open(IInteractionElement node) {
 		// ignore
 	}
 
 	@Override
-	public void close(IMylarElement node) {
+	public void close(IInteractionElement node) {
 		// ignore
 	}
 
@@ -53,7 +53,7 @@ public class TaskUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public IMylarElement getElement(IEditorInput input) {
+	public IInteractionElement getElement(IEditorInput input) {
 		return null;
 	}
 

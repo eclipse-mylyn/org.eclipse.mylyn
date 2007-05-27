@@ -21,9 +21,9 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.internal.context.core.MylarContext;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylar.resources.tests.ResourceTestUtil;
@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class JavaStructureTest extends AbstractJavaContextTest {
 
-	private ContextManager manager = ContextCorePlugin.getContextManager();
+	private InteractionContextManager manager = ContextCorePlugin.getContextManager();
 
 	private JavaEditingMonitor monitor = new JavaEditingMonitor();
 
@@ -52,7 +52,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 
 	private IMethod callee;
 
-	private MylarContext taskscape;
+	private InteractionContext taskscape;
 
 	private ScalingFactors scaling = new ScalingFactors();
 
@@ -64,7 +64,7 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		caller = typeFoo.createMethod("void caller() { callee(); }", null, true, null);
 		callee = typeFoo.createMethod("void callee() { }", callee, true, null);
 
-		taskscape = new MylarContext("12312", scaling);
+		taskscape = new InteractionContext("12312", scaling);
 		manager.activateContext(taskscape);
 	}
 
@@ -92,8 +92,8 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		monitor.selectionChanged(editorPart, calleeSelection);
 
-		IMylarElement callerNode = manager.getElement(caller.getHandleIdentifier());
-		IMylarElement calleeNode = manager.getElement(callee.getHandleIdentifier());
+		IInteractionElement callerNode = manager.getElement(caller.getHandleIdentifier());
+		IInteractionElement calleeNode = manager.getElement(callee.getHandleIdentifier());
 		assertTrue(callerNode.getInterest().isInteresting());
 		assertTrue(calleeNode.getInterest().isInteresting());
 		assertEquals(1, callerNode.getRelations().size());

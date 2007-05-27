@@ -104,7 +104,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	}
 
 	public boolean isLandmark() {
-		return getValue() >= ContextManager.getScalingFactors().getLandmark();
+		return getValue() >= InteractionContextManager.getScalingFactors().getLandmark();
 	}
 
 	public Set<IDegreeOfInterest> getComposedDegreesOfInterest() {

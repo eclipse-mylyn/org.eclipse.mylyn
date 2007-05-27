@@ -27,7 +27,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.java.JavaStructureBridge;
@@ -55,7 +55,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void open(IMylarElement node) {
+	public void open(IInteractionElement node) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		if (javaElement == null || !javaElement.exists())
 			return;
@@ -68,7 +68,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public void close(IMylarElement node) {
+	public void close(IInteractionElement node) {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
@@ -96,7 +96,7 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	}
 
 	@Override
-	public IMylarElement getElement(IEditorInput input) {
+	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IJavaElement.class);
 		if (adapter instanceof IJavaElement) {
 			IJavaElement javaElement = (IJavaElement)adapter;

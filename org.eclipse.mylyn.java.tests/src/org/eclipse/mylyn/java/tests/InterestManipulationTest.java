@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.IMylarElement;
+import org.eclipse.mylar.context.core.IInteractionElement;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.context.ui.actions.AbstractInterestManipulationAction;
 import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
@@ -35,11 +35,11 @@ import org.eclipse.ui.PlatformUI;
  */
 public class InterestManipulationTest extends AbstractJavaContextTest {
 
-	private IMylarElement method;
+	private IInteractionElement method;
 
-	private IMylarElement clazz;
+	private IInteractionElement clazz;
 
-	private IMylarElement cu;
+	private IInteractionElement cu;
 
 	private IMethod javaMethod;
 
@@ -75,8 +75,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
 		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
 
-		IMylarElement fileElement = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
-		IMylarElement projectElement = ContextCorePlugin.getContextManager().getElement(
+		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		IInteractionElement projectElement = ContextCorePlugin.getContextManager().getElement(
 				javaCu.getJavaProject().getHandleIdentifier());
 
 		assertTrue(fileElement.getInterest().isInteresting());
@@ -96,7 +96,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		clazz = ContextCorePlugin.getContextManager().getElement(javaType.getHandleIdentifier());
 		cu = ContextCorePlugin.getContextManager().getElement(javaCu.getHandleIdentifier());
 
-		IMylarElement packageNode = ContextCorePlugin.getContextManager().getElement(javaPackage.getHandleIdentifier());
+		IInteractionElement packageNode = ContextCorePlugin.getContextManager().getElement(javaPackage.getHandleIdentifier());
 
 		assertTrue(method.getInterest().isInteresting());
 		assertTrue(clazz.getInterest().isInteresting());
@@ -116,7 +116,7 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("void m22() { }", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
-		IMylarElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
+		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertFalse(node.getInterest().isLandmark());
 		assertNotNull(ContextCorePlugin.getContextManager().getActiveElement());
 		action.changeInterestForSelected(true);
