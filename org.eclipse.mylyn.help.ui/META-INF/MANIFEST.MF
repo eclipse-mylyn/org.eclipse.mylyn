@@ -10,7 +10,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.tasks.core,
  org.eclipse.mylar.tasks.ui,
  org.eclipse.mylar,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.ui.intro
 Export-Package: org.eclipse.mylar.doc.internal.actions,
  org.eclipse.mylar.doc.internal.dialogs
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

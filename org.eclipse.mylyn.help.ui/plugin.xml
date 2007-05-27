@@ -51,6 +51,46 @@
             commandId="org.eclipse.mylar.doc.legend.show"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/overviewExtensionContent.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/whatsnewExtensionContent.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/tutorialsExtensionContent.xml">
+      </configExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <category
+            id="org.eclipse.mylar.cheatsheet"
+            name="Mylar">
+      </category>
+      <cheatsheet
+            category="org.eclipse.mylar.cheatsheet"
+            contentFile="cheatsheets/Query.xml"
+            id="org.eclipse.mylar.cheatsheet.query"
+            name="Create a query from bugs.eclipse.org">
+         <description>
+            Learn how to create a query from bugs.eclipse.org
+         </description>
+      </cheatsheet>
+      <cheatsheet
+            category="org.eclipse.mylar.cheatsheet"
+            contentFile="cheatsheets/TaskFocus.xml"
+            id="org.eclipse.mylar.cheatsheet.taskfocus"
+            name="Use Task-Focused UI">
+         <description>
+            Learn how to use Task-Focused UI
+         </description>
+      </cheatsheet>
    </extension> 
   
 </plugin>

@@ -1,0 +1,15 @@
+a#mylar-query img {
+	background-image: url(../../images/topiclabel/tu_query48.gif);
+}
+
+a#mylar-query:hover img {
+	background-image: url(../../images/topiclabel/tu_query48_hov.gif);
+}
+
+a#mylar-task img {
+	background-image: url(../../images/topiclabel/tu_task48.gif);
+}
+
+a#mylar-task:hover img {
+	background-image: url(../../images/topiclabel/tu_task48_hov.gif);
+}

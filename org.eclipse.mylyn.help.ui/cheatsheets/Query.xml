@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create a query from bugs.eclipse.org">
+   <intro>
+      <description>
+         This cheat sheet shows you how to create a query from bugs.eclipse.org.<br/>
+      </description>
+   </intro>
+   <item title="Open the Task List view" dialog="true" skip="false">
+      <description>
+         If the Task List view is not opened, select in the main menu  <b>Window</b> &gt; <b>Show View</b> &gt; <b>Other...</b> &gt; <b>Mylar</b> &gt; <b>Task List</b> or click on the &quot;Click to Perform&quot; link below.
+      </description>
+      <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylar.tasks.ui.views.TaskListView)" confirm="true">
+      </command>
+   </item>
+   <item title="Create a new Query" dialog="true" skip="false">
+      <description>
+         In the Task List view, click on the right mouse button then select <b>New &gt; Query</b> or click on the &quot;Click to Perform&quot; link below.
+      </description>
+      <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylar.tasks.ui.wizard.new.query)" confirm="true">
+      </command>
+   </item>
+   <item title="Add Task Repository" dialog="true" skip="true">
+      <description>
+         If <b>Eclipse.org</b> is on your repository list, you can <b>skip</b> this step.
+<br/><br/>
+Click on the <b>Add Repository Task</b> button in the Query dialog. Select Bugzilla on the list then click on the Next button. Enter <b>https://bugs.eclipse.org/bugs</b> for the server&apos;s address, <b>Eclipse.org</b> for the label then click on the <b>Finish</b> button.
+      </description>
+   </item>
+   <item title="Setup the query" dialog="true" skip="false">
+      <description>
+         Select <b>Eclipse.org</b> then click on the <b>Next</b> button.<br/>
+ Select <b>Create a query using form</b> then click on the <b>Next</b> button.<br/>
+ Enter <b>Mylar bugs</b> for the query&apos;s title.
+ Select <b>Mylar</b> from the Product and <b>P1, P2</b> from the Priority then click on the <b>Finish</b> button.
+      </description>
+   </item>
+</cheatsheet>
