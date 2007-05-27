@@ -78,7 +78,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 					null, null, part.getSite().getId());			
 		}
 		if (handleIdentifier != null && contributeToContext) {
-			ContextCorePlugin.getContextManager().handleInteractionEvent(selectionEvent);
+			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
 		}
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(selectionEvent);
 		return selectionEvent;
@@ -95,7 +95,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		InteractionEvent editEvent = new InteractionEvent(InteractionEvent.Kind.EDIT, bridge.getContentType(),
 				handleIdentifier, part.getSite().getId());
 		if (handleIdentifier != null && contributeToContext) {
-			ContextCorePlugin.getContextManager().handleInteractionEvent(editEvent);
+			ContextCorePlugin.getContextManager().processInteractionEvent(editEvent);
 		}
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(editEvent);
 	}
@@ -110,7 +110,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
 					.getContentType(), handleIdentifier, part.getSite().getId(), kind);
 			if (handleIdentifier != null && contributeToContext) {
-				ContextCorePlugin.getContextManager().handleInteractionEvent(navigationEvent);
+				ContextCorePlugin.getContextManager().processInteractionEvent(navigationEvent);
 			}
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(navigationEvent);
 		}

@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 
 /**
@@ -56,10 +56,10 @@ public class ActivityContextManager {
 	}
 
 	public void fireActive(long start, long end) {
-		ContextCorePlugin.getContextManager().handleActivityMetaContextEvent(
-				new InteractionEvent(InteractionEvent.Kind.COMMAND, ContextManager.ACTIVITY_STRUCTURE_KIND,
-						ContextManager.ACTIVITY_HANDLE_ATTENTION, ContextManager.ACTIVITY_ORIGIN_ID, null,
-						ContextManager.ACTIVITY_DELTA_ACTIVATED, 1f, new Date(start), new Date(end)));
+		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
+				new InteractionEvent(InteractionEvent.Kind.COMMAND, InteractionContextManager.ACTIVITY_STRUCTURE_KIND,
+						InteractionContextManager.ACTIVITY_HANDLE_ATTENTION, InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
+						InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f, new Date(start), new Date(end)));
 		for (IUserAttentionListener attentionListener : attentionListeners) {
 			attentionListener.userAttentionGained();
 		}

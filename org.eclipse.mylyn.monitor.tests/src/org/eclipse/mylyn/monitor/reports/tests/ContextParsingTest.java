@@ -17,8 +17,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.context.core.IMylarElement;
-import org.eclipse.mylar.internal.context.core.MylarContext;
+import org.eclipse.mylar.context.core.IInteractionElement;
+import org.eclipse.mylar.internal.context.core.InteractionContext;
 import org.eclipse.mylar.internal.context.core.ScalingFactor;
 import org.eclipse.mylar.internal.context.core.ScalingFactors;
 import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
@@ -64,7 +64,7 @@ public class ContextParsingTest extends TestCase {
 	public void testHistoryParsingWithDecayReset() {
 		ScalingFactors scalingFactors = new ScalingFactors();
 		// scalingFactors.setDecay(new ScalingFactor("decay", .05f));
-		MylarContext context = new MylarContext("test", scalingFactors);
+		InteractionContext context = new InteractionContext("test", scalingFactors);
 		int numEvents = 0;
 		for (InteractionEvent event : events) {
 			if (event.isValidStructureHandle()) {
@@ -75,7 +75,7 @@ public class ContextParsingTest extends TestCase {
 					// if (SelectionMonitor.isValidStructureHandle(event) &&
 					// event.getKind().equals(InteractionEvent.Kind.SELECTION))
 					// {
-					IMylarElement element = context.parseEvent(event);
+					IInteractionElement element = context.parseEvent(event);
 
 					// reset decay if not selected
 					if (element.getInterest().getValue() < 0) {
@@ -95,7 +95,7 @@ public class ContextParsingTest extends TestCase {
 	public void testScalingVactorSet() {
 		ScalingFactors scalingFactors = new ScalingFactors();
 		scalingFactors.setDecay(new ScalingFactor("decay", 0f));
-		MylarContext context = new MylarContext("test", scalingFactors);
+		InteractionContext context = new InteractionContext("test", scalingFactors);
 		assertEquals(0f, context.getScalingFactors().getDecay().getValue());
 	}
 }

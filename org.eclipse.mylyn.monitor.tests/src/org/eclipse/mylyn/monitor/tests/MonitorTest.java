@@ -145,7 +145,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		assertFalse(monitorRunning);
 		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
 		MylarUsageMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
-		assertFalse(monitorRunning);
+		assertTrue(monitorRunning);
 
 		MylarUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
