@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.internal.context.core.ContextManager;
+import org.eclipse.mylar.internal.context.core.InteractionContextManager;
 import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -77,7 +77,7 @@ public class ChangeDataDirTest extends TestCase {
 		assertTrue(new File(newPath).exists());
 
 		assertTrue(MylarUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
-		String monitorFileName = MylarUsageMonitorPlugin.MONITOR_LOG_NAME + ContextManager.CONTEXT_FILE_EXTENSION_OLD;
+		String monitorFileName = MylarUsageMonitorPlugin.MONITOR_LOG_NAME + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 		List<String> newFiles = Arrays.asList(new File(newDataDir).list());
 		assertTrue(newFiles.toString(), newFiles.contains(monitorFileName));
 

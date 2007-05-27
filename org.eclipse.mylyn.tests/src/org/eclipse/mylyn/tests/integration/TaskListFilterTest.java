@@ -102,7 +102,7 @@ public class TaskListFilterTest extends TestCase {
 	}
 	
 	public void testNoFilters() {
-		assertEquals("has archive filter", 1, view.getFilters().size());
+		assertEquals("should have archive and working set filter: " + view.getFilters(), 2, view.getFilters().size());
 		view.getViewer().refresh();
 		assertEquals(5, view.getViewer().getTree().getItemCount());
 	}
