@@ -171,7 +171,7 @@ public class InteractionContext implements IInteractionContext {
 		elementMap.remove(node.getHandleIdentifier());
 	}
 
-	public synchronized List<IInteractionElement> getAllElements() {
+	public List<IInteractionElement> getAllElements() {
 		return new ArrayList<IInteractionElement>(elementMap.values());
 	}
 
