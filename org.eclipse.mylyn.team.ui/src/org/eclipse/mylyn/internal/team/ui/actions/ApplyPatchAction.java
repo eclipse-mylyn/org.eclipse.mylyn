@@ -8,7 +8,6 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
-import java.io.InputStream;
 import java.io.*;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -29,11 +28,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
  */
-public class ApplyPatchAction implements IViewActionDelegate {
+public class ApplyPatchAction extends BaseSelectionListenerAction implements IViewActionDelegate {
+
+	protected ApplyPatchAction(String text) {
+		super(text);
+	}
 
 	private ISelection currentSelection;
 

@@ -203,7 +203,13 @@
                icon="icons/elcl16/apply-patch.gif"
                id="org.eclipse.mylar.team.ui.patch.apply"
                label="Apply Patch..."
-               menubarPath="actions">
+               menubarPath="actions"
+               tooltip="Apply from Repository Task Attachment">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+               </objectClass>
+            </enablement>
          </action>
       </objectContribution>
       
