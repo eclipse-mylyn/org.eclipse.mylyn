@@ -672,7 +672,7 @@ public class CommonNavigatorFilterBar extends Composite {
 	 * 
 	 * @param string
 	 */
-	protected void setFilterText(String string) {
+	public void setFilterText(String string) {
 		if (filterText != null) {
 			filterText.setText(string);
 			selectAll();

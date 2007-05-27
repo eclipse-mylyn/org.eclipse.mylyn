@@ -58,7 +58,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	public void keyReleased(KeyEvent event) {
-		InterestFilter filter = getFilter(viewer);
+		InterestFilter filter = getInterestFilter(viewer);
 
 		if (event.keyCode == SWT.ARROW_RIGHT) {
 			if (filter == null || !(viewer instanceof TreeViewer)) {
@@ -94,7 +94,7 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 	}
 
 	public void mouseDown(MouseEvent event) {
-		final InterestFilter filter = getFilter(viewer);
+		final InterestFilter filter = getInterestFilter(viewer);
 		if (filter == null || !(viewer instanceof TreeViewer)) {
 			return;
 		}
@@ -146,11 +146,11 @@ public class BrowseFilteredListener implements MouseListener, KeyListener {
 		return null;
 	}
 
-	private boolean isUnfilterEvent(MouseEvent event) {
+	public static boolean isUnfilterEvent(MouseEvent event) {
 		return (event.stateMask & SWT.ALT) != 0;
 	}
 
-	private InterestFilter getFilter(StructuredViewer structuredViewer) {
+	private InterestFilter getInterestFilter(StructuredViewer structuredViewer) {
 		ViewerFilter[] filters = structuredViewer.getFilters();
 		for (int i = 0; i < filters.length; i++) {
 			if (filters[i] instanceof InterestFilter)
