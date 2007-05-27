@@ -87,7 +87,7 @@
 		id="org.eclipse.mylar.problems.contribution" 
    		targetID="org.eclipse.ui.views.ProblemView">
     	<action
-           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToProblemsListAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.FocusProblemsListAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"
@@ -102,7 +102,7 @@
 		id="org.eclipse.mylar.markers.tasks.contribution" 
    		targetID="org.eclipse.ui.views.TaskList">
     	<action
-           class="org.eclipse.mylar.internal.ide.ui.actions.ApplyMylarToTaskMarkersAction"
+           class="org.eclipse.mylar.internal.ide.ui.actions.FocusTaskMarkersViewAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylar.ui.actions.ApplyMylarToProblemsListAction"

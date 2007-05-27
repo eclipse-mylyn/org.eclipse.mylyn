@@ -26,7 +26,7 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToProblemsListAction extends AbstractFocusMarkerViewAction {
+public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 
 	/**
 	 * HACK: changing accessibility

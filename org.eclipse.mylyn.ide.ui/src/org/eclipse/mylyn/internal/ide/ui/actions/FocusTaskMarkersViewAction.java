@@ -24,7 +24,7 @@ import org.eclipse.ui.views.markers.internal.TaskView;
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarToTaskMarkersAction extends AbstractFocusMarkerViewAction {
+public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 
 	/**
 	 * HACK: changing accessibility

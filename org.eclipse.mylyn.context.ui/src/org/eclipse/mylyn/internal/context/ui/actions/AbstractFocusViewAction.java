@@ -37,6 +37,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -74,6 +76,39 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	
 	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
 
+	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
+
+		public boolean preShutdown(IWorkbench workbench, boolean forced) {
+			// restore the viewers' previous state
+			if (manageLinking) {
+				setDefaultLinkingEnabled(wasLinkingEnabled);
+			}
+			
+			List<StructuredViewer> viewers = getViewers();
+			Set<Class<?>> excludedFilters = getPreservedFilterClasses();
+			for (StructuredViewer viewer : viewers) {
+				if (previousFilters.containsKey(viewer)) {
+					for (ViewerFilter filter : previousFilters.get(viewer)) {
+						if (!excludedFilters.contains(filter.getClass())) {
+							try {
+								viewer.addFilter(filter);
+							} catch (Throwable t) {
+								MylarStatusHandler.fail(t, "Failed to restore filter: " + filter, false);
+							}
+						}
+					}
+					previousFilters.remove(viewer);
+				}
+			}
+			return true;
+		}
+		
+		public void postShutdown(IWorkbench workbench) {
+			// ignore
+			
+		}
+	};
+	
 	public static AbstractFocusViewAction getActionForPart(IViewPart part) {
 		return partMap.get(part);
 	}
@@ -101,8 +136,20 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		setText(ACTION_LABEL);
 		setToolTipText(ACTION_LABEL);
 		setImageDescriptor(ContextUiImages.INTEREST_FILTERING);
+		PlatformUI.getWorkbench().addWorkbenchListener(WORKBENCH_LISTENER);
 	}
 
+	public void dispose() {
+		partMap.remove(getPartForAction());
+		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
+			for (StructuredViewer viewer : getViewers()) {
+				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+			}
+		}
+		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
+		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
+	}
+	
 	public void init(IAction action) {
 		initAction = action;
 		setChecked(action.isChecked());
@@ -331,16 +378,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 		}
 		viewer.getControl().setRedraw(true);
-	}
-
-	public void dispose() {
-		partMap.remove(getPartForAction());
-		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
-			for (StructuredViewer viewer : getViewers()) {
-				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
-			}
-		}
-		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 	}
 
 	public void runWithEvent(IAction action, Event event) {

@@ -478,7 +478,7 @@
    <extension
           point="org.eclipse.ui.commands">
        <command
-             defaultHandler="org.eclipse.mylar.internal.context.ui.commands.ApplyMylarHandler"
+             defaultHandler="org.eclipse.mylar.internal.context.ui.commands.FocusViewHandler"
              id="org.eclipse.mylar.ui.commands.applyMylar"
              name="Apply Mylar to View">
           <commandParameter

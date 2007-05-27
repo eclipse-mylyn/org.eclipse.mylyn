@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Izzet Safer
  */
-public class ApplyMylarHandler extends AbstractHandler {
+public class FocusViewHandler extends AbstractHandler {
 
 	private static final String PARAMETER_VIEW_ID = "viewId";
 

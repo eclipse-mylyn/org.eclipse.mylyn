@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class ApplyMylarActionTest extends AbstractJavaContextTest {
+public class FocusViewActionTest extends AbstractJavaContextTest {
 
 	private IViewPart view;
 
