@@ -14,6 +14,7 @@ package org.eclipse.mylar.bugzilla.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
@@ -42,7 +43,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 
 	private RepositoryTaskData init(String taskId) throws CoreException {
 		ITaskDataHandler handler = connector.getTaskDataHandler();
-		RepositoryTaskData taskData = handler.getTaskData(repository, taskId);
+		RepositoryTaskData taskData = handler.getTaskData(repository, taskId, new NullProgressMonitor());
 		return taskData;
 	}
 

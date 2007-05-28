@@ -169,7 +169,7 @@ public class NewAttachmentWizard extends Wizard {
 
 					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
 							.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(),
-							attachment.isPatch());
+							attachment.isPatch(), new NullProgressMonitor());
 
 					if (attachment.getDeleteAfterUpload()) {
 						File file = new File(attachment.getFilePath());
@@ -183,7 +183,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 
 					if (attachContext) {
-						connector.attachContext(repository, task, "");
+						connector.attachContext(repository, task, "", monitor);
 					}
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);

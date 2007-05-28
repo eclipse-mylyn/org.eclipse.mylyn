@@ -53,7 +53,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId));
 	}
 
@@ -322,7 +322,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 	}
 
 	
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		try {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
 			ITracClient server = ((TracRepositoryConnector) connector).getClientManager().getRepository(repository);

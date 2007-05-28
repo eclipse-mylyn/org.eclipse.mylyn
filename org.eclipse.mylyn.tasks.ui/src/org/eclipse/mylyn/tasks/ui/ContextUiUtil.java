@@ -48,7 +48,7 @@ public class ContextUiUtil {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						result[0] = connector.retrieveContext(repository, task, attachment, directory);
+						result[0] = connector.retrieveContext(repository, task, attachment, directory, monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}
@@ -88,7 +88,7 @@ public class ContextUiUtil {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						result[0] = connector.attachContext(repository, task, comment);
+						result[0] = connector.attachContext(repository, task, comment, monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

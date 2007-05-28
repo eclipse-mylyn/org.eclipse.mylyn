@@ -71,12 +71,12 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 				return new MockAttributeFactory();
 			}
 
-			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+			public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return null;
 			}
 
-			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+			public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 				// ignore
 				return null;
 			}
@@ -123,7 +123,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) {
 		// ignore
 	}
 

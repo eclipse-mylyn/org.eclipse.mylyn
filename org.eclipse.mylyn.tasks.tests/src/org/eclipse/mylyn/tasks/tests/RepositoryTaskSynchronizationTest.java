@@ -350,11 +350,11 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 			return null;
 		}
 
-		public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+		public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 			return null;
 		}
 
-		public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+		public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 			// ignore
 			return null;
 		}

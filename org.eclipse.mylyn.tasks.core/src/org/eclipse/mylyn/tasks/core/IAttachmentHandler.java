@@ -14,6 +14,7 @@ package org.eclipse.mylar.tasks.core;
 import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * @author Mik Kersten
@@ -22,9 +23,9 @@ import org.eclipse.core.runtime.CoreException;
 public interface IAttachmentHandler {
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch) throws CoreException;
+			String description, File file, String contentType, boolean isPatch, IProgressMonitor monitor) throws CoreException;
 
-	public void downloadAttachment(TaskRepository taskRepository, RepositoryAttachment attachment, File file) throws CoreException;
+	public void downloadAttachment(TaskRepository taskRepository, RepositoryAttachment attachment, File file, IProgressMonitor monitor) throws CoreException;
 
 	public byte[] getAttachmentData(TaskRepository repository, RepositoryAttachment attachment) throws CoreException;
 	

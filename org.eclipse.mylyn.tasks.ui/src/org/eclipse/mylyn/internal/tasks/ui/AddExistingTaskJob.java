@@ -62,8 +62,7 @@ public class AddExistingTaskJob extends Job {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 		try {
-			monitor.beginTask("Retrieving task...", IProgressMonitor.UNKNOWN);
-			final ITask newTask = connector.createTaskFromExistingId(repository, taskId);
+			final ITask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
 
 //			if (newTask instanceof AbstractRepositoryTask) {
 //				// TODO: encapsulate in abstract connector

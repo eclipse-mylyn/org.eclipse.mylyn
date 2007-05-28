@@ -16,6 +16,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
@@ -103,7 +104,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected BugzillaTask generateLocalTaskAndDownload(String taskNumber) throws CoreException {
-		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber);
+		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
 		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
@@ -112,7 +113,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	}
 
 	protected void submit(AbstractRepositoryTask task, RepositoryTaskData taskData) throws CoreException {
-		connector.getTaskDataHandler().postTaskData(repository, taskData);
+		connector.getTaskDataHandler().postTaskData(repository, taskData, new NullProgressMonitor());
 		task.setSubmitting(true);
 	}
 

@@ -65,7 +65,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
 		try {
 
 			BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -101,7 +101,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		}
 	}
 
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			try {

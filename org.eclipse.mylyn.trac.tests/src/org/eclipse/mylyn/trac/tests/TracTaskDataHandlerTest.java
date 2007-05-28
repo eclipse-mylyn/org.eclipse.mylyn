@@ -17,6 +17,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
@@ -78,7 +79,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
 		tasks.add(task);
@@ -104,7 +105,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void getChangedSinceLastSync() throws Exception {
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
@@ -144,7 +145,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	
 	public void testNonNumericTaskId() {
 		try {
-			connector.getTaskDataHandler().getTaskData(repository, "abc");
+			connector.getTaskDataHandler().getTaskData(repository, "abc", new NullProgressMonitor());
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}

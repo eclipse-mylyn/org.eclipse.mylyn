@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ITaskDataHandler {
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId) throws CoreException;
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Return a reference to the newly created report in the case of new task submission,
 	 * null otherwise
 	 */
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException;
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException;
 
 	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind);
 	

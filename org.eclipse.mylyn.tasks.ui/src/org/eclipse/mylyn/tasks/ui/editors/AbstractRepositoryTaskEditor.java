@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -2708,11 +2709,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData);
+					monitor.beginTask("Submitting task", 3);
+					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData, new SubProgressMonitor(monitor, 1));
 					final boolean isNew = taskData.isNew();
 					if (isNew) {
 						if (taskId != null) {
-							modifiedTask = handleNewBugPost(taskId);
+							modifiedTask = handleNewBugPost(taskId, new SubProgressMonitor(monitor, 1));
 						} else {
 							// null taskId, assume task could not be created...
 							throw new CoreException(
@@ -2729,7 +2731,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						// Attach context if required
 						if (attachContext) {
-							connector.attachContext(repository, modifiedTask, "");
+							connector.attachContext(repository, modifiedTask, "", new SubProgressMonitor(monitor, 1));
 						}
 
 						modifiedTask.setSubmitting(true);
@@ -2782,6 +2784,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							setGlobalBusy(false);// enableButtons();
 						}
 					});
+				} finally {
+					monitor.done();
 				}
 				return Status.OK_STATUS;
 			}
@@ -2920,8 +2924,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return Status.OK_STATUS;
 	}
 
-	protected AbstractRepositoryTask handleNewBugPost(String postResult) throws CoreException {
-		final AbstractRepositoryTask newTask = connector.createTaskFromExistingId(repository, postResult);
+	protected AbstractRepositoryTask handleNewBugPost(String postResult, IProgressMonitor monitor) throws CoreException {
+		final AbstractRepositoryTask newTask = connector.createTaskFromExistingId(repository, postResult, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

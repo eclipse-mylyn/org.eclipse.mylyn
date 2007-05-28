@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.core.MylarStatusHandler;
@@ -50,7 +51,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 		}
 	}
 
-	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file)
+	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file, IProgressMonitor monitor)
 			throws CoreException {
 		if (repository == null || attachment == null || file == null) {
 			MylarStatusHandler.log("Unable to download. Null argument.", this);
@@ -83,7 +84,7 @@ public class BugzillaAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch) throws CoreException {
+			String description, File file, String contentType, boolean isPatch, IProgressMonitor monitor) throws CoreException {
 		try {
 			String bugId = task.getTaskId();
 			BugzillaClient client = connector.getClientManager().getClient(repository);

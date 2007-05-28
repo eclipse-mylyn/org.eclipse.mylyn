@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
 import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
@@ -95,14 +96,14 @@ public class TracAttachmentHandlerTest extends TestCase {
 	
 	private void downloadAttachmentXmlRpc(String url) throws Exception {
 		init(url, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		attachmentHandler.downloadAttachment(repository, taskData.getAttachments().get(0), file);
+		attachmentHandler.downloadAttachment(repository, taskData.getAttachments().get(0), file, new NullProgressMonitor());
 
 		byte[] result = new byte[6];
 		InputStream in = new FileInputStream(file);
@@ -125,7 +126,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	private void getAttachmentDataXmlRpc(String url) throws Exception {
 		init(url, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
@@ -144,7 +145,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 	
 	private void uploadAttachmentXmlRpc(String url) throws Exception {
 		init(url, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
 		OutputStream out = new FileOutputStream(file);
@@ -153,7 +154,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		} finally {
 			out.close();
 		}
-		attachmentHandler.uploadAttachment(repository, task, "comment", "description", file, "", false);
+		attachmentHandler.uploadAttachment(repository, task, "comment", "description", file, "", false, new NullProgressMonitor());
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
 		byte[] result = client.getAttachmentData(data.attachmentTicketId, file.getName());
@@ -162,25 +163,25 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	public void testCanUploadAttachmentXmlRpc() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertTrue(attachmentHandler.canUploadAttachment(repository, task));
 	}
 
 	public void testCanUploadAttachmentWeb() throws CoreException {
 		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertFalse(attachmentHandler.canUploadAttachment(repository, task));
 	}
 
 	public void testCanDownloadAttachmentXmlRpc() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertTrue(attachmentHandler.canDownloadAttachment(repository, task));
 	}
 	
 	public void testCanDownloadAttachmentWeb() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertFalse(attachmentHandler.canDownloadAttachment(repository, task));
 	}
 

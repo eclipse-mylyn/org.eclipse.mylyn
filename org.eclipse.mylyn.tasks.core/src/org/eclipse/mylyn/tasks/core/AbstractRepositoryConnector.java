@@ -77,8 +77,8 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * create task and necessary subtasks (1 level nesting)
 	 */
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id) throws CoreException {
-		return createTaskFromExistingId(repository, id, true);
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
+		return createTaskFromExistingId(repository, id, true, monitor);
 	}
 	
 	/**
@@ -90,14 +90,14 @@ public abstract class AbstractRepositoryConnector {
 	 * @throws CoreException
 	 *             TODO
 	 */
-	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks) throws CoreException {
+	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
 		if (task instanceof AbstractRepositoryTask) {
 			repositoryTask = (AbstractRepositoryTask) task;
 		} else if (task == null && getTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
-			taskData = getTaskDataHandler().getTaskData(repository, id);
+			taskData = getTaskDataHandler().getTaskData(repository, id, monitor);
 			if (taskData != null) {
 				// Use connector task factory
 				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
@@ -162,7 +162,7 @@ public abstract class AbstractRepositoryConnector {
 	 *             thrown in case of error while synchronizing
 	 * @see {@link #getTaskDataHandler()}
 	 */
-	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask)
+	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor)
 			throws CoreException;
 
 	/**
@@ -233,7 +233,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment)
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment, IProgressMonitor monitor)
 			throws CoreException {
 		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
@@ -250,7 +250,7 @@ public abstract class AbstractRepositoryConnector {
 				task.setSubmitting(true);
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
 				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
-						APPLICATION_OCTET_STREAM, false);
+						APPLICATION_OCTET_STREAM, false, monitor);
 			} catch (CoreException e) {
 				// TODO: Calling method should be responsible for returning
 				// state of task. Wizard will have different behaviour than
@@ -269,7 +269,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @return false, if operation is not supported by repository
 	 */
 	public final boolean retrieveContext(TaskRepository repository, AbstractRepositoryTask task,
-			RepositoryAttachment attachment, String destinationPath) throws CoreException {
+			RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor) throws CoreException {
 		IAttachmentHandler attachmentHandler = getAttachmentHandler();
 		if (attachmentHandler == null) {
 			return false;
@@ -284,7 +284,7 @@ public abstract class AbstractRepositoryConnector {
 				return false;
 			}
 		}
-		attachmentHandler.downloadAttachment(repository, attachment, destinationContextFile);
+		attachmentHandler.downloadAttachment(repository, attachment, destinationContextFile, monitor);
 		return true;
 	}
 

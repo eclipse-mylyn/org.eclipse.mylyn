@@ -131,7 +131,7 @@ class SynchronizeTaskJob extends Job {
 		ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
 			String taskId = repositoryTask.getTaskId();
-			RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId);
+			RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId, monitor);
 
 			if (downloadedTaskData != null) {
 				// HACK: part of hack below
@@ -153,10 +153,10 @@ class SynchronizeTaskJob extends Job {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 				}
 			} else {
-				connector.updateTaskFromRepository(repository, repositoryTask);
+				connector.updateTaskFromRepository(repository, repositoryTask, monitor);
 			}
 		} else {
-			connector.updateTaskFromRepository(repository, repositoryTask);
+			connector.updateTaskFromRepository(repository, repositoryTask, monitor);
 		}
 	}
 }

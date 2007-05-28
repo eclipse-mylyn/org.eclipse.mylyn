@@ -116,7 +116,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 					if (subTask == null && retrieveSubTasks) {
 						if (!subId.trim().equals(taskData.getId()) && !subId.equals("")) {
 							try {
-								subTask = createTaskFromExistingId(repository, subId, false);
+								subTask = createTaskFromExistingId(repository, subId, false, new NullProgressMonitor());
 							} catch (CoreException e) {
 								// ignore
 							}
@@ -394,7 +394,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) {
 		// ignore
 	}
 

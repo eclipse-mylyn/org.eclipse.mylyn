@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -40,7 +41,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 		this.connector = connector;
 	}
 
-	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file)
+	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, File file, IProgressMonitor monitor)
 			throws CoreException {
 		byte[] data = getAttachmentData(repository, attachment);
 		try {
@@ -60,7 +61,7 @@ public class TracAttachmentHandler implements IAttachmentHandler {
 	}
 
 	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, String comment,
-			String description, File file, String contentType, boolean isPatch) throws CoreException {
+			String description, File file, String contentType, boolean isPatch, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
 					IMylarStatusConstants.REPOSITORY_ERROR,

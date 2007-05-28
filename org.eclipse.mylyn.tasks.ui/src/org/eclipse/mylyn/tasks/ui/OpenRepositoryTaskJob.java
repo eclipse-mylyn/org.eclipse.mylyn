@@ -81,7 +81,7 @@ public class OpenRepositoryTaskJob extends Job {
 			if (offlineHandler != null) {
 				// the following code was copied from SynchronizeTaskJob
 				RepositoryTaskData downloadedTaskData = null;
-				downloadedTaskData = offlineHandler.getTaskData(repository, taskId);
+				downloadedTaskData = offlineHandler.getTaskData(repository, taskId, monitor);
 				if (downloadedTaskData != null) {
 					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), downloadedTaskData.getId());
 					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(handle, downloadedTaskData);

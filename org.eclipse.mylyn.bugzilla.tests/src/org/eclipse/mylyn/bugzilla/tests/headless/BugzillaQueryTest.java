@@ -74,7 +74,7 @@ public class BugzillaQueryTest extends TestCase {
 	}
 
 	public void testGetBug() throws Exception {
-		RepositoryTaskData taskData = handler.getTaskData(repository, "1");
+		RepositoryTaskData taskData = handler.getTaskData(repository, "1",  new NullProgressMonitor());
 		assertNotNull(taskData);
 		assertEquals("user@mylar.eclipse.org", taskData.getAssignedTo());
 		assertEquals("foo", taskData.getDescription());

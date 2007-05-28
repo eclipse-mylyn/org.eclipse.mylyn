@@ -82,7 +82,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
-			connector.createTaskFromExistingId(repository, "-123");
+			connector.createTaskFromExistingId(repository, "-123", new NullProgressMonitor());
 			fail();
 		} catch (CoreException ce) {
 
@@ -175,7 +175,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		sourceContextFile.deleteOnExit();
 		repository.setAuthenticationCredentials("wrong", "wrong");
 		try {
-			connector.attachContext(repository, task, "");
+			connector.attachContext(repository, task, "", new NullProgressMonitor());
 		} catch (CoreException e) {
 			assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 			return;
@@ -356,7 +356,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
-		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		assertEquals(numAttached, taskData.getAttachments().size());
@@ -374,7 +374,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 			fail();
 		} catch (Exception e) {
 		}
-		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		assertEquals(numAttached, taskData.getAttachments().size());
@@ -390,7 +390,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(),
 				new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
 
-		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber);
+		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		assertEquals(numAttached + 1, taskData.getAttachments().size());
@@ -518,7 +518,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		}
 		TasksUiPlugin.getDefault().getTaskDataManager().clear(); // NO TASK
 		// DATA
-		connector.getTaskDataHandler().postTaskData(repository, recentTaskData);
+		connector.getTaskDataHandler().postTaskData(repository, recentTaskData, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task7.getSyncState());
 	}

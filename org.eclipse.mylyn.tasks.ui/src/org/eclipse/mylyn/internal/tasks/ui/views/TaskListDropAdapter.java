@@ -23,6 +23,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -197,7 +198,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					connector.getRepositoryType())) {
 				if (repository.getUrl().equals(repositoryUrl)) {
 					try {
-						newTask = connector.createTaskFromExistingId(repository, id);
+						newTask = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
 
 //						if (newTask instanceof AbstractRepositoryTask) {
 //							// TODO: encapsulate in abstract connector

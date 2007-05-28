@@ -143,14 +143,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		ITask task = connector.createTaskFromExistingId(repository, id);
+		ITask task = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
 		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getTaskUrl());
 
 		try {
-			task = connector.createTaskFromExistingId(repository, "does not exist");
+			task = connector.createTaskFromExistingId(repository, "does not exist", new NullProgressMonitor());
 			fail("Expected CoreException");
 		} catch (CoreException e) {
 		}
@@ -308,7 +308,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextXmlRpc010() throws Exception {
 		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 
 		//int size = task.getTaskData().getAttachments().size();
@@ -317,7 +317,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-		assertTrue(connector.attachContext(repository, task, ""));
+		assertTrue(connector.attachContext(repository, task, "", new NullProgressMonitor()));
 		
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
@@ -329,14 +329,14 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	public void testContextWeb096() throws Exception {
 		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "");
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 
 		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
 		try {
-			connector.attachContext(repository, task, "");
+			connector.attachContext(repository, task, "", new NullProgressMonitor());
 			fail("expected CoreException"); // operation should not be supported
 		} catch (CoreException e) {
 		}

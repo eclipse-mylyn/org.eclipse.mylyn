@@ -510,8 +510,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// ignore, new editor doesn't have people section
 	}
 
-	public AbstractRepositoryTask handleNewBugPost(String id) throws CoreException {
-		final AbstractRepositoryTask newTask = super.handleNewBugPost(id);
+	@Override
+	public AbstractRepositoryTask handleNewBugPost(String id, IProgressMonitor monitor) throws CoreException {
+		final AbstractRepositoryTask newTask = super.handleNewBugPost(id, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.core.util.DateUtil;
@@ -118,7 +119,7 @@ class SynchronizeQueryJob extends Job {
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
+				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, new SubProgressMonitor(monitor, 1), collector);
 
 				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
 					// do nothing
@@ -172,7 +173,6 @@ class SynchronizeQueryJob extends Job {
 			repositoryQuery.setCurrentlySynchronizing(false);
 
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
-			monitor.worked(1);
 		}
 
 		final PrimeTaskData job = new PrimeTaskData();
@@ -198,6 +198,9 @@ class SynchronizeQueryJob extends Job {
 		if (queries != null && queries.size() > 0) {
 			taskList.removeOrphanedHits();
 		}
+		
+		monitor.done();
+		
 		return Status.OK_STATUS;
 	}
 
@@ -258,7 +261,7 @@ class SynchronizeQueryJob extends Job {
 							return Status.CANCEL_STATUS;
 						RepositoryTaskData taskData;
 						try {
-							taskData = handler.getTaskData(repository, hit.getTaskId());
+							taskData = handler.getTaskData(repository, hit.getTaskId(), monitor);
 						} catch (Throwable e) {
 							// ignore failures
 							monitor.worked(1);

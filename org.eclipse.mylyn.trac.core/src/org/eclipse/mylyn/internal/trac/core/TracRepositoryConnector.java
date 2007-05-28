@@ -112,7 +112,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask) throws CoreException {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
 			// String taskId =
 			// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
@@ -193,9 +193,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String taskId)
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
-		AbstractRepositoryTask task = super.createTaskFromExistingId(repository, taskId);
+		AbstractRepositoryTask task = super.createTaskFromExistingId(repository, taskId, monitor);
 		if (task == null) {
 			// repository does not support XML-RPC, fall back to web access
 			try {
