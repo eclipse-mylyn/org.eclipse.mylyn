@@ -533,7 +533,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 	}
 
 	public void putAttachmentData(int ticketId, String filename, String description, byte[] data) throws TracException {
-		call("ticket.putAttachment", ticketId, filename, description, data, true);
+		call("ticket.putAttachment", ticketId, filename, description, data, false);
 	}
 
 	public void deleteAttachment(int ticketId, String filename) throws TracException {
