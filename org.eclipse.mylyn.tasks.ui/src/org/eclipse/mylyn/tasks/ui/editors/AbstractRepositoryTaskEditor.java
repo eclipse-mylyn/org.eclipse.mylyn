@@ -735,6 +735,17 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		});
 		attributesSection.setClient(attribComp);
 
+		GridLayout attributesLayout = new GridLayout();
+		attributesLayout.numColumns = 4;
+		attributesLayout.horizontalSpacing = 5;
+		attributesLayout.verticalSpacing = 4;
+		attribComp.setLayout(attributesLayout);
+		
+		GridData attributesData = new GridData(GridData.FILL_BOTH);
+		attributesData.horizontalSpan = 1;
+		attributesData.grabExcessVerticalSpace = false;
+		attribComp.setLayoutData(attributesData);
+		
 	    createAttributeLayout(attribComp);
 		createCustomAttributeLayout(attribComp);
 		
@@ -852,13 +863,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @param style
 	 */
 	protected Text createTextField(Composite composite, RepositoryTaskAttribute attribute, int style) {
-		final Text text;
 		String value;
 		if (attribute == null || attribute.getValue() == null) {
 			value = "";
 		} else {
 			value = attribute.getValue();
 		}
+
+		final Text text;
 		if ((SWT.READ_ONLY & style) == SWT.READ_ONLY) {
 			text = new Text(composite, style);
 			toolkit.adapt(text, true, true);
@@ -871,7 +883,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (attribute != null && !attribute.isReadOnly()) {
 			text.setData(attribute);
 			text.addModifyListener(new ModifyListener() {
-
 				public void modifyText(ModifyEvent e) {
 					String newValue = text.getText();
 					RepositoryTaskAttribute attribute = (RepositoryTaskAttribute) text.getData();
@@ -912,29 +923,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * attributes of the task (some of which are editable).
 	 */
 	protected void createAttributeLayout(Composite attributesComposite) {
-		GridLayout attributesLayout = new GridLayout();
-		attributesLayout.numColumns = 4;
-		attributesLayout.horizontalSpacing = 5;
-		attributesLayout.verticalSpacing = 4;
-		attributesComposite.setLayout(attributesLayout);
-		GridData attributesData = new GridData(GridData.FILL_BOTH);
-		attributesData.horizontalSpan = 1;
-		attributesData.grabExcessVerticalSpace = false;
-		attributesComposite.setLayoutData(attributesData);
-
+		int numColumns = ((GridLayout) attributesComposite.getLayout()).numColumns;
 		int currentCol = 1;
-
+		
 		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
-			String value = "";
-			value = checkText(attribute.getValue());
-			if (attribute.isHidden())
+			if (attribute.isHidden()) {
 				continue;
-
-			List<String> values = attribute.getOptions();
-
-			if (values == null)
-				values = new ArrayList<String>();
-
+			}
+			
 			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			data.horizontalSpan = 1;
 			data.horizontalIndent = HORZ_INDENT;
@@ -950,10 +946,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					attributeCombo.setBackground(backgroundIncoming);
 				}
 				attributeCombo.setLayoutData(data);
-				for (String val : values) {
-					attributeCombo.add(val);
+
+				List<String> values = attribute.getOptions();
+				if (values != null) {
+					for (String val : values) {
+						attributeCombo.add(val);
+					}
 				}
 
+				String value = checkText(attribute.getValue());
 				if (attributeCombo.indexOf(value) != -1) {
 					attributeCombo.select(attributeCombo.indexOf(value));
 				}
@@ -997,18 +998,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				currentCol += 2;
 			}
 
-			if (currentCol > attributesLayout.numColumns) {
-				currentCol -= attributesLayout.numColumns;
+			if (currentCol > numColumns) {
+				currentCol -= numColumns;
 			}
 		}
-		toolkit.paintBordersFor(attributesComposite);
+		
 		// make sure that we are in the first column
 		if (currentCol > 1) {
-			while (currentCol <= attributesLayout.numColumns) {
+			while (currentCol <= numColumns) {
 				toolkit.createLabel(attributesComposite, "");
 				currentCol++;
 			}
 		}
+		
+		toolkit.paintBordersFor(attributesComposite);
 	}
 
 	/**
@@ -1731,7 +1734,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		boolean foundNew = false;
 
-		StyledText styledText = null;
 		for (Iterator<TaskComment> it = taskData.getComments().iterator(); it.hasNext();) {
 			final TaskComment taskComment = it.next();
 
@@ -1818,7 +1820,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					| SWT.WRAP);
 			// viewer.getControl().setBackground(new
 			// Color(expandableComposite.getDisplay(), 123, 34, 155));
-			styledText = viewer.getTextWidget();
+			StyledText styledText = viewer.getTextWidget();
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(styledText);
 			// GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH,
 			// SWT.DEFAULT).applyTo(viewer.getControl());
