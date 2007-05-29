@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -179,6 +180,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 
+	private Hyperlink createAccountHyperlink;
+
+	private Hyperlink manageAccountHyperlink;
+
 	public AbstractRepositorySettingsPage(String title, String description, AbstractRepositoryConnectorUi repositoryUi) {
 		super(title);
 		super.setTitle(title);
@@ -202,22 +207,18 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		new Label(container, SWT.NONE).setText(LABEL_SERVER);
 		serverUrlCombo = new Combo(container, SWT.DROP_DOWN);
 		serverUrlCombo.addModifyListener(new ModifyListener() {
-
 			public void modifyText(ModifyEvent e) {
 				isValidUrl(serverUrlCombo.getText());
+				updateHyperlinks();
+				
 				if (getWizard() != null) {
 					getWizard().getContainer().updateButtons();
 				}
 			}
 		});
 
-		serverUrlCombo.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// ignore
-
-			}
-
+		serverUrlCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isValidUrl(serverUrlCombo.getText());
 				if (getWizard() != null) {
@@ -252,13 +253,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(anonymousButton);
 
 			anonymousButton.setText("Anonymous Access");
-			anonymousButton.addSelectionListener(new SelectionListener() {
+			anonymousButton.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					setAnonymous(anonymousButton.getSelection());
-				}
-
-				public void widgetDefaultSelected(SelectionEvent e) {
-					// ignore
 				}
 			});
 
@@ -270,115 +268,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
 				container);
-		if (repository != null) {
-			originalUrl = repository.getUrl();
-			oldUsername = repository.getUserName();
-			oldPassword = repository.getPassword();
-
-			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
-				oldHttpAuthUserId = repository.getHttpUser();
-				oldHttpAuthPassword = repository.getHttpPassword();
-			} else {
-				oldHttpAuthPassword = "";
-				oldHttpAuthUserId = "";
-			}
-
-			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
-			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
-			if (oldProxyHostname == null)
-				oldProxyHostname = "";
-			if (oldProxyPort == null)
-				oldProxyPort = "";
-
-			oldProxyUsername = repository.getProxyUsername();
-			oldProxyPassword = repository.getProxyPassword();
-			if (oldProxyUsername == null)
-				oldProxyUsername = "";
-			if (oldProxyPassword == null)
-				oldProxyPassword = "";
-
-			try {
-				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
-				if (repositoryLabel != null && repositoryLabel.length() > 0) {
-					// repositoryLabelCombo.add(repositoryLabel);
-					// repositoryLabelCombo.select(0);
-					repositoryLabelEditor.setStringValue(repositoryLabel);
-				}
-				serverUrlCombo.setText(repository.getUrl());
-				repositoryUserNameEditor.setStringValue(repository.getUserName());
-				repositoryPasswordEditor.setStringValue(repository.getPassword());
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
-			}
-		} else {
-			oldUsername = "";
-			oldPassword = "";
-			oldHttpAuthPassword = "";
-			oldHttpAuthUserId = "";
-		}
-		// bug 131656: must set echo char after setting value on Mac
-		((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
-
-		if (needsAnonymousLogin()) {
-			// do this after username and password widgets have been intialized
-			if (repository != null) {
-				setAnonymous(isAnonymousAccess());
-			}
-		}
-
-		final String accountCreationUrl = TasksUiPlugin.getRepositoryUi(repository.getKind()).getAccountCreationUrl(
-				repository);
-		final String accountManagementUrl = TasksUiPlugin.getRepositoryUi(repository.getKind())
-				.getAccountManagementUrl(repository);
-		if (accountCreationUrl != null || accountManagementUrl != null) {
-			Label accountLabel = new Label(container, SWT.NULL);
-			accountLabel.setText("Manage account: ");
-
-			Composite accountManagementComposite = new Composite(container, SWT.NULL);
-			GridLayout accountGridLayout = new GridLayout(2, false);
-			accountGridLayout.marginLeft = 0;
-			accountManagementComposite.setLayout(accountGridLayout);
-
-			if (accountCreationUrl != null) {
-				Hyperlink createAccountHyperlink = toolkit.createHyperlink(accountManagementComposite, "Create new",
-						SWT.NULL);
-				createAccountHyperlink.setBackground(accountManagementComposite.getBackground());
-				createAccountHyperlink.addHyperlinkListener(new IHyperlinkListener() {
-
-					public void linkActivated(HyperlinkEvent e) {
-						TasksUiUtil.openUrl(accountCreationUrl, false);
-					}
-
-					public void linkEntered(HyperlinkEvent e) {
-						// ignore
-					}
-
-					public void linkExited(HyperlinkEvent e) {
-						// ignore
-					}
-				});
-			}
-
-			if (accountCreationUrl != null) {
-				Hyperlink manageAccountHyperlink = toolkit.createHyperlink(accountManagementComposite, "Change settings",
-						SWT.NULL);
-				manageAccountHyperlink.setBackground(accountManagementComposite.getBackground());
-				manageAccountHyperlink.addHyperlinkListener(new IHyperlinkListener() {
-
-					public void linkActivated(HyperlinkEvent e) {
-						TasksUiUtil.openUrl(accountManagementUrl, false);
-					}
-
-					public void linkEntered(HyperlinkEvent e) {
-						// ignore
-					}
-
-					public void linkExited(HyperlinkEvent e) {
-						// ignore
-					}
-				});
-			}
-		}
 		// TODO: put this back if we can't get the info from all connectors
 		// if (needsTimeZone()) {
 		// Label timeZoneLabel = new Label(container, SWT.NONE);
@@ -566,8 +455,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			addProxySection();
 		}
 
+		Composite managementComposite = new Composite(container, SWT.NULL);
+		GridLayout managementLayout = new GridLayout(4, false);
+		managementLayout.marginHeight = 0;
+		managementLayout.marginWidth = 0;
+		managementLayout.horizontalSpacing = 10;
+		managementComposite.setLayout(managementLayout);
+		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
+		
 		if (needsValidation()) {
-			validateServerButton = new Button(container, SWT.PUSH);
+			validateServerButton = new Button(managementComposite, SWT.PUSH);
 			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
 			validateServerButton.setText("Validate Settings");
 			validateServerButton.addSelectionListener(new SelectionAdapter() {
@@ -579,6 +476,102 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			});
 		}
 
+		createAccountHyperlink = toolkit.createHyperlink(managementComposite, "Create new account", SWT.NONE);
+		createAccountHyperlink.setBackground(managementComposite.getBackground());
+		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				TaskRepository repository = getRepository();
+				if (repository == null && getServerUrl()!=null && getServerUrl().length()>0) {
+					repository = createTaskRepository();
+				}
+				if (repository != null) {
+					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+							.getAccountCreationUrl(repository);
+					if (accountCreationUrl != null) {
+						TasksUiUtil.openUrl(accountCreationUrl, false);
+					}
+				}
+			}
+		});
+
+		manageAccountHyperlink = toolkit.createHyperlink(managementComposite, "Change account settings", SWT.NONE);
+		manageAccountHyperlink.setBackground(managementComposite.getBackground());
+		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				TaskRepository repository = getRepository();
+				if (repository == null && getServerUrl()!=null && getServerUrl().length()>0) {
+					repository = createTaskRepository();
+				}
+				if(repository!=null) {
+					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+							.getAccountManagementUrl(repository);
+					if(accountManagementUrl!=null) {
+						TasksUiUtil.openUrl(accountManagementUrl, false);
+					}
+				}
+			}
+		});
+
+		if (repository != null) {
+			originalUrl = repository.getUrl();
+			oldUsername = repository.getUserName();
+			oldPassword = repository.getPassword();
+
+			if (repository.getHttpUser() != null && repository.getHttpPassword() != null) {
+				oldHttpAuthUserId = repository.getHttpUser();
+				oldHttpAuthPassword = repository.getHttpPassword();
+			} else {
+				oldHttpAuthPassword = "";
+				oldHttpAuthUserId = "";
+			}
+
+			oldProxyHostname = repository.getProperty(TaskRepository.PROXY_HOSTNAME);
+			oldProxyPort = repository.getProperty(TaskRepository.PROXY_PORT);
+			if (oldProxyHostname == null)
+				oldProxyHostname = "";
+			if (oldProxyPort == null)
+				oldProxyPort = "";
+
+			oldProxyUsername = repository.getProxyUsername();
+			oldProxyPassword = repository.getProxyPassword();
+			if (oldProxyUsername == null)
+				oldProxyUsername = "";
+			if (oldProxyPassword == null)
+				oldProxyPassword = "";
+
+			try {
+				String repositoryLabel = repository.getProperty(IRepositoryConstants.PROPERTY_LABEL);
+				if (repositoryLabel != null && repositoryLabel.length() > 0) {
+					// repositoryLabelCombo.add(repositoryLabel);
+					// repositoryLabelCombo.select(0);
+					repositoryLabelEditor.setStringValue(repositoryLabel);
+				}
+				serverUrlCombo.setText(repository.getUrl());
+				repositoryUserNameEditor.setStringValue(repository.getUserName());
+				repositoryPasswordEditor.setStringValue(repository.getPassword());
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+			}
+		} else {
+			oldUsername = "";
+			oldPassword = "";
+			oldHttpAuthPassword = "";
+			oldHttpAuthUserId = "";
+		}
+		// bug 131656: must set echo char after setting value on Mac
+		((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
+
+		if (needsAnonymousLogin()) {
+			// do this after username and password widgets have been intialized
+			if (repository != null) {
+				setAnonymous(isAnonymousAccess());
+			}
+		}
+
+		updateHyperlinks();
+		
 		setControl(container);
 	}
 
@@ -830,6 +823,26 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	protected abstract boolean isValidUrl(String name);
 
+	void updateHyperlinks() {
+		if (getServerUrl()!=null && getServerUrl().length()>0) {
+			TaskRepository repository = createTaskRepository(); 
+			String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+					.getAccountCreationUrl(repository);
+			createAccountHyperlink.setEnabled(accountCreationUrl != null);
+			createAccountHyperlink.setVisible(accountCreationUrl != null);
+
+			String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+					.getAccountManagementUrl(repository);
+			manageAccountHyperlink.setEnabled(accountManagementUrl != null);
+			manageAccountHyperlink.setVisible(accountManagementUrl != null);
+		} else {
+			createAccountHyperlink.setEnabled(false);
+			createAccountHyperlink.setVisible(false);
+			manageAccountHyperlink.setEnabled(false);
+			manageAccountHyperlink.setVisible(false);
+		}
+	}
+	
 	public String getRepositoryLabel() {
 		return repositoryLabelEditor.getStringValue();
 	}
