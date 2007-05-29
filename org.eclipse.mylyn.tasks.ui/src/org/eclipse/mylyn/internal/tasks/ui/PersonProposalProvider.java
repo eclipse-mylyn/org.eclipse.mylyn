@@ -22,6 +22,7 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskComment;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -155,6 +156,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			}
 			for (TaskComment comment : currentTaskData.getComments()) {
 				addAddress(comment.getAuthor(), addressSet);
+			}
+			for (RepositoryAttachment attachment : currentTaskData.getAttachments()) {
+				addAddress(attachment.getCreator(), addressSet);
 			}
 		}
 	}
