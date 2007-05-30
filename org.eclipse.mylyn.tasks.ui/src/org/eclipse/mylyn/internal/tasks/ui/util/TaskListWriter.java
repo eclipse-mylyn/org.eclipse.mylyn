@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -247,6 +249,7 @@ public class TaskListWriter {
 	 */
 	public void readTaskList(TaskList taskList, File inFile, TaskDataManager taskDataManager) {
 		hasCaughtException = false;
+		Map<ITask, NodeList> tasksWithSubtasks = new HashMap<ITask, NodeList>();
 		orphanedTaskNodes.clear();
 		orphanedQueryNodes.clear();
 		try {
@@ -287,6 +290,10 @@ public class TaskListWriter {
 							ITask task = delagatingExternalizer.readTask(child, taskList, null, null);
 							if (task == null) {
 								orphanedTaskNodes.add(child);
+							} else {
+								if(child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
+									tasksWithSubtasks.put(task, child.getChildNodes());
+								}
 							}
 						}
 					} catch (Exception e) {
@@ -299,6 +306,11 @@ public class TaskListWriter {
 						// bad tasklist.
 						handleException(inFile, child, e);
 					}
+				}
+				
+				for (ITask task : tasksWithSubtasks.keySet()) {
+					NodeList nodes = tasksWithSubtasks.get(task);
+					delagatingExternalizer.readSubTasks(task, nodes, taskList);
 				}
 
 				// then queries and hits which get linked to tasks

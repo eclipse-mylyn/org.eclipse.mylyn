@@ -75,6 +75,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 	public static final String KEY_TASK = "Task";
 
+	public static final String KEY_SUBTASK = "SubTask";
+
 	public static final String KEY_KIND = "Kind";
 
 	public static final String KEY_TASK_CATEGORY = "Task" + KEY_CATEGORY;
@@ -227,10 +229,31 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		}
 
 		for (ITask t : task.getChildren()) {
-			createTaskElement(t, doc, node);
+			createSubTaskElement(t, doc, node);
 		}
+		
 		parent.appendChild(node);
 		return node;
+	}
+
+	public void readSubTasks(ITask task, NodeList nodes, TaskList tasklist) {
+		for (int j = 0; j < nodes.getLength(); j++) {
+			Node child = nodes.item(j);
+			Element element = (Element) child;
+			if (element.hasAttribute(KEY_HANDLE)) {
+				String handle = element.getAttribute(KEY_HANDLE);
+				ITask subTask = tasklist.getTask(handle);
+				if (subTask != null) {
+					task.addSubTask(subTask);
+				}
+			}
+		}
+	}
+
+	public void createSubTaskElement(ITask task, Document doc, Element parent) {
+		Element node = doc.createElement(KEY_SUBTASK);
+		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		parent.appendChild(node);
 	}
 
 	protected String stripControlCharacters(String text) {
@@ -494,11 +517,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 		}
 
-		NodeList list = element.getChildNodes();
-		for (int j = 0; j < list.getLength(); j++) {
-			Node child = list.item(j);
-			task.addSubTask(readTask(child, taskList, null, task));
-		}
+// NodeList list = element.getChildNodes();
+// for (int j = 0; j < list.getLength(); j++) {
+// Node child = list.item(j);
+// task.addSubTask(readTask(child, taskList, null, task));
+// }
 	}
 
 	// /**
