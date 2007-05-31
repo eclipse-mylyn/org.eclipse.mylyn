@@ -87,6 +87,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor REMOVE = create(T_ELCL, "remove.gif");
 
+	public static final ImageDescriptor DELETE = create(T_ELCL, "delete.gif");
+	
 	public static final ImageDescriptor FILTER_COMPLETE = create(T_ELCL, "filter-complete.gif");
 
 	public static final ImageDescriptor FILTER_ARCHIVE = create(T_ELCL, "filter-archive.gif");
