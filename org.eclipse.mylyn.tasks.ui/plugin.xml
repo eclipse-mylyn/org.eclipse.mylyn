@@ -211,8 +211,8 @@
                 closeable="true"
                 id="org.eclipse.mylar.tasks.ui.views.TaskListView"
                 minimized="false"
-                relationship="left"
-                relative="org.eclipse.ui.views.TaskList">
+                relationship="stack"
+                relative="org.eclipse.ui.views.ContentOutline">
          </view>
           <newWizardShortcut
                 id="org.eclipse.mylar.tasks.ui.wizard.new.task">
