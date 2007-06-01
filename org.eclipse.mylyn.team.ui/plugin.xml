@@ -5,6 +5,12 @@
    <extension-point id="changeSets" name="Mylar Team Providers" schema="schema/changeSets.exsd"/>
    <extension-point id="commitTemplates" name="Mylar Template Handlers" schema="schema/commitTemplates.exsd"/>
     
+    <!-- needed to update change sets -->
+    <extension
+         name="Mylar Team Startup (Change Set management)"
+         point="org.eclipse.ui.startup">
+    </extension>
+    
    <extension
          point="org.eclipse.mylar.team.changeSets">
       <activeChangeSetProvider 
@@ -24,11 +30,6 @@
             objectClass="org.eclipse.mylar.internal.team.ContextChangeSet"
             state="true">
       </decorator>
-    </extension>
-    
-	<extension
-         name="Mylar Team Startup (Change Set management)"
-         point="org.eclipse.ui.startup">
     </extension>
     
      <extension point="org.eclipse.ui.popupMenus"> 
