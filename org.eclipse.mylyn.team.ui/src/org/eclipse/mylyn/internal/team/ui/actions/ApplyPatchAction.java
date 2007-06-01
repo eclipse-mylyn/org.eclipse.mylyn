@@ -35,6 +35,10 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
  */
 public class ApplyPatchAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
+	public ApplyPatchAction() {
+		super("Apply Patch");
+	}
+	
 	protected ApplyPatchAction(String text) {
 		super(text);
 	}
