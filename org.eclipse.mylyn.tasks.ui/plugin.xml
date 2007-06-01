@@ -653,7 +653,7 @@
               class="org.eclipse.mylar.internal.tasks.ui.actions.ReportBugAction"
               icon="icons/etool16/bug-report.gif"
               id="org.eclipse.mylar.tasks.ui.bug.report"
-              label="Report Bug"
+              label="Report Bug or Enhancement"
               menubarPath="help/helpStart"
               style="push"
               tooltip="Report Bug or Feature Request"> 
