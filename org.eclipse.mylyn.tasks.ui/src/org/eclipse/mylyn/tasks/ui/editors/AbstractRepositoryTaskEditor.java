@@ -1495,6 +1495,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					SWT.FLAT | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 			descriptionTextViewer.setEditable(true);
 			StyledText styledText = descriptionTextViewer.getTextWidget();
+			styledText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.widthHint = DESCRIPTION_WIDTH;
 			gd.heightHint = SWT.DEFAULT;
@@ -1534,6 +1535,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createReplyHyperlink(0, replyComp, taskData.getDescription());
 		descriptionSection.setTextClient(replyComp);
 
+		toolkit.paintBordersFor(sectionComposite);
 	}
 
 	private ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
@@ -1584,7 +1586,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		RepositoryTaskAttribute assignedAttribute = taskData.getAttribute(RepositoryTaskAttribute.USER_ASSIGNED);
 		if (assignedAttribute != null) {
-
 			Label label = createLabel(peopleComposite, assignedAttribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
 			Text textField = createTextField(peopleComposite, assignedAttribute, SWT.FLAT | SWT.READ_ONLY);
