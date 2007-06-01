@@ -17,8 +17,8 @@
 	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-httpclient-3.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib-httpclient/commons-logging-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/ws-commons-util-1.0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-client-3.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-common-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/ws-commons-util-1.0.1.jar" sourcepath="lib-xmlrpc/ws-commons-util-1.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-client-3.0.jar" sourcepath="lib-xmlrpc/xmlrpc-client-3.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib-xmlrpc/xmlrpc-common-3.0.jar" sourcepath="lib-xmlrpc/xmlrpc-common-3.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
