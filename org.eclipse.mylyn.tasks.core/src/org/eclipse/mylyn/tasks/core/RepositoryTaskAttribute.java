@@ -13,6 +13,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -268,6 +269,10 @@ public class RepositoryTaskAttribute implements Serializable {
 		return true;
 	}
 
+	public void clearMetaData() {
+		metaData.clear();
+	}
+	
 	public void putMetaDataValue(String key, String value) {
 		metaData.put(key, value);
 	}
@@ -279,5 +284,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	public void removeMetaDataValue(String key) {
 		metaData.remove(key);
 	}
-
+	
+	public Map<String, String> getMetaData() {
+		return Collections.unmodifiableMap(metaData);
+	}
 }
