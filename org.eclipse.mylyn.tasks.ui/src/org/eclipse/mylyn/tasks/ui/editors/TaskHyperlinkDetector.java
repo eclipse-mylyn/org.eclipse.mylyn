@@ -18,31 +18,26 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Rob Elves
  * @author Steffen Pingel
+ * @author Eugene Kuleshov
  */
 public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null) {
-			return null;
-		}
-
-		TaskRepository repository = getRepository(textViewer);
-		if (repository == null) {
-			return null;
-		}
-
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
-		if (connectorUi == null) {
 			return null;
 		}
 
@@ -60,21 +55,44 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		return connectorUi.findHyperlinks(repository, line, region.getOffset() - lineInfo.getOffset(), lineInfo
-				.getOffset());
+		TaskRepository repository = getRepository(textViewer);
+		if (repository == null) {
+			repository = guessRepository(line);
+		}
+		if (repository == null) {
+			return null;
+		}
+
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+		if (connectorUi == null) {
+			return null;
+		}
+
+		return connectorUi.findHyperlinks(repository, line, //
+				region.getOffset() - lineInfo.getOffset(), lineInfo.getOffset());
 	}
 
 	private TaskRepository getRepository(ITextViewer textViewer) {
+		TaskRepository repository = (TaskRepository) getAdapter(TaskRepository.class);
+		if (repository != null) {
+			return repository;
+		}
+		
 		IResource resource = (IResource) getAdapter(IResource.class);
 		if (resource == null) {
 			if (textViewer instanceof RepositoryTextViewer) {
 				RepositoryTextViewer viewer = (RepositoryTextViewer) textViewer;
 				return viewer.getRepository();
-			} else {
-				IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.getActiveEditor();
-				IEditorInput input = part.getEditorInput();
-				resource = (IResource) input.getAdapter(IResource.class);
+			}
+
+			// use currently active editor (if any)
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPart part = activePage.getActivePart();
+			if (part != null && part instanceof IEditorPart) {
+				IEditorInput input = ((IEditorPart) part).getEditorInput();
+				if (input != null) {
+					resource = (IResource) input.getAdapter(IResource.class);
+				}
 			}
 		}
 		if (resource != null) {
@@ -82,4 +100,19 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 		return null;
 	}
+
+	// TODO: extract similar code to OpenCorrespondingTaskAction#reconsile(ILinkedTaskInfo info)
+	private TaskRepository guessRepository(String text) {
+		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
+		for (AbstractRepositoryConnector c : manager.getRepositoryConnectors()) {
+			for (TaskRepository repository : manager.getRepositories(c.getRepositoryType())) {
+				String[] ids = c.getTaskIdsFromComment(repository, text);
+				if (ids != null && ids.length > 0 && ids[0].length() > 0) {
+					return repository;
+				}
+			}
+		}
+		return null;
+	}
+
 }
