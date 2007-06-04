@@ -584,7 +584,11 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	public void setMessage(String message, int type) {
-		this.getHeaderForm().getForm().setMessage(message, type);
+		if (this.getHeaderForm() != null && this.getHeaderForm().getForm() != null) {
+			if (!this.getHeaderForm().getForm().isDisposed()) {
+				this.getHeaderForm().getForm().setMessage(message, type);
+			}
+		}
 	}
 
 	protected IWorkbenchSiteProgressService getProgressService() {
@@ -597,20 +601,20 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
 
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskData.getRepositoryKind());
-		
+
 		String kindLabel = taskData.getTaskKind();
-		
-		if(connectorUi != null) {
-			kindLabel =  connectorUi.getTaskKindLabel(taskData);
-		}		
-		
+
+		if (connectorUi != null) {
+			kindLabel = connectorUi.getTaskKindLabel(taskData);
+		}
+
 		String idLabel = taskData.getTaskKey();
 
 		if (taskData.isNew()) {
 			if (connectorUi != null) {
 				kindLabel = "New " + connectorUi.getTaskKindLabel(taskData);
 			} else {
-				kindLabel = "New "+taskData.getTaskKind();
+				kindLabel = "New " + taskData.getTaskKind();
 			}
 			idLabel = "";
 		}
