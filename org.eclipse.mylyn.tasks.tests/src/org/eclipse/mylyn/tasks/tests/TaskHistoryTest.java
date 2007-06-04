@@ -170,7 +170,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Get a task from the list and activate it
-		PreviousTaskDropDownAction prevAction = new PreviousTaskDropDownAction(taskView, history);
+		PreviousTaskDropDownAction prevAction = new PreviousTaskDropDownAction(history);
 		TaskNavigateAction navigateAction = prevAction.new TaskNavigateAction(task2);
 		navigateAction.run();
 		assertTrue(task2.isActive());

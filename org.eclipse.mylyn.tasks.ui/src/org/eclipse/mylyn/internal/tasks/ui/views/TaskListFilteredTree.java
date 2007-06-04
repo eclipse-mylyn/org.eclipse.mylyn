@@ -197,11 +197,6 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
-				// TaskListView.getFromActivePerspective().selectedAndFocusTask(
-				// TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()
-				// );
-				// TasksUiUtil.openEditor(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask(),
-				// false);
 				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
 						.getActiveTask()));
 			}

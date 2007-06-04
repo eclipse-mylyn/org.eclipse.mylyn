@@ -16,19 +16,18 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 
 /**
  * @author Wesley Coelho
+ * @author Mik Kersten
  */
 public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 	
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.navigate.previous";
 
-	public PreviousTaskDropDownAction(TaskListView view, TaskActivationHistory history) {
-		super(view, history);
+	public PreviousTaskDropDownAction(TaskActivationHistory history) {
+		super(history);
 		setText("Previous Task");
 		setToolTipText("Previous Task");
 		setId(ID);
@@ -61,8 +60,8 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			ITask previousTask = taskHistory.getPreviousTask();
 			new TaskActivateAction().run(previousTask);
 			setButtonStatus();
-			view.refreshAndFocus(false);
-			TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
+//			view.refreshAndFocus(false);
+//			TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
 		}
 	}
 

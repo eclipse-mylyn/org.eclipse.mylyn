@@ -13,6 +13,34 @@
     </extension>
 	-->
 
+	<extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.trim.status?after">
+         <toolbar
+               id="org.eclipse.mylar.tasks.ui.trim.container">
+ 			<command
+                  commandId="org.eclipse.mylar.tasks.ui.trim.command"
+                  id="org.eclipse.mylar.tasks.ui.trim"
+                  label="."
+                  style="push">
+            </command>
+            <control
+                  class="org.eclipse.mylar.internal.tasks.ui.TaskTrimWidget"
+                  id="org.eclipse.mylar.tasks.ui.trim.control">
+            </control>
+         </toolbar>
+      </menuContribution>
+    </extension>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.eclipse.mylar.tasks.ui.trim.command"
+            name="Task Trim Command">
+      </command>
+   </extension>
+
 	<extension point="org.eclipse.ui.views">
      	<category name="Mylar" id="org.eclipse.mylar"/>
     </extension>

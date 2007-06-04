@@ -22,6 +22,7 @@ public interface ITaskActivityListener {
 
 	public abstract void taskActivated(ITask task);
 
+	@Deprecated
 	public abstract void tasksActivated(List<ITask> tasks);
 
 	public abstract void taskDeactivated(ITask task);
