@@ -1247,7 +1247,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
-		previousTaskAction = new PreviousTaskDropDownAction(this, TasksUiPlugin.getTaskListManager()
+		previousTaskAction = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
 		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this, presentations);

@@ -15,9 +15,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -31,8 +29,6 @@ import org.eclipse.swt.widgets.Menu;
  */
 public abstract class TaskNavigateDropDownAction extends Action implements IMenuCreator {
 	
-	protected final TaskListView view;
-
 	protected TaskActivationHistory taskHistory;
 
 	protected Menu dropDownMenu = null;
@@ -42,9 +38,8 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 	/** Maximum number of items to appear in the drop-down menu */
 	protected final static int MAX_ITEMS_TO_DISPLAY = 12;
 
-	public TaskNavigateDropDownAction(TaskListView view, TaskActivationHistory history) {
+	public TaskNavigateDropDownAction(TaskActivationHistory history) {
 		super();
-		this.view = view;
 		taskHistory = history;
 		setMenuCreator(this);
 	}
@@ -83,8 +78,8 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 			// taskHistory.navigatedToTask(targetTask);
 			taskHistory.addTask(targetTask);
 			setButtonStatus();
-			view.refreshAndFocus(false);
-			TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
+//			view.refreshAndFocus(false);
+//			TasksUiUtil.refreshAndOpenTaskListElement(targetTask);
 		}
 	}
 
