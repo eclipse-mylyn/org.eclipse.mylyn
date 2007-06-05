@@ -133,6 +133,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor COMMENT = create(T_TOOL, "comment.gif");
 
+	public static final ImageDescriptor LINK_EDITOR = create(T_TOOL, "link-editor.gif");
+	
 	public static final ImageDescriptor PERSON = create(T_TOOL, "person.gif");
 
 	public static final ImageDescriptor PERSON_ME = create(T_TOOL, "person-me.gif");

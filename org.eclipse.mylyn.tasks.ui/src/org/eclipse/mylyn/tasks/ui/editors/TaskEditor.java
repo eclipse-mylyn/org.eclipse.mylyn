@@ -26,7 +26,6 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylar.internal.tasks.ui.editors.TaskPlanningEditor;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -41,11 +40,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
@@ -71,8 +65,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	private Browser webBrowser;
 
 	private TaskEditorInput taskEditorInput;
-
-	private TaskEditorListener partListener;
 
 	private List<IEditorPart> editors = new ArrayList<IEditorPart>();
 
@@ -234,8 +226,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		partListener = new TaskEditorListener();
-		site.getPage().addPartListener(partListener);
 		super.init(site, input);
 		setSite(site);
 	}
@@ -259,51 +249,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			}
 		}
 		return false;
-	}
-
-	private class TaskEditorListener implements IPartListener {
-
-		public void partActivated(IWorkbenchPart part) {
-			if (part.equals(TaskEditor.this)) {
-				if (taskEditorInput != null) {
-					ITask task = taskEditorInput.getTask();
-					if (TaskListView.getFromActivePerspective() != null) {
-						ITask selected = TaskListView.getFromActivePerspective().getSelectedTask();
-						if (selected == null || !selected.equals(task)) {
-							TaskListView.getFromActivePerspective().selectedAndFocusTask(task);
-						}
-					}
-				}
-			}
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partBroughtToTop(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partClosed(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partDeactivated(IWorkbenchPart part) {
-			// don't care about this event
-		}
-
-		/**
-		 * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-		 */
-		public void partOpened(IWorkbenchPart part) {
-			// don't care about this event
-		}
 	}
 
 	/**
@@ -384,15 +329,6 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 			webBrowser.dispose();
 		}
 
-		IWorkbench workbench = TasksUiPlugin.getDefault().getWorkbench();
-		if (workbench != null && partListener != null) {
-			for (IWorkbenchWindow window : workbench.getWorkbenchWindows()) {
-				IWorkbenchPage activePage = window.getActivePage();
-				if (activePage != null) {
-					activePage.removePartListener(partListener);
-				}
-			}
-		}
 		super.dispose();
 	}
 

@@ -69,6 +69,7 @@ import org.eclipse.mylar.internal.tasks.ui.actions.FilterCompletedTasksAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.FilterSubTasksAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoIntoAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.GoUpAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
@@ -100,6 +101,7 @@ import org.eclipse.mylar.tasks.core.UncategorizedCategory;
 import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
@@ -133,13 +135,17 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -166,6 +172,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String MEMENTO_KEY_SORT_INDEX = "sortIndex";
 
+	private static final String MEMENTO_LINK_WITH_EDITOR = "linkWithEditor";
+
 	private static final String ID_SEPARATOR_NEW = "new";
 
 	private static final String ID_SEPARATOR_CONTEXT = "context";
@@ -190,6 +198,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String PART_NAME = "Task List";
 
 	private boolean focusedMode = false;
+
+	private boolean linkWithEditor;
 
 	private TaskListCellModifier taskListCellModifier = new TaskListCellModifier(this);
 
@@ -246,6 +256,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	PreviousTaskDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
+
+	private LinkWithEditorAction linkWithEditorAction;
 
 	private TaskPriorityFilter filterPriority = new TaskPriorityFilter();
 
@@ -684,6 +696,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			m.putInteger(MEMENTO_KEY_SORT_INDEX, 0);
 		}
 		m.putInteger(MEMENTO_KEY_SORT_DIRECTION, sortDirection);
+
+		memento.putString(MEMENTO_LINK_WITH_EDITOR, Boolean.toString(linkWithEditor));
 	}
 
 	private void restoreState() {
@@ -732,6 +746,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
 			togglePreviousAction(false);
 		}
+
+		// Restore "link with editor" value; by default true
+		boolean linkValue = true;
+		if (taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR) != null) {
+			linkValue = Boolean.parseBoolean(taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR));
+		}
+		setLinkWithEditor(linkValue);
 
 		getViewer().refresh();
 	}
@@ -891,6 +912,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			updateDescription(activeTasks.get(0));
 		}
 		getSite().setSelectionProvider(getViewer());
+		getSite().getPage().addPartListener(editorListener);
 	}
 
 	public void applyPresentation(ITaskListPresentation presentation) {
@@ -955,6 +977,35 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			});
 		}
 	}
+
+	/**
+	 * Tracks editor activation and jump to corresponding task, if applicable
+	 */
+	private IPartListener editorListener = new IPartListener() {
+
+		private void jumpToEditor(IWorkbenchPart part) {
+			if (!linkWithEditor || !(part instanceof IEditorPart)) {
+				return;
+			}
+			jumpToEditorTask((IEditorPart) part);
+		}
+
+		public void partActivated(IWorkbenchPart part) {
+			jumpToEditor(part);
+		}
+
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		public void partClosed(IWorkbenchPart part) {
+		}
+
+		public void partDeactivated(IWorkbenchPart part) {
+		}
+
+		public void partOpened(IWorkbenchPart part) {
+		}
+	};
 
 	private void initDragAndDrop(Composite parent) {
 		Transfer[] dragTypes = new Transfer[] { TaskTransfer.getInstance(), TextTransfer.getInstance(),
@@ -1024,6 +1075,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		});
 
+		manager.add(new Separator());
+		manager.add(linkWithEditorAction);
 		manager.add(new Separator());
 		manager.add(openPreferencesAction);
 	}
@@ -1249,6 +1302,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterOnPriorityAction = new PriorityDropDownAction(this);
 		previousTaskAction = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory());
+		linkWithEditorAction = new LinkWithEditorAction(this);
 		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this, presentations);
 
@@ -1635,6 +1689,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public void setFocusedMode(boolean focusedMode) {
+		this.linkWithEditor = focusedMode;
 		this.focusedMode = focusedMode;
 	}
 
@@ -1657,14 +1712,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		getViewer().refresh();
 	}
 
-	
 	// IPropertyChangeListener
 
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)
 				|| IWorkingSetManager.CHANGE_WORKING_SET_REMOVE.equals(property)) {
-			if(getSite()!=null && getSite().getPage()!=null) {
+			if (getSite() != null && getSite().getPage() != null) {
 				filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 			}
 		}
@@ -1680,5 +1734,27 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			getViewer().getControl().setRedraw(true);
 		}
 	}
-	
+
+	public void setLinkWithEditor(boolean linkWithEditor) {
+		this.linkWithEditor = linkWithEditor;
+		linkWithEditorAction.setChecked(linkWithEditor);
+		if (linkWithEditor) {
+			IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+			if (activeEditor != null) {
+				jumpToEditorTask(activeEditor);
+			}
+		}
+	}
+
+	private void jumpToEditorTask(IEditorPart editor) {
+		IEditorInput input = editor.getEditorInput();
+		if (input instanceof TaskEditorInput) {
+			ITask task = ((TaskEditorInput) input).getTask();
+			ITask selected = getSelectedTask();
+			if (selected == null || !selected.equals(task)) {
+				selectedAndFocusTask(task);
+			}
+		}
+	}
+
 }
