@@ -11,10 +11,7 @@
 
 package org.eclipse.mylar.tasks.core;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
@@ -394,33 +390,5 @@ public class TaskRepositoryManager {
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySettingsChanged(repository);
 		}
-	}
-
-	// TODO: run with progress
-	public String getAttachmentContents(RepositoryAttachment attachment) {
-		StringBuffer contents = new StringBuffer();
-		try {
-			TaskRepository repository = getRepository(attachment.getRepositoryKind(), attachment.getRepositoryUrl());
-			AbstractRepositoryConnector connector = getRepositoryConnector(attachment.getRepositoryKind());
-			if (repository == null || connector == null) {
-				return "";
-			}
-			IAttachmentHandler handler = connector.getAttachmentHandler();
-			InputStream stream = new ByteArrayInputStream(handler.getAttachmentData(repository, attachment));
-
-			int c;
-			while ((c = stream.read()) != -1) {
-				/* TODO jpound - handle non-text */
-				contents.append((char) c);
-			}
-			stream.close();
-		} catch (CoreException e) {
-			MylarStatusHandler.fail(e.getStatus().getException(), "Retrieval of attachment data failed.", false);
-			return null;
-		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "Retrieval of attachment data failed.", false);
-			return null;
-		}
-		return contents.toString();
 	}
 }

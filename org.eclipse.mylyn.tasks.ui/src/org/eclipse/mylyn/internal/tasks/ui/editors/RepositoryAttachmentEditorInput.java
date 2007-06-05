@@ -8,12 +8,12 @@
 
 package org.eclipse.mylar.internal.tasks.ui.editors;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
@@ -84,12 +84,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
 			IAttachmentHandler handler = connector.getAttachmentHandler();
-			byte[] data = handler.getAttachmentData(repository, attachment);
-			if (data != null) {
-				return new ByteArrayInputStream(handler.getAttachmentData(repository, attachment));
-			} else {
-				return new ByteArrayInputStream(new byte[0]);
-			}
+			return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
 		}
 
 		public IPath getFullPath() {

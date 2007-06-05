@@ -12,6 +12,9 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -20,7 +23,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
@@ -36,7 +41,7 @@ public abstract class AbstractRepositoryConnector {
 
 	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
 
-	private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+	public final static String MYLAR_CONTEXT_FILENAME = "mylar-context.zip";
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
@@ -77,10 +82,11 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * create task and necessary subtasks (1 level nesting)
 	 */
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor) throws CoreException {
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
+			IProgressMonitor monitor) throws CoreException {
 		return createTaskFromExistingId(repository, id, true, monitor);
 	}
-	
+
 	/**
 	 * Create new repository task, storing necessary task data
 	 * 
@@ -90,7 +96,8 @@ public abstract class AbstractRepositoryConnector {
 	 * @throws CoreException
 	 *             TODO
 	 */
-	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
+			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
 		if (task instanceof AbstractRepositoryTask) {
@@ -102,7 +109,7 @@ public abstract class AbstractRepositoryConnector {
 				// Use connector task factory
 				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
 				updateTaskFromTaskData(repository, repositoryTask, taskData, retrieveSubTasks);
-				
+
 				taskList.addTask(repositoryTask);
 				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
 			}
@@ -162,15 +169,20 @@ public abstract class AbstractRepositoryConnector {
 	 *             thrown in case of error while synchronizing
 	 * @see {@link #getTaskDataHandler()}
 	 */
-	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor)
-			throws CoreException;
+	public abstract void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Sets all fields on the given task
+	 * 
 	 * @param TaskRepository
-	 * @param repositoryTask to update
-	 * @param RepositoryTaskData new repository task data from which to update task information
-	 * @param retrieveSubTasks true if method should result in construction of missing subtasks, false otherwise
+	 * @param repositoryTask
+	 *            to update
+	 * @param RepositoryTaskData
+	 *            new repository task data from which to update task information
+	 * @param retrieveSubTasks
+	 *            true if method should result in construction of missing
+	 *            subtasks, false otherwise
 	 * 
 	 * @since 2.0
 	 */
@@ -233,10 +245,11 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment, IProgressMonitor monitor)
-			throws CoreException {
+	public final boolean attachContext(TaskRepository repository, AbstractRepositoryTask task, String longComment,
+			IProgressMonitor monitor) throws CoreException {
 		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
-		File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(task.getHandleIdentifier());
+		final File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(
+				task.getHandleIdentifier());
 
 		RepositoryTaskSyncState previousState = task.getSyncState();
 
@@ -249,14 +262,17 @@ public abstract class AbstractRepositoryConnector {
 			try {
 				task.setSubmitting(true);
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				handler.uploadAttachment(repository, task, longComment, MYLAR_CONTEXT_DESCRIPTION, sourceContextFile,
-						APPLICATION_OCTET_STREAM, false, monitor);
+				FileAttachment attachment = new FileAttachment(sourceContextFile);				attachment.setDescription(MYLAR_CONTEXT_DESCRIPTION);
+				attachment.setFilename(MYLAR_CONTEXT_FILENAME);
+				handler.uploadAttachment(repository, task, attachment, longComment, monitor);
 			} catch (CoreException e) {
 				// TODO: Calling method should be responsible for returning
 				// state of task. Wizard will have different behaviour than
 				// editor.
 				task.setSyncState(previousState);
 				throw e;
+			} catch (OperationCanceledException e) {
+				return true;
 			}
 		}
 		return true;
@@ -284,7 +300,22 @@ public abstract class AbstractRepositoryConnector {
 				return false;
 			}
 		}
-		attachmentHandler.downloadAttachment(repository, attachment, destinationContextFile, monitor);
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(destinationContextFile);
+			try {
+				attachmentHandler.downloadAttachment(repository, attachment, out, monitor);
+			} finally {
+				try {
+					out.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Could not close context file", false);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			throw new CoreException(new MylarStatus(IStatus.ERROR, "org.eclipse.mylar.tasks.core",
+					IMylarStatusConstants.INTERNAL_ERROR, "Could not create context file", e));
+		}
 		return true;
 	}
 

@@ -11,6 +11,7 @@
 
 package org.eclipse.mylar.internal.trac.core;
 
+import java.io.InputStream;
 import java.net.Proxy;
 import java.util.Date;
 import java.util.List;
@@ -18,12 +19,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.internal.trac.core.model.TracComponent;
-import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylar.internal.trac.core.model.TracPriority;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.core.model.TracSeverity;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket;
+import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketResolution;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketStatus;
 import org.eclipse.mylar.internal.trac.core.model.TracTicketType;
@@ -91,6 +92,8 @@ public interface ITracClient {
 	public static final String MILESTONE_URL = "/milestone/";
 
 	public static final String BROWSER_URL = "/browser/";
+	
+	public static final String ATTACHMENT_URL = "/attachment/ticket/";
 
 	/**
 	 * Gets ticket with <code>id</code> from repository.
@@ -164,9 +167,9 @@ public interface ITracClient {
 
 	TracVersion[] getVersions();
 
-	byte[] getAttachmentData(int ticketId, String filename) throws TracException;
+	InputStream getAttachmentData(int ticketId, String filename) throws TracException;
 
-	void putAttachmentData(int ticketId, String name, String description, byte[] data) throws TracException;
+	void putAttachmentData(int ticketId, String name, String description, InputStream source) throws TracException;
 
 	void deleteAttachment(int ticketId, String filename) throws TracException;
 

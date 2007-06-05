@@ -338,15 +338,15 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment.setPatch(false);
 		attachment.setReport(taskData);
 		attachment.setComment("Automated JUnit attachment test"); // optional
-
+		
 		/* Test attempt to upload a non-existent file */
 		attachment.setFilePath("/this/is/not/a/real-file");
+		attachment.setFile(new File(attachment.getFilePath()));
 		// IAttachmentHandler attachmentHandler =
 		// connector.getAttachmentHandler();
 		BugzillaClient client = connector.getClientManager().getClient(repository);
 		try {
-			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(),
-					new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment);
 			fail();
 		} catch (Exception e) {
 		}
@@ -365,12 +365,12 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
+		attachment.setFile(new File(attachment.getFilePath()));
 		// assertFalse(attachmentHandler.uploadAttachment(attachment,
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
 		try {
-			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(),
-					new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+			client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment);
 			fail();
 		} catch (Exception e) {
 		}
@@ -386,9 +386,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// assertTrue(attachmentHandler.uploadAttachment(attachment,
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
-
-		client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment.getDescription(),
-				new File(attachment.getFilePath()), attachment.getContentType(), attachment.isPatch());
+		attachment.setFile(new File(attachment.getFilePath()));
+		client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment);
 
 		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);

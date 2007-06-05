@@ -16,12 +16,11 @@ import java.net.URLConnection;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Test task attachment actions.
@@ -38,14 +37,10 @@ public class TaskAttachmentActionsTest extends TestCase {
 	 */
 	public void testCopyToClipboardAction() throws Exception {
 		String contents = "Sample clipboard text";
-		CopyToClipboardAction action = new CopyToClipboardAction();
-		action.setContents(contents);
-		Control c = new Shell();
-		action.setControl(c);
+		CopyAttachmentToClipboardJob job = new CopyAttachmentToClipboardJob(null);
+		job.copyToClipboard(contents);
 
-		action.run();
-
-		Clipboard clipboard = new Clipboard(c.getDisplay());
+		Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 		assertEquals(contents, clipboard.getContents(TextTransfer.getInstance()));
 	}
 

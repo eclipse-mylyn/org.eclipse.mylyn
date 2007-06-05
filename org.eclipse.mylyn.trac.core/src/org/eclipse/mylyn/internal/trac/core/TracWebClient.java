@@ -13,6 +13,7 @@ package org.eclipse.mylar.internal.trac.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
@@ -145,13 +146,14 @@ public class TracWebClient extends AbstractTracClient {
 
 		// the expected return code is a redirect, anything else is suspicious
 		if (code == HttpURLConnection.HTTP_OK) {
-			// try form-based authentication via AccountManagerPlugin as a fall-back
+			// try form-based authentication via AccountManagerPlugin as a
+			// fall-back
 			authenticateAccountManager(httpClient);
 		}
-		
+
 		validateAuthenticationState(httpClient);
-		
-		// success since no exception was thrown 
+
+		// success since no exception was thrown
 		authenticated = true;
 	}
 
@@ -320,7 +322,7 @@ public class TracWebClient extends AbstractTracClient {
 			boolean inFooter = false;
 			boolean valid = false;
 			String version = null;
-			
+
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(reader, null);
 			for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
 				if (token.getType() == Token.TAG) {
@@ -328,7 +330,7 @@ public class TracWebClient extends AbstractTracClient {
 					if (tag.getTagType() == HtmlTag.Type.DIV) {
 						String id = tag.getAttribute("id");
 						inFooter = !tag.isEndTag() && "footer".equals(id);
-					} else  if (tag.getTagType() == HtmlTag.Type.STRONG && inFooter) {
+					} else if (tag.getTagType() == HtmlTag.Type.STRONG && inFooter) {
 						version = getText(tokenizer);
 					} else if (tag.getTagType() == HtmlTag.Type.A) {
 						String id = tag.getAttribute("id");
@@ -340,9 +342,10 @@ public class TracWebClient extends AbstractTracClient {
 			}
 
 			if (version != null && !(version.startsWith("Trac 0.9") || version.startsWith("Trac 0.10"))) {
-				throw new TracException("The Trac version " + version + " is unsupported. Please use version 0.9.x or 0.10.x.");
+				throw new TracException("The Trac version " + version
+						+ " is unsupported. Please use version 0.9.x or 0.10.x.");
 			}
-			
+
 			if (!valid) {
 				throw new TracException("Not a valid Trac repository");
 			}
@@ -379,7 +382,7 @@ public class TracWebClient extends AbstractTracClient {
 					}
 				}
 			}
-			
+
 			addResolutionAndStatus();
 		} catch (IOException e) {
 			throw new TracException(e);
@@ -390,10 +393,13 @@ public class TracWebClient extends AbstractTracClient {
 		}
 	}
 
-	enum AttributeState { INIT, IN_LIST, IN_ATTRIBUTE_KEY, IN_ATTRIBUTE_VALUE, IN_ATTRIBUTE_VALUE_LIST };
-	
-	/** 
-	 * Parses the JavaScript code from the query page to extract repository configuration.
+	enum AttributeState {
+		INIT, IN_LIST, IN_ATTRIBUTE_KEY, IN_ATTRIBUTE_VALUE, IN_ATTRIBUTE_VALUE_LIST
+	};
+
+	/**
+	 * Parses the JavaScript code from the query page to extract repository
+	 * configuration.
 	 */
 	private void parseAttributes(String text) throws IOException {
 		StreamTokenizer t = new StreamTokenizer(new StringReader(text));
@@ -401,7 +407,7 @@ public class TracWebClient extends AbstractTracClient {
 
 		AttributeFactory attributeFactory = null;
 		String attributeType = null;
-		
+
 		AttributeState state = AttributeState.INIT;
 		int tokenType;
 		while ((tokenType = t.nextToken()) != StreamTokenizer.TT_EOF) {
@@ -413,56 +419,57 @@ public class TracWebClient extends AbstractTracClient {
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.components.add(new TracComponent(value));
-							}							
+							}
 						};
 					} else if ("milestone".equals(t.sval)) {
 						data.milestones = new ArrayList<TracMilestone>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.milestones.add(new TracMilestone(value));
-							}							
+							}
 						};
 					} else if ("priority".equals(t.sval)) {
 						data.priorities = new ArrayList<TracPriority>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.priorities.add(new TracPriority(value, data.priorities.size() + 1));
-							}							
+							}
 						};
 					} else if ("resolution".equals(t.sval)) {
 						data.ticketResolutions = new ArrayList<TracTicketResolution>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
-								data.ticketResolutions.add(new TracTicketResolution(value, data.ticketResolutions.size() + 1));
-							}							
+								data.ticketResolutions.add(new TracTicketResolution(value, data.ticketResolutions
+										.size() + 1));
+							}
 						};
 					} else if ("severity".equals(t.sval)) {
 						data.severities = new ArrayList<TracSeverity>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.severities.add(new TracSeverity(value, data.severities.size() + 1));
-							}							
+							}
 						};
 					} else if ("status".equals(t.sval)) {
 						data.ticketStatus = new ArrayList<TracTicketStatus>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.ticketStatus.add(new TracTicketStatus(value, data.ticketStatus.size() + 1));
-							}							
+							}
 						};
 					} else if ("type".equals(t.sval)) {
 						data.ticketTypes = new ArrayList<TracTicketType>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.ticketTypes.add(new TracTicketType(value, data.ticketTypes.size() + 1));
-							}							
+							}
 						};
 					} else if ("version".equals(t.sval)) {
 						data.versions = new ArrayList<TracVersion>();
 						attributeFactory = new AttributeFactory() {
 							public void addAttribute(String value) {
 								data.versions.add(new TracVersion(value));
-							}							
+							}
 						};
 					} else {
 						attributeFactory = null;
@@ -515,7 +522,7 @@ public class TracWebClient extends AbstractTracClient {
 				} else {
 					throw new IOException("Error parsing attributes: unexpected token '}'");
 				}
-				break;				
+				break;
 			}
 		}
 	}
@@ -654,18 +661,26 @@ public class TracWebClient extends AbstractTracClient {
 		return "";
 	}
 
-	public byte[] getAttachmentData(int id, String filename) throws TracException {
-		throw new TracException("Unsupported operation");
+	public InputStream getAttachmentData(int id, String filename) throws TracException {
+		GetMethod method = connect(repositoryUrl + ITracClient.ATTACHMENT_URL + id + "/" + filename + "?format=raw");
+		try {
+			// the receiver is responsible for closing the stream which will
+			// release the connection
+			return method.getResponseBodyAsStream();
+		} catch (IOException e) {
+			method.releaseConnection();
+			throw new TracException(e);
+		}
 	}
 
-	public void putAttachmentData(int id, String name, String description, byte[] data) throws TracException {
+	public void putAttachmentData(int id, String name, String description, InputStream in) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
 
 	public void deleteAttachment(int ticketId, String filename) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
-	
+
 	public int createTicket(TracTicket ticket) throws TracException {
 		throw new TracException("Unsupported operation");
 	}
@@ -679,9 +694,9 @@ public class TracWebClient extends AbstractTracClient {
 	}
 
 	private interface AttributeFactory {
-		
+
 		void addAttribute(String value);
-		
+
 	}
 
 }

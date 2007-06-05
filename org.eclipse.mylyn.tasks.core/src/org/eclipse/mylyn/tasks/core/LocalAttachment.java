@@ -11,6 +11,11 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 
 /**
@@ -18,7 +23,7 @@ import java.io.Serializable;
  * 
  * @author Jeff Pound
  */
-public class LocalAttachment implements Serializable {
+public class LocalAttachment implements Serializable, ITaskAttachment {
 
 	private static final long serialVersionUID = -4477699536552617389L;
 
@@ -35,8 +40,12 @@ public class LocalAttachment implements Serializable {
 	
 	private boolean isPatch = false;
 
-	private boolean deleteAfterUpload = false;
+	private String filename;
 
+	private byte[] content;
+
+	private File file;
+	
 	public String getComment() {
 		return comment;
 	}
@@ -84,13 +93,31 @@ public class LocalAttachment implements Serializable {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-
-
-	public void setDeleteAfterUpload(boolean d) {
-		deleteAfterUpload = d;
+	
+	public String getFilename() {
+		return this.filename;
+	}
+	
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
-	public boolean getDeleteAfterUpload() {
-		return deleteAfterUpload;
+	public InputStream createInputStream() throws IOException {
+		assert file != null || content != null;
+		return (file != null) ? new FileInputStream(file) : new ByteArrayInputStream(content);
 	}
+
+	public long getLength() {
+		assert file != null || content != null;
+		return (file != null) ? file.length() : content.length;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+	
 }

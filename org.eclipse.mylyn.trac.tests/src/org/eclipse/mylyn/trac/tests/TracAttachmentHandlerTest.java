@@ -30,6 +30,7 @@ import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylar.internal.trac.core.TracTask;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.FileAttachment;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
@@ -103,7 +104,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		assertTrue(taskData.getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
 		file.deleteOnExit();
-		attachmentHandler.downloadAttachment(repository, taskData.getAttachments().get(0), file, new NullProgressMonitor());
+		attachmentHandler.downloadAttachment(repository, taskData.getAttachments().get(0), new FileOutputStream(file), new NullProgressMonitor());
 
 		byte[] result = new byte[6];
 		InputStream in = new FileInputStream(file);
@@ -131,7 +132,13 @@ public class TracAttachmentHandlerTest extends TestCase {
 		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
-		byte[] result = attachmentHandler.getAttachmentData(repository,taskData.getAttachments().get(0));
+		InputStream in = attachmentHandler.getAttachmentAsStream(repository,taskData.getAttachments().get(0), new NullProgressMonitor());
+		byte[] result = new byte[6];
+		try {
+			in.read(result);
+		} finally {
+			in.close();
+		}
 		assertEquals("Mylar\n", new String(result));
 	}
 
@@ -154,10 +161,13 @@ public class TracAttachmentHandlerTest extends TestCase {
 		} finally {
 			out.close();
 		}
-		attachmentHandler.uploadAttachment(repository, task, "comment", "description", file, "", false, new NullProgressMonitor());
+		FileAttachment attachment = new FileAttachment(file);
+		attachmentHandler.uploadAttachment(repository, task, attachment, "comment", new NullProgressMonitor());
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
-		byte[] result = client.getAttachmentData(data.attachmentTicketId, file.getName());
+		InputStream in = client.getAttachmentData(data.attachmentTicketId, file.getName());
+		byte[] result = new byte[5];
+		in.read(result);
 		assertEquals("Mylar", new String(result));
 	}
 

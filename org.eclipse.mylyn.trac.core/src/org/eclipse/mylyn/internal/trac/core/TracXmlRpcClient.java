@@ -1,6 +1,9 @@
 package org.eclipse.mylar.internal.trac.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -528,12 +531,45 @@ public class TracXmlRpcClient extends AbstractTracClient {
 		return attributes;
 	}
 
-	public byte[] getAttachmentData(int ticketId, String filename) throws TracException {
-		return (byte[]) call("ticket.getAttachment", ticketId, filename);
+	public InputStream getAttachmentData(int ticketId, String filename) throws TracException {
+		byte[] data = (byte[]) call("ticket.getAttachment", ticketId, filename);
+		return new ByteArrayInputStream(data); 
 	}
 
-	public void putAttachmentData(int ticketId, String filename, String description, byte[] data) throws TracException {
+	public void putAttachmentData(int ticketId, String filename, String description, InputStream in) throws TracException {
+		byte[] data;
+		try {
+			data = readData(in, new NullProgressMonitor());
+		} catch (IOException e) {
+			throw new TracException(e);
+		}
 		call("ticket.putAttachment", ticketId, filename, description, data, false);
+	}
+
+	private byte[] readData(InputStream in, IProgressMonitor monitor) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			byte[] buffer = new byte[512]; 
+			while (true) {
+				int count = in.read(buffer);
+				if (count == -1) {
+					return out.toByteArray();
+				}
+				if (monitor.isCanceled()) { 
+					throw new OperationCanceledException();
+				}
+				out.write(buffer, 0, count);
+				if (monitor.isCanceled()) { 
+					throw new OperationCanceledException();
+				}
+			}
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				MylarStatusHandler.fail(e, "Error closing attachment stream", false);
+			}
+		}
 	}
 
 	public void deleteAttachment(int ticketId, String filename) throws TracException {

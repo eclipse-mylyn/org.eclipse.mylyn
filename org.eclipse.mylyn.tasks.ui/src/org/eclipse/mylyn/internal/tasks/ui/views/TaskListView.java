@@ -162,7 +162,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
+	public static final String ID_VIEW = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	public static final String LABEL_VIEW = "Task List";
 
@@ -597,7 +597,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public static TaskListView getFromActivePerspective() {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage != null) {
-			IViewPart view = activePage.findView(ID);
+			IViewPart view = activePage.findView(ID_VIEW);
 			if (view instanceof TaskListView) {
 				return (TaskListView) view;
 			}
@@ -607,8 +607,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static TaskListView openInActivePerspective() {
 		try {
-			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
+			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID_VIEW);
 		} catch (Exception e) {
+			MylarStatusHandler.fail(e, "Could not show Task List view", false);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -644,7 +646,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (getSite() == null || getSite().getPage() == null)
 			return;
 
-		IViewReference reference = getSite().getPage().findViewReference(ID);
+		IViewReference reference = getSite().getPage().findViewReference(ID_VIEW);
 		boolean shouldSetDescription = false;
 		if (reference != null && reference.isFastView()) {
 			shouldSetDescription = true;
@@ -749,7 +751,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		// Restore "link with editor" value; by default true
 		boolean linkValue = true;
-		if (taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR) != null) {
+		if (taskListMemento != null && taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR) != null) {
 			linkValue = Boolean.parseBoolean(taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR));
 		}
 		setLinkWithEditor(linkValue);

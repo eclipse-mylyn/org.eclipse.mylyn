@@ -12,14 +12,14 @@
 package org.eclipse.mylar.internal.tasks.ui.wizards;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -38,6 +38,7 @@ import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
+import org.eclipse.mylar.tasks.core.MylarStatus;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -56,6 +57,8 @@ import org.eclipse.ui.PlatformUI;
 public class NewAttachmentWizard extends Wizard {
 
 	private static final String DIALOG_SETTINGS_KEY = "AttachmentWizard";
+
+	protected static final String CLIPBOARD_FILENAME = "clipboard.txt";
 
 	private LocalAttachment attachment;
 
@@ -108,36 +111,7 @@ public class NewAttachmentWizard extends Wizard {
 	public boolean performFinish() {
 		/* TODO jpound - support non-text in clipboard */
 		attachPage.populateAttachment();
-		String path = inputPage.getAbsoluteAttachmentPath();
-		if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
-			// write temporary file
-			String contents = inputPage.getClipboardContents();
-			if (contents == null) {
-				// TODO Handle error
-			}
-			// File file = new
-			// File(TasksUiPlugin.getDefault().getDefaultDataDirectory()
-			// + System.getProperty("file.separator").charAt(0) +
-			// "Clipboard-attachment");
-			File file = null;
-			try {
-				file = File.createTempFile("clipboard", ".txt");
-				FileWriter writer = new FileWriter(file);
-				writer.write(contents);
-				writer.flush();
-				writer.close();
-			} catch (IOException e) {
-				// TODO Handle error
-				return false;
-			}
-			if (file != null) {
-				path = file.getAbsolutePath();
-				attachment.setDeleteAfterUpload(true);
-			} else {
-				return false;
-			}
-		}
-		attachment.setFilePath(path);
+		final String path = inputPage.getAbsoluteAttachmentPath();
 
 		// Save the dialog settings
 		if (hasNewDialogSettings) {
@@ -163,27 +137,32 @@ public class NewAttachmentWizard extends Wizard {
 					if (monitor == null) {
 						monitor = new NullProgressMonitor();
 					}
-					monitor.beginTask("Attaching file...", IProgressMonitor.UNKNOWN);
+					monitor.beginTask("Attaching file...", 2);
 					task.setSubmitting(true);
-					task.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					task.setSyncState(RepositoryTaskSyncState.OUTGOING);					
 
-					attachmentHandler.uploadAttachment(repository, task, attachment.getComment(), attachment
-							.getDescription(), new File(attachment.getFilePath()), attachment.getContentType(),
-							attachment.isPatch(), new NullProgressMonitor());
-
-					if (attachment.getDeleteAfterUpload()) {
-						File file = new File(attachment.getFilePath());
-						if (!file.delete()) {
-							// TODO: Handle bad clean up
+					if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
+						String contents = inputPage.getClipboardContents();
+						if (contents == null) {
+							throw new InvocationTargetException(new CoreException(new MylarStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.INTERNAL_ERROR, "Clipboard is empty", null)));
 						}
+						attachment.setContent(contents.getBytes());
+						attachment.setFilename(CLIPBOARD_FILENAME);
+					} else {
+						File file = new File(path);
+						attachment.setFile(file);
+						attachment.setFilename(file.getName());
 					}
+					
+					attachmentHandler.uploadAttachment(repository, task, attachment, attachment.getComment(), 
+							new SubProgressMonitor(monitor, 1));
 
 					if (monitor.isCanceled()) {
 						throw new OperationCanceledException();
 					}
 
 					if (attachContext) {
-						connector.attachContext(repository, task, "", monitor);
+						connector.attachContext(repository, task, "", new SubProgressMonitor(monitor, 1));
 					}
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
@@ -264,7 +243,6 @@ public class NewAttachmentWizard extends Wizard {
 		return false;
 	}
 
-	
 	private void handleSubmitError(final CoreException exception) {
 		if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
 			if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {

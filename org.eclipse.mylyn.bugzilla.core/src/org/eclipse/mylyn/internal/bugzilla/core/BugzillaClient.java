@@ -11,8 +11,8 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
@@ -57,6 +57,7 @@ import org.eclipse.mylar.internal.bugzilla.core.history.BugzillaTaskHistoryParse
 import org.eclipse.mylar.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylar.tasks.core.ITaskAttachment;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryStatus;
@@ -545,22 +546,18 @@ public class BugzillaClient {
 		}
 	}
 
-	public byte[] getAttachmentData(String attachmentId) throws IOException, CoreException {
-		GetMethod method = null;
+	public InputStream getAttachmentData(String attachmentId) throws IOException, CoreException {
+		String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
+		GetMethod method = getConnect(url);
 		try {
-			String url = repositoryUrl + IBugzillaConstants.URL_GET_ATTACHMENT_DOWNLOAD + attachmentId;
-			method = getConnect(url);
-			return method.getResponseBody();
-
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
+			return method.getResponseBodyAsStream();
+		} catch (IOException e) {
+			method.releaseConnection();
+			throw e;
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, String description, File sourceFile,
-			String contentType, boolean isPatch) throws HttpException, IOException, CoreException {
+	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment) throws HttpException, IOException, CoreException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
@@ -580,15 +577,15 @@ public class BugzillaClient {
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, description, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, attachment.getDescription(), characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
-			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, sourceFile));
+			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new AttachmentPartSource(attachment)));
 
-			if (isPatch) {
+			if (attachment.isPatch()) {
 				parts.add(new StringPart(ATTRIBUTE_ISPATCH, VALUE_ISPATCH));
 			} else {
 				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEMETHOD, VALUE_CONTENTTYPEMETHOD_MANUAL));
-				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, contentType));
+				parts.add(new StringPart(ATTRIBUTE_CONTENTTYPEENTRY, attachment.getContentType()));
 			}
 
 			postMethod.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[1]), postMethod.getParams()));

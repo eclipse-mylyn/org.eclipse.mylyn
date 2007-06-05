@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.ui.editors;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,7 +69,7 @@ import org.eclipse.mylar.internal.tasks.ui.PersonProposalProvider;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyToClipboardAction;
+import org.eclipse.mylar.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylar.internal.tasks.ui.editors.ContentOutlineTools;
@@ -222,6 +221,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 //	private static final String REASSIGN_BUG_TO = "Reassign to";
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
+
+	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
 
 	protected RepositoryTaskEditorInput editorInput;
 
@@ -1323,9 +1324,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 					SaveRemoteFileAction save = new SaveRemoteFileAction();
 					try {
-						save
-								.setInputStream(new ByteArrayInputStream(handler.getAttachmentData(repository,
-										attachment)));
+						save.setInputStream(handler.getAttachmentAsStream(repository,
+										attachment, new NullProgressMonitor()));
 						save.setDestinationFilePath(filePath);
 						save.run();
 					} catch (CoreException e) {
@@ -1334,14 +1334,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-			final Action copyToClipAction = new Action(CopyToClipboardAction.TITLE) {
+			final Action copyToClipAction = new Action(LABEL_COPY_TO_CLIPBOARD) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer
 							.getSelection()).getFirstElement());
-					CopyToClipboardAction copyToClip = new CopyToClipboardAction();
-					copyToClip.setContents(TasksUiPlugin.getRepositoryManager().getAttachmentContents(attachment));
-					copyToClip.setControl(attachmentsTable.getParent());
-					copyToClip.run();
+					CopyAttachmentToClipboardJob job = new CopyAttachmentToClipboardJob(attachment);
+					job.setUser(true);
+					job.schedule();
 				}
 			};
 
