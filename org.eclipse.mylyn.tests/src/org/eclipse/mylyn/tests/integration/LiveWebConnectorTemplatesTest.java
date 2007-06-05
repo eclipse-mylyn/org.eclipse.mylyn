@@ -26,9 +26,11 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.web.WebRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITaskFactory;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -48,10 +50,15 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	public void testRepositoryTemplate() throws Throwable {
   	    IProgressMonitor monitor = new NullProgressMonitor();
   	    MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-  	    final List<AbstractQueryHit> hits = new ArrayList<AbstractQueryHit>();
-  	    QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
+  	    final List<AbstractRepositoryTask> hits = new ArrayList<AbstractRepositoryTask>();
+  	    QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(), new ITaskFactory() {
+
+			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced) {
+				// ignore
+				return null;
+			}}) {
   	        @Override
-  	        public void addMatch(AbstractQueryHit hit) {
+  	        public void accept(AbstractRepositoryTask hit) {
   	          hits.add(hit);
   	        }
   	    };
