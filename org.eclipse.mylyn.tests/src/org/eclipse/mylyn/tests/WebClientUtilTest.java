@@ -273,7 +273,7 @@ public class WebClientUtilTest extends TestCase {
 	}
 
 	public void testConnectSslClientCert() throws Exception {
-		if (SslProtocolSocketFactory.getInstance().hasKeyManager()) {
+		if (!SslProtocolSocketFactory.getInstance().hasKeyManager()) {
 			// skip if keystore property is not set
 			return;
 		}
