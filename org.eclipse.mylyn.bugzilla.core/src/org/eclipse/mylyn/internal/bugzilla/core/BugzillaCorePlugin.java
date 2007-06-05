@@ -53,9 +53,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	private static final String OPTION_ALL = "All";
 
-	// A Map from Java's OS and Platform to Buzilla's
-	private Map<String, String> java2buzillaOSMap = new HashMap<String, String>();
-
+	// A Map from Java's  Platform to Buzilla's
 	private Map<String, String> java2buzillaPlatformMap = new HashMap<String, String>();
 
 	/** Product configuration for the current server */
@@ -70,13 +68,6 @@ public class BugzillaCorePlugin extends Plugin {
 		java2buzillaPlatformMap.put("sparc", "Sun");
 		java2buzillaPlatformMap.put("ppc", "Power");
 
-		java2buzillaOSMap.put("aix", "AIX");
-		java2buzillaOSMap.put("hpux", "HP-UX");
-		java2buzillaOSMap.put("linux", "Linux");
-		java2buzillaOSMap.put("macosx", "Mac OS");
-		java2buzillaOSMap.put("qnx", "QNX-Photon");
-		java2buzillaOSMap.put("solaris", "Solaris");
-		java2buzillaOSMap.put("win32", "Windows XP");
 	}
 
 	public static BugzillaCorePlugin getDefault() {
@@ -283,27 +274,47 @@ public class BugzillaCorePlugin extends Plugin {
 
 			String OS = Platform.getOS();
 			String platform = Platform.getOSArch();
+			
 
 			String bugzillaOS = null; // Bugzilla String for OS
 			String bugzillaPlatform = null; // Bugzilla String for Platform
 
-			if (java2buzillaOSMap != null && java2buzillaOSMap.containsKey(OS) && opSysAttribute != null
-					&& opSysAttribute.getOptions() != null) {
-				bugzillaOS = java2buzillaOSMap.get(OS);
-				if (opSysAttribute != null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
-					// If the OS we found is not in the list of available
-					// options, set bugzillaOS
-					// to null, and just use "other"
-					bugzillaOS = null;
-				}
+			bugzillaOS = System.getProperty("os.name") + " " + System.getProperty("os.version");
+			// We start with the most specific Value as the Search String.
+			// If we didn't find it we remove the last part of the version String or the OS Name from
+			// the Search String and continue with the test until we found it or the Search String is empty.
+			// 
+			// The search in casesensitive.	
+			if (opSysAttribute != null) {
+				while (bugzillaOS!= null && opSysAttribute.getOptionParameter(bugzillaOS) == null) {
+					int dotindex = bugzillaOS.lastIndexOf('.');
+					if (dotindex > 0) 
+						bugzillaOS = bugzillaOS.substring(0, dotindex);
+					else {
+						int spaceindex = bugzillaOS.lastIndexOf(' ');
+						if (spaceindex > 0) 
+							bugzillaOS = bugzillaOS.substring(0, spaceindex);
+						else	
+							bugzillaOS = null;
+					}
+				}				
 			} else {
-				// If we have a strangeOS, then just set buzillaOS to null, and
-				// use "other"
 				bugzillaOS = null;
 			}
 
 			if (platform != null && java2buzillaPlatformMap.containsKey(platform)) {
 				bugzillaPlatform = java2buzillaPlatformMap.get(platform);
+				// Bugzilla knows the following Platforms [All, PC, Macintosh, Other]
+				// Platform.getOSArch() returns "x86" on Intel Mac's and "ppc" on Power Mac's
+				// so bugzillaPlatform is "Power" or "PC".
+				//
+				// If the OS is "macosx" we change the Platform to "Macintosh"
+				//
+				if (bugzillaPlatform!= null &&
+						(bugzillaPlatform.compareTo("Power")== 0 || bugzillaPlatform.compareTo("PC")== 0) &&
+						 OS!= null       && OS.compareTo("macosx")== 0) {
+					bugzillaPlatform = "Macintosh";
+				} else
 				if (platformAttribute != null && platformAttribute.getOptionParameter(bugzillaPlatform) == null) {
 					// If the platform we found is not int the list of available
 					// optinos, set the
@@ -315,16 +326,6 @@ public class BugzillaCorePlugin extends Plugin {
 				// to null, and use "other"
 				bugzillaPlatform = null;
 			}
-			if (bugzillaPlatform != null && bugzillaPlatform.compareTo("PC") == 0 && bugzillaOS != null
-					&& bugzillaOS.compareTo("Mac OS") == 0)
-				// Intel Mac's return PC as Platform because the OSArch == "x86"
-				// so we change the Plaform if the bugzilla OS tell us it is an
-				// Mac OS
-				//
-				// btw bugzilla 3.0rc1 set Platform to PC in enter_bug.cgi
-				// pickplatform
-				// move line 225 before 202 to fix this.
-				bugzillaPlatform = "Macintosh";
 			// Set the OS and the Platform in the taskData
 			if (bugzillaOS != null && opSysAttribute != null) {
 				opSysAttribute.setValue(bugzillaOS);

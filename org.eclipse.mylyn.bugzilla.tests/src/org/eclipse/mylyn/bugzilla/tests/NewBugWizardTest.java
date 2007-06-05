@@ -69,9 +69,12 @@ public class NewBugWizardTest extends TestCase {
 			assertEquals("PC", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
 		else if (platform.equals("sparc"))
 			assertEquals("Sun", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-		else if (platform.equals("ppc"))
-			assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
-
+		else if (platform.equals("ppc")) {
+			if (os.equals("macosx"))
+				assertEquals("Macintosh", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+			else
+				assertEquals("Power", newReport.getAttribute(BugzillaReportElement.REP_PLATFORM.getKeyString()).getValue());
+		}
 	}
 
 }
