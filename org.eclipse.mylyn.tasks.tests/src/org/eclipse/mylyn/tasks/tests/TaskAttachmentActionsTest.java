@@ -40,6 +40,10 @@ public class TaskAttachmentActionsTest extends TestCase {
 		CopyAttachmentToClipboardJob job = new CopyAttachmentToClipboardJob(null);
 		job.copyToClipboard(contents);
 
+		// wait for job to finish
+		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
+		}
+		
 		Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 		assertEquals(contents, clipboard.getContents(TextTransfer.getInstance()));
 	}
