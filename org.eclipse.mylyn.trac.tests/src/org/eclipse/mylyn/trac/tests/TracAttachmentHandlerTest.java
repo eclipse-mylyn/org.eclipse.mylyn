@@ -162,6 +162,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 			out.close();
 		}
 		FileAttachment attachment = new FileAttachment(file);
+		attachment.setDescription("");
 		attachmentHandler.uploadAttachment(repository, task, attachment, "comment", new NullProgressMonitor());
 
 		ITracClient client = connector.getClientManager().getRepository(repository);
