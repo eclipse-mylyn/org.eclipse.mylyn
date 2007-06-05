@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskTableLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.search.internal.ui.SearchMessages;
@@ -41,10 +41,11 @@ import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Displays the results of a Repository search.
+ * 
  * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage
  * 
  * @author Rob Elves
- * @author Mik Kersten 
+ * @author Mik Kersten
  */
 public class RepositorySearchResultView extends AbstractTextSearchViewPage implements IAdaptable {
 
@@ -149,10 +150,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		
+
 		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
-				new TaskElementLabelProvider(true), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(),
-				categoryBackground);
+				new TaskElementLabelProvider(true),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
 		viewer.setLabelProvider(taskListTableLabelProvider);
 		viewer.setContentProvider(new SearchResultTableContentProvider(this));
@@ -209,9 +210,10 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 	@Override
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate)
 			throws PartInitException {
-		AbstractQueryHit repositoryHit = (AbstractQueryHit) match.getElement();
-		
-		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
+		AbstractRepositoryTask repositoryHit = (AbstractRepositoryTask) match.getElement();
+
+		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit
+				.getTaskUrl());
 	}
 
 	@Override
@@ -219,7 +221,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		super.fillContextMenu(mgr);
 
 		// Create the submenu for sorting
-		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label); 
+		MenuManager sortMenu = new MenuManager(SearchMessages.SortDropDownAction_label);
 		sortMenu.add(sortByPriorityAction);
 		sortMenu.add(sortByDescriptionAction);
 

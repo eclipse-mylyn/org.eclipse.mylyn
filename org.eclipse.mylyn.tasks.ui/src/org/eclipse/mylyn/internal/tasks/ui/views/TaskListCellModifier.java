@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -51,7 +50,7 @@ class TaskListCellModifier implements ICellModifier {
 				case 2:
 					return "";
 				}
-			} 
+			}
 		} catch (Exception e) {
 			MylarStatusHandler.log(e, e.getMessage());
 		}
@@ -78,10 +77,6 @@ class TaskListCellModifier implements ICellModifier {
 				ITask task = null;
 				if (taskListElement instanceof ITask) {
 					task = (ITask) taskListElement;
-				} else if (taskListElement instanceof AbstractQueryHit) {
-					if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
-						task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
-					}
 				}
 				switch (columnIndex) {
 				case 0:
@@ -107,15 +102,8 @@ class TaskListCellModifier implements ICellModifier {
 		ITask task = null;
 		if (taskListElement instanceof ITask) {
 			task = (ITask) taskListElement;
-		} else if (taskListElement instanceof AbstractQueryHit) {
-			if (((AbstractQueryHit) taskListElement).getCorrespondingTask() != null) {
-				task = ((AbstractQueryHit) taskListElement).getCorrespondingTask();
-			}
 		}
-		
-		if (taskListElement instanceof AbstractQueryHit) {
-			task = ((AbstractQueryHit) taskListElement).getOrCreateCorrespondingTask();
-		}
+
 		if (task != null) {
 			if (task.isActive()) {
 				new TaskDeactivateAction().run(task);

@@ -12,15 +12,13 @@
 package org.eclipse.mylar.internal.trac.ui;
 
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.TracQueryHit;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.TracTask;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.TaskExternalizationException;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.w3c.dom.Document;
@@ -44,7 +42,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	private static final String KEY_TRAC_QUERY = KEY_TRAC + KEY_QUERY;
 
 	// category related methods
-	
+
 	@Override
 	public boolean canReadCategory(Node node) {
 		return node.getNodeName().equals(KEY_TRAC_CATEGORY);
@@ -56,7 +54,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	// task related methods
-	
+
 	@Override
 	public boolean canCreateElementFor(ITask task) {
 		return task instanceof TracTask;
@@ -68,18 +66,18 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
-			throws TaskExternalizationException {
+	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
+			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
 		TracTask task = new TracTask(repositoryUrl, taskId, summary, false);
 		return task;
 	}
 
 	// query related methods
-	
-	@Override
-	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
-		return queryHit instanceof TracQueryHit;
-	}
+
+// @Override
+// public boolean canCreateElementFor(AbstractQueryHit queryHit) {
+// return queryHit instanceof TracQueryHit;
+// }
 
 	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
@@ -105,14 +103,9 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		node.setAttribute(KEY_QUERY, query.getUrl());
 
-		for (AbstractQueryHit hit : query.getHits()) {
+		for (AbstractRepositoryTask hit : query.getHits()) {
 			try {
 				Element element = null;
-				for (ITaskListExternalizer externalizer : super.getDelegateExternalizers()) {
-					if (externalizer.canCreateElementFor(hit)) {
-						element = externalizer.createQueryHitElement(hit, doc, node);
-					}
-				}
 				if (element == null) {
 					createQueryHitElement(hit, doc, node);
 				}
@@ -124,10 +117,10 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		return node;
 	}
 
-	@Override
-	public String getQueryHitTagName() {
-		return KEY_TRAC_QUERY_HIT;
-	}
+// @Override
+// public String getQueryHitTagName() {
+// return KEY_TRAC_QUERY_HIT;
+// }
 
 	@Override
 	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
@@ -162,10 +155,12 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		return new TracRepositoryQuery(repositoryUrl, queryUrl, label, taskList);
 	}
 
-	@Override
-	public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractRepositoryQuery query)
-			throws TaskExternalizationException {
-		return new TracQueryHit(taskList, repositoryUrl, summary, taskId);
-	}
+// @Override
+// public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId,
+// String summary, Element element, TaskList taskList, AbstractRepositoryQuery
+// query)
+// throws TaskExternalizationException {
+// return new TracQueryHit(taskList, repositoryUrl, summary, taskId);
+// }
 
 }

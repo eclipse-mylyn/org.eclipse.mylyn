@@ -34,7 +34,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 	public void defineActions(IPageLayout layout) {
 		layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
 		layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
-		layout.addShowViewShortcut(TaskListView.ID_VIEW);
+		layout.addShowViewShortcut(TaskListView.ID);
 		// layout.addShowViewShortcut(TaskActivityView.ID);
 
 		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
@@ -45,7 +45,7 @@ public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 		String editorArea = layout.getEditorArea();
 
 		IFolderLayout topRight = layout.createFolder("topRight", IPageLayout.RIGHT, (float) 0.6, editorArea);//$NON-NLS-1$
-		topRight.addView(TaskListView.ID_VIEW);
+		topRight.addView(TaskListView.ID);
 
 		// IFolderLayout bottomLeft = layout.createFolder(
 		// "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$

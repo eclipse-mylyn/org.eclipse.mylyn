@@ -77,6 +77,7 @@ public class OpenRepositoryTaskJob extends Job {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repositoryKind);
 		try {
+			
 			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				// the following code was copied from SynchronizeTaskJob

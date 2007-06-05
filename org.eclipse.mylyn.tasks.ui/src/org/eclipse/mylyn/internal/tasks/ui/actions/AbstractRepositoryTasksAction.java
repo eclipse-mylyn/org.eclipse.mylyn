@@ -11,7 +11,6 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -25,26 +24,17 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public abstract class AbstractRepositoryTasksAction extends Action {
 
 	protected List<ITaskListElement> selectedElements;
-	
+
 	@Override
 	public void run() {
-		for (ITaskListElement element : selectedElements) {			
+		for (ITaskListElement element : selectedElements) {
 			if (element instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
 				performActionOnTask(repositoryTask);
-			} else if (element instanceof AbstractQueryHit) {
-				AbstractQueryHit queryHit = (AbstractQueryHit) element;
-				AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
-				if (repositoryTask != null) {
-					performActionOnTask(repositoryTask);
-				}
 			} else if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
-				for (AbstractQueryHit queryHit : repositoryQuery.getHits()) {
-					AbstractRepositoryTask repositoryTask = queryHit.getOrCreateCorrespondingTask();
-					if (repositoryTask != null) {
-						performActionOnTask(repositoryTask);
-					}
+				for (AbstractRepositoryTask queryHit : repositoryQuery.getHits()) {
+					performActionOnTask(queryHit);
 				}
 			} else if (element instanceof AbstractTaskContainer) {
 				AbstractTaskContainer container = (AbstractTaskContainer) element;
@@ -56,12 +46,12 @@ public abstract class AbstractRepositoryTasksAction extends Action {
 				}
 			}
 		}
-	}	
-	
+	}
+
 	protected abstract void performActionOnTask(AbstractRepositoryTask repositoryTask);
-	
+
 	protected boolean containsArchiveContainer(List<ITaskListElement> selectedElements) {
 		return selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 	}
-	
+
 }

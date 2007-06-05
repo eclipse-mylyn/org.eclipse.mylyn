@@ -25,11 +25,13 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITaskFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -48,6 +50,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected TaskRepository repository;
 
 	protected TaskList taskList;
+	
+	protected ITaskFactory taskFactory;
 
 	public AbstractBugzillaTest() {
 		super();
@@ -57,6 +61,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		manager = TasksUiPlugin.getRepositoryManager();
+		TasksUiPlugin.getTaskListManager().getTaskList().reset();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
@@ -99,6 +104,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
+		
+		taskFactory = new TaskFactory(repository);
 //		connector.setForceSynchExecForTesting(true);
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 	}

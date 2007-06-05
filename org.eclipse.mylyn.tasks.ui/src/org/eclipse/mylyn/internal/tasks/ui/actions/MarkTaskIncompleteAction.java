@@ -14,10 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.core.WebQueryHit;
-import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -33,17 +30,18 @@ public class MarkTaskIncompleteAction extends Action {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.incomplete";
 
 	private List<ITaskListElement> selectedElements;
+
 	public MarkTaskIncompleteAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
-		setToolTipText("Mark "+ACTION_NAME);
+		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_INCOMPLETE);
-		if(selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
-			Task task = (Task)selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof ITask)) {
+			Task task = (Task) selectedElements.get(0);
 			setEnabled(task.isLocal());
-		} else if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof WebQueryHit)) {
-			setEnabled(true);
+//		} else if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof WebQueryHit)) {
+//			setEnabled(true);
 		} else {
 			setEnabled(false);
 		}
@@ -54,11 +52,6 @@ public class MarkTaskIncompleteAction extends Action {
 		for (Object selectedObject : selectedElements) {
 			if (selectedObject instanceof ITask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().markComplete(((ITask) selectedObject), false);
-			} else if (selectedObject instanceof AbstractQueryHit) {
-				ITask task = ((AbstractQueryHit)selectedObject).getCorrespondingTask();
-				if (task instanceof WebTask) {
-					TasksUiPlugin.getTaskListManager().getTaskList().markComplete(task, false);
-				}
 			}
 		}
 	}

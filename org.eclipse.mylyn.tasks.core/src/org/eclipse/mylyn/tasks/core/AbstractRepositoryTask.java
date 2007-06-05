@@ -31,7 +31,7 @@ public abstract class AbstractRepositoryTask extends Task {
 	
 	protected String owner;
 		
-	protected boolean isNotifiedIncoming = true;
+	protected boolean isNotifiedIncoming = false;
 
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT

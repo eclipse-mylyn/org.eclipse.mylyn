@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -117,7 +118,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 				TasksUiPlugin.getTaskListManager().getTaskList());
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery);
+				repository, bugzillaQuery, new TaskFactory(repository));
 		return collector;
 	}
 

@@ -32,7 +32,7 @@ import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
  */
 public class TaskList {
 
-	//public static final String LABEL_ROOT = "Uncategorized";// "Root
+	// public static final String LABEL_ROOT = "Uncategorized";// "Root
 
 	// (automatic)";
 
@@ -41,8 +41,6 @@ public class TaskList {
 	private Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
 
 	private Map<String, ITask> tasks;
-
-	private Map<String, AbstractQueryHit> queryHits;
 
 	private Map<String, AbstractTaskContainer> categories;
 
@@ -63,7 +61,6 @@ public class TaskList {
 	 */
 	public void reset() {
 		tasks = new ConcurrentHashMap<String, ITask>();
-		queryHits = new ConcurrentHashMap<String, AbstractQueryHit>();
 
 		categories = new ConcurrentHashMap<String, AbstractTaskContainer>();
 		queries = new ConcurrentHashMap<String, AbstractRepositoryQuery>();
@@ -81,6 +78,23 @@ public class TaskList {
 		addTask(task, archiveContainer);
 	}
 
+	/**
+	 * Returns an ITask for each of the given handles
+	 * 
+	 * @since 2.0
+	 */
+	public Set<ITask> getTasks(Set<String> handles) {
+		HashSet<ITask> result = new HashSet<ITask>();
+		Map<String, ITask> tempTasks = Collections.unmodifiableMap(tasks);
+		for (String handle : handles) {
+			ITask tempTask = tempTasks.get(handle);
+			if (tempTask != null) {
+				result.add(tempTask);
+			}
+		}
+		return result;
+	}
+
 	public void addTask(ITask task, AbstractTaskContainer category) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (category != null) {
@@ -96,17 +110,12 @@ public class TaskList {
 	}
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
-		// TODO: update mappings in offline task data, will currently lose them
 		for (ITask task : tasks.values()) {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask
 						.getHandleIdentifier()))) {
 					tasks.remove(repositoryTask.getHandleIdentifier());
-// String taskId =
-// AbstractRepositoryTask.getTaskId(repositoryTask.getHandleIdentifier());
-// String newHandle = AbstractRepositoryTask.getHandle(newUrl, taskId);
-// repositoryTask.setHandleIdentifier(newHandle);
 					repositoryTask.setRepositoryUrl(newRepositoryUrl);
 					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
 
@@ -121,11 +130,6 @@ public class TaskList {
 		for (AbstractRepositoryQuery query : queries.values()) {
 			if (query.getRepositoryUrl().equals(oldRepositoryUrl)) {
 				query.setRepositoryUrl(newRepositoryUrl);
-				for (AbstractQueryHit hit : query.getHits()) {
-					queryHits.remove(hit.getHandleIdentifier());
-					hit.setRepositoryUrl(newRepositoryUrl);
-					queryHits.put(hit.getHandleIdentifier(), hit);
-				}
 				for (ITaskListChangeListener listener : changeListeners) {
 					listener.containerInfoChanged(query);
 				}
@@ -359,7 +363,8 @@ public class TaskList {
 	public Set<AbstractTaskContainer> getTaskContainers() {
 		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 		for (AbstractTaskContainer container : categories.values()) {
-			if (container instanceof TaskCategory || container instanceof TaskArchive || container instanceof UncategorizedCategory) {
+			if (container instanceof TaskCategory || container instanceof TaskArchive
+					|| container instanceof UncategorizedCategory) {
 				containers.add(container);
 			}
 		}
@@ -371,7 +376,7 @@ public class TaskList {
 			return null;
 		}
 		for (AbstractRepositoryQuery query : queries.values()) {
-			if (query.findQueryHit(handle) != null) {
+			if (query.contains(handle)) {
 				return query;
 			}
 		}
@@ -455,45 +460,45 @@ public class TaskList {
 		}
 		Set<AbstractRepositoryQuery> queriesForHandle = new HashSet<AbstractRepositoryQuery>();
 		for (AbstractRepositoryQuery query : queries.values()) {
-			if (query.findQueryHit(handle) != null) {
+			if (query.contains(handle)) {
 				queriesForHandle.add(query);
 			}
 		}
 		return queriesForHandle;
 	}
 
-	/** if handle == null or no query hits found an empty set is returned * */
-	public Set<AbstractQueryHit> getQueryHits(Set<String> handles) {
-		if (handles == null) {
-			return Collections.emptySet();
-		}
-		HashSet<AbstractQueryHit> result = new HashSet<AbstractQueryHit>();
-		for (String handle : handles) {
-			AbstractQueryHit hit = queryHits.get(handle);
-			if (hit != null) {
-				result.add(hit);
-			}
-		}
-		return result;
-	}
+// /** if handle == null or no query hits found an empty set is returned * */
+// public Set<AbstractQueryHit> getQueryHits(Set<String> handles) {
+// if (handles == null) {
+// return Collections.emptySet();
+// }
+// HashSet<AbstractQueryHit> result = new HashSet<AbstractQueryHit>();
+// for (String handle : handles) {
+// AbstractQueryHit hit = queryHits.get(handle);
+// if (hit != null) {
+// result.add(hit);
+// }
+// }
+// return result;
+// }
+//
+// public AbstractQueryHit getQueryHit(String handle) {
+// if (handle != null) {
+// return queryHits.get(handle);
+// }
+// return null;
+// }
 
-	public AbstractQueryHit getQueryHit(String handle) {
-		if (handle != null) {
-			return queryHits.get(handle);
-		}
-		return null;
-	}
-
-	/** for testing */
-	public Set<AbstractQueryHit> getQueryHits() {
-		// TODO: remove wrapping once API can change
-		return new HashSet<AbstractQueryHit>(queryHits.values());
-	}
-
-	/** called by AbstractRepositoryQuery */
-	public void addQueryHit(AbstractQueryHit hit) {
-		queryHits.put(hit.getHandleIdentifier(), hit);
-	}
+// /** for testing */
+// public Set<AbstractQueryHit> getQueryHits() {
+// // TODO: remove wrapping once API can change
+// return new HashSet<AbstractQueryHit>(queryHits.values());
+// }
+//
+// /** called by AbstractRepositoryQuery */
+// public void addQueryHit(AbstractQueryHit hit) {
+// queryHits.put(hit.getHandleIdentifier(), hit);
+// }
 
 	/**
 	 * return all queries for the given repository url
@@ -612,18 +617,18 @@ public class TaskList {
 		return max;
 	}
 
-	/**
-	 * Orphaned hits arise when no query in the tasklist references a hit in the
-	 * master list maintained by the tasklist. Orphaned hits don't span
-	 * workbench re-start but this just helps maintain the list in case of
-	 * prolonged workbench uptime.
-	 */
-	public void removeOrphanedHits() {
-		for (String handle : new HashSet<String>(queryHits.keySet())) {
-			Set<AbstractRepositoryQuery> queries = getQueriesForHandle(handle);
-			if (queries == null || queries.isEmpty()) {
-				queryHits.remove(handle);
-			}
-		}
-	}
+// /**
+// * Orphaned hits arise when no query in the tasklist references a hit in the
+// * master list maintained by the tasklist. Orphaned hits don't span
+// * workbench re-start but this just helps maintain the list in case of
+// * prolonged workbench uptime.
+// */
+// public void removeOrphanedHits() {
+// for (String handle : new HashSet<String>(queryHits.keySet())) {
+// Set<AbstractRepositoryQuery> queries = getQueriesForHandle(handle);
+// if (queries == null || queries.isEmpty()) {
+// queryHits.remove(handle);
+// }
+// }
+// }
 }

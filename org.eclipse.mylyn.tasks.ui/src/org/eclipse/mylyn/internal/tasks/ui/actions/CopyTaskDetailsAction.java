@@ -13,7 +13,6 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -39,7 +38,7 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.copy";
 
 	private Clipboard clipboard;
-	
+
 	public CopyTaskDetailsAction(boolean setAccelerator) {
 		super(LABEL);
 		setToolTipText(LABEL);
@@ -48,9 +47,9 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		if (setAccelerator) {
 			setAccelerator(SWT.MOD1 + 'c');
 		}
-		
+
 		Display display = PlatformUI.getWorkbench().getDisplay();
-	    clipboard = new Clipboard(display);
+		clipboard = new Clipboard(display);
 	}
 
 	@Override
@@ -59,19 +58,15 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 		Object object = ((IStructuredSelection) selection).getFirstElement();
 		String text = getTextForTask(object);
 
-	
 		TextTransfer textTransfer = TextTransfer.getInstance();
-        clipboard.setContents(new Object[] { text },
-            new Transfer[] { textTransfer });
+		clipboard.setContents(new Object[] { text }, new Transfer[] { textTransfer });
 	}
 
 	public static String getTextForTask(Object object) {
 		String text = "";
-		if (object instanceof ITask || object instanceof AbstractQueryHit) {
+		if (object instanceof ITask) {
 			ITask task = null;
-			if (object instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit) object).getCorrespondingTask();
-			} else if (object instanceof ITask) {
+			if (object instanceof ITask) {
 				task = (ITask) object;
 			}
 			if (task != null) {
@@ -83,8 +78,6 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 				if (task.hasValidUrl()) {
 					text += "\n" + task.getTaskUrl();
 				}
-			} else {
-				text += ((AbstractQueryHit) object).getSummary();
 			}
 		} else if (object instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;

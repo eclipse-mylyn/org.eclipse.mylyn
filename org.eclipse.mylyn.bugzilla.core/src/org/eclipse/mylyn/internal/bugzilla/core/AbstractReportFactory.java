@@ -57,7 +57,7 @@ public class AbstractReportFactory {
 		}
 
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
-		
+
 		// Remove control characters other than \\n and \\r
 		InputStream iis = new InputStream() {
 			public int read() throws IOException {
@@ -70,7 +70,7 @@ public class AbstractReportFactory {
 				return -1;
 			}
 		};
-		
+
 		Reader in;
 		if (characterEncoding != null) {
 			in = new InputStreamReader(iis, characterEncoding);

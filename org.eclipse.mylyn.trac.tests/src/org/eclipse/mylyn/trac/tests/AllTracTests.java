@@ -43,7 +43,6 @@ public class AllTracTests {
 		suite.addTestSuite(RepositorySearchQueryTest.class);
 		suite.addTestSuite(TracTaskDataHandlerTest.class);
 		suite.addTestSuite(TracTaskTest.class);
-		suite.addTestSuite(TracQueryHitTest.class);
 		suite.addTestSuite(TracRepositorySettingsPageTest.class);
 		suite.addTestSuite(TracClientProxyTest.class);
 		suite.addTestSuite(TracHyperlinkUtilTest.class);

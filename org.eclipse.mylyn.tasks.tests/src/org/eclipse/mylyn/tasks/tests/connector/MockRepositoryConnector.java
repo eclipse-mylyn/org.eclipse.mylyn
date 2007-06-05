@@ -128,19 +128,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector) {
-		return null;
-	}
-
-	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
 			Set<AbstractRepositoryTask> tasks) throws CoreException {
 		return Collections.emptySet();
 	}
 
 	@Override
-	protected AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary) {
+	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
 		// ignore
 		return null;
 	}
@@ -150,6 +144,13 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 			RepositoryTaskData taskData, boolean retrieveSubTasks) {
 		// ignore
 
+	}
+
+	@Override
+	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
+			QueryHitCollector resultCollector, boolean forced) {
+		// ignore
+		return null;
 	}
 
 }

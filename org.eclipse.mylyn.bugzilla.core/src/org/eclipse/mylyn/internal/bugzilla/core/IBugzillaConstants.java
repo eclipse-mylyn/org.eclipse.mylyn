@@ -85,6 +85,8 @@ public interface IBugzillaConstants {
 	
 	public static final String URL_GET_SHOW_BUG_XML_NOID = "/show_bug.cgi?ctype=xml&excludefield=attachmentdata";
 	
+	public static final String URL_POST_SHOW_BUG = "/show_bug.cgi";
+	
 	public static final String XML_ERROR_INVALIDBUGID = "invalidbugid";
 
 	public static final String XML_ERROR_NOTFOUND = "notfound";

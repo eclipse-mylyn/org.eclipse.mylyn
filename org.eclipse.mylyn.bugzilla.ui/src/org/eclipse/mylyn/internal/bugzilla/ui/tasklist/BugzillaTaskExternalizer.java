@@ -11,10 +11,8 @@
 
 package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
@@ -31,16 +29,10 @@ import org.w3c.dom.Node;
 public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	private static final String KEY_SEVERITY = "bugzilla.severity";
-	
+
 	private static final String KEY_PRODUCT = "bugzilla.product";
 
-	private static final String STATUS_RESO = "RESO";
-
-	private static final String STATUS_NEW = "NEW";
-
 	private static final String TAG_BUGZILLA = "Bugzilla";
-	
-	private static final String TAG_BUGZILLA_QUERY_HIT = TAG_BUGZILLA + KEY_QUERY_HIT;
 
 	private static final String TAG_BUGZILLA_QUERY = TAG_BUGZILLA + KEY_QUERY;
 
@@ -82,11 +74,11 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	@Override
 	public Element createTaskElement(ITask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
-		node.setAttribute(KEY_SEVERITY, ((BugzillaTask)task).getSeverity());
-		node.setAttribute(KEY_PRODUCT, ((BugzillaTask)task).getProduct());
+		node.setAttribute(KEY_SEVERITY, ((BugzillaTask) task).getSeverity());
+		node.setAttribute(KEY_PRODUCT, ((BugzillaTask) task).getProduct());
 		return node;
 	}
-	
+
 	@Override
 	public boolean canCreateElementFor(AbstractRepositoryQuery category) {
 		return category instanceof BugzillaRepositoryQuery;
@@ -103,35 +95,16 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, ITask parent)
-			throws TaskExternalizationException {
+	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
+			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary, false);
-		if(element.hasAttribute(KEY_SEVERITY)) {
+		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setSeverity(element.getAttribute(KEY_SEVERITY));
 		}
-		if(element.hasAttribute(KEY_PRODUCT)) {
+		if (element.hasAttribute(KEY_PRODUCT)) {
 			task.setProduct(element.getAttribute(KEY_PRODUCT));
 		}
 		return task;
-	}
-
-	@Override
-	public boolean canReadQueryHit(Node node) {
-		return node.getNodeName().equals(getQueryHitTagName());
-	}
-
-	@Override
-	public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractRepositoryQuery query)
-			throws TaskExternalizationException {
-		String status = STATUS_NEW;
-		if (element.hasAttribute(KEY_COMPLETE)) {
-			status = element.getAttribute(KEY_COMPLETE);
-			if (status.equals(VAL_TRUE)) {
-				status = STATUS_RESO;
-			}
-		}
-		BugzillaQueryHit hit = new BugzillaQueryHit(taskList, summary, "", repositoryUrl, taskId, null, status);
-		return hit;
 	}
 
 	@Override
@@ -139,8 +112,4 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 		return TAG_BUGZILLA_REPORT;
 	}
 
-	@Override
-	public String getQueryHitTagName() {
-		return TAG_BUGZILLA_QUERY_HIT;
-	}
 }

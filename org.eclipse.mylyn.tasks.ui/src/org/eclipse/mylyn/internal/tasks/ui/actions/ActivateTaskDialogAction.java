@@ -13,7 +13,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TaskListManager;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -57,13 +56,6 @@ public class ActivateTaskDialogAction extends ActionDelegate implements IWorkben
 			ITask task = (ITask) result;
 			manager.activateTask(task);
 			manager.getTaskActivationHistory().addTask(task);
-		} else if (result instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) result;
-			ITask task = hit.getOrCreateCorrespondingTask();
-			if (task != null) {
-				manager.activateTask(task);
-				manager.getTaskActivationHistory().addTask(task);
-			}
 		}
 		if (TaskListView.getFromActivePerspective() != null) {
 			TaskListView.getFromActivePerspective().refreshAndFocus(false);

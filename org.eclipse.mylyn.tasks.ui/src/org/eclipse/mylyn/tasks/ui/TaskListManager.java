@@ -45,7 +45,6 @@ import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
@@ -174,7 +173,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		public void contextCleared(IInteractionContext context) {
 			// ignore
 		}
-		
+
 		public void interestChanged(List<IInteractionElement> elements) {
 			List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityMetaContext()
 					.getInteractionHistory();
@@ -1131,13 +1130,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 */
 	public ITask getTaskForElement(ITaskListElement element, boolean force) {
 		ITask task = null;
-		if (element instanceof AbstractQueryHit) {
-			if (force) {
-				task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-			} else {
-				task = ((AbstractQueryHit) element).getCorrespondingTask();
-			}
-		} else if (element instanceof ITask) {
+		if (element instanceof ITask) {
 			task = (ITask) element;
 		}
 		return task;

@@ -85,7 +85,6 @@ import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskListElementPropertiesAction;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -162,7 +161,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
-	public static final String ID_VIEW = "org.eclipse.mylar.tasks.ui.views.TaskListView";
+	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
 
 	public static final String LABEL_VIEW = "Task List";
 
@@ -264,7 +263,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private TaskCompletionFilter filterComplete = new TaskCompletionFilter();
 
 	private TaskArchiveFilter filterArchive = new TaskArchiveFilter();
-	
+
 	private TaskWorkingSetFilter filterWorkingSet = new TaskWorkingSetFilter();
 
 	private Set<AbstractTaskListFilter> filters = new HashSet<AbstractTaskListFilter>();
@@ -597,7 +596,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	public static TaskListView getFromActivePerspective() {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage != null) {
-			IViewPart view = activePage.findView(ID_VIEW);
+			IViewPart view = activePage.findView(ID);
 			if (view instanceof TaskListView) {
 				return (TaskListView) view;
 			}
@@ -607,7 +606,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static TaskListView openInActivePerspective() {
 		try {
-			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID_VIEW);
+			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, "Could not show Task List view", false);
 			e.printStackTrace();
@@ -629,7 +628,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		TasksUiPlugin.getTaskListManager().removeActivityListener(TASK_ACTIVITY_LISTENER);
 
 		PlatformUI.getWorkbench().getWorkingSetManager().removePropertyChangeListener(this);
-		
+
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		if (themeManager != null) {
 			themeManager.removePropertyChangeListener(THEME_CHANGE_LISTENER);
@@ -646,7 +645,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (getSite() == null || getSite().getPage() == null)
 			return;
 
-		IViewReference reference = getSite().getPage().findViewReference(ID_VIEW);
+		IViewReference reference = getSite().getPage().findViewReference(ID);
 		boolean shouldSetDescription = false;
 		if (reference != null && reference.isFastView()) {
 			shouldSetDescription = true;
@@ -811,7 +810,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				Object selectedNode = ((Tree) e.widget).getItem(new Point(e.x + 70, e.y));
 				if (selectedNode instanceof TreeItem) {
 					Object selectedObject = ((TreeItem) selectedNode).getData();
-					if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
+					if (selectedObject instanceof ITask) {
 						if (e.x > activationImageOffset && e.x < activationImageOffset + 13) {
 							taskListCellModifier.toggleTaskActivation((ITaskListElement) selectedObject);
 						}
@@ -953,14 +952,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				layout.setColumnData(columns[i], new ColumnPixelData(columnWidths[i]));
 			}
 
-//			final int index = i;
+// final int index = i;
 			columns[i].addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-//					sortByIndex = index;
+// sortByIndex = index;
 					sortDirection *= DEFAULT_SORT_DIRECTION;
-//					tableSorter.setColumn(columnNames[sortByIndex]);
+// tableSorter.setColumn(columnNames[sortByIndex]);
 					getViewer().refresh(false);
 				}
 			});
@@ -1111,12 +1110,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		}
 		ITask task = null;
-		if ((element instanceof ITask) || (element instanceof AbstractQueryHit)) {
-			if (element instanceof AbstractQueryHit) {
-				task = ((AbstractQueryHit) element).getCorrespondingTask();
-			} else {
-				task = (ITask) element;
-			}
+		if ((element instanceof ITask)) {
+			task = (ITask) element;
 		}
 
 		manager.add(new Separator(ID_SEPARATOR_NEW));
@@ -1134,8 +1129,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else {
 				manager.add(activateAction);
 			}
-		} else if (element instanceof AbstractQueryHit) {
-			manager.add(activateAction);
 		}
 
 		manager.add(new Separator());
@@ -1153,7 +1146,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator());
 
 		addAction(copyDetailsAction, manager, element);
-		if (task != null && !(element instanceof AbstractQueryHit)) {
+		if (task != null) {
 			addAction(removeFromCategoryAction, manager, element);
 		}
 		addAction(deleteAction, manager, element);
@@ -1170,7 +1163,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 
-		if (element instanceof ITask || element instanceof AbstractQueryHit) {
+		if (element instanceof ITask) {
 			for (String menuPath : dynamicMenuMap.keySet()) {
 				if (ID_SEPARATOR_CONTEXT.equals(menuPath)) {
 					for (IDynamicSubMenuContributor contributor : dynamicMenuMap.get(menuPath)) {
@@ -1192,7 +1185,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	private void addMenuManager(IMenuManager menuToAdd, IMenuManager manager, ITaskListElement element) {
-		if ((element instanceof ITask || element instanceof AbstractQueryHit)
+		if ((element instanceof ITask)
 				|| (element instanceof AbstractTaskContainer || element instanceof AbstractRepositoryQuery)) {
 			manager.add(menuToAdd);
 		}
@@ -1504,8 +1497,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			Object element = structuredSelection.getFirstElement();
 			if (element instanceof ITask) {
 				return (ITask) structuredSelection.getFirstElement();
-			} else if (element instanceof AbstractQueryHit) {
-				return ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
 			}
 		}
 		return null;
@@ -1520,8 +1511,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			Object element = structuredSelection.getFirstElement();
 			if (element instanceof ITask) {
 				return (ITask) structuredSelection.getFirstElement();
-			} else if (element instanceof AbstractQueryHit) {
-				return ((AbstractQueryHit) element).getCorrespondingTask();
 			}
 		}
 		return null;
@@ -1558,19 +1547,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		IStructuredSelection selection = restoreSelection(task);
 		getViewer().setSelection(selection, true);
 
-		// if no task exists, select the query hit if exists
-		AbstractQueryHit hit = null;
-		if (getViewer().getSelection().isEmpty()
-				&& (hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier())) != null) {
-			try {
-				AbstractRepositoryQuery query = TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
-						task.getHandleIdentifier());
-				getViewer().expandToLevel(query, 1);
-				getViewer().setSelection(new StructuredSelection(hit), true);
-			} catch (SWTException e) {
-				MylarStatusHandler.log(e, "Failed to expand Task List");
-			}
-		}
+// // if no task exists, select the query hit if exists
+// if (getViewer().getSelection().isEmpty()
+// && (hit =
+// TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(task.getHandleIdentifier()))
+// != null) {
+// try {
+// AbstractRepositoryQuery query =
+// TasksUiPlugin.getTaskListManager().getTaskList().getQueryForHandle(
+// task.getHandleIdentifier());
+// getViewer().expandToLevel(query, 1);
+// getViewer().setSelection(new StructuredSelection(hit), true);
+// } catch (SWTException e) {
+// MylarStatusHandler.log(e, "Failed to expand Task List");
+// }
+// }
 	}
 
 	private void saveSelection() {
@@ -1630,15 +1621,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 							// refresh(task.getContainer());
 						}
 
-						AbstractQueryHit hit = TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(
+// AbstractQueryHit hit =
+// TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(
+// task.getHandleIdentifier());
+// if (hit != null) {
+// refresh(hit);
+// }
+// } else if (element instanceof AbstractQueryHit) {
+// AbstractQueryHit hit = (AbstractQueryHit) element;
+						queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
 								task.getHandleIdentifier());
-						if (hit != null) {
-							refresh(hit);
-						}
-					} else if (element instanceof AbstractQueryHit) {
-						AbstractQueryHit hit = (AbstractQueryHit) element;
-						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
-								.getQueriesForHandle(hit.getHandleIdentifier());
 						for (AbstractRepositoryQuery query : queries) {
 							refresh(query);
 						}

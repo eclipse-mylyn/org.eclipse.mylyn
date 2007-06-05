@@ -41,14 +41,16 @@ import org.eclipse.mylar.internal.trac.core.model.TracTicket;
 import org.eclipse.mylar.internal.trac.core.model.TracVersion;
 import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
 import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
@@ -213,20 +215,22 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description", tasklist);
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		final List<AbstractQueryHit> result = new ArrayList<AbstractQueryHit>();
-		QueryHitCollector hitCollector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList()) {
-
+		final List<RepositoryTaskData> result = new ArrayList<RepositoryTaskData>();
+		QueryHitCollector hitCollector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(), new TaskFactory(repository)) {
+			public void accept(RepositoryTaskData data) {
+				result.add(data);
+			}
 			@Override
-			public void addMatch(AbstractQueryHit hit) {
-				result.add(hit);
+			public void accept(AbstractRepositoryTask hit) {
+				// ignore;
 			}};
-		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector);
+		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector, false);
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());
-		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getTaskId());
-		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getTaskId());
-		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getTaskId());
+		assertEquals(data.tickets.get(0).getId() + "", result.get(0).getId());
+		assertEquals(data.tickets.get(1).getId() + "", result.get(1).getId());
+		assertEquals(data.tickets.get(2).getId() + "", result.get(2).getId());
 	}
 
 	public void testUpdateTaskDetails() throws InvalidTicketException {

@@ -14,7 +14,7 @@ package org.eclipse.mylar.internal.tasks.ui.search;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 /**
  * Sorts search results by summary.
@@ -38,8 +38,8 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
 
-			AbstractQueryHit entry1 = (AbstractQueryHit) e1;
-			AbstractQueryHit entry2 = (AbstractQueryHit) e2;
+			AbstractRepositoryTask entry1 = (AbstractRepositoryTask) e1;
+			AbstractRepositoryTask entry2 = (AbstractRepositoryTask) e2;
 			// NOTE we just comparing ids here, once summary and taskId separated
 			// they should have their own column/sorter.
 			return taskKeyComparator.compare(entry1.getTaskId(), entry2.getTaskId());
@@ -65,7 +65,7 @@ public class SearchResultSorterDescription extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			AbstractQueryHit hit = (AbstractQueryHit) element;
+			AbstractRepositoryTask hit = (AbstractRepositoryTask) element;
 			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore if

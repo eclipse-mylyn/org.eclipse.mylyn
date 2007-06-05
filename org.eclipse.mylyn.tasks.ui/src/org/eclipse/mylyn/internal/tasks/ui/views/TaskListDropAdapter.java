@@ -16,15 +16,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.TransferData;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,14 +25,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -51,6 +42,11 @@ import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TaskTransfer;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.TransferData;
 
 /**
  * @author Mik Kersten
@@ -88,9 +84,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				ITask toMove = null;
 				if (selectedObject instanceof ITask) {
 					toMove = (ITask) selectedObject;
-				} else if (selectedObject instanceof AbstractQueryHit) {
-					toMove = ((AbstractQueryHit) selectedObject).getOrCreateCorrespondingTask();
-				}
+				} 
 				if (toMove != null) {
 					tasksToMove.add(toMove);
 				}
@@ -101,8 +95,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			ITask targetTask = null;
 			if (getCurrentTarget() instanceof ITask) {
 				targetTask = (ITask) getCurrentTarget();
-			} else if (getCurrentTarget() instanceof AbstractQueryHit) {
-				targetTask = ((AbstractQueryHit) getCurrentTarget()).getCorrespondingTask();
 			}
 			if (targetTask != null) {
 				final String[] names = (String[]) data;
@@ -269,8 +261,6 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
 			if (getCurrentTarget() instanceof ITask) {
 				return true;
-			} else if (getCurrentTarget() instanceof AbstractQueryHit) {
-				return ((AbstractQueryHit) getCurrentTarget()).getCorrespondingTask() != null;
 			}
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory) {

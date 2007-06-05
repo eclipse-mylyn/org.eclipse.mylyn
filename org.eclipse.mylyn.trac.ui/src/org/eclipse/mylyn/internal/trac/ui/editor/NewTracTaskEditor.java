@@ -13,6 +13,7 @@ import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -46,7 +47,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 				TasksUiPlugin.getTaskListManager().getTaskList());
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, query);
+				repository, query, new TaskFactory(repository));
 		return collector;
 	}
 

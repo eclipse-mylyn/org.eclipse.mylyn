@@ -38,19 +38,21 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private TaskComment taskComment;
 
-	private final Map<String, TaskComment> attachIdToComment = new HashMap<String, TaskComment>();
+	private Map<String, TaskComment> attachIdToComment = new HashMap<String, TaskComment>();
 
 	private int commentNum = 0;
 
 	private RepositoryAttachment attachment;
 
-	Map<String, RepositoryTaskData> taskDataMap;
+	private Map<String, RepositoryTaskData> taskDataMap;
 	
 	private RepositoryTaskData repositoryTaskData;
 
 	private String errorMessage = null;
 
 	private AbstractAttributeFactory attributeFactory;
+	
+	private int retrieved = 0;
 
 	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, Map<String, RepositoryTaskData> taskDataMap) {
 		this.attributeFactory = factory;
@@ -98,6 +100,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			if (attributes != null && (attributes.getValue("error") != null)) {
 				errorMessage = attributes.getValue("error");
 			}
+			attachIdToComment = new HashMap<String, TaskComment>();
+			commentNum = 0;
+			taskComment = null;
 			break;
 		case LONG_DESC:
 			taskComment = new TaskComment(attributeFactory, commentNum++);
@@ -247,6 +252,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getId());
 			}
+			retrieved++;
 			break;
 
 		case BLOCKED:
@@ -295,6 +301,10 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				}
 			}
 		}
+	}
+
+	public int getNumRetrieved() {
+		return retrieved;
 	}
 
 }

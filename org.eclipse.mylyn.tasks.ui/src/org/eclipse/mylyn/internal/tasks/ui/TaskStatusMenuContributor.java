@@ -13,7 +13,6 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.mylar.internal.tasks.core.WebQueryHit;
 import org.eclipse.mylar.internal.tasks.ui.actions.ClearOutgoingAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
@@ -35,8 +34,6 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 		if (selectedElements.size() == 1) {
 			if (selectedElements.get(0) instanceof ITask) {
 				singleTask = (ITask)selectedElements.get(0);
-			} else if (selectedElements.get(0) instanceof WebQueryHit) {
-				singleTask = ((WebQueryHit)selectedElements.get(0)).getCorrespondingTask();
 			}
 		}
 		

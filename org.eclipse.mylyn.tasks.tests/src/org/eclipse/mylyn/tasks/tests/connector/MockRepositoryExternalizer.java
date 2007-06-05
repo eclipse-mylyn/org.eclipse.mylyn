@@ -11,7 +11,6 @@
 
 package org.eclipse.mylar.tasks.tests.connector;
 
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
@@ -38,10 +37,10 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 		return task instanceof MockRepositoryTask;
 	}
 
-	@Override
-	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
-		return queryHit instanceof AbstractQueryHit;
-	}
+//	@Override
+//	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
+//		return queryHit instanceof AbstractQueryHit;
+//	}
 	
 	@Override
 	public boolean canReadCategory(Node node) {

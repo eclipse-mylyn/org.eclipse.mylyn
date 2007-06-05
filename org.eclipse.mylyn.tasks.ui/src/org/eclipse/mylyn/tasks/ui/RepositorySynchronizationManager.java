@@ -113,7 +113,6 @@ public class RepositorySynchronizationManager {
 			long delay, boolean syncChangedTasks, boolean userForcedSync) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
-		job.setForceSyncExecForTesting(forceSyncExecForTesting);
 		job.setSynchChangedTasks(syncChangedTasks);
 		job.setForced(userForcedSync);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
@@ -147,7 +146,7 @@ public class RepositorySynchronizationManager {
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
 		if (connector.getTaskDataHandler() != null) {
-			final GetChangedTasksJob getChangedTasksJob = new GetChangedTasksJob(connector, repository);
+			final SynchronizeChangedTasksJob getChangedTasksJob = new SynchronizeChangedTasksJob(connector, repository);
 			getChangedTasksJob.setSystem(true);
 			getChangedTasksJob.setRule(new RepositoryMutexRule(repository));
 			if (!forceSyncExecForTesting) {
@@ -162,7 +161,7 @@ public class RepositorySynchronizationManager {
 		}
 	}
 
-	private class GetChangedTasksJob extends Job {
+	private class SynchronizeChangedTasksJob extends Job {
 
 		private AbstractRepositoryConnector connector;
 
@@ -170,7 +169,7 @@ public class RepositorySynchronizationManager {
 
 		private Set<AbstractRepositoryTask> changedTasks;
 
-		public GetChangedTasksJob(AbstractRepositoryConnector connector, TaskRepository repository) {
+		public SynchronizeChangedTasksJob(AbstractRepositoryConnector connector, TaskRepository repository) {
 			super("Get Changed Tasks");
 			this.connector = connector;
 			this.repository = repository;
@@ -294,6 +293,10 @@ public class RepositorySynchronizationManager {
 		}
 		repositoryTask.setSyncState(status);
 		return startState != repositoryTask.getSyncState();
+	}
+
+	public void saveOffline(AbstractRepositoryTask task, RepositoryTaskData taskData) {
+		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(task.getHandleIdentifier(), taskData);
 	}
 
 	/** public for testing purposes */

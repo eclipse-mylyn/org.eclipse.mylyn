@@ -13,8 +13,6 @@ import java.util.Arrays;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -42,15 +40,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 
 	private Image taskInactiveContext = TasksUiImages.getImage(TasksUiImages.TASK_INACTIVE_CONTEXT);
 
-	// see bug 185004 
+	// see bug 185004
 	private int platformSpecificSquish = 0;
-	
+
 	CustomTaskListDecorationDrawer(TaskListView taskListView, int activationImageOffset) {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
 				TaskListPreferenceConstants.INCOMING_OVERLAID);
-		
+
 		if (SWT.getPlatform().equals("gtk")) {
 			platformSpecificSquish = 8;
 		} else if (SWT.getPlatform().equals("carbon")) {
@@ -69,8 +67,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 		Image activationImage = null;
 		if (data instanceof ITask) {
 			task = (ITask) data;
-		} else if (data instanceof AbstractQueryHit) {
-			task = ((AbstractQueryHit) data).getCorrespondingTask();
 		}
 		if (task != null) {
 			if (task.isActive()) {
@@ -80,8 +76,6 @@ class CustomTaskListDecorationDrawer implements Listener {
 			} else {
 				activationImage = taskInactive;
 			}
-		} else if (data instanceof AbstractQueryHit) {
-			activationImage = taskInactive;
 		}
 		if (data instanceof ITaskListElement) {
 			switch (event.type) {
@@ -124,7 +118,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 					int additionalSquish = 0;
 					if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 						additionalSquish = platformSpecificSquish + 3;
-					} else if (platformSpecificSquish >0) {
+					} else if (platformSpecificSquish > 0) {
 						additionalSquish = platformSpecificSquish / 2;
 					}
 					if (taskListView.synchronizationOverlaid) {
@@ -132,12 +126,13 @@ class CustomTaskListDecorationDrawer implements Listener {
 						offsetX = 42 - additionalSquish;
 					} else {
 						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
-						offsetX = 24 - additionalSquish;						
+						offsetX = 24 - additionalSquish;
 					}
 				}
 			}
 		} else {
-			image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element, taskListView.synchronizationOverlaid));
+			image = TasksUiImages.getImage(TaskElementLabelProvider.getSynchronizationImageDescriptor(element,
+					taskListView.synchronizationOverlaid));
 		}
 		if (image != null) {
 			event.gc.drawImage(image, offsetX, event.y + offsetY);
@@ -153,14 +148,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 				}
 			}
 		}
-		if (container instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-			for (AbstractQueryHit hit : query.getHits()) {
-				if (hit.getCorrespondingTask() == null) {
-					return true;
-				}
-			}
-		}
+//		if (container instanceof AbstractRepositoryQuery) {
+//			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
+//			for (AbstractRepositoryTask hit : query.getHits()) {
+//				if (hit.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+//					return true;
+//				}
+//			}
+//		}
 		return false;
 	}
 

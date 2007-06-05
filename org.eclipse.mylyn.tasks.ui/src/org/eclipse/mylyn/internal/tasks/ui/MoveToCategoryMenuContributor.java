@@ -16,7 +16,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -101,12 +100,6 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 			if (element instanceof ITask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
 						(ITask) element);
-			} else if (element instanceof AbstractQueryHit) {
-				ITask task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-				if (task != null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
-							task);
-				}
 			}
 		}
 	}

@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +65,6 @@ import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten
@@ -72,6 +72,8 @@ import org.eclipse.mylar.tasks.core.TaskList;
  * @author Steffen Pingel
  */
 public class BugzillaClient {
+
+	private static final int MAX_RETRIEVED_PER_QUERY = 100;
 
 	private static final String QUERY_DELIMITER = "?";
 
@@ -436,8 +438,53 @@ public class BugzillaClient {
 	// }
 	// }
 
-	public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector collector, TaskList taskList)
-			throws IOException, CoreException {
+// public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector
+// collector, TaskList taskList)
+// throws IOException, CoreException {
+// GetMethod method = null;
+// try {
+// String queryUrl = query.getUrl();
+// // Test that we don't specify content type twice.
+// // Should only be specified here (not in passed in url if possible)
+// if (!queryUrl.contains("ctype=rdf")) {
+// queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
+// }
+//
+// method = getConnect(queryUrl);
+// if (method.getResponseHeader("Content-Type") != null) {
+// Header responseTypeHeader = method.getResponseHeader("Content-Type");
+// for (String type : VALID_CONFIG_CONTENT_TYPES) {
+// if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type))
+// {
+// RepositoryQueryResultsFactory queryFactory = new
+// RepositoryQueryResultsFactory(method
+// .getResponseBodyAsStream(), characterEncoding);
+// queryFactory.performQuery(taskList, repositoryUrl.toString(), collector,
+// QueryHitCollector.MAX_HITS);
+//						
+//
+//						
+//						
+// //getTaskData(queryFactory.get)
+// // pass t
+//						
+// return;
+// }
+// }
+// }
+// parseHtmlError(new BufferedReader(
+// new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+// } finally {
+// if (method != null) {
+// method.releaseConnection();
+// }
+// }
+// }
+
+	/**
+	 * Returns ids of bugs that match given query
+	 */
+	public Set<String> getSearchHits(AbstractRepositoryQuery query) throws IOException, CoreException {
 		GetMethod method = null;
 		try {
 			String queryUrl = query.getUrl();
@@ -454,9 +501,9 @@ public class BugzillaClient {
 					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
-						queryFactory.performQuery(taskList, repositoryUrl.toString(), collector,
-								QueryHitCollector.MAX_HITS);
-						return;
+						queryFactory.performQuery(repositoryUrl.toString(), QueryHitCollector.MAX_HITS);
+
+						return queryFactory.getHits();
 					}
 				}
 			}
@@ -467,6 +514,7 @@ public class BugzillaClient {
 				method.releaseConnection();
 			}
 		}
+		return new HashSet<String>();
 	}
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
@@ -574,8 +622,12 @@ public class BugzillaClient {
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, characterEncoding));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
+		//	if (username != null) {
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
+			//}
+			//if (password != null) {
+				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
+		//	}
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, attachment.getDescription(), characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
@@ -941,8 +993,9 @@ public class BugzillaClient {
 				}
 			}
 
-			throw new CoreException(RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.REPOSITORY_ERROR, "A repository error has occurred.", body));
+			throw new CoreException(RepositoryStatus.createHtmlStatus(repositoryUrl.toString(), IStatus.INFO,
+					BugzillaCorePlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR,
+					"A repository error has occurred.", body));
 
 		} catch (ParseException e) {
 			authenticated = false;
@@ -990,45 +1043,66 @@ public class BugzillaClient {
 	}
 
 	public Map<String, RepositoryTaskData> getTaskData(Set<String> taskIds) throws IOException, CoreException {
-		GetMethod method = null;
-		try {
+		PostMethod method = null;
+		HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
+		while (taskIds.size() > 0) {
 
-			// TODO: Handle too long of url (IBugzillaConstants.MAX_URL_LENGTH)
+			try {
 
-			String requestUrl = repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML_NOID;
+				Set<String> idsToRetrieve = new HashSet<String>();
+				Iterator<String> itr = taskIds.iterator();
+				for (int x = 0; itr.hasNext() && x < MAX_RETRIEVED_PER_QUERY; x++) {
+					idsToRetrieve.add(itr.next());
+				}
 
-			HashMap<String, RepositoryTaskData> taskDataMap = new HashMap<String, RepositoryTaskData>();
-			RepositoryTaskData taskData = null;
-			for (String taskId : taskIds) {
-				requestUrl += "&id=" + taskId;
-				taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
-						repositoryUrl.toString(), taskId, Task.DEFAULT_TASK_KIND);
-				setupExistingBugAttributes(repositoryUrl.toString(), taskData);
-				taskDataMap.put(taskId, taskData);
-			}
+				NameValuePair[] formData = new NameValuePair[idsToRetrieve.size() + 2];
 
-			method = getConnect(requestUrl);
-			if (method.getResponseHeader("Content-Type") != null) {
-				Header responseTypeHeader = method.getResponseHeader("Content-Type");
-				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsStream(),
-								characterEncoding);
-						factory.populateReport(taskDataMap);
-						return taskDataMap;
+				if (idsToRetrieve.size() == 0)
+					return taskDataMap;
+
+				itr = idsToRetrieve.iterator();
+				int x = 0;
+				for (; itr.hasNext(); x++) {
+					String taskId = itr.next();
+					formData[x] = new NameValuePair("id", taskId);
+					RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
+							BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), taskId,
+							Task.DEFAULT_TASK_KIND);
+					setupExistingBugAttributes(repositoryUrl.toString(), taskData);
+					taskDataMap.put(taskId, taskData);
+				}
+				formData[x++] = new NameValuePair("ctype", "xml");
+				formData[x] = new NameValuePair("excludefield", "attachmentdata");
+
+				method = postFormData(IBugzillaConstants.URL_POST_SHOW_BUG, formData);
+
+				if (method == null) {
+					throw new IOException("Could not post form, client returned null method.");
+				}
+
+				if (method.getResponseHeader("Content-Type") != null) {
+					Header responseTypeHeader = method.getResponseHeader("Content-Type");
+					for (String type : VALID_CONFIG_CONTENT_TYPES) {
+						if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+							MultiBugReportFactory factory = new MultiBugReportFactory(method.getResponseBodyAsStream(),
+									characterEncoding);
+							factory.populateReport(taskDataMap);
+							taskIds.removeAll(idsToRetrieve);
+						}
 					}
+				} else {
+
+					parseHtmlError(new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+							characterEncoding)));
+				}
+			} finally {
+				if (method != null) {
+					method.releaseConnection();
 				}
 			}
-
-			parseHtmlError(new BufferedReader(
-					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
-
-			return null;
-		} finally {
-			if (method != null) {
-				method.releaseConnection();
-			}
 		}
+
+		return taskDataMap;
 	}
 
 }

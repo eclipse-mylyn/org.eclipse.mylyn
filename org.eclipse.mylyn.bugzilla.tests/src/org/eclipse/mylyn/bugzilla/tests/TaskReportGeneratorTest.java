@@ -19,7 +19,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.tasks.ui.planner.CompletedTaskCollector;
@@ -176,7 +175,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		bugQuery.addHit(new BugzillaQueryHit(null, "task1description", "low", "repositoryURL", "1", task1, "FIXED"));
+		bugQuery.addHit(task1);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());

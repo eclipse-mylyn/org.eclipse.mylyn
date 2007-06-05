@@ -33,10 +33,10 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		setTaskUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
 	}
 
-	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-		this(hit.getRepositoryUrl(), hit.getTaskId(), hit.getSummary(), newTask);
-		setPriority(hit.getPriority());
-	}
+//	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
+//		this(hit.getRepositoryUrl(), hit.getTaskId(), hit.getSummary(), newTask);
+//		setPriority(hit.getPriority());
+//	}
 
 	@Override
 	public String getTaskKind() {

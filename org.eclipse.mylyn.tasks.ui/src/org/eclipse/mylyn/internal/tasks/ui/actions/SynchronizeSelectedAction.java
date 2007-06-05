@@ -24,7 +24,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -81,13 +80,6 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 							repositoryTask.getRepositoryKind());
 					addTaskToSync(client, repositoryTask);
-				} else if (obj instanceof AbstractQueryHit) {
-					AbstractQueryHit hit = (AbstractQueryHit) obj;
-					if (hit.getOrCreateCorrespondingTask() != null) {
-						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
-								.getRepositoryConnector(hit.getCorrespondingTask().getRepositoryKind());
-						addTaskToSync(client, hit.getCorrespondingTask());
-					}
 				}
 			}
 
@@ -115,10 +107,10 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
 								false, true);
 					}
-					
-					for (TaskRepository taskRepository : repositoriesToSync.get(connector.getRepositoryType())) {
-						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, taskRepository);
-					}
+					//XXX enable?
+//					for (TaskRepository taskRepository : repositoriesToSync.get(connector.getRepositoryType())) {
+//						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, taskRepository);
+//					}
 				}				
 			}
 			if (!tasksToSyncMap.isEmpty()) {

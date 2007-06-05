@@ -15,9 +15,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
@@ -46,11 +48,11 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	private String titleString;
 
 	protected Text title;
-	
+
 	protected ISearchPageContainer scontainer = null;
 
 	protected TaskRepository repository;
-	
+
 	public AbstractRepositoryQueryPage(String wizardTitle) {
 		this(wizardTitle, null);
 		setTitle(TITLE);
@@ -61,7 +63,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	public AbstractRepositoryQueryPage(String wizardTitle, String queryTitle) {
 		super(wizardTitle);
-		titleString = queryTitle==null ? "" : queryTitle;
+		titleString = queryTitle == null ? "" : queryTitle;
 	}
 
 	public void createControl(Composite parent) {
@@ -73,7 +75,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	private void createTitleGroup(Composite parent) {
 		Composite group = new Composite(parent, SWT.NONE);
-		
+
 		GridLayout layout = new GridLayout(2, false);
 		group.setLayout(layout);
 
@@ -114,11 +116,11 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 	public void saveWidgetValues() {
 		// empty
 	}
-	
+
 	public void setContainer(ISearchPageContainer container) {
 		scontainer = container;
 	}
-	
+
 	public boolean inSearchContainer() {
 		return scontainer != null;
 	}
@@ -130,10 +132,15 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 			return false;
 		}
 
-		NewSearchUI.activateSearchResultView();		
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, getQuery());
-		NewSearchUI.runQueryInBackground(collector);
+		NewSearchUI.activateSearchResultView();
+
+		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				repository.getKind());
+		if (connector != null) {
+			SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+					repository, getQuery(), new TaskFactory(repository));
+			NewSearchUI.runQueryInBackground(collector);
+		}
 		return true;
 	}
 

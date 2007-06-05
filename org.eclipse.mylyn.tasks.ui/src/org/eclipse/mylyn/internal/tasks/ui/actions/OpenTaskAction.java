@@ -12,7 +12,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
@@ -66,20 +65,6 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 			} else {
 				TasksUiUtil.refreshAndOpenTaskListElement(task);
 				TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
-			}
-		} else if (result instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) result;
-			ITask task = hit.getOrCreateCorrespondingTask();
-			if (task != null) {
-				if (dlg.getOpenInBrowser()) {
-					if (task.hasValidUrl()) {
-						TasksUiUtil.openUrl(task.getTaskUrl(), false);
-						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
-					}
-				} else {
-					TasksUiUtil.refreshAndOpenTaskListElement(task);
-					TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
-				}
 			}
 		}
 	}

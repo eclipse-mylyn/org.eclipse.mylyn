@@ -55,8 +55,6 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = "Summarizes task activity and assists planning future tasks.";
 
-	public static final String ROOT_CATEGORY_HACK = "Root Tasks";
-
 	private long DAY = 24 * 3600 * 1000;
 
 	protected String[] columnNames = new String[] { "", "Description" };
@@ -188,11 +186,6 @@ public class TaskActivityWizardPage extends WizardPage {
 			filtersTable.setEnabled(false);
 			return;
 		}
-
-		// TODO: Hack to allow selection of a 'root tasks' category
-		TableItem rootItem = new TableItem(filtersTable, SWT.NONE);
-		rootItem.setText(ROOT_CATEGORY_HACK);
-		rootItem.setData(ROOT_CATEGORY_HACK);
 
 		// populate categories
 		for (AbstractTaskContainer category : manager.getTaskList().getTaskContainers()) {

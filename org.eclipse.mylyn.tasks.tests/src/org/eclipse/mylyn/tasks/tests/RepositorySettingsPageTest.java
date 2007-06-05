@@ -14,6 +14,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.tests.connector.MockRepositoryUi;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -83,6 +84,9 @@ public class RepositorySettingsPageTest extends TestCase {
 
 	public void testNeedsAnonyoumousLogin() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
+		
+		TasksUiPlugin.addRepositoryConnectorUi(new MockRepositoryUi());
+		
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockRepositoryUi());
 		page.setNeedsAnonymousLogin(true);
 		page.setRepository(repository);
@@ -127,15 +131,13 @@ public class RepositorySettingsPageTest extends TestCase {
 
 	private class MockRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
-		private Composite parent;
-
 		public MockRepositorySettingsPage(AbstractRepositoryConnectorUi repositoryUi) {
 			super("title", "summary", repositoryUi);
 		}
 
 		@Override
 		protected void createAdditionalControls(Composite parent) {
-			this.parent = parent;
+			// ignore
 		}
 
 		@Override
@@ -162,7 +164,7 @@ public class RepositorySettingsPageTest extends TestCase {
 		}
 
 		Composite getParent() {
-			return parent;
+			return compositeContainer;
 		}
 
 		@Override

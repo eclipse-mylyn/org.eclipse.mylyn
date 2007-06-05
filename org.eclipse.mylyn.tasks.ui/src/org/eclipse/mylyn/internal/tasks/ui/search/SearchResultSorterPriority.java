@@ -13,7 +13,7 @@ package org.eclipse.mylar.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 
 /**
  * Sorts results of Bugzilla search by bug priority.
@@ -33,8 +33,8 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
-			AbstractQueryHit hit1 = (AbstractQueryHit) e1;
-			AbstractQueryHit hit2 = (AbstractQueryHit) e2;
+			AbstractRepositoryTask hit1 = (AbstractRepositoryTask) e1;
+			AbstractRepositoryTask hit2 = (AbstractRepositoryTask) e2;
 			return hit1.getPriority().compareTo(hit2.getPriority());
 		} catch (Exception ignored) {
 			// do nothing
@@ -55,7 +55,7 @@ public class SearchResultSorterPriority extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			AbstractQueryHit hit = (AbstractQueryHit) element;
+			AbstractRepositoryTask hit = (AbstractRepositoryTask) element;
 			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore if there is a problem

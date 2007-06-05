@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -92,11 +91,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			} else if (element instanceof ITask) {
 				String taskString = ((ITask) element).getSummary();
 				return pattern.matcher(taskString).find();
-			} else if (element instanceof AbstractQueryHit) {
-				AbstractQueryHit hit = (AbstractQueryHit) element;
-				String taskString = hit.getIdentifyingLabel() + ": " + hit.getSummary();
-				return pattern.matcher(taskString).find();
-			}
+			} 
 			return false;
 		}
 	}
@@ -166,10 +161,8 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			allTasks.addAll(query.getChildren());
 			// TODO: should not need to do this
-			for (AbstractQueryHit hit : query.getHits()) {
-				if (hit.getCorrespondingTask() == null) {
+			for (ITask hit : query.getHits()) {
 					allTasks.add(hit);
-				}
 			}
 		}
 
@@ -193,10 +186,6 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			private ITask getCorrespondingTask(Object o) {
 				if (o instanceof ITask) {
 					return (ITask) o;
-				}
-				if (o instanceof AbstractQueryHit) {
-					AbstractQueryHit hit = (AbstractQueryHit) o;
-					return hit.getCorrespondingTask();
 				}
 				return null;
 			}

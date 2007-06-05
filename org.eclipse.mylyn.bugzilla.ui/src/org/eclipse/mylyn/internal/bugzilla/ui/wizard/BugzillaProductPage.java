@@ -40,7 +40,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
@@ -300,11 +299,6 @@ public class BugzillaProductPage extends WizardPage {
 			if (element instanceof BugzillaRepositoryQuery) {
 				query = (BugzillaRepositoryQuery) element;
 
-			} else if (element instanceof BugzillaQueryHit) {
-				BugzillaQueryHit hit = (BugzillaQueryHit) element;
-				if (hit.getParent() != null && hit.getParent() instanceof BugzillaRepositoryQuery) {
-					query = (BugzillaRepositoryQuery) hit.getParent();
-				}
 			}
 
 			if (query != null) {

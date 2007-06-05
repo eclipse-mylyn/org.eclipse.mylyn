@@ -14,26 +14,32 @@ package org.eclipse.mylar.internal.bugzilla.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-
-import org.eclipse.mylar.tasks.core.QueryHitCollector;
-import org.eclipse.mylar.tasks.core.TaskList;
-
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Rob Elves
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
+	Set<String> hits = new HashSet<String>();
+	
 	public RepositoryQueryResultsFactory(InputStream inStream, String encoding) {
 		super(inStream, encoding);
 	}
 
-	/** expects rdf returned from repository (ctype=rdf in url) 
-	 * @throws GeneralSecurityException */
-	public void performQuery(TaskList taskList, String repositoryUrl, QueryHitCollector collector,  int maxHits) throws IOException {
-		
-		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(taskList, repositoryUrl,
-				collector, maxHits);		
+	/**
+	 * expects rdf returned from repository (ctype=rdf in url)
+	 * 
+	 * @throws GeneralSecurityException
+	 */
+	public void performQuery(String repositoryUrl, int maxHits) throws IOException {
+
+		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, hits, maxHits);
 		collectResults(contentHandler, false);
+	}
+	
+	public Set<String> getHits() {
+		return hits;
 	}
 }

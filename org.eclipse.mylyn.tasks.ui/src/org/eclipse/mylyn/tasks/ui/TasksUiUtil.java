@@ -42,7 +42,6 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -79,7 +78,7 @@ public class TasksUiUtil {
 	public static final String PREFS_PAGE_ID_COLORS_AND_FONTS = "org.eclipse.ui.preferencePages.ColorsAndFonts";
 
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
-	
+
 	/**
 	 * Resolves a rich editor for the task if available. Must be called from UI
 	 * thread.
@@ -190,17 +189,9 @@ public class TasksUiUtil {
 	}
 
 	public static void refreshAndOpenTaskListElement(ITaskListElement element) {
-		if (element instanceof ITask || element instanceof AbstractQueryHit
-				|| element instanceof DateRangeActivityDelegate) {
+		if (element instanceof ITask || element instanceof DateRangeActivityDelegate) {
 			final ITask task;
-			if (element instanceof AbstractQueryHit) {
-				if (((AbstractQueryHit) element).getCorrespondingTask() != null) {
-					task = ((AbstractQueryHit) element).getCorrespondingTask();
-				} else {
-					task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-					// NewLocalTaskAction.scheduleNewTask(task);
-				}
-			} else if (element instanceof DateRangeActivityDelegate) {
+			if (element instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
 			} else {
 				task = (ITask) element;
@@ -304,7 +295,7 @@ public class TasksUiUtil {
 
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {						
+					if (window != null) {
 						if (openWithBrowser) {
 							openUrl(task.getTaskUrl(), false);
 						} else {
@@ -329,20 +320,22 @@ public class TasksUiUtil {
 									if (!wasOpen) {
 										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 									}
-									// Synchronization must happen after marked read.
+									// Synchronization must happen after marked
+									// read.
 									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 											.getRepositoryConnector(repositoryTask.getRepositoryKind());
 									if (connector != null) {
-										TasksUiPlugin.getSynchronizationManager().synchronize(connector, repositoryTask, false,
-												null);
+										TasksUiPlugin.getSynchronizationManager().synchronize(connector,
+												repositoryTask, false, null);
 									}
 
 								}
 								return Status.OK_STATUS;
-							}};
-							
-							updateTaskData.setSystem(true);
-							updateTaskData.schedule();
+							}
+						};
+
+						updateTaskData.setSystem(true);
+						updateTaskData.schedule();
 
 					}
 				}
@@ -478,14 +471,6 @@ public class TasksUiUtil {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
-		} else if (element instanceof AbstractQueryHit) {
-			AbstractQueryHit queryHit = (AbstractQueryHit) element;
-			if (queryHit.getParent() != null) {
-				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getParent().getRepositoryKind(),
-						queryHit.getRepositoryUrl());
-			} else {
-				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
-			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			return TasksUiPlugin.getRepositoryManager()
@@ -529,7 +514,7 @@ public class TasksUiUtil {
 			}
 		});
 	}
-	
+
 	public static void closeEditorInActivePage(ITask task) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {

@@ -11,7 +11,6 @@
 package org.eclipse.mylar.internal.tasks.ui;
 
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.Task;
@@ -30,19 +29,16 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 	public TaskPriorityFilter() {
 		displayPrioritiesAbove(TaskListView.getCurrentPriorityLevel());
 	}
- 
+
 	public void displayPrioritiesAbove(String level) {
 		priorityLevel = level;
 	}
 
 	@Override
 	public boolean select(Object parent, Object element) {
-		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS);
+		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TaskListPreferenceConstants.FILTER_SUBTASKS);
 		if (element instanceof ITaskListElement) {
-			if (element instanceof AbstractQueryHit && ((AbstractQueryHit) element).getCorrespondingTask() != null) {
-				element = ((AbstractQueryHit) element).getCorrespondingTask();
-			}
-
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;
 				if (shouldAlwaysShow(parent, task, exposeSubTasks)) {

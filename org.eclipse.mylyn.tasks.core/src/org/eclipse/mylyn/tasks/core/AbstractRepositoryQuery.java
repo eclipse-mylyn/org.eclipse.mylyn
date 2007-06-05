@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -19,12 +19,11 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Rob Elves
  */
 public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
-
-	private Set<String> hitHandles = new HashSet<String>();
 
 	protected String lastRefreshTimeStamp = "<never>";
 
@@ -43,19 +42,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		super(description, taskList);
 	}
 
-	// TODO: this overriding is a bit weird
-	@Override
-	public Set<ITask> getChildren() {
-		Set<ITask> tasks = new HashSet<ITask>();
-		for (AbstractQueryHit hit : getHits()) {
-			ITask task = hit.getCorrespondingTask();
-			if (task != null) {
-				tasks.add(task);
-			}
-		}
-		return tasks;
-	}
-
 	public boolean isArchive() {
 		return false;
 	}
@@ -64,56 +50,41 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		// ignore
 	}
 
-	public /*synchronized*/ AbstractQueryHit findQueryHit(String handle) {
-		if (hitHandles.contains(handle)) {
-			return taskList.getQueryHit(handle);
-		}
-		return null;
-	}
-
-	public synchronized Set<AbstractQueryHit> getHits() {
-		return taskList.getQueryHits(hitHandles);
-	}
-
-	public synchronized void updateHits(List<AbstractQueryHit> newHits, TaskList taskList) {
-		Set<AbstractQueryHit> oldHits = getHits();
-		hitHandles.clear();
-		for (AbstractQueryHit oldHit : oldHits) {
-			int index = newHits.indexOf(oldHit);
-			if (index != -1) {
-				newHits.get(index).setNotified(oldHit.isNotified());
+	public synchronized Set<AbstractRepositoryTask> getHits() {
+		Set<AbstractRepositoryTask> repositoryTasks = new HashSet<AbstractRepositoryTask>();
+		for (ITask task : super.getChildren()) {
+			if (task instanceof AbstractRepositoryTask) {
+				repositoryTasks.add((AbstractRepositoryTask) task);
 			}
 		}
-		for (AbstractQueryHit hit : newHits) {
-			this.addHit(hit);
+		return repositoryTasks;
+	}
+
+	public synchronized void updateHits(Collection<AbstractRepositoryTask> newHits) {
+		clear();
+		for (AbstractRepositoryTask abstractRepositoryTask : newHits) {
+			addHit(abstractRepositoryTask);
 		}
 	}
 
-	public synchronized void addHit(AbstractQueryHit hit) {
-		if (hit.getCorrespondingTask() == null) {
-			ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
-			if (correspondingTask instanceof AbstractRepositoryTask) {
-				hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
-			}
-		}
-		// Always replace even if exists (may have new summary etc.)
-		taskList.addQueryHit(hit);
-
-		// TODO: this is meaningless since only one hit object exists now
-		hit.setParent(this);
-		hitHandles.add(hit.getHandleIdentifier());
+	public synchronized void addHit(AbstractRepositoryTask hit) {
+		// TODO: Move up?
+		if(!taskList.getAllTasks().contains(hit)) {
+			taskList.addTask(hit);
+		}			
+		super.add(hit);
 	}
 
-	public synchronized void removeHit(AbstractQueryHit hit) {
-		hitHandles.remove(hit.getHandleIdentifier());
+	public synchronized void removeHit(AbstractRepositoryTask hit) {
+		super.remove(hit);
 	}
 
 	public synchronized String getPriority() {
-		if (hitHandles.isEmpty()) {
+		if (super.isEmpty()) {
 			return Task.PriorityLevel.P1.toString();
 		}
 		String highestPriority = Task.PriorityLevel.P5.toString();
-		for (AbstractQueryHit hit : getHits()) {
+		for (AbstractRepositoryTask hit : getHits()) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}
@@ -150,11 +121,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public void setCurrentlySynchronizing(boolean currentlySynchronizing) {
 		this.currentlySynchronizing = currentlySynchronizing;
-	}
-
-	@Override
-	final void add(ITask task) {
-		// ignore, can not add tasks to a query
 	}
 
 	public String getLastRefreshTimeStamp() {

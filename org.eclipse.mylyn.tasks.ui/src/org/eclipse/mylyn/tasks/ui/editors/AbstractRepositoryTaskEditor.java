@@ -218,7 +218,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	public static final int DESCRIPTION_HEIGHT = 10 * 14;
 
-//	private static final String REASSIGN_BUG_TO = "Reassign to";
+// private static final String REASSIGN_BUG_TO = "Reassign to";
 
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
@@ -720,7 +720,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	protected void createSections() {
 		createReportHeaderLayout(editorComposite);
-		
+
 		Section attributesSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.ATTRIBTUES_SECTION));
 		attributesSection.setExpanded(expandedStateAttributes || hasAttributeChanges);
 
@@ -741,15 +741,15 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		attributesLayout.horizontalSpacing = 5;
 		attributesLayout.verticalSpacing = 4;
 		attribComp.setLayout(attributesLayout);
-		
+
 		GridData attributesData = new GridData(GridData.FILL_BOTH);
 		attributesData.horizontalSpan = 1;
 		attributesData.grabExcessVerticalSpace = false;
 		attribComp.setLayoutData(attributesData);
-		
-	    createAttributeLayout(attribComp);
+
+		createAttributeLayout(attribComp);
 		createCustomAttributeLayout(attribComp);
-		
+
 		if (showAttachments) {
 			createAttachmentLayout(editorComposite);
 		}
@@ -926,12 +926,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected void createAttributeLayout(Composite attributesComposite) {
 		int numColumns = ((GridLayout) attributesComposite.getLayout()).numColumns;
 		int currentCol = 1;
-		
+
 		for (RepositoryTaskAttribute attribute : taskData.getAttributes()) {
 			if (attribute.isHidden()) {
 				continue;
 			}
-			
+
 			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			data.horizontalSpan = 1;
 			data.horizontalIndent = HORZ_INDENT;
@@ -987,9 +987,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (hasContentAssist(attribute)) {
 						ContentAssistCommandAdapter adapter = applyContentAssist(text,
 								createContentProposalProvider(attribute));
-						
+
 						ILabelProvider propsalLabelProvider = createProposalLabelProvider(attribute);
-						if(propsalLabelProvider != null){
+						if (propsalLabelProvider != null) {
 							adapter.setLabelProvider(propsalLabelProvider);
 						}
 						adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
@@ -1003,7 +1003,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				currentCol -= numColumns;
 			}
 		}
-		
+
 		// make sure that we are in the first column
 		if (currentCol > 1) {
 			while (currentCol <= numColumns) {
@@ -1011,7 +1011,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				currentCol++;
 			}
 		}
-		
+
 		toolkit.paintBordersFor(attributesComposite);
 	}
 
@@ -1038,7 +1038,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		ContentAssistCommandAdapter adapter = new ContentAssistCommandAdapter(text, textContentAdapter,
 				proposalProvider, "org.eclipse.ui.edit.text.contentAssist.proposals", new char[0]);
-		
+
 		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 		controlDecoration.setDescriptionText(NLS.bind("Content Assist Available ({0})", bindingService
 				.getBestActiveBindingFormattedFor(adapter.getCommandId())));
@@ -1067,16 +1067,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @return the IContentProposalProvider.
 	 */
 	protected IContentProposalProvider createContentProposalProvider(RepositoryOperation operation) {
-	
+
 		return new PersonProposalProvider(repositoryTask, taskData);
 	}
-	
+
 	protected ILabelProvider createProposalLabelProvider(RepositoryTaskAttribute attribute) {
 		return new PersonProposalLabelProvider();
 	}
-	
+
 	protected ILabelProvider createProposalLabelProvider(RepositoryOperation operation) {
-	
+
 		return new PersonProposalLabelProvider();
 	}
 
@@ -1624,7 +1624,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				ContentAssistCommandAdapter adapter = applyContentAssist(text,
 						createContentProposalProvider(addCCattribute));
 				ILabelProvider propsalLabelProvider = createProposalLabelProvider(addCCattribute);
-				if(propsalLabelProvider != null){
+				if (propsalLabelProvider != null) {
 					adapter.setLabelProvider(propsalLabelProvider);
 				}
 				adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
@@ -2498,9 +2498,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 				String assignmentValue = "";
 				// NOTE: removed this because we now have content assit
-//				if (opName.equals(REASSIGN_BUG_TO)) {
-//					assignmentValue = repository.getUserName();
-//				}
+// if (opName.equals(REASSIGN_BUG_TO)) {
+// assignmentValue = repository.getUserName();
+// }
 				radioOptions[i] = toolkit.createText(buttonComposite, assignmentValue);
 				radioOptions[i].setFont(TEXT_FONT);
 				radioOptions[i].setLayoutData(radioData);
@@ -2512,7 +2512,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					ContentAssistCommandAdapter adapter = applyContentAssist((Text) radioOptions[i],
 							createContentProposalProvider(o));
 					ILabelProvider propsalLabelProvider = createProposalLabelProvider(o);
-					if(propsalLabelProvider != null){
+					if (propsalLabelProvider != null) {
 						adapter.setLabelProvider(propsalLabelProvider);
 					}
 					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
@@ -2712,7 +2712,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					monitor.beginTask("Submitting task", 3);
-					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData, new SubProgressMonitor(monitor, 1));
+					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData,
+							new SubProgressMonitor(monitor, 1));
 					final boolean isNew = taskData.isNew();
 					if (isNew) {
 						if (taskId != null) {
@@ -2903,23 +2904,26 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected IStatus handleSubmitError(final CoreException exception) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				if (exception.getStatus().getCode() == IMylarStatusConstants.IO_ERROR) {
-					parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
-					MylarStatusHandler.log(exception.getStatus());
-				} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
-					MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
-					if (!isDisposed && newCommentTextViewer != null && !newCommentTextViewer.getControl().isDisposed()) {
-						newCommentTextViewer.getControl().setFocus();
+				if (form != null && !form.isDisposed()) {
+					if (exception.getStatus().getCode() == IMylarStatusConstants.IO_ERROR) {
+						parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
+						MylarStatusHandler.log(exception.getStatus());
+					} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
+						MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
+						if (!isDisposed && newCommentTextViewer != null
+								&& !newCommentTextViewer.getControl().isDisposed()) {
+							newCommentTextViewer.getControl().setFocus();
+						}
+					} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+						if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
+							submitToRepository();
+							return;
+						}
+					} else {
+						MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
 					}
-				} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
-					if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
-						submitToRepository();
-						return;
-					}
-				} else {
-					MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
+					setGlobalBusy(false);
 				}
-				setGlobalBusy(false);
 			}
 
 		});

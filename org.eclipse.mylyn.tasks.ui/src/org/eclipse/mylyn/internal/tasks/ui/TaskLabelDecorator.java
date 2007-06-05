@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -32,12 +31,12 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 public class TaskLabelDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
-		
+
 		ImageDescriptor priorityOverlay = TaskElementLabelProvider.getPriorityImageDescriptor(element);
 		if (priorityOverlay != null) {
 			decoration.addOverlay(priorityOverlay, IDecoration.BOTTOM_LEFT);
 		}
-		
+
 		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			String repositoryUrl = query.getRepositoryUrl();
@@ -61,9 +60,6 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			} else if (!task.isCompleted() && task.getDueDate() != null) {
 				decoration.addOverlay(TasksUiImages.OVERLAY_HAS_DUE, IDecoration.TOP_RIGHT);
 			}
-		} else if (element instanceof AbstractQueryHit) {
-			ITask correspondingTask = ((AbstractQueryHit) element).getCorrespondingTask();
-			decorate(correspondingTask, decoration);
 		} else if (element instanceof ITask) {
 			ITask task = (ITask) element;
 			if (!task.isCompleted() && TasksUiPlugin.getTaskListManager().isOverdue(task)) {
@@ -76,7 +72,7 @@ public class TaskLabelDecorator implements ILightweightLabelDecorator {
 			}
 		}
 	}
-	
+
 	public void addListener(ILabelProviderListener listener) {
 		// ignore
 	}

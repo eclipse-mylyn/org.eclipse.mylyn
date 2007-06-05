@@ -40,6 +40,7 @@ import org.eclipse.mylar.tasks.core.RepositoryOperation;
 import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
 /**
@@ -128,7 +129,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector) {
+			QueryHitCollector resultCollector, boolean force) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
@@ -140,11 +141,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			for (TracTicket ticket : tickets) {
-				TracQueryHit hit = new TracQueryHit(taskList, query.getRepositoryUrl(), getTicketDescription(ticket),
-						ticket.getId() + "");
-				hit.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
-				hit.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
-				resultCollector.accept(hit);
+				TracAttributeFactory attrFactory = new TracAttributeFactory();
+				RepositoryTaskData data = new RepositoryTaskData(attrFactory, TracCorePlugin.REPOSITORY_KIND,
+						repository.getUrl(), ""+ticket.getId(), Task.DEFAULT_TASK_KIND);
+				TracTaskDataHandler.createDefaultAttributes(attrFactory, data, tracClient, true);
+				TracTaskDataHandler.updateTaskData(repository, attrFactory, data, ticket);
+				
+				resultCollector.accept(data);
 			}
 		} catch (Throwable e) {
 			return TracCorePlugin.toStatus(e, repository);
@@ -214,7 +217,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return task;
 	}
 
-	protected AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary) {
+	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
 		return new TracTask(repositoryUrl, id, "<description not set>", true);
 	}
 

@@ -12,6 +12,7 @@ package org.eclipse.mylar.tasks.core;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.PlatformObject;
 
@@ -24,7 +25,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 
 	private String handle = "";
 
-	private Set<String> childHandles = new HashSet<String>();
+	private Set<String> childHandles = new CopyOnWriteArraySet<String>();
 
 	protected TaskList taskList;
 
@@ -52,9 +53,21 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 		}
 		return children;
 	}
+	
+	public boolean contains(String handle) {
+		return childHandles.contains(handle);
+	}
 
 	public String getSummary() {
 		return handle;
+	}
+
+	
+	/**
+	 * @since 2.0
+	 */
+	public boolean isEmpty() {
+		return childHandles.isEmpty();
 	}
 
 	public String getHandleIdentifier() {

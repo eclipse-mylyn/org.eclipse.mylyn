@@ -17,7 +17,7 @@ import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractQueryHit extends PlatformObject implements ITaskListElement {
+/*public*/ abstract class AbstractQueryHit extends PlatformObject implements ITaskListElement {
 
 	protected TaskList taskList;
 

@@ -22,9 +22,10 @@ import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
 import org.eclipse.mylar.trac.tests.support.TestFixture;
@@ -76,17 +77,14 @@ public class RepositorySearchQueryTest extends TestCase {
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", null);
-
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager()
-				.getTaskList(), repository, query) {
-			@Override
-			public void addMatch(AbstractQueryHit hit) {
-				super.addMatch(hit);
-				assertEquals(Constants.TEST_TRAC_096_URL, hit.getRepositoryUrl());				
-			}
-		};
+				.getTaskList(), repository, query, new TaskFactory(repository));
+				
 		collector.run(new NullProgressMonitor());
-		assertEquals(data.tickets.size(), collector.getHits().size());
+		for (AbstractRepositoryTask task : collector.getTaskHits()) {
+			assertEquals(Constants.TEST_TRAC_096_URL, task.getRepositoryUrl());		
+		}
+		assertEquals(data.tickets.size(), collector.getTaskHits().size());
 	}
 
 }

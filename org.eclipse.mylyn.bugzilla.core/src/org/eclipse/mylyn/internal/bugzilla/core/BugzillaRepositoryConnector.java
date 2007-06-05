@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -30,13 +31,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
+import org.eclipse.mylar.tasks.core.ITaskFactory;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
@@ -98,7 +99,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
-	protected AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary) {
+	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
 		return new BugzillaTask(repositoryUrl, id, summary, true);
 	}
 
@@ -219,8 +220,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		}
 	}
-	
-	
+
 	// TODO: Move to ITaskDataHandler
 	private List<String> getSubTaskIds(RepositoryTaskData taskData) {
 		ArrayList<String> result = new ArrayList<String>();
@@ -232,7 +232,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		}
 		return result;
-		
+
 	}
 
 	@Override
@@ -284,20 +284,26 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private void queryForChanged(TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
+	private void queryForChanged(final TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
-		QueryHitCollector collector = new QueryHitCollector(taskList);
+		QueryHitCollector collector = new QueryHitCollector(taskList, new ITaskFactory() {
+
+			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced) {
+				// do not construct actual task objects here as query shouldn't result in new tasks
+				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
+			}
+		});
+
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", taskList);
 
-		performQuery(query, repository, new NullProgressMonitor(), collector);
+		performQuery(query, repository, new NullProgressMonitor(), collector, false);
 
-		for (AbstractQueryHit hit : collector.getHits()) {
+		for (ITask taskHit : collector.getTaskHits()) {
 			// String handle =
 			// AbstractRepositoryTask.getHandle(repository.getUrl(),
 			// hit.getId());
-			ITask correspondingTask = taskList.getTask(repository.getUrl(), hit.getTaskId());
-			if (correspondingTask != null && correspondingTask instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) correspondingTask;
+			if (taskHit != null && taskHit instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) taskHit;
 				// Hack to avoid re-syncing last task from previous
 				// synchronization
 				// This can be removed once we are getting a query timestamp
@@ -339,19 +345,35 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, QueryHitCollector resultCollector) {
-
+			IProgressMonitor monitor, QueryHitCollector resultCollector, boolean forced) {
 		IStatus queryStatus = Status.OK_STATUS;
 		try {
 			BugzillaClient client = getClientManager().getClient(repository);
 			resultCollector.clear();
-			client.getSearchHits(query, resultCollector, taskList);
-			// XXX: HACK in case of ip change bugzilla can return 0 hits
-			// due to invalid authorization token, forcing relogin fixes
-			if (resultCollector.getHits().size() == 0) {
+			Set<String> ids = client.getSearchHits(query);
+			if (ids.size() == 0) {
+				// XXX: HACK in case of ip change bugzilla can return 0 hits
+				// due to invalid authorization token, forcing relogin fixes
 				client.logout();
-				client.getSearchHits(query, resultCollector, taskList);
+				ids = client.getSearchHits(query);
 			}
+
+			if (!forced) {
+				// Only retrieve data for hits we don't already have
+				for (ITask existingTask : query.getChildren()) {
+					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) existingTask;
+					if (ids.contains(repositoryTask.getTaskId())) {
+						resultCollector.accept(repositoryTask);
+						ids.remove(repositoryTask.getTaskId());
+					}
+				}
+			}
+
+			Map<String, RepositoryTaskData> hits = client.getTaskData(ids);
+			for (RepositoryTaskData data : hits.values()) {
+				resultCollector.accept(data);
+			}
+
 		} catch (UnrecognizedReponseException e) {
 			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Unrecognized response from server", e);
@@ -394,7 +416,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			IProgressMonitor monitor) {
 		// ignore
 	}
 

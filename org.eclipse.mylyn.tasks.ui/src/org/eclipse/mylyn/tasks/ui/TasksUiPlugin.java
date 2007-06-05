@@ -62,7 +62,6 @@ import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -299,8 +298,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(query.getRepositoryKind());
 				if (!connectorUi.hasCustomNotificationHandling()) {
-					for (AbstractQueryHit hit : query.getHits()) {
-						if (hit.getCorrespondingTask() == null && hit.isNotified() == false) {
+					for (AbstractRepositoryTask hit : query.getHits()) {
+						if (hit.isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
 							hit.setNotified(true);
 						}

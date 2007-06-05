@@ -140,7 +140,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	private boolean needsValidation;
 
-	private Composite container;
+	protected Composite compositeContainer;
 
 	private Composite advancedComp;
 
@@ -200,12 +200,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	}
 
 	public void createControl(Composite parent) {
-		container = new Composite(parent, SWT.NULL);
+		compositeContainer = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
-		container.setLayout(layout);
+		compositeContainer.setLayout(layout);
 
-		new Label(container, SWT.NONE).setText(LABEL_SERVER);
-		serverUrlCombo = new Combo(container, SWT.DROP_DOWN);
+		new Label(compositeContainer, SWT.NONE).setText(LABEL_SERVER);
+		serverUrlCombo = new Combo(compositeContainer, SWT.DROP_DOWN);
 		serverUrlCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				isValidUrl(serverUrlCombo.getText());
@@ -230,7 +230,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).grab(true, false).applyTo(serverUrlCombo);
 
 		repositoryLabelEditor = new StringFieldEditor("", LABEL_REPOSITORY_LABEL, StringFieldEditor.UNLIMITED,
-				container) {
+				compositeContainer) {
 
 			@Override
 			protected boolean doCheckState() {
@@ -249,7 +249,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// repositoryLabelEditor.setErrorMessage("error");
 
 		if (needsAnonymousLogin()) {
-			anonymousButton = new Button(container, SWT.CHECK);
+			anonymousButton = new Button(compositeContainer, SWT.CHECK);
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(anonymousButton);
 
 			anonymousButton.setText("Anonymous Access");
@@ -265,9 +265,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		}
 
-		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, container);
+		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, compositeContainer);
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
-				container);
+				compositeContainer);
 		// TODO: put this back if we can't get the info from all connectors
 		// if (needsTimeZone()) {
 		// Label timeZoneLabel = new Label(container, SWT.NONE);
@@ -291,14 +291,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// }
 
 
-		advancedExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+		advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
 				| Section.TITLE_BAR);
 		advancedExpComposite.clientVerticalSpacing = 0;
 		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gridData_2.horizontalIndent = -5;
 		advancedExpComposite.setLayoutData(gridData_2);
-		advancedExpComposite.setFont(container.getFont());
-		advancedExpComposite.setBackground(container.getBackground());
+		advancedExpComposite.setFont(compositeContainer.getFont());
+		advancedExpComposite.setBackground(compositeContainer.getBackground());
 		advancedExpComposite.setText("Additional Settings");
 		advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
@@ -314,7 +314,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		gridLayout2.numColumns = 2;
 		gridLayout2.verticalSpacing = 5;
 		advancedComp.setLayout(gridLayout2);
-		advancedComp.setBackground(container.getBackground());
+		advancedComp.setBackground(compositeContainer.getBackground());
 		advancedExpComposite.setClient(advancedComp);
 
 		createAdditionalControls(advancedComp);
@@ -383,14 +383,14 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (needsHttpAuth()) {
-			httpAuthExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
 					| Section.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
 			gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
 			httpAuthExpComposite.setLayoutData(gridData_2);
-			httpAuthExpComposite.setFont(container.getFont());
-			httpAuthExpComposite.setBackground(container.getBackground());
+			httpAuthExpComposite.setFont(compositeContainer.getFont());
+			httpAuthExpComposite.setBackground(compositeContainer.getBackground());
 			httpAuthExpComposite.setText("Http Authentication");
 			httpAuthExpComposite.addExpansionListener(new ExpansionAdapter() {
 				@Override
@@ -406,7 +406,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			gridLayout2.numColumns = 2;
 			gridLayout2.verticalSpacing = 0;
 			httpAuthComp.setLayout(gridLayout2);
-			httpAuthComp.setBackground(container.getBackground());
+			httpAuthComp.setBackground(compositeContainer.getBackground());
 			httpAuthExpComposite.setClient(httpAuthComp);
 
 			httpAuthButton = new Button(httpAuthComp, SWT.CHECK);
@@ -456,7 +456,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			addProxySection();
 		}
 
-		Composite managementComposite = new Composite(container, SWT.NULL);
+		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
 		GridLayout managementLayout = new GridLayout(4, false);
 		managementLayout.marginHeight = 0;
 		managementLayout.marginWidth = 0;
@@ -573,19 +573,19 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		updateHyperlinks();
 		
-		setControl(container);
+		setControl(compositeContainer);
 	}
 
 	private void addProxySection() {
 
-		proxyExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+		proxyExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
 				| Section.TITLE_BAR);
 		proxyExpComposite.clientVerticalSpacing = 0;
 		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 		gridData_2.horizontalIndent = -5;
 		proxyExpComposite.setLayoutData(gridData_2);
-		proxyExpComposite.setFont(container.getFont());
-		proxyExpComposite.setBackground(container.getBackground());
+		proxyExpComposite.setFont(compositeContainer.getFont());
+		proxyExpComposite.setBackground(compositeContainer.getBackground());
 		proxyExpComposite.setText("Proxy Server Configuration");
 		proxyExpComposite.addExpansionListener(new ExpansionAdapter() {
 			@Override
@@ -601,7 +601,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		gridLayout2.numColumns = 2;
 		gridLayout2.verticalSpacing = 0;
 		proxyAuthComp.setLayout(gridLayout2);
-		proxyAuthComp.setBackground(container.getBackground());
+		proxyAuthComp.setBackground(compositeContainer.getBackground());
 		proxyExpComposite.setClient(proxyAuthComp);
 
 		Composite settingsComposite = new Composite(proxyAuthComp, SWT.NULL);
@@ -615,7 +615,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 		systemProxyButton.setText("Use global Network Connections preferences");
 		Hyperlink changeProxySettingsLink = toolkit.createHyperlink(settingsComposite, "Change Settings", SWT.NULL);
-		changeProxySettingsLink.setBackground(container.getBackground());
+		changeProxySettingsLink.setBackground(compositeContainer.getBackground());
 		changeProxySettingsLink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
@@ -758,8 +758,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			(repositoryPasswordEditor).setStringValue(oldPassword);
 		}
 
-		repositoryUserNameEditor.setEnabled(!selected, container);
-		(repositoryPasswordEditor).setEnabled(!selected, container);
+		repositoryUserNameEditor.setEnabled(!selected, compositeContainer);
+		(repositoryPasswordEditor).setEnabled(!selected, compositeContainer);
 	}
 
 	public void setHttpAuth(boolean selected) {

@@ -21,12 +21,13 @@ import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 
 // import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
@@ -131,14 +132,14 @@ public class BugzillaQueryTest extends TestCase {
 
 		// holds onto actual hit objects
 		TaskList taskList = new TaskList();
-		QueryHitCollector collector = new QueryHitCollector(new TaskList());
+		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "summary",
 				taskList);
-		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
-		assertEquals(2, collector.getHits().size());
-		for (AbstractQueryHit hit : collector.getHits()) {
+		connector.performQuery(query, repository, new NullProgressMonitor(), collector, false);
+		assertEquals(2, collector.getTaskHits().size());
+		for (ITask hit : collector.getTaskHits()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 	}

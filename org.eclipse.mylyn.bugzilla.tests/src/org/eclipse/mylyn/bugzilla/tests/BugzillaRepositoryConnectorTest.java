@@ -25,22 +25,20 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaQueryHit;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.LocalAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
 
 /**
@@ -49,36 +47,33 @@ import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
  * @author Nathan Hapke
  */
 public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
-	
-	
-	
-	
+
 	public void testFocedQuerySynchronization() throws CoreException {
 		init222();
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
 		TasksUiPlugin.getDefault().getTaskDataManager().clear();
 		assertEquals(0, taskList.getAllTasks().size());
-		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, "http://mylar.eclipse.org/bugs222/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=Read+Only+Test+Cases&long_desc_type=allwordssubstr&long_desc=&bug_status=NEW&order=Importance",
+		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(
+				IBugzillaConstants.TEST_BUGZILLA_222_URL,
+				"http://mylar.eclipse.org/bugs222/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=Read+Only+Test+Cases&long_desc_type=allwordssubstr&long_desc=&bug_status=NEW&order=Importance",
 				"testFocedQuerySynchronization", taskList);
 
 		taskList.addQuery(bugQuery);
-		
+
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, false);
-		
+
 		assertEquals(1, bugQuery.getHits().size());
-		AbstractQueryHit hit = (AbstractQueryHit) bugQuery.getHits().toArray()[0];
+		AbstractRepositoryTask hit = (AbstractRepositoryTask) bugQuery.getHits().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
 		TasksUiPlugin.getDefault().getTaskDataManager().remove(hit.getHandleIdentifier());
-		assertTrue(hit.getCorrespondingTask() == null);
-		
+
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, true);
 		assertEquals(1, bugQuery.getHits().size());
-		hit = (AbstractQueryHit) bugQuery.getHits().toArray()[0];
+		hit = (AbstractRepositoryTask) bugQuery.getHits().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
-		
+
 	}
-	
-	
+
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
@@ -119,15 +114,16 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
 				taskList);
 
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery);
-
+		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery, taskFactory);
+		RepositorySearchResult result = (RepositorySearchResult)collector.getSearchResult();
+		
+		
 		// operation.run(new NullProgressMonitor());
 		// BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(collector);
 		collector.run(new NullProgressMonitor());
-		assertEquals(2, collector.getHits().size());
+		assertEquals(2, result.getElements().length);
 
-		for (AbstractQueryHit hit : collector.getHits()) {
+		for (AbstractRepositoryTask hit : collector.getTaskHits()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 
@@ -136,7 +132,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(config);
 		assertTrue(config.getComponents().size() > 0);
 	}
-	
+
 	public void testUpdate() throws Exception {
 		init222();
 		String taskNumber = "3";
@@ -148,7 +144,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals("P1", task.getPriority());
 		assertEquals("blocker", task.getSeverity());
 		assertEquals("nhapke@cs.ubc.ca", task.getOwner());
-		//assertEquals("2007-04-18 14:21:40", task.getCompletionDate().toString());
+		// assertEquals("2007-04-18 14:21:40",
+		// task.getCompletionDate().toString());
 		assertFalse(task.isCompleted());
 		assertEquals("http://mylar.eclipse.org/bugs222/show_bug.cgi?id=3", task.getTaskUrl());
 	}
@@ -162,7 +159,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertNotNull(task.getChildren());
 		assertEquals(2, task.getChildren().size());
 	}
-	
+
 	public void testContextAttachFailure() throws Exception {
 		init218();
 		BugzillaTask task = this.generateLocalTaskAndDownload("3");
@@ -242,75 +239,30 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 	}
 
-	public void testUniqueTaskObjects() {
-		init222();
-		String repositoryURL = "repositoryURL";
-		BugzillaQueryHit hit1 = new BugzillaQueryHit(taskList, "summary", "P1", repositoryURL, "1", null, "status");
-		ITask task1 = hit1.getOrCreateCorrespondingTask();
-		assertNotNull(task1);
-		// taskList.renameTask(task1, "testing");
-		// task1.setDescription("testing");
-
-		BugzillaQueryHit hit1Twin = new BugzillaQueryHit(taskList, "summary", "P1", repositoryURL, "1", null, "status");
-		ITask task2 = hit1Twin.getOrCreateCorrespondingTask();
-		assertEquals(task1.getSummary(), task2.getSummary());
-
-	}
-
 	public void testUniqueQueryHitObjects() {
 		init222();
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"queryurl", "description1", taskList);
-		BugzillaQueryHit query1Hit = new BugzillaQueryHit(taskList, "description1", "P1",
-				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
+		BugzillaTask query1Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description1", true);
 		query1.addHit(query1Hit);
 		taskList.addQuery(query1);
 
 		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"queryurl2", "description2", taskList);
-		BugzillaQueryHit query2Hit = new BugzillaQueryHit(taskList, "description2", "P1",
-				IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", null, "status");
+		BugzillaTask query2Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description2", true);
 		query2.addHit(query2Hit);
 		taskList.addQuery(query2);
 		assertEquals(2, taskList.getQueries().size());
-		assertEquals(1, taskList.getQueryHits().size());
-		for (AbstractQueryHit hit : query1.getHits()) {
-			for (AbstractQueryHit hit2 : query2.getHits()) {
+		assertEquals(1, taskList.getAllTasks().size());
+		for (AbstractRepositoryTask hit : query1.getHits()) {
+			for (AbstractRepositoryTask hit2 : query2.getHits()) {
 				assertTrue(hit.getClass().equals(hit2.getClass()));
 			}
 		}
 
 		taskList.deleteQuery(query1);
 		taskList.deleteQuery(query2);
-		assertEquals(1, taskList.getQueryHits().size());
-		taskList.removeOrphanedHits();
-		assertEquals(0, taskList.getQueryHits().size());
-
-		// List<AbstractQueryHit> hitsForHandle = new
-		// ArrayList<AbstractQueryHit>();
-		// for (AbstractRepositoryQuery query : taskList.getQueries()) {
-		// AbstractQueryHit foundHit =
-		// query.findQueryHit(AbstractRepositoryTask.getHandle(
-		// IBugzillaConstants.TEST_BUGZILLA_222_URL, "1"));
-		// if (foundHit != null) {
-		// hitsForHandle.add(foundHit);
-		// }
-		// }
-		//
-		// // IF two queries have the same hit there should only be one instance
-		// of
-		// // a hit with a given handle.
-		// assertEquals(1, hitsForHandle.size());
-
-		// IF two queries have the same hit there should only be one instance of
-		// a hit for a given handle.
-		// Note that getQueryHitsForHandle will always return a set of unique
-		// elements (even if there are duplicates among queries because
-		// it returns a set.
-		// assertEquals(1, taskList.getQueryHits(
-		// AbstractRepositoryTask.getHandle(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-		// "1")).size());
-
+		assertEquals(1, taskList.getAllTasks().size());
 	}
 
 	public void testAttachToExistingReport() throws Exception {
@@ -606,8 +558,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
 
-		bugtaskdata = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
-				bugtask.getHandleIdentifier());
+		bugtaskdata = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(bugtask.getHandleIdentifier());
 
 		assertEquals(estimatedTime, Float.parseFloat(bugtaskdata.getAttributeValue(BugzillaReportElement.ESTIMATED_TIME
 				.getKeyString())));
@@ -659,36 +610,39 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	private boolean validateAttachmentAttributes(RepositoryAttachment att, boolean isPatch, boolean isObsolete) {
 		return (att.isPatch() == isPatch) && (att.isObsolete() == isObsolete);
 	}
-	
-	
-//	public void testSimpleLoad() throws Exception {
-//		repository = new TaskRepository(DEFAULT_KIND, IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
-//		//Credentials credentials = MylarTestUtils.readCredentials();
-//		//repository.setAuthenticationCredentials(credentials.username, credentials.password);
+
+// public void testSimpleLoad() throws Exception {
+// repository = new TaskRepository(DEFAULT_KIND,
+// IBugzillaConstants.ECLIPSE_BUGZILLA_URL);
+// //Credentials credentials = MylarTestUtils.readCredentials();
+// //repository.setAuthenticationCredentials(credentials.username,
+// credentials.password);
 //
-//		//repository.setTimeZoneId("Canada/Eastern");
-//		assertNotNull(manager);
-//		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
+// //repository.setTimeZoneId("Canada/Eastern");
+// assertNotNull(manager);
+// manager.addRepository(repository,
+// TasksUiPlugin.getDefault().getRepositoriesFilePath());
 //
-//		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+// taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 //
-//		AbstractRepositoryConnector abstractRepositoryConnector = manager.getRepositoryConnector(DEFAULT_KIND);
+// AbstractRepositoryConnector abstractRepositoryConnector =
+// manager.getRepositoryConnector(DEFAULT_KIND);
 //
-//		assertEquals(abstractRepositoryConnector.getRepositoryType(), DEFAULT_KIND);
+// assertEquals(abstractRepositoryConnector.getRepositoryType(), DEFAULT_KIND);
 //
-//		connector = (BugzillaRepositoryConnector) abstractRepositoryConnector;
+// connector = (BugzillaRepositoryConnector) abstractRepositoryConnector;
 //		
-//		long start = System.currentTimeMillis();
-//		BugzillaTask task = null;
-//		for(int x = 1; x < 5; x++) {
-//			if(task != null) 
-//				taskList.deleteTask(task);
+// long start = System.currentTimeMillis();
+// BugzillaTask task = null;
+// for(int x = 1; x < 5; x++) {
+// if(task != null)
+// taskList.deleteTask(task);
 //			
-//			task = this.generateLocalTaskAndDownload("154100");
-//			assertNotNull(task);
-//		}
-//		System.err.println("Total: "+((System.currentTimeMillis() - start)/1000));
-//	}
+// task = this.generateLocalTaskAndDownload("154100");
+// assertNotNull(task);
+// }
+// System.err.println("Total: "+((System.currentTimeMillis() - start)/1000));
+// }
 
 	// class MockBugzillaReportSubmitForm extends BugzillaReportSubmitForm {
 	//

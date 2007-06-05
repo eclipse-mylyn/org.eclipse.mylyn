@@ -15,7 +15,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
@@ -124,13 +123,9 @@ public class TaskListTableSorter extends ViewerSorter {
 			ITask t2 = null;
 			if (element1 instanceof ITask) {
 				t1 = (ITask)element1;
-			} else if (element1 instanceof AbstractQueryHit) {
-				t1 = ((AbstractQueryHit)element1).getCorrespondingTask();
 			} 
 			if (element2 instanceof ITask) {
 				t2 = (ITask)element2;
-			}else if (element2 instanceof AbstractQueryHit) {
-				t2 = ((AbstractQueryHit)element2).getCorrespondingTask();
 			}
 			if (t1 != null && t2 != null) {
 				if (t1.getCreationDate() != null) {
@@ -149,14 +144,7 @@ public class TaskListTableSorter extends ViewerSorter {
 	public static String getSortableSummaryFromElement(ITaskListElement element) {
 		String summary = element.getSummary();
 
-		if (element instanceof AbstractQueryHit) {
-			AbstractRepositoryTask task1 = ((AbstractQueryHit) element).getCorrespondingTask();
-			if (task1 != null && task1.getTaskKey() != null) {
-				summary = task1.getTaskKey() + ": " + summary;
-			} else {
-				summary = ((AbstractQueryHit) element).getIdentifyingLabel() + ": " + summary;
-			}
-		} else if (element instanceof AbstractRepositoryTask) {
+		if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task1 = (AbstractRepositoryTask) element;
 			if (task1.getTaskKey() != null) {
 				summary = task1.getTaskKey() + ": " + summary;

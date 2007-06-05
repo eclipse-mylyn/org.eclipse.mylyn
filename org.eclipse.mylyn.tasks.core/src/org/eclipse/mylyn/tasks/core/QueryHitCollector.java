@@ -11,8 +11,8 @@
 package org.eclipse.mylar.tasks.core;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,7 +30,7 @@ public class QueryHitCollector {
 
 	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
-	private List<AbstractQueryHit> results = new ArrayList<AbstractQueryHit>();
+	protected Set<AbstractRepositoryTask> taskResults = new HashSet<AbstractRepositoryTask>();
 
 	/** The progress monitor for the search operation */
 	private IProgressMonitor monitor = new NullProgressMonitor();
@@ -50,35 +50,48 @@ public class QueryHitCollector {
 	/** The string to display to the user when the query is done */
 	private static final String DONE = "done";
 
-	private TaskList taskList;
+	protected TaskList taskList;
 
-	public QueryHitCollector(TaskList tasklist) {
+	protected ITaskFactory taskFactory;
+
+	public QueryHitCollector(TaskList tasklist, ITaskFactory taskFactory) {
 		this.taskList = tasklist;
+		this.taskFactory = taskFactory;
 	}
 
 	public void aboutToStart(int startMatchCount) throws CoreException {
-		results.clear();
+		taskResults.clear();
 		matchCount = startMatchCount;
 		monitor.setTaskName(STARTING);
 	}
 
-	
-	public void accept(AbstractQueryHit hit) {
+	public void accept(AbstractRepositoryTask task) {
 
-		ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
-		if (correspondingTask instanceof AbstractRepositoryTask) {
-			hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
-		}
-
-		addMatch(hit);
-		matchCount++;
-		
 		if (!getProgressMonitor().isCanceled()) {
-			// if the operation is canceled finish with whatever data was
-			// already found
 			getProgressMonitor().subTask(getFormattedMatchesString(matchCount));
 			getProgressMonitor().worked(1);
 		}
+
+		if (task == null)
+			return;
+
+		ITask hitTask = taskList.getTask(task.getHandleIdentifier());
+		if (hitTask == null) {
+			hitTask = task;
+			// task is new, add to tasklist
+			taskList.addTask(hitTask);
+		}
+		taskResults.add((AbstractRepositoryTask) hitTask);
+		matchCount++;
+	}
+
+	public void accept(RepositoryTaskData taskData) {
+		if (taskData == null)
+			return;
+
+		AbstractRepositoryTask task = taskFactory.createTask(taskData, true, false);
+		taskResults.add(task);
+		matchCount++;
 	}
 
 	public void done() {
@@ -110,16 +123,12 @@ public class QueryHitCollector {
 		this.monitor = monitor;
 	}
 
-	public void addMatch(AbstractQueryHit hit) {
-		results.add(hit);
-	}
-
-	public List<AbstractQueryHit> getHits() {
-		return results;
+	public Set<AbstractRepositoryTask> getTaskHits() {
+		return taskResults;
 	}
 
 	public void clear() {
-		results.clear();
+		taskResults.clear();
 	}
 
 }

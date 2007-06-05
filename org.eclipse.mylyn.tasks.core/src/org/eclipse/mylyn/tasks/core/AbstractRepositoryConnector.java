@@ -107,7 +107,7 @@ public abstract class AbstractRepositoryConnector {
 			taskData = getTaskDataHandler().getTaskData(repository, id, monitor);
 			if (taskData != null) {
 				// Use connector task factory
-				repositoryTask = makeTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
+				repositoryTask = createTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
 				updateTaskFromTaskData(repository, repositoryTask, taskData, retrieveSubTasks);
 
 				taskList.addTask(repositoryTask);
@@ -125,7 +125,7 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * @return instance of AbstractRepositoryTask
 	 */
-	protected abstract AbstractRepositoryTask makeTask(String repositoryUrl, String id, String summary);
+	public abstract AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary);
 
 	/**
 	 * Implementors must execute query synchronously.
@@ -138,7 +138,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            IQueryHitCollector that collects the hits found
 	 */
 	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, QueryHitCollector resultCollector);
+			IProgressMonitor monitor, QueryHitCollector resultCollector, boolean forced);
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"

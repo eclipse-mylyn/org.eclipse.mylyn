@@ -23,7 +23,6 @@ import org.eclipse.mylar.internal.tasks.core.WebTask;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -111,7 +110,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public ImageDescriptor getTaskListElementIcon(ITaskListElement element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			return TasksUiImages.QUERY;
-		} else if (element instanceof AbstractQueryHit || element instanceof ITask) {
+		} else if (element instanceof ITask) {
 			return TasksUiImages.TASK;
 		} else {
 			return null;

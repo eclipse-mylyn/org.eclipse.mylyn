@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylar.context.core,
  org.eclipse.mylar.tasks.core,
  org.eclipse.ui.forms,
- org.eclipse.mylar
+ org.eclipse.mylar,
+ org.eclipse.search
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar

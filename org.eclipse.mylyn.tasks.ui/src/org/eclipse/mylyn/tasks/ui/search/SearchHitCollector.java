@@ -16,11 +16,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.core.ITaskFactory;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryStatus;
+import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -46,11 +49,14 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	private RepositorySearchResult searchResult;
 
-	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery) {
-		super(tasklist);
+	private ITaskFactory taskFactory;
+
+	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
+		super(tasklist, taskFactory);
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
 		this.searchResult = new RepositorySearchResult(this);
+		this.taskFactory = taskFactory;
 	}
 
 	@Override
@@ -70,9 +76,28 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	}
 
 	@Override
-	public void addMatch(AbstractQueryHit hit) {
-		super.addMatch(hit);
-		this.searchResult.addMatch(new Match(hit, 0, 0));
+	public void accept(AbstractRepositoryTask task) {
+		if (task == null)
+			return;
+
+		ITask hitTask = taskList.getTask(task.getHandleIdentifier());
+		if (hitTask == null) {
+			hitTask = task;
+		}
+
+		taskResults.add((AbstractRepositoryTask)hitTask);	
+		this.searchResult.addMatch(new Match(hitTask, 0, 0));
+	}
+
+	@Override
+	public void accept(RepositoryTaskData taskData) {
+		if (taskData == null)
+			return;
+		AbstractRepositoryTask task = taskFactory.createTask(taskData, false, false);
+		if (task != null) {
+			taskResults.add(task);			
+			this.searchResult.addMatch(new Match(task, 0, 0));
+		}
 	}
 
 	public String getLabel() {
@@ -108,7 +133,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repositoryQuery.getRepositoryKind());
 			if (connector != null) {
-				status = connector.performQuery(repositoryQuery, repository, monitor, this);
+				status = connector.performQuery(repositoryQuery, repository, monitor, this, false);
 			} else {
 				return new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
 						"repository connector could not be found", null);

@@ -21,7 +21,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -55,7 +54,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	public MenuManager getSubMenuManager(final List<ITaskListElement> selectedElements) {
 
 		final TaskListManager tasklistManager = TasksUiPlugin.getTaskListManager();
-		
+
 		final MenuManager subMenuManager = new MenuManager(LABEL_REMINDER);
 
 		subMenuManager
@@ -65,14 +64,14 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 		ITaskListElement singleSelection = null;
 		if (selectedElements.size() == 1) {
 			ITaskListElement selectedElement = selectedElements.get(0);
-			if (selectedElement instanceof ITask || selectedElement instanceof AbstractQueryHit) {
+			if (selectedElement instanceof ITask) {
 				singleSelection = selectedElement;
 			}
 		}
 		final ITask singleTaskSelection = tasklistManager.getTaskForElement(singleSelection, false);
 		final List<ITaskListElement> taskListElementsToSchedule = new ArrayList<ITaskListElement>();
 		for (ITaskListElement selectedElement : selectedElements) {
-			if (selectedElement instanceof ITask || selectedElement instanceof AbstractQueryHit) {
+			if (selectedElement instanceof ITask) {
 				taskListElementsToSchedule.add(selectedElement);
 			}
 			// if (selectedElement instanceof ITask) {
@@ -148,7 +147,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 					ITask task = tasklistManager.getTaskForElement(element, true);
 					Calendar startNextWeek = Calendar.getInstance();
 					TasksUiPlugin.getTaskListManager().setScheduledNextWeek(startNextWeek);
-					TasksUiPlugin.getTaskListManager().setScheduledFor(task, startNextWeek.getTime());					
+					TasksUiPlugin.getTaskListManager().setScheduledFor(task, startNextWeek.getTime());
 				}
 			}
 		};
@@ -197,9 +196,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 				if (result == Window.OK) {
 					for (ITaskListElement element : taskListElementsToSchedule) {
 						ITask task = null;
-						if (element instanceof AbstractQueryHit) {
-							task = ((AbstractQueryHit) element).getOrCreateCorrespondingTask();
-						} else if (element instanceof ITask) {
+						if (element instanceof ITask) {
 							task = (ITask) element;
 						}
 						TasksUiPlugin.getTaskListManager().setScheduledFor(task, reminderDialog.getDate());
@@ -257,11 +254,9 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 	private boolean canSchedule(ITaskListElement singleSelection, List<ITaskListElement> elements) {
 		if (singleSelection instanceof ITask) {
 			return ((!((ITask) singleSelection).isCompleted()) || elements.size() > 0);
-		} else if (singleSelection instanceof AbstractQueryHit) {
-			return ((!((AbstractQueryHit) singleSelection).isCompleted()) || elements.size() > 0);
 		} else {
 			return elements.size() > 0;
-		}		
+		}
 		// return (singleSelection != null && !singleSelection.isCompleted())
 		// || elements.size() > 0;
 	}

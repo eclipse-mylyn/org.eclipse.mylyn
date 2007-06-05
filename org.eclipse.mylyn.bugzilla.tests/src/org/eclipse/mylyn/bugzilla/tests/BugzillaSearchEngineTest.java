@@ -11,7 +11,7 @@
 
 package org.eclipse.mylar.bugzilla.tests;
 
-import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -19,10 +19,12 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylar.tasks.ui.TaskFactory;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -82,11 +84,11 @@ public class BugzillaSearchEngineTest extends TestCase {
 		TaskRepository repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, 
 				IBugzillaConstants.TEST_BUGZILLA_222_URL, IBugzillaConstants.BugzillaServerVersion.SERVER_222.toString());
 		TasksUiPlugin.getRepositoryManager().addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());		
-		List<AbstractQueryHit> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
+		Set<AbstractRepositoryTask> hits = runQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL, SEARCH_DESCRIPTION);
 		assertEquals(NUM_EXPECTED_HITS, hits.size());		
 	}
 		
-	private List<AbstractQueryHit> runQuery(String repositoryURL, String SearchString) throws Exception {		
+	private Set<AbstractRepositoryTask> runQuery(String repositoryURL, String SearchString) throws Exception {		
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
 		assertNotNull(repository);		
 		
@@ -97,13 +99,13 @@ public class BugzillaSearchEngineTest extends TestCase {
 				TasksUiPlugin.getTaskListManager().getTaskList());
 		
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
 		
-		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList());
-		
-		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector);
+		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector, false);
 		
 		//results.addAll(connector.performQuery(repositoryQuery, new NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null)));
-		return collector.getHits();			
+		return collector.getTaskHits();			
 	}
 	
 	

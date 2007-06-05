@@ -32,7 +32,7 @@ public interface ITaskListExternalizer {
 
 	public abstract String getQueryTagNameForElement(AbstractRepositoryQuery query);
 
-	public abstract String getQueryHitTagName();
+//	public abstract String getQueryHitTagName();
 
 	/**
 	 * @return the element that was created, null if failed
@@ -65,10 +65,10 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canCreateElementFor(AbstractQueryHit queryHit);
 
-	public abstract Element createQueryHitElement(AbstractQueryHit queryHit, Document doc, Element parent);
+//	public abstract Element createQueryHitElement(AbstractRepositoryTask queryHit, Document doc, Element parent);
 
-	public abstract boolean canReadQueryHit(Node node);
+//	public abstract boolean canReadQueryHit(Node node);
 
-	public abstract AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList tlist, AbstractRepositoryQuery query)
-			throws TaskExternalizationException;
+//	public abstract AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList tlist, AbstractRepositoryQuery query)
+//			throws TaskExternalizationException;
 }

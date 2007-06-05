@@ -37,7 +37,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
@@ -278,13 +277,6 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
 
-		} else if (element instanceof AbstractQueryHit) {
-			AbstractQueryHit queryHit = (AbstractQueryHit) element;
-			if (queryHit.getParent() != null) {
-				return getRepository(queryHit.getRepositoryUrl(), queryHit.getParent().getRepositoryKind());
-			} else {
-				return TasksUiPlugin.getRepositoryManager().getRepository(queryHit.getRepositoryUrl());
-			}
 		} else if (element instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
 			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());

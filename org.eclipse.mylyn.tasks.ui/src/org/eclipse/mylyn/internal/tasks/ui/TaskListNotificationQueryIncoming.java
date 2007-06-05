@@ -15,7 +15,7 @@ import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -25,14 +25,14 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotificationQueryIncoming implements ITaskListNotification {
 
-	private final AbstractQueryHit hit;
+	private final AbstractRepositoryTask hit;
 
 	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	private Date date;
 
-	public TaskListNotificationQueryIncoming(AbstractQueryHit hit) {
+	public TaskListNotificationQueryIncoming(AbstractRepositoryTask hit) {
 		this.hit = hit;
 	}
 

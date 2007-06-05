@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -51,7 +50,8 @@ public class DeleteAction extends Action {
 
 		String message = "Delete the elements listed?  If categories or queries are selected contained tasks"
 				+ " will not be deleted.  Contexts will be deleted for selected tasks.\n\n";
-//				+ "This operation cannot be undone (the Task List can be restored from history).\n\n";
+// + "This operation cannot be undone (the Task List can be restored from
+// history).\n\n";
 		int i = 0;
 		for (Object object : toDelete) {
 			i++;
@@ -71,19 +71,13 @@ public class DeleteAction extends Action {
 		}
 
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof ITask || selectedObject instanceof AbstractQueryHit) {
+			if (selectedObject instanceof ITask) {
 				ITask task = null;
-				if (selectedObject instanceof AbstractQueryHit) {
-					task = ((AbstractQueryHit) selectedObject).getCorrespondingTask();
-				} else {
-					task = (ITask) selectedObject;
-				}
-				if (task != null) {
-					TasksUiPlugin.getTaskListManager().deactivateTask(task);
-					TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
-					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-					TasksUiUtil.closeEditorInActivePage(task);
-				}
+				task = (ITask) selectedObject;
+				TasksUiPlugin.getTaskListManager().deactivateTask(task);
+				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
+				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
+				TasksUiUtil.closeEditorInActivePage(task);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				// boolean deleteConfirmed =
 				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
