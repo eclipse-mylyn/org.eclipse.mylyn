@@ -131,7 +131,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
 
-	private void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
+	public void configureTaskData(TaskRepository repository, RepositoryTaskData taskData) throws CoreException {
 		connector.updateAttributeOptions(repository, taskData);
 		addValidOperations(taskData, repository.getUserName());
 	}

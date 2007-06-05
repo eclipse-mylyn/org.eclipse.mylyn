@@ -371,7 +371,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			Map<String, RepositoryTaskData> hits = client.getTaskData(ids);
 			for (RepositoryTaskData data : hits.values()) {
-				resultCollector.accept(data);
+				if (data != null) {
+					taskDataHandler.configureTaskData(repository, data);
+					resultCollector.accept(data);
+				}
 			}
 
 		} catch (UnrecognizedReponseException e) {
