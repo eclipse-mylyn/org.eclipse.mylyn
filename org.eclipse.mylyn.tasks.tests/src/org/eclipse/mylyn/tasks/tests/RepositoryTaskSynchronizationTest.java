@@ -8,6 +8,7 @@
 
 package org.eclipse.mylar.tasks.tests;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -368,6 +369,10 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 			// ignore
 			return null;
+		}
+
+		public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+			return Collections.emptySet();
 		}
 
 

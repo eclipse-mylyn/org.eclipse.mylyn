@@ -104,8 +104,10 @@ class SynchronizeQueryJob extends Job {
 			} else {
 
 				QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
+				SubProgressMonitor collectorMonitor = new SubProgressMonitor(monitor, 1);
+				collector.setProgressMonitor(collectorMonitor);
 				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository,
-						new SubProgressMonitor(monitor, 1), collector, forced);
+						collectorMonitor, collector, forced);
 
 				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
 					// do nothing
@@ -116,6 +118,8 @@ class SynchronizeQueryJob extends Job {
 								QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 					}
 
+					// TODO: when queries no longer hold onto tasklist, ensure all hits exist in tasklist here
+					
 					repositoryQuery.updateHits(collector.getTaskHits());
 
 					if (synchChangedTasks) {

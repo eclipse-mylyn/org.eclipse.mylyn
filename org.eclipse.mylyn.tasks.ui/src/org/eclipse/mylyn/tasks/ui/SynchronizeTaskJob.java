@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
@@ -61,7 +62,7 @@ class SynchronizeTaskJob extends Job {
 	public boolean isForced() {
 		return forced;
 	}
-	
+
 	/**
 	 * Indicates a manual synchronization. If set to true, a dialog will be
 	 * displayed in case of errors.
@@ -98,7 +99,7 @@ class SynchronizeTaskJob extends Job {
 
 				// TODO: Set in connector.updateTask
 				repositoryTask.setCurrentlySynchronizing(false);
-				
+
 				TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
 				// TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
@@ -136,18 +137,31 @@ class SynchronizeTaskJob extends Job {
 			if (downloadedTaskData != null) {
 				// HACK: part of hack below
 				Date oldDueDate = repositoryTask.getDueDate();
-				
+
 				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
-				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData, true);
-				
-				// HACK: Remove once connectors can get access to TaskDataManager and do this themselves
-				if((oldDueDate == null && repositoryTask.getDueDate() != null) || (oldDueDate != null && repositoryTask.getDueDate() == null)) {
+				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
+				repositoryTask.dropSubTasks();
+				for (String subId : taskDataHandler.getSubTaskIds(downloadedTaskData)) {
+					if (subId == null || subId.trim().equals("")) {
+						continue;
+					}
+					AbstractRepositoryTask subTask = connector.createTaskFromExistingId(repository, subId, false,
+							new SubProgressMonitor(monitor, 1));
+					if (subTask != null) {
+						repositoryTask.addSubTask(subTask);
+					}
+				}
+
+				// HACK: Remove once connectors can get access to
+				// TaskDataManager and do this themselves
+				if ((oldDueDate == null && repositoryTask.getDueDate() != null)
+						|| (oldDueDate != null && repositoryTask.getDueDate() == null)) {
 					TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
-				} else if(oldDueDate != null && repositoryTask.getDueDate() != null && oldDueDate.compareTo(repositoryTask.getDueDate()) != 0) {
+				} else if (oldDueDate != null && repositoryTask.getDueDate() != null
+						&& oldDueDate.compareTo(repositoryTask.getDueDate()) != 0) {
 					TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
 				}
-				
-				
+
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);

@@ -23,7 +23,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
@@ -88,15 +90,9 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Create new repository task, storing necessary task data
-	 * 
-	 * @param taskId
-	 *            identifier, e.g. "123" bug Bugzilla bug 123
-	 * @return null if task could not be created
-	 * @throws CoreException
-	 *             TODO
+	 * Create new repository task, adding result to tasklist
 	 */
-	protected AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
 			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 		ITask task = taskList.getTask(repository.getUrl(), id);
 		AbstractRepositoryTask repositoryTask = null;
@@ -104,18 +100,55 @@ public abstract class AbstractRepositoryConnector {
 			repositoryTask = (AbstractRepositoryTask) task;
 		} else if (task == null && getTaskDataHandler() != null) {
 			RepositoryTaskData taskData = null;
-			taskData = getTaskDataHandler().getTaskData(repository, id, monitor);
+			taskData = getTaskDataHandler().getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
 			if (taskData != null) {
-				// Use connector task factory
-				repositoryTask = createTask(repository.getUrl(), id, taskData.getId() + ": " + taskData.getDescription());
-				updateTaskFromTaskData(repository, repositoryTask, taskData, retrieveSubTasks);
-
-				taskList.addTask(repositoryTask);
-				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
+				repositoryTask = createTaskFromTaskData(repository, taskData, retrieveSubTasks, new SubProgressMonitor(
+						monitor, 1));
+				if (repositoryTask != null) {
+					taskList.addTask(repositoryTask);
+				}
 			}
 		} // TODO: Handle case similar to web tasks (no taskDataHandler but
 		// have tasks)
 
+		return repositoryTask;
+	}
+
+	/**
+	 * Creates a new task from the given task data. Does NOT add resulting task
+	 * to the tasklist
+	 */
+	public AbstractRepositoryTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
+			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+		AbstractRepositoryTask repositoryTask = null;
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+		try {
+			if (taskData != null && getTaskDataManager() != null) {
+				// Use connector task factory
+				repositoryTask = createTask(repository.getUrl(), taskData.getId(), taskData.getId() + ": "
+						+ taskData.getDescription());
+				updateTaskFromTaskData(repository, repositoryTask, taskData);
+				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
+
+				if (retrieveSubTasks) {
+					monitor.beginTask("Creating task", getTaskDataHandler().getSubTaskIds(taskData).size());
+					for (String subId : getTaskDataHandler().getSubTaskIds(taskData)) {
+						if (subId == null || subId.trim().equals("")) {
+							continue;
+						}
+						AbstractRepositoryTask subTask = createTaskFromExistingId(repository, subId, false,
+								new SubProgressMonitor(monitor, 1));
+						if (subTask != null) {
+							repositoryTask.addSubTask(subTask);
+						}
+					}
+				}
+			}
+		} finally {
+			monitor.done();
+		}
 		return repositoryTask;
 	}
 
@@ -173,21 +206,12 @@ public abstract class AbstractRepositoryConnector {
 			IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Sets all fields on the given task
-	 * 
-	 * @param TaskRepository
-	 * @param repositoryTask
-	 *            to update
-	 * @param RepositoryTaskData
-	 *            new repository task data from which to update task information
-	 * @param retrieveSubTasks
-	 *            true if method should result in construction of missing
-	 *            subtasks, false otherwise
+	 * Updates task with latest information from {@code taskData}
 	 * 
 	 * @since 2.0
 	 */
 	public abstract void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
-			RepositoryTaskData taskData, boolean retrieveSubTasks);
+			RepositoryTaskData taskData);
 
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
@@ -262,7 +286,8 @@ public abstract class AbstractRepositoryConnector {
 			try {
 				task.setSubmitting(true);
 				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				FileAttachment attachment = new FileAttachment(sourceContextFile);				attachment.setDescription(MYLAR_CONTEXT_DESCRIPTION);
+				FileAttachment attachment = new FileAttachment(sourceContextFile);
+				attachment.setDescription(MYLAR_CONTEXT_DESCRIPTION);
 				attachment.setFilename(MYLAR_CONTEXT_FILENAME);
 				handler.uploadAttachment(repository, task, attachment, longComment, monitor);
 			} catch (CoreException e) {

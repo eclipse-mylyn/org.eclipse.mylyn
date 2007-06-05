@@ -8,6 +8,9 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 
 /**
  * @author Rob Elves
@@ -20,6 +23,6 @@ public interface ITaskFactory {
 	 * @param forced -
 	 *            user requested synchronization
 	 */
-	public abstract AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced);
+	public abstract AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) throws CoreException;
 
 }

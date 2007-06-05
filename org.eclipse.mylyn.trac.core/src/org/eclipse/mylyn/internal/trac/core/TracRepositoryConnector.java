@@ -113,7 +113,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) throws CoreException {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			IProgressMonitor monitor) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
 			// String taskId =
 			// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
@@ -143,10 +144,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			for (TracTicket ticket : tickets) {
 				TracAttributeFactory attrFactory = new TracAttributeFactory();
 				RepositoryTaskData data = new RepositoryTaskData(attrFactory, TracCorePlugin.REPOSITORY_KIND,
-						repository.getUrl(), ""+ticket.getId(), Task.DEFAULT_TASK_KIND);
+						repository.getUrl(), "" + ticket.getId(), Task.DEFAULT_TASK_KIND);
 				TracTaskDataHandler.createDefaultAttributes(attrFactory, data, tracClient, true);
 				TracTaskDataHandler.updateTaskData(repository, attrFactory, data, ticket);
-				
+
 				resultCollector.accept(data);
 			}
 		} catch (Throwable e) {
@@ -196,8 +197,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String taskId, IProgressMonitor monitor)
-			throws CoreException {
+	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String taskId,
+			IProgressMonitor monitor) throws CoreException {
 		AbstractRepositoryTask task = super.createTaskFromExistingId(repository, taskId, monitor);
 		if (task == null) {
 			// repository does not support XML-RPC, fall back to web access
@@ -207,7 +208,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				TracTicket ticket = connection.getTicket(taskIdInt);
 
 				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket), true);
-				updateTaskFromTicket((TracTask)task, ticket, false);
+				updateTaskFromTicket((TracTask) task, ticket, false);
 				taskList.addTask(task);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e, repository));
@@ -221,7 +222,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return new TracTask(repositoryUrl, id, "<description not set>", true);
 	}
 
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData, boolean retrieveSubTasks) {
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+			RepositoryTaskData taskData) {
 		if (taskData != null) {
 			repositoryTask.setSummary(getTicketDescription(taskData));
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
@@ -231,7 +233,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 					.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
 			repositoryTask.setKind((kind != null) ? kind.toString() : null);
-			// TODO: Completion Date			
+			// TODO: Completion Date
 		}
 	}
 
@@ -296,7 +298,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static String getTicketDescription(RepositoryTaskData taskData) {
-		return /*taskData.getId() + ":" + */taskData.getSummary();
+		return /* taskData.getId() + ":" + */taskData.getSummary();
 	}
 
 	public static boolean hasChangedSince(TaskRepository repository) {
@@ -327,7 +329,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			ITracClient client = getClientManager().getRepository(repository);
 			client.updateAttributes(monitor, true);
 		} catch (Exception e) {
-			throw new CoreException(RepositoryStatus.createStatus(repository.getUrl(), IStatus.WARNING, TracCorePlugin.PLUGIN_ID, "Could not update attributes"));
+			throw new CoreException(RepositoryStatus.createStatus(repository.getUrl(), IStatus.WARNING,
+					TracCorePlugin.PLUGIN_ID, "Could not update attributes"));
 		}
 	}
 

@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
  * Collects QueryHits resulting from repository search
@@ -85,11 +86,16 @@ public class QueryHitCollector {
 		matchCount++;
 	}
 
-	public void accept(RepositoryTaskData taskData) {
+	public void accept(RepositoryTaskData taskData) throws CoreException {
 		if (taskData == null)
 			return;
+		
+		if (!getProgressMonitor().isCanceled()) {
+			getProgressMonitor().subTask(getFormattedMatchesString(matchCount));
+			getProgressMonitor().worked(1);
+		}
 
-		AbstractRepositoryTask task = taskFactory.createTask(taskData, true, false);
+		AbstractRepositoryTask task = taskFactory.createTask(taskData, true, false, new SubProgressMonitor(monitor, 1));
 		taskResults.add(task);
 		matchCount++;
 	}

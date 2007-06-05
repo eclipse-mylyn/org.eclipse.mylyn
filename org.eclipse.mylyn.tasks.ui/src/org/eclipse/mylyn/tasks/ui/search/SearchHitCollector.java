@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
@@ -85,16 +86,30 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			hitTask = task;
 		}
 
+		
+		if (!getProgressMonitor().isCanceled()) {
+			getProgressMonitor().subTask(getFormattedMatchesString(searchResult.getMatchCount()));
+			getProgressMonitor().worked(1);
+		}
+		
 		taskResults.add((AbstractRepositoryTask)hitTask);	
 		this.searchResult.addMatch(new Match(hitTask, 0, 0));
 	}
 
 	@Override
-	public void accept(RepositoryTaskData taskData) {
+	public void accept(RepositoryTaskData taskData) throws CoreException {
 		if (taskData == null)
 			return;
-		AbstractRepositoryTask task = taskFactory.createTask(taskData, false, false);
+		
+		
+		AbstractRepositoryTask task = taskFactory.createTask(taskData, false, false, new SubProgressMonitor(getProgressMonitor(), 1));
 		if (task != null) {
+			
+			if (!getProgressMonitor().isCanceled()) {
+				getProgressMonitor().subTask(getFormattedMatchesString(searchResult.getMatchCount()));
+				getProgressMonitor().worked(1);
+			}
+			
 			taskResults.add(task);			
 			this.searchResult.addMatch(new Match(task, 0, 0));
 		}

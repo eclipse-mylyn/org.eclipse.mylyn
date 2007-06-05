@@ -92,6 +92,10 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 				return new MockAttributeFactory();
 			}
 
+			public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+				return Collections.emptySet();
+			}
+
 		};
 	}
 
@@ -141,7 +145,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
-			RepositoryTaskData taskData, boolean retrieveSubTasks) {
+			RepositoryTaskData taskData) {
 		// ignore
 
 	}

@@ -8,6 +8,8 @@
 
 package org.eclipse.mylar.tasks.ui;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.ITaskFactory;
@@ -42,13 +44,14 @@ public class TaskFactory implements ITaskFactory {
 	 *            synchronize task with the provided taskData
 	 * @param forced -
 	 *            user requested synchronization
+	 * @throws CoreException
 	 */
-	public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced) {
-
+	public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced,
+			IProgressMonitor monitor) throws CoreException {
 		AbstractRepositoryTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
-			repositoryTask = connector.createTask(repository.getUrl(), taskData.getId(), taskData.getId() + ": "
-					+ taskData.getDescription());
+
+			repositoryTask = connector.createTaskFromTaskData(repository, taskData, true, monitor);
 
 			if (synchData) {
 				taskList.addTask(repositoryTask);
@@ -57,12 +60,10 @@ public class TaskFactory implements ITaskFactory {
 				synchManager.saveOffline(repositoryTask, taskData);
 			}
 
-			connector.updateTaskFromTaskData(repository, repositoryTask, taskData, false);
-
 		} else {
 			if (synchData) {
 				synchManager.saveIncoming(repositoryTask, taskData, forced);
-				connector.updateTaskFromTaskData(repository, repositoryTask, taskData, false);
+				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
 			}
 		}
 		return repositoryTask;

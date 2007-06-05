@@ -11,6 +11,8 @@
 
 package org.eclipse.mylar.tasks.core;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -37,4 +39,6 @@ public interface ITaskDataHandler {
 
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData);
 
+	public Set<String> getSubTaskIds(RepositoryTaskData taskData);
+	
 }

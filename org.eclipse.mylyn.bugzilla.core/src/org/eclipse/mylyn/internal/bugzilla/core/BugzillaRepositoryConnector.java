@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -104,30 +103,30 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
-			RepositoryTaskData taskData, boolean retrieveSubTasks) {
+			RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
 
-			// subtasks
-			repositoryTask.dropSubTasks();
-			List<String> subTaskIds = getSubTaskIds(taskData);
-			if (subTaskIds != null && !subTaskIds.isEmpty()) {
-				for (String subId : subTaskIds) {
-					ITask subTask = taskList.getTask(repository.getUrl(), subId);
-					if (subTask == null && retrieveSubTasks) {
-						if (!subId.trim().equals(taskData.getId()) && !subId.equals("")) {
-							try {
-								subTask = createTaskFromExistingId(repository, subId, false, new NullProgressMonitor());
-							} catch (CoreException e) {
-								// ignore
-							}
-						}
-					}
-					if (subTask != null) {
-						bugzillaTask.addSubTask(subTask);
-					}
-				}
-			}
+////			// subtasks
+//			repositoryTask.dropSubTasks();
+//			Set<String> subTaskIds = taskDataHandler.getSubTaskIds(taskData);
+//			if (subTaskIds != null && !subTaskIds.isEmpty()) {
+//				for (String subId : subTaskIds) {
+//					ITask subTask = taskList.getTask(repository.getUrl(), subId);
+////					if (subTask == null && retrieveSubTasks) {
+////						if (!subId.trim().equals(taskData.getId()) && !subId.equals("")) {
+////							try {
+////								subTask = createTaskFromExistingId(repository, subId, false, new NullProgressMonitor());
+////							} catch (CoreException e) {
+////								// ignore
+////							}
+////						}
+////					}
+//					if (subTask != null) {
+//						bugzillaTask.addSubTask(subTask);
+//					}
+//				}
+//			}
 
 			// Summary
 			String summary = taskData.getSummary();
@@ -221,19 +220,6 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	// TODO: Move to ITaskDataHandler
-	private List<String> getSubTaskIds(RepositoryTaskData taskData) {
-		ArrayList<String> result = new ArrayList<String>();
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
-		if (attribute != null) {
-			String[] ids = attribute.getValue().split(",");
-			for (String id : ids) {
-				result.add(id.trim());
-			}
-		}
-		return result;
-
-	}
 
 	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
@@ -288,7 +274,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList, new ITaskFactory() {
 
-			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced) {
+			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
 				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 			}

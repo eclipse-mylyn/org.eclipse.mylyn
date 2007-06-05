@@ -76,6 +76,9 @@ public class TaskList {
 
 	public void addTask(ITask task) {
 		addTask(task, archiveContainer);
+		for (ITask subTask : task.getChildren()) {
+			addTask(subTask, archiveContainer);
+		}
 	}
 
 	/**

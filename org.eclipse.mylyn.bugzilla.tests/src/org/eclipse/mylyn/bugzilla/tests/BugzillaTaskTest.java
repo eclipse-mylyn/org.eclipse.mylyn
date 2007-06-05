@@ -75,7 +75,7 @@ public class BugzillaTaskTest extends TestCase {
 		resolvedAttribute.setValue(IBugzillaConstants.VALUE_STATUS_RESOLVED);
 		taskData.addAttribute(BugzillaReportElement.BUG_STATUS.getKeyString(), resolvedAttribute);
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(BugzillaCorePlugin.REPOSITORY_KIND);
-		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "http://eclipse.org"), task, taskData, true);
+		connector.updateTaskFromTaskData(new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, "http://eclipse.org"), task, taskData);
 		assertNotNull(task.getCompletionDate());
 		assertEquals(taskData.getAttributeFactory()
 				.getDateForAttributeType(BugzillaReportElement.BUG_WHEN.getKeyString(), nowTimeStamp), task

@@ -13,9 +13,11 @@ package org.eclipse.mylar.internal.trac.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
@@ -53,7 +55,8 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		return downloadTaskData(repository, TracRepositoryConnector.getTicketId(taskId));
 	}
 
@@ -81,7 +84,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
-	
+
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
@@ -206,7 +209,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 	public static void createDefaultAttributes(AbstractAttributeFactory factory, RepositoryTaskData data,
 			ITracClient client, boolean existingTask) {
 		TracTicketField[] fields = client.getTicketFields();
-		
+
 		if (existingTask) {
 			createAttribute(factory, data, Attribute.STATUS, client.getTicketStatus());
 			createAttribute(factory, data, Attribute.RESOLUTION, client.getTicketResolutions());
@@ -236,7 +239,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			createAttribute(factory, data, Attribute.SUMMARY);
 			createAttribute(factory, data, Attribute.DESCRIPTION);
 		}
-		
+
 		if (fields != null) {
 			for (TracTicketField field : fields) {
 				if (field.isCustom()) {
@@ -249,13 +252,13 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 	private static void createAttribute(RepositoryTaskData data, TracTicketField field) {
 		RepositoryTaskAttribute attr = new RepositoryTaskAttribute(field.getName(), field.getLabel(), false);
 		if (field.getType() == TracTicketField.Type.CHECKBOX) {
-			//attr.addOption("True", "1");
-			//attr.addOption("False", "0");
+			// attr.addOption("True", "1");
+			// attr.addOption("False", "0");
 			attr.addOption("1", "1");
 			attr.addOption("0", "0");
-			
+
 			if (field.getDefaultValue() != null) {
-				attr.setValue(field.getDefaultValue());	
+				attr.setValue(field.getDefaultValue());
 			}
 		} else if (field.getType() == TracTicketField.Type.SELECT || field.getType() == TracTicketField.Type.RADIO) {
 			String[] values = field.getOptions();
@@ -266,7 +269,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 				for (int i = 0; i < values.length; i++) {
 					attr.addOption(values[i], values[i]);
 				}
-				
+
 				if (field.getDefaultValue() != null) {
 					try {
 						int index = Integer.parseInt(field.getDefaultValue());
@@ -285,7 +288,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 			}
 		} else {
 			if (field.getDefaultValue() != null) {
-				attr.setValue(field.getDefaultValue());	
+				attr.setValue(field.getDefaultValue());
 			}
 		}
 		data.addAttribute(attr.getID(), attr);
@@ -321,8 +324,8 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		return createAttribute(factory, data, attribute, values, false);
 	}
 
-	
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			TracTicket ticket = TracRepositoryConnector.getTracTicket(repository, taskData);
 			ITracClient server = ((TracRepositoryConnector) connector).getClientManager().getRepository(repository);
@@ -330,7 +333,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 				int id = server.createTicket(ticket);
 				return id + "";
 			} else {
-								
+
 				String comment = taskData.getNewComment();
 				// XXX: new comment is now an attribute
 				taskData.removeAttribute(RepositoryTaskAttribute.COMMENT_NEW);
@@ -352,6 +355,11 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 		} catch (Exception e) {
 			throw new CoreException(TracCorePlugin.toStatus(e, repository));
 		}
+	}
+
+	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+		// TODO Auto-generated method stub
+		return Collections.emptySet();
 	}
 
 }

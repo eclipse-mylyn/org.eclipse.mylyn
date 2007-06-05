@@ -12,6 +12,8 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,6 +26,7 @@ import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
+import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 
@@ -55,8 +58,6 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 
 	private static final String OPERATION_LABEL_ACCEPT = "Accept (change status to ASSIGNED)";
 
-
-
 	private AbstractAttributeFactory attributeFactory = new BugzillaAttributeFactory();
 
 	private BugzillaRepositoryConnector connector;
@@ -65,7 +66,8 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		this.connector = connector;
 	}
 
-	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor) throws CoreException {
+	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 
 			BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -101,7 +103,8 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		}
 	}
 
-	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
+	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			try {
@@ -126,7 +129,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		// we don't care about the repository information right now
 		return attributeFactory;
 	}
-	
+
 	public AbstractAttributeFactory getAttributeFactory(RepositoryTaskData taskData) {
 		return getAttributeFactory(taskData.getRepositoryUrl(), taskData.getRepositoryKind(), taskData.getTaskKind());
 	}
@@ -135,7 +138,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		connector.updateAttributeOptions(repository, taskData);
 		addValidOperations(taskData, repository.getUserName());
 	}
-	
+
 	private void addValidOperations(RepositoryTaskData bugReport, String userName) throws CoreException {
 		BUGZILLA_REPORT_STATUS status;
 		try {
@@ -236,5 +239,21 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		return false;
 	}
 
+	// TODO: Move to ITaskDataHandler
+	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
+		Set<String> result = new HashSet<String>();
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());
+		if (attribute != null) {
+			String[] ids = attribute.getValue().split(",");
+			for (String id : ids) {
+				id = id.trim();
+				if (id.length() == 0)
+					continue;
+				result.add(id);
+			}
+		}
+		return result;
+
+	}
 
 }
