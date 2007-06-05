@@ -31,7 +31,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
  */
 public class TaskListFilterTest extends TestCase {
 
-	private TaskListView view = TaskListView.openInActivePerspective();
+	private TaskListView view;
 	
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 	
@@ -50,6 +50,7 @@ public class TaskListFilterTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		view = TaskListView.openInActivePerspective();
 		assertNotNull(view);
 		previousFilters = view.getFilters();
 		view.clearFilters(true);
