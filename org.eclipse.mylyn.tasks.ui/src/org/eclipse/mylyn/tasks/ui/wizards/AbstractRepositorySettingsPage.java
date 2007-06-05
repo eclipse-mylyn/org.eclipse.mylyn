@@ -290,35 +290,36 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// }
 		// }
 
+
+		advancedExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
+				| Section.TITLE_BAR);
+		advancedExpComposite.clientVerticalSpacing = 0;
+		GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
+		gridData_2.horizontalIndent = -5;
+		advancedExpComposite.setLayoutData(gridData_2);
+		advancedExpComposite.setFont(container.getFont());
+		advancedExpComposite.setBackground(container.getBackground());
+		advancedExpComposite.setText("Additional Settings");
+		advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				getControl().getShell().pack();
+			}
+		});
+
+		GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(advancedExpComposite);
+
+		advancedComp = toolkit.createComposite(advancedExpComposite, SWT.NONE);
+		GridLayout gridLayout2 = new GridLayout();
+		gridLayout2.numColumns = 2;
+		gridLayout2.verticalSpacing = 5;
+		advancedComp.setLayout(gridLayout2);
+		advancedComp.setBackground(container.getBackground());
+		advancedExpComposite.setClient(advancedComp);
+
+		createAdditionalControls(advancedComp);
+
 		if (needsEncoding()) {
-			advancedExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
-					| Section.TITLE_BAR);
-			advancedExpComposite.clientVerticalSpacing = 0;
-			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
-			gridData_2.horizontalIndent = -5;
-			advancedExpComposite.setLayoutData(gridData_2);
-			advancedExpComposite.setFont(container.getFont());
-			advancedExpComposite.setBackground(container.getBackground());
-			advancedExpComposite.setText("Additional Settings");
-			advancedExpComposite.addExpansionListener(new ExpansionAdapter() {
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					getControl().getShell().pack();
-				}
-			});
-
-			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(advancedExpComposite);
-
-			advancedComp = toolkit.createComposite(advancedExpComposite, SWT.NONE);
-			GridLayout gridLayout2 = new GridLayout();
-			gridLayout2.numColumns = 2;
-			gridLayout2.verticalSpacing = 5;
-			advancedComp.setLayout(gridLayout2);
-			advancedComp.setBackground(container.getBackground());
-			advancedExpComposite.setClient(advancedComp);
-
-			createAdditionalControls(advancedComp);
-
 			Label encodingLabel = new Label(advancedComp, SWT.HORIZONTAL);
 			encodingLabel.setText("Character Encoding:");
 			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.TOP).applyTo(encodingLabel);
@@ -385,7 +386,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite = toolkit.createExpandableComposite(container, Section.COMPACT | Section.TWISTIE
 					| Section.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
-			GridData gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
 			httpAuthExpComposite.setLayoutData(gridData_2);
 			httpAuthExpComposite.setFont(container.getFont());
@@ -401,7 +402,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			GridDataFactory.fillDefaults().span(2, SWT.DEFAULT).applyTo(httpAuthExpComposite);
 
 			httpAuthComp = toolkit.createComposite(httpAuthExpComposite, SWT.NONE);
-			GridLayout gridLayout2 = new GridLayout();
+			gridLayout2 = new GridLayout();
 			gridLayout2.numColumns = 2;
 			gridLayout2.verticalSpacing = 0;
 			httpAuthComp.setLayout(gridLayout2);
