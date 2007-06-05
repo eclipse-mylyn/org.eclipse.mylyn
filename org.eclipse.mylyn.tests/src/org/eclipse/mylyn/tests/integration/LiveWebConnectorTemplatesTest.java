@@ -20,6 +20,7 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -48,48 +49,54 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	}
 
 	public void testRepositoryTemplate() throws Throwable {
-  	    IProgressMonitor monitor = new NullProgressMonitor();
-  	    MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-  	    final List<AbstractRepositoryTask> hits = new ArrayList<AbstractRepositoryTask>();
-  	    QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(), new ITaskFactory() {
+		IProgressMonitor monitor = new NullProgressMonitor();
+		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		final List<AbstractRepositoryTask> hits = new ArrayList<AbstractRepositoryTask>();
+		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
+				new ITaskFactory() {
 
-			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced) {
-				// ignore
-				return null;
-			}}) {
-  	        @Override
-  	        public void accept(AbstractRepositoryTask hit) {
-  	          hits.add(hit);
-  	        }
-  	    };
+					public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData,
+							boolean forced, IProgressMonitor monitor) throws CoreException {
+						// ignore
+						return null;
+					}
+				}) {
+			@Override
+			public void accept(AbstractRepositoryTask hit) {
+				hits.add(hit);
+			}
+		};
 
-	    Map<String, String> params = new HashMap<String, String>();
-	    Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
-	    for(Map.Entry<String, String> e : attributes.entrySet()) {
-	        String key = e.getKey();
-//	        if(key.startsWith(WebRepositoryConnector.PARAM_PREFIX)) {
-	            params.put(key, e.getValue());
-//	        }
-	    }
+		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<String, String>(template.getAttributes());
+		for (Map.Entry<String, String> e : attributes.entrySet()) {
+			String key = e.getKey();
+// if(key.startsWith(WebRepositoryConnector.PARAM_PREFIX)) {
+			params.put(key, e.getValue());
+// }
+		}
 
-        TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
-        String url = repository.getUrl();
-        // HACK: repositories that require auth
+		TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
+		String url = repository.getUrl();
+		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
 			repository.setAuthenticationCredentials("skywalker", "skywalker");
 		} else if ("http://changelogic.araneaframework.org".equals(url)) {
 			repository.setAuthenticationCredentials("mylar2", "mylar123");
 		}
- 
-        String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
-        String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
-        assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
-        
-        String regexp = WebRepositoryConnector.evaluateParams(template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
-        IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector, repository);
 
-        assertTrue("Query failed\n"+taskQueryUrl+"\n"+regexp+"\n"+resultingStatus.toString(), queryStatus.isOK());
-        try {
+		String taskQueryUrl = WebRepositoryConnector.evaluateParams(template.taskQueryUrl, repository);
+		String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
+		assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
+
+		String regexp = WebRepositoryConnector.evaluateParams(template
+				.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
+		IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector,
+				repository);
+
+		assertTrue("Query failed\n" + taskQueryUrl + "\n" + regexp + "\n" + resultingStatus.toString(), queryStatus
+				.isOK());
+		try {
 			assertTrue("Expected non-empty query result\n" + taskQueryUrl + "\n" + regexp, hits.size() > 0);
 		} catch (Throwable t) {
 			System.err.println(taskQueryUrl);
@@ -105,11 +112,12 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	}
 
 	private static final String excluded = "http://demo.otrs.org,";
-	
+
 	public static TestSuite suite() {
 		TestSuite suite = new ActiveTestSuite(LiveWebConnectorTemplatesTest.class.getName());
 
-		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(WebTask.REPOSITORY_TYPE);
+		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
+				WebTask.REPOSITORY_TYPE);
 		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
 			if (excluded.indexOf(template.repositoryUrl + ",") == -1) {
 				suite.addTest(new LiveWebConnectorTemplatesTest(template));
