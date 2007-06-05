@@ -262,7 +262,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		StringBuilder builder = new StringBuilder(text.length());
 		for (int x = 0; x < text.length(); x++) {
 			char temp = text.charAt(x);
-			if (!Character.isISOControl(temp) || temp == '\n' || temp == '\r') {
+			if (!Character.isISOControl(temp) || temp == '\n' || temp == '\r' || temp == '\t') {
 				builder.append(temp);
 			}
 		}
