@@ -543,8 +543,12 @@ public class TaskListToolTipHandler {
 			shellBounds.x = displayBounds.x + displayBounds.width - shellBounds.width;
 		else
 			shellBounds.x = position.x;
+		
+		if ((position.y + 10 + shellBounds.height) > (displayBounds.y + displayBounds.height))
+			shellBounds.y = displayBounds.y + displayBounds.height - shellBounds.height;
+		else
+			shellBounds.y = position.y + 10;
 
-		shellBounds.y = Math.max(Math.min(position.y + 10, displayBounds.height - shellBounds.height), 0);
 		shell.setBounds(shellBounds);
 	}
 
