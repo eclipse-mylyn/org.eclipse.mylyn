@@ -22,7 +22,6 @@ import org.eclipse.mylar.context.core.ContextCorePlugin;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylar.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
@@ -68,10 +67,7 @@ public class ContextCopyAction extends TaskContextAction {
 		Object result = dialog.getFirstResult();
 
 		ITask targetTask = null;
-		if (result instanceof AbstractQueryHit) {
-			AbstractQueryHit hit = (AbstractQueryHit) result;
-			targetTask = hit.getOrCreateCorrespondingTask();
-		} else if (result instanceof ITask) {
+		if (result instanceof ITask) {
 			targetTask = (ITask) result;
 		}
 

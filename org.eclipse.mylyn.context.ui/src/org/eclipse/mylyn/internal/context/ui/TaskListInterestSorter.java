@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
@@ -76,20 +75,10 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 				ITask task1 = null;
 				ITask task2 = null;
-				if (element1 instanceof AbstractQueryHit) {
-					task1 = ((AbstractQueryHit) element1).getCorrespondingTask();
-					// if (task1 == null) {
-					// return 1;
-					// }
-				} else if (element1 instanceof ITask) {
+				if (element1 instanceof ITask) {
 					task1 = (ITask) element1;
 				}
-				if (element2 instanceof AbstractQueryHit) {
-					task2 = ((AbstractQueryHit) element2).getCorrespondingTask();
-					// if (task2 == null) {
-					// return -1;
-					// }
-				} else if (element2 instanceof ITask) {
+				if (element2 instanceof ITask) {
 					task2 = (ITask) element2;
 				}
 

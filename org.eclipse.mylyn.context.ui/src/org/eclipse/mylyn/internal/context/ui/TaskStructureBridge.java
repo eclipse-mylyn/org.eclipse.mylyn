@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -77,7 +76,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean canFilter(Object object) {
-		return object instanceof ITask || object instanceof AbstractQueryHit;
+		return object instanceof ITask;
 	}
 
 	@Override

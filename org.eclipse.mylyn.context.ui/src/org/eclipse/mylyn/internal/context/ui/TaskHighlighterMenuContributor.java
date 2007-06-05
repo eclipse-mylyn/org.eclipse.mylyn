@@ -19,7 +19,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.context.ui.ContextUiPlugin;
 import org.eclipse.mylar.internal.context.ui.actions.EditHighlightersAction;
 import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -41,11 +40,7 @@ public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributo
 					for (ITaskListElement selectedElement : selectedElements) {
 						if (selectedElement instanceof ITask) {
 							task = (ITask) selectedElement;
-						} else if (selectedElement instanceof AbstractQueryHit) {
-							if (((AbstractQueryHit) selectedElement).getCorrespondingTask() != null) {
-								task = ((AbstractQueryHit) selectedElement).getCorrespondingTask();
-							}
-						}
+						} 
 						if (task != null) {
 							ContextUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 									highlighter.getName());

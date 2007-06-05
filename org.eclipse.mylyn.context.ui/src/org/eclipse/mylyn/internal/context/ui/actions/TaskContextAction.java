@@ -15,7 +15,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.ui.IViewActionDelegate;
 
@@ -33,9 +32,10 @@ public abstract class TaskContextAction implements IViewActionDelegate {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
 			if (selectedObject instanceof ITask) {
 				return (ITask) selectedObject;
-			} else if (selectedObject instanceof AbstractQueryHit) {
-				return ((AbstractQueryHit) selectedObject).getCorrespondingTask();
 			}
+//			else if (selectedObject instanceof AbstractQueryHit) {
+//				return ((AbstractQueryHit) selectedObject).getCorrespondingTask();
+//			}
 		}
 		return null;
 	}

@@ -17,7 +17,6 @@ import org.eclipse.mylar.core.MylarStatusHandler;
 import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.tasks.core.AbstractQueryHit;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -38,12 +37,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				DateRangeContainer dateRangeTaskContainer = (DateRangeContainer) object;
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
-			if (object instanceof ITask || object instanceof AbstractQueryHit) {
+			if (object instanceof ITask) {
 				ITask task = null;
 				if (object instanceof ITask) {
 					task = (ITask) object;
-				} else if (object instanceof AbstractQueryHit) {
-					task = ((AbstractQueryHit) object).getCorrespondingTask();
 				}
 				if (task != null) {
 					if (isUninteresting(parent, task)) {
@@ -51,8 +48,6 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 					} else if (isInteresting(parent, task)) {
 						return true;
 					}
-				} else if (object instanceof AbstractQueryHit) {
-					return true;
 				}
 			}
 		} catch (Throwable t) {
@@ -66,7 +61,8 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	protected boolean isUninteresting(Object parent, ITask task) {
-		return !task.isActive() && !hasInterestingSubTasks(parent, task, true) 
+		return !task.isActive()
+				&& !hasInterestingSubTasks(parent, task, true)
 				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(
 						parent, task)) || (TasksUiPlugin.getTaskListManager().isScheduledAfterThisWeek(task))
 						&& !hasChanges(parent, task));
