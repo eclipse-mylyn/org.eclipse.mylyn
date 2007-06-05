@@ -8,19 +8,21 @@
 
 package org.eclipse.mylar.internal.team.ui.actions;
 
-import java.io.*;
+import java.io.InputStream;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.patch.ApplyPatchOperation;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylar.tasks.core.IAttachmentHandler;
 import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.team.MylarTeamPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -32,13 +34,14 @@ import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
  * @author Mik Kersten
+ * @author Steffen Pingel
  */
 public class ApplyPatchAction extends BaseSelectionListenerAction implements IViewActionDelegate {
 
 	public ApplyPatchAction() {
 		super("Apply Patch");
 	}
-	
+
 	protected ApplyPatchAction(String text) {
 		super(text);
 	}
@@ -53,45 +56,38 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 		if (currentSelection instanceof StructuredSelection) {
 			Object object = ((StructuredSelection) currentSelection).getFirstElement();
 			if (object instanceof RepositoryAttachment) {
-				RepositoryAttachment attachment = (RepositoryAttachment) object;
-				final String contents = TasksUiPlugin.getRepositoryManager().getAttachmentContents(attachment);
-				if (contents == null) {
-					MessageDialog
-							.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-									ITasksUiConstants.TITLE_DIALOG,
-									"Patch could not be retrieved. Please try re-synchronizing task in order to apply the patch.");
-				} else {
-					IStorage storage = new IStorage() {
+				final RepositoryAttachment attachment = (RepositoryAttachment) object;
+				IStorage storage = new IStorage() {
+					public InputStream getContents() throws CoreException {
+						TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+								attachment.getRepositoryKind(), attachment.getRepositoryUrl());
+						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+								.getRepositoryConnector(attachment.getRepositoryKind());
+						IAttachmentHandler handler = connector.getAttachmentHandler();
+						return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
+					}
 
-						@SuppressWarnings("deprecation")
-						public InputStream getContents() throws CoreException {
-							return new StringBufferInputStream(contents);
-						}
+					public IPath getFullPath() {
+						return MylarTeamPlugin.getDefault().getStateLocation();
+					}
 
-						public IPath getFullPath() {
-							return MylarTeamPlugin.getDefault().getStateLocation();
-						}
+					public String getName() {
+						return null;
+					}
 
-						public String getName() {
-							return null;
-						}
+					public boolean isReadOnly() {
+						return true;
+					}
 
-						public boolean isReadOnly() {
-							return true;
-						}
+					@SuppressWarnings("unchecked")
+					public Object getAdapter(Class adapter) {
+						return null;
+					}
 
-						@SuppressWarnings("unchecked")
-						public Object getAdapter(Class adapter) {
-							return null;
-						}
-
-					};
-					ApplyPatchOperation op = new ApplyPatchOperation(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart(), 
-							storage, null, new CompareConfiguration());
-					BusyIndicator.showWhile(Display.getDefault(), op);
-				}
-
+				};
+				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().getActivePart(), storage, null, new CompareConfiguration());
+				BusyIndicator.showWhile(Display.getDefault(), op);
 			}
 		}
 	}
