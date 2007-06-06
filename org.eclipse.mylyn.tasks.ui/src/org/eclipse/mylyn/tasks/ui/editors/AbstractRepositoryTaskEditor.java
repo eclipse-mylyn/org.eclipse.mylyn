@@ -429,6 +429,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						select(data, highlight);
 					}
 				}
+				part.setFocus();
 			}
 		}
 	};
