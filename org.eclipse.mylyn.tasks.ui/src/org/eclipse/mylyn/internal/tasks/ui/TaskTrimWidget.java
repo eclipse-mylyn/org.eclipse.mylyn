@@ -22,25 +22,27 @@ import org.eclipse.mylar.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
 /**
  * @author Mik Kersten
+ * @author Leo Dos Santos
  */
 public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Composite composite = null;
 
 	private Hyperlink activeTaskLabel;
-	
-	private PreviousTaskDropDownAction navigateAction;	
-	
+
+	private PreviousTaskDropDownAction navigateAction;
+
 	private final ITaskActivityListener TASK_CHANGE_LISTENER = new ITaskActivityListener() {
 
 		public void taskActivated(ITask task) {
@@ -50,7 +52,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		public void taskDeactivated(ITask task) {
 			indicateNoActiveTask();
 		}
-		
+
 		public void activityChanged(DateRangeContainer week) {
 		}
 
@@ -62,8 +64,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		public void tasksActivated(List<ITask> tasks) {
 		}
+		
 	};
-	
+
 	public TaskTrimWidget() {
 		super();
 		TasksUiPlugin.getTaskListManager().addActivityListener(TASK_CHANGE_LISTENER);
@@ -80,70 +83,73 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	@Override
 	protected Control createControl(Composite parent) {
-		
 		composite = new Composite(parent, SWT.NONE);
 
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = 2;
-		layout.marginWidth = 2;
 		layout.numColumns = 2;
+		layout.horizontalSpacing = 2;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.marginRight = 5;
 		composite.setLayout(layout);
 
-		GridData gridData = new GridData(SWT.NONE, SWT.RIGHT, false, false);
-//		gridData. = 200;
+		GridData gridData = new GridData(SWT.NONE, SWT.CENTER, false, false);
 		composite.setLayoutData(gridData);
 
-//		Label label = new Label(composite, SWT.NULL);
-//		label.setText("Task:");
-
-		createStatusComposite(composite);
 		navigateAction = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
-//		navigateAction.setText("xxxxxxxxx");
+		
 		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
 		manager.add(navigateAction);
-		ToolBar toolBar = manager.createControl(composite);	
-		toolBar.setLayoutData(new GridData(50, SWT.DEFAULT));
+		manager.createControl(composite);
+		
+		createStatusComposite(composite);
+		
 		return composite;
 	}
-	
+
 	private Composite createStatusComposite(Composite container) {
-		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);		
+		GC gc = new GC(container);
+		Point p = gc.textExtent("WWWWWWWWWWWWWWW");
+		gc.dispose();
+
+		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
+		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
 		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
+
 		ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
 
 		activeTaskLabel.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseDown(MouseEvent e) {
-//				if (TaskListFilteredTree.super.filterText.getText().length() > 0) {
-//					TaskListFilteredTree.super.filterText.setText("");
-//					TaskListFilteredTree.this.textChanged();
-//				}
+				// if (TaskListFilteredTree.super.filterText.getText().length()
+				// > 0) {
+				// TaskListFilteredTree.super.filterText.setText("");
+				// TaskListFilteredTree.this.textChanged();
+				// }
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
 				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
 						.getActiveTask()));
 			}
-
 		});
+
 		return activeTaskLabel;
 	}
-	
+
 	public void indicateActiveTask(ITask task) {
 		if (activeTaskLabel.isDisposed()) {
 			return;
 		}
-		String text = task.getSummary();
-		activeTaskLabel.setText(text);
+		
+		activeTaskLabel.setText(task.getSummary());
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(task.getSummary());
-//		filterComposite.layout();
 	}
-	
+
 	public void indicateNoActiveTask() {
 		if (activeTaskLabel.isDisposed()) {
 			return;

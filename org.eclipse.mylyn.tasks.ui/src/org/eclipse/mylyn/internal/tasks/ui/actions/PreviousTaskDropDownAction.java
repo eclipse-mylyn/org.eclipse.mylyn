@@ -14,16 +14,19 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Wesley Coelho
  * @author Mik Kersten
+ * @author Leo Dos Santos
  */
 public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
-	
+
 	public static final String ID = "org.eclipse.mylar.tasklist.actions.navigate.previous";
 
 	public PreviousTaskDropDownAction(TaskActivationHistory history) {
@@ -47,11 +50,22 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			ITask currTask = tasks.get(i);
 			Action taskNavAction = new TaskNavigateAction(currTask);
 			ActionContributionItem item = new ActionContributionItem(taskNavAction);
-			if(currTask.isActive()) {
+			if (currTask.isActive()) {
 				taskNavAction.setChecked(true);
 			}
 			item.fill(dropDownMenu, -1);
 		}
+
+		ITask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		if (active != null) {
+			Separator separator = new Separator();
+			separator.fill(dropDownMenu, -1);
+
+			Action deactivateAction = new DeactivateTaskAction();
+			ActionContributionItem item = new ActionContributionItem(deactivateAction);
+			item.fill(dropDownMenu, -1);
+		}
+
 	}
 
 	@Override
@@ -60,9 +74,29 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			ITask previousTask = taskHistory.getPreviousTask();
 			new TaskActivateAction().run(previousTask);
 			setButtonStatus();
-//			view.refreshAndFocus(false);
-//			TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
+			// view.refreshAndFocus(false);
+			// TasksUiUtil.refreshAndOpenTaskListElement(previousTask);
 		}
+	}
+
+	public class DeactivateTaskAction extends Action {
+
+		public DeactivateTaskAction() {
+			setText("Deactivate Task");
+			setToolTipText("Deactivate Task");
+			setEnabled(true);
+			setChecked(false);
+			setImageDescriptor(null);
+		}
+		
+		@Override
+		public void run() {
+			ITask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+			if (active != null) {
+				TasksUiPlugin.getTaskListManager().deactivateTask(active);
+			}
+		}
+
 	}
 
 }
