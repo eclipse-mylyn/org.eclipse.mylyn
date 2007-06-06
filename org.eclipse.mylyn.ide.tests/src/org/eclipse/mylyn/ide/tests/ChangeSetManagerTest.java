@@ -68,7 +68,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.disable();
 //		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 
-		Task task1 = new Task("task1", "label", true);
+		Task task1 = new Task("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length);
@@ -88,7 +88,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
-		Task task1 = new Task("task1", "label", true);
+		Task task1 = new Task("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		assertEquals(1, changeSetManager.getActiveChangeSets().size());
 		assertEquals(1, collector.getSets().length);
@@ -107,7 +107,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile(new Path("foo.txt"));
 		file.create(null, true, null);
 
-		Task task1 = new Task("task1", "label", true);
+		Task task1 = new Task("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));

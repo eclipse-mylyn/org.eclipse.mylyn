@@ -73,7 +73,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException, PartInitException {
 		// need a task for mementos
-		Task task = new Task(contextId, contextId, true);
+		Task task = new Task(contextId, contextId);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		manager.deleteContext(contextId);
 		MylarResourcesPlugin.getDefault().getEditorManager().closeAllEditors();
@@ -200,7 +200,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	public void testActivationPreservesActiveTaskEditor() throws JavaModelException, InvocationTargetException,
 			InterruptedException {
 		assertEquals(0, page.getEditorReferences().length);
-		ITask task = new Task(contextId, contextId, true);
+		ITask task = new Task(contextId, contextId);
 		TasksUiUtil.openEditor(task, false, false);
 		assertEquals(1, page.getEditorReferences().length);
 		manager.activateContext(contextId);
