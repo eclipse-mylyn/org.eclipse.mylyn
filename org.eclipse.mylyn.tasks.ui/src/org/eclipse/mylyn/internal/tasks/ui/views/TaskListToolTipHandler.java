@@ -16,6 +16,7 @@ package org.eclipse.mylar.internal.tasks.ui.views;
 
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -173,7 +174,9 @@ public class TaskListToolTipHandler {
 
 	private String updateContainerProgressBar(WorkweekProgressBar taskProgressBar, Object object) {
 		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
+			String text = "";
 			AbstractTaskContainer container = (AbstractTaskContainer) object;
+						
 			int total = container.getChildren().size();
 			int completed = 0;
 			for (ITask task : container.getChildren()) {
@@ -195,7 +198,8 @@ public class TaskListToolTipHandler {
 				// suffix = " (query max: " + query.getMaxHits() + ")";
 			}
 			taskProgressBar.reset(completed, total);
-			return "Completed " + completed + " of " + total + suffix;
+			text += "Completed " + completed + " of " + total + suffix;
+			return text;
 		} else {
 			return "";
 		}
@@ -477,10 +481,17 @@ public class TaskListToolTipHandler {
 					tipShell = createTipShell(PlatformUI.getWorkbench().getDisplay().getActiveShell(), widget,
 							scheduledText != null, incommingText != null);
 				}
+				
+				ITaskListElement element = getTaskListElement(widget);
+				String progressText = updateContainerProgressBar(taskProgressBar, element);
 
-				String progressText = updateContainerProgressBar(taskProgressBar, getTaskListElement(widget));
-
-				tipLabelText.setText(baseText + progressText);
+				String dateText = "";
+				if (element instanceof DateRangeContainer) {
+					Calendar start = ((DateRangeContainer)element).getStart();
+					dateText += DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()) + "\n"; 
+				}
+				
+				tipLabelText.setText(dateText + baseText + progressText);
 				tipLabelImage.setImage(repositoryImage); // accepts null
 
 				if (scheduledText != null) {
