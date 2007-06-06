@@ -97,7 +97,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	public void testTaskMove() {
 		String handle = "task-1";
-		ITask task = new Task(handle, "label", true);
+		ITask task = new Task(handle, "label");
 		manager.getTaskList().moveToRoot(task);
 
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
@@ -112,7 +112,7 @@ public class ChangeDataDirTest extends TestCase {
 	// TODO: delete? using lastOpened date wrong
 	public void testBugzillaTaskMove() {
 //		String handle = AbstractRepositoryTask.getHandle("server", 1);
-		BugzillaTask bugzillaTask = new BugzillaTask("server", "1", "bug1", true);
+		BugzillaTask bugzillaTask = new BugzillaTask("server", "1", "bug1");
 		String refreshDate = (new Date()).toString();
 		bugzillaTask.setLastSyncDateStamp(refreshDate);
 		addBugzillaTask(bugzillaTask);
