@@ -57,19 +57,19 @@ public class TaskHistoryTest extends TestCase {
 
 		resetHistory();
 
-		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 
-		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2", true);
+		task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2");
 		manager.getTaskList().moveToRoot(task2);
 
-		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3", true);
+		task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 3");
 		manager.getTaskList().moveToRoot(task3);
 
-		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4", true);
+		task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 4");
 		manager.getTaskList().moveToRoot(task4);
 
-		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5", true);
+		task5 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 5");
 		manager.getTaskList().moveToRoot(task5);
 
 		history = manager.getTaskActivationHistory();

@@ -32,7 +32,7 @@ public class TaskListBackupManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		task1 = new Task("handle", "label", true);
+		task1 = new Task("handle", "label");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);

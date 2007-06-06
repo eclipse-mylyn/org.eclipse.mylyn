@@ -48,9 +48,9 @@ public abstract class AbstractRepositoryTask extends Task {
 	// transient
 	protected boolean submitting;
 	
-	public AbstractRepositoryTask(String repositoryUrl, String taskId, String summary, boolean newTask) {
+	public AbstractRepositoryTask(String repositoryUrl, String taskId, String summary) {
 		// NOTE: Repository tasks specify their own handle format.
-		super(null, summary, newTask);
+		super(null, summary);
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 	}

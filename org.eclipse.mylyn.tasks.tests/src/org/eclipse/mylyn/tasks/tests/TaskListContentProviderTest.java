@@ -44,13 +44,13 @@ public class TaskListContentProviderTest extends TestCase {
 
 	public void testHasChildren() {
 
-		Task parent = new Task("parent", "parent label", true);
-		Task completedChild = new Task("completed child", "completed child label", true);
+		Task parent = new Task("parent", "parent label");
+		Task completedChild = new Task("completed child", "completed child label");
 		completedChild.setCompleted(true);
 		parent.addSubTask(completedChild);
 		assertFalse(provider.hasChildren(parent));
 
-		Task incompleteChild = new Task("incomplete child", "incomplete child label", true);
+		Task incompleteChild = new Task("incomplete child", "incomplete child label");
 		incompleteChild.setCompleted(false);
 		parent.addSubTask(incompleteChild);
 		assertTrue(provider.hasChildren(parent));

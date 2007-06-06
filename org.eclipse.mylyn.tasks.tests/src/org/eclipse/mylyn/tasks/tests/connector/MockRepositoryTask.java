@@ -21,15 +21,15 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 	private String ownerId;
 	
 	public MockRepositoryTask(String taskId) {
-		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId, true);
+		super(MockRepositoryConnector.REPOSITORY_URL, taskId, taskId);
 	}
 
 	public MockRepositoryTask(String repositoryUrl, String taskId) {
-		super(repositoryUrl, taskId, taskId, true);
+		super(repositoryUrl, taskId, taskId);
 	}
 	
 	public MockRepositoryTask(String repositoryUrl, String taskId, String summary) {
-		super(repositoryUrl, taskId, summary, true);
+		super(repositoryUrl, taskId, summary);
 	}
 	
 	@Override

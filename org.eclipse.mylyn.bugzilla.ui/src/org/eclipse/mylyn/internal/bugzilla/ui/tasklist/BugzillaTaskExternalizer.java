@@ -97,7 +97,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	@Override
 	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
 			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
-		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary, false);
+		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary);
 		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setSeverity(element.getAttribute(KEY_SEVERITY));
 		}

@@ -43,7 +43,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), queryUrl, "description", TasksUiPlugin.getTaskListManager().getTaskList());
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 
-		TracTask task = new TracTask(Constants.TEST_TRAC_096_URL, ""+123, "desc", true);
+		TracTask task = new TracTask(Constants.TEST_TRAC_096_URL, ""+123, "desc");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);		
 		
 		String oldUrl = repository.getUrl();

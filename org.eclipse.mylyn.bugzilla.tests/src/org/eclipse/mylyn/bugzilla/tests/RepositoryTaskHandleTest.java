@@ -54,7 +54,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 
 		String repository = IBugzillaConstants.ECLIPSE_BUGZILLA_URL;
 		String id = "123";
-		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124", true);
+		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124");
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
 		manager.getTaskList().moveToRoot(bugTask);

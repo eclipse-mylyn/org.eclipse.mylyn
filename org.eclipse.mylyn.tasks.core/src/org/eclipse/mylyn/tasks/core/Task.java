@@ -145,12 +145,9 @@ public class Task extends PlatformObject implements ITask {
 		return summary;
 	}
 
-	public Task(String handle, String summary, boolean newTask) {
+	public Task(String handle, String summary) {
 		this.handleIdentifier = handle;
 		this.summary = summary;
-		if (newTask) {
-			creationDate = new Date();
-		}
 	}
 
 	public String getHandleIdentifier() {

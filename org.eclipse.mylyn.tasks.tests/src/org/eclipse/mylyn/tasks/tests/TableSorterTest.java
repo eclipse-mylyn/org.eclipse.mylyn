@@ -26,7 +26,7 @@ public class TableSorterTest extends TestCase {
 	public void testRootTaskSorting() {
 		TaskListTableSorter sorter = new TaskListTableSorter(null, TaskListTableSorter.SortByIndex.SUMMARY);
 		 		
-		Task task = new Task("1", "", true);
+		Task task = new Task("1", "");
 		TaskCategory category = new TaskCategory("cat", new TaskList());
 		
 		assertEquals(-1, sorter.compare(null, task, category));

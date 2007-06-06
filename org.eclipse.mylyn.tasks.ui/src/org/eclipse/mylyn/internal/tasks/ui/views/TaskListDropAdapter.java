@@ -222,7 +222,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// }
 			retrieveTaskDescription(url);
 
-			newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle, true);
+			newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle);
 			NewLocalTaskAction.scheduleNewTask(newTask);
 
 			if (newTask == null) {
@@ -241,7 +241,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	public boolean createTaskFromString(String title) {
-		newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title, true);
+		newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title);
 		NewLocalTaskAction.scheduleNewTask(newTask);
 
 		if (newTask == null) {

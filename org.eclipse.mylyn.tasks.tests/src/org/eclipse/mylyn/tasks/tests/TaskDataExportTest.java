@@ -72,7 +72,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 		assertTrue(destinationDir.exists());
 
 		// Create a task and context with an interaction event to be saved
-		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task", true);
+		task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "Export Test Task");
 		manager.getTaskList().moveToRoot(task1);
 		mockContext = ContextCorePlugin.getContextManager().loadContext(task1.getHandleIdentifier());
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.EDIT, "structureKind", "handle", "originId");

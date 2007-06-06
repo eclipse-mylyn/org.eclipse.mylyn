@@ -378,7 +378,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			throw new TaskExternalizationException("Handle not stored for task");
 		}
-		Task task = new Task(handle, summary, false);
+		Task task = new Task(handle, summary);
 		return task;
 	}
 

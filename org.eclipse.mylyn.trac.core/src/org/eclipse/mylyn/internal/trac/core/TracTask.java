@@ -135,8 +135,8 @@ public class TracTask extends AbstractRepositoryTask {
 
 	}
 
-	public TracTask(String repositoryUrl, String id, String label, boolean newTask) {
-		super(repositoryUrl, id, label, newTask);
+	public TracTask(String repositoryUrl, String id, String label) {
+		super(repositoryUrl, id, label);
 		setTaskUrl(repositoryUrl + ITracClient.TICKET_URL + id);
 	}
 

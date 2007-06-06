@@ -69,7 +69,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 
 		String bugNumber = "106939";
 
-		BugzillaTask task1 = new BugzillaTask(repositoryUrl, bugNumber, "label", false);
+		BugzillaTask task1 = new BugzillaTask(repositoryUrl, bugNumber, "label");
 		manager.getTaskList().addTask(task1);
 
 		task1.setReminded(true);
@@ -89,7 +89,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	}
 	
 	public void testRepositoryTaskExternalization() {
-		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label", true);
+		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label");
 		repositoryTask.setKind("kind");
 		manager.getTaskList().moveToRoot(repositoryTask);
 		manager.saveTaskList();

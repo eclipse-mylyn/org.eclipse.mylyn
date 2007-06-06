@@ -55,7 +55,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -71,7 +71,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 	
 	public void testCompletedTasksDateBoundsRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		Thread.sleep(1000);
@@ -93,7 +93,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	
 	public void testCompletedBugzillaTasksRetrieved() throws InvocationTargetException, InterruptedException {
 		BugzillaTask task1 = new BugzillaTask("repo", "1",
-				"bugzillatask 1", true);
+				"bugzillatask 1");
 		manager.getTaskList().moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -109,7 +109,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1", true);
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
@@ -132,8 +132,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedBugzillaTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1",
-				true);
+		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
@@ -156,8 +155,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedBugzillaTasksInQueryRetrieved() throws InvocationTargetException, InterruptedException {
-		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1",
-				true);
+		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(false);
 

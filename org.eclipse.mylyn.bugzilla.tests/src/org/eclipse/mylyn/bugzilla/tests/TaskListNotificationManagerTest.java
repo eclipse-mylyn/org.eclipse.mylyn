@@ -46,9 +46,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		Date now = new Date();
 
-		ITask task0 = new Task("t0", "t0 - test 0", true);
-		ITask task1 = new Task("t1", "t1 - test 1", true);
-		ITask task2 = new Task("t2", "t2 - test 2", true);
+		ITask task0 = new Task("t0", "t0 - test 0");
+		ITask task1 = new Task("t1", "t1 - test 1");
+		ITask task2 = new Task("t2", "t2 - test 2");
 
 		task0.setScheduledForDate(new Date(now.getTime() - 2000));
 		task1.setScheduledForDate(new Date(now.getTime() - 2000));
@@ -78,7 +78,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskRepository repository = new TaskRepository("bugzilla", "https://bugs.eclipse.org/bugs");
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		AbstractRepositoryTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label", true);
+		AbstractRepositoryTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
 		assertTrue(task.getSyncState() == RepositoryTaskSyncState.INCOMING);
 		assertFalse(task.isNotified());
 		task.setNotified(false);
@@ -93,7 +93,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 	}
 
 	public void testTaskListNotificationQueryIncoming() {
-		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary", true);
+		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
 				"summary", TasksUiPlugin.getTaskListManager().getTaskList());
@@ -111,7 +111,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 	public void testTaskListNotificationQueryIncomingRepeats() {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
-		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary", true);
+		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary");
 		String hitHandle = hit.getHandleIdentifier();
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",

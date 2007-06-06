@@ -85,13 +85,13 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testUniqueTaskID() {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
+		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
 		manager.getTaskList().addTask(task1);
-		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
+		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
 		manager.getTaskList().addTask(task2);
 		assertEquals(2, manager.getTaskList().getLastTaskNum());
 		manager.getTaskList().deleteTask(task2);
-		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
+		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
 		manager.getTaskList().addTask(task3);
 		assertTrue(task3.getHandleIdentifier() + " should end with 3", task3.getHandleIdentifier().endsWith("3"));
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
@@ -104,7 +104,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
-		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label", true);
+		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
 		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}
 
@@ -212,7 +212,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testIsActiveToday() {
-		ITask task = new Task("1", "task-1", true);
+		ITask task = new Task("1", "task-1");
 		assertFalse(manager.isScheduledForToday(task));
 
 		task.setScheduledForDate(new Date());
@@ -234,7 +234,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testScheduledForToday() {
-		ITask task = new Task("1", "task-1", true);
+		ITask task = new Task("1", "task-1");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 2);
 		task.setScheduledForDate(cal.getTime());
@@ -257,7 +257,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testIsCompletedToday() {
-		ITask task = new Task("1", "task 1", true);
+		ITask task = new Task("1", "task 1");
 		task.setCompleted(true);
 		task.setCompletionDate(new Date());
 		assertTrue(manager.isCompletedToday(task));
@@ -281,7 +281,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new Task("t1", "t1", true);
+		Task task1 = new Task("t1", "t1");
 
 		TaskCategory cat1 = new TaskCategory("cat1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
@@ -299,7 +299,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveToRoot() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new Task("t1", "t1", true);
+		Task task1 = new Task("t1", "t1");
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(UncategorizedCategory.HANDLE, task1.getContainer().getHandleIdentifier());
@@ -320,7 +320,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testEmpty() {
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		manager.getTaskList().internalAddRootTask(new Task("", "", true));
+		manager.getTaskList().internalAddRootTask(new Task("", ""));
 		assertFalse(manager.getTaskList().isEmpty());
 	}
 
@@ -401,7 +401,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteRootTask() {
-		ITask task = new Task("task-1", "label", true);
+		ITask task = new Task("task-1", "label");
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
@@ -416,7 +416,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(2, manager.getTaskList().getCategories().size());
 
-		ITask task = new Task("task-1", "label", true);
+		ITask task = new Task("task-1", "label");
 		TaskCategory category = new TaskCategory("handleAndDescription", manager.getTaskList());
 		manager.getTaskList().addTask(task);
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
@@ -510,16 +510,16 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testCreationAndExternalization() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
-		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1", true);
+		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 
-		Task sub1 = new Task("subtask-1", "sub 1", true);
+		Task sub1 = new Task("subtask-1", "sub 1");
 		task1.addSubTask(sub1);
 		manager.getTaskList().addTask(sub1);
 		sub1.setParent(task1);
 
-		Task task2 = new Task(manager.genUniqueTaskHandle(), "task 2", true);
+		Task task2 = new Task(manager.genUniqueTaskHandle(), "task 2");
 		manager.getTaskList().moveToRoot(task2);
 		rootTasks.add(task2);
 
@@ -528,14 +528,14 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1", manager.getTaskList());
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
-		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3", true);
+		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3");
 		manager.getTaskList().moveToContainer(cat1, task3);
 		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getContainer());
-		Task sub2 = new Task(manager.genUniqueTaskHandle(), "sub 2", true);
+		Task sub2 = new Task(manager.genUniqueTaskHandle(), "sub 2");
 		task3.addSubTask(sub2);
 		sub2.setParent(task3);
-		Task task4 = new Task(manager.genUniqueTaskHandle(), "task 4", true);
+		Task task4 = new Task(manager.genUniqueTaskHandle(), "task 4");
 		manager.getTaskList().moveToContainer(cat1, task4);
 		cat1Contents.add(task4);
 
@@ -585,7 +585,7 @@ public class TaskListManagerTest extends TestCase {
 
 // String handle = AbstractRepositoryTask.getHandle("http://url/repo-location",
 // 1);
-		Task task1 = new Task("http://url/repo-location-1", "task 1", true);
+		Task task1 = new Task("http://url/repo-location-1", "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 
@@ -737,8 +737,8 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testAllTasksDeactivation() {
-		Task task1 = new Task("task1", "description1", true);
-		Task task2 = new Task("task2", "description2", true);
+		Task task1 = new Task("task1", "description1");
+		Task task2 = new Task("task2", "description2");
 		TaskList taskList = manager.getTaskList();
 		taskList.addTask(task1);
 		taskList.addTask(task2);

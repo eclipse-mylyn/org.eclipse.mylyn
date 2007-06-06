@@ -243,13 +243,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		init222();
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"queryurl", "description1", taskList);
-		BugzillaTask query1Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description1", true);
+		BugzillaTask query1Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description1");
 		query1.addHit(query1Hit);
 		taskList.addQuery(query1);
 
 		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"queryurl2", "description2", taskList);
-		BugzillaTask query2Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description2", true);
+		BugzillaTask query2Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description2");
 		query2.addHit(query2Hit);
 		taskList.addQuery(query2);
 		assertEquals(2, taskList.getQueries().size());

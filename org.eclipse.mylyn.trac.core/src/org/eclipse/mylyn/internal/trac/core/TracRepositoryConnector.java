@@ -207,7 +207,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				ITracClient connection = getClientManager().getRepository(repository);
 				TracTicket ticket = connection.getTicket(taskIdInt);
 
-				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket), true);
+				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket));
+				task.setCreationDate(new Date());
 				updateTaskFromTicket((TracTask) task, ticket, false);
 				taskList.addTask(task);
 			} catch (Exception e) {
@@ -219,7 +220,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
-		return new TracTask(repositoryUrl, id, "<description not set>", true);
+		TracTask tracTask = new TracTask(repositoryUrl, id, "<description not set>");
+		tracTask.setCreationDate(new Date());
+		return tracTask;
 	}
 
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
@@ -265,7 +268,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (existingTask instanceof TracTask) {
 			task = (TracTask) existingTask;
 		} else {
-			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket), true);
+			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket));
+			task.setCreationDate(new Date());
 			taskList.addTask(task);
 		}
 		return task;

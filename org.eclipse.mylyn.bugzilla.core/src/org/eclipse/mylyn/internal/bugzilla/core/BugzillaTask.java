@@ -25,12 +25,12 @@ public class BugzillaTask extends AbstractRepositoryTask {
 
 	private String product;
 	
-	public BugzillaTask(String repositoryUrl, String id, String label, boolean newTask) {
-		super(repositoryUrl, id, label, newTask);
-		if (newTask) {
-			setSyncState(RepositoryTaskSyncState.INCOMING);
-		}
+	public BugzillaTask(String repositoryUrl, String id, String label) {
+		super(repositoryUrl, id, label);
 		setTaskUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
+//		if (newTask) {
+//			setSyncState(RepositoryTaskSyncState.INCOMING);
+//		}
 	}
 
 //	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {

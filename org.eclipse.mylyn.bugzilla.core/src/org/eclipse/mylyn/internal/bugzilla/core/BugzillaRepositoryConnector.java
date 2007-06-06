@@ -99,7 +99,9 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
-		return new BugzillaTask(repositoryUrl, id, summary, true);
+		BugzillaTask task = new BugzillaTask(repositoryUrl, id, summary);
+		task.setCreationDate(new Date());
+		return task;
 	}
 
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,

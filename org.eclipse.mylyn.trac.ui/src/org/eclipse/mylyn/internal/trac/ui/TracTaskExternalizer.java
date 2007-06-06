@@ -68,7 +68,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	@Override
 	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
 			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
-		TracTask task = new TracTask(repositoryUrl, taskId, summary, false);
+		TracTask task = new TracTask(repositoryUrl, taskId, summary);
 		return task;
 	}
 

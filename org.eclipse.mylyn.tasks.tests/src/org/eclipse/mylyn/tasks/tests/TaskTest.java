@@ -32,7 +32,7 @@ public class TaskTest extends TestCase {
 	}
 
 	public void testUrl() {
-		Task task = new Task("handle", "label", true);
+		Task task = new Task("handle", "label");
 		task.setTaskUrl("http://eclipse.org/mylar/doc.php");
 		assertTrue(task.hasValidUrl());
 
@@ -50,7 +50,7 @@ public class TaskTest extends TestCase {
 	}
 	
 	public void testPriorityNeverNull() {
-		Task task = new Task("handle", "label", false);
+		Task task = new Task("handle", "label");
 		assertNotNull(task.getPriority());
 		
 		PriorityLevel def = PriorityLevel.getDefault();		

@@ -76,8 +76,8 @@ public class TaskActivityTest extends TestCase {
 		midTime.setTimeInMillis(1500);
 		assertTrue(testContainer.includes(midTime));
 
-		ITask task1 = new Task("task 1", "Task 1", true);
-		ITask task2 = new Task("task 2", "Task 2", true);
+		ITask task1 = new Task("task 1", "Task 1");
+		ITask task2 = new Task("task 2", "Task 2");
 
 		Calendar currentTaskStart = GregorianCalendar.getInstance();
 		currentTaskStart.setTimeInMillis(currentStartMili);
@@ -123,8 +123,8 @@ public class TaskActivityTest extends TestCase {
 
 	public void testTaskListManagerActivity() {
 
-		ITask task1 = new Task("task 1", "Task 1", true);
-		ITask task2 = new Task("task 2", "Task 2", true);
+		ITask task1 = new Task("task 1", "Task 1");
+		ITask task2 = new Task("task 2", "Task 2");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
@@ -257,7 +257,7 @@ public class TaskActivityTest extends TestCase {
 	 * @author Yuri Baburov (burchik@gmail.com)
 	 */
 	public void testTaskListManagerActivity2() {
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
@@ -325,7 +325,7 @@ public class TaskActivityTest extends TestCase {
 	 * @author Yuri Baburov (burchik@gmail.com)
 	 */
 	public void testTaskListManagerActivity3() {
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
@@ -402,7 +402,7 @@ public class TaskActivityTest extends TestCase {
 
 	public void testTaskListManagerInactivity() {
 
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
@@ -464,7 +464,7 @@ public class TaskActivityTest extends TestCase {
 
 	public void testInterleavedActivation() {
 
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
@@ -518,7 +518,7 @@ public class TaskActivityTest extends TestCase {
 
 	public void testInterleavedActivation2() {
 
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
@@ -602,7 +602,7 @@ public class TaskActivityTest extends TestCase {
 		futureWeekTaskStart.setTimeInMillis(futureStartTime + 10);
 		assertTrue(futureWeeks.includes(futureWeekTaskStart));
 
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		InteractionEvent event1 = new InteractionEvent(InteractionEvent.Kind.SELECTION, "structureKind", task1
 				.getHandleIdentifier(), "originId", "navigatedRelation", InteractionContextManager.ACTIVITY_DELTA_ACTIVATED,
@@ -655,7 +655,7 @@ public class TaskActivityTest extends TestCase {
 	}
 
 	public void testAfterReloading() {
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
 		Calendar startTime = Calendar.getInstance();
@@ -731,7 +731,7 @@ public class TaskActivityTest extends TestCase {
 		endTime2.add(Calendar.DAY_OF_MONTH, 1);
 		endTime2.add(Calendar.SECOND, 20);
 
-		ITask task1 = new Task("task 1", "Task 1", true);
+		ITask task1 = new Task("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		InteractionContext metaContext = ContextCorePlugin.getContextManager().getActivityMetaContext();
 		metaContext.reset();

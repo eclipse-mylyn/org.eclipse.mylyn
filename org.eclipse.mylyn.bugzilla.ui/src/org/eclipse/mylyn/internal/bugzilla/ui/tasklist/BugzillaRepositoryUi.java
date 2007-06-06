@@ -61,19 +61,19 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	public List<ITaskListElement> getLegendItems() {
 		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
 		
-		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker", false);
+		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker");
 		blocker.setSeverity("critical");		
 		legendItems.add(blocker);
 		
-		BugzillaTask major = new BugzillaTask("", "major", "Major", false);
+		BugzillaTask major = new BugzillaTask("", "major", "Major");
 		major.setSeverity("major");		
 		legendItems.add(major);
 		
-		BugzillaTask enhancement = new BugzillaTask("", "enhancement", "Enhancement", false);
+		BugzillaTask enhancement = new BugzillaTask("", "enhancement", "Enhancement");
 		enhancement.setSeverity("enhancement");		
 		legendItems.add(enhancement);
 		
-		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial or Minor", false);
+		BugzillaTask trivial = new BugzillaTask("", "trivial", "Trivial or Minor");
 		trivial.setSeverity("trivial");		
 		legendItems.add(trivial);
 		

@@ -12,6 +12,7 @@
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -19,8 +20,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskInputDialog;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.ITask;
@@ -61,8 +62,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 
 	@Override
 	public void run() {
-		Task newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT, true);
-
+		Task newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), DESCRIPTION_DEFAULT);
 		scheduleNewTask(newTask);
 
 		Object selectedObject = null;
@@ -107,6 +107,8 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 	}
 
 	public static void scheduleNewTask(ITask newTask) {
+		newTask.setCreationDate(new Date());
+		
 		Calendar newTaskSchedule = Calendar.getInstance();
 		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 				TaskListPreferenceConstants.PLANNING_ENDHOUR);
