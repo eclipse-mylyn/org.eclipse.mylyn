@@ -85,7 +85,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		tasks.add(task);
 		
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		assertEquals(tasks, result);
 		assertEquals(null, repository.getSyncTimeStamp());
 		
@@ -115,16 +115,16 @@ public class TracTaskDataHandlerTest extends TestCase {
 		tasks.add(task);
 
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks);
+		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		assertEquals(tasks, result);
 
 		// always returns the ticket because time comparison mode is >=
 		repository.setSyncTimeStamp(lastModified + "");
-		result = connector.getChangedSinceLastSync(repository, tasks);
+		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		assertEquals(tasks, result);
 
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = connector.getChangedSinceLastSync(repository, tasks);		
+		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());		
 		assertTrue(result.isEmpty());
 		
 		// change ticket making sure it gets a new change time
@@ -139,7 +139,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		client.updateTicket(ticket, "comment");
 
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = connector.getChangedSinceLastSync(repository, tasks);		
+		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());		
 		assertEquals(tasks, result);
 	}
 	

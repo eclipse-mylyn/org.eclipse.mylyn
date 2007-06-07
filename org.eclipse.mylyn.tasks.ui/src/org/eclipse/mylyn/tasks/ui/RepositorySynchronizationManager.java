@@ -182,7 +182,7 @@ public class RepositorySynchronizationManager {
 					.getRepositoryTasks(repository.getUrl()));
 
 			try {
-				changedTasks = connector.getChangedSinceLastSync(repository, repositoryTasks);
+				changedTasks = connector.getChangedSinceLastSync(repository, repositoryTasks, monitor);
 
 				if (changedTasks == null || changedTasks.size() == 0) {
 					return Status.OK_STATUS;

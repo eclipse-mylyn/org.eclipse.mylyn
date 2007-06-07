@@ -262,7 +262,7 @@ public abstract class AbstractRepositoryConnector {
 	 * @throws CoreException
 	 */
 	public abstract Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException;
+			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Attaches the associated context to <code>task</code>.

@@ -158,7 +158,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException {
+			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException {
 		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}

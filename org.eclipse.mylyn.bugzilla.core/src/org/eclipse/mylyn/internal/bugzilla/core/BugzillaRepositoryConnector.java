@@ -225,7 +225,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks) throws CoreException {
+			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException {
 		try {
 			Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
 
