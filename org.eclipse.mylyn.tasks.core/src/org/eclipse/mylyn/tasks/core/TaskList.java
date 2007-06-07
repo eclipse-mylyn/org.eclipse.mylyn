@@ -95,53 +95,6 @@ public class TaskList {
 		return result;
 	}
 
-// /**
-// * Adds subTask to parentTask, adding each to tasklist if not already
-// * present
-// */
-// public void addSubTask(ITask parentTask, ITask subTask) {
-// if (parentTask instanceof AbstractTaskContainer) {
-// if (!tasks.containsKey(parentTask.getHandleIdentifier())) {
-// addTask(parentTask);
-// } else {
-// parentTask = tasks.get(parentTask.getHandleIdentifier());
-// }
-// if (!tasks.containsKey(subTask.getHandleIdentifier())) {
-// addTask(subTask);
-// }
-// ((AbstractTaskContainer) parentTask).add(subTask);
-// }
-// }
-//
-// /**
-// * Precondition: query exists in tasklist Postcondition: hit added to
-// * tasklist if not present and added to query
-// */
-// public void addQueryHit(AbstractRepositoryQuery query, ITask hit) {
-// if (queries.containsKey(query.getHandleIdentifier())) {
-// if (!tasks.containsKey(hit.getHandleIdentifier())) {
-// addTask(hit);
-// } else {
-// hit = tasks.get(hit.getHandleIdentifier());
-// }
-// query.add(hit);
-// }
-// }
-
-//	/**
-//	 * Add task hits to a query Precondition: query exists in tasklist
-//	 * Postcondition: hit added to tasklist if not present and added to query
-//	 */
-//	public void addTask(ITask task, AbstractRepositoryQuery query) {
-//		if (queries.containsKey(query.getHandleIdentifier())) {
-//			if (!tasks.containsKey(task.getHandleIdentifier())) {
-//				addTask(task);
-//			} else {
-//				hit = tasks.get(hit.getHandleIdentifier());
-//			}
-//			query.add(hit);
-//		}
-//	}
 
 	/**
 	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query)
@@ -172,29 +125,7 @@ public class TaskList {
 			newTask.setContainer(uncategorizedCategory);
 		}
 	}
-//	public void addTask(ITask task, AbstractTaskContainer container) {
-//		
-//		if (!tasks.containsKey(task.getHandleIdentifier())) {
-//			tasks.put(task.getHandleIdentifier(), task);
-//			archiveContainer.add(task);
-//			task.setContainer(archiveContainer);
-//		} else {
-//			task = tasks.get(task.getHandleIdentifier());
-//		}
-//		
-//		if (container != null) {
-//			container.add(task);
-//			if (!(container instanceof ITask) && !(container instanceof AbstractRepositoryQuery)) {
-//				task.setContainer(container);
-//			}
-//		} else {
-//			uncategorizedCategory.add(task);
-//			task.setContainer(uncategorizedCategory);
-//		}
-//		for (ITaskListChangeListener listener : changeListeners) {
-//			listener.taskAdded(task);
-//		}
-//	}
+
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		for (ITask task : tasks.values()) {
