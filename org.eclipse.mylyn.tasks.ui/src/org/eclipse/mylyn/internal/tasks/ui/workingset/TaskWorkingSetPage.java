@@ -265,7 +265,13 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				if (workingSet != null) {
 					items = workingSet.getElements();
 					if (items != null) {
-						tree.setCheckedElements(items);
+						// see bug 191342
+						tree.setCheckedElements(new Object[] {});
+						for (Object item : items) {
+							if(item!=null) {
+								tree.setChecked(item, true);
+							}
+						}
 					}
 				}
 			}
