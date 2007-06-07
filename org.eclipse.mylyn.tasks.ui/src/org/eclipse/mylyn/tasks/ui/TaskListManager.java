@@ -550,7 +550,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				summary = "Sunday";
 				break;
 			}
-			DateRangeContainer day = new DateRangeContainer(dayStart, dayEnd, summary, taskList);
+			DateRangeContainer day = new DateRangeContainer(dayStart, dayEnd, summary);
 			activityWeekDays.add(day);
 			dateRangeContainers.add(day);
 		}
@@ -563,7 +563,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		currentEnd.setFirstDayOfWeek(startDay);
 		currentEnd.setTime(startTime);
 		snapToEndOfWeek(currentEnd);
-		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK, taskList);
+		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
 		// dateRangeContainers.add(activityThisWeek);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
@@ -577,7 +577,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToEndOfWeek(previousEnd);
 		activityPreviousWeek = new DateRangeContainer(previousStart.getTime(), previousEnd.getTime(),
-				DESCRIPTION_PREVIOUS_WEEK, taskList);
+				DESCRIPTION_PREVIOUS_WEEK);
 		dateRangeContainers.add(activityPreviousWeek);
 
 		GregorianCalendar nextStart = new GregorianCalendar();
@@ -590,8 +590,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		nextEnd.setTime(startTime);
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
-		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK,
-				taskList);
+		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
 		dateRangeContainers.add(activityNextWeek);
 
 		GregorianCalendar futureStart = new GregorianCalendar();
@@ -604,8 +603,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		futureEnd.setTime(startTime);
 		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
 		snapToEndOfWeek(futureEnd);
-		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE,
-				taskList);
+		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE);
 		dateRangeContainers.add(activityFuture);
 
 		GregorianCalendar pastStart = new GregorianCalendar();
@@ -618,7 +616,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		pastEnd.setTime(startTime);
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
 		snapToEndOfWeek(pastEnd);
-		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST, taskList);
+		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST);
 		dateRangeContainers.add(activityPast);
 	}
 

@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
@@ -64,12 +63,12 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	}
 
 	public Object getParent(Object child) {
-		if (child instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate dateRangeTaskWrapper = (DateRangeActivityDelegate) child;
-			return dateRangeTaskWrapper.getParent();
-		} else {
+//		if (child instanceof DateRangeActivityDelegate) {
+//			DateRangeActivityDelegate dateRangeTaskWrapper = (DateRangeActivityDelegate) child;
+//			return dateRangeTaskWrapper.getParent();
+//		} else {
 			return null;
-		}
+//		}
 	}
 
 	public boolean hasChildren(Object parent) {

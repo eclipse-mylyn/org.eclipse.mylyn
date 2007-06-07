@@ -63,11 +63,11 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	public Object getParent(Object child) {
 		if (child instanceof ITask) {
-			if (((ITask) child).getParent() != null) {
-				return ((ITask) child).getParent();
-			} else {
+//			if (((ITask) child).getParent() != null) {
+//				return ((ITask) child).getParent();
+//			} else {
 				return ((ITask) child).getContainer();
-			}
+//			}
 		}
 		return null;
 	}
@@ -84,12 +84,12 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		if (parent instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery t = (AbstractRepositoryQuery) parent;
 			return !t.isEmpty();
+		} else if (parent instanceof ITask) {
+			return taskHasUnfilteredChildren((ITask) parent);
 		} else if (parent instanceof AbstractTaskContainer) {
 			AbstractTaskContainer cat = (AbstractTaskContainer) parent;
 			// TODO: should provide hasChildren method!
 			return cat.getChildren() != null && cat.getChildren().size() > 0;
-		} else if (parent instanceof ITask) {
-			return taskHasUnfilteredChildren((ITask) parent);
 		}
 		return false;
 	}
@@ -241,18 +241,19 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				}
 				return children;
-			} 
-//			else if (parent instanceof AbstractQueryHit) {
-//				AbstractRepositoryTask task = ((AbstractQueryHit) parent).getCorrespondingTask();
-//				if (task != null) {
-//					for (ITask t : task.getChildren()) {
-//						if (!filter(parent, t)) {
-//							children.add(t);
-//						}
-//					}
-//				}
-//				return children;
-//			}
+			}
+// else if (parent instanceof AbstractQueryHit) {
+// AbstractRepositoryTask task = ((AbstractQueryHit)
+// parent).getCorrespondingTask();
+// if (task != null) {
+// for (ITask t : task.getChildren()) {
+// if (!filter(parent, t)) {
+// children.add(t);
+// }
+// }
+// }
+// return children;
+// }
 		} else {
 			List<ITaskListElement> children = new ArrayList<ITaskListElement>();
 			if (parent instanceof AbstractRepositoryQuery) {

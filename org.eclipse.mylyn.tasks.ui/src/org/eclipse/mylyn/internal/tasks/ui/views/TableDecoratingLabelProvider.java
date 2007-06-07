@@ -37,7 +37,7 @@ public class TableDecoratingLabelProvider extends DecoratingLabelProvider implem
 			return null;
 		}
 		if (columnIndex == 0) {
-			if (element instanceof AbstractTaskContainer) {
+			if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
 				return super.getImage(element);
 			} else {
 				ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement)element);

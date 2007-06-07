@@ -14,15 +14,11 @@ package org.eclipse.mylar.tasks.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.core.runtime.PlatformObject;
 
 /**
  * @author Mik Kersten
  */
-public class Task extends PlatformObject implements ITask {
+public class Task extends AbstractTaskContainer implements ITask {
 
 	private static final String REPOSITORY_KIND_LOCAL = "local";
 
@@ -101,11 +97,9 @@ public class Task extends PlatformObject implements ITask {
 		}
 	}
 
-	private String handleIdentifier = "-1";
-
 	private boolean active = false;
 
-	private boolean category = false;
+//	private boolean category = false;
 
 	private boolean hasReminded = false;
 
@@ -131,12 +125,7 @@ public class Task extends PlatformObject implements ITask {
 
 	private Date dueDate = null;
 
-	/**
-	 * @return null if root
-	 */
-	private transient ITask parent;
-
-	private Set<ITask> children = new HashSet<ITask>();
+	//private Set<ITask> children = new HashSet<ITask>();
 
 	protected String kind = DEFAULT_TASK_KIND;
 
@@ -146,21 +135,10 @@ public class Task extends PlatformObject implements ITask {
 	}
 
 	public Task(String handle, String summary) {
-		this.handleIdentifier = handle;
+		super(handle);
 		this.summary = summary;
 	}
 
-	public String getHandleIdentifier() {
-		return handleIdentifier;
-	}
-
-	public ITask getParent() {
-		return parent;
-	}
-
-	public void setParent(ITask parent) {
-		this.parent = parent;
-	}
 
 	/**
 	 * Package visible in order to prevent sets that don't update the index.
@@ -198,14 +176,6 @@ public class Task extends PlatformObject implements ITask {
 		} else {
 			completionDate = null;
 		}
-	}
-
-	public boolean isCategory() {
-		return category;
-	}
-
-	public void setIsCategory(boolean category) {
-		this.category = category;
 	}
 
 	public String getPriority() {
@@ -247,21 +217,6 @@ public class Task extends PlatformObject implements ITask {
 		this.estimatedTimeHours = estimated;
 	}
 
-	public Set<ITask> getChildren() {
-		return children;
-	}
-
-	public void addSubTask(ITask t) {
-		children.add(t);
-	}
-
-	public void removeSubTask(ITask t) {
-		children.remove(t);
-	}
-	
-	public void dropSubTasks() {
-		children.clear();
-	}
 
 	public void setContainer(AbstractTaskContainer cat) {
 		this.parentCategory = cat;
@@ -275,6 +230,7 @@ public class Task extends PlatformObject implements ITask {
 		return summary;
 	}
 
+	// TODO: Remove
 	public boolean isLocal() {
 		return true;
 	}

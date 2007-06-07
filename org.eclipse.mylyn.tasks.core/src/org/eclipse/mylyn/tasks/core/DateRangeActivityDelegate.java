@@ -15,13 +15,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-import org.eclipse.core.runtime.PlatformObject;
-
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeActivityDelegate extends PlatformObject implements ITask {
+public class DateRangeActivityDelegate extends AbstractTaskContainer implements ITask {
 
 	private ITask task = null;
 
@@ -38,6 +36,7 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 	}
 
 	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long activity) {
+		super(task.getHandleIdentifier());
 		if (task == null) {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
 		}
@@ -103,9 +102,9 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		return parent;
 	}
 
-	public void addSubTask(ITask task) {
-		task.addSubTask(task);
-	}
+//	public void addSubTask(ITask task) {
+//		task.addSubTask(task);
+//	}
 
 	public AbstractTaskContainer getContainer() {
 		return task.getContainer();
@@ -143,10 +142,6 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		return task.getNotes();
 	}
 
-	public ITask getParent() {
-		return task.getParent();
-	}
-
 	public String getPriority() {
 		return task.getPriority();
 	}
@@ -179,9 +174,9 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		return task.isPastReminder();
 	}
 
-	public void removeSubTask(ITask task) {
-		task.removeSubTask(task);
-	}
+//	public void removeSubTask(ITask task) {
+//		task.removeSubTask(task);
+//	}
 
 	public void setActive(boolean active) {
 		task.setActive(active);
@@ -219,10 +214,6 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 		task.setNotes(notes);
 	}
 
-	public void setParent(ITask parent) {
-		task.setParent(parent);
-	}
-
 	public void setPriority(String priority) {
 		task.setPriority(priority);
 	}
@@ -253,5 +244,10 @@ public class DateRangeActivityDelegate extends PlatformObject implements ITask {
 
 	public void setDueDate(Date date) {
 		task.setDueDate(date);
+	}
+
+	@Override
+	public boolean isLocal() {
+		return ((Task)task).isLocal();
 	}
 }

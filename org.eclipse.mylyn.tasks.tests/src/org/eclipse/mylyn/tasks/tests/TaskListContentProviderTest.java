@@ -14,6 +14,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -25,6 +26,8 @@ public class TaskListContentProviderTest extends TestCase {
 
 	private TaskListView view;
 
+	private TaskList taskList;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -34,6 +37,7 @@ public class TaskListContentProviderTest extends TestCase {
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS, false);
 		view.clearFilters(true);
 		view.addFilter(view.getCompleteFilter());
+		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 
 	@Override
@@ -47,12 +51,12 @@ public class TaskListContentProviderTest extends TestCase {
 		Task parent = new Task("parent", "parent label");
 		Task completedChild = new Task("completed child", "completed child label");
 		completedChild.setCompleted(true);
-		parent.addSubTask(completedChild);
+		taskList.addTask(completedChild, parent);
 		assertFalse(provider.hasChildren(parent));
 
 		Task incompleteChild = new Task("incomplete child", "incomplete child label");
 		incompleteChild.setCompleted(false);
-		parent.addSubTask(incompleteChild);
+		taskList.addTask(incompleteChild, parent);
 		assertTrue(provider.hasChildren(parent));
 	}
 }

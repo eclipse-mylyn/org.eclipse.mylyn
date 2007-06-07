@@ -32,8 +32,6 @@ public interface ITaskListExternalizer {
 
 	public abstract String getQueryTagNameForElement(AbstractRepositoryQuery query);
 
-//	public abstract String getQueryHitTagName();
-
 	/**
 	 * @return the element that was created, null if failed
 	 */
@@ -52,8 +50,8 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadTask(Node node);
 
-	public abstract ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList tlist, AbstractTaskContainer category, ITask parent)
-			throws TaskExternalizationException;
+	public abstract ITask createTask(String repositoryUrl, String taskId, String summary, Element element,
+			TaskList tlist, AbstractTaskContainer category, ITask parent) throws TaskExternalizationException;
 
 	public abstract boolean canCreateElementFor(AbstractRepositoryQuery category);
 
@@ -62,13 +60,4 @@ public interface ITaskListExternalizer {
 	public abstract boolean canReadQuery(Node node);
 
 	public abstract AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException;
-
-	public abstract boolean canCreateElementFor(AbstractQueryHit queryHit);
-
-//	public abstract Element createQueryHitElement(AbstractRepositoryTask queryHit, Document doc, Element parent);
-
-//	public abstract boolean canReadQueryHit(Node node);
-
-//	public abstract AbstractQueryHit createQueryHit(String repositoryUrl, String taskId, String summary, Element element, TaskList tlist, AbstractRepositoryQuery query)
-//			throws TaskExternalizationException;
 }

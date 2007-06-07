@@ -235,24 +235,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Color getForeground(Object object) {
-		if (object instanceof AbstractTaskContainer) {
-			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {
-				if (child.isActive()) {
-					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-				} else if (child.isPastReminder() && !child.isCompleted()) {
-					return themeManager.getCurrentTheme().getColorRegistry().get(
-							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
-				}
-			}
-		} else if (object instanceof AbstractRepositoryQuery) {
-			// FIXME AbstractRepositoryQuery is a subclass of
-			// AbstractTaskContainer so this is probably a dead branch!
-			for (AbstractRepositoryTask child : ((AbstractRepositoryQuery) object).getHits()) {
-				if (child != null && child.isActive()) {
-					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
-				}
-			}
-		} else if (object instanceof ITaskListElement) {
+		if (object instanceof ITaskListElement && object instanceof ITask) {
 			ITask task = getCorrespondingTask((ITaskListElement) object);
 			if (task != null) {
 				if (TasksUiPlugin.getTaskListManager().isCompletedToday(task)) {
@@ -272,6 +255,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				} else if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
 							TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
+				}
+			}
+		} else if (object instanceof AbstractTaskContainer) {
+			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {
+				if (child.isActive()) {
+					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
+				} else if (child.isPastReminder() && !child.isCompleted()) {
+					return themeManager.getCurrentTheme().getColorRegistry().get(
+							TaskListColorsAndFonts.THEME_COLOR_TASK_OVERDUE);
 				}
 			}
 		}

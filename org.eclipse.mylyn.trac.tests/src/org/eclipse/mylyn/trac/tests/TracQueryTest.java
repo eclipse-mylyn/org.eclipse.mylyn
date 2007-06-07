@@ -24,7 +24,7 @@ public class TracQueryTest extends TestCase {
 
 	private TracRepositoryQuery createQuery(String parameter) {
 		String url = "http://oss.steffenpingel.de/mylar-trac-connector";
-		return new TracRepositoryQuery(url, url + ITracClient.QUERY_URL + parameter, "description", null);
+		return new TracRepositoryQuery(url, url + ITracClient.QUERY_URL + parameter, "description");
 	}
 		
 	public void testGetTracSearch() {

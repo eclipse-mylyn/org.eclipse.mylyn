@@ -14,9 +14,9 @@ package org.eclipse.mylar.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter;
+import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylar.tasks.core.Task;
 import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten
@@ -24,10 +24,10 @@ import org.eclipse.mylar.tasks.core.TaskList;
 public class TableSorterTest extends TestCase {
 
 	public void testRootTaskSorting() {
-		TaskListTableSorter sorter = new TaskListTableSorter(null, TaskListTableSorter.SortByIndex.SUMMARY);
+		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(), TaskListTableSorter.SortByIndex.SUMMARY);
 		 		
 		Task task = new Task("1", "");
-		TaskCategory category = new TaskCategory("cat", new TaskList());
+		TaskCategory category = new TaskCategory("cat");
 		
 		assertEquals(-1, sorter.compare(null, task, category));
 		assertEquals(1, sorter.compare(null, category, task));

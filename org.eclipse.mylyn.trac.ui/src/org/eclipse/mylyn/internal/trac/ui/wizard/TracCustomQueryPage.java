@@ -466,8 +466,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 
 	@Override
 	public TracRepositoryQuery getQuery() {
-		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), getTitleText(),
-				TasksUiPlugin.getTaskListManager().getTaskList());
+		return new TracRepositoryQuery(repository.getUrl(), getQueryUrl(repository.getUrl()), getTitleText());
 	}
 
 	private String getTitleText() {

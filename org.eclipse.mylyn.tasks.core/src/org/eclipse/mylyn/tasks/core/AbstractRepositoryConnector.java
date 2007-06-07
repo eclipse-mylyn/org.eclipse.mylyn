@@ -141,7 +141,7 @@ public abstract class AbstractRepositoryConnector {
 						AbstractRepositoryTask subTask = createTaskFromExistingId(repository, subId, false,
 								new SubProgressMonitor(monitor, 1));
 						if (subTask != null) {
-							repositoryTask.addSubTask(subTask);
+							taskList.addTask(subTask, repositoryTask);
 						}
 					}
 				}
@@ -431,4 +431,5 @@ public abstract class AbstractRepositoryConnector {
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
+
 }

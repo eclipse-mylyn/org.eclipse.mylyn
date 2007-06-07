@@ -21,8 +21,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.DatePicker;
@@ -59,7 +57,7 @@ public class ScheduleTaskMenuContributor implements IDynamicSubMenuContributor {
 
 		subMenuManager
 				.setVisible(selectedElements.size() > 0
-						&& !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
+						&& selectedElements.get(0) instanceof ITask);// !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
 
 		ITaskListElement singleSelection = null;
 		if (selectedElements.size() == 1) {

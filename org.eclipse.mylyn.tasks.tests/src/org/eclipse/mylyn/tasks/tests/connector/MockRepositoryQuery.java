@@ -12,7 +12,6 @@
 package org.eclipse.mylar.tasks.tests.connector;
 
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Mik Kersten
@@ -21,13 +20,13 @@ public class MockRepositoryQuery extends AbstractRepositoryQuery {
 
 	public String MOCK_URL = "http://mock.repository";
 
-	public MockRepositoryQuery(String description, TaskList taskList) {
-		super(description, taskList);
+	public MockRepositoryQuery(String description) {
+		super(description);
 		super.setUrl(MOCK_URL);
 	}
 	
-	public MockRepositoryQuery(String description, TaskList taskList, String url) {
-		super(description, taskList);
+	public MockRepositoryQuery(String description, String url) {
+		super(description);
 		super.setUrl(url);
 	}
 

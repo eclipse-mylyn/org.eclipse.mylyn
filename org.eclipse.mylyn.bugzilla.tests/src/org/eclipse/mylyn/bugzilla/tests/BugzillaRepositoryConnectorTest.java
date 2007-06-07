@@ -56,7 +56,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery(
 				IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"http://mylar.eclipse.org/bugs222/buglist.cgi?short_desc_type=allwordssubstr&short_desc=&product=Read+Only+Test+Cases&long_desc_type=allwordssubstr&long_desc=&bug_status=NEW&order=Importance",
-				"testFocedQuerySynchronization", taskList);
+				"testFocedQuerySynchronization");
 
 		taskList.addQuery(bugQuery);
 
@@ -111,13 +111,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// null, collector, "-1");
 		//		
 		String queryUrl = "http://mylar.eclipse.org/bugs218/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				taskList);
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search");
 
 		SearchHitCollector collector = new SearchHitCollector(taskList, repository, bugzillaQuery, taskFactory);
-		RepositorySearchResult result = (RepositorySearchResult)collector.getSearchResult();
-		
-		
+		RepositorySearchResult result = (RepositorySearchResult) collector.getSearchResult();
+
 		// operation.run(new NullProgressMonitor());
 		// BugzillaSearchQuery searchQuery = new BugzillaSearchQuery(collector);
 		collector.run(new NullProgressMonitor());
@@ -242,16 +240,17 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testUniqueQueryHitObjects() {
 		init222();
 		BugzillaRepositoryQuery query1 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"queryurl", "description1", taskList);
+				"queryurl", "description1");
 		BugzillaTask query1Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description1");
-		query1.addHit(query1Hit);
 		taskList.addQuery(query1);
-
+		taskList.addTask(query1Hit, query1);
+		
 		BugzillaRepositoryQuery query2 = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
-				"queryurl2", "description2", taskList);
+				"queryurl2", "description2");
 		BugzillaTask query2Hit = new BugzillaTask(IBugzillaConstants.TEST_BUGZILLA_222_URL, "1", "description2");
-		query2.addHit(query2Hit);
 		taskList.addQuery(query2);
+		taskList.addTask(query2Hit, query1);
+		
 		assertEquals(2, taskList.getQueries().size());
 		assertEquals(1, taskList.getAllTasks().size());
 		for (AbstractRepositoryTask hit : query1.getHits()) {
@@ -290,10 +289,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		attachment.setPatch(false);
 		attachment.setReport(taskData);
 		attachment.setComment("Automated JUnit attachment test"); // optional
-		
+
 		/* Test attempt to upload a non-existent file */
 		attachment.setFilePath("/this/is/not/a/real-file");
 		attachment.setFile(new File(attachment.getFilePath()));
+		attachment.setFilename("real-file");
 		// IAttachmentHandler attachmentHandler =
 		// connector.getAttachmentHandler();
 		BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -317,7 +317,9 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		File attachFile = new File(fileName);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 		BufferedWriter write = new BufferedWriter(new FileWriter(attachFile));
-		attachment.setFile(new File(attachment.getFilePath()));
+		attachFile = new File(attachment.getFilePath());
+		attachment.setFile(attachFile);
+		attachment.setFilename(attachFile.getName());
 		// assertFalse(attachmentHandler.uploadAttachment(attachment,
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
@@ -338,7 +340,10 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// assertTrue(attachmentHandler.uploadAttachment(attachment,
 		// repository.getUserName(), repository.getPassword(),
 		// Proxy.NO_PROXY));
-		attachment.setFile(new File(attachment.getFilePath()));
+		File fileToAttach = new File(attachment.getFilePath());
+		assertTrue(fileToAttach.exists());
+		attachment.setFile(fileToAttach);
+		attachment.setFilename(fileToAttach.getName());
 		client.postAttachment(attachment.getReport().getId(), attachment.getComment(), attachment);
 
 		task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());

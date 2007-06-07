@@ -244,7 +244,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				String handle = element.getAttribute(KEY_HANDLE);
 				ITask subTask = tasklist.getTask(handle);
 				if (subTask != null) {
-					task.addSubTask(subTask);
+					tasklist.addTask(subTask, (Task)task);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
 		AbstractTaskContainer category;
 		if (element.hasAttribute(KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(KEY_NAME), taskList);
+			category = new TaskCategory(element.getAttribute(KEY_NAME));
 			taskList.internalAddCategory(category);
 		} else {
 			// LEGACY: registry categories did not have names
@@ -359,7 +359,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		if (task != null) {
 			readTaskInfo(task, taskList, element, parent, category);
 		}
-		
+
 		return task;
 	}
 
@@ -407,8 +407,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			} else {
 				taskList.internalAddRootTask(task);
 			}
-		} else if (parent != null) {
-			task.setParent(parent);
 		} else {
 			taskList.internalAddTask(task, taskList.getArchiveContainer());
 		}
@@ -633,25 +631,9 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return KEY_QUERY_HIT;
 	}
 
-	public boolean canCreateElementFor(AbstractQueryHit queryHit) {
-		return false;
-	}
-
 	public Element createQueryHitElement(AbstractRepositoryTask queryHit, Document doc, Element parent) {
 		Element node = doc.createElement(getQueryHitTagName());
-// node.setAttribute(KEY_NAME, queryHit.getSummary());
 		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
-// node.setAttribute(KEY_PRIORITY, queryHit.getPriority());
-// if (queryHit.isCompleted()) {
-// node.setAttribute(KEY_COMPLETE, VAL_TRUE);
-// } else {
-// node.setAttribute(KEY_COMPLETE, VAL_FALSE);
-// }
-// if (queryHit.isNotified()) {
-// node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_TRUE);
-// } else {
-// node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
-// }
 		parent.appendChild(node);
 		return node;
 	}
@@ -667,53 +649,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			String handle = element.getAttribute(KEY_HANDLE);
 			ITask hit = taskList.getTask(handle);
 			if (hit != null) {
-				query.addHit((AbstractRepositoryTask) hit);
+				taskList.addTask(hit, query);
 			}
 
 		} else {
 			throw new TaskExternalizationException("Handle not stored for repository task");
 		}
 	}
-
-// /**
-// * Subclasses should override.
-// */
-// public AbstractQueryHit createQueryHit(String repositoryUrl, String taskId,
-// String summary, Element element,
-// TaskList taskList, AbstractRepositoryQuery query) throws
-// TaskExternalizationException {
-// // no default hit reading behavior
-// return null;
-// }
-
-// private void readQueryHitInfo(AbstractQueryHit hit, TaskList taskList,
-// AbstractRepositoryQuery query,
-// Element element) throws TaskExternalizationException {
-// if (element.hasAttribute(KEY_PRIORITY)) {
-// hit.setPriority(element.getAttribute(KEY_PRIORITY));
-// }
-//
-// if (element.hasAttribute(KEY_COMPLETE) &&
-// element.getAttribute(KEY_COMPLETE).compareTo(VAL_TRUE) == 0) {
-// hit.setCompleted(true);
-// } else {
-// hit.setCompleted(false);
-// }
-//
-// if (element.hasAttribute(KEY_NOTIFIED_INCOMING)
-// && element.getAttribute(KEY_NOTIFIED_INCOMING).compareTo(VAL_TRUE) == 0) {
-// hit.setNotified(true);
-// } else {
-// hit.setNotified(false);
-// }
-//
-// ITask correspondingTask = taskList.getTask(hit.getHandleIdentifier());
-// if (correspondingTask instanceof AbstractRepositoryTask) {
-// hit.setCorrespondingTask((AbstractRepositoryTask) correspondingTask);
-// }
-//
-// query.addHit(hit);
-// }
 
 	public List<ITaskListExternalizer> getDelegateExternalizers() {
 		return delegateExternalizers;

@@ -111,23 +111,21 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
-		if (element instanceof AbstractTaskContainer) {
-			if (element instanceof AbstractTaskContainer) {
-				if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
-						&& hasIncoming((AbstractTaskContainer) element)) {
-					int additionalSquish = 0;
-					if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
-						additionalSquish = platformSpecificSquish + 3;
-					} else if (platformSpecificSquish > 0) {
-						additionalSquish = platformSpecificSquish / 2;
-					}
-					if (taskListView.synchronizationOverlaid) {
-						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
-						offsetX = 42 - additionalSquish;
-					} else {
-						image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
-						offsetX = 24 - additionalSquish;
-					}
+		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
+			if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
+					&& hasIncoming((AbstractTaskContainer) element)) {
+				int additionalSquish = 0;
+				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
+					additionalSquish = platformSpecificSquish + 3;
+				} else if (platformSpecificSquish > 0) {
+					additionalSquish = platformSpecificSquish / 2;
+				}
+				if (taskListView.synchronizationOverlaid) {
+					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_SYNCH_INCOMMING);
+					offsetX = 42 - additionalSquish;
+				} else {
+					image = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
+					offsetX = 24 - additionalSquish;
 				}
 			}
 		} else {
@@ -148,14 +146,14 @@ class CustomTaskListDecorationDrawer implements Listener {
 				}
 			}
 		}
-//		if (container instanceof AbstractRepositoryQuery) {
-//			AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-//			for (AbstractRepositoryTask hit : query.getHits()) {
-//				if (hit.getSyncState() == RepositoryTaskSyncState.INCOMING) {
-//					return true;
-//				}
-//			}
-//		}
+// if (container instanceof AbstractRepositoryQuery) {
+// AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
+// for (AbstractRepositoryTask hit : query.getHits()) {
+// if (hit.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+// return true;
+// }
+// }
+// }
 		return false;
 	}
 

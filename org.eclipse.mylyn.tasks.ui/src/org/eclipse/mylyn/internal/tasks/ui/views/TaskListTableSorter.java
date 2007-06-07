@@ -85,10 +85,17 @@ public class TaskListTableSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof ITask) {
+		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
 			return 1;
 		}
-		if (o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
+
+		if (o1 instanceof ITask && !(o2 instanceof AbstractTaskContainer)) {
+			return -1;
+		}
+
+		// if (o1 instanceof AbstractTaskContainer || o1 instanceof
+		// AbstractRepositoryQuery) {
+		if (!(o1 instanceof ITask)) {
 			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 
 				return this.view.sortDirection
@@ -98,7 +105,7 @@ public class TaskListTableSorter extends ViewerSorter {
 				return -1;
 			}
 		} else if (o1 instanceof ITaskListElement) {
-			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+			if (!(o2 instanceof ITask)) {
 				return -1;
 			} else if (o2 instanceof ITaskListElement) {
 				ITaskListElement element1 = (ITaskListElement) o1;
@@ -122,10 +129,10 @@ public class TaskListTableSorter extends ViewerSorter {
 			ITask t1 = null;
 			ITask t2 = null;
 			if (element1 instanceof ITask) {
-				t1 = (ITask)element1;
-			} 
+				t1 = (ITask) element1;
+			}
 			if (element2 instanceof ITask) {
-				t2 = (ITask)element2;
+				t2 = (ITask) element2;
 			}
 			if (t1 != null && t2 != null) {
 				if (t1.getCreationDate() != null) {

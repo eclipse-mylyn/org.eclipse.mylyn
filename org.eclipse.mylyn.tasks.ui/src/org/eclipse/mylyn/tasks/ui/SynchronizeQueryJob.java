@@ -25,6 +25,7 @@ import org.eclipse.mylar.internal.core.util.DateUtil;
 import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryStatus;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -106,8 +107,8 @@ class SynchronizeQueryJob extends Job {
 				QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
 				SubProgressMonitor collectorMonitor = new SubProgressMonitor(monitor, 1);
 				collector.setProgressMonitor(collectorMonitor);
-				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository,
-						collectorMonitor, collector, forced);
+				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, collectorMonitor,
+						collector, forced);
 
 				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
 					// do nothing
@@ -118,9 +119,32 @@ class SynchronizeQueryJob extends Job {
 								QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 					}
 
-					// TODO: when queries no longer hold onto tasklist, ensure all hits exist in tasklist here
+					// Notification state code
+					// Set<AbstractRepositoryTask> oldHits = repositoryQuery.getHits();
+					// for (AbstractRepositoryTask oldHit : oldHits) {
+					// collector.getTaskHits().
+					// int index = newHits.indexOf(oldHit);
+					// if (index != -1) {
+					// newHits.get(index).setNotified(oldHit.isNotified());
+					// }
+					// }
+					// for (AbstractQueryHit hit : newHits) {
+					// this.addHit(hit);
+					// }
+
+//					repositoryQuery.clear();
+//					for (AbstractRepositoryTask hit : collector.getTaskHits()) {
+//						taskList.addTask(hit, repositoryQuery);
+//					}
 					
-					repositoryQuery.updateHits(collector.getTaskHits());
+					
+					Set<AbstractRepositoryTask> hits = collector.getTaskHits();
+					hits.removeAll(repositoryQuery.getChildren());
+					//repositoryQuery.clear();
+					for (AbstractRepositoryTask hit : hits) {
+						taskList.addTask(hit, repositoryQuery);
+					}
+					
 
 					if (synchChangedTasks) {
 						repositories.add(repository);

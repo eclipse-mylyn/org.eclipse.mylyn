@@ -282,7 +282,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			}
 		});
 
-		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "", taskList);
+		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
 
 		performQuery(query, repository, new NullProgressMonitor(), collector, false);
 

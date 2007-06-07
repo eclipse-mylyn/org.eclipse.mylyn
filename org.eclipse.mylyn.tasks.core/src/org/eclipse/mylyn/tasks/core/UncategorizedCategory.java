@@ -20,8 +20,8 @@ public class UncategorizedCategory extends AbstractTaskContainer {
 
 	public static final String HANDLE = "uncategorized";
 
-	public UncategorizedCategory(TaskList taskList) {
-		super(HANDLE, taskList);
+	public UncategorizedCategory() {
+		super(HANDLE);
 	}
 
 	public String getPriority() {

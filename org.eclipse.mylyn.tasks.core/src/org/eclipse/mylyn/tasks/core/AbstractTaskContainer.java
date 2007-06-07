@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -25,9 +25,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 
 	private String handle = "";
 
-	private Set<String> childHandles = new CopyOnWriteArraySet<String>();
-
-	protected TaskList taskList;
+	private Set<ITask> children = new CopyOnWriteArraySet<ITask>();
 
 	/**
 	 * Optional URL corresponding to the web resource associated with this
@@ -35,39 +33,36 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 	 */
 	protected String url = null;
 
-	public AbstractTaskContainer(String handleAndDescription, TaskList taskList) {
+	public AbstractTaskContainer(String handleAndDescription) {
 		assert handle != null;
 		this.handle = handleAndDescription;
-		this.taskList = taskList;
 	}
 
+	// XXX: Get rid of this
 	public abstract boolean isLocal();
 
 	public Set<ITask> getChildren() {
-		Set<ITask> children = new HashSet<ITask>();
-		for (String childHandle : childHandles) {
-			ITask task = taskList.getTask(childHandle);
-			if (task != null) {
-				children.add(task);
+		return Collections.unmodifiableSet(children);
+	}
+
+	public boolean contains(String handle) {
+		for (ITask child : children) {
+			if (handle.equals(child.getHandleIdentifier())) {
+				return true;
 			}
 		}
-		return children;
-	}
-	
-	public boolean contains(String handle) {
-		return childHandles.contains(handle);
+		return false;
 	}
 
 	public String getSummary() {
 		return handle;
 	}
 
-	
 	/**
 	 * @since 2.0
 	 */
 	public boolean isEmpty() {
-		return childHandles.isEmpty();
+		return children.isEmpty();
 	}
 
 	public String getHandleIdentifier() {
@@ -82,20 +77,25 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 		this.handle = handle;
 	}
 
+	/**
+	 * Use {@link TaskList} methods instead.
+	 */
 	void add(ITask task) {
-		childHandles.add(task.getHandleIdentifier());
+		children.add(task);
 	}
 
+	/**
+	 * Does not delete task from TaskList
+	 */
 	void remove(ITask task) {
-		childHandles.remove(task.getHandleIdentifier());
+		children.remove(task);
 	}
 
-	void clear() {
-		childHandles.clear();
-	}
-
-	public boolean isCompleted() {
-		return false;
+	/**
+	 * Does not delete tasks from TaskList
+	 */
+	public void clear() {
+		children.clear();
 	}
 
 	@Override

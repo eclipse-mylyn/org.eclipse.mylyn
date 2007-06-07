@@ -33,7 +33,6 @@ import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryOperation;
@@ -260,20 +259,20 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return clientManager;
 	}
 
-	public TracTask createTask(TracTicket ticket, String repositoryUrl, String taskId) {
-		TracTask task;
-		// String handleIdentifier =
-		// AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-		ITask existingTask = taskList.getTask(repositoryUrl, taskId);
-		if (existingTask instanceof TracTask) {
-			task = (TracTask) existingTask;
-		} else {
-			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket));
-			task.setCreationDate(new Date());
-			taskList.addTask(task);
-		}
-		return task;
-	}
+//	public TracTask createTask(TracTicket ticket, String repositoryUrl, String taskId) {
+//		TracTask task;
+//		// String handleIdentifier =
+//		// AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+//		ITask existingTask = taskList.getTask(repositoryUrl, taskId);
+//		if (existingTask instanceof TracTask) {
+//			task = (TracTask) existingTask;
+//		} else {
+//			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket));
+//			task.setCreationDate(new Date());
+//			taskList.addTask(task);
+//		}
+//		return task;
+//	}
 
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.

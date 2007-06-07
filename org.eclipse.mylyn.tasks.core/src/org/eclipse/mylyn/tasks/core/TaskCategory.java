@@ -21,8 +21,8 @@ import java.util.Set;
  */
 public class TaskCategory extends AbstractTaskContainer {
 
-	public TaskCategory(String handleAndDescription, TaskList taskList) {
-		super(handleAndDescription, taskList);
+	public TaskCategory(String handleAndDescription) {
+		super(handleAndDescription);
 	}	
 
 	public String getPriority() {

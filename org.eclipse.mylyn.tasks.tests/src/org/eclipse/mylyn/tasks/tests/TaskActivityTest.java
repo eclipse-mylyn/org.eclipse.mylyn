@@ -28,7 +28,6 @@ import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
 import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 
 /**
@@ -40,11 +39,8 @@ public class TaskActivityTest extends TestCase {
 
 	private long currentEndMili = 1900;
 
-	private TaskList taskList;
-
 	protected void setUp() throws Exception {
 		super.setUp();
-		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 	}
 
 	protected void tearDown() throws Exception {
@@ -68,8 +64,7 @@ public class TaskActivityTest extends TestCase {
 		Calendar endDate = GregorianCalendar.getInstance();
 		endDate.setTimeInMillis(2000);
 
-		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container",
-				taskList);
+		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container");
 		assertTrue(testContainer.includes(startDate));
 		assertTrue(testContainer.includes(endDate));
 		Calendar midTime = GregorianCalendar.getInstance();

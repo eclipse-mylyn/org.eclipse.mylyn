@@ -21,7 +21,7 @@ public class TaskListTest extends TestCase {
 
 	public void testGetUserCategories() {
 		TaskList taskList = new TaskList();
-		taskList.addCategory(new TaskCategory("a", taskList));
+		taskList.addCategory(new TaskCategory("a"));
 		assertEquals(2, taskList.getUserCategories().size());
 	}
 	

@@ -605,7 +605,8 @@ public class BugzillaClient {
 		}
 	}
 
-	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment) throws HttpException, IOException, CoreException {
+	public void postAttachment(String bugReportID, String comment, ITaskAttachment attachment) throws HttpException,
+			IOException, CoreException {
 		WebClientUtil.setupHttpClient(httpClient, proxy, repositoryUrl.toString(), htAuthUser, htAuthPass);
 		if (!authenticated && hasAuthenticationCredentials()) {
 			authenticate();
@@ -622,14 +623,11 @@ public class BugzillaClient {
 			postMethod.getParams().setBooleanParameter(HttpMethodParams.USE_EXPECT_CONTINUE, true);
 			List<PartBase> parts = new ArrayList<PartBase>();
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_ACTION, VALUE_ACTION_INSERT, characterEncoding));
-		//	if (username != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
-			//}
-			//if (password != null) {
-				parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
-		//	}
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_LOGIN, username, characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGZILLA_PASSWORD, password, characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_BUGID, bugReportID, characterEncoding));
-			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, attachment.getDescription(), characterEncoding));
+			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_DESCRIPTION, attachment.getDescription(),
+					characterEncoding));
 			parts.add(new StringPart(IBugzillaConstants.POST_INPUT_COMMENT, comment, characterEncoding));
 			parts.add(new FilePart(IBugzillaConstants.POST_INPUT_DATA, new AttachmentPartSource(attachment)));
 

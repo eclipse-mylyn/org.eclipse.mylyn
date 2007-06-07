@@ -47,7 +47,6 @@ import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.QueryHitCollector;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.TaskRepository;
 import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylar.tasks.ui.TaskFactory;
@@ -70,16 +69,12 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
-	private TaskList tasklist;
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
 		manager = TasksUiPlugin.getRepositoryManager();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		tasklist = TasksUiPlugin.getTaskListManager().getTaskList();
 
 		data = TestFixture.init010();
 	}
@@ -212,7 +207,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		search.setOrderBy("id");
 
 		String queryUrl = url + ITracClient.QUERY_URL + search.toUrl();
-		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description", tasklist);
+		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description");
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<RepositoryTaskData> result = new ArrayList<RepositoryTaskData>();

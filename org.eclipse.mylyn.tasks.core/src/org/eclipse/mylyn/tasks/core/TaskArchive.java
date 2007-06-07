@@ -22,8 +22,8 @@ public class TaskArchive extends AbstractTaskContainer {
 	
 	public static final String LABEL_ARCHIVE = "Archive (all tasks)";
 	
-	public TaskArchive(TaskList taskList) {
-		super(HANDLE, taskList);
+	public TaskArchive() {
+		super(HANDLE);
 	}
 
 	public String getPriority() {

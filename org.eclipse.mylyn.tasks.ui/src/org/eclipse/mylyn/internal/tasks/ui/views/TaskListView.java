@@ -341,7 +341,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (event.item.getData() instanceof AbstractTaskContainer) {
+			if (event.item.getData() instanceof AbstractTaskContainer && !(event.item.getData() instanceof ITask)) {
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -1119,7 +1119,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		Map<String, List<IDynamicSubMenuContributor>> dynamicMenuMap = TasksUiPlugin.getDefault().getDynamicMenuMap();
 
-		if (!(element instanceof AbstractTaskContainer)) {
+		if (element instanceof ITask) {
 			addAction(openAction, manager, element);
 		}
 		addAction(openWithBrowser, manager, element);
@@ -1154,7 +1154,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			addAction(renameAction, manager, element);
 		}
 
-		if (element instanceof AbstractTaskContainer) {
+		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
 			manager.add(goIntoAction);
 		}
 		if (drilledIntoCategory != null) {

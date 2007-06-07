@@ -38,22 +38,21 @@ public class DateRangeContainer extends AbstractTaskContainer {
 
 	private long totalEstimated = 0;
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description,
-			TaskList taskList) {
-		super(description, taskList);
+	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
+		super(description);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(Calendar startDate, Calendar endDate, String description, TaskList taskList) {
-		super(description, taskList);
+	public DateRangeContainer(Calendar startDate, Calendar endDate, String description) {
+		super(description);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, TaskList taskList) {
+	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate) {
 		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) + " to "
-				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()), taskList);
+				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()));
 		// super(startDate.hashCode() + endDate.hashCode() + "");
 		// String start =
 		// DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime());
@@ -64,8 +63,8 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(Date time, Date time2, String description, TaskList taskList) {
-		super(description, taskList);
+	public DateRangeContainer(Date time, Date time2, String description) {
+		super(description);
 		startDate = new GregorianCalendar();
 		startDate.setTime(time);
 		endDate = new GregorianCalendar();

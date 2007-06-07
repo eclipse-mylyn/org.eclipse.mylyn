@@ -12,7 +12,6 @@
 package org.eclipse.mylar.internal.bugzilla.core;
 
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Shawn Minto
@@ -22,8 +21,8 @@ public class BugzillaRepositoryQuery extends AbstractRepositoryQuery {
 
 	private boolean customQuery = false;
 
-	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description, TaskList taskList) {
-		super(description, taskList);
+	public BugzillaRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
+		super(description);
 		this.url = queryUrl;
 		this.repositoryUrl = repositoryUrl;
 //		try {

@@ -54,7 +54,7 @@ public class NewCategoryAction extends Action implements IViewActionDelegate {
 				"Enter name", "Enter a name for the Category: ", "", null);
 		int dialogResult = dialog.open();
 		if (dialogResult == Window.OK) {
-			this.cat = new TaskCategory(dialog.getValue(), TasksUiPlugin.getTaskListManager().getTaskList());
+			this.cat = new TaskCategory(dialog.getValue());
 			TasksUiPlugin.getTaskListManager().getTaskList().addCategory(cat);
 //			this.view.getViewer().refresh();
 		}

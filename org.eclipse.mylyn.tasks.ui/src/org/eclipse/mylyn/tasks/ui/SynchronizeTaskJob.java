@@ -116,7 +116,7 @@ class SynchronizeTaskJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void syncTask(IProgressMonitor monitor, final AbstractRepositoryTask repositoryTask) throws CoreException {
+	private void syncTask(IProgressMonitor monitor, AbstractRepositoryTask repositoryTask) throws CoreException {
 		monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getSummary());
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -137,20 +137,24 @@ class SynchronizeTaskJob extends Job {
 			if (downloadedTaskData != null) {
 				// HACK: part of hack below
 				Date oldDueDate = repositoryTask.getDueDate();
+				
+				
+				TaskFactory factory = new TaskFactory(repository);
+				repositoryTask = factory.createTask(downloadedTaskData, true, forced, new SubProgressMonitor(monitor, 1));
 
-				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
-				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
-				repositoryTask.dropSubTasks();
-				for (String subId : taskDataHandler.getSubTaskIds(downloadedTaskData)) {
-					if (subId == null || subId.trim().equals("")) {
-						continue;
-					}
-					AbstractRepositoryTask subTask = connector.createTaskFromExistingId(repository, subId, false,
-							new SubProgressMonitor(monitor, 1));
-					if (subTask != null) {
-						repositoryTask.addSubTask(subTask);
-					}
-				}
+//				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
+//				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
+//				repositoryTask.dropSubTasks();
+//				for (String subId : taskDataHandler.getSubTaskIds(downloadedTaskData)) {
+//					if (subId == null || subId.trim().equals("")) {
+//						continue;
+//					}
+//					AbstractRepositoryTask subTask = factory.createTaskFromExistingId(repository, subId, false,
+//							new SubProgressMonitor(monitor, 1));
+//					if (subTask != null) {
+//						repositoryTask.addSubTask(subTask);
+//					}
+//				}
 
 				// HACK: Remove once connectors can get access to
 				// TaskDataManager and do this themselves

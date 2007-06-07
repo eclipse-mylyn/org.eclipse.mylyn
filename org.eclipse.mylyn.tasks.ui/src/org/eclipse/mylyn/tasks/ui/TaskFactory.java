@@ -10,8 +10,10 @@ package org.eclipse.mylar.tasks.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylar.tasks.core.ITaskDataHandler;
 import org.eclipse.mylar.tasks.core.ITaskFactory;
 import org.eclipse.mylar.tasks.core.RepositoryTaskData;
 import org.eclipse.mylar.tasks.core.TaskList;
@@ -32,28 +34,35 @@ public class TaskFactory implements ITaskFactory {
 
 	private TaskList taskList;
 
+	//private TaskDataManager dataManager;
+
+	private ITaskDataHandler dataHandler;
+
 	public TaskFactory(TaskRepository repository) {
 		this.repository = repository;
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		synchManager = TasksUiPlugin.getSynchronizationManager();
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		//dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		dataHandler = connector.getTaskDataHandler();
+
 	}
 
 	/**
-	 * @param synchData -
+	 * @param updateTasklist -
 	 *            synchronize task with the provided taskData
 	 * @param forced -
 	 *            user requested synchronization
 	 * @throws CoreException
 	 */
-	public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced,
+	public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean updateTasklist, boolean forced,
 			IProgressMonitor monitor) throws CoreException {
 		AbstractRepositoryTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
 
 			repositoryTask = connector.createTaskFromTaskData(repository, taskData, true, monitor);
 
-			if (synchData) {
+			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
 				synchManager.saveIncoming(repositoryTask, taskData, forced);
 			} else {
@@ -61,12 +70,90 @@ public class TaskFactory implements ITaskFactory {
 			}
 
 		} else {
-			if (synchData) {
+			if (updateTasklist) {
 				synchManager.saveIncoming(repositoryTask, taskData, forced);
 				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+				if (dataHandler != null) {
+					repositoryTask.clear();
+					for (String subId : dataHandler.getSubTaskIds(taskData)) {
+						if (subId == null || subId.trim().equals("")) {
+							continue;
+						}
+						AbstractRepositoryTask subTask = connector.createTaskFromExistingId(repository, subId, false,
+								new SubProgressMonitor(monitor, 1));
+						if (subTask != null) {
+							taskList.addTask(subTask, repositoryTask);
+						}
+					}
+				}
 			}
 		}
 		return repositoryTask;
 	}
+
+	// TODO: Move all task construction code here
+	
+//	/**
+//	 * Create new repository task, adding result to tasklist
+//	 */
+//	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
+//			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+//		ITask task = taskList.getTask(repository.getUrl(), id);
+//		AbstractRepositoryTask repositoryTask = null;
+//		if (task instanceof AbstractRepositoryTask) {
+//			repositoryTask = (AbstractRepositoryTask) task;
+//		} else if (task == null && dataHandler != null) {
+//			RepositoryTaskData taskData = null;
+//			taskData = dataHandler.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
+//			if (taskData != null) {
+//				repositoryTask = createTaskFromTaskData(repository, taskData, retrieveSubTasks, new SubProgressMonitor(
+//						monitor, 1));
+//				if (repositoryTask != null) {
+//					taskList.addTask(repositoryTask);
+//				}
+//			}
+//		} // TODO: Handle case similar to web tasks (no taskDataHandler but
+//		// have tasks)
+//
+//		return repositoryTask;
+//	}
+//
+//	/**
+//	 * Creates a new task from the given task data. Does NOT add resulting task
+//	 * to the tasklist
+//	 */
+//	public AbstractRepositoryTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
+//			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+//		AbstractRepositoryTask repositoryTask = null;
+//		if (monitor == null) {
+//			monitor = new NullProgressMonitor();
+//		}
+//		try {
+//			if (taskData != null && dataHandler != null) {
+//				// Use connector task factory
+//				repositoryTask = connector.createTask(repository.getUrl(), taskData.getId(), taskData.getId() + ": "
+//						+ taskData.getDescription());
+//				connector.updateTaskFromTaskData(repository, repositoryTask, taskData);
+//				dataManager.setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
+//
+//				if (retrieveSubTasks) {
+//					monitor.beginTask("Creating task", dataHandler.getSubTaskIds(taskData).size());
+//					for (String subId : dataHandler.getSubTaskIds(taskData)) {
+//						if (subId == null || subId.trim().equals("")) {
+//							continue;
+//						}
+//						AbstractRepositoryTask subTask = createTaskFromExistingId(repository, subId, false,
+//								new SubProgressMonitor(monitor, 1));
+//						if (subTask != null) {
+//							repositoryTask.addSubTask(subTask);
+//						}
+//					}
+//				}
+//			}
+//		} finally {
+//			monitor.done();
+//		}
+//		return repositoryTask;
+//	}
 
 }

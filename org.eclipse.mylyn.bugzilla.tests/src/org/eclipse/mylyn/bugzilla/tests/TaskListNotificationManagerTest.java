@@ -79,9 +79,8 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		AbstractRepositoryTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
-		assertTrue(task.getSyncState() == RepositoryTaskSyncState.INCOMING);
+		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertFalse(task.isNotified());
-		task.setNotified(false);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
 		notificationManager.collectNotifications();
@@ -96,9 +95,10 @@ public class TaskListNotificationManagerTest extends TestCase {
 		BugzillaTask hit = new BugzillaTask("https://bugs.eclipse.org/bugs", "1", "summary");
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-				"summary", TasksUiPlugin.getTaskListManager().getTaskList());
-		query.addHit(hit);
+				"summary");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
+		
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
 		assertFalse(hit.isNotified());
 		notificationManager.collectNotifications();
@@ -115,9 +115,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 		String hitHandle = hit.getHandleIdentifier();
 		assertFalse(hit.isNotified());
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery("https://bugs.eclipse.org/bugs", "queryUrl",
-				"summary", TasksUiPlugin.getTaskListManager().getTaskList());
-		query.addHit(hit);
+				"summary");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
+		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		for (ITaskListNotification notification : notificationManager.getNotifications()) {

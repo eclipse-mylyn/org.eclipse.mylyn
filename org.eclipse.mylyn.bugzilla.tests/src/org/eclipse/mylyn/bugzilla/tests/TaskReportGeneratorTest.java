@@ -112,7 +112,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
-		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
 		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
@@ -135,7 +135,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		BugzillaTask task1 = new BugzillaTask("repo", "1", "task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
-		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category", manager.getTaskList());
+		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
 		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
@@ -160,7 +160,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		task1.setCompleted(false);
 
 		BugzillaRepositoryQuery bugQuery = new BugzillaRepositoryQuery("repositoryUrl", "queryUrl",
-				"TaskReportGeneratorBugzillaQueryCategory", manager.getTaskList());
+				"TaskReportGeneratorBugzillaQueryCategory");
 
 		manager.getTaskList().addQuery(bugQuery);
 
@@ -173,7 +173,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());
 
-		bugQuery.addHit(task1);
+		manager.getTaskList().addTask(task1, bugQuery);
 
 		generator.run(new NullProgressMonitor());
 		assertEquals(0, generator.getAllCollectedTasks().size());

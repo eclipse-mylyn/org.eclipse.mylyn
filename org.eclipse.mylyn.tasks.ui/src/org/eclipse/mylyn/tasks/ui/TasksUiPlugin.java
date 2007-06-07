@@ -284,7 +284,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				if (connectorUi != null && !connectorUi.hasCustomNotificationHandling()) {
 					for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
-						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+						if ((repositoryTask.getLastSyncDateStamp() == null || repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotificationIncoming notification = getIncommingNotification(connector,
 									repositoryTask);
@@ -407,7 +407,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskListManager.addActivityListener(CONTEXT_TASK_ACTIVITY_LISTENER);
 			taskListManager.readExistingOrCreateNewList();
 			initialized = true;
-			
+
 			saveParticipant = new ISaveParticipant() {
 
 				public void doneSaving(ISaveContext context) {
@@ -491,8 +491,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						MylarStatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
 					}
 				}
-			});			
-			
+			});
+
 			Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
 			if (bundle.getLocation().contains("_3.3.")) {
 				eclipse_3_3_workbench = true;
@@ -764,31 +764,35 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private void readOfflineReports() {
 		IPath offlineReportsPath = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
 
-//		try {
-			taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath);//, true);
-//		} catch (Throwable t) {
-//			MylarStatusHandler.log("Recreating offline task cache due to format update.", this);
-//			boolean deleted = offlineReportsPath.toFile().delete();
-//			if (!deleted) {
-//				MylarStatusHandler.log(t, "could not delete offline repository tasks file");
-//			}
-//			try {
-//				taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath, false);
-//			} catch (Exception e1) {
-//				MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
-//			}
-//		}
+// try {
+		taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath);// ,
+		// true);
+// } catch (Throwable t) {
+// MylarStatusHandler.log("Recreating offline task cache due to format update.",
+// this);
+// boolean deleted = offlineReportsPath.toFile().delete();
+// if (!deleted) {
+// MylarStatusHandler.log(t, "could not delete offline repository tasks file");
+// }
+// try {
+// taskDataManager = new TaskDataManager(taskRepositoryManager,
+// offlineReportsPath, false);
+// } catch (Exception e1) {
+// MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
+// }
+// }
 	}
 
-//	/**
-//	 * Returns the path to the file caching the offline bug reports. PUBLIC FOR
-//	 * TESTING
-//	 */
-//	public IPath getOfflineReportsFilePath() {
-//		IPath stateLocation = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
-//		IPath configFile = stateLocation.append("offlineReports");
-//		return configFile;
-//	}
+// /**
+// * Returns the path to the file caching the offline bug reports. PUBLIC FOR
+// * TESTING
+// */
+// public IPath getOfflineReportsFilePath() {
+// IPath stateLocation =
+// Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
+// IPath configFile = stateLocation.append("offlineReports");
+// return configFile;
+// }
 
 	public TaskDataManager getTaskDataManager() {
 		if (taskDataManager == null) {
@@ -909,7 +913,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
 			AbstractRepositoryTask repositoryTask) {
-		
+
 		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 
 		RepositoryTaskData newTaskData = getDefault().getTaskDataManager().getNewTaskData(
@@ -918,14 +922,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		RepositoryTaskData oldTaskData = getDefault().getTaskDataManager().getOldTaskData(
 				repositoryTask.getHandleIdentifier());
 
-		
 		if (newTaskData != null && oldTaskData != null) {
-			
+
 			String descriptionText = getChangedDescription(newTaskData, oldTaskData);
-			if(descriptionText != null){
+			if (descriptionText != null) {
 				notification.setDescription(descriptionText);
 			}
-			
+
 			if (connector != null) {
 				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
 				if (offlineHandler != null && newTaskData.getLastModified() != null) {
@@ -940,12 +943,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 		return notification;
 	}
-	
-	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData){
-		
+
+	private static String getChangedDescription(RepositoryTaskData newTaskData, RepositoryTaskData oldTaskData) {
+
 		String descriptionText = "";
-		
-		if(newTaskData.getComments().size() > oldTaskData.getComments().size()){
+
+		if (newTaskData.getComments().size() > oldTaskData.getComments().size()) {
 			List<TaskComment> taskComments = newTaskData.getComments();
 			if (taskComments != null && taskComments.size() > 0) {
 				TaskComment lastComment = taskComments.get(taskComments.size() - 1);
@@ -959,12 +962,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 		}
-		
+
 		boolean attributeChanged = false;
-		
-		for(RepositoryTaskAttribute newAttribute: newTaskData.getAttributes()){
+
+		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
 			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
-			if (oldAttribute == null){
+			if (oldAttribute == null) {
 				attributeChanged = true;
 				break;
 			}
@@ -976,19 +979,19 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				break;
 			}
 		}
-		
-		if(attributeChanged){
-			if (descriptionText.equals("")){
+
+		if (attributeChanged) {
+			if (descriptionText.equals("")) {
 				descriptionText += "Attributes changed";
-			} 
+			}
 		}
-//		else {
-//			String description = taskData.getDescription();
-//			if (description != null) {
-//				notification.setDescription(description);
-//			}
-//		}
-		
+// else {
+// String description = taskData.getDescription();
+// if (description != null) {
+// notification.setDescription(description);
+// }
+// }
+
 		return descriptionText;
 	}
 

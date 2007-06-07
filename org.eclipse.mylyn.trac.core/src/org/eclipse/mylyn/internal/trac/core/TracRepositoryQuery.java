@@ -13,15 +13,14 @@ package org.eclipse.mylar.internal.trac.core;
 
 import org.eclipse.mylar.internal.trac.core.model.TracSearch;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskList;
 
 /**
  * @author Steffen Pingel
  */
 public class TracRepositoryQuery extends AbstractRepositoryQuery {
 
-	public TracRepositoryQuery(String repositoryUrl, String queryUrl, String description, TaskList taskList) {
-		super(description, taskList);
+	public TracRepositoryQuery(String repositoryUrl, String queryUrl, String description) {
+		super(description);
 
 		assert queryUrl.startsWith(repositoryUrl + ITracClient.QUERY_URL);
 

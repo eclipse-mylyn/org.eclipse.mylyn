@@ -120,7 +120,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	@Override
 	public Color getBackground(Object element) {
-		if (element instanceof AbstractTaskContainer) {
+		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
 			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylar.tasks.core;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,21 +32,8 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	public abstract String getRepositoryKind();
 
-	/**
-	 * Query must be added to tasklist or synchronization will result in empty
-	 * result set due to removeOrphanedHits(). All hits that don't have a query
-	 * in the tasklist are removed.
-	 */
-	public AbstractRepositoryQuery(String description, TaskList taskList) {
-		super(description, taskList);
-	}
-
-	public boolean isArchive() {
-		return false;
-	}
-
-	public void setIsArchive(boolean isArchive) {
-		// ignore
+	public AbstractRepositoryQuery(String description) {
+		super(description);
 	}
 
 	public synchronized Set<AbstractRepositoryTask> getHits() {
@@ -60,24 +46,20 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return repositoryTasks;
 	}
 
-	public synchronized void updateHits(Collection<AbstractRepositoryTask> newHits) {
-		clear();
-		for (AbstractRepositoryTask abstractRepositoryTask : newHits) {
-			addHit(abstractRepositoryTask);
-		}
-	}
+//	public synchronized void updateHits(Collection<AbstractRepositoryTask> newHits) {
+//		clear();
+//		for (AbstractRepositoryTask abstractRepositoryTask : newHits) {
+//			addHit(abstractRepositoryTask);
+//		}
+//	}
 
-	public synchronized void addHit(AbstractRepositoryTask hit) {
-		// TODO: Move up?
-		if(!taskList.getAllTasks().contains(hit)) {
-			taskList.addTask(hit);
-		}			
-		super.add(hit);
-	}
-
-	public synchronized void removeHit(AbstractRepositoryTask hit) {
-		super.remove(hit);
-	}
+//	public synchronized void addHit(AbstractRepositoryTask hit) {
+//		super.add(hit);
+//	}
+//
+//	public synchronized void removeHit(AbstractRepositoryTask hit) {
+//		super.remove(hit);
+//	}
 
 	public synchronized String getPriority() {
 		if (super.isEmpty()) {
@@ -94,11 +76,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	@Override
 	public boolean isLocal() {
-		return false;
-	}
-
-	@Override
-	public boolean isCompleted() {
 		return false;
 	}
 

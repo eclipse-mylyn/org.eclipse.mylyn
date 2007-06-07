@@ -89,7 +89,7 @@ public class QueryHitCollector {
 	public void accept(RepositoryTaskData taskData) throws CoreException {
 		if (taskData == null)
 			return;
-		
+
 		if (!getProgressMonitor().isCanceled()) {
 			getProgressMonitor().subTask(getFormattedMatchesString(matchCount));
 			getProgressMonitor().worked(1);

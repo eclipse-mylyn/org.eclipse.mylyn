@@ -11,16 +11,16 @@
 
 package org.eclipse.mylar.internal.tasks.ui.actions;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Mik Kersten
@@ -44,7 +44,8 @@ public class OpenTaskListElementAction extends Action {
 		List<?> list = ((IStructuredSelection) selection).toList();
 		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 			Object element = (Object) iterator.next();
-			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
+//			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
+			if (element instanceof ITask) {
 				TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) element);
 			}
 		}

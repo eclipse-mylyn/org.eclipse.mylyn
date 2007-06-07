@@ -370,7 +370,7 @@
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-                    <objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>
+                    <!--<objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>-->
 					<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryQuery"/>
                		<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryTask"/>
                  <objectClass name="org.eclipse.mylar.tasks.core.AbstractTaskContainer"/>

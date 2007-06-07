@@ -114,8 +114,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 
 		queryUrl += "&product=" + taskData.getProduct();
 
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search",
-				TasksUiPlugin.getTaskListManager().getTaskList());
+		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search");
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				repository, bugzillaQuery, new TaskFactory(repository));

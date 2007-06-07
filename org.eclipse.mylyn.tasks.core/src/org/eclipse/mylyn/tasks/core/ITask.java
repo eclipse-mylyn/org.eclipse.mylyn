@@ -23,10 +23,6 @@ public interface ITask extends ITaskListElement {
 
 	public abstract String getHandleIdentifier();
 
-	public abstract ITask getParent();
-
-	public abstract void setParent(ITask parent);
-
 	public abstract boolean isActive();
 
 	public abstract void setActive(boolean active);
@@ -55,12 +51,10 @@ public interface ITask extends ITaskListElement {
 
 	public abstract Set<ITask> getChildren();
 
-	public abstract void addSubTask(ITask task);
-
-	public abstract void removeSubTask(ITask task);
 
 	public abstract void setPriority(String priority);
 
+	@Deprecated
 	public abstract void setContainer(AbstractTaskContainer category);
 
 	/**

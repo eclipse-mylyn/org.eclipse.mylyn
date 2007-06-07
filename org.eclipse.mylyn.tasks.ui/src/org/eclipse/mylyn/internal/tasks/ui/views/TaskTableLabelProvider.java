@@ -23,6 +23,7 @@ import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylar.tasks.core.DateRangeContainer;
+import org.eclipse.mylar.tasks.core.ITask;
 import org.eclipse.mylar.tasks.core.ITaskListElement;
 import org.eclipse.mylar.tasks.core.TaskArchive;
 import org.eclipse.swt.graphics.Color;
@@ -82,7 +83,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof AbstractTaskContainer) {
+		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
 			AbstractTaskContainer category = (AbstractTaskContainer) element;
 			if (category instanceof TaskArchive) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;

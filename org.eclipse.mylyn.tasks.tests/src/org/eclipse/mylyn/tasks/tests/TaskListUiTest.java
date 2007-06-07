@@ -88,7 +88,7 @@ public class TaskListUiTest extends TestCase {
 		try {
 			TaskListView.openInActivePerspective();
 			manager = TasksUiPlugin.getTaskListManager();
-			cat1 = new TaskCategory("First Category", manager.getTaskList());
+			cat1 = new TaskCategory("First Category");
 
 			cat1task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 			cat1task1.setPriority(Task.PriorityLevel.P1.toString());
@@ -99,8 +99,7 @@ public class TaskListUiTest extends TestCase {
 			cat1task1sub1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1");
 			cat1task1sub1.setPriority(Task.PriorityLevel.P1.toString());
 			cat1task1sub1.setCompleted(true);
-			cat1task1sub1.setParent(cat1task1);
-			cat1task1.addSubTask(cat1task1sub1);
+			manager.getTaskList().addTask(cat1task1sub1, cat1task1);
 
 			cat1task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2");
 			cat1task2.setPriority(Task.PriorityLevel.P2.toString());
@@ -127,7 +126,7 @@ public class TaskListUiTest extends TestCase {
 			manager.getTaskList().addCategory(cat1);
 			assertEquals(cat1.getChildren().size(), 5);
 
-			cat2 = new TaskCategory("Second Category", manager.getTaskList());
+			cat2 = new TaskCategory("Second Category");
 
 			cat2task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
 			cat2task1.setPriority(Task.PriorityLevel.P1.toString());
@@ -136,8 +135,7 @@ public class TaskListUiTest extends TestCase {
 
 			cat2task1sub1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "sub task 1");
 			cat2task1sub1.setPriority(Task.PriorityLevel.P1.toString());
-			cat2task1sub1.setParent(cat2task1);
-			cat2task1.addSubTask(cat2task1sub1);
+			manager.getTaskList().addTask(cat2task1sub1, cat2task1);
 
 			cat2task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 2");
 			cat2task2.setPriority(Task.PriorityLevel.P2.toString());

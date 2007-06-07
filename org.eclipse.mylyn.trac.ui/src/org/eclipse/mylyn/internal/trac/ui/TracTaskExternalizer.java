@@ -152,7 +152,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 			throw new TaskExternalizationException("Description not stored for task");
 		}
 
-		return new TracRepositoryQuery(repositoryUrl, queryUrl, label, taskList);
+		return new TracRepositoryQuery(repositoryUrl, queryUrl, label);
 	}
 
 // @Override
