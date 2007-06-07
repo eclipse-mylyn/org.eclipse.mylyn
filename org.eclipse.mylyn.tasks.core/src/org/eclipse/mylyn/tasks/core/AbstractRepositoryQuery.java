@@ -46,21 +46,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return repositoryTasks;
 	}
 
-//	public synchronized void updateHits(Collection<AbstractRepositoryTask> newHits) {
-//		clear();
-//		for (AbstractRepositoryTask abstractRepositoryTask : newHits) {
-//			addHit(abstractRepositoryTask);
-//		}
-//	}
-
-//	public synchronized void addHit(AbstractRepositoryTask hit) {
-//		super.add(hit);
-//	}
-//
-//	public synchronized void removeHit(AbstractRepositoryTask hit) {
-//		super.remove(hit);
-//	}
-
 	public synchronized String getPriority() {
 		if (super.isEmpty()) {
 			return Task.PriorityLevel.P1.toString();
