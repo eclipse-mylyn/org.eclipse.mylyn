@@ -149,28 +149,52 @@ public class TaskList {
 	 * @param container task container, query or parent task
 	 */
 	public void addTask(ITask task, AbstractTaskContainer container) {
-		
-		if (!tasks.containsKey(task.getHandleIdentifier())) {
-			tasks.put(task.getHandleIdentifier(), task);
-			archiveContainer.add(task);
-			task.setContainer(archiveContainer);
-		} else {
-			task = tasks.get(task.getHandleIdentifier());
+
+		ITask newTask = tasks.get(task.getHandleIdentifier());
+
+		if (newTask == null) {
+			newTask = task;
+			tasks.put(newTask.getHandleIdentifier(), newTask);
+			archiveContainer.add(newTask);
+			newTask.setContainer(archiveContainer);
+			for (ITaskListChangeListener listener : changeListeners) {
+				listener.taskAdded(newTask);
+			}
 		}
-		
+
 		if (container != null) {
-			container.add(task);
+			container.add(newTask);
 			if (!(container instanceof ITask) && !(container instanceof AbstractRepositoryQuery)) {
-				task.setContainer(container);
+				newTask.setContainer(container);
 			}
 		} else {
-			uncategorizedCategory.add(task);
-			task.setContainer(uncategorizedCategory);
-		}
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskAdded(task);
+			uncategorizedCategory.add(newTask);
+			newTask.setContainer(uncategorizedCategory);
 		}
 	}
+//	public void addTask(ITask task, AbstractTaskContainer container) {
+//		
+//		if (!tasks.containsKey(task.getHandleIdentifier())) {
+//			tasks.put(task.getHandleIdentifier(), task);
+//			archiveContainer.add(task);
+//			task.setContainer(archiveContainer);
+//		} else {
+//			task = tasks.get(task.getHandleIdentifier());
+//		}
+//		
+//		if (container != null) {
+//			container.add(task);
+//			if (!(container instanceof ITask) && !(container instanceof AbstractRepositoryQuery)) {
+//				task.setContainer(container);
+//			}
+//		} else {
+//			uncategorizedCategory.add(task);
+//			task.setContainer(uncategorizedCategory);
+//		}
+//		for (ITaskListChangeListener listener : changeListeners) {
+//			listener.taskAdded(task);
+//		}
+//	}
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		for (ITask task : tasks.values()) {

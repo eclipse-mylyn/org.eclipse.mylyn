@@ -119,32 +119,10 @@ class SynchronizeQueryJob extends Job {
 								QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 					}
 
-					// Notification state code
-					// Set<AbstractRepositoryTask> oldHits = repositoryQuery.getHits();
-					// for (AbstractRepositoryTask oldHit : oldHits) {
-					// collector.getTaskHits().
-					// int index = newHits.indexOf(oldHit);
-					// if (index != -1) {
-					// newHits.get(index).setNotified(oldHit.isNotified());
-					// }
-					// }
-					// for (AbstractQueryHit hit : newHits) {
-					// this.addHit(hit);
-					// }
-
-//					repositoryQuery.clear();
-//					for (AbstractRepositoryTask hit : collector.getTaskHits()) {
-//						taskList.addTask(hit, repositoryQuery);
-//					}
-					
-					
-					Set<AbstractRepositoryTask> hits = collector.getTaskHits();
-					hits.removeAll(repositoryQuery.getChildren());
-					//repositoryQuery.clear();
-					for (AbstractRepositoryTask hit : hits) {
+					repositoryQuery.clear();
+					for (AbstractRepositoryTask hit : collector.getTaskHits()) {
 						taskList.addTask(hit, repositoryQuery);
 					}
-					
 
 					if (synchChangedTasks) {
 						repositories.add(repository);
