@@ -150,7 +150,7 @@
         </action>
 	 </objectContribution>
 	 <!-- NOTE: duplicate actions as above -->
-	 <objectContribution
+	 <!--<objectContribution
            adaptable="false"
            id="org.eclipse.mylar.ui.tasks.repository.action.contribution"
            objectClass="org.eclipse.mylar.tasks.core.AbstractQueryHit">
@@ -187,7 +187,7 @@
         menubarPath="context"
         tooltip="Copy Context to...">
   </action>
-	 </objectContribution>
+	 </objectContribution>-->
    </extension>
     
    <extension
