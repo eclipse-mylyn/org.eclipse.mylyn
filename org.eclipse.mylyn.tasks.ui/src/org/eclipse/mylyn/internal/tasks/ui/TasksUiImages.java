@@ -116,8 +116,6 @@ public class TasksUiImages {
 	public static final ImageDescriptor OVERLAY_OVER_DUE = create(T_EVIEW, "overlay-overdue.gif");
 
 	public static final ImageDescriptor OVERLAY_SOLID_WHITE = create(T_OVR, "solid-white.gif");
-	
-	public static final ImageDescriptor TASK_WEB = createWithOverlay(TASK, OVERLAY_WEB, false, true);
 
 	public static final ImageDescriptor TASK_WEB_REMOTE = create(T_TOOL, "overlay-web.gif");
 
@@ -172,18 +170,6 @@ public class TasksUiImages {
 	public static final ImageDescriptor STATUS_NORMAL = create(T_EVIEW, "status-normal.gif");
 
 	public static final ImageDescriptor STATUS_CONTEXT = create(T_EVIEW, "status-server-context.gif");
-
-//	public static final ImageDescriptor STATUS_OVERLAY_INCOMMING_NEW = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING_NEW,
-//			true, true);
-//	
-//	public static final ImageDescriptor STATUS_NORMAL_INCOMING = createWithOverlay(STATUS_NORMAL, OVERLAY_INCOMMING,
-//			true, true);
-//
-//	public static final ImageDescriptor STATUS_NORMAL_OUTGOING = createWithOverlay(STATUS_NORMAL, OVERLAY_OUTGOING,
-//			true, true);
-//
-//	public static final ImageDescriptor STATUS_NORMAL_CONFLICT = createWithOverlay(STATUS_NORMAL, OVERLAY_CONFLICT,
-//			true, true);
 
 	public static final ImageDescriptor QUERY = create(T_TOOL, "query.gif");
 
@@ -251,11 +237,6 @@ public class TasksUiImages {
 //		return new TaskListImageDescriptor(base, size);
 //	}
 	
-	public static ImageDescriptor createWithOverlay(ImageDescriptor base, ImageDescriptor overlay, boolean top,
-			boolean left) {
-		return new TaskListImageDescriptor(base, overlay, top, left);
-	}
-
 	/**
 	 * Lazily initializes image map.
 	 */
@@ -265,6 +246,28 @@ public class TasksUiImages {
 		if (image == null) {
 			image = imageDescriptor.createImage(true);
 			imageRegistry.put(""+imageDescriptor.hashCode(), image);
+		}
+		return image;
+	}
+	
+	public static Image getImageWithOverlay(ImageDescriptor icon, ImageDescriptor overlay, boolean top,
+			boolean left) {
+		if (icon == null) {
+			return null;
+		}
+		String key = "" + icon.hashCode();
+		if (overlay != null) {
+			key += overlay.hashCode();
+		}
+		key += new Boolean(top).hashCode();
+		key += new Boolean(left).hashCode();
+		
+		Image image = getImageRegistry().get(key);
+
+		if (image == null) {
+			TaskListImageDescriptor imageDescriptor = new TaskListImageDescriptor(icon, overlay, top, left);
+			image = imageDescriptor.createImage(true);
+			getImageRegistry().put(key, image);
 		}
 		return image;
 	}

@@ -417,8 +417,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
 			} else if (getEditorInput() instanceof AbstractTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
-			} else if (getUrl() != null) {
-				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_WEB));
+			} else { //if (getUrl() != null) {
+				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
+//				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_WEB));
 			}
 
 		} catch (PartInitException e) {
@@ -508,10 +509,10 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private void setFormHeaderImage(String repositoryKind) {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
-		ImageDescriptor imageDescriptor = TasksUiImages.createWithOverlay(TasksUiImages.REPOSITORY, overlay, false,
+		Image image = TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false,
 				false);
 		if (getHeaderForm() != null) {
-			getHeaderForm().getForm().setImage(TasksUiImages.getImage(imageDescriptor));
+			getHeaderForm().getForm().setImage(image);
 		}
 	}
 
