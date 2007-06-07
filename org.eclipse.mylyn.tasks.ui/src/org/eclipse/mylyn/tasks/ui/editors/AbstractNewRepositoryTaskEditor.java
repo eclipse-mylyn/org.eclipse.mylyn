@@ -35,6 +35,7 @@ import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylar.tasks.core.TaskCategory;
 import org.eclipse.mylar.tasks.core.TaskList;
 import org.eclipse.mylar.tasks.core.UncategorizedCategory;
+import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylar.tasks.ui.DatePicker;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -78,11 +79,15 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
 
+	private static final String LABEL_SELECT_DETECTOR = "Select duplicate detector:";
+
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
 
-	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.\nDuplicate search currently only supports stack trace matching.";
-
 	protected Button searchForDuplicates;
+
+	protected CCombo duplicateDetectorChooser;
+
+	protected Label duplicateDetectorLabel;
 
 	protected DatePicker scheduledForDate;
 
@@ -110,7 +115,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		newSummary = taskData.getSummary();
 		repository = editorInput.getRepository();
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-		isDirty = false;		
+		isDirty = false;
 	}
 
 	@Override
@@ -265,52 +270,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		// ignore
 	}
 
-	public String getStackTraceFromDescription() {
-		String description = descriptionTextViewer.getTextWidget().getText().trim();
-		String stackTrace = null;
-
-		if (description == null) {
-			return null;
-		}
-
-		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n";
-		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?";
-		Pattern tracePattern = Pattern.compile(lineRegex);
-		Matcher match = tracePattern.matcher(description);
-
-		if (match.find()) {
-			// record the index of the first stack trace line
-			int start = match.start();
-			int lastEnd = match.end();
-
-			// find the last stack trace line
-			while (match.find()) {
-				lastEnd = match.end();
-			}
-
-			// make sure there's still room to find the exception
-			if (start <= 0) {
-				return null;
-			}
-
-			// count back to the line before the stack trace to find the
-			// exception
-			int stackStart = 0;
-			int index = start - 1;
-			while (index > 1 && description.charAt(index) == ' ') {
-				index--;
-			}
-
-			// locate the exception line index
-			stackStart = description.substring(0, index - 1).lastIndexOf("\n");
-			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
-
-			stackTrace = description.substring(stackStart, lastEnd);
-		}
-
-		return stackTrace;
-	}
-
 	@Override
 	protected void updateTask() {
 		taskData.setSummary(newSummary);
@@ -324,8 +283,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected class DescriptionListener implements Listener {
 		public void handleEvent(Event event) {
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData.getRepositoryKind(), "New Description",
-							false, taskData.getSummary()))));
+					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
+							.getRepositoryKind(), "New Description", false, taskData.getSummary()))));
 		}
 	}
 
@@ -432,8 +391,34 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
 
-		SearchHitCollector collector = getDuplicateSearchCollector("");
-		if (collector != null) {
+		List<AbstractDuplicateDetector> allCollectors = getDuplicateSearchCollectorsList();
+		if (allCollectors != null) {
+			duplicateDetectorLabel = new Label(buttonComposite, SWT.LEFT);
+			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
+
+			duplicateDetectorChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
+
+			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+			duplicateDetectorChooser.setFont(TEXT_FONT);
+
+			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
+
+				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
+					return c1.getName().compareToIgnoreCase(c2.getName());
+				}
+
+			});
+
+			for (AbstractDuplicateDetector detector : allCollectors) {
+				duplicateDetectorChooser.add(detector.getName());
+			}
+
+			duplicateDetectorChooser.select(0);
+			duplicateDetectorChooser.setEnabled(true);
+			duplicateDetectorChooser.setData(allCollectors);
+		}
+
+		if (allCollectors != null && allCollectors.size() > 0) {
 
 			searchForDuplicates = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
 			GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
@@ -444,7 +429,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 				}
 			});
 		}
-		
+
+		Label spacer = new Label(buttonComposite, SWT.NULL);
+		spacer.setText("");
+
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
@@ -491,12 +479,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	public boolean searchForDuplicates() {
 
-		String stackTrace = getStackTraceFromDescription();
-		if (stackTrace == null) {
-			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
-			return false;
-		}
-		SearchHitCollector collector = getDuplicateSearchCollector(stackTrace);
+		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
+
+		// updatetask() needs to be called so that the description text is save before we
+		// search for duplicates
+		this.updateTask();
+
+		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
 		if (collector != null) {
 			NewSearchUI.runQueryInBackground(collector);
 			return true;
@@ -541,12 +530,63 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return newTask;
 	}
 
-	protected abstract SearchHitCollector getDuplicateSearchCollector(String description);
+	protected abstract SearchHitCollector getDuplicateSearchCollector(String name);
+
+	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
+	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		new MessageDialog(null, "Operation not supported", null, "Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.", MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
+		new MessageDialog(null, "Operation not supported", null,
+				"Save of un-submitted new tasks is not currently supported.\nPlease submit all new tasks.",
+				MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0).open();
 		monitor.setCanceled(true);
 		return;
+	}
+
+	public static String getStackTraceFromDescription(String description) {
+		String stackTrace = null;
+
+		if (description == null) {
+			return null;
+		}
+
+		String punct = "!\"#$%&'\\(\\)*+,-./:;\\<=\\>?@\\[\\]^_`\\{|\\}~\n";
+		String lineRegex = " *at\\s+[\\w" + punct + "]+ ?\\(.*\\) *\n?";
+		Pattern tracePattern = Pattern.compile(lineRegex);
+		Matcher match = tracePattern.matcher(description);
+
+		if (match.find()) {
+			// record the index of the first stack trace line
+			int start = match.start();
+			int lastEnd = match.end();
+
+			// find the last stack trace line
+			while (match.find()) {
+				lastEnd = match.end();
+			}
+
+			// make sure there's still room to find the exception
+			if (start <= 0) {
+				return null;
+			}
+
+			// count back to the line before the stack trace to find the
+			// exception
+			int stackStart = 0;
+			int index = start - 1;
+			while (index > 1 && description.charAt(index) == ' ') {
+				index--;
+			}
+
+			// locate the exception line index
+			stackStart = description.substring(0, index - 1).lastIndexOf("\n");
+			stackStart = (stackStart == -1) ? 0 : stackStart + 1;
+
+			stackTrace = description.substring(stackStart, lastEnd);
+		}
+
+		return stackTrace;
 	}
 }

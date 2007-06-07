@@ -5,6 +5,7 @@
     <extension-point id="repositories" name="Task Repositories" schema="schema/repositories.exsd"/>
     <extension-point id="editors" name="Task Editors" schema="schema/editors.exsd"/>
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
+    <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
 
 	<!--
     <extension
@@ -840,8 +841,7 @@
           class="org.eclipse.mylar.internal.tasks.ui.workingset.TaskElementFactory"
           id="org.eclipse.mylar.tasks.ui.elementFactory">
     </factory>
- </extension>
-   
+</extension>
 </plugin>
 
    <!--

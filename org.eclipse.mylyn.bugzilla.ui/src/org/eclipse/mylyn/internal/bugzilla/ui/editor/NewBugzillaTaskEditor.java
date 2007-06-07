@@ -10,17 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylar.internal.bugzilla.ui.editor;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.ui.TaskFactory;
+import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
 import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
@@ -102,23 +99,21 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
-	public SearchHitCollector getDuplicateSearchCollector(String searchString) {
-		String queryUrl = "";
-		try {
-			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
-					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());
-		} catch (UnsupportedEncodingException e) {
-			MylarStatusHandler.log(e, "Error during duplicate detection");
-			return null;
+	public SearchHitCollector getDuplicateSearchCollector(String name) {
+		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
+		List<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+
+		for (AbstractDuplicateDetector detector : allDetectors) {
+			if (detector.getName().equals(duplicateDetectorName)) {
+				return detector.getSearchHitCollector(repository, taskData);
+			}
 		}
+		// didn't find it
+		return null;
+	}
 
-		queryUrl += "&product=" + taskData.getProduct();
-
-		BugzillaRepositoryQuery bugzillaQuery = new BugzillaRepositoryQuery(repository.getUrl(), queryUrl, "search");
-
-		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, bugzillaQuery, new TaskFactory(repository));
-		return collector;
+	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
 	}
 
 	@Override

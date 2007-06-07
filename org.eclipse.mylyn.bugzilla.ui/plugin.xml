@@ -38,4 +38,15 @@
                <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
+	
+	
+	
+         <extension
+   		point="org.eclipse.mylar.tasks.ui.duplicateDetectors">
+            <detector class="org.eclipse.mylar.internal.bugzilla.ui.search.StackTraceDuplicateDetector"
+                      name="Stack Trace">
+            </detector>
+          
+   </extension>
+	
 </plugin>

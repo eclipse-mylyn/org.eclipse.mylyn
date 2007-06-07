@@ -144,6 +144,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
+	private List<AbstractDuplicateDetector> duplicateDetectors = new ArrayList<AbstractDuplicateDetector>();
+
 	private boolean eclipse_3_3_workbench = false;
 
 	private ISaveParticipant saveParticipant;
@@ -282,7 +284,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						repository.getKind());
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getKind());
 				if (connectorUi != null && !connectorUi.hasCustomNotificationHandling()) {
-					for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager().getTaskList()
+					for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager()
+							.getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
 						if ((repositoryTask.getLastSyncDateStamp() == null || repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
@@ -385,8 +388,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				for (RepositoryTemplate template : connector.getTemplates()) {
 					if (template.addAutomatically) {
 						try {
-							TaskRepository taskRepository = taskRepositoryManager.getRepository(connector
-									.getRepositoryType(), template.repositoryUrl);
+							TaskRepository taskRepository = taskRepositoryManager.getRepository(
+									connector.getRepositoryType(), template.repositoryUrl);
 							if (taskRepository == null) {
 								taskRepository = new TaskRepository(connector.getRepositoryType(),
 										template.repositoryUrl, template.version);
@@ -783,17 +786,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 // }
 	}
 
-// /**
-// * Returns the path to the file caching the offline bug reports. PUBLIC FOR
-// * TESTING
-// */
-// public IPath getOfflineReportsFilePath() {
-// IPath stateLocation =
-// Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
-// IPath configFile = stateLocation.append("offlineReports");
-// return configFile;
-// }
-
 	public TaskDataManager getTaskDataManager() {
 		if (taskDataManager == null) {
 			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
@@ -817,6 +809,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static RepositorySynchronizationManager getSynchronizationManager() {
 		return synchronizationManager;
+	}
+
+	public void addDuplicateDetector(AbstractDuplicateDetector duplicateDetector) {
+		if (duplicateDetector != null) {
+			duplicateDetectors.add(duplicateDetector);
+		}
+	}
+
+	public List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		return duplicateDetectors;
 	}
 
 	public String getRepositoriesFilePath() {
@@ -872,8 +874,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	/**
-	 * Retrieve the task repository that has been associated with the given
-	 * project (or resource belonging to a project)
+	 * Retrieve the task repository that has been associated with the given project (or resource belonging to a project)
 	 */
 	public TaskRepository getRepositoryForResource(IResource resource, boolean silent) {
 		if (resource == null) {
@@ -888,9 +889,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 
 		if (!silent) {
-			MessageDialog
-					.openInformation(null, "No Repository Found",
-							"No repository was found. Associate a Task Repository with this project via the project's property page.");
+			MessageDialog.openInformation(null, "No Repository Found",
+					"No repository was found. Associate a Task Repository with this project via the project's property page.");
 		}
 
 		return null;

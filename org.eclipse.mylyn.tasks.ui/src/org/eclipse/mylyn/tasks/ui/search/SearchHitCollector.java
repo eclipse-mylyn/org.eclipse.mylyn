@@ -43,6 +43,8 @@ import org.eclipse.ui.PlatformUI;
 public class SearchHitCollector extends QueryHitCollector implements ISearchQuery {
 
 	private static final String QUERYING_REPOSITORY = "Querying Repository...";
+	
+	private String type;
 
 	private TaskRepository repository;
 
@@ -118,7 +120,15 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	public String getLabel() {
 		return QUERYING_REPOSITORY;
 	}
+	
+	public String getTypeLabel() {
+		return type;
+	}
 
+	public void setTypeLabel(String type) {
+		this.type = type;
+	}
+	
 	public boolean canRerun() {
 		return true;
 	}

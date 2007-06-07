@@ -27,6 +27,7 @@ import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylar.tasks.core.RepositoryTemplate;
+import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylar.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
@@ -53,7 +54,7 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_TMPL_URLREPOSITORY = "urlRepository";
 
 	public static final String ELMNT_TMPL_REPOSITORYKIND = "repositoryKind";
-	
+
 	public static final String ELMNT_TMPL_CHARACTERENCODING = "characterEncoding";
 
 	public static final String ELMNT_TMPL_ANONYMOUS = "anonymous";
@@ -71,15 +72,15 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_TMPL_ADDAUTO = "addAutomatically";
 
 	public static final String ELMNT_REPOSITORY_CONNECTOR = "connectorCore";
-	
+
 	public static final String ATTR_USER_MANAGED = "userManaged";
-	
+
 	public static final String ATTR_CUSTOM_NOTIFICATIONS = "customNotifications";
 
 	public static final String ELMNT_REPOSITORY_LINK_PROVIDER = "linkProvider";
-	
-	public static final String ELMNT_REPOSITORY_UI= "connectorUi";
-	
+
+	public static final String ELMNT_REPOSITORY_UI = "connectorUi";
+
 	public static final String ELMNT_EXTERNALIZER = "externalizer";
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
@@ -101,7 +102,7 @@ public class TasksUiExtensionReader {
 	public static final String ATTR_CLASS = "class";
 
 	public static final String ATTR_MENU_PATH = "menuPath";
-	
+
 	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasks.ui.editors";
 
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
@@ -109,6 +110,14 @@ public class TasksUiExtensionReader {
 	public static final String ELMNT_HYPERLINK_LISTENER = "hyperlinkListener";
 
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
+
+	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylar.tasks.ui.duplicateDetectors";
+
+	public static final String ELMNT_DUPLICATE_DETECTOR = "detector";
+
+	public static final String ATTR_NAME = "name";
+
+	public static final String ATTR_KIND = "kind";
 
 	private static boolean coreExtensionsRead = false;
 
@@ -180,7 +189,7 @@ public class TasksUiExtensionReader {
 			for (int j = 0; j < elements.length; j++) {
 				if (elements[j].getName().equals(ELMNT_REPOSITORY_UI)) {
 					readRepositoryConnectorUi(elements[j]);
-				} 
+				}
 			}
 		}
 
@@ -191,20 +200,48 @@ public class TasksUiExtensionReader {
 			for (int j = 0; j < elements.length; j++) {
 				if (elements[j].getName().equals(ELMNT_REPOSITORY_LINK_PROVIDER)) {
 					readLinkProvider(elements[j]);
-				} 
+				}
 			}
 		}
-	
+
+		IExtensionPoint duplicateDetectorsExtensionPoint = registry.getExtensionPoint(EXTENSION_DUPLICATE_DETECTORS);
+		IExtension[] dulicateDetectorsExtensions = duplicateDetectorsExtensionPoint.getExtensions();
+		for (int i = 0; i < dulicateDetectorsExtensions.length; i++) {
+			IConfigurationElement[] elements = dulicateDetectorsExtensions[i].getConfigurationElements();
+			for (int j = 0; j < elements.length; j++) {
+				if (elements[j].getName().equals(ELMNT_DUPLICATE_DETECTOR)) {
+					readDuplicateDetector(elements[j]);
+				}
+			}
+		}
+
 	}
-	
+
+	private static void readDuplicateDetector(IConfigurationElement element) {
+		try {
+			Object obj = element.createExecutableExtension(ATTR_CLASS);
+			if (obj instanceof AbstractDuplicateDetector) {
+				AbstractDuplicateDetector duplicateDetector = (AbstractDuplicateDetector) obj;
+				duplicateDetector.setName(element.getAttribute(ATTR_NAME));
+				duplicateDetector.setKind(element.getAttribute(ATTR_KIND));
+				TasksUiPlugin.getDefault().addDuplicateDetector((AbstractDuplicateDetector) duplicateDetector);
+			} else {
+				MylarStatusHandler.log("Could not load duplicate detector: " + obj.getClass().getCanonicalName(), null);
+			}
+		} catch (CoreException e) {
+			MylarStatusHandler.log(e, "Could not load duplicate detector extension");
+		}
+	}
+
 	private static void readLinkProvider(IConfigurationElement element) {
 		try {
 			Object repositoryLinkProvider = element.createExecutableExtension(ATTR_CLASS);
 			if (repositoryLinkProvider instanceof AbstractTaskRepositoryLinkProvider) {
-				TasksUiPlugin.getDefault().addRepositoryLinkProvider((AbstractTaskRepositoryLinkProvider) repositoryLinkProvider);
+				TasksUiPlugin.getDefault().addRepositoryLinkProvider(
+						(AbstractTaskRepositoryLinkProvider) repositoryLinkProvider);
 			} else {
-				MylarStatusHandler.log("Could not load repository link provider: " + repositoryLinkProvider.getClass().getCanonicalName(),
-						null);
+				MylarStatusHandler.log("Could not load repository link provider: "
+						+ repositoryLinkProvider.getClass().getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "Could not load repository link provider extension");
@@ -246,12 +283,12 @@ public class TasksUiExtensionReader {
 			if (connectorCore instanceof AbstractRepositoryConnector && type != null) {
 				AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) connectorCore;
 				TasksUiPlugin.getRepositoryManager().addRepositoryConnector(repositoryConnector);
-				
+
 				String userManagedString = element.getAttribute(ATTR_USER_MANAGED);
-				if(userManagedString != null){
+				if (userManagedString != null) {
 					boolean userManaged = Boolean.parseBoolean(userManagedString);
-					repositoryConnector.setUserManaged(userManaged);					
-				}				
+					repositoryConnector.setUserManaged(userManaged);
+				}
 			} else {
 				MylarStatusHandler.log("could not not load connector core: " + connectorCore, null);
 			}
@@ -265,21 +302,22 @@ public class TasksUiExtensionReader {
 		try {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
-				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi)connectorUiObject;
+				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
 				TasksUiPlugin.addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
 
 				String customNotificationsString = element.getAttribute(ATTR_CUSTOM_NOTIFICATIONS);
-				if(customNotificationsString != null){
+				if (customNotificationsString != null) {
 					boolean customNotifications = Boolean.parseBoolean(customNotificationsString);
-					connectorUi.setCustomNotificationHandling(customNotifications);					
+					connectorUi.setCustomNotificationHandling(customNotifications);
 				}
-				
+
 				String iconPath = element.getAttribute(ATTR_BRANDING_ICON);
 				if (iconPath != null) {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
 							.getName(), iconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addBrandingIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
+						TasksUiPlugin.getDefault().addBrandingIcon(
+								((AbstractRepositoryConnectorUi) connectorUi).getRepositoryType(),
 								TasksUiImages.getImage(descriptor));
 					}
 				}
@@ -288,8 +326,8 @@ public class TasksUiExtensionReader {
 					ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element.getContributor()
 							.getName(), overlayIconPath);
 					if (descriptor != null) {
-						TasksUiPlugin.getDefault().addOverlayIcon(((AbstractRepositoryConnectorUi)connectorUi).getRepositoryType(),
-								descriptor);
+						TasksUiPlugin.getDefault().addOverlayIcon(
+								((AbstractRepositoryConnectorUi) connectorUi).getRepositoryType(), descriptor);
 					}
 				}
 			} else {
@@ -300,7 +338,7 @@ public class TasksUiExtensionReader {
 			MylarStatusHandler.log(e, "Could not load tasklist listener extension");
 		}
 	}
-	
+
 	private static void readRepositoryTemplate(IConfigurationElement element) {
 
 		boolean anonymous = false;
@@ -322,18 +360,18 @@ public class TasksUiExtensionReader {
 				&& TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repKind) != null) {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getRepositoryConnector(repKind);
-			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl, taskPrefix,
-					taskQueryUrl, newAccountUrl, anonymous, addAuto);
+			RepositoryTemplate template = new RepositoryTemplate(label, serverUrl, encoding, version, newTaskUrl,
+					taskPrefix, taskQueryUrl, newAccountUrl, anonymous, addAuto);
 			connector.addTemplate(template);
-			
+
 			for (IConfigurationElement configElement : element.getChildren()) {
 				String name = configElement.getAttribute("name");
 				String value = configElement.getAttribute("value");
-				if(name != null && !name.equals("") && value != null) {
+				if (name != null && !name.equals("") && value != null) {
 					template.addAttribute(name, value);
 				}
 			}
-			
+
 		} else {
 			MylarStatusHandler.log("Could not load repository template extension " + element.getName(),
 					TasksUiExtensionReader.class);
