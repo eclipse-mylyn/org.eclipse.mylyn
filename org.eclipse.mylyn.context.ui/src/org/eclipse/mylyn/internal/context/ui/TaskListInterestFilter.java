@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
@@ -71,7 +71,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	// TODO: make meta-context more explicit
 	protected boolean isInteresting(Object parent, ITask task) {
 		return shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.FILTER_SUBTASKS));
+				TasksUiPreferenceConstants.FILTER_SUBTASKS));
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (!checkSubTasks) {
 			return false;
 		}
-		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TaskListPreferenceConstants.FILTER_SUBTASKS)) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(TasksUiPreferenceConstants.FILTER_SUBTASKS)) {
 			return false;
 		}
 		if (task.getChildren() != null && task.getChildren().size() > 0) {
