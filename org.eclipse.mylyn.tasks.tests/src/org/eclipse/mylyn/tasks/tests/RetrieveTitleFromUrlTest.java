@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 
 /**
  * @author Mik Kersten

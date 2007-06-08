@@ -9,12 +9,12 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.internal.trac.ui.TracHyperlinkUtilTest;
+import org.eclipse.mylyn.internal.trac.ui.TracHyperlinkUtilTest;
 
 /**
  * @author Mik Kersten
@@ -25,7 +25,7 @@ public class AllTracTests {
 	public static Test suite() {
 //		UrlConnectionUtil.initCommonsLoggingSettings();
 		
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.trac.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.trac.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(TracXmlRpcTest.class);
 		suite.addTestSuite(TracSearchTest.class);

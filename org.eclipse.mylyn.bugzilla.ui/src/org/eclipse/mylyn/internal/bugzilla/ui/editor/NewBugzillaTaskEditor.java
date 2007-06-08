@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.editor;
+package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

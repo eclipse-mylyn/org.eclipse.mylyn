@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.tasks.ui.DatePicker;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;

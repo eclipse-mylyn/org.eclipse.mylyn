@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests.connector;
+package org.eclipse.mylyn.tasks.tests.connector;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskExternalizationException;
-import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

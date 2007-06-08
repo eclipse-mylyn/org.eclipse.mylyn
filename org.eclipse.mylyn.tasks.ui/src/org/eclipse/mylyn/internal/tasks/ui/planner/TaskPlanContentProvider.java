@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Ken Sueda

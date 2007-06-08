@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests.connector;
+package org.eclipse.mylyn.tasks.tests.connector;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 
 /**
  * @author Mik Kersten

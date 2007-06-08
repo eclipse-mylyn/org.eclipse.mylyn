@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import org.apache.commons.httpclient.util.DateUtil;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -94,7 +94,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 	private final static String IMPORT_BACKUPMETHOD_SETTING = "Import method backup";
 
 	public TaskDataImportWizardPage() {
-		super("org.eclipse.mylar.tasklist.importPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
+		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
 				TasksUiPlugin.PLUGIN_ID, "icons/wizban/banner-import.gif"));
 		setPageComplete(false);
 		setDescription(DESCRIPTION);

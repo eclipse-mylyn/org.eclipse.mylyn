@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.search;
+package org.eclipse.mylyn.tasks.ui.search;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.internal.ui.SearchPluginImages;

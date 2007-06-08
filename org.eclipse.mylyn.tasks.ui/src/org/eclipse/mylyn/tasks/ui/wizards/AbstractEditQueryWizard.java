@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.wizards;
+package org.eclipse.mylyn.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 
 /**
  * @author Mik Kersten

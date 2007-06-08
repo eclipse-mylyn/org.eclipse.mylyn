@@ -9,23 +9,23 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TaskListManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Wes Coelho

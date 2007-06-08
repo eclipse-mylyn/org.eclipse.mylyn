@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,11 +18,11 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.ui.TaskTransfer;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.FileTransfer;

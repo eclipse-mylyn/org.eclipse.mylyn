@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

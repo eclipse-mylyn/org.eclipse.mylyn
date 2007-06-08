@@ -9,18 +9,18 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.net.Proxy;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracClientFactory;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 
 /**
  * Provides a base implementation for test cases that access trac repositories.

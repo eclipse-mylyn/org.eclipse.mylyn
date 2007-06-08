@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.commands;
+package org.eclipse.mylyn.internal.tasks.ui.commands;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,20 +34,20 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TaskCommandIds;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TaskCommandIds;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;

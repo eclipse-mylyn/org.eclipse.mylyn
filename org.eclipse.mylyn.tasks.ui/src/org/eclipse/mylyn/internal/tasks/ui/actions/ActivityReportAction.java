@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -25,7 +25,7 @@ public class ActivityReportAction extends Action {
 
 	private static final String LABEL = "Activity Report";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.report.activity";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.report.activity";
 
 	public ActivityReportAction() {
 		super(LABEL);

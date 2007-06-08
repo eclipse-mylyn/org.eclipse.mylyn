@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,9 +21,9 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Caches {@link ITracClient} objects.

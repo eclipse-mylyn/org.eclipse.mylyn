@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 /**
  * @author Mik Kersten
@@ -30,9 +30,9 @@ public interface IBugzillaConstants {
 	
 	static final String LOGGED_OUT = "logged out";
 
-	static final String MOST_RECENT_QUERY = "org.eclipse.mylar.bugzilla.query.last";
+	static final String MOST_RECENT_QUERY = "org.eclipse.mylyn.bugzilla.query.last";
 
-	static final String SERVER_VERSION = "org.eclipse.mylar.bugzilla.server.version";
+	static final String SERVER_VERSION = "org.eclipse.mylyn.bugzilla.server.version";
 
 	public static final int RETURN_ALL_HITS = -1;
 
@@ -129,32 +129,32 @@ public interface IBugzillaConstants {
 		}
 	}
 
-	static final String REFRESH_QUERY = "org.eclipse.mylar.bugzilla.query.refresh";
+	static final String REFRESH_QUERY = "org.eclipse.mylyn.bugzilla.query.refresh";
 
-	static final String MAX_RESULTS = "org.eclipse.mylar.bugzilla.search.results.max";
+	static final String MAX_RESULTS = "org.eclipse.mylyn.bugzilla.search.results.max";
 
 	// names for the resources used to hold the different attributes of a bug
-	static final String VALUES_STATUS = "org.eclipse.mylar.bugzilla.values.status";
+	static final String VALUES_STATUS = "org.eclipse.mylyn.bugzilla.values.status";
 
-	static final String VALUSE_STATUS_PRESELECTED = "org.eclipse.mylar.bugzilla.values.status.preselected";
+	static final String VALUSE_STATUS_PRESELECTED = "org.eclipse.mylyn.bugzilla.values.status.preselected";
 
-	static final String VALUES_RESOLUTION = "org.eclipse.mylar.bugzilla.values.resolution";
+	static final String VALUES_RESOLUTION = "org.eclipse.mylyn.bugzilla.values.resolution";
 
-	static final String VALUES_SEVERITY = "org.eclipse.mylar.bugzilla.values.severity";
+	static final String VALUES_SEVERITY = "org.eclipse.mylyn.bugzilla.values.severity";
 
-	static final String VALUES_PRIORITY = "org.eclipse.mylar.bugzilla.values.priority";
+	static final String VALUES_PRIORITY = "org.eclipse.mylyn.bugzilla.values.priority";
 
-	static final String VALUES_HARDWARE = "org.eclipse.mylar.bugzilla.values.hardware";
+	static final String VALUES_HARDWARE = "org.eclipse.mylyn.bugzilla.values.hardware";
 
-	static final String VALUES_OS = "org.eclipse.mylar.bugzilla.values.os";
+	static final String VALUES_OS = "org.eclipse.mylyn.bugzilla.values.os";
 
-	static final String VALUES_PRODUCT = "org.eclipse.mylar.bugzilla.values.product";
+	static final String VALUES_PRODUCT = "org.eclipse.mylyn.bugzilla.values.product";
 
-	static final String VALUES_COMPONENT = "org.eclipse.mylar.bugzilla.values.component";
+	static final String VALUES_COMPONENT = "org.eclipse.mylyn.bugzilla.values.component";
 
-	static final String VALUES_VERSION = "org.eclipse.mylar.bugzilla.values.version";
+	static final String VALUES_VERSION = "org.eclipse.mylyn.bugzilla.values.version";
 
-	static final String VALUES_TARGET = "org.eclipse.mylar.bugzilla.values.target";
+	static final String VALUES_TARGET = "org.eclipse.mylyn.bugzilla.values.target";
 
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 

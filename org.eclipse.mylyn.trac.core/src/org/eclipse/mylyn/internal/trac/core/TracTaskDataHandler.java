@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,22 +23,22 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
-import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
-import org.eclipse.mylar.internal.trac.core.model.TracComment;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.internal.trac.core.model.TracTicketField;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.core.util.TracUtils;
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.RepositoryAttachment;
-import org.eclipse.mylar.tasks.core.RepositoryOperation;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
+import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
+import org.eclipse.mylyn.internal.trac.core.model.TracComment;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel

@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;

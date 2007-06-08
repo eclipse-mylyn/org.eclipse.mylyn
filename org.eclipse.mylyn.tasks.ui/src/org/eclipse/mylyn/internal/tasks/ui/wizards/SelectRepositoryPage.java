@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +28,15 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
-import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

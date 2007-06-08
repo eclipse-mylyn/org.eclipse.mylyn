@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.util;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,15 +26,15 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.core.util.ZipFileUtil;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.core.util.ZipFileUtil;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Job that performs exporting (copying or zipping) of Mylar Task List data

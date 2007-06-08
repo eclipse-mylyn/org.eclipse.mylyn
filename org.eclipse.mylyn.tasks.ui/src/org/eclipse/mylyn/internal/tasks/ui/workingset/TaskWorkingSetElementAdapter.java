@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.workingset;
+package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetElementAdapter;
 

@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,24 +23,24 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.core.TracAttributeFactory.Attribute;
-import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.core.util.TracUtils;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.QueryHitCollector;
-import org.eclipse.mylar.tasks.core.RepositoryOperation;
-import org.eclipse.mylar.tasks.core.RepositoryStatus;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.TracAttributeFactory.Attribute;
+import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.QueryHitCollector;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Steffen Pingel

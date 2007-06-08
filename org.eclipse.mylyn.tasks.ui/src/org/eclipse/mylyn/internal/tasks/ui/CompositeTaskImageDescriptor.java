@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;

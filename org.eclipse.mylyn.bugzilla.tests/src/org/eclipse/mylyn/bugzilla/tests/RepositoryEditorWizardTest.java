@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.net.UnknownHostException;
 
@@ -17,18 +17,18 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClientFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
-import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClientFactory;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositorySettingsPage;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**

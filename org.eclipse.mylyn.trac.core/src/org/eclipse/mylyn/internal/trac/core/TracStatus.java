@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 
 /**
  * @author Steffen Pingel

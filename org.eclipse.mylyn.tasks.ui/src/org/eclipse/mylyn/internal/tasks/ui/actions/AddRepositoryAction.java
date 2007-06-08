@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.ui.TaskCommandIds;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.ui.TaskCommandIds;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 
@@ -26,7 +26,7 @@ public class AddRepositoryAction extends Action {
 
 	public static final String TITLE = "Add Task Repository";
 
-	private static final String ID = "org.eclipse.mylar.tasklist.repositories.add";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.add";
 
 	public AddRepositoryAction() {
 		setImageDescriptor(TasksUiImages.REPOSITORY_NEW);

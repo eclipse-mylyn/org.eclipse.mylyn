@@ -9,23 +9,23 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 

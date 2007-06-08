@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core.model;
+package org.eclipse.mylyn.internal.trac.core.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
 
 /**
  * Represents a Trac ticket as it is retrieved from a Trac repository.

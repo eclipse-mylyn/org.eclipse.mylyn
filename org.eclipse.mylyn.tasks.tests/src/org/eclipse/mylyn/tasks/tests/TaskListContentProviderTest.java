@@ -6,16 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListContentProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Felix Schwarz

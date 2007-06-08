@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Iterator;
 
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
 /**
@@ -26,7 +26,7 @@ public class OpenWithBrowserAction extends BaseSelectionListenerAction {
 
 	private static final String LABEL = "Open with Browser";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.open.browser";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open.browser";
 
 	public OpenWithBrowserAction() {
 		super(LABEL);

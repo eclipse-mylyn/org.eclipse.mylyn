@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -18,27 +18,27 @@ import java.util.Calendar;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.DateUtil;
-import org.eclipse.mylar.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.Task.PriorityLevel;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.DatePicker;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.core.util.DateUtil;
+import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyEvent;
@@ -82,7 +82,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private static final String LABEL_DUE = "Due:";
 
-	public static final String PLANNING_EDITOR_ID = "org.eclipse.mylar.editors.planning";
+	public static final String PLANNING_EDITOR_ID = "org.eclipse.mylyn.editors.planning";
 
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 

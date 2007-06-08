@@ -8,11 +8,11 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -23,7 +23,7 @@ public class RenameAction extends BaseSelectionListenerAction {
 
 	private static final String LABEL_NAME = "Rename";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.rename";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.rename";
 
 	private TaskListView view;
 

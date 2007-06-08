@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -28,9 +28,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskDataExportJob;
-import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 

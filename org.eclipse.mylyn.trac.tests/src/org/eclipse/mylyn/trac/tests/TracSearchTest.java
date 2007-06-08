@@ -9,11 +9,11 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 
 /**
  * @author Steffen Pingel

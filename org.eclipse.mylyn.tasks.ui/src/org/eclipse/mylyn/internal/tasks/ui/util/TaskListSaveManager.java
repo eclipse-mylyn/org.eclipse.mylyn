@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.util;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,15 +27,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylar.tasks.ui.TaskListManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**

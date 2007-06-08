@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

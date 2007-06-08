@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;

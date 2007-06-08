@@ -6,17 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves

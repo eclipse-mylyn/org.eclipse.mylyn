@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -27,25 +27,25 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IAttachmentHandler;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.LocalAttachment;
-import org.eclipse.mylar.tasks.core.MylarStatus;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.editors.AbstractTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.LocalAttachment;
+import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 

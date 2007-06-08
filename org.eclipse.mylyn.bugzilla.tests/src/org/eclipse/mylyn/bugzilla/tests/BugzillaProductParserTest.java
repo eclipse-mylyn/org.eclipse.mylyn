@@ -8,18 +8,18 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Tests for parsing Product Page for new Bugzilla reports

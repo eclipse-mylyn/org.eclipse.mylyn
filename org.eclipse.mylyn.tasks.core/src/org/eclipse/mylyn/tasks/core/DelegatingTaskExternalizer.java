@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,9 +19,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

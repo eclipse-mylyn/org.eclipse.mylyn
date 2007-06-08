@@ -6,15 +6,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -27,7 +27,7 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 
 	public AttachFileAction() {
 		super("Attach File...");
-		setId("org.eclipse.mylar.tasks.ui.actions.add.attachment");
+		setId("org.eclipse.mylyn.tasks.ui.actions.add.attachment");
 	}
 
 	@Override

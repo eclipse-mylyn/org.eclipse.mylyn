@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,24 +37,24 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditorInput;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -122,7 +122,7 @@ public class TasksUiUtil {
 						| WorkbenchBrowserSupport.NAVIGATION_BAR | customFlags;
 			}
 
-			String generatedId = "org.eclipse.mylar.web.browser-" + Calendar.getInstance().getTimeInMillis();
+			String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
 			browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
 			browser.openURL(new URL(url));
 		}

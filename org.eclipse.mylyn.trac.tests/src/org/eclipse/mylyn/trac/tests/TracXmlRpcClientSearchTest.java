@@ -9,15 +9,15 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 
 /**
  * @author Steffen Pingel

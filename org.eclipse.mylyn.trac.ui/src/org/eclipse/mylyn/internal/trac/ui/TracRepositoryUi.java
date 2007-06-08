@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +16,25 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.TracTask;
-import org.eclipse.mylar.internal.trac.core.TracTask.Kind;
-import org.eclipse.mylar.internal.trac.ui.wizard.EditTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.NewTracQueryWizard;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracCustomQueryPage;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
-import org.eclipse.mylar.tasks.ui.wizards.NewTaskWizard;
-import org.eclipse.mylar.tasks.ui.wizards.NewWebTaskWizard;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.TracTask;
+import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
+import org.eclipse.mylyn.internal.trac.ui.wizard.EditTracQueryWizard;
+import org.eclipse.mylyn.internal.trac.ui.wizard.NewTracQueryWizard;
+import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
+import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
 
 /**
  * @author Mik Kersten

@@ -8,14 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.ITaskListPresentation;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.ITaskListPresentation;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
@@ -26,7 +26,7 @@ public class PresentationDropDownSelectionAction extends Action implements IMenu
 
 	private static final String LABEL_NAME = "Task Presentation";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.presentationselection";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.presentationselection";
 
 	private TaskListView view;
 

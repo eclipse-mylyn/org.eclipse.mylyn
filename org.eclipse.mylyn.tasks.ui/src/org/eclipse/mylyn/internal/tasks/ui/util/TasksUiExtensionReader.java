@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.util;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +21,17 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.ITaskListExternalizer;
-import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.AbstractTaskRepositoryLinkProvider;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
+import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -41,11 +41,11 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class TasksUiExtensionReader {
 
-	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylar.tasks.ui.repositories";
+	public static final String EXTENSION_REPOSITORIES = "org.eclipse.mylyn.tasks.ui.repositories";
 
-	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylar.tasks.ui.projectLinkProviders";
+	public static final String EXTENSION_REPOSITORY_LINKS_PROVIDERS = "org.eclipse.mylyn.tasks.ui.projectLinkProviders";
 
-	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylar.tasks.core.templates";
+	public static final String EXTENSION_TEMPLATES = "org.eclipse.mylyn.tasks.core.templates";
 
 	public static final String EXTENSION_TMPL_REPOSITORY = "repository";
 
@@ -93,7 +93,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_SETTINGS_PAGE = "settingsPage";
 
-	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylar.tasks.ui.actions";
+	public static final String EXTENSION_TASK_CONTRIBUTOR = "org.eclipse.mylyn.tasks.ui.actions";
 
 	public static final String ATTR_ACTION_CONTRIBUTOR_CLASS = "taskHandlerClass";
 
@@ -103,7 +103,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ATTR_MENU_PATH = "menuPath";
 
-	public static final String EXTENSION_EDITORS = "org.eclipse.mylar.tasks.ui.editors";
+	public static final String EXTENSION_EDITORS = "org.eclipse.mylyn.tasks.ui.editors";
 
 	public static final String ELMNT_EDITOR_FACTORY = "editorFactory";
 
@@ -111,7 +111,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_HYPERLINK_DETECTOR = "hyperlinkDetector";
 
-	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylar.tasks.ui.duplicateDetectors";
+	public static final String EXTENSION_DUPLICATE_DETECTORS = "org.eclipse.mylyn.tasks.ui.duplicateDetectors";
 
 	public static final String ELMNT_DUPLICATE_DETECTOR = "detector";
 

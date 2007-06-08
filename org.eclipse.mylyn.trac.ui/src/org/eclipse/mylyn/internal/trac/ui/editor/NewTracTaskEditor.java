@@ -6,17 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.editor;
+package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylar.tasks.ui.TaskFactory;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**

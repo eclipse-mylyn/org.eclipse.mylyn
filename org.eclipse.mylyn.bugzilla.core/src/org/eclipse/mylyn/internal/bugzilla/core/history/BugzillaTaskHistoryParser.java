@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core.history;
+package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
  * @author John Anvik
@@ -21,9 +21,9 @@ import java.text.ParseException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylar.core.net.HtmlTag;
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.core.net.HtmlTag;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
 
 /**
  * Parses Bugzilla bug activity page to fill in a BugActivity object

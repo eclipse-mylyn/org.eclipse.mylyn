@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,10 +26,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 
 /**
  * Operations on a task repository
@@ -338,7 +338,7 @@ public abstract class AbstractRepositoryConnector {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new CoreException(new MylarStatus(IStatus.ERROR, "org.eclipse.mylar.tasks.core",
+			throw new CoreException(new MylarStatus(IStatus.ERROR, "org.eclipse.mylyn.tasks.core",
 					IMylarStatusConstants.INTERNAL_ERROR, "Could not create context file", e));
 		}
 		return true;

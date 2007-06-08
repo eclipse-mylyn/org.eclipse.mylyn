@@ -1,12 +1,12 @@
-package org.eclipse.mylar.trac.tests.support;
+package org.eclipse.mylyn.trac.tests.support;
 
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.core.model.TracAttachment;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.trac.tests.AbstractTracClientTest;
-import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.trac.tests.AbstractTracClientTest;
+import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
  * Utility that cleans up artifacts created by the Trac test suite. This class

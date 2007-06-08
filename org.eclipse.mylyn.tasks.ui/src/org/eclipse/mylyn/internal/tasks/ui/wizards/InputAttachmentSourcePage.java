@@ -10,7 +10,7 @@
  *     Sebastian Davids <sdavids@gmx.de> - layout tweaks
  *     Jeff Pound <jeff.bagu@gmail.com> - modified for attachment input
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.*;
+import org.eclipse.ui.views.navigator.ResourceSorter;
 
 /**
  * A wizard to input the source of the attachment. This is a modified version of

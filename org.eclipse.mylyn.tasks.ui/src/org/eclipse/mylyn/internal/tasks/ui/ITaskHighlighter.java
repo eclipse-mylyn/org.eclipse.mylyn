@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.graphics.Color;
 
 /**

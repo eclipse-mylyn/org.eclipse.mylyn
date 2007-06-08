@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,26 +29,26 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.actions.AttachFileAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeEditorAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskEditorInput;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskFormPage;
+import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;

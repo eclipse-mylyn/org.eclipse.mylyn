@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
 
@@ -25,7 +25,7 @@ public class TaskEditorInputFactory implements IElementFactory {
 
 	private static final String TAG_TASK_HANDLE = "taskHandle";
 
-	public static final String ID_FACTORY = "org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory";
+	public static final String ID_FACTORY = "org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory";
 
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);

@@ -8,15 +8,15 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskSelection;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
+import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * A node for the tree in the <code>RepositoryTaskOutlinePage</code>.

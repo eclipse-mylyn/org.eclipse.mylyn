@@ -1,4 +1,4 @@
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

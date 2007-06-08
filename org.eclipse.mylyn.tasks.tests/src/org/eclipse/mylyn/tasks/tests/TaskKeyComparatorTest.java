@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.views.TaskKeyComparator;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 
 /**
  * @author Eugene Kuleshov https://bugs.eclipse.org/bugs/show_bug.cgi?taskId=129511

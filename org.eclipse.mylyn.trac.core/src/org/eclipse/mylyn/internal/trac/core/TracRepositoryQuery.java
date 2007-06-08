@@ -9,10 +9,10 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 
 /**
  * @author Steffen Pingel

@@ -9,13 +9,13 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -25,7 +25,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TracUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.trac.ui";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.trac.ui";
 
 	public final static String TITLE_MESSAGE_DIALOG = "Mylar Trac Client";
 

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.wizard;
+package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -17,17 +17,17 @@ import java.net.MalformedURLException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.core.TracTaskDataHandler;
-import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
+import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;

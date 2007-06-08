@@ -9,23 +9,23 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
  */
 public class TaskListElementPropertiesAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.properties";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.properties";
 
 	private final StructuredViewer viewer;
 

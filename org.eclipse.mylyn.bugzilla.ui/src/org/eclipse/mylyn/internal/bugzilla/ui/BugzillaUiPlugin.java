@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *     IBM Corporation - Bug 177320 Pending changes to internal class UpdateCore will break Tasks/Core
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -37,7 +37,7 @@ import org.osgi.framework.BundleContext;
  */
 public class BugzillaUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla.ui";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla.ui";
 
 	public static final String SEARCH_PAGE_ID = BugzillaUiPlugin.PLUGIN_ID + ".search.bugzillaSearchPage";
 

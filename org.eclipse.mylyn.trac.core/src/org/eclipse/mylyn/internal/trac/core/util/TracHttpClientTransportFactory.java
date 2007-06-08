@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core.util;
+package org.eclipse.mylyn.internal.trac.core.util;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -28,7 +28,7 @@ import org.apache.xmlrpc.client.XmlRpcCommonsTransport;
 import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactory;
-import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.mylyn.core.net.WebClientUtil;
 
 /**
  * A custom transport factory used to establish XML-RPC connections. Uses the

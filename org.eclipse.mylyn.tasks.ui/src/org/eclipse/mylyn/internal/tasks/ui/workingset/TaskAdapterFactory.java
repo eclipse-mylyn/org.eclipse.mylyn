@@ -6,10 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.workingset;
+package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
@@ -20,7 +20,7 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class TaskAdapterFactory implements IAdapterFactory {
 
-	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylar.tasks.ui.elementFactory";
+	private static final String TASK_ELEMENT_FACTORY_ID = "org.eclipse.mylyn.tasks.ui.elementFactory";
 	
 	@SuppressWarnings("unchecked")
 	private static final Class[] ADAPTER_TYPES = new Class[] { IPersistableElement.class };

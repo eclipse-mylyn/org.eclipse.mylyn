@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * Collects tasks that are not complete but have been worked on during the

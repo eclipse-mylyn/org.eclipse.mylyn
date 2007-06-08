@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +17,10 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +31,7 @@ import org.eclipse.ui.internal.WorkbenchImages;
  */
 public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 
-	private static final String ID = "org.eclipse.mylar.tasklist.repositories.delete";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.delete";
 
 	public DeleteTaskRepositoryAction() {
 		super("Delete Repository");

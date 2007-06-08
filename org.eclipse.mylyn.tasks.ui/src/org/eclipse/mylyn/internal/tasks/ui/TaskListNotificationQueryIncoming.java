@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 

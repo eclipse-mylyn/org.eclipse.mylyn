@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 
 /**
  * @author Rob Elves

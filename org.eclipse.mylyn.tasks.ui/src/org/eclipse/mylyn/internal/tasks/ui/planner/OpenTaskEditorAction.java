@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
@@ -25,7 +25,7 @@ import org.eclipse.mylar.tasks.ui.TasksUiUtil;
  */
 public class OpenTaskEditorAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.taskplannereditor.actions.open";
+	public static final String ID = "org.eclipse.mylyn.taskplannereditor.actions.open";
 
 	private final TableViewer viewer;
 

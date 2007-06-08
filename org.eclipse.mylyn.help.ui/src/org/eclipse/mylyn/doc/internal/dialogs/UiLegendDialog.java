@@ -9,21 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.doc.internal.dialogs;
+package org.eclipse.mylyn.doc.internal.dialogs;
 
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

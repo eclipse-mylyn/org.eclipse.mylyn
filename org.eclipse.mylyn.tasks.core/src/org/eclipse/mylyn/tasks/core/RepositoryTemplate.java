@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

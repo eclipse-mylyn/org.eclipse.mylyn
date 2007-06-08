@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 /**
  * Utility class to handle many text quoting scenarios

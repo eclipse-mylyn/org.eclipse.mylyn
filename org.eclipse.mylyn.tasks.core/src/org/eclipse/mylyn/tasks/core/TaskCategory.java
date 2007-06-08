@@ -11,7 +11,7 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.util.Set;
 

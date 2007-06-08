@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
 
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -24,7 +24,7 @@ import org.eclipse.ui.internal.PageLayout;
  */
 public class PlanningPerspectiveFactory implements IPerspectiveFactory {
 
-	public static final String ID_PERSPECTIVE = "org.eclipse.mylar.tasklist.ui.perspectives.planning";
+	public static final String ID_PERSPECTIVE = "org.eclipse.mylyn.tasklist.ui.perspectives.planning";
 	
 	public void createInitialLayout(IPageLayout layout) {
 		defineActions(layout);

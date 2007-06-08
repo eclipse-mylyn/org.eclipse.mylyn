@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,58 +49,58 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TaskArchiveFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskCompletionFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPatternFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.TaskWorkingSetFilter;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.actions.CollapseAllAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.DeleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.ExpandAllAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.FilterArchiveContainerAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.FilterCompletedTasksAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.FilterSubTasksAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.GoIntoAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.GoUpAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.LinkWithEditorAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskListElementAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.RemoveFromCategoryAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.RenameAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskListElementPropertiesAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskArchive;
-import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.core.UncategorizedCategory;
-import org.eclipse.mylar.tasks.ui.TaskTransfer;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ExpandAllAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.FilterArchiveContainerAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.FilterCompletedTasksAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.FilterSubTasksAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.GoIntoAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.RemoveFromCategoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskArchive;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.ui.TaskTransfer;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.DND;
@@ -161,7 +161,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.views.TaskListView";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.TaskListView";
 
 	public static final String LABEL_VIEW = "Task List";
 
@@ -276,9 +276,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private IMemento taskListMemento;
 
-	public static final String columnWidthIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.columnwidth";
+	public static final String columnWidthIdentifier = "org.eclipse.mylyn.tasklist.ui.views.tasklist.columnwidth";
 
-	public static final String tableSortIdentifier = "org.eclipse.mylar.tasklist.ui.views.tasklist.sortIndex";
+	public static final String tableSortIdentifier = "org.eclipse.mylyn.tasklist.ui.views.tasklist.sortIndex";
 
 	private static final int DEFAULT_SORT_DIRECTION = 1;
 

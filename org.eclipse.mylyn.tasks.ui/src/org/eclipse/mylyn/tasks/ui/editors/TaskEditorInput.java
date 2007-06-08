@@ -11,12 +11,12 @@
 /*
  * Created on 19-Jan-2005
  */
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;

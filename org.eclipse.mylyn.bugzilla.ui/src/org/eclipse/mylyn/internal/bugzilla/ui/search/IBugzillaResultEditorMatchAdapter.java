@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
-import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.Match;

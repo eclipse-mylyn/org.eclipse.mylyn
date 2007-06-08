@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,14 +19,14 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.search.ui.ISearchPage;
 import org.eclipse.search.ui.ISearchPageContainer;
 import org.eclipse.swt.SWT;
@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
 	
-	public static final String ID = "org.eclipse.mylar.tasks.ui.core.search.page";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.core.search.page";
 
 	private static final String PAGE_KEY = "page";
 

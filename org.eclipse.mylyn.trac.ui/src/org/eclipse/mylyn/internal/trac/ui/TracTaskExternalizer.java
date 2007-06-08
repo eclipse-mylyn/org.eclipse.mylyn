@@ -9,18 +9,18 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.TracTask;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.TaskExternalizationException;
-import org.eclipse.mylar.tasks.core.TaskList;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.TracTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

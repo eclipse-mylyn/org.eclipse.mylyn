@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.properties;
+package org.eclipse.mylyn.tasks.ui.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -18,12 +18,12 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesSorter;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoryLabelProvider;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

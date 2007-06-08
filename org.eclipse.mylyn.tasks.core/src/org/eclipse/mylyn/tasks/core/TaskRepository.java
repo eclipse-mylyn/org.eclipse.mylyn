@@ -10,7 +10,7 @@
  *     IBM Corporation - Bug 177320 Pending changes to internal class UpdateCore will break Tasks/Core
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -22,8 +22,8 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.net.WebClientUtil;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using
@@ -47,15 +47,15 @@ public class TaskRepository {
 
 	public static final String DEFAULT_CHARACTER_ENCODING = "UTF-8";
 
-	public static final String AUTH_PASSWORD = "org.eclipse.mylar.tasklist.repositories.password"; //$NON-NLS-1$ 
+	public static final String AUTH_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.password"; //$NON-NLS-1$ 
 
-	public static final String AUTH_USERNAME = "org.eclipse.mylar.tasklist.repositories.username"; //$NON-NLS-1$ 
+	public static final String AUTH_USERNAME = "org.eclipse.mylyn.tasklist.repositories.username"; //$NON-NLS-1$ 
 
-	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylar.tasklist.repositories.anonymous";
+	public static final String ANONYMOUS_LOGIN = "org.eclipse.mylyn.tasklist.repositories.anonymous";
 
-	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylar.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
+	public static final String AUTH_HTTP_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.httpauth.password"; //$NON-NLS-1$ 
 
-	public static final String AUTH_HTTP_USERNAME = "org.eclipse.mylar.tasklist.repositories.httpauth.username"; //$NON-NLS-1$ 
+	public static final String AUTH_HTTP_USERNAME = "org.eclipse.mylyn.tasklist.repositories.httpauth.username"; //$NON-NLS-1$ 
 
 	public static final String NO_VERSION_SPECIFIED = "unknown";
 
@@ -65,15 +65,15 @@ public class TaskRepository {
 
 	private static final URL DEFAULT_URL;
 
-	public static final String PROXY_USEDEFAULT = "org.eclipse.mylar.tasklist.repositories.proxy.usedefault";
+	public static final String PROXY_USEDEFAULT = "org.eclipse.mylyn.tasklist.repositories.proxy.usedefault";
 
-	public static final String PROXY_HOSTNAME = "org.eclipse.mylar.tasklist.repositories.proxy.hostname";
+	public static final String PROXY_HOSTNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.hostname";
 
-	public static final String PROXY_PORT = "org.eclipse.mylar.tasklist.repositories.proxy.port";
+	public static final String PROXY_PORT = "org.eclipse.mylyn.tasklist.repositories.proxy.port";
 
-	public static final String PROXY_USERNAME = "org.eclipse.mylar.tasklist.repositories.proxy.username";
+	public static final String PROXY_USERNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.username";
 
-	public static final String PROXY_PASSWORD = "org.eclipse.mylar.tasklist.repositories.proxy.password";
+	public static final String PROXY_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.proxy.password";
 
 	// HACK: Lock used to work around race condition in
 	// Platform.add/get/flushAuthorizationInfo()

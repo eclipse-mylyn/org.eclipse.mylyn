@@ -4,7 +4,7 @@
 		style="css/whatsnew.css" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
 			<link label="Mylar"
-				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylar.doc/doc/new.html"
+				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.doc/doc/new.html"
 				id="mylar-noteworthy" style-id="content-link">
 				<text>
 					Find out the significant changes made to Mylar

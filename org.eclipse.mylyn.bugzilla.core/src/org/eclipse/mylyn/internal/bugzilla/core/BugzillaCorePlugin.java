@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -41,7 +41,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 	public static final String REPOSITORY_KIND = "bugzilla";
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.bugzilla";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.bugzilla";
 
 	private static BugzillaCorePlugin INSTANCE;
 

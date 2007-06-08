@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,19 +26,19 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.UncategorizedCategory;
-import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylar.tasks.ui.DatePicker;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;

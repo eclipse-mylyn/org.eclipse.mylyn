@@ -9,13 +9,13 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 
 /**
  * @author Steffen Pingel

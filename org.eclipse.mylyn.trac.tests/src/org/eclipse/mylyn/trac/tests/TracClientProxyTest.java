@@ -1,11 +1,11 @@
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.net.Proxy;
 
-import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 
 public class TracClientProxyTest extends AbstractTracClientTest {
 

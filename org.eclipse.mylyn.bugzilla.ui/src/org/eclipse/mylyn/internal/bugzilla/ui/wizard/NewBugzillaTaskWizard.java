@@ -8,22 +8,22 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui.wizard;
+package org.eclipse.mylyn.internal.bugzilla.ui.wizard;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaAttributeFactory;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
-import org.eclipse.mylar.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -60,7 +60,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 				repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), Task.DEFAULT_TASK_KIND);
 		taskData.setNew(true);
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.mylar.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
+				"org.eclipse.mylyn.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));
 		super.setWindowTitle(TITLE);
 		setNeedsProgressMonitor(true);
 	}

@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
  * Abstract Task Repository link provider

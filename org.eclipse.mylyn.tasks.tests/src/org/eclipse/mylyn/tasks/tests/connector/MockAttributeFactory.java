@@ -6,11 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests.connector;
+package org.eclipse.mylyn.tasks.tests.connector;
 
 import java.util.Date;
 
-import org.eclipse.mylar.tasks.core.AbstractAttributeFactory;
+import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 
 
 

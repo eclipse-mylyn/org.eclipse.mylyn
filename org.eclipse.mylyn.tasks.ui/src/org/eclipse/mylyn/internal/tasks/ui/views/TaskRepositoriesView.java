@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -22,12 +22,12 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
-import org.eclipse.mylar.tasks.core.ITaskRepositoryListener;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteTaskRepositoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.EditRepositoryPropertiesAction;
+import org.eclipse.mylyn.tasks.core.ITaskRepositoryListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -44,7 +44,7 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskRepositoriesView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.repositories";
+	public static final String ID = "org.eclipse.mylyn.tasklist.repositories";
 
 	private TableViewer viewer;
 

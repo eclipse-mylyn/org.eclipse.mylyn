@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;

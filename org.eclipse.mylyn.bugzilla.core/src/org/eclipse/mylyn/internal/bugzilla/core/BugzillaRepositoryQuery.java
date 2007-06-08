@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 
 /**
  * @author Shawn Minto

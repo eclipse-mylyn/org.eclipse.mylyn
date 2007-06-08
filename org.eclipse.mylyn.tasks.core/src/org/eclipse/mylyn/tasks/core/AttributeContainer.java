@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * @author Rob Elves

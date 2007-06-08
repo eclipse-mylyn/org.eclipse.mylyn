@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,12 +17,12 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.ITaskAttachment;
-import org.eclipse.mylar.tasks.core.RepositoryAttachment;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten

@@ -4,12 +4,12 @@
 		style="css/tutorials.css" path="tutorials/@">
 		<group label="Mylar" id="mylar" style-id="content-group">
 			<link 
-				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylar.cheatsheet.query" 
+				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.query" 
 				label="Create a query" id="mylar-query"	style-id="content-link">
 				<text>Learn how to create a query from bugs.eclipse.org.</text>
 			</link>
 			<link
-				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylar.cheatsheet.taskfocus"
+				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.taskfocus"
 				label="Use Task-Focused UI" id="mylar-task" style-id="content-link">
 				<text>Learn how to use Task-Focused UI.</text>
 			</link>

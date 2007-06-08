@@ -8,14 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;

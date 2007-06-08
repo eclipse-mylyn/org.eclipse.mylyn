@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.lang.reflect.Field;
 
@@ -24,21 +24,21 @@ import org.eclipse.swt.widgets.Display;
  */
 public class TaskListColorsAndFonts {
 
-	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylar.tasks.ui.colors.incoming.background";
+	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background";
 
-	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylar.tasklist.ui.colors.foreground.overdue";
+	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylyn.tasklist.ui.colors.foreground.overdue";
 
-	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled";
+	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.thisweek.scheduled";
 
-	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.completed";
+	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.completed";
 
-	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled";
+	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.today.scheduled";
 
-	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed";
+	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.today.completed";
 
-	public static final String THEME_COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylar.tasks.ui.colors.category.gradient.start";
+	public static final String THEME_COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.start";
 
-	public static final String THEME_COLOR_CATEGORY_GRADIENT_END = "org.eclipse.mylar.tasks.ui.colors.category.gradient.end";
+	public static final String THEME_COLOR_CATEGORY_GRADIENT_END = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.end";
 
 	public static final String THEME_COLOR_TASKLIST_CATEGORY = THEME_COLOR_CATEGORY_GRADIENT_END;
 	
@@ -112,6 +112,6 @@ public class TaskListColorsAndFonts {
 		}
 	}
 
-	public static final String TASK_EDITOR_FONT = "org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment";
+	public static final String TASK_EDITOR_FONT = "org.eclipse.mylyn.tasklist.ui.fonts.task.editor.comment";
 
 }

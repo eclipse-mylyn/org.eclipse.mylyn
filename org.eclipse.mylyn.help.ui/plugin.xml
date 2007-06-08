@@ -3,7 +3,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 	<extension
-         id="org.eclipse.mylar.helpDocs"
+         id="org.eclipse.mylyn.helpDocs"
          name="Mylar Help"
          point="org.eclipse.help.toc">
       <toc
@@ -14,14 +14,14 @@
    
     <extension point="org.eclipse.ui.actionSets">
 	<actionSet
-            id="org.eclipse.mylar.doc.actionSet"
+            id="org.eclipse.mylyn.doc.actionSet"
             label="Mylar Documentation"
             visible="true"> 
   		<action
-          class="org.eclipse.mylar.doc.internal.actions.ShowMylarLegendAction"
-          definitionId="org.eclipse.mylar.doc.legend.show"
+          class="org.eclipse.mylyn.doc.internal.actions.ShowMylarLegendAction"
+          definitionId="org.eclipse.mylyn.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
-          id="org.eclipse.mylar.doc.legend.show.action"
+          id="org.eclipse.mylyn.doc.legend.show.action"
           label="Mylar UI Legend"
           menubarPath="help/helpStart"
           style="push"
@@ -32,14 +32,14 @@
   
    <extension point="org.eclipse.ui.commands">
    <category
-         id="org.eclipse.mylar.doc.commands"
+         id="org.eclipse.mylyn.doc.commands"
          name="Mylar Documentation">
    </category>
 	  <command
-         category="org.eclipse.mylar.doc.commands"
-         categoryId="org.eclipse.mylar.doc.commands"
+         category="org.eclipse.mylyn.doc.commands"
+         categoryId="org.eclipse.mylyn.doc.commands"
          description="Show Mylar UI Legend"
-         id="org.eclipse.mylar.doc.legend.show"
+         id="org.eclipse.mylyn.doc.legend.show"
          name="Show Mylar UI Legend">
       </command>
    </extension>
@@ -48,7 +48,7 @@
       <key
             sequence="M1+M2+M3+?"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.doc.legend.show"
+            commandId="org.eclipse.mylyn.doc.legend.show"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>
@@ -70,22 +70,22 @@
    <extension
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
-            id="org.eclipse.mylar.cheatsheet"
+            id="org.eclipse.mylyn.cheatsheet"
             name="Mylar">
       </category>
       <cheatsheet
-            category="org.eclipse.mylar.cheatsheet"
+            category="org.eclipse.mylyn.cheatsheet"
             contentFile="cheatsheets/Query.xml"
-            id="org.eclipse.mylar.cheatsheet.query"
+            id="org.eclipse.mylyn.cheatsheet.query"
             name="Create a query from bugs.eclipse.org">
          <description>
             Learn how to create a query from bugs.eclipse.org
          </description>
       </cheatsheet>
       <cheatsheet
-            category="org.eclipse.mylar.cheatsheet"
+            category="org.eclipse.mylyn.cheatsheet"
             contentFile="cheatsheets/TaskFocus.xml"
-            id="org.eclipse.mylar.cheatsheet.taskfocus"
+            id="org.eclipse.mylyn.cheatsheet.taskfocus"
             name="Use Task-Focused UI">
          <description>
             Learn how to use Task-Focused UI

@@ -9,19 +9,19 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Rob Elves
  */
 public class RemoveTaskAction extends Action {
-	public static final String ID = "org.eclipse.mylar.taskplannereditor.actions.remove";
+	public static final String ID = "org.eclipse.mylyn.taskplannereditor.actions.remove";
 
 	private final TableViewer viewer;
 

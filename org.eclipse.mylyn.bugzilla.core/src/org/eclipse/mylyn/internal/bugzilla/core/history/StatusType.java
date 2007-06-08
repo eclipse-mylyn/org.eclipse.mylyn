@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core.history;
+package org.eclipse.mylyn.internal.bugzilla.core.history;
 
 /**
  * @author John Anvik 

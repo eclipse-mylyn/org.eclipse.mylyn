@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,11 +16,11 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;

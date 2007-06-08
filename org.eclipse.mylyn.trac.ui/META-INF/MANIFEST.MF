@@ -1,25 +1,25 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Trac UI Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.trac.ui;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.trac.ui;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.internal.trac.ui.TracUiPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.trac.ui.TracUiPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.core.runtime,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.tasks.core,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.tasks.core,
  org.eclipse.search,
- org.eclipse.mylar.trac.core,
- org.eclipse.mylar,
+ org.eclipse.mylyn.trac.core,
+ org.eclipse.mylyn,
  org.eclipse.ui.editors,
  org.eclipse.jface.text,
  org.eclipse.core.resources,
  org.eclipse.ui.workbench.texteditor
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylar.internal.trac.ui,
- org.eclipse.mylar.internal.trac.ui.editor,
- org.eclipse.mylar.internal.trac.ui.wizard
+Export-Package: org.eclipse.mylyn.internal.trac.ui,
+ org.eclipse.mylyn.internal.trac.ui.editor,
+ org.eclipse.mylyn.internal.trac.ui.wizard
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

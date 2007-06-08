@@ -3,19 +3,19 @@
 <plugin>
 
    <extension
-         id="org.eclipse.mylar.jira.repository"
+         id="org.eclipse.mylyn.jira.repository"
          name="JIRA Repository"
-         point="org.eclipse.mylar.tasks.ui.repositories">
+         point="org.eclipse.mylyn.tasks.ui.repositories">
 
       <connectorCore
-            class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector"
-            id="org.eclipse.mylar.tasks.tests.repositories"
+            class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector"
+            id="org.eclipse.mylyn.tasks.tests.repositories"
             name="Mock Repository Client"
             type="mock"/>
       
       <externalizer 
-            class="org.eclipse.mylar.tasks.tests.connector.MockRepositoryExternalizer"
-            id="org.eclipse.mylar.tasks.tests.externalizer"/>
+            class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryExternalizer"
+            id="org.eclipse.mylyn.tasks.tests.externalizer"/>
    </extension>  
    
 </plugin>

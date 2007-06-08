@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 
 /**
  * Sorts results of Bugzilla search by bug priority.

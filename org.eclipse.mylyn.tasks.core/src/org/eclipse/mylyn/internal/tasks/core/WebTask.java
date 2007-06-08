@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 
 /**
  * Task used with generic web-based repositories

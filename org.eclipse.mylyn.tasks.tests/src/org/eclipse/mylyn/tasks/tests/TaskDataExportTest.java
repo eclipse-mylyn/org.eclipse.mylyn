@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,16 +16,16 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizardPage;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TaskListManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 /**

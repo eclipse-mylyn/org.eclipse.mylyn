@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

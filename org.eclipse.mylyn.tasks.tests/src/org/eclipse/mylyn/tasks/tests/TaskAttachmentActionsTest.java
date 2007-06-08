@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +16,8 @@ import java.net.URLConnection;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
-import org.eclipse.mylar.internal.tasks.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
+import org.eclipse.mylyn.internal.tasks.ui.actions.SaveRemoteFileAction;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;

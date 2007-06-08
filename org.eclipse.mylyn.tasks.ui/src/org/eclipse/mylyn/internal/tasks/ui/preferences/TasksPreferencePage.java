@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.preferences;
+package org.eclipse.mylyn.internal.tasks.ui.preferences;
 
 import java.io.File;
 
@@ -16,10 +16,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -49,7 +49,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class TasksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.preferences";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
 	
 	private static final int OVERWRITE = 0;
 

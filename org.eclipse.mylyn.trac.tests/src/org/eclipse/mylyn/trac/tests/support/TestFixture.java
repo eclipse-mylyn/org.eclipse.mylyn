@@ -9,12 +9,12 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests.support;
+package org.eclipse.mylyn.trac.tests.support;
 
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.trac.tests.Constants;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.trac.tests.Constants;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test

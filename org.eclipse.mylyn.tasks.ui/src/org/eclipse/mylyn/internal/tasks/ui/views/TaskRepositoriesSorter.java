@@ -6,12 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.tasks.core.IRepositoryConstants;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Mik Kersten 

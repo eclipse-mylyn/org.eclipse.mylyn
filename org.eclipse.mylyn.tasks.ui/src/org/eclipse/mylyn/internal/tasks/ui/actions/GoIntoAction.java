@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -25,7 +25,7 @@ import org.eclipse.ui.IViewPart;
 public class GoIntoAction extends Action implements IViewActionDelegate {
 
 	private static final String LABEL = "Go Into";
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.into";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.into";
 
 	//		
 	// private DrillDownAdapter drillDownAdapter;

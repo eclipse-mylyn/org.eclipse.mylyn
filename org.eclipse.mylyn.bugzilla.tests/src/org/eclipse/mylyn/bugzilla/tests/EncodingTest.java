@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaTask;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

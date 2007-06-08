@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin;
+import org.eclipse.mylyn.tasks.tests.MylarTasksTestsPlugin;
 
 /**
  * @author Mik Kersten

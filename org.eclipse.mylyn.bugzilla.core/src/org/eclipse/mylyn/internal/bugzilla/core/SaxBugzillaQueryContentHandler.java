@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.util.Locale;
 import java.util.Set;
 
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

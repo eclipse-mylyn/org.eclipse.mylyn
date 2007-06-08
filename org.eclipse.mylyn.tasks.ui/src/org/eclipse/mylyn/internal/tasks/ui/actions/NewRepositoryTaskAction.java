@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewRepositoryTaskAction extends Action implements IViewActionDelegate {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
+	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
 			
 	@Override
 	public void run() {

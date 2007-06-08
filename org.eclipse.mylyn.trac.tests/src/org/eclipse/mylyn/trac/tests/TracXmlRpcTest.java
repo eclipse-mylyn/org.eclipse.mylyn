@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,10 +25,10 @@ import junit.framework.TestCase;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.util.TracHttpClientTransportFactory;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**
  * Test cases for <a href="http://trac-hacks.org/wiki/XmlRpcPlugin">Trac XML-RPC

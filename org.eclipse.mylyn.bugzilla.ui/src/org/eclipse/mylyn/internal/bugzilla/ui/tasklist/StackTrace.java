@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
 import java.util.ArrayList;
 import java.util.List;

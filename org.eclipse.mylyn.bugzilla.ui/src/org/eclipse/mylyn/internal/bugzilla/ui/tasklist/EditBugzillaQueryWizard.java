@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.tasklist;
+package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.internal.bugzilla.ui.search.BugzillaSearchPage;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 
 /**
  * @author Rob Elves

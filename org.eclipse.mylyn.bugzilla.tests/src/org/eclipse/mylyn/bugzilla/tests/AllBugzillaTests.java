@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.bugzilla.tests.headless.BugzillaQueryTest;
-import org.eclipse.mylar.bugzilla.tests.headless.BugzillaTaskHistoryTest;
+import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaQueryTest;
+import org.eclipse.mylyn.bugzilla.tests.headless.BugzillaTaskHistoryTest;
 
 /**
  * @author Mik Kersten
@@ -22,7 +22,7 @@ import org.eclipse.mylar.bugzilla.tests.headless.BugzillaTaskHistoryTest;
 public class AllBugzillaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.bugzilla.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.bugzilla.tests");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(RepositoryTaskHandleTest.class);
 		suite.addTestSuite(TaskListNotificationManagerTest.class);

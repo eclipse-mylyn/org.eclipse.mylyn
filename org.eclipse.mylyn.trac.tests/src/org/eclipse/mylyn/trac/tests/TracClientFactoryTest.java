@@ -9,22 +9,22 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.net.Proxy;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracWebClient;
-import org.eclipse.mylar.internal.trac.core.TracClientFactory;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracLoginException;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracWebClient;
+import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 
 /**
  * @author Steffen Pingel

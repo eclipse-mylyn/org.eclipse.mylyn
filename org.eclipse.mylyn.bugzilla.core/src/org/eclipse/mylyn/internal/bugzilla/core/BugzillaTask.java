@@ -11,9 +11,9 @@
 /*
  * Created on 14-Jan-2005
  */
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 
 /**
  * @author Mik Kersten

@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Bugzilla Connector Core Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.bugzilla.core; singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.core; singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.tasks.core,
- org.eclipse.mylar
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylar.internal.bugzilla.core,
- org.eclipse.mylar.internal.bugzilla.core.history
+Export-Package: org.eclipse.mylyn.internal.bugzilla.core,
+ org.eclipse.mylyn.internal.bugzilla.core.history
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

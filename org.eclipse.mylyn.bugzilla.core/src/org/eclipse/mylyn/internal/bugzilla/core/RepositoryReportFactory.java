@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +17,8 @@ import java.util.Locale;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * Reads bug reports from repository.

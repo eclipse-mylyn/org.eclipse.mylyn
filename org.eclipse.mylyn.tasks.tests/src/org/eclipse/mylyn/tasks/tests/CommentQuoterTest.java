@@ -6,11 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.core.CommentQuoter;
+import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 
 /**
  * Test many quoting scenarios

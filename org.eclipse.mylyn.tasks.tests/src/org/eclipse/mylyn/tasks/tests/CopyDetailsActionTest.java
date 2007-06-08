@@ -6,12 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.ui.actions.CopyTaskDetailsAction;
-import org.eclipse.mylar.tasks.tests.connector.MockRepositoryTask;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 
 /**
  * @author Mik Kersten

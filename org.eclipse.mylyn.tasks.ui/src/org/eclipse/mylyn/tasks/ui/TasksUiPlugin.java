@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,47 +37,47 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.internal.context.core.ContextPreferenceContstants;
-import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylar.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
-import org.eclipse.mylar.internal.tasks.ui.ITaskListNotification;
-import org.eclipse.mylar.internal.tasks.ui.ITaskListNotificationProvider;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListBackupManager;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationIncoming;
-import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationManager;
-import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationQueryIncoming;
-import org.eclipse.mylar.internal.tasks.ui.TaskListNotificationReminder;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.TaskListSynchronizationScheduler;
-import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
-import org.eclipse.mylar.internal.tasks.ui.util.TasksUiExtensionReader;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView;
-import org.eclipse.mylar.internal.tasks.ui.wizards.EditRepositoryWizard;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.core.ITaskDataHandler;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationQueryIncoming;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationReminder;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
+import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
+import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
@@ -97,7 +97,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.tasklist";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.tasklist";
 
 	private static final String NAME_DATA_DIR = ".mylar";
 

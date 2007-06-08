@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
@@ -26,7 +26,7 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 
 	private static final String ACTION_NAME = "Unread";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.unread";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.unread";
 
 	public MarkTaskUnreadAction(List<ITaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;

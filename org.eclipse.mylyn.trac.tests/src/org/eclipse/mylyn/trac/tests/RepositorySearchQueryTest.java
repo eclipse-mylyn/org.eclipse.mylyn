@@ -9,27 +9,27 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.PrivilegeLevel;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TaskFactory;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
-import org.eclipse.mylar.trac.tests.support.TestFixture;
-import org.eclipse.mylar.trac.tests.support.XmlRpcServer.TestData;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.trac.tests.support.TestFixture;
+import org.eclipse.mylyn.trac.tests.support.XmlRpcServer.TestData;
 
 /**
  * @author Steffen Pingel

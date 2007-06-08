@@ -1,42 +1,42 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasks UI Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.tasks.ui;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.tasks.ui;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.tasks.ui.TasksUiPlugin
+Bundle-Activator: org.eclipse.mylyn.tasks.ui.TasksUiPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
- org.eclipse.mylar.context.core,
+ org.eclipse.mylyn.context.core,
  org.eclipse.update.core,
  org.eclipse.ui.browser,
  org.eclipse.ui.editors,
  org.eclipse.ui.views,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.monitor.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.ide,
  org.eclipse.search,
- org.eclipse.mylar.monitor.core,
- org.eclipse.mylar,
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn,
  org.eclipse.ui.net
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.internal.tasks.ui,
- org.eclipse.mylar.internal.tasks.ui.actions,
- org.eclipse.mylar.internal.tasks.ui.commands,
- org.eclipse.mylar.internal.tasks.ui.editors,
- org.eclipse.mylar.internal.tasks.ui.planner,
- org.eclipse.mylar.internal.tasks.ui.preferences,
- org.eclipse.mylar.internal.tasks.ui.search,
- org.eclipse.mylar.internal.tasks.ui.util,
- org.eclipse.mylar.internal.tasks.ui.views,
- org.eclipse.mylar.internal.tasks.ui.wizards,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.tasks.ui.editors,
- org.eclipse.mylar.tasks.ui.properties,
- org.eclipse.mylar.tasks.ui.search,
- org.eclipse.mylar.tasks.ui.wizards
+Export-Package: org.eclipse.mylyn.internal.tasks.ui,
+ org.eclipse.mylyn.internal.tasks.ui.actions,
+ org.eclipse.mylyn.internal.tasks.ui.commands,
+ org.eclipse.mylyn.internal.tasks.ui.editors,
+ org.eclipse.mylyn.internal.tasks.ui.planner,
+ org.eclipse.mylyn.internal.tasks.ui.preferences,
+ org.eclipse.mylyn.internal.tasks.ui.search,
+ org.eclipse.mylyn.internal.tasks.ui.util,
+ org.eclipse.mylyn.internal.tasks.ui.views,
+ org.eclipse.mylyn.internal.tasks.ui.wizards,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.tasks.ui.editors,
+ org.eclipse.mylyn.tasks.ui.properties,
+ org.eclipse.mylyn.tasks.ui.search,
+ org.eclipse.mylyn.tasks.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

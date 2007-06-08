@@ -9,17 +9,17 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Discard outgoing changes on selected task TODO: Enable multi task discard?
@@ -30,7 +30,7 @@ public class ClearOutgoingAction extends Action {
 
 	private static final String ACTION_NAME = "Clear outgoing";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.discard";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
 
 	private List<ITaskListElement> selectedElements;
 

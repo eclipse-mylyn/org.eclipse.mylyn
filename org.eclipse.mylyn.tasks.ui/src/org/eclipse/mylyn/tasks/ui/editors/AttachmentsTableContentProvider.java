@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 
 /**
  * @author Mik Kersten

@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 
 /**
  * This implementation of <code>SearchResultContentProvider</code> is used for the

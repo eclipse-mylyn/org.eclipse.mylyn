@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
  * Virtual proxy for a repository task.

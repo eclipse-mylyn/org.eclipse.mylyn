@@ -9,11 +9,11 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.wizard;
+package org.eclipse.mylyn.internal.trac.ui.wizard;
 
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.wizards.AbstractEditQueryWizard;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractEditQueryWizard;
 
 /**
  * @author Steffen Pingel

@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.bugzilla.tests.headless;
+package org.eclipse.mylyn.bugzilla.tests.headless;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,19 +18,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.eclipse.mylar.bugzilla.tests.AbstractBugzillaTest;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils;
-import org.eclipse.mylar.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.history.AssignmentEvent;
-import org.eclipse.mylar.internal.bugzilla.core.history.ResolutionEvent;
-import org.eclipse.mylar.internal.bugzilla.core.history.StatusEvent;
-import org.eclipse.mylar.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.bugzilla.tests.AbstractBugzillaTest;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
+import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.history.AssignmentEvent;
+import org.eclipse.mylyn.internal.bugzilla.core.history.ResolutionEvent;
+import org.eclipse.mylyn.internal.bugzilla.core.history.StatusEvent;
+import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 public class BugzillaTaskHistoryTest extends AbstractBugzillaTest {
 

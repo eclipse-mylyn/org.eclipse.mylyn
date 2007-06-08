@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -15,11 +15,11 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.tasks.ui.AddExistingTaskJob;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.AddExistingTaskJob;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -30,7 +30,7 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate {
 
-	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylar.tasks.ui.open.remote";
+	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote";
 
 	public void run(IAction action) {
 		RemoteTaskSelectionDialog dlg = new RemoteTaskSelectionDialog(PlatformUI.getWorkbench()

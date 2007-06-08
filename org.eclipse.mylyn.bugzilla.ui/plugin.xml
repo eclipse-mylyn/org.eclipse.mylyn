@@ -3,47 +3,47 @@
 <plugin>
       
    <extension
-         id="org.eclipse.mylar.bugzilla.repository" 
+         id="org.eclipse.mylyn.bugzilla.repository" 
          name="Bugzilla Repository"
-         point="org.eclipse.mylar.tasks.ui.repositories">
+         point="org.eclipse.mylyn.tasks.ui.repositories">
 
       <connectorCore
-            class="org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryConnector"
-            id="org.eclipse.mylar.bugzilla.tasklist.repositories"
+            class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector"
+            id="org.eclipse.mylyn.bugzilla.tasklist.repositories"
             name="Bugzilla Repository Connector"
             type="bugzilla"/>
             
       <connectorUi
             brandingIcon="icons/eview16/bugzilla-logo.gif"
-            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
             name="Bugzilla Repository Ui"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
              
 		<externalizer 
-            class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
-            id="org.eclipse.mylar.bugzilla.tasklist.externalizer"/>
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
+            id="org.eclipse.mylyn.bugzilla.tasklist.externalizer"/>
    </extension> 
   
    <extension
-         point="org.eclipse.mylar.tasks.ui.editors">
-      <editorFactory class="org.eclipse.mylar.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <editorFactory class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
     <!-- <hyperlinkDetector
-            class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
-            id="org.eclipse.mylar.tasks.hyperlinkdetector.bugzillatask"/>-->
+            class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
+            id="org.eclipse.mylyn.tasks.hyperlinkdetector.bugzillatask"/>-->
    </extension>
    
    <extension 
    		point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <newWizardShortcut id="org.eclipse.mylar.bugzilla.bugWizard"/>
+               <newWizardShortcut id="org.eclipse.mylyn.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
 	
 	
 	
          <extension
-   		point="org.eclipse.mylar.tasks.ui.duplicateDetectors">
-            <detector class="org.eclipse.mylar.internal.bugzilla.ui.search.StackTraceDuplicateDetector"
+   		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
+            <detector class="org.eclipse.mylyn.internal.bugzilla.ui.search.StackTraceDuplicateDetector"
                       name="Stack Trace">
             </detector>
           

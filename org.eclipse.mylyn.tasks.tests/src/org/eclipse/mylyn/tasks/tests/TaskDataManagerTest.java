@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,14 +16,14 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.tests.connector.MockAttributeFactory;
-import org.eclipse.mylar.tasks.tests.connector.MockRepositoryConnector;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.tests.connector.MockAttributeFactory;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryConnector;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves

@@ -9,24 +9,24 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.core.WebTask;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.core.WebTask;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class MarkTaskCompleteAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.completed";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.completed";
 
 	private static final String ACTION_NAME = "Complete";
 

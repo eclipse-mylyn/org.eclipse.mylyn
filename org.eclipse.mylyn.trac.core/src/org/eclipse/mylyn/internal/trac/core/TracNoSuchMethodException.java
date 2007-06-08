@@ -6,9 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import org.apache.xmlrpc.XmlRpcException;
+
 
 public class TracNoSuchMethodException extends TracException {
 

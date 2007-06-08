@@ -6,13 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.commands;
+package org.eclipse.mylyn.internal.tasks.ui.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -24,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 public class AddTaskRepositoryHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		String param = event.getParameter("org.eclipse.mylar.tasks.command.taskRepositoryId");
+		String param = event.getParameter("org.eclipse.mylyn.tasks.command.taskRepositoryId");
 		NewRepositoryWizard wizard = new NewRepositoryWizard(param);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {

@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IMenuManager;
@@ -18,12 +18,12 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskTableLabelProvider;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskTableLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.search.internal.ui.SearchMessages;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;

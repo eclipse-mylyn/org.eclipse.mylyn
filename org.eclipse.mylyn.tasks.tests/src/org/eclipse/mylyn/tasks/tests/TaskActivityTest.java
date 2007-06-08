@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -18,17 +18,17 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.core.DegreeOfInterest;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves

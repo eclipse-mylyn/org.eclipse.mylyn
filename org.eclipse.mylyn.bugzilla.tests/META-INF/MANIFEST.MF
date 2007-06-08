@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bugzilla Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.bugzilla.tests
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.bugzilla.tests.BugzillaTestPlugin
+Bundle-Activator: org.eclipse.mylyn.bugzilla.tests.BugzillaTestPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
@@ -12,18 +12,18 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.mylar.bugzilla.core,
- org.eclipse.mylar.bugzilla.ui,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.core.tests,
- org.eclipse.mylar.tasks.tests,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.tasks.core,
+ org.eclipse.mylyn.bugzilla.core,
+ org.eclipse.mylyn.bugzilla.ui,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.core.tests,
+ org.eclipse.mylyn.tasks.tests,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.tasks.core,
  org.eclipse.ui.forms,
- org.eclipse.mylar,
+ org.eclipse.mylyn,
  org.eclipse.search
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar
-Export-Package: org.eclipse.mylar.bugzilla.tests
+Export-Package: org.eclipse.mylyn.bugzilla.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

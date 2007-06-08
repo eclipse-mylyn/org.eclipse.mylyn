@@ -8,14 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.internal.core.util.XmlStringConverter;
-import org.eclipse.mylar.tasks.core.IRepositoryConstants;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

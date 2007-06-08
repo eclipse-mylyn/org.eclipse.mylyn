@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.eclipse.jface.viewers.DialogCellEditor;
-import org.eclipse.mylar.tasks.ui.DatePicker;
+import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

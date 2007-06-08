@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * @author Steffen Pingel
@@ -48,7 +48,7 @@ public abstract class AbstractAttachmentHandler implements IAttachmentHandler {
 					}
 				}
 			} catch (IOException e) {
-				throw new CoreException(RepositoryStatus.createStatus(repository, IStatus.ERROR, "org.eclipse.mylar.tasks.core", "IO error reading attachment: " + e.getMessage()));
+				throw new CoreException(RepositoryStatus.createStatus(repository, IStatus.ERROR, "org.eclipse.mylyn.tasks.core", "IO error reading attachment: " + e.getMessage()));
 			} finally {
 				try {
 					in.close();

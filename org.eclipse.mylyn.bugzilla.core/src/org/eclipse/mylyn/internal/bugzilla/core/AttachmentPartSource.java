@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.httpclient.methods.multipart.PartSource;
-import org.eclipse.mylar.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 
 /**
  * @author Steffen Pingel

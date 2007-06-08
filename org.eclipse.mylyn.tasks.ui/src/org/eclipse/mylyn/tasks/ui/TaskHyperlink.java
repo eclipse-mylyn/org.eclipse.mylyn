@@ -8,12 +8,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * @author Eugene Kuleshov

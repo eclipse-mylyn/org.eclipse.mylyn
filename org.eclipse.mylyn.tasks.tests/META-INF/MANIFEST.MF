@@ -1,28 +1,28 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasks Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.tasks.tests;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.tasks.tests;singleton:=true
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylar.tasks.tests.MylarTasksTestsPlugin
+Bundle-Activator: org.eclipse.mylyn.tasks.tests.MylarTasksTestsPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.core.tests,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.core.tests,
  org.eclipse.jdt.core,
  org.eclipse.core.resources,
  org.eclipse.ui,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.context.ui,
- org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.context.ui,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.monitor.ui,
  org.eclipse.ui.forms,
- org.eclipse.mylar.resources.tests,
- org.eclipse.mylar.tasks.web,
- org.eclipse.mylar.monitor.core,
- org.eclipse.mylar
+ org.eclipse.mylyn.resources.tests,
+ org.eclipse.mylyn.tasks.web,
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-tasklist-tests.jar
-Export-Package: org.eclipse.mylar.tasks.tests,
- org.eclipse.mylar.tasks.tests.connector
+Export-Package: org.eclipse.mylyn.tasks.tests,
+ org.eclipse.mylyn.tasks.tests.connector
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,10 +17,10 @@ import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.trac.core.InvalidTicketException;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket;
-import org.eclipse.mylar.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylar.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.internal.trac.core.InvalidTicketException;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
+import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
+import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 
 /**
  * @author Steffen Pingel

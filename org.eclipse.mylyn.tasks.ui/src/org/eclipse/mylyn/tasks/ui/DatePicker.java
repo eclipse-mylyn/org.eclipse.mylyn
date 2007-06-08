@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.tasks.ui.planner.DateSelectionDialog;
+import org.eclipse.mylyn.internal.tasks.ui.planner.DateSelectionDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;

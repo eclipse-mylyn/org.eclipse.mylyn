@@ -8,11 +8,11 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.util;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.core.ActivityTimerThread;
-import org.eclipse.mylar.monitor.core.IActivityTimerListener;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
+import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
 
 /**
  * Timer that periodically runs saveRequested() on its client as a job

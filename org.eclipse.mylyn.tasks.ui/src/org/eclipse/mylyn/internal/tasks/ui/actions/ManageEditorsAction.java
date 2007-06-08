@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 
 /**
@@ -17,7 +17,7 @@ package org.eclipse.mylar.internal.tasks.ui.actions;
  */
 //public class ManageEditorsAction extends Action {
 //
-//	public static final String ID = "org.eclipse.mylar.ui.editors.auto.manage";
+//	public static final String ID = "org.eclipse.mylyn.ui.editors.auto.manage";
 
 //	public ManageEditorsAction() {
 //		super("Manage Editors with Context", IAction.AS_CHECK_BOX);

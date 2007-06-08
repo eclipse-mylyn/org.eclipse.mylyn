@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.preferences;
+package org.eclipse.mylyn.internal.tasks.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;

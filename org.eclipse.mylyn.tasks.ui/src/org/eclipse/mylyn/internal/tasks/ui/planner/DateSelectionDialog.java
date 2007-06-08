@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.planner;
+package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,8 +19,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.mylar.internal.tasks.ui.views.DatePickerPanel;
-import org.eclipse.mylar.internal.tasks.ui.views.DatePickerPanel.DateSelection;
+import org.eclipse.mylyn.internal.tasks.ui.views.DatePickerPanel;
+import org.eclipse.mylyn.internal.tasks.ui.views.DatePickerPanel.DateSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

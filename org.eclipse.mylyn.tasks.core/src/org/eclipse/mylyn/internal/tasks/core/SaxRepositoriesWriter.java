@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,9 +22,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.core.util.XmlStringConverter;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;

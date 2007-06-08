@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.wizard;
+package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -18,18 +18,18 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracClientFactory;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracLoginException;
-import org.eclipse.mylar.internal.trac.core.TracPermissionDeniedException;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
-import org.eclipse.mylar.tasks.core.RepositoryStatus;
-import org.eclipse.mylar.tasks.core.RepositoryTemplate;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylar.tasks.ui.wizards.AbstractRepositorySettingsPage;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.TracLoginException;
+import org.eclipse.mylyn.internal.trac.core.TracPermissionDeniedException;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
+import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

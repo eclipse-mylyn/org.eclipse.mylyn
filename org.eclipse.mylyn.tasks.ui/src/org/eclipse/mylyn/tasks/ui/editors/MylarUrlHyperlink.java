@@ -6,11 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.URLHyperlink;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Rob Elves

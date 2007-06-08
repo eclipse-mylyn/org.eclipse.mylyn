@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.trac.ui.wizard;
+package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -19,21 +19,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.core.TracException;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryConnector;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylar.internal.trac.ui.TracUiPlugin;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.search.AbstractRepositoryQueryPage;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.TracException;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;

@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Trac Core Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.trac.core;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.trac.core;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.tasks.core,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.tasks.core,
  org.eclipse.search,
- org.eclipse.mylar.monitor.core,
- org.eclipse.mylar
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylar.internal.trac.core,
- org.eclipse.mylar.internal.trac.core.model,
- org.eclipse.mylar.internal.trac.core.util
-Bundle-Activator: org.eclipse.mylar.internal.trac.core.TracCorePlugin
+Export-Package: org.eclipse.mylyn.internal.trac.core,
+ org.eclipse.mylyn.internal.trac.core.model,
+ org.eclipse.mylyn.internal.trac.core.util
+Bundle-Activator: org.eclipse.mylyn.internal.trac.core.TracCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

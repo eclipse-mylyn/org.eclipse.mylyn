@@ -6,11 +6,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 

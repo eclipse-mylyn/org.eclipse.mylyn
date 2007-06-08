@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 
 /**
  * @author Mik Kersten
@@ -35,7 +35,7 @@ public class TaskRepositoryManager {
 
 	public static final String DEFAULT_REPOSITORIES_FILE = "repositories.xml.zip";
 
-	public static final String PREF_REPOSITORIES = "org.eclipse.mylar.tasklist.repositories.";
+	public static final String PREF_REPOSITORIES = "org.eclipse.mylyn.tasklist.repositories.";
 
 	private Map<String, AbstractRepositoryConnector> repositoryConnectors = new HashMap<String, AbstractRepositoryConnector>();
 

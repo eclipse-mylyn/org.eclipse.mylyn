@@ -7,24 +7,24 @@
    <!--
    <extension 
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-      <hyperlinkDetector class="org.eclipse.mylar.internal.bugs.java.BugzillaHyperLinkDetector"/>
+      <hyperlinkDetector class="org.eclipse.mylyn.internal.bugs.java.BugzillaHyperLinkDetector"/>
    </extension>    
    -->
 
 <!--
    <extension
-         point="org.eclipse.mylar.core.context">
+         point="org.eclipse.mylyn.core.context">
       <structureBridge
             activeSearchIcon="icons/elcl16/edge-ref-bug.gif"
             activeSearchLabel="Bugzilla References"
-            class="org.eclipse.mylar.bugs.BugzillaStructureBridge"
+            class="org.eclipse.mylyn.bugs.BugzillaStructureBridge"
             name="Bugzilla Structure Bridge"/>
    </extension>
    
    <extension
-         point="org.eclipse.mylar.ui.context">
+         point="org.eclipse.mylyn.ui.context">
       <uiBridge
-            class="org.eclipse.mylar.bugs.BugzillaUiBridge"
+            class="org.eclipse.mylyn.bugs.BugzillaUiBridge"
             contentType="bugzilla"/>
    </extension>
 -->

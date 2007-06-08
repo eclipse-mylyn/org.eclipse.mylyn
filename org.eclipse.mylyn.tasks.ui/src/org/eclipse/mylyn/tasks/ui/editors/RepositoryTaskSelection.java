@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.mylar.internal.tasks.ui.editors.IRepositoryTaskSelection;
-import org.eclipse.mylar.tasks.core.TaskComment;
+import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
+import org.eclipse.mylyn.tasks.core.TaskComment;
 
 /**
  * A selection of an element in a view.

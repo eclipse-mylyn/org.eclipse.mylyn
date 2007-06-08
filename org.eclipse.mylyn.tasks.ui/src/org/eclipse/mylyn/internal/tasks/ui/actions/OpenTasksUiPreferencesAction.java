@@ -6,18 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.preferences.TasksPreferencePage;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
  */
 public class OpenTasksUiPreferencesAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.actions.preferences.open";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.preferences.open";
 	
 	private static final String LABEL = "Preferences...";
 

@@ -8,16 +8,16 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 public class GoUpAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.view.go.up";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.view.go.up";
 
 	public GoUpAction(DrillDownAdapter drillDownAdapter) {
 		setText("Go Up To Root");

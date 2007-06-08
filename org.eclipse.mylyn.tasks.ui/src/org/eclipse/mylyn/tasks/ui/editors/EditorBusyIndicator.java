@@ -1,9 +1,9 @@
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;

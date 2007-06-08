@@ -2,26 +2,26 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         id="org.eclipse.mylar.trac.repository"
+         id="org.eclipse.mylyn.trac.repository"
          name="Trac Repository"
-         point="org.eclipse.mylar.tasks.ui.repositories">
+         point="org.eclipse.mylyn.tasks.ui.repositories">
       <connectorCore
-            class="org.eclipse.mylar.internal.trac.core.TracRepositoryConnector"
-            id="org.eclipse.mylar.trac.tasklist.repositories"
+            class="org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector"
+            id="org.eclipse.mylyn.trac.tasklist.repositories"
             name="Trac Repository Connector"
             type="trac"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
-            class="org.eclipse.mylar.internal.trac.ui.TracRepositoryUi"
+            class="org.eclipse.mylyn.internal.trac.ui.TracRepositoryUi"
             id="Trac Repository UI"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
       <externalizer
-            class="org.eclipse.mylar.internal.trac.ui.TracTaskExternalizer"
-            id="org.eclipse.mylar.trac.tasklist.externalizer"
+            class="org.eclipse.mylyn.internal.trac.ui.TracTaskExternalizer"
+            id="org.eclipse.mylyn.trac.tasklist.externalizer"
             name="Trac Externalizer"/>
    </extension>
    <extension
-         point="org.eclipse.mylar.tasks.core.templates">
+         point="org.eclipse.mylyn.tasks.core.templates">
       <repository
             addAutomatically="false"
             anonymous="true"
@@ -31,14 +31,14 @@
             version="TRAC_0_9"/>
    </extension> 
    <extension
-         point="org.eclipse.mylar.tasks.ui.editors">
-      <editorFactory class="org.eclipse.mylar.internal.trac.ui.editor.TracTaskEditorFactory"/>
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <editorFactory class="org.eclipse.mylyn.internal.trac.ui.editor.TracTaskEditorFactory"/>
    </extension>
   <!-- <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector
-            class="org.eclipse.mylar.internal.trac.ui.TracHyperlinkDetector"
-            id="org.eclipse.mylar.jira.ui.hyperlinkdetector"
+            class="org.eclipse.mylyn.internal.trac.ui.TracHyperlinkDetector"
+            id="org.eclipse.mylyn.jira.ui.hyperlinkdetector"
             name="Mylar Task - Trac"
             targetId="org.eclipse.jdt.ui.javaCode">
       </hyperlinkDetector>

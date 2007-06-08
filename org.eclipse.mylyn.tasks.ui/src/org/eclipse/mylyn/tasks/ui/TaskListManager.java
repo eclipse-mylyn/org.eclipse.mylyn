@@ -11,7 +11,7 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylar.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.io.File;
 import java.net.URLDecoder;
@@ -30,35 +30,35 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylar.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylar.internal.tasks.core.WebTask;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskListSaveManager;
-import org.eclipse.mylar.internal.tasks.ui.util.TaskListWriter;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylar.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskList;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.WebTask;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
+import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
  * TODO: pull task activity management out into new TaskActivityManager

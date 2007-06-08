@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.wizard;
+package org.eclipse.mylyn.internal.trac.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracRepositoryQuery;
-import org.eclipse.mylar.internal.trac.core.model.TracSearch;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;

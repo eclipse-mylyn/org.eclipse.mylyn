@@ -9,8 +9,8 @@
 
 	<!--
     <extension
-         point="org.eclipse.mylar.context.core.bridges">
-   	  	<contextStore class="org.eclipse.mylar.internal.tasks.ui.WorkspaceAwareContextStore"/>
+         point="org.eclipse.mylyn.context.core.bridges">
+   	  	<contextStore class="org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore"/>
     </extension>
 	-->
 
@@ -19,16 +19,16 @@
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.trim.status?after">
          <toolbar
-               id="org.eclipse.mylar.tasks.ui.trim.container">
+               id="org.eclipse.mylyn.tasks.ui.trim.container">
  			<command
-                  commandId="org.eclipse.mylar.tasks.ui.trim.command"
-                  id="org.eclipse.mylar.tasks.ui.trim"
+                  commandId="org.eclipse.mylyn.tasks.ui.trim.command"
+                  id="org.eclipse.mylyn.tasks.ui.trim"
                   label="."
                   style="push">
             </command>
             <control
-                  class="org.eclipse.mylar.internal.tasks.ui.TaskTrimWidget"
-                  id="org.eclipse.mylar.tasks.ui.trim.control">
+                  class="org.eclipse.mylyn.internal.tasks.ui.TaskTrimWidget"
+                  id="org.eclipse.mylyn.tasks.ui.trim.control">
             </control>
          </toolbar>
       </menuContribution>
@@ -37,7 +37,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            id="org.eclipse.mylar.tasks.ui.trim.command"
+            id="org.eclipse.mylyn.tasks.ui.trim.command"
             name="Task Trim Command">
       </command>
    </extension>
@@ -51,22 +51,22 @@
       <view
          allowMultiple="true"
          category="org.eclipse.mylar"
-         class="org.eclipse.mylar.internal.tasks.ui.views.TaskListView"
+         class="org.eclipse.mylyn.internal.tasks.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
-         id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+         id="org.eclipse.mylyn.tasks.ui.views.TaskListView"
          name="Task List"/> 
       <view
-            id="org.eclipse.mylar.tasklist.repositories"
+            id="org.eclipse.mylyn.tasklist.repositories"
             allowMultiple="false"
             category="org.eclipse.mylar"
-            class="org.eclipse.mylar.internal.tasks.ui.views.TaskRepositoriesView"
+            class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView"
             icon="icons/eview16/repositories.gif"
             name="Task Repositories">
       </view>
   	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
-        <category name="Mylar" id="org.eclipse.mylar.wizards"/>
+        <category name="Mylar" id="org.eclipse.mylyn.wizards"/>
     </extension>
 
     <extension
@@ -76,7 +76,7 @@
 
    <!--
 	<extension
-         id="org.eclipse.mylar.helpDocs"
+         id="org.eclipse.mylyn.helpDocs"
          name="Mylar Help"
          point="org.eclipse.help.toc">
       <toc
@@ -88,45 +88,45 @@
  <extension
          point="org.eclipse.ui.elementFactories">
       <factory
-            class="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory"
-            id="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorInputFactory">
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory"
+            id="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory">
       </factory>
    </extension>
     <extension point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="true" 
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.wizards.NewLocalTaskWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard"
             hasPages="false"
             icon="icons/etool16/task-new.gif"
-            id="org.eclipse.mylar.tasks.ui.wizard.new.task"
+            id="org.eclipse.mylyn.tasks.ui.wizard.new.task"
             name="Task"/>
       <wizard
             canFinishEarly="true"
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.wizards.NewLocalCategoryWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalCategoryWizard"
             hasPages="false"
             icon="icons/etool16/category-new.gif"
-            id="org.eclipse.mylar.tasks.ui.wizard.new.category"
+            id="org.eclipse.mylyn.tasks.ui.wizard.new.category"
             name="Category">
       </wizard>
 	  <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
-            id="org.eclipse.mylar.tasks.ui.wizard.new.repository.task"
+            id="org.eclipse.mylyn.tasks.ui.wizard.new.repository.task"
             name="Repository Task"/>
       <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.wizards.NewQueryWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard"
             icon="icons/etool16/query-new.gif"
-            id="org.eclipse.mylar.tasks.ui.wizard.new.query"
+            id="org.eclipse.mylyn.tasks.ui.wizard.new.query"
             name="Query"/>
 	  <wizard
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityWizard"
             icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylar.tasks.ui.activity.report"
+            id="org.eclipse.mylyn.tasks.ui.activity.report"
             name="Task Activity Report">
       </wizard> 
 	</extension>
@@ -134,40 +134,40 @@
   <extension
         point="org.eclipse.ui.importWizards">
      <wizard
-           category="org.eclipse.mylar.tasklist.importcategory"
-           class="org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataImportWizard"
+           category="org.eclipse.mylyn.tasklist.importcategory"
+           class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard"
            icon="icons/eview16/task-list.gif"
-           id="org.eclipse.mylar.tasklist.ui.importWizard"
+           id="org.eclipse.mylyn.tasklist.ui.importWizard"
            name="Task List">
         <description>
            Import task data files from file system.
         </description>
      </wizard>
      <category
-           id="org.eclipse.mylar.tasklist.importcategory"
+           id="org.eclipse.mylyn.tasklist.importcategory"
            name="Mylar"/>
   </extension>
 
      <extension point="org.eclipse.ui.exportWizards"> 
       <wizard
-            category="org.eclipse.mylar.tasklist.exportcategory"
-            class="org.eclipse.mylar.internal.tasks.ui.wizards.TaskDataExportWizard"
+            category="org.eclipse.mylyn.tasklist.exportcategory"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard"
             icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylar.tasklist.ui.exportWizard"
+            id="org.eclipse.mylyn.tasklist.ui.exportWizard"
             name="Task Data"> 
          <description> 
             Export Task List data files to the file system.
          </description> 
       </wizard>
       <category
-            id="org.eclipse.mylar.tasklist.exportcategory"
+            id="org.eclipse.mylyn.tasklist.exportcategory"
             name="Mylar"/> 
     </extension> 
 
    <extension point="org.eclipse.ui.decorators">
       <decorator
-            class="org.eclipse.mylar.internal.tasks.ui.TaskLabelDecorator"
-            id="org.eclipse.mylar.tasklist.ui.decorator.repositories"
+            class="org.eclipse.mylyn.internal.tasks.ui.TaskLabelDecorator"
+            id="org.eclipse.mylyn.tasklist.ui.decorator.repositories"
             label="Mylar Task Decorator"
             lightweight="true"
             state="true">
@@ -177,10 +177,10 @@
          <enablement>
             <or>
                <objectClass
-                     name="org.eclipse.mylar.tasks.core.ITaskListElement">
+                     name="org.eclipse.mylyn.tasks.core.ITaskListElement">
                </objectClass>
                <objectClass
-                     name="org.eclipse.mylar.tasks.core.TaskRepository">
+                     name="org.eclipse.mylyn.tasks.core.TaskRepository">
                </objectClass>
             </or>
          </enablement>
@@ -190,30 +190,30 @@
   	<extension
         point="org.eclipse.ui.editors">
      <editor
-           class="org.eclipse.mylar.tasks.ui.editors.TaskEditor"
-           contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
+           class="org.eclipse.mylyn.tasks.ui.editors.TaskEditor"
+           contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
            icon="icons/etool16/task.gif"
-           id="org.eclipse.mylar.tasklist.ui.taskEditor"
+           id="org.eclipse.mylyn.tasklist.ui.taskEditor"
            name="Task Editor"/>
 	    <editor
            icon="icons/etool16/task.gif"
-           class="org.eclipse.mylar.internal.tasks.ui.editors.CategoryEditor"
+           class="org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor"
            name="Category Editor"
-           id="org.eclipse.mylar.tasklist.ui.catEditor"/>
+           id="org.eclipse.mylyn.tasklist.ui.catEditor"/>
     <editor
-          class="org.eclipse.mylar.internal.tasks.ui.planner.TaskActivityEditorPart"
-          contributorClass="org.eclipse.mylar.internal.tasks.ui.editors.TaskEditorActionContributor"
+          class="org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityEditorPart"
+          contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
           icon="icons/eview16/task-list.gif"
-          id="org.eclipse.mylar.tasklist.ui.planner.editor"
+          id="org.eclipse.mylyn.tasklist.ui.planner.editor"
           name="Task Planner"/>     
   </extension>
   
       <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+               <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.TaskListView"/>
                <view
                      closeable="true"
-                     id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+                     id="org.eclipse.mylyn.tasks.ui.views.TaskListView"
                      minimized="false"
                      moveable="true"
                      ratio="0.5"
@@ -221,87 +221,87 @@
                      relative="org.eclipse.ui.views.ContentOutline"
                      visible="true"/>
                <newWizardShortcut
-                     id="org.eclipse.mylar.tasks.ui.wizard.new.task">
+                     id="org.eclipse.mylyn.tasks.ui.wizard.new.task">
                </newWizardShortcut>
                <newWizardShortcut
-                     id="org.eclipse.mylar.tasks.ui.wizard.new.task">
+                     id="org.eclipse.mylyn.tasks.ui.wizard.new.task">
                </newWizardShortcut>
                <newWizardShortcut
-                     id="org.eclipse.mylar.tasks.ui.wizard.new.repository.task">
+                     id="org.eclipse.mylyn.tasks.ui.wizard.new.repository.task">
                </newWizardShortcut>
           </perspectiveExtension>
 		  <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
-               <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+               <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.TaskListView"/>
           </perspectiveExtension>
       	<perspectiveExtension
             targetID="org.eclipse.ui.resourcePerspective">
-            <viewShortcut id="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+            <viewShortcut id="org.eclipse.mylyn.tasks.ui.views.TaskListView"/>
 	         <view
                 closeable="true"
-                id="org.eclipse.mylar.tasks.ui.views.TaskListView"
+                id="org.eclipse.mylyn.tasks.ui.views.TaskListView"
                 minimized="false"
                 relationship="stack"
                 relative="org.eclipse.ui.views.ContentOutline">
          </view>
           <newWizardShortcut
-                id="org.eclipse.mylar.tasks.ui.wizard.new.task">
+                id="org.eclipse.mylyn.tasks.ui.wizard.new.task">
           </newWizardShortcut>
           <newWizardShortcut
-                id="org.eclipse.mylar.tasks.ui.wizard.new.repository.task">
+                id="org.eclipse.mylyn.tasks.ui.wizard.new.repository.task">
           </newWizardShortcut> 
       </perspectiveExtension>
      <perspectiveExtension
-           targetID="org.eclipse.mylar.tasklist.ui.perspectives.planning">
+           targetID="org.eclipse.mylyn.tasklist.ui.perspectives.planning">
         <newWizardShortcut
-              id="org.eclipse.mylar.tasks.ui.wizard.new.task">
+              id="org.eclipse.mylyn.tasks.ui.wizard.new.task">
         </newWizardShortcut>
         <newWizardShortcut
-              id="org.eclipse.mylar.tasks.ui.wizard.new.repository.task">
+              id="org.eclipse.mylyn.tasks.ui.wizard.new.repository.task">
         </newWizardShortcut>
      </perspectiveExtension>
        
        <perspectiveExtension targetID="org.eclipse.team.cvs.ui.cvsPerspective">
         <view
-              id="org.eclipse.mylar.tasklist.repositories"
+              id="org.eclipse.mylyn.tasklist.repositories"
               minimized="false"
               ratio="0.7"
               relationship="bottom"
               relative="org.eclipse.team.ccvs.ui.RepositoriesView"
               visible="true"/>
-        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+        <viewShortcut id="org.eclipse.mylyn.tasklist.repositories"/>
      </perspectiveExtension>
      <perspectiveExtension targetID="org.tigris.subversion.subclipse.ui.svnPerspective">
         <view
-              id="org.eclipse.mylar.tasklist.repositories"
+              id="org.eclipse.mylyn.tasklist.repositories"
               minimized="false"
               ratio="0.7"
               relationship="bottom"
               relative="org.tigris.subversion.subclipse.ui.repository.RepositoriesView"
               visible="true"/>
-        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+        <viewShortcut id="org.eclipse.mylyn.tasklist.repositories"/>
      </perspectiveExtension>
      <perspectiveExtension targetID="org.eclipse.team.ui.TeamSynchronizingPerspective">
         <view
-              id="org.eclipse.mylar.tasklist.repositories"
+              id="org.eclipse.mylyn.tasklist.repositories"
               minimized="false"
               ratio="0.7"
               relationship="bottom"
               relative="org.eclipse.team.sync.views.SynchronizeView"
               visible="true"/>
-        <viewShortcut id="org.eclipse.mylar.tasklist.repositories"/>
+        <viewShortcut id="org.eclipse.mylyn.tasklist.repositories"/>
      </perspectiveExtension>
 	</extension>
   
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
-			id="org.eclipse.mylar.tasklist.actions.view" 
-	   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+			id="org.eclipse.mylyn.tasklist.actions.view" 
+	   		targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
   		
   		<action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeAllAction"
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAllAction"
           enablesFor="*"
           icon="icons/etool16/repository-synchronize.gif"
-          id="org.eclipse.mylar.tasklist.synchronize"
+          id="org.eclipse.mylyn.tasklist.synchronize"
           label="Synchronize Changed"
           menubarPath="tasks"
           toolbarPath="new"
@@ -309,37 +309,37 @@
          </action>
 
   		<action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.ShowTaskRepositoriesViewAction"
           enablesFor="*"
           icon="icons/eview16/repositories.gif"
-          id="org.eclipse.mylar.tasks.ui.open.repositories.view"
+          id="org.eclipse.mylyn.tasks.ui.open.repositories.view"
           label="Show Task Repositories View"
           menubarPath="tasks"
           tooltip="Show Task Repositories View">
          </action>
     <action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.RestoreTaskListAction"
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.RestoreTaskListAction"
           icon="icons/etool16/import.gif"
-          id="org.eclipse.mylar.tasks.ui.action.restore"
+          id="org.eclipse.mylyn.tasks.ui.action.restore"
           label="Restore Tasks from History..."
           menubarPath="tasks"
           style="push">
     </action>
            		
   		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewRepositoryTaskAction"
                enablesFor="*"
                icon="icons/etool16/task-repository-new.gif"
-               id="org.eclipse.mylar.tasks.ui.actions.new.repository.task"
+               id="org.eclipse.mylyn.tasks.ui.actions.new.repository.task"
                label="New Repository Task"
                style="push"
                toolbarPath="new"
                tooltip="New Repository Task"> 
   		</action>
     <action
-          class="org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction"
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
           icon="icons/etool16/task-new.gif"
-          id="org.eclipse.mylar.tasks.ui.actions.newy.task"
+          id="org.eclipse.mylyn.tasks.ui.actions.newy.task"
           label="Task"
           style="push"
           toolbarPath="new"
@@ -347,8 +347,8 @@
     </action>
          <!--
     	<action
-          class="org.eclipse.mylar.internal.tasklist.ui.actions.CopyDetailsAction"
-          id="org.eclipse.mylar.tasklist.copy.details"
+          class="org.eclipse.mylyn.internal.tasklist.ui.actions.CopyDetailsAction"
+          id="org.eclipse.mylyn.tasklist.copy.details"
           label="Copy Details"
           style="push"/>
   		-->
@@ -357,35 +357,35 @@
 
   <extension point="org.eclipse.ui.popupMenus">
       <viewerContribution
-            id="org.eclipse.mylar.tasklist.ui.viewerContribution"
-            targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+            id="org.eclipse.mylyn.tasklist.ui.viewerContribution"
+            targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
 
          <action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.SynchronizeSelectedAction"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeSelectedAction"
                definitionId="org.eclipse.ui.file.refresh"
                enablesFor="*"
                icon="icons/etool16/repository-synchronize.gif"
-               id="org.eclipse.mylar.tasks.ui.actions.synchronize.selection"
+               id="org.eclipse.mylyn.tasks.ui.actions.synchronize.selection"
                label="Synchronize"
                menubarPath="repository"
                tooltip="Synchronize with Repository">
             <enablement>
                <or>
-                    <!--<objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>-->
-					<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractTaskContainer"/>
+                    <!--<objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>-->
+					<objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"/>
+               		<objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"/>
                </or>
             </enablement>
          </action>
          
         <!--
 		<action
-              class="org.eclipse.mylar.internal.tasks.ui.actions.AddRepositoryTaskAction"
+              class="org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryTaskAction"
               enablesFor="*"
               icon="icons/etool16/task-repository.gif"
-              id="org.eclipse.mylar.tasks.ui.actions.add.repository.task"
-              menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
+              id="org.eclipse.mylyn.tasks.ui.actions.add.repository.task"
+              menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
               label="Add Existing Task..."
               style="push"
               tooltip="Add Existing Task"> 
@@ -393,26 +393,26 @@
   		-->
   		
   		<action
-	        class="org.eclipse.mylar.internal.tasks.ui.actions.NewRepositoryTaskAction"
+	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewRepositoryTaskAction"
 	        enablesFor="*"
 	        icon="icons/etool16/task-repository-new.gif"
-	        id="org.eclipse.mylar.tasks.ui.actions.new.repository.task"
+	        id="org.eclipse.mylyn.tasks.ui.actions.new.repository.task"
 	        label="Repository Task..."
-	        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
+	        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
 	        tooltip="New Repository Task"/>
 	              
 		<action
-              class="org.eclipse.mylar.internal.tasks.ui.actions.NewQueryAction"
+              class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction"
               enablesFor="*"
               icon="icons/etool16/query-new.gif"
-              id="org.eclipse.mylar.tasks.ui.actions.new.query"
-              menubarPath="org.eclipse.mylar.tasks.ui.menu.new/repository"
+              id="org.eclipse.mylyn.tasks.ui.actions.new.query"
+              menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
               label="Query..."
               style="push"
               tooltip="New Query"> 
   		</action>
   <menu
-        id="org.eclipse.mylar.tasks.ui.menu.new"
+        id="org.eclipse.mylyn.tasks.ui.menu.new"
         label="New"
         path="new">
      <separator
@@ -423,20 +423,20 @@
      </separator>
   </menu>
   <action
-        class="org.eclipse.mylar.internal.tasks.ui.actions.NewLocalTaskAction"
+        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
         icon="icons/etool16/task-new.gif"
-        id="org.eclipse.mylar.tasks.ui.actions.new.task"
+        id="org.eclipse.mylyn.tasks.ui.actions.new.task"
         label="Task"
-        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
         style="push"
         tooltip="New Task">
   </action>
   <action
-        class="org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction"
+        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction"
         icon="icons/etool16/category-new.gif"
-        id="org.eclipse.mylar.tasks.ui.actions.new.category"
+        id="org.eclipse.mylyn.tasks.ui.actions.new.category"
         label="Category"
-        menubarPath="org.eclipse.mylar.tasks.ui.menu.new/local"
+        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
         tooltip="New Category">
   </action>
       </viewerContribution>
@@ -446,16 +446,16 @@
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
             name="Mylar"
-            class="org.eclipse.mylar.internal.tasks.ui.preferences.MylarPreferencePage"
-            id="org.eclipse.mylar.ui.preferences">
-            <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
+            class="org.eclipse.mylyn.internal.tasks.ui.preferences.MylarPreferencePage"
+            id="org.eclipse.mylyn.ui.preferences">
+            <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>
       </page>  
       <page 
          name="Task List"
-         class="org.eclipse.mylar.internal.tasks.ui.preferences.TasksPreferencePage"
-         id="org.eclipse.mylar.tasks.ui.preferences"
-         category="org.eclipse.mylar.ui.preferences">
-         <keywordReference id="org.eclipse.mylar.tasks.keywords"/>
+         class="org.eclipse.mylyn.internal.tasks.ui.preferences.TasksPreferencePage"
+         id="org.eclipse.mylyn.tasks.ui.preferences"
+         category="org.eclipse.mylyn.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>
       </page> 
    </extension>
    
@@ -463,7 +463,7 @@
    		point="org.eclipse.ui.keywords">
       <keyword
             label="mylar tasks"
-            id="org.eclipse.mylar.tasks.keywords"/>
+            id="org.eclipse.mylyn.tasks.keywords"/>
    </extension>
  
 
@@ -474,7 +474,7 @@
             name="Mylar Tasks"
             description="Open Mylar Tasks View"
             categoryId="org.eclipse.ui.category.views"
-            id="org.eclipse.mylar.tasklist.ui.views.TaskListView">
+            id="org.eclipse.mylyn.tasklist.ui.views.TaskListView">
       </command>
    </extension>
    -->
@@ -486,18 +486,18 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
             <parameter 
             	id="org.eclipse.ui.views.showView.viewId"
-            	value="org.eclipse.mylar.tasks.ui.views.TaskListView"/>
+            	value="org.eclipse.mylyn.tasks.ui.views.TaskListView"/>
       </key>
   </extension>
   
    <extension
          point="org.eclipse.ui.themes">
       <themeElementCategory
-           id="org.eclipse.mylar.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.presentation"
            label="Tasks"/>         
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.overdue"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.colors.foreground.overdue"
            isEditable="true"
            label="Tasks - Overdue"
            value="198,4,38"> 
@@ -506,8 +506,8 @@
          </description>
      </colorDefinition>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.scheduled"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.colors.foreground.today.scheduled"
            isEditable="true"
            label="Tasks - Scheduled for Today"
            value="32,21,223">  
@@ -516,8 +516,8 @@
          </description>
      </colorDefinition>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.thisweek.scheduled"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.colors.foreground.thisweek.scheduled"
            isEditable="true"
            label="Tasks - Scheduled for This Week"
            value="0,0,0">  
@@ -526,8 +526,8 @@
          </description>
      </colorDefinition>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.today.completed"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.colors.foreground.today.completed"
            isEditable="true"
            label="Tasks - Completed Today"
            value="107,169,128">  
@@ -536,8 +536,8 @@
          </description>
      </colorDefinition>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasklist.ui.colors.foreground.completed"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasklist.ui.colors.foreground.completed"
            isEditable="true"
            label="Tasks - Completed"
            value="128,128,128">  
@@ -546,8 +546,8 @@
          </description>
      </colorDefinition>
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasks.ui.colors.incoming.background"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.incoming.background"
            isEditable="true"
            label="Task Editor - Incoming Changes"
            value="225,236,255"> 
@@ -557,8 +557,8 @@
      </colorDefinition>  
 
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasks.ui.colors.category.gradient.start"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.category.gradient.start"
            isEditable="true"
            label="Task List - Category Gradient Top"
            value="240,240,240"> 
@@ -568,8 +568,8 @@
      </colorDefinition> 
  
      <colorDefinition
-           categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-           id="org.eclipse.mylar.tasks.ui.colors.category.gradient.end"
+           categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+           id="org.eclipse.mylyn.tasks.ui.colors.category.gradient.end"
            isEditable="true"
            label="Task List - Category Gradient Bottom"
            value="220,220,220"> <!-- was all 220, 234,233,237 -->
@@ -579,8 +579,8 @@
      </colorDefinition> 
 
 	<fontDefinition
-       categoryId="org.eclipse.mylar.tasklist.ui.presentation"
-       id="org.eclipse.mylar.tasklist.ui.fonts.task.editor.comment"
+       categoryId="org.eclipse.mylyn.tasklist.ui.presentation"
+       id="org.eclipse.mylyn.tasklist.ui.fonts.task.editor.comment"
        isEditable="true"
        label="Task Editor - Notes and Comments"
        value="org.eclipse.jface.dialogfont-">
@@ -598,80 +598,80 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.eclipse.mylar.internal.tasks.ui.PlanningPerspectiveFactory"
+            class="org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory"
             icon="icons/eview16/perspective-planning.png"
-            id="org.eclipse.mylar.tasklist.ui.perspectives.planning"
+            id="org.eclipse.mylyn.tasklist.ui.perspectives.planning"
             name="Planning"/>
    </extension>
   
      
-   <extension point="org.eclipse.mylar.tasks.ui.actions">    
+   <extension point="org.eclipse.mylyn.tasks.ui.actions">    
       <dynamicPopupMenu
-            class="org.eclipse.mylar.internal.tasks.ui.ScheduleTaskMenuContributor"
+            class="org.eclipse.mylyn.internal.tasks.ui.ScheduleTaskMenuContributor"
             menuPath="tasks"/>
       <dynamicPopupMenu
-            class="org.eclipse.mylar.internal.tasks.ui.TaskStatusMenuContributor"
+            class="org.eclipse.mylyn.internal.tasks.ui.TaskStatusMenuContributor"
             menuPath="tasks"/>
       <dynamicPopupMenu
-            class="org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor"
+            class="org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor"
             menuPath="tasks"/>
    </extension>
    
   <extension
-         point="org.eclipse.mylar.tasks.ui.editors">
+         point="org.eclipse.mylyn.tasks.ui.editors">
       <hyperlinkDetector
-            class="org.eclipse.mylar.tasks.ui.editors.MylarUrlHyperlinkDetector"
-            id="org.eclipse.mylar.tasks.ui.hyperlink.detector.url"/>
+            class="org.eclipse.mylyn.tasks.ui.editors.MylarUrlHyperlinkDetector"
+            id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.url"/>
       
    </extension>
    <extension
-          point="org.eclipse.mylar.tasks.ui.editors">
+          point="org.eclipse.mylyn.tasks.ui.editors">
        <hyperlinkDetector
-             class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
-             id="org.eclipse.mylar.tasks.ui.hyperlink.detector.tasks"/>
+             class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
+             id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.tasks"/>
     </extension>
    
    <extension
-         point="org.eclipse.mylar.context.core.handlers">
-      <status class="org.eclipse.mylar.internal.tasks.ui.RepositoryAwareStatusHandler"/>
+         point="org.eclipse.mylyn.context.core.handlers">
+      <status class="org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler"/>
    </extension>
    
       <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            id="org.eclipse.mylar.tasks.navigation"
+            id="org.eclipse.mylyn.tasks.navigation"
             label="Task Navigation"
             visible="true">
 		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.DeactivateAllTasksAction"
-               definitionId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.DeactivateAllTasksAction"
+               definitionId="org.eclipse.mylyn.tasks.command.deactivateAllTasks"
                icon="icons/etool16/task-inactive-centered.gif"
-               id="org.eclipse.mylar.tasks.ui.deactivateAllTasks"
+               id="org.eclipse.mylyn.tasks.ui.deactivateAllTasks"
                label="&amp;Deactivate Task"
                menubarPath="navigate/open.ext3"
                style="push"/>
 		<action
-        	class="org.eclipse.mylar.internal.tasks.ui.actions.ActivateTaskDialogAction"
-        	definitionId="org.eclipse.mylar.tasks.command.activateTask"
+        	class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction"
+        	definitionId="org.eclipse.mylyn.tasks.command.activateTask"
         	icon="icons/etool16/task-active-centered.gif"
-        	id="org.eclipse.mylar.tasks.ui.switchTask"
+        	id="org.eclipse.mylyn.tasks.ui.switchTask"
         	label="&amp;Activate Task..."
         	menubarPath="navigate/open.ext3"
         	style="push"/>
 		<action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenRepositoryTask"
-               definitionId="org.eclipse.mylar.tasks.command.openRemoteTask"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
+               definitionId="org.eclipse.mylyn.tasks.command.openRemoteTask"
                icon="icons/etool16/open-repository-task.gif"
-               id="org.eclipse.mylar.tasks.ui.open.task.remote"
+               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
                label="Open &amp;Repository Task..."
                menubarPath="navigate/open.ext3"
                style="push"
                tooltip="Open Repository Task"/>
         <action
-               class="org.eclipse.mylar.internal.tasks.ui.actions.OpenTaskAction"
-               definitionId="org.eclipse.mylar.tasks.command.openTask"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskAction"
+               definitionId="org.eclipse.mylyn.tasks.command.openTask"
                icon="icons/etool16/open-task.gif"
-               id="org.eclipse.mylar.tasks.ui.openTask"
+               id="org.eclipse.mylyn.tasks.ui.openTask"
                label="Open Tas&amp;k..."
                menubarPath="navigate/open.ext3"
                style="push"
@@ -679,9 +679,9 @@
                tooltip="Open Task"/>
      
         <action
-              class="org.eclipse.mylar.internal.tasks.ui.actions.ReportBugAction"
+              class="org.eclipse.mylyn.internal.tasks.ui.actions.ReportBugAction"
               icon="icons/etool16/bug-report.gif"
-              id="org.eclipse.mylar.tasks.ui.bug.report"
+              id="org.eclipse.mylyn.tasks.ui.bug.report"
               label="Report Bug or Enhancement"
               menubarPath="help/helpStart"
               style="push"
@@ -694,37 +694,37 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            id="org.eclipse.mylar.tasks.command.openTask"
+            id="org.eclipse.mylyn.tasks.command.openTask"
             name="Open Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            id="org.eclipse.mylar.tasks.command.openRemoteTask"
+            id="org.eclipse.mylyn.tasks.command.openRemoteTask"
             name="Open Remote Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            id="org.eclipse.mylar.tasks.command.activateTask"
+            id="org.eclipse.mylyn.tasks.command.activateTask"
             name="Activate Task"/>
       <command
             categoryId="org.eclipse.ui.category.navigate"
-            id="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+            id="org.eclipse.mylyn.tasks.command.deactivateAllTasks"
             name="Deactivate Task"/>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="org.eclipse.mylar.tasks.command.openTask"
+            commandId="org.eclipse.mylyn.tasks.command.openTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F12"/>
       <key
-            commandId="org.eclipse.mylar.tasks.command.openRemoteTask"
+            commandId="org.eclipse.mylyn.tasks.command.openRemoteTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+F12"/>
       <key
-            commandId="org.eclipse.mylar.tasks.command.activateTask"
+            commandId="org.eclipse.mylyn.tasks.command.activateTask"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+F9"/>
       <key
-            commandId="org.eclipse.mylar.tasks.command.deactivateAllTasks"
+            commandId="org.eclipse.mylyn.tasks.command.deactivateAllTasks"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+M2+F9"/>
    </extension>
@@ -732,20 +732,20 @@
          id="BugzillaSearchPage"
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
-            class="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResultView"
-            searchResultClass="org.eclipse.mylar.tasks.ui.search.RepositorySearchResult"
-            id="org.eclipse.mylar.internal.tasks.ui.search.RepositorySearchResultView"/>
-<!--            id="org.eclipse.mylar.bugzilla.BugzillaSearchResultPage"/>-->
+            class="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"
+            searchResultClass="org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult"
+            id="org.eclipse.mylyn.internal.tasks.ui.search.RepositorySearchResultView"/>
+<!--            id="org.eclipse.mylyn.bugzilla.BugzillaSearchResultPage"/>-->
    </extension>
     <extension
-         id="org.eclipse.mylar.tasks.ui.repositorySearchPage"
+         id="org.eclipse.mylyn.tasks.ui.repositorySearchPage"
          name="Task Search Page"
          point="org.eclipse.search.searchPages">
        <page
-            class="org.eclipse.mylar.internal.tasks.ui.TaskSearchPage"
+            class="org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage"
             enabled="true" 
             icon="icons/elcl16/task-search.gif"
-            id="org.eclipse.mylar.tasks.ui.core.search.page"
+            id="org.eclipse.mylyn.tasks.ui.core.search.page"
             label="Task Search" 
             tabPosition="999"/>
    </extension>
@@ -753,45 +753,45 @@
           point="org.eclipse.ui.propertyPages">
        <page
              adaptable="true"
-             class="org.eclipse.mylar.tasks.ui.properties.ProjectTaskRepositoryPage"
-             id="org.eclipse.mylar.tasks.ui.project.repository"
+             class="org.eclipse.mylyn.tasks.ui.properties.ProjectTaskRepositoryPage"
+             id="org.eclipse.mylyn.tasks.ui.project.repository"
              name="Task Repository"
              objectClass="org.eclipse.core.resources.IProject"/>
     </extension>
     <extension
           point="org.eclipse.ui.commands">
        <category
-             id="org.eclipse.mylar.tasks.ui.commands"
+             id="org.eclipse.mylyn.tasks.ui.commands"
              name="Task Repositories">
        </category>
        <command
-             category="org.eclipse.mylar.tasks.ui.commands"
-             categoryId="org.eclipse.mylar.tasks.ui.commands"
-             defaultHandler="org.eclipse.mylar.internal.tasks.ui.commands.AddTaskRepositoryHandler"
-             id="org.eclipse.mylar.tasks.command.addTaskRepository"
+             category="org.eclipse.mylyn.tasks.ui.commands"
+             categoryId="org.eclipse.mylyn.tasks.ui.commands"
+             defaultHandler="org.eclipse.mylyn.internal.tasks.ui.commands.AddTaskRepositoryHandler"
+             id="org.eclipse.mylyn.tasks.command.addTaskRepository"
              name="Add Task Repository">
           <commandParameter
-                id="org.eclipse.mylar.tasks.command.taskRepositoryId"
+                id="org.eclipse.mylyn.tasks.command.taskRepositoryId"
                 name="Repository Type"
                 optional="true"
-                values="org.eclipse.mylar.internal.tasks.ui.commands.TaskRepositoryParameterValues">
+                values="org.eclipse.mylyn.internal.tasks.ui.commands.TaskRepositoryParameterValues">
           </commandParameter>
        </command>
     </extension>
     <extension
-          point="org.eclipse.mylar.tasks.ui.projectLinkProviders">
+          point="org.eclipse.mylyn.tasks.ui.projectLinkProviders">
        <linkProvider
-             class="org.eclipse.mylar.tasks.ui.ProjectPreferencesLinkProvider"
+             class="org.eclipse.mylyn.tasks.ui.ProjectPreferencesLinkProvider"
              name="Default Repository Link"
              order="1000"
-             id="org.eclipse.mylar.tasks.ui.defaultRepositoryLinkProvider">
+             id="org.eclipse.mylyn.tasks.ui.defaultRepositoryLinkProvider">
        </linkProvider>
     </extension>
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.eclipse.mylar.tasks.core.ITaskListElement"
-            class="org.eclipse.mylar.tasks.ui.search.SearchScoreComputerAdapterFactory">
+            adaptableType="org.eclipse.mylyn.tasks.core.ITaskListElement"
+            class="org.eclipse.mylyn.tasks.ui.search.SearchScoreComputerAdapterFactory">
          <adapter
                type="org.eclipse.search.ui.ISearchPageScoreComputer">
          </adapter>
@@ -800,15 +800,15 @@
         <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector            
-            class="org.eclipse.mylar.tasks.ui.editors.TaskHyperlinkDetector"
-            id="org.eclipse.mylar.tasks.ui.taskhyperlinkdetector"
+            class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
+            id="org.eclipse.mylyn.tasks.ui.taskhyperlinkdetector"
             name="Mylar Task"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
       <hyperlinkDetector
-            class="org.eclipse.mylar.tasks.ui.editors.MylarUrlHyperlinkDetector"
+            class="org.eclipse.mylyn.tasks.ui.editors.MylarUrlHyperlinkDetector"
             description="Mylar enabled URL hyperlink detector"
-            id="org.eclipse.mylar.tasks.ui.mylarurlhyperlink"
+            id="org.eclipse.mylyn.tasks.ui.mylarurlhyperlink"
             name="Mylar URL"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
@@ -817,19 +817,19 @@
 	<extension
 		point="org.eclipse.ui.workingSets">
 		<workingSet
-                 elementAdapterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
+                 elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
         icon="icons/etool16/open-task.gif"
-                 id="org.eclipse.mylar.tasks.ui.workingSet"
+                 id="org.eclipse.mylyn.tasks.ui.workingSet"
                  name="Tasks"
-                 pageClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetPage"
-                 updaterClass="org.eclipse.mylar.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
+                 pageClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetPage"
+                 updaterClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
 		</workingSet>
 	</extension>
  <extension
        point="org.eclipse.core.runtime.adapters">
     <factory
-          adaptableType="org.eclipse.mylar.tasks.core.AbstractTaskContainer"
-          class="org.eclipse.mylar.internal.tasks.ui.workingset.TaskAdapterFactory">
+          adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
+          class="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskAdapterFactory">
        <adapter
              type="org.eclipse.ui.IPersistableElement">
        </adapter>
@@ -838,24 +838,24 @@
  <extension
        point="org.eclipse.ui.elementFactories">
     <factory
-          class="org.eclipse.mylar.internal.tasks.ui.workingset.TaskElementFactory"
-          id="org.eclipse.mylar.tasks.ui.elementFactory">
+          class="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskElementFactory"
+          id="org.eclipse.mylyn.tasks.ui.elementFactory">
     </factory>
 </extension>
 </plugin>
 
    <!--
    <extension
-         point="org.eclipse.mylar.tasklist.editors">
+         point="org.eclipse.mylyn.tasklist.editors">
       <hyperlinkDetector class="org.eclipse.ui.internal.editors.text.URLHyperlinkDetector"/>
    </extension>
    -->
    
     <!--<extension
-          point="org.eclipse.mylar.tasklist.editors">
+          point="org.eclipse.mylyn.tasklist.editors">
        <hyperlinkListener
-             class="org.eclipse.mylar.internal.tasklist.ui.TaskHyperlinkAdapter"
-             id="org.eclipse.mylar.tasklist.hyperlinkLister.task"
+             class="org.eclipse.mylyn.internal.tasklist.ui.TaskHyperlinkAdapter"
+             id="org.eclipse.mylyn.tasklist.hyperlinkLister.task"
              type="task"/>
     </extension>-->
 
@@ -864,8 +864,8 @@
   		  	label="Go Into Category" 
 	  		tooltip="Go Into Category"
 	  		menubarPath="tasks" 
-	  		id="org.eclipse.mylar.tasklist.actions.category.gointo" 
-	  		class="org.eclipse.mylar.tasklist.ui.actions.GoIntoAction"
+	  		id="org.eclipse.mylyn.tasklist.actions.category.gointo" 
+	  		class="org.eclipse.mylyn.tasklist.ui.actions.GoIntoAction"
 	  		icon="icons/etool16/go-into.gif"
 	  		enablesFor="1"/>
 -->

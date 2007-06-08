@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy.Type;
@@ -15,8 +15,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.eclipse.mylar.core.net.AuthenticatedProxy;
-import org.eclipse.mylar.core.net.WebClientUtil;
+import org.eclipse.mylyn.core.net.AuthenticatedProxy;
+import org.eclipse.mylyn.core.net.WebClientUtil;
 
 public class UrlConnectionUtilTest extends TestCase {
 

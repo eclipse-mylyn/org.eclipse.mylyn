@@ -8,7 +8,7 @@
 // * Contributors:
 // *     University Of British Columbia - initial API and implementation
 // *******************************************************************************/
-//package org.eclipse.mylar.internal.bugzilla.ui;
+//package org.eclipse.mylyn.internal.bugzilla.ui;
 //
 //import java.util.ArrayList;
 //import java.util.Iterator;
@@ -34,15 +34,15 @@
 //import org.eclipse.jface.viewers.TableLayout;
 //import org.eclipse.jface.viewers.TableViewer;
 //import org.eclipse.jface.viewers.Viewer;
-//import org.eclipse.mylar.bugzilla.core.IBugzillaBug;
-//import org.eclipse.mylar.internal.bugzilla.core.BugzillaPlugin;
-//import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-//import org.eclipse.mylar.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
-//import org.eclipse.mylar.internal.bugzilla.core.internal.OfflineReportsFile;
-//import org.eclipse.mylar.internal.bugzilla.ui.actions.AbstractOfflineReportsAction;
-//import org.eclipse.mylar.internal.bugzilla.ui.actions.DeleteOfflineReportAction;
-//import org.eclipse.mylar.internal.bugzilla.ui.actions.ViewOfflineReportAction;
-//import org.eclipse.mylar.internal.core.util.MylarStatusHandler;
+//import org.eclipse.mylyn.bugzilla.core.IBugzillaBug;
+//import org.eclipse.mylyn.internal.bugzilla.core.BugzillaPlugin;
+//import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+//import org.eclipse.mylyn.internal.bugzilla.core.IOfflineBugListener.BugzillaOfflineStaus;
+//import org.eclipse.mylyn.internal.bugzilla.core.internal.OfflineReportsFile;
+//import org.eclipse.mylyn.internal.bugzilla.ui.actions.AbstractOfflineReportsAction;
+//import org.eclipse.mylyn.internal.bugzilla.ui.actions.DeleteOfflineReportAction;
+//import org.eclipse.mylyn.internal.bugzilla.ui.actions.ViewOfflineReportAction;
+//import org.eclipse.mylyn.internal.core.util.MylarStatusHandler;
 //import org.eclipse.swt.SWT;
 //import org.eclipse.swt.events.KeyAdapter;
 //import org.eclipse.swt.events.KeyEvent;

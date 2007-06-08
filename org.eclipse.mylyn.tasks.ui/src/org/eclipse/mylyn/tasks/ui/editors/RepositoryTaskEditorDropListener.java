@@ -6,16 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.io.File;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizard;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -80,7 +80,7 @@ public class BugzillaTestPlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		try {
 			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.bugzilla.tests.TestsPluginResources");
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.bugzilla.tests.TestsPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -96,6 +96,6 @@ public class BugzillaTestPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.bugzilla.tests", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.bugzilla.tests", path);
 	}
 }

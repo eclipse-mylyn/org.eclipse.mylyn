@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,22 +49,22 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylar.core.net.HtmlTag;
-import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
-import org.eclipse.mylar.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
-import org.eclipse.mylar.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.ITaskAttachment;
-import org.eclipse.mylar.tasks.core.QueryHitCollector;
-import org.eclipse.mylar.tasks.core.RepositoryOperation;
-import org.eclipse.mylar.tasks.core.RepositoryStatus;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.Task;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.core.net.HtmlTag;
+import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
+import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.QueryHitCollector;
+import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.Task;
 
 /**
  * @author Mik Kersten
@@ -563,7 +563,7 @@ public class BugzillaClient {
 	}
 
 	protected static RepositoryTaskAttribute makeNewAttribute(
-			org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement tag) {
+			org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement tag) {
 		return attributeFactory.createAttribute(tag.getKeyString());
 	}
 

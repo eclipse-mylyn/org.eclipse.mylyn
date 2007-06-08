@@ -8,12 +8,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
 
 /**
  * @author Mik Kersten

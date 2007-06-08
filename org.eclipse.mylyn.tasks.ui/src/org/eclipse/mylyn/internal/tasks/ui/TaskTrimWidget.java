@@ -1,4 +1,4 @@
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 /*******************************************************************************
  * Copyright (c) 2004 - 2006 Mylar committers and others.
@@ -11,14 +11,14 @@ package org.eclipse.mylar.internal.tasks.ui;
 import java.util.List;
 
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.mylar.internal.tasks.ui.actions.PreviousTaskDropDownAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListFilteredTree;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

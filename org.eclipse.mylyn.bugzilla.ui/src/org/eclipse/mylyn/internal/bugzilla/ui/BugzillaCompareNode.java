@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -20,10 +20,10 @@ import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaReportElement;
-import org.eclipse.mylar.tasks.core.TaskComment;
-import org.eclipse.mylar.tasks.core.RepositoryTaskAttribute;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
+import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;

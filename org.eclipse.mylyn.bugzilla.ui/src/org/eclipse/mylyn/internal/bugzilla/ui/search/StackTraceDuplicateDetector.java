@@ -6,21 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaRepositoryQuery;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.AbstractDuplicateDetector;
-import org.eclipse.mylar.tasks.ui.TaskFactory;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.search.SearchHitCollector;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
+import org.eclipse.mylyn.tasks.ui.TaskFactory;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractNewRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 
 /**
  * @author Meghan Allen

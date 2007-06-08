@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
@@ -18,16 +18,16 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
  */
 public class OpenTaskListElementAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.open";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.open";
 
 	private final StructuredViewer viewer;
 

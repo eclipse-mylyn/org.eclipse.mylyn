@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui.search;
+package org.eclipse.mylyn.internal.bugzilla.ui.search;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylar.internal.bugzilla.ui.BugzillaUiPlugin;
+import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 
 /**
  * Sorts results of Bugzilla search by bug severity.

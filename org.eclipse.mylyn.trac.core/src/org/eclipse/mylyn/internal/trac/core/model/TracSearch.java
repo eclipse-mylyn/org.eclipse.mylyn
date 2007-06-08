@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core.model;
+package org.eclipse.mylyn.internal.trac.core.model;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 
 /**
  * Represents a Trac search. A search can have multiple {@link TracSearchFilter}s

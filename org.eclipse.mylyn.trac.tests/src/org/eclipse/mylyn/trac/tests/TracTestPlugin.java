@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -22,7 +22,7 @@ import org.osgi.framework.BundleContext;
 public class TracTestPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.mylar.trac.tests";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.trac.tests";
 
 	// The shared instance
 	private static TracTestPlugin plugin;

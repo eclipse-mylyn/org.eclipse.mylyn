@@ -1,4 +1,4 @@
-package org.eclipse.mylar.internal.trac.ui;
+package org.eclipse.mylyn.internal.trac.ui;
 
 
 
@@ -6,10 +6,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TaskHyperlink;
-import org.eclipse.mylar.tasks.ui.WebHyperlink;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
+import org.eclipse.mylyn.tasks.ui.WebHyperlink;
 
 public class TracHyperlinkUtilTest extends TestCase {
 

@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;

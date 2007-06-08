@@ -8,7 +8,7 @@
  * Contributors:
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.net.MalformedURLException;
 import java.net.Proxy;

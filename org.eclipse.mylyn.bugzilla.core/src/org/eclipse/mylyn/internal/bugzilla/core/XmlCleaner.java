@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.text.ParseException;
 
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylar.core.net.HtmlTag;
-import org.eclipse.mylar.core.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.core.net.HtmlTag;
+import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
 
 /**
  * This is in place to escape & characters within the resource and rdf:about

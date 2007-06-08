@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class MylarMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.mylar.tasks.core.MylarMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tasks.core.MylarMessages";//$NON-NLS-1$
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, MylarMessages.class);

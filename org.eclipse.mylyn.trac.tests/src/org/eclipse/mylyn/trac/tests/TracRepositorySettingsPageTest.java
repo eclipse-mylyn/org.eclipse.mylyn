@@ -9,18 +9,18 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests;
+package org.eclipse.mylyn.trac.tests;
 
 import java.net.Proxy;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.internal.trac.core.ITracClient;
-import org.eclipse.mylar.internal.trac.core.TracCorePlugin;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylar.internal.trac.ui.TracRepositoryUi;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage;
-import org.eclipse.mylar.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.ui.TracRepositoryUi;
+import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
+import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 

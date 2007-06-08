@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import java.net.Authenticator;
 import java.net.InetAddress;

@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 
 /**
  * @author Mik Kersten
@@ -22,7 +22,7 @@ public class ExpandAllAction extends Action {
 
 	private static final String LABEL = "Expand All";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.expand.all";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.expand.all";
 
 	private TaskListView taskListView;
 

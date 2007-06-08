@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.bugzilla.ui;
+package org.eclipse.mylyn.internal.bugzilla.ui;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.tasks.core.RepositoryTaskData;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 
 /**
  * A two-way or three-way compare for <code>BugReport</code> objects.

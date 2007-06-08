@@ -6,18 +6,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPreferenceConstants;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
  */
 public class SynchronizeAutomaticallyAction extends Action {
 
-	public static final String ID = "org.eclipse.mylar.tasks.ui.actions.synchronize.background";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.actions.synchronize.background";
 	
 	private static final String LABEL = "Synchronize Automatically";
 

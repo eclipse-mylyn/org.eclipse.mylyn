@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.ui.search;
+package org.eclipse.mylyn.tasks.ui.search;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylar.internal.tasks.ui.TaskSearchPage;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
 
 /**

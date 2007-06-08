@@ -9,20 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
  * @author Mik Kersten
  */
 public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction {
 
-	private static final String ID = "org.eclipse.mylar.tasklist.repositories.properties";
+	private static final String ID = "org.eclipse.mylyn.tasklist.repositories.properties";
 
 	public EditRepositoryPropertiesAction() {
 		super("Properties");

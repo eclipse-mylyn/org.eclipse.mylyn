@@ -11,7 +11,7 @@
 /*
  * Created on 20-Jan-2005
  */
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 

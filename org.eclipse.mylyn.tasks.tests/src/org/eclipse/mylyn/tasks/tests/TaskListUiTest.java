@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +21,21 @@ import junit.framework.TestCase;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.internal.tasks.core.WebTask;
-import org.eclipse.mylar.internal.tasks.ui.MoveToCategoryMenuContributor;
-import org.eclipse.mylar.internal.tasks.ui.TaskPriorityFilter;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.NewCategoryAction;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.core.TaskCategory;
-import org.eclipse.mylar.tasks.tests.connector.MockRepositoryQuery;
-import org.eclipse.mylar.tasks.ui.TaskListManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.internal.tasks.core.WebTask;
+import org.eclipse.mylyn.internal.tasks.ui.MoveToCategoryMenuContributor;
+import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
 

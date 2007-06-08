@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.actions;
+package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten and Ken Sueda
@@ -27,7 +27,7 @@ public class MarkTaskIncompleteAction extends Action {
 
 	private static final String ACTION_NAME = "Incomplete";
 
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.mark.incomplete";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.incomplete";
 
 	private List<ITaskListElement> selectedElements;
 

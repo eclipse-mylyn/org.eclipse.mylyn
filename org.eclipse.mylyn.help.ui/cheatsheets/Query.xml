@@ -9,14 +9,14 @@
       <description>
          If the Task List view is not opened, select in the main menu  <b>Window</b> &gt; <b>Show View</b> &gt; <b>Other...</b> &gt; <b>Mylar</b> &gt; <b>Task List</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
-      <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylar.tasks.ui.views.TaskListView)" confirm="true">
+      <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.TaskListView)" confirm="true">
       </command>
    </item>
    <item title="Create a new Query" dialog="true" skip="false">
       <description>
          In the Task List view, click on the right mouse button then select <b>New &gt; Query</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
-      <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylar.tasks.ui.wizard.new.query)" confirm="true">
+      <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylyn.tasks.ui.wizard.new.query)" confirm="true">
       </command>
    </item>
    <item title="Add Task Repository" dialog="true" skip="true">

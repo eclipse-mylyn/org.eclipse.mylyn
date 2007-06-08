@@ -9,7 +9,7 @@
  *     Eugene Kuleshov - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.core;
+package org.eclipse.mylyn.tasks.core;
 
 /**
  * Task information linked to artifacts from version control integration 

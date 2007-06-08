@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.bugzilla.tests;
+package org.eclipse.mylyn.bugzilla.tests;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -20,12 +20,12 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaClient;
-import org.eclipse.mylar.internal.bugzilla.core.BugzillaCorePlugin;
-import org.eclipse.mylar.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylar.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylar.internal.bugzilla.core.SaxConfigurationContentHandler;
-import org.eclipse.mylar.internal.bugzilla.core.XmlCleaner;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient;
+import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
+import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
+import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.bugzilla.core.SaxConfigurationContentHandler;
+import org.eclipse.mylyn.internal.bugzilla.core.XmlCleaner;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

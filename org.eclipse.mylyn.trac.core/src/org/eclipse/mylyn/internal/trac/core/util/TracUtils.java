@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core.util;
+package org.eclipse.mylyn.internal.trac.core.util;
 
 import java.util.Date;
 

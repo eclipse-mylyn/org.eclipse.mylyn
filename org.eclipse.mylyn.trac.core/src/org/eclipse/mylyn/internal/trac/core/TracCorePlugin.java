@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.trac.core;
+package org.eclipse.mylyn.internal.trac.core;
 
 import java.net.MalformedURLException;
 
@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylar.tasks.core.MylarStatus;
-import org.eclipse.mylar.tasks.core.RepositoryStatus;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -30,7 +30,7 @@ import org.osgi.framework.BundleContext;
  */
 public class TracCorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.trac.core";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.trac.core";
 
 	public static final String ENCODING_UTF_8 = "UTF-8";
 

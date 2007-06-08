@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.core.model;
+package org.eclipse.mylyn.internal.trac.core.model;
 
 import java.util.ArrayList;
 import java.util.List;

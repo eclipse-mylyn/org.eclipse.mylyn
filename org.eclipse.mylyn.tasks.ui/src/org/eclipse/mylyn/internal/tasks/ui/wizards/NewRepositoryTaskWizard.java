@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import org.eclipse.mylar.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 
 /**
  * @author Mik Kersten

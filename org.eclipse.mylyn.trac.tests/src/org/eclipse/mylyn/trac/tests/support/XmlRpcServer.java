@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.trac.tests.support;
+package org.eclipse.mylyn.trac.tests.support;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,8 +23,8 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
-import org.eclipse.mylar.internal.trac.core.TracXmlRpcClient;
-import org.eclipse.mylar.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient;
+import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 
 /**
  * @author Steffen Pingel

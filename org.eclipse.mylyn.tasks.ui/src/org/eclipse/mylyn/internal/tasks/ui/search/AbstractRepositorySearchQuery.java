@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
-import org.eclipse.mylar.tasks.ui.search.RepositorySearchResult;
+import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 

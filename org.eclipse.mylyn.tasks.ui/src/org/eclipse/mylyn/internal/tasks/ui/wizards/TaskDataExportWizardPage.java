@@ -8,12 +8,12 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.tasks.ui.wizards;
+package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -77,7 +77,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 	// private final static String ZIP_SETTING = "Zip Setting";
 
 	public TaskDataExportWizardPage() {
-		super("org.eclipse.mylar.tasklist.exportPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
+		super("org.eclipse.mylyn.tasklist.exportPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
 				TasksUiPlugin.PLUGIN_ID, "icons/wizban/banner-export.gif"));
 		setPageComplete(false);
 	}

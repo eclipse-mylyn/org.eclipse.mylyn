@@ -6,10 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
-import org.eclipse.mylar.tasks.core.IRepositoryConstants;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import junit.framework.TestCase;
 

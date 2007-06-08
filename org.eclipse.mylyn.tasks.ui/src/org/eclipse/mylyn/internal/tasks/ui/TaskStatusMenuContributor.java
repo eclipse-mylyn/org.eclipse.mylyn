@@ -6,20 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.mylar.internal.tasks.ui.actions.ClearOutgoingAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskCompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskReadAction;
-import org.eclipse.mylar.internal.tasks.ui.actions.MarkTaskUnreadAction;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ClearOutgoingAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskListElement;
 
 /**
  * @author Rob Elves

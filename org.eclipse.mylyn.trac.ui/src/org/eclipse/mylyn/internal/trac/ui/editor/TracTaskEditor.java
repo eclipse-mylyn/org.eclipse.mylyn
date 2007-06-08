@@ -6,9 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.trac.ui.editor;
+package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**

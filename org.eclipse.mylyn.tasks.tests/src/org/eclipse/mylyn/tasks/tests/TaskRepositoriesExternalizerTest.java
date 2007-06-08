@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tasks.tests;
+package org.eclipse.mylyn.tasks.tests;
 
 import java.io.File;
 import java.util.HashSet;
@@ -17,8 +17,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.tasks.core.TaskRepositoriesExternalizer;
-import org.eclipse.mylar.tasks.core.TaskRepository;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /** 
  * @author Rob Elves

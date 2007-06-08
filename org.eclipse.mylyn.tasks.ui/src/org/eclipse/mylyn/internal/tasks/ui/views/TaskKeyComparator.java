@@ -1,4 +1,4 @@
-package org.eclipse.mylar.internal.tasks.ui.views;
+package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Comparator;
 import java.util.regex.Matcher;
