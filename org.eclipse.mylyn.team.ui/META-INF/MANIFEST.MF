@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Team Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.team;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylyn.team.MylarTeamPlugin
+Bundle-Activator: org.eclipse.mylyn.team.FocusedTeamPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.team.core,
  org.eclipse.team.cvs.ui,

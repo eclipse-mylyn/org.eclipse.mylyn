@@ -25,7 +25,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class MylarJUnitLaunchConfiguration extends JUnitLaunchConfigurationDelegate {
+public class TaskContextJUnitLaunchConfiguration extends JUnitLaunchConfigurationDelegate {
 	
 	@Override
 	protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {

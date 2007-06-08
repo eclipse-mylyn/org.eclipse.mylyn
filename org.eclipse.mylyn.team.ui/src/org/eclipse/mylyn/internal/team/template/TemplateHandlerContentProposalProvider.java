@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 
 /**
  * @author Eike Stepper
@@ -59,7 +59,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void initKeywords() {
-			keywords = MylarTeamPlugin.getDefault().getCommitTemplateManager().getRecognizedKeywords();
+			keywords = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getRecognizedKeywords();
 		}
 
 		private void initPrefix() {
@@ -88,7 +88,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void addProposal(String proposal, String keyword) {
-			String description = MylarTeamPlugin.getDefault().getCommitTemplateManager().getHandlerDescription(keyword);
+			String description = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getHandlerDescription(keyword);
 			result.add(new Proposal(proposal, keyword, description));
 		}
 

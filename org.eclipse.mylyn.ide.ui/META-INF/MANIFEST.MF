@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Ide Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.ide;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylyn.internal.ide.MylarIdePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.ide.FocusedIdePlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

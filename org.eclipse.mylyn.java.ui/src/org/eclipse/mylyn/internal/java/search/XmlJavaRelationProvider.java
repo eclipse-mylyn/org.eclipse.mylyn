@@ -48,7 +48,7 @@ import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge;
-import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -143,7 +143,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IInteractionElement landmark : landmarks) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
-				IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(landmark, true);
+				IResource resource = FocusedResourcesPlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;
 				if (resource != null) {
 					project = resource.getProject();

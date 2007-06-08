@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.team.LinkedTaskInfoAdapterFactory;
-import org.eclipse.mylyn.internal.team.MylarTeamExtensionPointReader;
+import org.eclipse.mylyn.internal.team.FocusedTeamExtensionPointReader;
 import org.eclipse.mylyn.internal.team.template.CommitTemplateManager;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
@@ -27,11 +27,11 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
+public class FocusedTeamPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.team";
 
-	private static MylarTeamPlugin INSTANCE;
+	private static FocusedTeamPlugin INSTANCE;
 
 	private Set<AbstractContextChangeSetManager> changeSetManagers = new HashSet<AbstractContextChangeSetManager>();
 
@@ -48,7 +48,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	private static final String OLD_DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \n${task.url}";
 	private static final String OLD_DEFAULT_COMMIT_TEMPLATE2 = "${task.status} - ${connector.task.prefix} ${task.id}: ${task.description} \r\n${task.url}";
 	
-	public MylarTeamPlugin() {
+	public FocusedTeamPlugin() {
 		INSTANCE = this;
 	} 
 
@@ -61,7 +61,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					MylarTeamExtensionPointReader extensionPointReader = new MylarTeamExtensionPointReader();
+					FocusedTeamExtensionPointReader extensionPointReader = new FocusedTeamExtensionPointReader();
 					extensionPointReader.readExtensions();
 					
 					LinkedTaskInfoAdapterFactory.registerAdapters();
@@ -103,7 +103,7 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	public static MylarTeamPlugin getDefault() {
+	public static FocusedTeamPlugin getDefault() {
 		return INSTANCE;
 	}
 

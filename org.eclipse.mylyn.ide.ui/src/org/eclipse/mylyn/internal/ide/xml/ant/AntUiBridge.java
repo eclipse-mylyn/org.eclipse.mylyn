@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.ide.MylarIdePlugin;
+import org.eclipse.mylyn.internal.ide.FocusedIdePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -116,7 +116,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 	 */
 	private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
 		if (file != null) {
-			IWorkbenchPage p = MylarIdePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage p = FocusedIdePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (p != null && file.exists()) {
 				try {
 					IEditorPart editorPart = IDE.openEditor(p, file, activate);

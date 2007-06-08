@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 
 /**
  * Manages the registeres repository provides.
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.team.MylarTeamPlugin;
  * @author Gunnar Wagenknecht
  * @author Mik Kersten (rewrite)
  */
-public class MylarTeamExtensionPointReader {
+public class FocusedTeamExtensionPointReader {
 
 	private static final String ATTR_CLASS = "class";
 
@@ -39,7 +39,7 @@ public class MylarTeamExtensionPointReader {
 	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets";
 
 	public void readExtensions() {
-		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(MylarTeamPlugin.PLUGIN_ID,
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamPlugin.PLUGIN_ID,
 				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
@@ -52,7 +52,7 @@ public class MylarTeamExtensionPointReader {
 					try {
 						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element
 								.createExecutableExtension(ATTR_CLASS);
-						MylarTeamPlugin.getDefault().addActiveChangeSetProvider(provider);
+						FocusedTeamPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
 						MylarStatusHandler.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
@@ -71,7 +71,7 @@ public class MylarTeamExtensionPointReader {
 					try {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element
 								.createExecutableExtension(ATTR_CLASS);
-						MylarTeamPlugin.getDefault().addContextChangeSetManager(manager);
+						FocusedTeamPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
 						// ignore, we
 						MylarStatusHandler.log(e, MessageFormat.format(

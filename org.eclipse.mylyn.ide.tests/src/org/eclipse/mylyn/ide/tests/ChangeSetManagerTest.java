@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.ide.MylarIdePlugin;
+import org.eclipse.mylyn.internal.ide.FocusedIdePlugin;
 import org.eclipse.mylyn.internal.team.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.resources.tests.AbstractResourceContextTest;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
@@ -43,8 +43,8 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		assertNotNull(MylarIdePlugin.getDefault());
-		changeSetManager = (ContextActiveChangeSetManager)MylarTeamPlugin.getDefault().getContextChangeSetManagers().iterator().next();
+		assertNotNull(FocusedIdePlugin.getDefault());
+		changeSetManager = (ContextActiveChangeSetManager)FocusedTeamPlugin.getDefault().getContextChangeSetManagers().iterator().next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
 		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks().size());

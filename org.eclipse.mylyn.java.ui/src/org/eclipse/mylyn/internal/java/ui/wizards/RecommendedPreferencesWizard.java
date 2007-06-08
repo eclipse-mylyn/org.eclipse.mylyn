@@ -21,8 +21,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.context.ui.MylarWorkingSetPage;
-import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetPage;
+import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -32,9 +32,12 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.dialogs.IWorkingSetNewWizard;
 
-public class MylarPreferenceWizard extends Wizard implements INewWizard {
+/**
+ * @author Mik Kersten
+ */
+public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 
-	private MylarPreferenceWizardPage preferencePage;
+	private RecommendedPreferencesWizardPage preferencePage;
 
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
 	
@@ -45,17 +48,17 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 	public void init() {
 		setDefaultPageImageDescriptor(ContextUiImages.MYLAR);
 		setWindowTitle("Mylar Recommended Preferences");
-		super.setDefaultPageImageDescriptor(MylarJavaPlugin.imageDescriptorFromPlugin(MylarJavaPlugin.PLUGIN_ID,
+		super.setDefaultPageImageDescriptor(FocusedJavaPlugin.imageDescriptorFromPlugin(FocusedJavaPlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));
-		preferencePage = new MylarPreferenceWizardPage("Automatic preference settings");
+		preferencePage = new RecommendedPreferencesWizardPage("Automatic preference settings");
 	}
 
-	public MylarPreferenceWizard() {
+	public RecommendedPreferencesWizard() {
 		super();
 		init();
 	}
 
-	public MylarPreferenceWizard(String htmlDocs) {
+	public RecommendedPreferencesWizard(String htmlDocs) {
 		super();
 		init();
 	}
@@ -91,7 +94,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSetNewWizard wizard = workingSetManager
 					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylyn.workingSetPage" });
-			if (wizard != null && workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME) == null) {
+			if (wizard != null && workingSetManager.getWorkingSet(TaskContextWorkingSetPage.WORKING_SET_NAME) == null) {
 				WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
 				dialog.create();
 				if (dialog.open() == Window.OK) {
@@ -103,7 +106,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 			}
 		} else {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
-			IWorkingSet workingSet = workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME);
+			IWorkingSet workingSet = workingSetManager.getWorkingSet(TaskContextWorkingSetPage.WORKING_SET_NAME);
 			if (workingSet != null) {
 				workingSetManager.removeWorkingSet(workingSet);
 			}

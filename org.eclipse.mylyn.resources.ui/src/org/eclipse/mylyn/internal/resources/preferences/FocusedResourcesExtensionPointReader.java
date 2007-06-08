@@ -20,14 +20,14 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
 
 /**
  * Helper to get extension point contributors
  * 
  * @author Fabio
  */
-public class MylarResourcesExtensionPointReader {
+public class FocusedResourcesExtensionPointReader {
 
 	public final static String EXTENSION_CHANGE_MONITORING = "changeMonitoring";
 
@@ -48,7 +48,7 @@ public class MylarResourcesExtensionPointReader {
 
 	private static void readExtensions() {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
-				MylarResourcesPlugin.PLUGIN_ID + '.' + EXTENSION_CHANGE_MONITORING);
+				FocusedResourcesPlugin.PLUGIN_ID + '.' + EXTENSION_CHANGE_MONITORING);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];

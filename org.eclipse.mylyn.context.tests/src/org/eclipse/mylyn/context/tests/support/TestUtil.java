@@ -19,12 +19,12 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylyn.context.tests.MylarCoreTestsPlugin;
+import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
 
 /**
  * @author Steffen Pingel
  */
-public class MylarTestUtils {
+public class TestUtil {
 
 	public enum PrivilegeLevel {
 		ANONYMOUS, GUEST, USER, ADMIN
@@ -58,7 +58,7 @@ public class MylarTestUtils {
 	public static Credentials readCredentials(PrivilegeLevel level, String realm) {
 		Properties properties = new Properties();
 		try {
-			URL localURL = FileLocator.toFileURL(MylarCoreTestsPlugin.getDefault().getBundle().getEntry(
+			URL localURL = FileLocator.toFileURL(ContextTestsPlugin.getDefault().getBundle().getEntry(
 					"credentials.properties"));
 			properties.load(new FileInputStream(new File(localURL.getFile())));
 		} catch (Exception e) {

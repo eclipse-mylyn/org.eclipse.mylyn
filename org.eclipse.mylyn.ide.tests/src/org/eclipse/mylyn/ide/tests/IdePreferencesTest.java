@@ -16,7 +16,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
 
 /**
  * @author Mik Kersten
@@ -24,15 +24,15 @@ import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 public class IdePreferencesTest extends TestCase {
 
 	public void testExclusionPatterns() {
-		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(new HashSet<String>());
-		assertEquals(0, MylarResourcesPlugin.getDefault().getExcludedResourcePatterns().size());
+		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(new HashSet<String>());
+		assertEquals(0, FocusedResourcesPlugin.getDefault().getExcludedResourcePatterns().size());
 		
 		Set<String> ignored = new HashSet<String>();
 		ignored.add("one*");
 		ignored.add(".two");
 		
-		MylarResourcesPlugin.getDefault().setExcludedResourcePatterns(ignored);
-		Set<String> read = MylarResourcesPlugin.getDefault().getExcludedResourcePatterns();
+		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(ignored);
+		Set<String> read = FocusedResourcesPlugin.getDefault().getExcludedResourcePatterns();
 		assertEquals(2, read.size());
 		assertTrue(read.contains("one*"));
 		assertTrue(read.contains(".two"));

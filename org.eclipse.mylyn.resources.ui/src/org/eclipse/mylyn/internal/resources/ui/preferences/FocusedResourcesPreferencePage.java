@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.resources.preferences.MylarResourcesPreferenceInitializer;
+import org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,7 +37,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 /**
  * @author Mik Kersten
  */
-public class MylarResourcesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class FocusedResourcesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Table ignoreTable;
 
@@ -111,7 +111,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 				removeIgnore();
 			}
 		});
-		fillTable(MylarResourcesPreferenceInitializer.getExcludedResourcePatterns());
+		fillTable(FocusedResourcesPreferenceInitializer.getExcludedResourcePatterns());
 		Dialog.applyDialogFont(group);
 		setButtonLayoutData(addButton);
 		setButtonLayoutData(removeButton);
@@ -129,7 +129,7 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 		for (int i = 0; i < items.length; i++) {
 			patterns.add(items[i].getText());
 		}
-		MylarResourcesPreferenceInitializer.setExcludedResourcePatterns(patterns);
+		FocusedResourcesPreferenceInitializer.setExcludedResourcePatterns(patterns);
 		return true;
 	}
 
@@ -137,8 +137,8 @@ public class MylarResourcesPreferencePage extends PreferencePage implements IWor
 	protected void performDefaults() {
 		super.performDefaults();
 		ignoreTable.removeAll();
-		MylarResourcesPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
-		fillTable(MylarResourcesPreferenceInitializer.getExcludedResourcePatterns());
+		FocusedResourcesPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
+		fillTable(FocusedResourcesPreferenceInitializer.getExcludedResourcePatterns());
 	}
 
 	/**

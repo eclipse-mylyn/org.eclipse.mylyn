@@ -40,7 +40,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -167,7 +167,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			}
 		}
 		if (taskId == null && comment != null) {
-			CommitTemplateManager commitTemplateManager = MylarTeamPlugin.getDefault().getCommitTemplateManager();
+			CommitTemplateManager commitTemplateManager = FocusedTeamPlugin.getDefault().getCommitTemplateManager();
 			taskId = commitTemplateManager.getTaskIdFromCommentOrLabel(comment);
 			if (taskId == null) {
 				taskId = getTaskIdFromLegacy07Label(comment);

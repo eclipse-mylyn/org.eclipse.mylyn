@@ -32,7 +32,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class MylarPreferenceWizardPage extends WizardPage {
+public class RecommendedPreferencesWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = 
 		"Configures Mylar preferences to the recommended defaults. To alter these\n"
@@ -69,7 +69,7 @@ public class MylarPreferenceWizardPage extends WizardPage {
 
 	private boolean openTaskList = true;
 
-	protected MylarPreferenceWizardPage(String pageName) {
+	protected RecommendedPreferencesWizardPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
 		setDescription(DESCRIPTION);

@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author Mik Kersten
  */
-public class MylarCompilationUnitEditor extends CompilationUnitEditor {
+public class FocusedCompilationUnitEditor extends CompilationUnitEditor {
 
 	@Override
 	protected void initializeEditor() {
@@ -32,7 +32,7 @@ public class MylarCompilationUnitEditor extends CompilationUnitEditor {
 	@Override
 	public void createPartControl(Composite parent) {
 		JavaTextTools textTools = JavaPlugin.getDefault().getJavaTextTools();
-		setSourceViewerConfiguration(new MylarJavaSourceViewerConfiguration(textTools.getColorManager(),
+		setSourceViewerConfiguration(new FocusedJavaSourceViewerConfiguration(textTools.getColorManager(),
 				getPreferenceStore(), this, IJavaPartitions.JAVA_PARTITIONING));
 		super.createPartControl(parent);
 	}

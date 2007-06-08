@@ -27,7 +27,7 @@
             contentType="*"/>
    </extension>  
    <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.mylyn.internal.resources.preferences.MylarResourcesPreferenceInitializer"/>
+      <initializer class="org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer"/>
    </extension>
    
    <!--

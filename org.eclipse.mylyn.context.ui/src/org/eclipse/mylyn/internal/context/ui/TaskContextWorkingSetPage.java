@@ -30,15 +30,15 @@ import org.eclipse.ui.dialogs.IWorkingSetPage;
 /**
  * @author Shawn Minto
  */
-public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
+public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	private Text workingSetNameText;
 
 	private IWorkingSet workingSet;
 
-	public static final String WORKING_SET_NAME = "Mylar Task Context (for search)";
+	public static final String WORKING_SET_NAME = "Task Context (for search)";
 
-	public MylarWorkingSetPage() {
+	public TaskContextWorkingSetPage() {
 		super("org.eclipse.mylyn.monitor.ui.workingSetPage", "Mylar Task Context Working Set", ContextUiPlugin
 				.imageDescriptorFromPlugin(ContextUiPlugin.PLUGIN_ID, "icons/wizban/banner-prefs.gif"));
 		setDescription("Create the Mylar Task Context working set.  It will be updated automatically to contain\n"
@@ -104,7 +104,7 @@ public class MylarWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public void finish() {
 		String workingSetName = workingSetNameText.getText();
 		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(1);
-		MylarWorkingSetManager.getElementsFromTaskscape(elements);
+		TaskContextWorkingSetManager.getElementsFromTaskscape(elements);
 		if (workingSet == null) {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			if ((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null) {

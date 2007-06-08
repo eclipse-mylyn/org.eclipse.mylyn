@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.team.AbstractCommitTemplateVariable;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 
 /**
  * @author Eike Stepper
@@ -52,8 +52,8 @@ public class CommitTemplateManager {
 
 	private String getTaskIdFromComment(String comment) {
 		try {
-			String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-					MylarTeamPlugin.COMMIT_TEMPLATE);
+			String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
+					FocusedTeamPlugin.COMMIT_TEMPLATE);
 			int templateNewline = template.indexOf('\n');
 			String templateFirstLineIndex = template;
 			if (templateNewline != -1) {
@@ -215,7 +215,7 @@ public class CommitTemplateManager {
 	 */
 	private static class ExtensionProcessor {
 		public Object run() {
-			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(MylarTeamPlugin.PLUGIN_ID,
+			IExtensionPoint extPoint = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamPlugin.PLUGIN_ID,
 					EXT_POINT_TEMPLATE_HANDLERS);
 			IExtension[] extensions = extPoint.getExtensions();
 			for (int i = 0; i < extensions.length; i++) {

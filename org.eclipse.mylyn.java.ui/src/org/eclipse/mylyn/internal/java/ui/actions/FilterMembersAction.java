@@ -16,7 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
@@ -44,7 +44,7 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 
 	private void valueChanged(final boolean on, boolean store) {
 		if (store) {
-			MylarJavaPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); 
+			FocusedJavaPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); 
 		}
 			
 		setChecked(true);

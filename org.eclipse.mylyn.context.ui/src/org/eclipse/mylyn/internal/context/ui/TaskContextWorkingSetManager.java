@@ -29,12 +29,12 @@ import org.eclipse.ui.IWorkingSetUpdater;
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class MylarWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
+public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
 
 	/** Should only ever have 1 working set */
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
-	public MylarWorkingSetManager() {
+	public TaskContextWorkingSetManager() {
 		ContextUiPlugin.getDefault().addWorkingSetManager(this);
 	}
 

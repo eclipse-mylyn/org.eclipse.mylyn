@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
  * 
  * @author Mik Kersten
  */
-public class MylarJavaProposalProcessor {
+public class FocusedJavaProposalProcessor {
 
 	static final int THRESHOLD_INTEREST = 10000;
 
@@ -41,7 +41,7 @@ public class MylarJavaProposalProcessor {
 
 	public static final String LABEL_SEPARATOR = " -------------------------------------------- ";
 
-	public static final MylarProposalSeparator PROPOSAL_SEPARATOR = new MylarProposalSeparator();
+	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
 	private List<IJavaCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IJavaCompletionProposalComputer>();
 
@@ -51,12 +51,12 @@ public class MylarJavaProposalProcessor {
 
 	private List<IJavaCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IJavaCompletionProposalComputer>();
 
-	private static MylarJavaProposalProcessor INSTANCE = new MylarJavaProposalProcessor();
+	private static FocusedJavaProposalProcessor INSTANCE = new FocusedJavaProposalProcessor();
 
-	private MylarJavaProposalProcessor() {
+	private FocusedJavaProposalProcessor() {
 	}
 
-	public static MylarJavaProposalProcessor getDefault() {
+	public static FocusedJavaProposalProcessor getDefault() {
 		return INSTANCE;
 	}
 
@@ -85,12 +85,12 @@ public class MylarJavaProposalProcessor {
 				// separator is added only once, and not added for single
 				// proposals
 				if (containsSingleInterestingProposal.size() > 0 && proposals.size() > 0) {
-					proposals.add(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR);
+					proposals.add(FocusedJavaProposalProcessor.PROPOSAL_SEPARATOR);
 				} else if (hasInterestingProposals && alreadyContainSeparator.isEmpty()) {
 					if (proposals.size() == 1) {
 						containsSingleInterestingProposal.add(proposalComputer);
 					} else {
-						proposals.add(MylarJavaProposalProcessor.PROPOSAL_SEPARATOR);
+						proposals.add(FocusedJavaProposalProcessor.PROPOSAL_SEPARATOR);
 						alreadyContainSeparator.add(proposalComputer);
 					}
 				}
@@ -134,10 +134,10 @@ public class MylarJavaProposalProcessor {
 				&& !IDENTIFIER_THIS.equals(proposal.getDisplayString());
 	}
 
-	static class MylarProposalSeparator extends JavaCompletionProposal {
-		public MylarProposalSeparator() {
+	static class FocusedProposalSeparator extends JavaCompletionProposal {
+		public FocusedProposalSeparator() {
 			super("", 0, 0, ContextUiImages.getImage(ContextUiImages.CONTENT_ASSIST_SEPARATOR), LABEL_SEPARATOR,
-					MylarJavaProposalProcessor.THRESHOLD_INTEREST);
+					FocusedJavaProposalProcessor.THRESHOLD_INTEREST);
 		}
 	}
 }

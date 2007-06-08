@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
 
 /**
  * This class is responsible for creating, storing and retrieving the values for
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.resources.MylarResourcesPlugin;
  * @author Fabio (bug 178931)
  * @author Mik Kersten
  */
-public class MylarResourcesPreferenceInitializer extends AbstractPreferenceInitializer {
+public class FocusedResourcesPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylyn.ide.resources";
 
@@ -46,7 +46,7 @@ public class MylarResourcesPreferenceInitializer extends AbstractPreferenceIniti
 	 * Restores the default values for the patterns to ignore.
 	 */
 	public static void restoreDefaultExcludedResourcePatterns() {
-		setExcludedResourcePatterns(MylarResourcesExtensionPointReader.getDefaultResourceExclusions());
+		setExcludedResourcePatterns(FocusedResourcesExtensionPointReader.getDefaultResourceExclusions());
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class MylarResourcesPreferenceInitializer extends AbstractPreferenceIniti
 			store.append(string);
 			store.append(PREF_STORE_DELIM);
 		}
-		MylarResourcesPlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
+		FocusedResourcesPlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class MylarResourcesPreferenceInitializer extends AbstractPreferenceIniti
 	 */
 	public static Set<String> getExcludedResourcePatterns() {
 		Set<String> ignored = new HashSet<String>();
-		String read = MylarResourcesPlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
+		String read = FocusedResourcesPlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 		if (read != null) {
 			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 			while (st.hasMoreTokens()) {

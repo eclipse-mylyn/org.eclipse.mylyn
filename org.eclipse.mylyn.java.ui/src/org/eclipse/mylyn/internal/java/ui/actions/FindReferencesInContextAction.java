@@ -24,7 +24,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.context.ui.MylarWorkingSetManager;
+import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetManager;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -46,7 +46,7 @@ public class FindReferencesInContextAction extends Action implements IWorkbenchW
 				if (resolved != null && resolved.length == 1 && resolved[0] != null) {
 					IJavaElement element = resolved[0];
 
-					MylarWorkingSetManager updater = ContextUiPlugin.getDefault().getWorkingSetUpdater();
+					TaskContextWorkingSetManager updater = ContextUiPlugin.getDefault().getWorkingSetUpdater();
 					if (updater != null && updater.getWorkingSet() != null) {
 						IJavaSearchScope scope = JavaSearchScopeFactory.getInstance().createJavaSearchScope(
 								updater.getWorkingSet(), false);

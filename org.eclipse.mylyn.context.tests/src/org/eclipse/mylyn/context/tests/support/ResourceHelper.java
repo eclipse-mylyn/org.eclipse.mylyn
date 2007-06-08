@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylyn.context.tests.MylarCoreTestsPlugin;
+import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
@@ -122,7 +122,7 @@ public class ResourceHelper {
 	public static IJavaProject createJavaPluginProjectFromZip(String projectName, String zipFileName)
 			throws CoreException, ZipException, IOException {
 		IProject project = ResourceHelper.createProject(projectName);
-		ZipFile zip = new ZipFile(FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), new Path(
+		ZipFile zip = new ZipFile(FileTool.getFileInPlugin(ContextTestsPlugin.getDefault(), new Path(
 				"testdata/projects/" + zipFileName)));
 
 		FileTool.unzip(zip, project.getLocation().toFile());

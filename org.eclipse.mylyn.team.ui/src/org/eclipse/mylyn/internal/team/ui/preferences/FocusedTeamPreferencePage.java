@@ -19,7 +19,7 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.team.template.TemplateHandlerContentProposalProvider;
 import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,15 +35,15 @@ import org.eclipse.ui.fieldassist.ContentAssistField;
 /**
  * @author Mik Kersten
  */
-public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	
 	private Button manageChangeSets;
 
 	private Text commitTemplate = null;
 
-	public MylarTeamPreferencePage() {
+	public FocusedTeamPreferencePage() {
 		super();
-		setPreferenceStore(MylarTeamPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(FocusedTeamPlugin.getDefault().getPreferenceStore());
 	}
 
 	@Override
@@ -63,16 +63,16 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(MylarTeamPlugin.COMMIT_TEMPLATE, commitTemplate.getText());
-		getPreferenceStore().setValue(MylarTeamPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
+		getPreferenceStore().setValue(FocusedTeamPlugin.COMMIT_TEMPLATE, commitTemplate.getText());
+		getPreferenceStore().setValue(FocusedTeamPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
 
 		if (manageChangeSets.getSelection()) {
-			for (AbstractContextChangeSetManager changeSetManager : MylarTeamPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamPlugin.getDefault().getContextChangeSetManagers()) {
 				changeSetManager.enable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
-			for (AbstractContextChangeSetManager changeSetManager : MylarTeamPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamPlugin.getDefault().getContextChangeSetManagers()) {
 				changeSetManager.disable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
@@ -89,8 +89,8 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 	public void performDefaults() {
 		super.performDefaults();
 		commitTemplate.setText(getPreferenceStore()
-				.getDefaultString(MylarTeamPlugin.COMMIT_TEMPLATE));
-		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
+				.getDefaultString(FocusedTeamPlugin.COMMIT_TEMPLATE));
+		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(FocusedTeamPlugin.CHANGE_SET_MANAGE));
 	}
 
 //	private Label createLabel(Composite parent, String text) {
@@ -111,7 +111,7 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 
 		manageChangeSets = new Button(group, SWT.CHECK);
 		manageChangeSets.setText("Automatically create and manage with task context");
-		manageChangeSets.setSelection(getPreferenceStore().getBoolean(MylarTeamPlugin.CHANGE_SET_MANAGE));
+		manageChangeSets.setSelection(getPreferenceStore().getBoolean(FocusedTeamPlugin.CHANGE_SET_MANAGE));
 	}
 
 	private void createCommitGroup(Composite parent) {
@@ -123,7 +123,7 @@ public class MylarTeamPreferencePage extends PreferencePage implements IWorkbenc
 //		Label completedLabel = createLabel(group, "Template: ");
 //		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
-		String completedTemplate = getPreferenceStore().getString(MylarTeamPlugin.COMMIT_TEMPLATE);
+		String completedTemplate = getPreferenceStore().getString(FocusedTeamPlugin.COMMIT_TEMPLATE);
 		commitTemplate = addTemplateField(group, completedTemplate, new TemplateHandlerContentProposalProvider());
 	}
 

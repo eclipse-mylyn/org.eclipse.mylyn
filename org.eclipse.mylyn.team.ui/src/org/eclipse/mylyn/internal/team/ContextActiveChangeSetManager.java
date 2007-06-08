@@ -25,12 +25,12 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -80,7 +80,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	};
 
 	public ContextActiveChangeSetManager() {
-		Set<AbstractActiveChangeSetProvider> providerList = MylarTeamPlugin.getDefault().getActiveChangeSetProviders();
+		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamPlugin.getDefault().getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {
@@ -178,7 +178,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = MylarResourcesPlugin.getDefault().getInterestingResources(
+					List<IResource> interestingResources = FocusedResourcesPlugin.getDefault().getInterestingResources(
 							context);
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
@@ -220,7 +220,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {
-					IResource resource = MylarResourcesPlugin.getDefault().getResourceForElement(element, false);
+					IResource resource = FocusedResourcesPlugin.getDefault().getResourceForElement(element, false);
 					if (resource != null && resource.exists()) {
 						for (ContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
 							if (!activeContextChangeSet.contains(resource)) {

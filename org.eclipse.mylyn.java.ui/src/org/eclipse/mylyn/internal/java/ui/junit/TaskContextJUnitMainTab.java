@@ -18,7 +18,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationTab;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Label;
 /**
  * @author Mik Kersten
  */
-class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
+class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	private static final String DESCRIPTION = "Subclasses of TestCase in the active task context automatically added to suite.";
 
 	private boolean isPdeMode = false;
 
-	public MylarJUnitMainTab(boolean isPdeMode) {
+	public TaskContextJUnitMainTab(boolean isPdeMode) {
 		this.isPdeMode = isPdeMode;
 	}
 
@@ -86,6 +86,6 @@ class MylarJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	@Override
 	public Image getImage() {
-		return MylarJavaPlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
+		return FocusedJavaPlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}
 }

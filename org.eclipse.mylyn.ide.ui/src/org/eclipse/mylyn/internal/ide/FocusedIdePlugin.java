@@ -21,11 +21,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarIdePlugin extends AbstractUIPlugin {
+public class FocusedIdePlugin extends AbstractUIPlugin {
 	
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
 	
-	private static MylarIdePlugin INSTANCE;
+	private static FocusedIdePlugin INSTANCE;
 
 	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
 
@@ -33,7 +33,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 
 	private AntEditingMonitor antEditingMonitor;
 		
-	public MylarIdePlugin() {
+	public FocusedIdePlugin() {
 		INSTANCE = this;
 	}
 
@@ -77,7 +77,7 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static MylarIdePlugin getDefault() {
+	public static FocusedIdePlugin getDefault() {
 		return INSTANCE;
 	}
 

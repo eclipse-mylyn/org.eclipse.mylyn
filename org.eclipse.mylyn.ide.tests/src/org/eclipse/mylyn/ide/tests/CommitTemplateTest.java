@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 
 /**
  * @author Mik Kersten
@@ -26,24 +26,24 @@ import org.eclipse.mylyn.team.MylarTeamPlugin;
 public class CommitTemplateTest extends TestCase {
 
 	public void testRepositoryTaskCommentParsing() {
-		String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-				MylarTeamPlugin.COMMIT_TEMPLATE);
+		String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
+				FocusedTeamPlugin.COMMIT_TEMPLATE);
 		
 		AbstractRepositoryTask task = new MockRepositoryTask("12345");
-		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		String comment = FocusedTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 		
-		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		String taskId = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
 
 	public void testRepositoryTaskCommentParsingMultiline() {
-		String template = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
-				MylarTeamPlugin.COMMIT_TEMPLATE);
+		String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
+				FocusedTeamPlugin.COMMIT_TEMPLATE);
 		
 		AbstractRepositoryTask task = new MockRepositoryTask("12345");
-		String comment = MylarTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
+		String comment = FocusedTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
 		
-		String taskId = MylarTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		String taskId = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
 	

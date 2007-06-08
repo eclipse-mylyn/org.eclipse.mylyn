@@ -49,7 +49,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylyn.internal.context.ui.Highlighter;
 import org.eclipse.mylyn.internal.context.ui.HighlighterList;
-import org.eclipse.mylyn.internal.context.ui.MylarWorkingSetManager;
+import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetManager;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -102,7 +102,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
 
-	private List<MylarWorkingSetManager> workingSetUpdaters = null;
+	private List<TaskContextWorkingSetManager> workingSetUpdaters = null;
 
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
@@ -685,15 +685,15 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public void addWorkingSetManager(MylarWorkingSetManager updater) {
+	public void addWorkingSetManager(TaskContextWorkingSetManager updater) {
 		if (workingSetUpdaters == null) {
-			workingSetUpdaters = new ArrayList<MylarWorkingSetManager>();
+			workingSetUpdaters = new ArrayList<TaskContextWorkingSetManager>();
 		}
 		workingSetUpdaters.add(updater);
 		ContextCorePlugin.getContextManager().addListener(updater);
 	}
 
-	public MylarWorkingSetManager getWorkingSetUpdater() {
+	public TaskContextWorkingSetManager getWorkingSetUpdater() {
 		if (workingSetUpdaters == null)
 			return null;
 		else

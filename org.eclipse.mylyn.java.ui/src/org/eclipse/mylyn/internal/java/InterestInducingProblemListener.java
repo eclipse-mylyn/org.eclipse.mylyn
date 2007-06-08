@@ -59,9 +59,9 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
-			if (MylarJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-					MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
+		if (FocusedJavaPlugin.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
+			if (FocusedJavaPlugin.getDefault().getPreferenceStore().getBoolean(
+					FocusedJavaPlugin.PREDICTED_INTEREST_ERRORS)) {
 				enable();
 			} else {
 				disable();

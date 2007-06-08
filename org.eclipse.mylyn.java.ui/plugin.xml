@@ -130,7 +130,7 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeCompletionProposalComputer">
 		<javaCompletionProposalComputer 
-			class="org.eclipse.mylyn.internal.java.ui.editor.MylarJavaTypeProposalComputer"
+			class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaTypeProposalComputer"
 			categoryId="org.eclipse.mylyn.java.javaTypeProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
@@ -140,7 +140,7 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeCompletionProposalComputer">
 		<javaCompletionProposalComputer 
-			class="org.eclipse.mylyn.internal.java.ui.editor.MylarJavaNoTypeProposalComputer"
+			class="org.eclipse.mylyn.internal.java.ui.editor.FocusedJavaNoTypeProposalComputer"
 			categoryId="org.eclipse.mylyn.java.javaNoTypeProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
@@ -190,7 +190,7 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             name="Task Context Test"
-            delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylyn.java.junit.launchconfig"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
@@ -208,7 +208,7 @@
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Task Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
-            delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylyn.pde.junit.launchconfig">
          <fileExtension
@@ -243,7 +243,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.mylyn.java.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylyn.internal.java.ui.junit.MylarJUnitTabGroup"
+            class="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitTabGroup"
             id="org.eclipse.mylyn.java.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -262,7 +262,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.mylyn.pde.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylyn.internal.java.ui.junit.MylarPdeJUnitTabGroup"
+            class="org.eclipse.mylyn.internal.java.ui.junit.TaskContextPdeJUnitTabGroup"
             id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -456,7 +456,7 @@
       <wizard
             canFinishEarly="false"
             category="org.eclipse.mylyn.wizards"
-            class="org.eclipse.mylyn.internal.java.ui.wizards.MylarPreferenceWizard"
+            class="org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard"
             hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"
             id="org.eclipse.mylyn.java.ui.wizards.preferences"

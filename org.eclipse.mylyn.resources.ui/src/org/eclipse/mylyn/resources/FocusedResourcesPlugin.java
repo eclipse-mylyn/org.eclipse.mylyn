@@ -42,11 +42,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarResourcesPlugin extends AbstractUIPlugin {
+public class FocusedResourcesPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources";
 	
-	private static MylarResourcesPlugin plugin;
+	private static FocusedResourcesPlugin plugin;
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
@@ -66,7 +66,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 
 	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
 	
-	public MylarResourcesPlugin() {
+	public FocusedResourcesPlugin() {
 		super();
 		plugin = this;
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
@@ -201,7 +201,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 		return editorManager;
 	}
 	
-	public static MylarResourcesPlugin getDefault() {
+	public static FocusedResourcesPlugin getDefault() {
 		return plugin;
 	}
 
@@ -210,7 +210,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = MylarResourcesPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = FocusedResourcesPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {

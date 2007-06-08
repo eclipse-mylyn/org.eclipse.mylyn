@@ -120,7 +120,7 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Team"
-         class="org.eclipse.mylyn.internal.team.ui.preferences.MylarTeamPreferencePage"
+         class="org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage"
          id="org.eclipse.mylyn.team.ui.preferences"
          category="org.eclipse.mylyn.ui.preferences">
          <keywordReference id="org.eclipse.mylyn.team.keywords"/>

@@ -69,7 +69,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 	}
 	
 	public void testSaxExternalizationAgainstDom() {
-		File file = FileTool.getFileInPlugin(MylarCoreTestsPlugin.getDefault(), new Path(
+		File file = FileTool.getFileInPlugin(ContextTestsPlugin.getDefault(), new Path(
 				"testdata/externalizer/testcontext.xml.zip"));
 		assertTrue(file.getAbsolutePath(), file.exists());
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();

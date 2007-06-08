@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylyn.internal.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
-import org.eclipse.mylyn.internal.java.ui.wizards.MylarPreferenceWizard;
+import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -39,11 +39,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class MylarJavaPlugin extends AbstractUIPlugin {
+public class FocusedJavaPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.java";
 
-	private static MylarJavaPlugin INSTANCE;
+	private static FocusedJavaPlugin INSTANCE;
 
 	private ResourceBundle resourceBundle;
 
@@ -61,7 +61,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	public MylarJavaPlugin() {
+	static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
+
+	
+	public FocusedJavaPlugin() {
 		super();
 		INSTANCE = this;
 	}
@@ -88,9 +91,10 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 						MylarStatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
 					}					
 				
-					if (getPreferenceStore().getBoolean(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS)) {
+					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
+					
 					getPreferenceStore().addPropertyChangeListener(problemListener);
 
 //					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
@@ -107,19 +111,19 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 //						FocusBrowsingPerspectiveAction.getDefault().update();
 //					}
 
-					if (!getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
+					if (!getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
 						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
 					}
 
 					if (!ContextCorePlugin.getDefault().suppressWizardsOnStartup()
-							&& !getPreferenceStore().contains(MylarPreferenceWizard.MYLAR_FIRST_RUN)) {
-						MylarPreferenceWizard wizard = new MylarPreferenceWizard();
+							&& !getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
+						RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
 						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						if (wizard != null && shell != null && !shell.isDisposed()) {
 							WizardDialog dialog = new WizardDialog(shell, wizard);
 							dialog.create();
 							dialog.open();
-							getPreferenceStore().putValue(MylarPreferenceWizard.MYLAR_FIRST_RUN, "false");
+							getPreferenceStore().putValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, "false");
 						}
 					}
 
@@ -133,7 +137,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 
 	private void initDefaultPrefs() {
 //		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, true);
-		getPreferenceStore().setDefault(MylarJavaPrefConstants.PREDICTED_INTEREST_ERRORS, false);
+		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
 	}
 
 	@Override
@@ -200,7 +204,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarJavaPlugin getDefault() {
+	public static FocusedJavaPlugin getDefault() {
 		return INSTANCE;
 	}
 
@@ -209,7 +213,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = MylarJavaPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = FocusedJavaPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {

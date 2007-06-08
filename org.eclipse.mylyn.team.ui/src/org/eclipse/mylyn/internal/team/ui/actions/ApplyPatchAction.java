@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -68,7 +68,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 					}
 
 					public IPath getFullPath() {
-						return MylarTeamPlugin.getDefault().getStateLocation();
+						return FocusedTeamPlugin.getDefault().getStateLocation();
 					}
 
 					public String getName() {

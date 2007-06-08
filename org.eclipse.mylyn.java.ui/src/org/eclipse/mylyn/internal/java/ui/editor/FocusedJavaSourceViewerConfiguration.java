@@ -23,9 +23,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * 
  * @author Mik Kersten
  */
-public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfiguration {
+public class FocusedJavaSourceViewerConfiguration extends JavaSourceViewerConfiguration {
 
-	public MylarJavaSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore,
+	public FocusedJavaSourceViewerConfiguration(IColorManager colorManager, IPreferenceStore preferenceStore,
 			ITextEditor editor, String partitioning) {
 		super(colorManager, preferenceStore, editor, partitioning);
 	}
