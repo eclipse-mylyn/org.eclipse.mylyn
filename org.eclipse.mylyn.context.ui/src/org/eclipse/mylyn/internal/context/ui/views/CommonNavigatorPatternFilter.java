@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.internal.tasks.ui.TaskListPatternFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 
 /**
  * @author Mik Kersten

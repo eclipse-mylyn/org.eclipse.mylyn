@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.team.ui.preferences.workaround;
+package org.eclipse.mylyn.internal.team.ui.preferences.workaround;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
  * Copied from org.eclipse.ui.texteditor.RegExContentProposalProvider.
  * <p>
  * Needed by
- * org.eclipse.mylar.internal.team.ui.preferences.workaround.MylarTeamPreferencePage.
+ * org.eclipse.mylyn.internal.team.ui.preferences.workaround.MylarTeamPreferencePage.
  * <p>
  * TODO Ask platform guys to open this API
  * 

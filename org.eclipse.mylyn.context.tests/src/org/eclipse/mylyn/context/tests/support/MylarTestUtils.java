@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests.support;
+package org.eclipse.mylyn.context.tests.support;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +19,7 @@ import java.util.Properties;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylar.context.tests.MylarCoreTestsPlugin;
+import org.eclipse.mylyn.context.tests.MylarCoreTestsPlugin;
 
 /**
  * @author Steffen Pingel

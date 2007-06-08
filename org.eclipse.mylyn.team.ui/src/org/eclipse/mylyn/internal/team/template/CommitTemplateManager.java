@@ -8,7 +8,7 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylar.internal.team.template;
+package org.eclipse.mylyn.internal.team.template;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.team.AbstractCommitTemplateVariable;
-import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.team.AbstractCommitTemplateVariable;
+import org.eclipse.mylyn.team.MylarTeamPlugin;
 
 /**
  * @author Eike Stepper

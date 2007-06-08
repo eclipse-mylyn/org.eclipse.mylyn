@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.editors;
+package org.eclipse.mylyn.internal.context.ui.editors;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,23 +21,23 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction;
-import org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction;
-import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylar.internal.context.ui.actions.RemoveFromContextAction;
-import org.eclipse.mylar.internal.context.ui.views.ContextNodeOpenListener;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditorInput;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
+import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
+import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
+import org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextAction;
+import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -68,7 +68,7 @@ import org.eclipse.ui.navigator.INavigatorContentExtension;
  */
 public class ContextEditorFormPage extends FormPage {
 
-	public static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context";
+	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context";
 
 	private ScrolledForm form;
 

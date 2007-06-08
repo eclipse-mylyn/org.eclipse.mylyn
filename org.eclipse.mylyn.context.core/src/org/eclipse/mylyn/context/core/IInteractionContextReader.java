@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.core;
+package org.eclipse.mylyn.context.core;
 
 import java.io.File;
 
-import org.eclipse.mylar.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
 
 /**
  * @author Mik Kersten

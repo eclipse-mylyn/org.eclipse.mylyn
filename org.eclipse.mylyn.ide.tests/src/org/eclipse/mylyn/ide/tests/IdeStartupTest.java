@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide.tests;
+package org.eclipse.mylyn.ide.tests;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.internal.team.ContextActiveChangeSetManager;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager;
 
 /**
  * @author Mik Kersten

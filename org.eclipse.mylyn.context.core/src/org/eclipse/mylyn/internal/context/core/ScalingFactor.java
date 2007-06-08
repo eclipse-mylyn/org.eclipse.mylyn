@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 /**
  * @author Mik Kersten

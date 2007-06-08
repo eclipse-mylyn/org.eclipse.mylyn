@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.resources.ui;
+package org.eclipse.mylyn.internal.resources.ui;
 
 /**
  * Tag interface for editors that do not get closed when a context is deactivated.  The editor

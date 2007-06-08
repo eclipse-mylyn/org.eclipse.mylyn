@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java;
+package org.eclipse.mylyn.internal.java;
 
 
 /**
@@ -17,6 +17,6 @@ package org.eclipse.mylar.internal.java;
  */
 public class MylarJavaPrefConstants {
 
-	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylar.java.interest.prediction.errors";
+	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
 	
 }

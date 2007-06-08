@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.core;
+package org.eclipse.mylyn.context.core;
 
 import java.io.File;
 import java.util.ArrayList;

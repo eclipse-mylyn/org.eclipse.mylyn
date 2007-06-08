@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui;
+package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

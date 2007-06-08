@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
  */
-package org.eclipse.mylar.internal.java.ui;
+package org.eclipse.mylyn.internal.java.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaOutlinePage;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;

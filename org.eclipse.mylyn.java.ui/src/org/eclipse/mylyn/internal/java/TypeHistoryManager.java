@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java;
+package org.eclipse.mylyn.internal.java;
 
 import java.util.List;
 
@@ -20,10 +20,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.internal.core.search.JavaSearchTypeNameMatch;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

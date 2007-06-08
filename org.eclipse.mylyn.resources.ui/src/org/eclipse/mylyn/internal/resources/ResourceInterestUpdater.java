@@ -9,18 +9,18 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.resources;
+package org.eclipse.mylyn.internal.resources;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ResourceInterestUpdater {
 
-	public static final String SOURCE_ID = "org.eclipse.mylar.ide.resource.interest.updater";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.ide.resource.interest.updater";
 
 	private boolean syncExec = false;
 

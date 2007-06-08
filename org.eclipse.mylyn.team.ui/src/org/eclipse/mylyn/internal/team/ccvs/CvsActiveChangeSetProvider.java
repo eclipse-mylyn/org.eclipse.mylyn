@@ -10,9 +10,9 @@
  *     Gunnar Wagenknecht - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.team.ccvs;
+package org.eclipse.mylyn.internal.team.ccvs;
 
-import org.eclipse.mylar.team.AbstractActiveChangeSetProvider;
+import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 

@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.mylar.context.core.IDegreeOfInterest;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.core.IDegreeOfInterest;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
 
 /**
  * Can only have one edge from a node to a particular target.

@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.context.core.DegreeOfInterest;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

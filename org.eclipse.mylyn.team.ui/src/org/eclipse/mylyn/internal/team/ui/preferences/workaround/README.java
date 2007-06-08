@@ -8,7 +8,7 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylar.internal.team.ui.preferences.workaround;
+package org.eclipse.mylyn.internal.team.ui.preferences.workaround;
 
 /**
  * The classes in this package are copied from org.eclipse.ui.texteditor because

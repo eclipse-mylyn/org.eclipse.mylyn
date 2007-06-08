@@ -11,14 +11,14 @@
 /*
  * Created on Apr 4, 2005
  */
-package org.eclipse.mylar.internal.ide.xml;
+package org.eclipse.mylyn.internal.ide.xml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * Class to help get the handle for an xml file

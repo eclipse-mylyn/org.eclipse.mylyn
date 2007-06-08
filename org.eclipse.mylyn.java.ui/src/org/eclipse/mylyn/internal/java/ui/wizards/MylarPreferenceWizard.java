@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.java.ui.wizards;
+package org.eclipse.mylyn.internal.java.ui.wizards;
 
 
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -18,13 +18,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.MylarWorkingSetPage;
+import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -36,7 +36,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 
 	private MylarPreferenceWizardPage preferencePage;
 
-	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylar.ui.first.run.0_4_9";
+	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
 	
 	private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
     
@@ -90,7 +90,7 @@ public class MylarPreferenceWizard extends Wizard implements INewWizard {
 		if (preferencePage.isCreateWorkingSet()) {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			IWorkingSetNewWizard wizard = workingSetManager
-					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylar.workingSetPage" });
+					.createWorkingSetNewWizard(new String[] { "org.eclipse.mylyn.workingSetPage" });
 			if (wizard != null && workingSetManager.getWorkingSet(MylarWorkingSetPage.WORKING_SET_NAME) == null) {
 				WizardDialog dialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
 				dialog.create();

@@ -10,16 +10,16 @@
  *     Eike tepper - commit comment template preferences
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.team.ui.preferences;
+package org.eclipse.mylyn.internal.team.ui.preferences;
 
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.fieldassist.*;
+import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.internal.team.template.TemplateHandlerContentProposalProvider;
-import org.eclipse.mylar.team.AbstractContextChangeSetManager;
-import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.mylyn.internal.team.template.TemplateHandlerContentProposalProvider;
+import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
+import org.eclipse.mylyn.team.MylarTeamPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.fieldassist.*;
+import org.eclipse.ui.fieldassist.ContentAssistField;
 
 /**
  * @author Mik Kersten

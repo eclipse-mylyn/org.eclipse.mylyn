@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *     Eike Stepper - template based commit templates
  *******************************************************************************/
-package org.eclipse.mylar.internal.team;
+package org.eclipse.mylyn.internal.team;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +23,12 @@ import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
-import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.team.MylarTeamPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
@@ -46,7 +46,7 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
 
-	public static final String SOURCE_ID = "org.eclipse.mylar.java.context.changeset.add";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.java.context.changeset.add";
 
 	private boolean suppressInterestContribution = false;
 

@@ -11,9 +11,10 @@
 /*
  * Created on Aug 3, 2004
  */
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+
 
 /**
  * @author Mik Kersten

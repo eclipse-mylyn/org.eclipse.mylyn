@@ -8,14 +8,14 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.java;
+package org.eclipse.mylyn.internal.java;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
-import org.eclipse.mylar.monitor.ui.workbench.AbstractEditorTracker;
+import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
+import org.eclipse.mylyn.monitor.ui.workbench.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
 
 /**

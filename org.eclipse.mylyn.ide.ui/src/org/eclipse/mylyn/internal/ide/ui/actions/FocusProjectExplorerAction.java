@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.ide.ui.actions;
+package org.eclipse.mylyn.internal.ide.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.resources.ui.FocusCommonNavigatorAction;
+import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.resources.ui.FocusCommonNavigatorAction;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.navigator.CommonNavigator;
 

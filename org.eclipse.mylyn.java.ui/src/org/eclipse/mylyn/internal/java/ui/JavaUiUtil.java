@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui;
+package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +30,7 @@ import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -50,9 +50,9 @@ public class JavaUiUtil {
 
 	private static final String SEPARATOR_CODEASSIST = "\0"; //$NON-NLS-1$
 
-	public static final String ASSIST_MYLAR_TYPE = "org.eclipse.mylar.java.javaTypeProposalCategory";
+	public static final String ASSIST_MYLAR_TYPE = "org.eclipse.mylyn.java.javaTypeProposalCategory";
 
-	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylar.java.javaNoTypeProposalCategory";
+	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory";
 
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
 	
@@ -60,7 +60,7 @@ public class JavaUiUtil {
 
 	public static final String ASSIST_JDT_TEMPLATE= "org.eclipse.jdt.ui.templateProposalCategory";
 
-	public static final String ASSIST_MYLAR_TEMPLATE = "org.eclipse.mylar.java.templateProposalCategory";
+	public static final String ASSIST_MYLAR_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
 
 	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylarContentAssist) {
 		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);

@@ -11,7 +11,7 @@
 /*
  * Created on Mar 14, 2005
  */
-package org.eclipse.mylar.internal.java.ui.editor;
+package org.eclipse.mylyn.internal.java.ui.editor;
 
 import org.eclipse.jdt.ui.text.IColorManager;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
@@ -58,7 +58,7 @@ public class MylarJavaSourceViewerConfiguration extends JavaSourceViewerConfigur
 //
 //		private boolean extensionsRead = false;
 //
-//		public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylar.java.javaEditorContributor";
+//		public static final String JAVA_EDITOR_CONTRIBUTOR_EXTENSION_POINT_ID = "org.eclipse.mylyn.java.javaEditorContributor";
 //
 //		public static final String JAVA_HYPERLINK_DETECTOR_ELEMENT = "hyperlinkDetector";
 //

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui;
+package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.ui.IDebugModelPresentation;

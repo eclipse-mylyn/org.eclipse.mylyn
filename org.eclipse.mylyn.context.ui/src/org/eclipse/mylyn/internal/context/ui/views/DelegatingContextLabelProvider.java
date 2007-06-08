@@ -11,15 +11,15 @@
 /*
  * Created on Apr 18, 2005
  */
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionObject;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionObject;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.ide.ui.MarkerViewerInterestSorter;
+import org.eclipse.mylyn.internal.ide.ui.MarkerViewerInterestSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IViewPart;

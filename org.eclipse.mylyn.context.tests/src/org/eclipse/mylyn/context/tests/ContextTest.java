@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionRelation;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
 
 /**
  * @author Mik Kersten

@@ -8,9 +8,9 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylar.team;
+package org.eclipse.mylyn.team;
 
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITask;
 
 /**
  * @author Eike Stepper

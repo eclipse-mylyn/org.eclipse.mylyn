@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.ide;
+package org.eclipse.mylyn.internal.ide;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.xml.ant.AntEditingMonitor;
-import org.eclipse.mylar.internal.ide.xml.pde.PdeEditingMonitor;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.ide.xml.ant.AntEditingMonitor;
+import org.eclipse.mylyn.internal.ide.xml.pde.PdeEditingMonitor;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarIdePlugin extends AbstractUIPlugin {
 	
-	public static final String PLUGIN_ID = "org.eclipse.mylar.ide";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
 	
 	private static MylarIdePlugin INSTANCE;
 
@@ -90,6 +90,6 @@ public class MylarIdePlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.ide", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.ide", path);
 	}
 }

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.resources.tests;
+package org.eclipse.mylyn.resources.tests;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

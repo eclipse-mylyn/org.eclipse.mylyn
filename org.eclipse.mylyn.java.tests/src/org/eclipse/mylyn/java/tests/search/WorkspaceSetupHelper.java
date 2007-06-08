@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.java.tests.search;
+package org.eclipse.mylyn.java.tests.search;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -23,11 +23,11 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.tests.support.ResourceHelper;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.java.tests.TestJavaProject;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.tests.support.ResourceHelper;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.java.tests.TestJavaProject;
 
 public class WorkspaceSetupHelper {
 

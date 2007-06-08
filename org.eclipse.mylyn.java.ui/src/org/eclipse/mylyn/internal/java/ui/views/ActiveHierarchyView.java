@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui.views;
+package org.eclipse.mylyn.internal.java.ui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,16 +39,16 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
-import org.eclipse.mylar.internal.context.ui.views.ActiveViewDelegatingDragAdapter;
-import org.eclipse.mylar.internal.context.ui.views.ActiveViewDropAdapter;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.ui.ActiveViewSelectionDragAdapter;
+import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDelegatingDragAdapter;
+import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDropAdapter;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaContextLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -67,7 +67,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
  */
 public class ActiveHierarchyView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylar.ui.views.active.hierarchy";
+	public static final String ID = "org.eclipse.mylyn.ui.views.active.hierarchy";
 
 	private TreeParent root = new TreeParent("<no hierarchy>");
 

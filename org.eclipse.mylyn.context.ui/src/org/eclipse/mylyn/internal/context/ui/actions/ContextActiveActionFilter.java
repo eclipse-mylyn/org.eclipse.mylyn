@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.actions;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.ui.IActionFilter;
 
 /**

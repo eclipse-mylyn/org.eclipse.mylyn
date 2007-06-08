@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
+import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 
 /**
  * @author Shawn Minto

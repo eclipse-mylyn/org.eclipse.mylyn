@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Team Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.team;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.team;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.team.MylarTeamPlugin
+Bundle-Activator: org.eclipse.mylyn.team.MylarTeamPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.team.core,
  org.eclipse.team.cvs.ui,
@@ -14,24 +14,24 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.core.runtime,
  org.eclipse.ui.navigator,
  org.eclipse.ui.workbench,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.context.ui,
- org.eclipse.mylar.tasks.core,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.resources,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.context.ui,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.resources,
  org.eclipse.compare,
  org.eclipse.ui.navigator.resources,
- org.eclipse.mylar.monitor.core,
- org.eclipse.mylar
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.mylar.internal.team,
- org.eclipse.mylar.internal.team.ccvs,
- org.eclipse.mylar.internal.team.template,
- org.eclipse.mylar.internal.team.ui,
- org.eclipse.mylar.internal.team.ui.actions,
- org.eclipse.mylar.internal.team.ui.preferences,
- org.eclipse.mylar.internal.team.ui.preferences.workaround,
- org.eclipse.mylar.internal.team.ui.wizards,
- org.eclipse.mylar.team
+Export-Package: org.eclipse.mylyn.internal.team,
+ org.eclipse.mylyn.internal.team.ccvs,
+ org.eclipse.mylyn.internal.team.template,
+ org.eclipse.mylyn.internal.team.ui,
+ org.eclipse.mylyn.internal.team.ui.actions,
+ org.eclipse.mylyn.internal.team.ui.preferences,
+ org.eclipse.mylyn.internal.team.ui.preferences.workaround,
+ org.eclipse.mylyn.internal.team.ui.wizards,
+ org.eclipse.mylyn.team
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

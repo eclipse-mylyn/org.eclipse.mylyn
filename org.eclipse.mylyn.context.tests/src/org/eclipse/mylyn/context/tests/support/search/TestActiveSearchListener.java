@@ -8,13 +8,13 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.context.tests.support.search;
+package org.eclipse.mylyn.context.tests.support.search;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 
 public class TestActiveSearchListener implements IActiveSearchListener {
 

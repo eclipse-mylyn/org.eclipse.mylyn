@@ -9,18 +9,18 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.resources.tests;
+package org.eclipse.mylyn.resources.tests;
 
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
-import org.eclipse.mylar.internal.ide.ui.IdeUiUtil;
-import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
-import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.ide.MylarIdePlugin;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
+import org.eclipse.mylyn.internal.resources.ResourceInteractionMonitor;
+import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**

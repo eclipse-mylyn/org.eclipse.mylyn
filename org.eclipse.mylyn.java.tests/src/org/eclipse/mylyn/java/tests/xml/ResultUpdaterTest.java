@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests.xml;
+package org.eclipse.mylyn.java.tests.xml;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -21,19 +21,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.tests.support.ResourceHelper;
-import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.internal.context.core.CompositeInteractionContext;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.InteractionContextRelation;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider;
-import org.eclipse.mylar.java.tests.search.ActiveSearchNotifier;
-import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
-import org.eclipse.mylar.java.tests.search.WorkspaceSetupHelper;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.support.ResourceHelper;
+import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.search.XmlJavaRelationProvider;
+import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
+import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
+import org.eclipse.mylyn.java.tests.search.WorkspaceSetupHelper;
 
 public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 	private IType type1;
@@ -51,7 +51,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		// TODO: clear the relationship providers?
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
-		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
+		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.views.SampleView");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext t = WorkspaceSetupHelper.getContext();

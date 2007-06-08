@@ -11,7 +11,7 @@
 /*
  * Created on May 22, 2005
  */
-package org.eclipse.mylar.internal.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,9 +22,9 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylar.context.core.IInteractionContextReader;
-import org.eclipse.mylar.context.core.IInteractionContextWriter;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.context.core.IInteractionContextReader;
+import org.eclipse.mylyn.context.core.IInteractionContextWriter;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * @author Mik Kersten

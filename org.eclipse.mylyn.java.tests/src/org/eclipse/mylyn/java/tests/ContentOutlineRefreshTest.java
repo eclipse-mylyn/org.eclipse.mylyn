@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,11 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.tests.UiTestUtil;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
+import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;

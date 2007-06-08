@@ -11,12 +11,12 @@
 /*
  * Created on May 6, 2005
  */
-package org.eclipse.mylar.internal.ide.ui;
+package org.eclipse.mylyn.internal.ide.ui;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 import org.eclipse.ui.views.markers.internal.MarkerNode;
 import org.eclipse.ui.views.markers.internal.ProblemMarker;

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,15 +21,15 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.tests.UiTestUtil;
-import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.context.ui.views.ActiveSearchView;
-import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.java.tests.search.SearchPluginTestHelper;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
+import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;

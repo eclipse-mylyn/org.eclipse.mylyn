@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -20,8 +20,8 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.preferences.ContextUiPreferencePage;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewActionDelegate;
@@ -33,8 +33,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public class EditHighlightersAction extends Action implements IViewActionDelegate {
 
-	private static final String ID_PREFS_HIGHLIGHTERS = "org.eclipse.mylar.sandbox.ui.preferences";
-	public static final String ID = "org.eclipse.mylar.tasklist.actions.context.highlighters.edit";
+	private static final String ID_PREFS_HIGHLIGHTERS = "org.eclipse.mylyn.sandbox.ui.preferences";
+	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.highlighters.edit";
 
 	public EditHighlightersAction() {
 		setText("Edit Highlighters...");

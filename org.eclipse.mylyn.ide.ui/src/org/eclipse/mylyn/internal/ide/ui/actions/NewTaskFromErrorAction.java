@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.ide.ui.actions;
+package org.eclipse.mylyn.internal.ide.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -19,10 +19,10 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
-import org.eclipse.mylar.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylar.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionChangedListener {
 
-	public static final String ID = "org.eclipse.mylar.tasklist.ui.repositories.actions.create";
+	public static final String ID = "org.eclipse.mylyn.tasklist.ui.repositories.actions.create";
 
 	private TreeViewer treeViewer;
 

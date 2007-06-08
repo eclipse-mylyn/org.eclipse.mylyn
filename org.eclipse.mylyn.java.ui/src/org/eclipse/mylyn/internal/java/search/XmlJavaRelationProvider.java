@@ -11,7 +11,7 @@
 /*
  * Created on Feb 7, 2005
  */
-package org.eclipse.mylar.internal.java.search;
+package org.eclipse.mylyn.internal.java.search;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,18 +37,18 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
-import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
@@ -62,7 +62,7 @@ import org.eclipse.search.ui.text.Match;
  */
 public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
-	public static final String SOURCE_ID = "org.eclipse.mylar.xml.search.references";
+	public static final String SOURCE_ID = "org.eclipse.mylyn.xml.search.references";
 
 	public static final String NAME = "referenced by";
 

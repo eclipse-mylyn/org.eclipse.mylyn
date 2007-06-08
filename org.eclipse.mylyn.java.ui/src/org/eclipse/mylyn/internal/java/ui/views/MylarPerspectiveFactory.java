@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui.views;
+package org.eclipse.mylyn.internal.java.ui.views;
 
 import org.eclipse.jdt.internal.ui.JavaPerspectiveFactory;
 import org.eclipse.ui.IFolderLayout;
@@ -20,9 +20,9 @@ import org.eclipse.ui.IPageLayout;
  */
 public class MylarPerspectiveFactory extends JavaPerspectiveFactory {
 
-	public static final String ID_RELATED_ELEMENTS_VIEW = "org.eclipse.mylar.ui.views.RelatedElementsView";
+	public static final String ID_RELATED_ELEMENTS_VIEW = "org.eclipse.mylyn.ui.views.RelatedElementsView";
 
-	public static final String ID_TASK_LIST_VIEW = "org.eclipse.mylar.tasklist.ui.views.TaskListView";
+	public static final String ID_TASK_LIST_VIEW = "org.eclipse.mylyn.tasklist.ui.views.TaskListView";
 
 	/**
 	 * Constructs a new Default layout engine.

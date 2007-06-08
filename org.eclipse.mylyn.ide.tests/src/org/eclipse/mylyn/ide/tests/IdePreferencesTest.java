@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide.tests;
+package org.eclipse.mylyn.ide.tests;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten

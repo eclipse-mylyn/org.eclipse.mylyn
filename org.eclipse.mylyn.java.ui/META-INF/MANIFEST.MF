@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Java Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.java; singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.java; singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.internal.java.MylarJavaPlugin
+Bundle-Activator: org.eclipse.mylyn.internal.java.MylarJavaPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -27,28 +27,28 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.ui,
  org.eclipse.pde.core,
  org.eclipse.ui.ide,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.ide,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.context.ui,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.ide,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.context.ui,
  org.eclipse.team.ui,
  org.eclipse.team.cvs.core,
  org.eclipse.team.core,
  org.eclipse.ui.forms,
- org.eclipse.mylar.monitor.ui,
- org.eclipse.mylar.resources,
+ org.eclipse.mylyn.monitor.ui,
+ org.eclipse.mylyn.resources,
  org.eclipse.jdt.debug,
- org.eclipse.mylar.doc,
- org.eclipse.mylar.monitor.core,
- org.eclipse.mylar
+ org.eclipse.mylyn.doc,
+ org.eclipse.mylyn.monitor.core,
+ org.eclipse.mylyn
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylar.internal.java,
- org.eclipse.mylar.internal.java.search,
- org.eclipse.mylar.internal.java.ui,
- org.eclipse.mylar.internal.java.ui.actions,
- org.eclipse.mylar.internal.java.ui.editor,
- org.eclipse.mylar.internal.java.ui.junit,
- org.eclipse.mylar.internal.java.ui.views,
- org.eclipse.mylar.internal.java.ui.wizards
+Export-Package: org.eclipse.mylyn.internal.java,
+ org.eclipse.mylyn.internal.java.search,
+ org.eclipse.mylyn.internal.java.ui,
+ org.eclipse.mylyn.internal.java.ui.actions,
+ org.eclipse.mylyn.internal.java.ui.editor,
+ org.eclipse.mylyn.internal.java.ui.junit,
+ org.eclipse.mylyn.internal.java.ui.views,
+ org.eclipse.mylyn.internal.java.ui.wizards
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -11,7 +11,7 @@
 /*
  * Created on Feb 9, 2005
  */
-package org.eclipse.mylar.context.tests.support;
+package org.eclipse.mylyn.context.tests.support;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**

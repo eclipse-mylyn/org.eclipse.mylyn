@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.ide.xml.pde;
+package org.eclipse.mylyn.internal.ide.xml.pde;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +23,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
@@ -108,7 +108,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getObjectForHandle(java.lang.String)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getObjectForHandle(java.lang.String)
 	 */
 	@Override
 	public Object getObjectForHandle(String handle) {
@@ -170,7 +170,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	/**
 	 * Handle is filename;hashcodeOfElementAndAttributes
 	 * 
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	@Override
 	public String getHandleIdentifier(Object object) {

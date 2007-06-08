@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.resources.tests;
+package org.eclipse.mylyn.resources.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllResourcesTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests.xml");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.xml");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ResourceChangeMonitorTest.class);
 		suite.addTestSuite(ResourceContextTest.class);

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +21,9 @@ import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
-import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
+import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.context.ui.actions.AbstractFocusViewAction;
+import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 
 /**
  * @author Mik Kersten

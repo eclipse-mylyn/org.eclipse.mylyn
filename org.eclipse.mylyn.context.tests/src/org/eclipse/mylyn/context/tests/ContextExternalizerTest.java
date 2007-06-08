@@ -9,22 +9,22 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionRelation;
-import org.eclipse.mylar.context.tests.support.DomContextReader;
-import org.eclipse.mylar.context.tests.support.DomContextWriter;
-import org.eclipse.mylar.context.tests.support.FileTool;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.InteractionContextExternalizer;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.context.core.SaxContextReader;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.context.tests.support.DomContextReader;
+import org.eclipse.mylyn.context.tests.support.DomContextWriter;
+import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.InteractionContextExternalizer;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.core.SaxContextReader;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
 
 /**
  * @author Mik Kersten

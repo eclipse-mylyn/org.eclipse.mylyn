@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Ide Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.ide;singleton:=true
+Bundle-SymbolicName: org.eclipse.mylyn.ide;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
-Bundle-Activator: org.eclipse.mylar.internal.ide.MylarIdePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.ide.MylarIdePlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,20 +17,20 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.debug.ui,
  org.eclipse.pde.runtime,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.context.ui,
- org.eclipse.mylar.monitor.ui,
- org.eclipse.mylar.tasks.ui,
- org.eclipse.mylar.resources,
- org.eclipse.mylar,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.context.ui,
+ org.eclipse.mylyn.monitor.ui,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.resources,
+ org.eclipse.mylyn,
  org.eclipse.search,
  org.eclipse.ui.editors,
- org.eclipse.mylar.monitor.core
+ org.eclipse.mylyn.monitor.core
 Eclipse-AutoStart: true
-Export-Package: org.eclipse.mylar.internal.ide,
- org.eclipse.mylar.internal.ide.ui,
- org.eclipse.mylar.internal.ide.ui.actions,
- org.eclipse.mylar.internal.ide.xml,
- org.eclipse.mylar.internal.ide.xml.ant,
- org.eclipse.mylar.internal.ide.xml.pde
+Export-Package: org.eclipse.mylyn.internal.ide,
+ org.eclipse.mylyn.internal.ide.ui,
+ org.eclipse.mylyn.internal.ide.ui.actions,
+ org.eclipse.mylyn.internal.ide.xml,
+ org.eclipse.mylyn.internal.ide.xml.ant,
+ org.eclipse.mylyn.internal.ide.xml.pde
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

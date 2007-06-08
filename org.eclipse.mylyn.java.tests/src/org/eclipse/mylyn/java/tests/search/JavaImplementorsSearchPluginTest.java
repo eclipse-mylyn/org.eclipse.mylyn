@@ -8,18 +8,18 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.java.tests.search;
+package org.eclipse.mylyn.java.tests.search;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
 
 /*
  * TEST CASES TO HANDLE 1. all different degree of separations - with result,

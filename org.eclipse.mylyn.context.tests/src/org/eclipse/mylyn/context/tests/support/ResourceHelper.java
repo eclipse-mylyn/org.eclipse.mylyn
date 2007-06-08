@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.context.tests.support;
+package org.eclipse.mylyn.context.tests.support;
 
 import java.io.IOException;
 import java.util.zip.ZipException;
@@ -29,8 +29,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.mylar.context.tests.MylarCoreTestsPlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.context.tests.MylarCoreTestsPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 

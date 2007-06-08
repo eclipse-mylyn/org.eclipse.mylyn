@@ -11,7 +11,7 @@
 /*
  * Created on Jul 20, 2004
  */
-package org.eclipse.mylar.resources.tests;
+package org.eclipse.mylyn.resources.tests;
 
 import java.lang.reflect.InvocationTargetException;
 

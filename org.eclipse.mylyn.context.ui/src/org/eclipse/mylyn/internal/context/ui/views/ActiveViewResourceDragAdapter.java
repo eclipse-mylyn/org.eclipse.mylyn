@@ -9,7 +9,7 @@
 // *     University Of British Columbia - initial API and implementation
 // *******************************************************************************/
 //
-//package org.eclipse.mylar.internal.context.ui.views;
+//package org.eclipse.mylyn.internal.context.ui.views;
 //
 //import java.util.ArrayList;
 //import java.util.Collections;

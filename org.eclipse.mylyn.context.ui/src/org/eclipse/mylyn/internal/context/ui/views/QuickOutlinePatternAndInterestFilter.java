@@ -9,14 +9,14 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.context.ui.InterestFilter;
+import org.eclipse.mylyn.context.ui.InterestFilter;
 import org.eclipse.ui.internal.misc.StringMatcher;
 
 /**

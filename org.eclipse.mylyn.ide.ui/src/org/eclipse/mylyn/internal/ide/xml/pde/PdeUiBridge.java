@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
  */
-package org.eclipse.mylar.internal.ide.xml.pde;
+package org.eclipse.mylyn.internal.ide.xml.pde;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -30,10 +30,10 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -65,7 +65,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.ui.AbstractContextUiBridge#open(org.eclipse.mylar.context.core.IInteractionElement)
+	 * @see org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
 	 */
 	@Override
 	public void open(IInteractionElement node) {

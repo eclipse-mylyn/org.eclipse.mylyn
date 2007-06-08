@@ -11,7 +11,7 @@
 /*
  * Created on Apr 1, 2005
  */
-package org.eclipse.mylar.internal.ide.xml.pde;
+package org.eclipse.mylyn.internal.ide.xml.pde;
 
 import java.util.Locale;
 
@@ -21,9 +21,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
 import org.eclipse.pde.internal.core.plugin.ImportObject;

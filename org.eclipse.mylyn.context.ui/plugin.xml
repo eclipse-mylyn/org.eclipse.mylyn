@@ -5,52 +5,52 @@
     <extension-point id="bridges" name="bridges" schema="schema/bridges.exsd"/>
 
     <extension 
-         point="org.eclipse.mylar.context.core.bridges">
+         point="org.eclipse.mylyn.context.core.bridges">
       <structureBridge 
-      		class="org.eclipse.mylar.internal.context.ui.TaskStructureBridge"/> 
+      		class="org.eclipse.mylyn.internal.context.ui.TaskStructureBridge"/> 
    </extension>
    <extension 
-         point="org.eclipse.mylar.context.ui.bridges">
+         point="org.eclipse.mylyn.context.ui.bridges">
       <uiBridge
-            class="org.eclipse.mylar.internal.context.ui.TaskUiBridge"
+            class="org.eclipse.mylyn.internal.context.ui.TaskUiBridge"
             contentType="meta/task"/>
    </extension>   
  
  	<extension
-         point="org.eclipse.mylar.tasks.ui.editors">
-      	<editorFactory class="org.eclipse.mylar.internal.context.ui.editors.ContextEditorFactory"/>
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      	<editorFactory class="org.eclipse.mylyn.internal.context.ui.editors.ContextEditorFactory"/>
    	</extension>
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
-        id="org.eclipse.mylar.ui.interest"
-        objectClass="org.eclipse.mylar.context.core.IInteractionElement">
+        id="org.eclipse.mylyn.ui.interest"
+        objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
      	<action  
   		  	label="Mark Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylar.context.ui.actions.InterestDecrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+	  		id="org.eclipse.mylyn.context.ui.actions.InterestDecrementAction" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
 	    <action  
   		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylar.context.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
+	  		id="org.eclipse.mylyn.context.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution> 
 	 
 	 <objectContribution
             adaptable="false"
-            id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
-            objectClass="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+            id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
          <action
-               class="org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction"
+               class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
                icon="icons/etool16/context-retrieve.gif"
-               id="org.eclipse.mylar.ui.context.repository.retrieve"
+               id="org.eclipse.mylyn.ui.context.repository.retrieve"
                label="Retrieve Context..."
                menubarPath="actions">
          </action>
@@ -58,48 +58,48 @@
 	 
 	 <!--
      <viewerContribution 
-           id="org.eclipse.mylar.ui.tasklist.contribution"
-           targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+           id="org.eclipse.mylyn.ui.tasklist.contribution"
+           targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
         <action
-              class="org.eclipse.mylar.internal.ui.actions.ContextClearAction"
+              class="org.eclipse.mylyn.internal.ui.actions.ContextClearAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylar.ui.clear.context"
+              id="org.eclipse.mylyn.ui.clear.context"
               label="Clear Context"
               menubarPath="context"
               tooltip="Clear Context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.tasks.core.ITask"/>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.ITask"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
               </or>
            </enablement>
         </action>
         <action
-              class="org.eclipse.mylar.internal.ui.actions.ContextRetrieveAction"
+              class="org.eclipse.mylyn.internal.ui.actions.ContextRetrieveAction"
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              id="org.eclipse.mylyn.ui.context.repository.retrieve"
               label="Retrieve Context"
               menubarPath="context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
               </or>
            </enablement>
         </action> 
         <action
-              class="org.eclipse.mylar.internal.ui.actions.ContextAttachAction"
+              class="org.eclipse.mylyn.internal.ui.actions.ContextAttachAction"
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylar.ui.context.repository.attach"
+              id="org.eclipse.mylyn.ui.context.repository.attach"
               label="Attach Context..."
               menubarPath="context">
            <enablement>
               <or>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylar.tasks.core.AbstractQueryHit"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
               </or>
            </enablement>
         </action>
@@ -108,21 +108,21 @@
 
 	 <objectContribution
            adaptable="false"
-           id="org.eclipse.mylar.ui.tasks.action.contribution"
-           objectClass="org.eclipse.mylar.tasks.core.ITask">
+           id="org.eclipse.mylyn.ui.tasks.action.contribution"
+           objectClass="org.eclipse.mylyn.tasks.core.ITask">
 		<action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextClearAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylar.ui.clear.context"
+              id="org.eclipse.mylyn.ui.clear.context"
               label="Clear Context"
               menubarPath="context"
               tooltip="Clear Context">
         </action>
   		<action
-        	class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
+        	class="org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction"
         	icon="icons/elcl16/context-transfer.gif"
-        	id="org.eclipse.mylar.context.ui.action.copy.context.to"
+        	id="org.eclipse.mylyn.context.ui.action.copy.context.to"
         	label="Copy Context to..."
         	menubarPath="context"
         	tooltip="Copy Context to...">
@@ -130,21 +130,21 @@
 	 </objectContribution>
      <objectContribution
            adaptable="false"
-           id="org.eclipse.mylar.ui.tasks.repository.hits..action.contribution"
-           objectClass="org.eclipse.mylar.tasks.core.AbstractRepositoryTask">
+           id="org.eclipse.mylyn.ui.tasks.repository.hits..action.contribution"
+           objectClass="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask">
         <action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              id="org.eclipse.mylyn.ui.context.repository.retrieve"
               label="Retrieve Context..."
               menubarPath="context">
         </action> 
         <action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction"
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylar.ui.context.repository.attach"
+              id="org.eclipse.mylyn.ui.context.repository.attach"
               label="Attach Context..."
               menubarPath="context">
         </action>
@@ -152,37 +152,37 @@
 	 <!-- NOTE: duplicate actions as above -->
 	 <!--<objectContribution
            adaptable="false"
-           id="org.eclipse.mylar.ui.tasks.repository.action.contribution"
-           objectClass="org.eclipse.mylar.tasks.core.AbstractQueryHit">
+           id="org.eclipse.mylyn.ui.tasks.repository.action.contribution"
+           objectClass="org.eclipse.mylyn.tasks.core.AbstractQueryHit">
         <action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylar.ui.context.repository.retrieve"
+              id="org.eclipse.mylyn.ui.context.repository.retrieve"
               label="Retrieve Context"
               menubarPath="context">
         </action> 
         <action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextAttachAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction"
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylar.ui.context.repository.attach"
+              id="org.eclipse.mylyn.ui.context.repository.attach"
               label="Attach Context..."
               menubarPath="context">
         </action>
         <action
-              class="org.eclipse.mylar.internal.context.ui.actions.ContextClearAction"
+              class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylar.ui.clear.context.hit"
+              id="org.eclipse.mylyn.ui.clear.context.hit"
               label="Clear Context"
               menubarPath="context"
               tooltip="Clear Context">
         </action>
           <action
-        class="org.eclipse.mylar.internal.context.ui.actions.ContextCopyAction"
+        class="org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction"
         icon="icons/elcl16/context-transfer.gif"
-        id="org.eclipse.mylar.context.ui.action.copy.context.to"
+        id="org.eclipse.mylyn.context.ui.action.copy.context.to"
         label="Copy Context to..."
         menubarPath="context"
         tooltip="Copy Context to...">
@@ -194,10 +194,10 @@
          point="org.eclipse.ui.preferencePages">
       <page
             name="Context"
-            class="org.eclipse.mylar.internal.context.ui.preferences.ContextUiPreferencePage"
-            id="org.eclipse.mylar.context.ui.preferences"
-            category="org.eclipse.mylar.ui.preferences">
-         <keywordReference id="org.eclipse.mylar.context.keywords"/>
+            class="org.eclipse.mylyn.internal.context.ui.preferences.ContextUiPreferencePage"
+            id="org.eclipse.mylyn.context.ui.preferences"
+            category="org.eclipse.mylyn.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.context.keywords"/>
       </page> 
    </extension>
    
@@ -205,7 +205,7 @@
    		point="org.eclipse.ui.keywords">
       <keyword
             label="mylar context"
-            id="org.eclipse.mylar.context.keywords"/>
+            id="org.eclipse.mylyn.context.keywords"/>
    </extension>
  
 	<!-- ==================== Common Navigator ==================== -->
@@ -214,10 +214,10 @@
          point="org.eclipse.ui.navigator.viewer">
        <!--
        <viewer
-             viewerId="org.eclipse.mylar.context.ui.navigator.context">
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context">
           <popupMenu
                 allowsPlatformContributions="false"
-                id="org.eclipse.mylar.context.ui.navigator.context#PopupMenu">  
+                id="org.eclipse.mylyn.context.ui.navigator.context#PopupMenu">  
              <insertionPoint name="group.new"/>
              <insertionPoint
                    	name="group.open"
@@ -237,21 +237,21 @@
        </viewer>
        -->
        <viewerContentBinding 
-             viewerId="org.eclipse.mylar.context.ui.navigator.context">
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context">
           <includes>
        	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
           </includes>
        </viewerContentBinding>
        
        <viewerContentBinding 
-             viewerId="org.eclipse.mylar.context.ui.navigator.context.quick">
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
           <includes>
        	      <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>		       	      
           </includes>
        </viewerContentBinding>
        
        <viewerActionBinding
-            viewerId="org.eclipse.mylar.context.ui.navigator.context">
+            viewerId="org.eclipse.mylyn.context.ui.navigator.context">
          <includes>
              <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
          </includes>
@@ -262,20 +262,20 @@
 	
     <extension point="org.eclipse.ui.ide.markerImageProviders">
     <imageprovider 
-  		markertype="org.eclipse.mylar.ui.landmark" 
+  		markertype="org.eclipse.mylyn.ui.landmark" 
   		icon="icons/elcl16/interest-landmark.gif" 
-  		id="org.eclipse.mylar.landmarkMarkerProvider" /> 
+  		id="org.eclipse.mylyn.landmarkMarkerProvider" /> 
    </extension> 
   
   <extension point="org.eclipse.ui.editors.annotationTypes">
   	<type
          markerSeverity="0"
-         markerType="org.eclipse.mylar.ui.landmark"
-         name="org.eclipse.mylar.ui.landmark.annotation"/> 
+         markerType="org.eclipse.mylyn.ui.landmark"
+         name="org.eclipse.mylyn.ui.landmark.annotation"/> 
   </extension> 
    
   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
-  	<specification annotationType="org.eclipse.mylar.ui.landmark.annotation" 
+  	<specification annotationType="org.eclipse.mylyn.ui.landmark.annotation" 
   		label="Mylar Landmark" 
   		icon="icons/elcl16/interest-landmark.gif" 
   		textPreferenceKey="landmarkIndication" 
@@ -302,45 +302,45 @@
             label="Mylar"
             description="Mylar"
             visible="true"
-            id="org.eclipse.mylar.ui.mylar.actionSet">
+            id="org.eclipse.mylyn.ui.mylar.actionSet">
          <action
-               class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
-               definitionId="org.eclipse.mylar.ui.interest.decrement"
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+               definitionId="org.eclipse.mylyn.ui.interest.decrement"
                icon="icons/elcl16/interest-decrease.gif"
-               id="org.eclipse.mylar.ui.actions.InterestDecrementAction"
+               id="org.eclipse.mylyn.ui.actions.InterestDecrementAction"
                label="Mark Less Interesting"
                menubarPath="navigate/open.ext2">
          </action>
          <action
-               class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
-               definitionId="org.eclipse.mylar.ui.interest.increment"
+               class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+               definitionId="org.eclipse.mylyn.ui.interest.increment"
                icon="icons/elcl16/interest-increase.gif"
-               id="org.eclipse.mylar.ui.actions.InterestIncrementAction"
+               id="org.eclipse.mylyn.ui.actions.InterestIncrementAction"
                label="Mark as Landmark"
                menubarPath="navigate/open.ext2">
          </action>
 	
 	     <action
-               definitionId="org.eclipse.mylar.ui.context.dialog.show"
+               definitionId="org.eclipse.mylyn.ui.context.dialog.show"
                label="Quick Context View"
-               class="org.eclipse.mylar.internal.context.ui.actions.OpenQuickContextPopupDialog"
+               class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialog"
                menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.context.ui.actions.open.context.dialog">
+               id="org.eclipse.mylyn.context.ui.actions.open.context.dialog">
          </action>
          <!--
          <action
-               definitionId="org.eclipse.mylar.ui.related.show"
+               definitionId="org.eclipse.mylyn.ui.related.show"
                label="Open Mylar related elements"
-               class="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView"
+               class="org.eclipse.mylyn.ui.actions.OpenRelatedElementsQuickView"
                menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.ui.actions.OpenRelatedElementsQuickView">
+               id="org.eclipse.mylyn.ui.actions.OpenRelatedElementsQuickView">
          </action>
          <action
-               definitionId="org.eclipse.mylar.ui.show.filtered"
+               definitionId="org.eclipse.mylyn.ui.show.filtered"
                label="Make less interesting"
-               class="org.eclipse.mylar.ui.actions.ShowFilteredAction"
+               class="org.eclipse.mylyn.ui.actions.ShowFilteredAction"
                menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylar.ui.actions.ShowFilteredAction">
+               id="org.eclipse.mylyn.ui.actions.ShowFilteredAction">
          </action>
          -->
       </actionSet>
@@ -350,37 +350,37 @@
       <category
             name="Mylar"
             description="Mylar commands"
-            id="org.eclipse.mylar.ui.commands">
+            id="org.eclipse.mylyn.ui.commands">
       </category>
       <command
             name="Global Filtering"
-            id="org.eclipse.mylar.ui.interest.filter.global"
-            categoryId="org.eclipse.mylar.ui.commands">
+            id="org.eclipse.mylyn.ui.interest.filter.global"
+            categoryId="org.eclipse.mylyn.ui.commands">
       </command>
       <command
             name="Show Related Elements"
             description="Show Related Elements"
-            id="org.eclipse.mylar.ui.context.dialog.show"
-            categoryId="org.eclipse.mylar.ui.commands">
+            id="org.eclipse.mylyn.ui.context.dialog.show"
+            categoryId="org.eclipse.mylyn.ui.commands">
       </command>
       <command
             name="Make Landmark"
             description="Make Landmark"
-            id="org.eclipse.mylar.ui.interest.increment"
-            categoryId="org.eclipse.mylar.ui.commands">
+            id="org.eclipse.mylyn.ui.interest.increment"
+            categoryId="org.eclipse.mylyn.ui.commands">
       </command>
       <command
             name="Make Less Interesting"
             description="Make Less Interesting"
-            id="org.eclipse.mylar.ui.interest.decrement"
-            categoryId="org.eclipse.mylar.ui.commands">
+            id="org.eclipse.mylyn.ui.interest.decrement"
+            categoryId="org.eclipse.mylyn.ui.commands">
       </command>
       <!--
       <command
             name="Show Filtered Children"
             description="Show Filtered Children"
-            id="org.eclipse.mylar.ui.show.filtered"
-            categoryId="org.eclipse.mylar.ui">
+            id="org.eclipse.mylyn.ui.show.filtered"
+            categoryId="org.eclipse.mylyn.ui">
       </command>
       -->
    </extension>
@@ -389,26 +389,26 @@
       <key
             sequence="M1+M2+M3+ARROW_UP"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.interest.increment"
+            commandId="org.eclipse.mylyn.ui.interest.increment"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_DOWN"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.interest.decrement"
+            commandId="org.eclipse.mylyn.ui.interest.decrement"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.context.dialog.show"
+            commandId="org.eclipse.mylyn.ui.context.dialog.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
 	  <!--
       <key
             sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.show.filtered"
+            commandId="org.eclipse.mylyn.ui.show.filtered"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key> 
       -->
@@ -418,9 +418,9 @@
       <decorator
             lightweight="true"
             label="Mylar Interest Decorator"
-            class="org.eclipse.mylar.internal.context.ui.InterestDecoratorLightweight"
+            class="org.eclipse.mylyn.internal.context.ui.InterestDecoratorLightweight"
             state="true"
-            id="org.eclipse.mylar.ui.decorator.interest">
+            id="org.eclipse.mylyn.ui.decorator.interest">
          <description>
 			Mylar degree of interest decorator
 		 </description>
@@ -432,13 +432,13 @@
 
  <extension point="org.eclipse.ui.viewActions"> 
  	<viewContribution 
-		id="org.eclipse.mylar.ui.tasklist.apply" 
-   		targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+		id="org.eclipse.mylyn.ui.tasklist.apply" 
+   		targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
     	<action
-           class="org.eclipse.mylar.internal.context.ui.actions.FocusTaskListAction"
+           class="org.eclipse.mylyn.internal.context.ui.actions.FocusTaskListAction"
            enablesFor="*"
            icon="icons/eview16/mylar-apply-activity.gif"
-           id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
            label="Focus on Workweek"
            menubarPath="additions"
            style="toggle"
@@ -447,13 +447,13 @@
   		</action> 
   	</viewContribution>
 	<viewContribution 
-		id="org.eclipse.mylar.outline.contribution.filter" 
+		id="org.eclipse.mylyn.outline.contribution.filter" 
    		targetID="org.eclipse.ui.views.ContentOutline">
     	<action
-           class="org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction"
+           class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylar.ui.actions.ApplyMylarToOutlineAction"
+           id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
            label="Focus on Active Task (Alt+click to reveal filtered elements)"
            menubarPath="mylar"
            style="toggle"
@@ -462,12 +462,12 @@
   		</action> 
   	</viewContribution>
     <viewContribution
-         id="org.eclipse.mylar.tasks.contribution.context"
-         targetID="org.eclipse.mylar.tasks.ui.views.TaskListView">
+         id="org.eclipse.mylyn.tasks.contribution.context"
+         targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
       <action
-            class="org.eclipse.mylar.internal.context.ui.actions.ContextCapturePauseAction"
+            class="org.eclipse.mylyn.internal.context.ui.actions.ContextCapturePauseAction"
             icon="icons/elcl16/capture-pause.gif"
-            id="org.eclipse.mylar.ui.context.capture.pause"
+            id="org.eclipse.mylyn.ui.context.capture.pause"
             label="Pause Capturing Context"
             menubarPath="additions"
             style="toggle"
@@ -478,8 +478,8 @@
    <extension
           point="org.eclipse.ui.commands">
        <command
-             defaultHandler="org.eclipse.mylar.internal.context.ui.commands.FocusViewHandler"
-             id="org.eclipse.mylar.ui.commands.applyMylar"
+             defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
+             id="org.eclipse.mylyn.ui.commands.applyMylar"
              name="Apply Mylar to View">
           <commandParameter
                 id="viewId"
@@ -492,22 +492,22 @@
    <!--
    <extension point="org.eclipse.ui.workingSets">
         <workingSet
-            id="org.eclipse.mylar.workingSetPage"
+            id="org.eclipse.mylyn.workingSetPage"
             name="Mylar Task Context"
             icon="icons/elcl16/interest-working-set.gif"
-            pageClass="org.eclipse.mylar.internal.context.ui.MylarWorkingSetPage"
-            updaterClass="org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager">
+            pageClass="org.eclipse.mylyn.internal.context.ui.MylarWorkingSetPage"
+            updaterClass="org.eclipse.mylyn.internal.context.ui.MylarWorkingSetManager">
         </workingSet>
     </extension>
     -->
 </plugin>
 
 	    <!--
-	  	<action id="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+	  	<action id="org.eclipse.mylyn.ui.actions.ShowFilteredAction" 
               label="Raise children" 
 	      	  menubarPath="mylar" 
               icon="icons/elcl16/raise-children.gif" 
               tooltip="Show all children of the current element" 
-              class="org.eclipse.mylar.ui.actions.ShowFilteredAction" 
+              class="org.eclipse.mylyn.ui.actions.ShowFilteredAction" 
               enablesFor="1"/> 
           --> 

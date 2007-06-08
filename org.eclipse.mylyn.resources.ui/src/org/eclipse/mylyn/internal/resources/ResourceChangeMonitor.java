@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.resources;
+package org.eclipse.mylyn.internal.resources;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,11 +22,11 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.resources.preferences.MylarResourcesPreferenceInitializer;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten

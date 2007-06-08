@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests.support;
+package org.eclipse.mylyn.context.tests.support;
 
 import java.io.File;
 import java.io.FileInputStream;

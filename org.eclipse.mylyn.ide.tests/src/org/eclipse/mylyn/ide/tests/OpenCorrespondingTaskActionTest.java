@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.ide.tests;
+package org.eclipse.mylyn.ide.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction;
+import org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction;
 
 /**
  * @author Mik Kersten

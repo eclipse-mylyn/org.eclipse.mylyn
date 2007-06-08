@@ -9,21 +9,21 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui.actions;
+package org.eclipse.mylyn.internal.java.ui.actions;
 
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter;
+import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 public class FilterMembersAction extends Action implements IViewActionDelegate {
 
-	public static final String PREF_ID = "org.eclipse.mylar.java.ui.explorer.filter.members";
+	public static final String PREF_ID = "org.eclipse.mylyn.java.ui.explorer.filter.members";
 
 	public FilterMembersAction() {
 		super();

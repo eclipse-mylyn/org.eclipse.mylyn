@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.team;
+package org.eclipse.mylyn.internal.team;
 
 import java.text.MessageFormat;
 
@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.team.AbstractActiveChangeSetProvider;
-import org.eclipse.mylar.team.AbstractContextChangeSetManager;
-import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
+import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
+import org.eclipse.mylyn.team.MylarTeamPlugin;
 
 /**
  * Manages the registeres repository provides.

@@ -11,14 +11,14 @@
  * @author Fabio Zadrozny
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.resources.preferences;
+package org.eclipse.mylyn.internal.resources.preferences;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 
 /**
  * This class is responsible for creating, storing and retrieving the values for
@@ -31,7 +31,7 @@ import org.eclipse.mylar.resources.MylarResourcesPlugin;
  */
 public class MylarResourcesPreferenceInitializer extends AbstractPreferenceInitializer {
 
-	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylar.ide.resources";
+	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylyn.ide.resources";
 
 	private static final String PREF_STORE_DELIM = ", ";
 

@@ -12,11 +12,11 @@
  * Created on Feb 13, 2005
  *
  */
-package org.eclipse.mylar.internal.context.ui.preferences;
+package org.eclipse.mylyn.internal.context.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

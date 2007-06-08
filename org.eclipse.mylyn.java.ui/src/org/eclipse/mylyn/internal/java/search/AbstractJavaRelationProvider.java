@@ -11,7 +11,7 @@
 /*
  * Created on Jan 26, 2005
  */
-package org.eclipse.mylar.internal.java.search;
+package org.eclipse.mylyn.internal.java.search;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -41,17 +41,17 @@ import org.eclipse.jdt.internal.ui.search.JavaSearchQuery;
 import org.eclipse.jdt.internal.ui.search.JavaSearchResult;
 import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jdt.ui.search.QuerySpecification;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.DegreeOfSeparation;
-import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
 
@@ -60,7 +60,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
  */
 public abstract class AbstractJavaRelationProvider extends AbstractRelationProvider {
 
-	public static final String ID_GENERIC = "org.eclipse.mylar.java.relation";
+	public static final String ID_GENERIC = "org.eclipse.mylyn.java.relation";
 
 	public static final String NAME = "Java relationships";
 

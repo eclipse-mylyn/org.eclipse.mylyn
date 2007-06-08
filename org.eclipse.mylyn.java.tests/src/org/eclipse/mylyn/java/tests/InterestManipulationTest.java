@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,12 +21,12 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractInterestManipulationAction;
-import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
-import org.eclipse.mylar.internal.resources.ResourceStructureBridge;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.ui.actions.AbstractInterestManipulationAction;
+import org.eclipse.mylyn.internal.resources.ResourceInteractionMonitor;
+import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 

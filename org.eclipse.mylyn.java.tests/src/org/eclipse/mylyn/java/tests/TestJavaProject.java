@@ -11,7 +11,7 @@
 /*
  * Created on Jul 20, 2004
  */
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

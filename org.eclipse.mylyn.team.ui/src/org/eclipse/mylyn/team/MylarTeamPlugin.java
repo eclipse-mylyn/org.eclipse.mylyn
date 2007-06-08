@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *     Eike Stepper - template based commit templates
  *******************************************************************************/
-package org.eclipse.mylar.team;
+package org.eclipse.mylyn.team;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.team.LinkedTaskInfoAdapterFactory;
-import org.eclipse.mylar.internal.team.MylarTeamExtensionPointReader;
-import org.eclipse.mylar.internal.team.template.CommitTemplateManager;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.team.LinkedTaskInfoAdapterFactory;
+import org.eclipse.mylyn.internal.team.MylarTeamExtensionPointReader;
+import org.eclipse.mylyn.internal.team.template.CommitTemplateManager;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.team";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.team";
 
 	private static MylarTeamPlugin INSTANCE;
 
@@ -39,9 +39,9 @@ public class MylarTeamPlugin extends AbstractUIPlugin implements IStartup {
 	
 	private CommitTemplateManager commitTemplateManager;
 	
-	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylar.team.changesets.manage";
+	public static final String CHANGE_SET_MANAGE = "org.eclipse.mylyn.team.changesets.manage";
 
-	public static final String COMMIT_TEMPLATE = "org.eclipse.mylar.team.commit.template";
+	public static final String COMMIT_TEMPLATE = "org.eclipse.mylyn.team.commit.template";
 
 	public static final String DEFAULT_COMMIT_TEMPLATE = "${task.status} - ${connector.task.prefix} ${task.key}: ${task.description} \n${task.url}"; 
 

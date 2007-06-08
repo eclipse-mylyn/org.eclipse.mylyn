@@ -11,9 +11,9 @@
 /*
  * Created on Dec 28, 2004
  */
-package org.eclipse.mylar.internal.context.ui;
+package org.eclipse.mylyn.internal.context.ui;
 
-import org.eclipse.mylar.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 

@@ -5,29 +5,29 @@
    <extension-point id="changeMonitoring" name="Resource Change Monitorin" schema="schema/changeMonitoring.exsd"/>
  
     <extension
-         point="org.eclipse.mylar.resources.changeMonitoring">
+         point="org.eclipse.mylyn.resources.changeMonitoring">
 		<exclude
          	pattern=".*"/>
    </extension>
  
    <extension
-         point="org.eclipse.mylar.context.core.bridges">
+         point="org.eclipse.mylyn.context.core.bridges">
       <structureBridge
-            class="org.eclipse.mylar.internal.resources.ResourceStructureBridge"
+            class="org.eclipse.mylyn.internal.resources.ResourceStructureBridge"
             name="Resource Structure Bridge"/> 
    </extension>
    
    <extension
-         point="org.eclipse.mylar.context.ui.bridges">
+         point="org.eclipse.mylyn.context.ui.bridges">
       <uiBridge
-            class="org.eclipse.mylar.internal.resources.ui.ResourceUiBridge"
+            class="org.eclipse.mylyn.internal.resources.ui.ResourceUiBridge"
             contentType="*"/>
       <labelProvider
-            class="org.eclipse.mylar.internal.resources.ui.ResourceContextLabelProvider"
+            class="org.eclipse.mylyn.internal.resources.ui.ResourceContextLabelProvider"
             contentType="*"/>
    </extension>  
    <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer"/>
+      <initializer class="org.eclipse.mylyn.internal.resources.preferences.MylarResourcesPreferenceInitializer"/>
    </extension>
    
    <!--
@@ -35,20 +35,20 @@
          point="org.eclipse.ui.navigator.viewer">
        <dragAssistant
              class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
-             viewerId="org.eclipse.mylar.context.ui.navigator.context"/>
+             viewerId="org.eclipse.mylyn.context.ui.navigator.context"/>
    </extension>
    -->
    
    <extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
      	adaptable="true"
-        id="org.eclipse.mylar.ui.interest"
+        id="org.eclipse.mylyn.ui.interest"
         objectClass="org.eclipse.core.resources.IResource">
      	<action
-            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
-            id="org.eclipse.mylar.resources.ui.actions.InterestDecrementAction"
+            id="org.eclipse.mylyn.resources.ui.actions.InterestDecrementAction"
             label="Remove from Focus"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
@@ -57,8 +57,8 @@
   		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylar.resources.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
+	  		id="org.eclipse.mylyn.resources.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
 	 </objectContribution>

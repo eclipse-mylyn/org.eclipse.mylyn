@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllContextTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.core.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.core.tests");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(InteractionContextTest.class);
 		suite.addTestSuite(ContextExternalizerTest.class);

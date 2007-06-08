@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.java.tests.xml;
+package org.eclipse.mylyn.java.tests.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.internal.resources.File;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
-import org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge;
+import org.eclipse.mylyn.internal.java.search.XmlJavaRelationProvider;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.part.FileEditorInput;

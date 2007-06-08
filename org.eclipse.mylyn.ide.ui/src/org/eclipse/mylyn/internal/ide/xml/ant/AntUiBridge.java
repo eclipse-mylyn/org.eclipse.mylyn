@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
  */
-package org.eclipse.mylar.internal.ide.xml.ant;
+package org.eclipse.mylyn.internal.ide.xml.ant;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,10 +27,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.MylarIdePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.ide.MylarIdePlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -50,7 +50,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 public class AntUiBridge extends AbstractContextUiBridge {
 
 	/**
-	 * @see org.eclipse.mylar.context.ui.AbstractContextUiBridge#open(org.eclipse.mylar.context.core.IInteractionElement)
+	 * @see org.eclipse.mylyn.context.ui.AbstractContextUiBridge#open(org.eclipse.mylyn.context.core.IInteractionElement)
 	 */
 	@Override
 	public void open(IInteractionElement node) {

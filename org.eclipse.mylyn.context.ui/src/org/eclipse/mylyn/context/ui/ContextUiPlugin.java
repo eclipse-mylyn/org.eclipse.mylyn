@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.context.ui;
+package org.eclipse.mylyn.context.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,33 +35,33 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionRelation;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.ui.AbstractContextLabelProvider;
-import org.eclipse.mylar.internal.context.ui.ActiveSearchViewTracker;
-import org.eclipse.mylar.internal.context.ui.ColorMap;
-import org.eclipse.mylar.internal.context.ui.ContentOutlineManager;
-import org.eclipse.mylar.internal.context.ui.ContextPerspectiveManager;
-import org.eclipse.mylar.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylar.internal.context.ui.FocusedViewerManager;
-import org.eclipse.mylar.internal.context.ui.Highlighter;
-import org.eclipse.mylar.internal.context.ui.HighlighterList;
-import org.eclipse.mylar.internal.context.ui.MylarWorkingSetManager;
-import org.eclipse.mylar.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylar.internal.tasks.ui.ITaskHighlighter;
-import org.eclipse.mylar.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylar.internal.tasks.ui.PlanningPerspectiveFactory;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylar.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylar.tasks.core.DateRangeContainer;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.ITaskActivityListener;
-import org.eclipse.mylar.tasks.core.TaskRepository;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
+import org.eclipse.mylyn.internal.context.ui.ActiveSearchViewTracker;
+import org.eclipse.mylyn.internal.context.ui.ColorMap;
+import org.eclipse.mylyn.internal.context.ui.ContentOutlineManager;
+import org.eclipse.mylyn.internal.context.ui.ContextPerspectiveManager;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
+import org.eclipse.mylyn.internal.context.ui.Highlighter;
+import org.eclipse.mylyn.internal.context.ui.HighlighterList;
+import org.eclipse.mylyn.internal.context.ui.MylarWorkingSetManager;
+import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -78,7 +78,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextUiPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.ui";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.ui";
 
 	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
@@ -250,7 +250,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		super();
 		INSTANCE = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.MylarUiPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.MylarUiPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		} catch (Throwable t) {
@@ -549,7 +549,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		private static UiExtensionPointReader thisReader = new UiExtensionPointReader();
 
-		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.ui.bridges";
+		public static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.ui.bridges";
 
 		public static final String ELEMENT_UI_BRIDGE = "uiBridge";
 

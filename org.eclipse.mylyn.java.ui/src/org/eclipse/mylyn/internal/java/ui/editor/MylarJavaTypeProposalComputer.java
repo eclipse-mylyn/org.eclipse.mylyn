@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.java.ui.editor;
+package org.eclipse.mylyn.internal.java.ui.editor;
 
 import java.util.List;
 

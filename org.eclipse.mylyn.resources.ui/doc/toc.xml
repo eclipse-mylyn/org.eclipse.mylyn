@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc link_to="../org.eclipse.mylar.doc/doc/toc.xml#xml" label="XML Support">
+<toc link_to="../org.eclipse.mylyn.doc/doc/toc.xml#xml" label="XML Support">
 	<topic label="XML Support" href="doc/xml.html">
 		<topic label="Ant Editing" href="doc/ant.html"/>
 	</topic>

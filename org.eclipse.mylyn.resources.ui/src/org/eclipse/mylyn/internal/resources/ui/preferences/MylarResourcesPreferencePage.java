@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.resources.ui.preferences;
+package org.eclipse.mylyn.internal.resources.ui.preferences;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylar.internal.resources.preferences.MylarResourcesPreferenceInitializer;
+import org.eclipse.mylyn.internal.resources.preferences.MylarResourcesPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

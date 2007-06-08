@@ -8,7 +8,7 @@
  * Contributors:
  *     Gunnar Wagenknecht - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.team;
+package org.eclipse.mylyn.team;
 
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 

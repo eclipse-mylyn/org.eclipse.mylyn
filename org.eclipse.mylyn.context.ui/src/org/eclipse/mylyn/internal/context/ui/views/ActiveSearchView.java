@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +27,21 @@ import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionContextListener;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.ui.ActiveViewSelectionDragAdapter;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.DoiOrderSorter;
-import org.eclipse.mylar.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
-import org.eclipse.mylar.internal.context.ui.actions.ShowQualifiedNamesAction;
-import org.eclipse.mylar.internal.context.ui.actions.ToggleRelationshipProviderAction;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.ui.ActiveViewSelectionDragAdapter;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.DoiOrderSorter;
+import org.eclipse.mylyn.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
+import org.eclipse.mylyn.internal.context.ui.actions.ShowQualifiedNamesAction;
+import org.eclipse.mylyn.internal.context.ui.actions.ToggleRelationshipProviderAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -63,7 +63,7 @@ public class ActiveSearchView extends ViewPart {
 
 	private static final String STOP_JOBS_LABEL = "Stop Active Search Jobs";
 
-	public static final String ID = "org.eclipse.mylar.ui.views.active.search";
+	public static final String ID = "org.eclipse.mylyn.ui.views.active.search";
 
 	private TreeViewer viewer;
 

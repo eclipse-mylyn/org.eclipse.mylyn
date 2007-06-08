@@ -9,13 +9,13 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.core;
+package org.eclipse.mylyn.internal.context.core;
 
 /**
  * @author Mik Kersten
  */
 public class ContextPreferenceContstants {
 
-	public static final String PREF_DATA_DIR = "org.eclipse.mylar.data.dir";
+	public static final String PREF_DATA_DIR = "org.eclipse.mylyn.data.dir";
 
 }

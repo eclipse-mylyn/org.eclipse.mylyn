@@ -9,18 +9,18 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 
 /**
  * @author Mik Kersten
  */
 public class ToggleDecorateInterestLevelAction extends Action {
 
-	public static final String PREF_ID = "org.eclipse.mylar.ui.decorators.interest";
+	public static final String PREF_ID = "org.eclipse.mylyn.ui.decorators.interest";
 
 	public ToggleDecorateInterestLevelAction() {
 		super();

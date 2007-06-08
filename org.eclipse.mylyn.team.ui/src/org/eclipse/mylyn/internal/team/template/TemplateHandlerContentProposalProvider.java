@@ -8,14 +8,14 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylar.internal.team.template;
+package org.eclipse.mylyn.internal.team.template;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.mylar.team.MylarTeamPlugin;
+import org.eclipse.mylyn.team.MylarTeamPlugin;
 
 /**
  * @author Eike Stepper

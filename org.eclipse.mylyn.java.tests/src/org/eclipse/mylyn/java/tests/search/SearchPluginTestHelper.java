@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.java.tests.search;
+package org.eclipse.mylyn.java.tests.search;
 
 import java.io.IOException;
 import java.util.Date;
@@ -18,10 +18,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 
 /**
  * @author Shawn Minto

@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.internal.context.ui.UiUtil;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.internal.context.ui.UiUtil;
 import org.eclipse.swt.dnd.TransferData;
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.swt.dnd.TransferData;
  */
 public class ActiveViewDropAdapter extends ViewerDropAdapter {
 
-	public static final String ID_MANIPULATION = "org.eclipse.mylar.ui.views.active.drop.landmark";
+	public static final String ID_MANIPULATION = "org.eclipse.mylyn.ui.views.active.drop.landmark";
 
 	public ActiveViewDropAdapter(Viewer viewer) {
 		super(viewer);

@@ -11,7 +11,7 @@
 /*
  * Created on Aug 6, 2004
  */
-package org.eclipse.mylar.internal.java.ui;
+package org.eclipse.mylyn.internal.java.ui;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
@@ -22,19 +22,19 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.jdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
 import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.core.IInteractionRelation;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.internal.context.ui.ContextUiImages;
-import org.eclipse.mylar.internal.context.ui.views.DelegatingContextLabelProvider;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.search.AbstractJavaRelationProvider;
-import org.eclipse.mylar.internal.java.search.JUnitReferencesProvider;
-import org.eclipse.mylar.internal.java.search.JavaImplementorsProvider;
-import org.eclipse.mylar.internal.java.search.JavaReadAccessProvider;
-import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
-import org.eclipse.mylar.internal.java.search.JavaWriteAccessProvider;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.core.IInteractionRelation;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.views.DelegatingContextLabelProvider;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.search.AbstractJavaRelationProvider;
+import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
+import org.eclipse.mylyn.internal.java.search.JavaReadAccessProvider;
+import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.search.JavaWriteAccessProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**

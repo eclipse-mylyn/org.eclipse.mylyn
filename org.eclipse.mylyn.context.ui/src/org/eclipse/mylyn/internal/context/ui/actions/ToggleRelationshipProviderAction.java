@@ -11,18 +11,18 @@
 /*
  * Created on Jul 27, 2004
  */
-package org.eclipse.mylar.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.actions;
 
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.mylar.context.core.AbstractRelationProvider;
-import org.eclipse.mylar.context.core.IDegreeOfSeparation;
-import org.eclipse.mylar.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.context.core.AbstractRelationProvider;
+import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
+import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -35,7 +35,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	private static final String LABEL_DEGREE_OF_SEPARATION = "Degree of Separation:";
 
-	public static final String ID = "org.eclipse.mylar.ui.actions.active.search.toggle";
+	public static final String ID = "org.eclipse.mylyn.ui.actions.active.search.toggle";
 
 //	private AbstractContextStructureBridge structureBridge;
 

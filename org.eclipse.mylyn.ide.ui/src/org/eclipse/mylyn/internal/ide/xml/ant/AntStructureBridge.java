@@ -11,7 +11,7 @@
 /*
  * Created on Apr 20, 2005
  */
-package org.eclipse.mylar.internal.ide.xml.ant;
+package org.eclipse.mylyn.internal.ide.xml.ant;
 
 //import java.lang.reflect.Method;
 import java.util.Collections;
@@ -32,10 +32,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
@@ -51,7 +51,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	private static final char HANDLE_PATH_SEPARATOR = ';';
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getContentType()
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getContentType()
 	 */
 	@Override
 	public String getContentType() {
@@ -73,7 +73,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getParentHandle(java.lang.String)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getParentHandle(java.lang.String)
 	 */
 	@Override
 	public String getParentHandle(String handle) {
@@ -169,7 +169,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	/**
 	 * Handle is filename;XPath
 	 * 
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getHandleIdentifier(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleIdentifier(java.lang.Object)
 	 */
 	@Override
 	public String getHandleIdentifier(Object object) {
@@ -196,7 +196,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getName(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getName(java.lang.Object)
 	 */
 	@Override
 	public String getName(Object object) {
@@ -213,7 +213,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#canBeLandmark(Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canBeLandmark(Object)
 	 * 
 	 * TODO: make a non-handle based test
 	 */
@@ -227,7 +227,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#acceptsObject(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#acceptsObject(java.lang.Object)
 	 */
 	@Override
 	public boolean acceptsObject(Object object) {
@@ -246,7 +246,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#canFilter(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#canFilter(java.lang.Object)
 	 */
 	@Override
 	public boolean canFilter(Object element) {
@@ -254,7 +254,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#isDocument(java.lang.String)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#isDocument(java.lang.String)
 	 */
 	@Override
 	public boolean isDocument(String handle) {
@@ -262,7 +262,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylar.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object,
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getHandleForOffsetInObject(Object,
 	 *      int)
 	 */
 	@Override

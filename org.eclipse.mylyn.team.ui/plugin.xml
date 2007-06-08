@@ -12,22 +12,22 @@
     </extension>
     
    <extension
-         point="org.eclipse.mylar.team.changeSets">
+         point="org.eclipse.mylyn.team.changeSets">
       <activeChangeSetProvider 
-      	class="org.eclipse.mylar.internal.team.ccvs.CvsActiveChangeSetProvider"/>
+      	class="org.eclipse.mylyn.internal.team.ccvs.CvsActiveChangeSetProvider"/>
       <contextChangeSetManager
-            class="org.eclipse.mylar.internal.team.ContextActiveChangeSetManager">
+            class="org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager">
       </contextChangeSetManager>
    </extension>
     
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
-            class="org.eclipse.mylar.internal.team.ui.ContextChangeSetDecorator"
-            id="org.eclipse.mylar.team.changeset.decorator"
+            class="org.eclipse.mylyn.internal.team.ui.ContextChangeSetDecorator"
+            id="org.eclipse.mylyn.team.changeset.decorator"
             label="Mylar Change Set Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylar.internal.team.ContextChangeSet"
+            objectClass="org.eclipse.mylyn.internal.team.ContextChangeSet"
             state="true">
       </decorator>
     </extension>
@@ -35,23 +35,23 @@
      <extension point="org.eclipse.ui.popupMenus"> 
 
      	<objectContribution
-				id="org.eclipse.mylar.ui.team.synchronize.open.report.contribution"
-				objectClass="org.eclipse.mylar.tasks.core.ILinkedTaskInfo"
+				id="org.eclipse.mylyn.ui.team.synchronize.open.report.contribution"
+				objectClass="org.eclipse.mylyn.tasks.core.ILinkedTaskInfo"
 				adaptable="true">
 			<action
-				class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+				class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
 				enablesFor="1" 
 				icon="icons/elcl16/task-repository.gif"
-				id="org.eclipse.mylar.ui.team.synchronize.open.report.linked"
+				id="org.eclipse.mylyn.ui.team.synchronize.open.report.linked"
 				label="Open Corresponding Task"
 				menubarPath="mylar"
 				tooltip="Open Corresponding Task">
 			</action> 
 			<action
-				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
 				icon="icons/elcl16/context-add.gif"
-				id="org.eclipse.mylar.ui.team.synchronize.create.context"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="Add to Task Context"
 				menubarPath="mylar"
 				tooltip="Add to Task Context">
@@ -60,12 +60,12 @@
 
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.SyncInfoModelElement"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report.syncinfo">
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report.syncinfo">
             <action
-				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
 				icon="icons/elcl16/context-add.gif"
-				id="org.eclipse.mylar.ui.team.synchronize.create.context"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="Add to Task Context"
 				menubarPath="mylar"
 				tooltip="Add to Task Context">
@@ -73,12 +73,12 @@
 		</objectContribution>
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.UnchangedResourceModelElement"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report.unchanged">
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report.unchanged">
             <action
-				class="org.eclipse.mylar.internal.team.ui.actions.AddToTaskContextAction"
+				class="org.eclipse.mylyn.internal.team.ui.actions.AddToTaskContextAction"
 				enablesFor="*" 
 				icon="icons/elcl16/context-add.gif"
-				id="org.eclipse.mylar.ui.team.synchronize.create.context"
+				id="org.eclipse.mylyn.ui.team.synchronize.create.context"
 				label="Add to Task Context"
 				menubarPath="mylar"
 				tooltip="Add to Task Context">
@@ -91,12 +91,12 @@
         <!--
 		<objectContribution
             objectClass="org.eclipse.team.ui.synchronize.ISynchronizeModelElement"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report">
          <action
-	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylyn.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
@@ -107,12 +107,12 @@
 	   	<!-- is this from Eclipse 3.1 History view?
 	   	<objectContribution
             objectClass="org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry"
-            id="org.eclipse.mylar.ui.team.history.open.report">
+            id="org.eclipse.mylyn.ui.team.history.open.report">
          <action
-	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylyn.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
@@ -123,12 +123,12 @@
 		<!--
 		<objectContribution
             objectClass="org.eclipse.team.core.history.IFileRevision"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report">
          <action
-	           class="org.eclipse.mylar.internal.team.ui.actions.OpenCorrespondingTaskAction"
+	           class="org.eclipse.mylyn.internal.team.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylyn.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
@@ -139,12 +139,12 @@
 	    <!--
 		<objectContribution
             objectClass="org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode"
-            id="org.eclipse.mylar.ui.team.synchronize.open.report">
+            id="org.eclipse.mylyn.ui.team.synchronize.open.report">
          <action
-	           class="org.eclipse.mylar.internal.ide.ui.actions.OpenCorrespondingTaskAction"
+	           class="org.eclipse.mylyn.internal.ide.ui.actions.OpenCorrespondingTaskAction"
 	           enablesFor="1" 
 	           icon="icons/elcl16/task-repository.gif"
-	           id="org.eclipse.mylar.ui.team.synchronize.contribution.open.report"
+	           id="org.eclipse.mylyn.ui.team.synchronize.contribution.open.report"
 	           label="Open Corresponding Task"
 	           menubarPath="mylar"
 	           tooltip="Open Corresponding Task"> 
@@ -155,8 +155,8 @@
     
     <extension point="org.eclipse.ui.navigator.navigatorContent">
 	   <actionProvider           
-	   	 class="org.eclipse.mylar.internal.team.ui.actions.TaskResourceMappingActionProvider"
-	     id="org.eclipse.mylar.ide.ui.actions.TaskResourceMappingActionProvider">
+	   	 class="org.eclipse.mylyn.internal.team.ui.actions.TaskResourceMappingActionProvider"
+	     id="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider">
 	     <enablement>
 	       <adapt type="org.eclipse.core.resources.mapping.ResourceMapping"/>
 	     </enablement>
@@ -167,13 +167,13 @@
 		<!--
 	    <objectContribution
 	           adaptable="false"
-	           id="org.eclipse.mylar.team.ui.contribution.commit.query"
-	           objectClass="org.eclipse.mylar.tasks.core.AbstractQueryHit">
+	           id="org.eclipse.mylyn.team.ui.contribution.commit.query"
+	           objectClass="org.eclipse.mylyn.tasks.core.AbstractQueryHit">
 			<action
-	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
+	              class="org.eclipse.mylyn.internal.team.ui.actions.CommitContextAction"
 	              enablesFor="*"
 	              icon="icons/elcl16/context-commit.gif"
-	              id="org.eclipse.mylar.team.context.commit.hit"
+	              id="org.eclipse.mylyn.team.context.commit.hit"
 	              label="Commit Context..."
 	              menubarPath="context"
 	              tooltip="Commit Context...">
@@ -181,13 +181,13 @@
 		</objectContribution>
 	     <objectContribution
 	           adaptable="false"
-	           id="org.eclipse.mylar.team.ui.contribution.commit.task"
-	           objectClass="org.eclipse.mylar.tasks.core.ITask">
+	           id="org.eclipse.mylyn.team.ui.contribution.commit.task"
+	           objectClass="org.eclipse.mylyn.tasks.core.ITask">
 			<action
-	              class="org.eclipse.mylar.internal.team.ui.actions.CommitContextAction"
+	              class="org.eclipse.mylyn.internal.team.ui.actions.CommitContextAction"
 	              enablesFor="*"
 	              icon="icons/elcl16/context-commit.gif"
-	              id="org.eclipse.mylar.team.context.commit.task"
+	              id="org.eclipse.mylyn.team.context.commit.task"
 	              label="Commit Context..."
 	              menubarPath="context"
 	              tooltip="Commit Context...">
@@ -197,18 +197,18 @@
 	  
       <objectContribution
             adaptable="false"
-            id="org.eclipse.mylar.ide.team.ui.contribution.attachment.patch"
-            objectClass="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+            id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
+            objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
          <action
-               class="org.eclipse.mylar.internal.team.ui.actions.ApplyPatchAction"
+               class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
                icon="icons/elcl16/apply-patch.gif"
-               id="org.eclipse.mylar.team.ui.patch.apply"
+               id="org.eclipse.mylyn.team.ui.patch.apply"
                label="Apply Patch..."
                menubarPath="actions"
                tooltip="Apply from Repository Task Attachment">
             <enablement>
                <objectClass
-                     name="org.eclipse.mylar.tasks.core.RepositoryAttachment">
+                     name="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
                </objectClass>
             </enablement>
          </action>
@@ -219,10 +219,10 @@
   <extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Team"
-         class="org.eclipse.mylar.internal.team.ui.preferences.MylarTeamPreferencePage"
-         id="org.eclipse.mylar.team.ui.preferences"
-         category="org.eclipse.mylar.ui.preferences">
-         <keywordReference id="org.eclipse.mylar.team.keywords"/>
+         class="org.eclipse.mylyn.internal.team.ui.preferences.MylarTeamPreferencePage"
+         id="org.eclipse.mylyn.team.ui.preferences"
+         category="org.eclipse.mylyn.ui.preferences">
+         <keywordReference id="org.eclipse.mylyn.team.keywords"/>
       </page> 
    </extension>
    
@@ -230,7 +230,7 @@
    		point="org.eclipse.ui.keywords">
       <keyword
             label="mylar team"
-            id="org.eclipse.mylar.team.keywords"/>
+            id="org.eclipse.mylyn.team.keywords"/>
    </extension>
   
    	<extension point="org.eclipse.ui.navigator.viewer">
@@ -238,103 +238,103 @@
 	      viewerId="org.eclipse.team.cvs.ui.workspaceSynchronization">
 	        <includes>
 	           <actionExtension
-			       pattern="org.eclipse.mylar.ide.ui.actions.TaskResourceMappingActionProvider"/>
+			       pattern="org.eclipse.mylyn.ide.ui.actions.TaskResourceMappingActionProvider"/>
 	        </includes>
 	   </viewerActionBinding>
     <dragAssistant
           class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
-          viewerId="org.eclipse.mylar.team.cvs.ui.dragAssistant">
+          viewerId="org.eclipse.mylyn.team.cvs.ui.dragAssistant">
     </dragAssistant>
 	</extension>
 	
     <extension
-          point="org.eclipse.mylar.team.commitTemplates">
+          point="org.eclipse.mylyn.team.commitTemplates">
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$ConnectorTaskPrefix"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$ConnectorTaskPrefix"
              description="Task repository-specific connector prefix, e.g. bug"
              recognizedKeyword="connector.task.prefix"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$RepositoryKind"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$RepositoryKind"
              description="Provides the repository kind of a Mylar task"
              recognizedKeyword="repository.kind"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$RepositoryUrl"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$RepositoryUrl"
              description="Provides the repository URL of a Mylar task."
              recognizedKeyword="repository.url"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskAssignee"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskAssignee"
              description="Provides the user a Mylar task is assigned to, if available."
              recognizedKeyword="task.assignee"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskCc"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskCc"
              description="Provides the comma separated CC list of a Mylar task, if available."
              recognizedKeyword="task.cc"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskDescription"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskDescription"
              description="Provides the description of a Mylar task."
              recognizedKeyword="task.description"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskId"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskId"
              description="Provides the ID of a Mylar task."
              recognizedKeyword="task.id"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskKey"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskKey"
              description="Provides the key of a Mylar task, for most repositories this is equals to the ID."
              recognizedKeyword="task.key"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskKeywords"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskKeywords"
              description="Provides the comma separated keyword list of a Mylar task, if available."
              recognizedKeyword="task.keywords"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskLastModified"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskLastModified"
              description="Provides the date of last modification of a Mylar task, if available."
              recognizedKeyword="task.lastmodified"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskNotes"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskNotes"
              description="Provides the notes of a Mylar task."
              recognizedKeyword="task.notes"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskPriority"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskPriority"
              description="Provides the priority of a Mylar task."
              recognizedKeyword="task.priority"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskProduct"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskProduct"
              description="Provides the prroduct a Mylar task belongs to, if available."
              recognizedKeyword="task.product"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskReporter"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskReporter"
              description="Provides the user who reported a Mylar task, if available."
              recognizedKeyword="task.reporter"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskResolution"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskResolution"
              description="Provides the resolution of a Mylar task, if available."
              recognizedKeyword="task.resolution"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskStatus"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskStatus"
              description="Provides the status of a Mylar task, if available."
              recognizedKeyword="task.status"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskSummary"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskSummary"
              description="Provides the summary or description of a Mylar task, whichever is available."
              recognizedKeyword="task.summary"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskType"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskType"
              description="Provides the type of a Mylar task."
              recognizedKeyword="task.type"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$TaskURL"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskURL"
              description="Provides the URL of a Mylar task."
              recognizedKeyword="task.url"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCompletion"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCompletion"
              description="Provides the completion date of a Mylar task."
              recognizedKeyword="task.completiondate"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCreation"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCreation"
              description="Provides the creation date of a Mylar task."
              recognizedKeyword="task.creationdate"/>
        <templateVariable
-             class="org.eclipse.mylar.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskReminder"
+             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskReminder"
              description="Provides the reminder date of a Mylar task."
              recognizedKeyword="task.reminderdate"/>
     </extension>

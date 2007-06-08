@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.actions;
+package org.eclipse.mylyn.internal.context.ui.actions;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,11 +17,11 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 import org.eclipse.ui.internal.navigator.NavigatorContentServiceContentProvider;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -32,7 +32,7 @@ import org.eclipse.ui.navigator.CommonViewer;
  */
 public class RemoveFromContextAction extends BaseSelectionListenerAction {
 
-	public static final String ID = "org.eclipse.mylar.context.ui.actions.delete";
+	public static final String ID = "org.eclipse.mylyn.context.ui.actions.delete";
 
 	private CommonViewer commonViewer;
 	

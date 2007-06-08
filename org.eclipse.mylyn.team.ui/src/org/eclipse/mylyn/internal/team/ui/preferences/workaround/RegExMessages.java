@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.team.ui.preferences.workaround;
+package org.eclipse.mylyn.internal.team.ui.preferences.workaround;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -19,7 +19,7 @@ import org.eclipse.osgi.util.NLS;
  * Copied from org.eclipse.ui.texteditor.RegExMessages.
  * <p>
  * Needed by
- * org.eclipse.mylar.internal.team.ui.preferences.workaround.RegExContentProposalProvider.
+ * org.eclipse.mylyn.internal.team.ui.preferences.workaround.RegExContentProposalProvider.
  * <p>
  * TODO Ask platform guys to open this API
  * 

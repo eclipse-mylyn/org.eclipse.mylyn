@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Resources Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylar.resources.tests
+Bundle-SymbolicName: org.eclipse.mylyn.resources.tests
 Bundle-Version: 0.0.0
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
@@ -12,16 +12,16 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt,
  org.eclipse.jdt.core,
  org.junit,
- org.eclipse.mylar.context.core,
- org.eclipse.mylar.core.tests,
- org.eclipse.mylar.java,
- org.eclipse.mylar.resources,
- org.eclipse.mylar.ide,
- org.eclipse.mylar.monitor.ui,
+ org.eclipse.mylyn.context.core,
+ org.eclipse.mylyn.core.tests,
+ org.eclipse.mylyn.java,
+ org.eclipse.mylyn.resources,
+ org.eclipse.mylyn.ide,
+ org.eclipse.mylyn.monitor.ui,
  org.eclipse.jface,
  org.eclipse.ui,
- org.eclipse.mylar.context.ui
+ org.eclipse.mylyn.context.ui
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-xml-tests.jar
-Export-Package: org.eclipse.mylar.resources.tests
+Export-Package: org.eclipse.mylyn.resources.tests
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

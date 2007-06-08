@@ -9,7 +9,7 @@
  *     Mylar project committers - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.context.ui.views;
+package org.eclipse.mylyn.internal.context.ui.views;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
@@ -21,8 +21,8 @@ import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.context.ui.InterestFilter;
-import org.eclipse.mylar.internal.context.ui.editors.ContextEditorFormPage;
+import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.mylyn.internal.context.ui.editors.ContextEditorFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -59,7 +59,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		IInformationControl, IInformationControlExtension,
 		IInformationControlExtension2, DisposeListener {
 
-	public static final String ID_VIEWER = "org.eclipse.mylar.context.ui.navigator.context.quick";
+	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick";
 	
 	private CommonViewer commonViewer;
 	

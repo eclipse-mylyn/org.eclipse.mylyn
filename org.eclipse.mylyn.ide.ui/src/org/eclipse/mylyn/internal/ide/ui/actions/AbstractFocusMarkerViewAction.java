@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.ide.ui.actions;
+package org.eclipse.mylyn.internal.ide.ui.actions;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylar.internal.context.ui.actions.AbstractFocusViewAction;
-import org.eclipse.mylar.internal.ide.ui.MarkerInterestFilter;
-import org.eclipse.mylar.internal.ide.ui.MarkerViewLabelProvider;
+import org.eclipse.mylyn.internal.context.ui.actions.AbstractFocusViewAction;
+import org.eclipse.mylyn.internal.ide.ui.MarkerInterestFilter;
+import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 
 /**

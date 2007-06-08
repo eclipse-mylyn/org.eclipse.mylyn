@@ -7,48 +7,48 @@
    		schema="schema/javaEditorContributor.exsd"/>
 	
 	<extension
-	       point="org.eclipse.mylar.context.core.bridges">
+	       point="org.eclipse.mylyn.context.core.bridges">
 	    <structureBridge
-           class="org.eclipse.mylar.internal.java.JavaStructureBridge"
+           class="org.eclipse.mylyn.internal.java.JavaStructureBridge"
            name="Java Structure Bridge"
            parentContentType="*"/>
      <structureBridge
-           class="org.eclipse.mylar.internal.java.JavaDebugStructureBridge"
+           class="org.eclipse.mylyn.internal.java.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.JavaImplementorsProvider"
+           class="org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.JavaReadAccessProvider"
+           class="org.eclipse.mylyn.internal.java.search.JavaReadAccessProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.JavaReferencesProvider"
+           class="org.eclipse.mylyn.internal.java.search.JavaReferencesProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.JavaWriteAccessProvider"
+           class="org.eclipse.mylyn.internal.java.search.JavaWriteAccessProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.JUnitReferencesProvider"
+           class="org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylar.internal.java.search.XmlJavaRelationProvider"
+           class="org.eclipse.mylyn.internal.java.search.XmlJavaRelationProvider"
            contentType="plugin.xml">
      </relationProvider>
 	</extension>
 	   
-	<extension point="org.eclipse.mylar.context.ui.bridges">
+	<extension point="org.eclipse.mylyn.context.ui.bridges">
 	    <uiBridge
-	          class="org.eclipse.mylar.internal.java.ui.JavaUiBridge"
+	          class="org.eclipse.mylyn.internal.java.ui.JavaUiBridge"
 	          contentType="java"
 	          activeSearchIcon="icons/elcl16/edge-ref-java.gif"
            	  activeSearchLabel="Java Search"/>
 	    <labelProvider
-	          class="org.eclipse.mylar.internal.java.ui.JavaContextLabelProvider"
+	          class="org.eclipse.mylyn.internal.java.ui.JavaContextLabelProvider"
 	          contentType="java"/>
         <preservedFilters
             viewId="org.eclipse.jdt.ui.PackageExplorer">
@@ -59,7 +59,7 @@
                class="org.eclipse.jdt.internal.ui.filters.PackageDeclarationFilter">
          	</filter>
          	<filter
-               class="org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter">
+               class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter">
          	</filter>
           <filter
                 class="org.eclipse.jdt.internal.ui.filters.ClosedProjectFilter">
@@ -81,13 +81,13 @@
 	<extension
 			point="org.eclipse.ui.navigator.viewer">
 		<viewerContentBinding 
-			viewerId="org.eclipse.mylar.context.ui.navigator.context">
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context">
 			<includes>
 				<contentExtension pattern="org.eclipse.jdt.java.ui.javaContent" />	
 			</includes>
 		</viewerContentBinding>
 		<viewerContentBinding 
-			viewerId="org.eclipse.mylar.context.ui.navigator.context.quick">
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
 			<includes>
 				<contentExtension pattern="org.eclipse.jdt.java.ui.javaContent" />	
 			</includes>
@@ -97,10 +97,10 @@
   	<!-- ==================== Editors ==================== -->
 
 	<extension
-          point="org.eclipse.mylar.tasks.ui.editors">
+          point="org.eclipse.mylyn.tasks.ui.editors">
        <hyperlinkDetector
-             class="org.eclipse.mylar.internal.java.ui.JavaStackTraceHyperlinkDetector"
-             id="org.eclipse.mylar.java.hyperlink.detector.stack"/>
+             class="org.eclipse.mylyn.internal.java.ui.JavaStackTraceHyperlinkDetector"
+             id="org.eclipse.mylyn.java.hyperlink.detector.stack"/>
     </extension>
 	
   	<!-- ==================== Content Assist ==================== -->
@@ -130,8 +130,8 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeCompletionProposalComputer">
 		<javaCompletionProposalComputer 
-			class="org.eclipse.mylar.internal.java.ui.editor.MylarJavaTypeProposalComputer"
-			categoryId="org.eclipse.mylar.java.javaTypeProposalCategory">
+			class="org.eclipse.mylyn.internal.java.ui.editor.MylarJavaTypeProposalComputer"
+			categoryId="org.eclipse.mylyn.java.javaTypeProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
@@ -140,8 +140,8 @@
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeCompletionProposalComputer">
 		<javaCompletionProposalComputer 
-			class="org.eclipse.mylar.internal.java.ui.editor.MylarJavaNoTypeProposalComputer"
-			categoryId="org.eclipse.mylar.java.javaNoTypeProposalCategory">
+			class="org.eclipse.mylyn.internal.java.ui.editor.MylarJavaNoTypeProposalComputer"
+			categoryId="org.eclipse.mylyn.java.javaNoTypeProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_string"/>
 		</javaCompletionProposalComputer>
@@ -151,7 +151,7 @@
 		id="TemplateProposalComputer">
 		<javaCompletionProposalComputer
 			class="org.eclipse.jdt.internal.ui.text.java.TemplateCompletionProposalComputer"
-			categoryId="org.eclipse.mylar.java.templateProposalCategory">
+			categoryId="org.eclipse.mylyn.java.templateProposalCategory">
 			<partition type="__dftl_partition_content_type"/>
 			<partition type="__java_singleline_comment"/> <!-- to get NLS templates -->
 			<partition type="__java_javadoc"/>
@@ -160,28 +160,28 @@
 		<!-- javadoc completions -->   
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="org.eclipse.mylar.java.editor.LegacyJavadocCompletionProposalComputer">
+		id="org.eclipse.mylyn.java.editor.LegacyJavadocCompletionProposalComputer">
 		<javaCompletionProposalComputer 
 			class="org.eclipse.jdt.internal.ui.text.javadoc.LegacyJavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylar.java.javaNoTypeProposalCategory">
+			categoryId="org.eclipse.mylyn.java.javaNoTypeProposalCategory">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="org.eclipse.mylar.java.editor.JavadocCompletionProposalComputer">
+		id="org.eclipse.mylyn.java.editor.JavadocCompletionProposalComputer">
 		<javaCompletionProposalComputer 
 			class="org.eclipse.jdt.internal.ui.text.javadoc.JavadocCompletionProposalComputer"
-			categoryId="org.eclipse.mylar.java.javaNoTypeProposalCategory">
+			categoryId="org.eclipse.mylyn.java.javaNoTypeProposalCategory">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="org.eclipse.mylar.java.editor.JavadocHTMLCompletionProposalComputer">
+		id="org.eclipse.mylyn.java.editor.JavadocHTMLCompletionProposalComputer">
 		<javaCompletionProposalComputer 
 			class="org.eclipse.jdt.internal.ui.text.javadoc.HTMLTagCompletionProposalComputer"
-			categoryId="org.eclipse.mylar.java.javaNoTypeProposalCategory">
+			categoryId="org.eclipse.mylyn.java.javaNoTypeProposalCategory">
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
@@ -189,9 +189,9 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalSorters">
 		<proposalSorter
-			id="org.eclipse.mylar.java.ui.editor.proposals.sorter"
+			id="org.eclipse.mylyn.java.ui.editor.proposals.sorter"
 			name="Mylar Interest Sorter"
-			class="org.eclipse.mylar.internal.java.ui.editor.MylarCompletionInterestSorter"/>
+			class="org.eclipse.mylyn.internal.java.ui.editor.MylarCompletionInterestSorter"/>
 	</extension>
 	-->
 	
@@ -200,9 +200,9 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             name="Mylar Context Test"
-            delegate="org.eclipse.mylar.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
             modes="run, debug"
-            id="org.eclipse.mylar.java.junit.launchconfig"
+            id="org.eclipse.mylyn.java.junit.launchconfig"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
          <fileExtension
@@ -218,9 +218,9 @@
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Mylar Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
-            delegate="org.eclipse.mylar.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
             modes="run, debug"
-            id="org.eclipse.mylar.pde.junit.launchconfig">
+            id="org.eclipse.mylyn.pde.junit.launchconfig">
          <fileExtension
                default="false"
                extension="java">
@@ -234,16 +234,16 @@
     
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 	  	<launchConfigurationTypeImage
-	 		id="org.eclipse.mylar.pde.junit.launchconfig.image"
-	 		configTypeID="org.eclipse.mylar.pde.junit.launchconfig"
+	 		id="org.eclipse.mylyn.pde.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylyn.pde.junit.launchconfig"
 	 		icon="icons/etool16/launch-junit-pde.gif">
 	  	</launchConfigurationTypeImage>
 	</extension>
 
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 	  	<launchConfigurationTypeImage
-	 		id="org.eclipse.mylar.java.junit.launchconfig.image"
-	 		configTypeID="org.eclipse.mylar.java.junit.launchconfig"
+	 		id="org.eclipse.mylyn.java.junit.launchconfig.image"
+	 		configTypeID="org.eclipse.mylyn.java.junit.launchconfig"
 	 		icon="icons/etool16/launch-junit.gif">
 	  	</launchConfigurationTypeImage>
 	</extension>
@@ -251,10 +251,10 @@
 	<extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="org.eclipse.mylar.java.junit.launchconfig"
+            type="org.eclipse.mylyn.java.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylar.internal.java.ui.junit.MylarJUnitTabGroup"
-            id="org.eclipse.mylar.java.junit.launchconfig.tabgroup">
+            class="org.eclipse.mylyn.internal.java.ui.junit.MylarJUnitTabGroup"
+            id="org.eclipse.mylyn.java.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
                description="Test suite automatically populated by elements in the task context."
@@ -270,10 +270,10 @@
 	<extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="org.eclipse.mylar.pde.junit.launchconfig"
+            type="org.eclipse.mylyn.pde.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylar.internal.java.ui.junit.MylarPdeJUnitTabGroup"
-            id="org.eclipse.mylar.pde.junit.launchconfig.tabgroup">
+            class="org.eclipse.mylyn.internal.java.ui.junit.MylarPdeJUnitTabGroup"
+            id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"
                description="Test suite automatically populated by elements in the task context."
@@ -288,7 +288,7 @@
 
 	<!--
 	<extension
-	     id="org.eclipse.mylar.helpDocs"
+	     id="org.eclipse.mylyn.helpDocs"
 	     name="Mylar Help"
 	     point="org.eclipse.help.toc">
 	  <toc
@@ -300,12 +300,12 @@
   
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-			<viewShortcut id="org.eclipse.mylar.ui.views.active.hierarchy"/>
+			<viewShortcut id="org.eclipse.mylyn.ui.views.active.hierarchy"/>
                 <!--
-               <viewShortcut id="org.eclipse.mylar.ui.views.active.search"/>
+               <viewShortcut id="org.eclipse.mylyn.ui.views.active.search"/>
                -->
                <!--
-               <view id="org.eclipse.mylar.ui.views.active.search"
+               <view id="org.eclipse.mylyn.ui.views.active.search"
                     relative="org.eclipse.ui.views.ContentOutline"
                     relationship="stack"/>-->
           </perspectiveExtension>
@@ -313,13 +313,13 @@
  
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
-		id="org.eclipse.mylar.java.explorer.contribution" 
+		id="org.eclipse.mylyn.java.explorer.contribution" 
    		targetID="org.eclipse.jdt.ui.PackageExplorer">
     	<action
-           class="org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction"
+           class="org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylar.actions.filter.packageExplorer"
+           id="org.eclipse.mylyn.actions.filter.packageExplorer"
            label="Focus on Active Task"
            menubarPath="mylar"
            style="toggle"
@@ -328,18 +328,18 @@
   		</action> 
       </viewContribution>
  	  <viewContribution
-       id="org.eclipse.mylar.ui.views.active.search.contribution"
-       targetID="org.eclipse.mylar.ui.views.active.search">
+       id="org.eclipse.mylyn.ui.views.active.search.contribution"
+       targetID="org.eclipse.mylyn.ui.views.active.search">
  		</viewContribution>
  		
  	<viewContribution 
-		id="org.eclipse.mylar.ui.debug.view.contribution" 
+		id="org.eclipse.mylyn.ui.debug.view.contribution" 
    		targetID="org.eclipse.debug.ui.DebugView">
     	<action
-           class="org.eclipse.mylar.internal.java.ui.actions.FocusDebugViewAction"
+           class="org.eclipse.mylyn.internal.java.ui.actions.FocusDebugViewAction"
            enablesFor="*"
            icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylar.ui.actions.FilterResourceNavigatorAction"
+           id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task (Experimental)"
            menubarPath="mylar"
            style="toggle"
@@ -352,13 +352,13 @@
   <extension point="org.eclipse.ui.popupMenus"> 
      <objectContribution
      	   adaptable="false"
-           id="org.eclipse.mylar.java.ui.interest"
+           id="org.eclipse.mylyn.java.ui.interest"
            objectClass="org.eclipse.jdt.core.IMember">
      	<action
-            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
-            id="org.eclipse.mylar.java.ui.actions.interest.decrement"
+            id="org.eclipse.mylyn.java.ui.actions.interest.decrement"
             label="Remove from Focus"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
@@ -367,8 +367,8 @@
   		  	label="Mark as Landmark" 
 	  		tooltip="Mark the selected element as a landmark"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylar.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylar.internal.context.ui.actions.InterestIncrementAction"
+	  		id="org.eclipse.mylyn.ui.actions.InterestIncrementAction" 
+	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
      <visibility>
@@ -384,13 +384,13 @@
 	 </objectContribution>
      <objectContribution
            adaptable="false"
-           id="org.eclipse.mylar.java.ui.interest.contribution.container"
+           id="org.eclipse.mylyn.java.ui.interest.contribution.container"
            objectClass="org.eclipse.jdt.internal.ui.packageview.ClassPathContainer">
      	<action
-            class="org.eclipse.mylar.internal.context.ui.actions.InterestDecrementAction"
+            class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
-            id="org.eclipse.mylar.java.ui.actions.interest.decrement.container"
+            id="org.eclipse.mylyn.java.ui.actions.interest.decrement.container"
             label="Remove from Focus"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
@@ -400,14 +400,14 @@
 
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
-            id="org.eclipse.mylar.java.actionSet"
+            id="org.eclipse.mylyn.java.actionSet"
             label="Mylar Java"
             visible="false">
   		<action
-          class="org.eclipse.mylar.internal.java.ui.actions.ToggleActiveFoldingAction"
-          definitionId="org.eclipse.mylar.java.ui.editor.folding.auto"
+          class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
+          definitionId="org.eclipse.mylyn.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
-          id="org.eclipse.mylar.java.ui.editor.folding.auto"
+          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
           label="Automatically Fold Uninteresting Elements"
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
@@ -415,10 +415,10 @@
       	</action> 
       	<!--
         <action
-               definitionId="org.eclipse.mylar.java.ui.search.context"
+               definitionId="org.eclipse.mylyn.java.ui.search.context"
                label="Search the current task context"
-               class="org.eclipse.mylar.internal.java.ui.actions.FindReferencesInContextAction"
-               id="org.eclipse.mylar.java.ui.search.context">
+               class="org.eclipse.mylyn.internal.java.ui.actions.FindReferencesInContextAction"
+               id="org.eclipse.mylyn.java.ui.search.context">
          </action>
         -->
     </actionSet>
@@ -427,7 +427,7 @@
    <extension
          point="org.eclipse.ui.actionSetPartAssociations">
       <actionSetPartAssociation
-            targetID="org.eclipse.mylar.java.actionSet">
+            targetID="org.eclipse.mylyn.java.actionSet">
          <part
                id="org.eclipse.jdt.ui.CompilationUnitEditor">
          </part>
@@ -439,12 +439,12 @@
   
    <extension point="org.eclipse.ui.actionSets">
 	<actionSet
-            id="org.eclipse.mylar.java.actionSet.browsing"
+            id="org.eclipse.mylyn.java.actionSet.browsing"
             label="Mylar Java Browsing"
             visible="false"> 
 	    <action
-           class="org.eclipse.mylar.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
-           id="org.eclipse.mylar.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
+           class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
+           id="org.eclipse.mylyn.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            style="toggle"
 	       label="Apply Mylar" 
 	       icon="icons/elcl16/interest-filtering-browsing.gif"
@@ -456,7 +456,7 @@
   </extension>
   
  <extension point="org.eclipse.ui.actionSetPartAssociations">
-	<actionSetPartAssociation targetID="org.eclipse.mylar.java.actionSet.browsing">
+	<actionSetPartAssociation targetID="org.eclipse.mylyn.java.actionSet.browsing">
          <part id="org.eclipse.jdt.ui.MembersView"/>
          <part id="org.eclipse.jdt.ui.PackagesView"/>
          <part id="org.eclipse.jdt.ui.TypesView"/>
@@ -466,7 +466,7 @@
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension 
 			targetID="org.eclipse.jdt.ui.JavaBrowsingPerspective">
-			<actionSet id="org.eclipse.mylar.java.actionSet.browsing"/>
+			<actionSet id="org.eclipse.mylyn.java.actionSet.browsing"/>
 		</perspectiveExtension>
 	</extension>
 
@@ -476,19 +476,19 @@
             name="Java Declarations Filter"
             enabled="false"
             description="Java Declarations Filter"
-            class="org.eclipse.mylar.internal.java.ui.JavaDeclarationsFilter"
-            id="org.eclipse.mylar.java.ui.MembersFilter">
+            class="org.eclipse.mylyn.internal.java.ui.JavaDeclarationsFilter"
+            id="org.eclipse.mylyn.java.ui.MembersFilter">
    		</filter>
   </extension>
   
 	<extension point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
-            category="org.eclipse.mylar.wizards"
-            class="org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard"
+            category="org.eclipse.mylyn.wizards"
+            class="org.eclipse.mylyn.internal.java.ui.wizards.MylarPreferenceWizard"
             hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"
-            id="org.eclipse.mylar.java.ui.wizards.preferences"
+            id="org.eclipse.mylyn.java.ui.wizards.preferences"
             name="Recommended Preferences"
             project="false">
       </wizard>
@@ -496,15 +496,15 @@
 
    <extension point="org.eclipse.ui.commands">
 	  <command
-         categoryId="org.eclipse.mylar.ui.commands"
+         categoryId="org.eclipse.mylyn.ui.commands"
          description="Search the current task context"
-         id="org.eclipse.mylar.java.ui.search.context"
+         id="org.eclipse.mylyn.java.ui.search.context"
          name="Search Task Context">
       </command>
 	  <command
-         categoryId="org.eclipse.mylar.ui.commands"
+         categoryId="org.eclipse.mylyn.ui.commands"
          description="Toggle Active Folding"
-         id="org.eclipse.mylar.java.ui.editor.folding.auto"
+         id="org.eclipse.mylyn.java.ui.editor.folding.auto"
          name="Toggle Active Folding">
       </command>
    </extension>
@@ -514,19 +514,19 @@
         <key
             sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.ui.interest.increment"
+            commandId="org.eclipse.mylyn.ui.interest.increment"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
 	  <key
             sequence="M1+M2+M3+G"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.java.ui.search.context"
+            commandId="org.eclipse.mylyn.java.ui.search.context"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
 	  <key
             sequence="M1+M2+M3+F"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylar.java.ui.editor.folding.auto"
+            commandId="org.eclipse.mylyn.java.ui.editor.folding.auto"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension> 

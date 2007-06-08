@@ -9,20 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.java.tests;
+package org.eclipse.mylyn.java.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.ide.tests.ChangeSetManagerTest;
-import org.eclipse.mylar.ide.tests.CommitTemplateTest;
-import org.eclipse.mylar.java.tests.search.JUnitReferencesSearchPluginTest;
-import org.eclipse.mylar.java.tests.search.JavaImplementorsSearchPluginTest;
-import org.eclipse.mylar.java.tests.search.JavaReadAccessSearchPluginTest;
-import org.eclipse.mylar.java.tests.search.JavaReferencesSearchTest;
-import org.eclipse.mylar.java.tests.search.JavaWriteAccessSearchPluginTest;
-import org.eclipse.mylar.java.tests.xml.XmlSearchPluginTest;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.ide.tests.ChangeSetManagerTest;
+import org.eclipse.mylyn.ide.tests.CommitTemplateTest;
+import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
+import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
+import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
+import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
+import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
+import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 
 /**
  * @author Mik Kersten
@@ -30,7 +30,7 @@ import org.eclipse.mylar.resources.MylarResourcesPlugin;
 public class AllJavaTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Tests for org.eclipse.mylar.java.tests");
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.java.tests");
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ContentSpecificContextTest.class);

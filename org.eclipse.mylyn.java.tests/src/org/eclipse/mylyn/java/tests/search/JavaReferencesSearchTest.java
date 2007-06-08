@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.java.tests.search;
+package org.eclipse.mylyn.java.tests.search;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,16 +20,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.context.tests.support.search.ISearchPluginTest;
-import org.eclipse.mylar.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylar.internal.context.core.CompositeInteractionContext;
-import org.eclipse.mylar.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.ide.xml.pde.PdeStructureBridge;
-import org.eclipse.mylar.internal.java.JavaStructureBridge;
-import org.eclipse.mylar.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
+import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
+import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
+import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge;
+import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
 
 /**
  * @author Shawn Minto
@@ -59,9 +59,9 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		WorkspaceSetupHelper.setupWorkspace();
 		jp1 = WorkspaceSetupHelper.getProject1();
 		jp2 = WorkspaceSetupHelper.getProject2();
-		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.views.SampleView");
-		type11 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylar.tests.project1.Project1Plugin");
-		type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylar.tests.project2.builder.ToggleNatureAction");
+		type1 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.views.SampleView");
+		type11 = WorkspaceSetupHelper.getType(jp1, "org.eclipse.mylyn.tests.project1.Project1Plugin");
+		type2 = WorkspaceSetupHelper.getType(jp2, "org.eclipse.mylyn.tests.project2.builder.ToggleNatureAction");
 		plugin1 = WorkspaceSetupHelper.getFile(jp1, "plugin.xml");
 
 		InteractionContext context = WorkspaceSetupHelper.getContext();

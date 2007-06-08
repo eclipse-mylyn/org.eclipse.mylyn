@@ -11,13 +11,13 @@
 /*
  * Created on May 26, 2005
  */
-package org.eclipse.mylar.context.tests;
+package org.eclipse.mylyn.context.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;

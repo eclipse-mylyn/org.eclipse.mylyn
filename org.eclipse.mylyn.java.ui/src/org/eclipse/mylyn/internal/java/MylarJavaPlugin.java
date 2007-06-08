@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.java;
+package org.eclipse.mylyn.internal.java;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -18,14 +18,14 @@ import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.java.ui.JavaEditingMonitor;
-import org.eclipse.mylar.internal.java.ui.JavaUiUtil;
-import org.eclipse.mylar.internal.java.ui.LandmarkMarkerManager;
-import org.eclipse.mylar.internal.java.ui.editor.ActiveFoldingListener;
-import org.eclipse.mylar.internal.java.ui.wizards.MylarPreferenceWizard;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
+import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
+import org.eclipse.mylyn.internal.java.ui.LandmarkMarkerManager;
+import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
+import org.eclipse.mylyn.internal.java.ui.wizards.MylarPreferenceWizard;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -41,7 +41,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarJavaPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.java";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.java";
 
 	private static MylarJavaPlugin INSTANCE;
 
@@ -223,7 +223,7 @@ public class MylarJavaPlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		try {
 			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.java.JavaPluginResources");
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.java.JavaPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

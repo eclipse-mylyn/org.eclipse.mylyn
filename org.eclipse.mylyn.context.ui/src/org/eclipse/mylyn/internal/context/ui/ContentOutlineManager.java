@@ -8,9 +8,9 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.context.ui;
+package org.eclipse.mylyn.internal.context.ui;
 
-import org.eclipse.mylar.internal.context.ui.actions.FocusOutlineAction;
+import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;

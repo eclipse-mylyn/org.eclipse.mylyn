@@ -9,10 +9,10 @@
  *     Eugene Kuleshov - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.team;
+package org.eclipse.mylyn.internal.team;
 
-import org.eclipse.mylar.tasks.core.ILinkedTaskInfo;
-import org.eclipse.mylar.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
+import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**

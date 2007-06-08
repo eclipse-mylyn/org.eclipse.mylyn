@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.context.core;
+package org.eclipse.mylyn.context.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylar.core.IStatusHandler;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.core.IStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -36,7 +36,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ContextCorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.core";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.core";
 
 	public static final String CONTENT_TYPE_ANY = "*";
 
@@ -313,7 +313,7 @@ public class ContextCorePlugin extends Plugin {
 
 	static class BridgesExtensionPointReader {
 
-		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylar.context.core.bridges";
+		private static final String EXTENSION_ID_CONTEXT = "org.eclipse.mylyn.context.core.bridges";
 
 		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 
@@ -387,7 +387,7 @@ public class ContextCorePlugin extends Plugin {
 
 	static class HandlersExtensionPointReader {
 
-		private static final String EXTENSION_ID_HANDLERS = "org.eclipse.mylar.context.core.handlers";
+		private static final String EXTENSION_ID_HANDLERS = "org.eclipse.mylyn.context.core.handlers";
 
 		private static final String ELEMENT_STATUS = "status";
 

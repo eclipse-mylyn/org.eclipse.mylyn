@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.resources;
+package org.eclipse.mylyn.resources;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,17 +24,17 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.core.IInteractionContext;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.internal.resources.ResourceChangeMonitor;
-import org.eclipse.mylar.internal.resources.ResourceInteractionMonitor;
-import org.eclipse.mylar.internal.resources.ResourceInterestUpdater;
-import org.eclipse.mylar.internal.resources.ui.ContextEditorManager;
-import org.eclipse.mylar.internal.resources.ui.EditorInteractionMonitor;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.resources.ResourceChangeMonitor;
+import org.eclipse.mylyn.internal.resources.ResourceInteractionMonitor;
+import org.eclipse.mylyn.internal.resources.ResourceInterestUpdater;
+import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
+import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -44,7 +44,7 @@ import org.osgi.framework.BundleContext;
  */
 public class MylarResourcesPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylar.resources";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources";
 	
 	private static MylarResourcesPlugin plugin;
 
@@ -62,7 +62,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	
 	private static final String PREF_STORE_DELIM = ", ";
 
-	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylar.ide.resources.ignored.pattern";
+	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylyn.ide.resources.ignored.pattern";
 
 	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
 	
@@ -221,7 +221,7 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	public ResourceBundle getResourceBundle() {
 		try {
 			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.xml.XmlPluginResources");
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.xml.XmlPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -237,6 +237,6 @@ public class MylarResourcesPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylar.xml", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.xml", path);
 	} 
 }

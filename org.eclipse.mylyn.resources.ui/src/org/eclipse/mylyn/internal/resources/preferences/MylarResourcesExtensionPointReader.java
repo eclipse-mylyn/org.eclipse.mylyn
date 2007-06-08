@@ -11,7 +11,7 @@
  * @author Fabio Zadrozny
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.resources.preferences;
+package org.eclipse.mylyn.internal.resources.preferences;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
 
 /**
  * Helper to get extension point contributors
