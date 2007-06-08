@@ -21,7 +21,7 @@ import org.eclipse.mylyn.ide.tests.AllIdeTests;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
 import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.resources.tests.AllResourcesTests;
 import org.eclipse.mylyn.tasks.tests.AllTasksTests;
 import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
@@ -38,7 +38,7 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 
 		MylarStatusHandler.addStatusHandler(new TestingStatusNotifier());
-		FocusedResourcesPlugin.getDefault().setResourceMonitoringEnabled(false);
+		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 
 		// TODO: the order of these tests might still matter, but shouldn't
 		

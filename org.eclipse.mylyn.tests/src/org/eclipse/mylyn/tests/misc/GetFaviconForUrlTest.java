@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.internal.web.ui.WebUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -27,7 +27,7 @@ public class GetFaviconForUrlTest extends TestCase {
 	public void testMalformedUrl() {
 		boolean exceptionThrown = false;
 		try {
-			WebClientUtil.getFaviconForUrl("www.eclipse.org");
+			WebUiUtil.getFaviconForUrl("www.eclipse.org");
 		} catch (MalformedURLException e) {
 			exceptionThrown = true;
 		} 
@@ -37,7 +37,7 @@ public class GetFaviconForUrlTest extends TestCase {
 	public void testEclipseDotOrg() {
 		Image img = null;
 		try {
-			img = WebClientUtil.getFaviconForUrl("http://www.eclipse.org").createImage(false);
+			img = WebUiUtil.getFaviconForUrl("http://www.eclipse.org").createImage(false);
 		} catch (MalformedURLException e) {
 			fail();
 		}
@@ -49,6 +49,6 @@ public class GetFaviconForUrlTest extends TestCase {
 	}
 	
 	public void testNoFavicon() throws MalformedURLException {
-		assertNull(WebClientUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp"));
+		assertNull(WebUiUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp"));
 	}	
 }
