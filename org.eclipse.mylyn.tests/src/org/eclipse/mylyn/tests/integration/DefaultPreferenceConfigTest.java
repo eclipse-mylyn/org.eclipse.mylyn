@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.tests.integration;
 
 import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 
 import junit.framework.TestCase;
 
@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 public class DefaultPreferenceConfigTest extends TestCase {
 
 	public void testMonitorPreferences() {
-		assertNotNull(MylarUsageMonitorPlugin.getDefault());
-		assertTrue(MylarUsageMonitorPlugin.getPrefs().getBoolean(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
+		assertNotNull(UiUsageMonitorPlugin.getDefault());
+		assertTrue(UiUsageMonitorPlugin.getPrefs().getBoolean(MonitorPreferenceConstants.PREF_MONITORING_OBFUSCATE));
 	}
 }

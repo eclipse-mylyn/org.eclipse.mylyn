@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.tests
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylyn.tests.MylarTestsPlugin
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.mylyn.tests

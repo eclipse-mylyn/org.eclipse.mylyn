@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tests.misc;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.web.MylarWebPlugin;
+import org.eclipse.mylyn.internal.web.FocusedWebPlugin;
 import org.eclipse.mylyn.internal.web.WebResource;
 import org.eclipse.mylyn.internal.web.WebResourceStructureBridge;
 import org.eclipse.mylyn.internal.web.WebSite;
@@ -29,7 +29,7 @@ public class UrlExclusionTest extends TestCase {
 		WebResource resource = new WebSite(url);
 		assertEquals(url, bridge.getHandleIdentifier(resource));
 		
-		MylarWebPlugin.getDefault().addExcludedUrl(url);
+		FocusedWebPlugin.getDefault().addExcludedUrl(url);
 		assertNull(bridge.getHandleIdentifier(resource));
 	}
 	
@@ -37,7 +37,7 @@ public class UrlExclusionTest extends TestCase {
 		WebResourceStructureBridge bridge = new WebResourceStructureBridge();
 		String url = "http://eclipse.org";
 		WebResource resource = new WebSite(url + "/foo");
-		MylarWebPlugin.getDefault().addExcludedUrl(url);
+		FocusedWebPlugin.getDefault().addExcludedUrl(url);
 		assertNull(bridge.getHandleIdentifier(resource));
 	}
 	
