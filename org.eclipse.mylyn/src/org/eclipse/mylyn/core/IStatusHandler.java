@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Mik Kersten
+ * 
  */
 public interface IStatusHandler {
  
