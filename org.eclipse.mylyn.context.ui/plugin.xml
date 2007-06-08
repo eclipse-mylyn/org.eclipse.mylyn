@@ -45,7 +45,7 @@
 	 
 	 <objectContribution
             adaptable="false"
-            id="org.eclipse.mylyn.context.ui.context.retrieve.contribution"
+            id="org.eclipse.mylyn.context.ui.task.attachment.contribution"
             objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
@@ -229,7 +229,7 @@
          </action>
 	
 	     <action
-               definitionId="org.eclipse.mylyn.context.ui.context.dialog.show"
+               definitionId="org.eclipse.mylyn.context.ui.dialog.show"
                label="Quick Context View"
                class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialog"
                menubarPath="navigate/open.ext2"
