@@ -42,10 +42,12 @@ public class GetFaviconForUrlTest extends TestCase {
 			fail();
 		}
 		assertNotNull(img);
-		ImageData data = img.getImageData();
-		assertEquals(data.height, 16);
-		assertEquals(data.width, 16);
-		img.dispose();
+		if (img != null) {
+			ImageData data = img.getImageData();
+			assertEquals(data.height, 16);
+			assertEquals(data.width, 16);
+			img.dispose();			
+		}
 	}
 	
 	public void testNoFavicon() throws MalformedURLException {
