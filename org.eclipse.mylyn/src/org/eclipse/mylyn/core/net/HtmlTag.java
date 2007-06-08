@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.net;
+package org.eclipse.mylyn.core.net;
 
 import java.net.URL;
 import java.text.ParseException;

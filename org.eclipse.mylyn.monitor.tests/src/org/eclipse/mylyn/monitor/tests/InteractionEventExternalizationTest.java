@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.mylar.context.tests.AbstractContextTest;
-import org.eclipse.mylar.internal.core.util.XmlStringConverter;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MonitorPreferenceConstants;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.tests.AbstractContextTest;
+import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

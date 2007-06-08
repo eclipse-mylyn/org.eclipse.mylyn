@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
+package org.eclipse.mylyn.core;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylar.internal.core.MylarCorePlugin;
+import org.eclipse.mylyn.internal.core.MylarCorePlugin;
 
 /**
  * @author Mik Kersten

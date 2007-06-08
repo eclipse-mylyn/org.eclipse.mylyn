@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**

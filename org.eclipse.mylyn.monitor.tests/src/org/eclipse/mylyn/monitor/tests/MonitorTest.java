@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,13 +20,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.IMylarMonitorLifecycleListener;
-import org.eclipse.mylar.monitor.ui.workbench.BrowserMonitor;
-import org.eclipse.mylar.monitor.ui.workbench.KeybindingCommandMonitor;
-import org.eclipse.mylar.monitor.ui.workbench.PerspectiveChangeMonitor;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.ui.IMylarMonitorLifecycleListener;
+import org.eclipse.mylyn.monitor.ui.workbench.BrowserMonitor;
+import org.eclipse.mylyn.monitor.ui.workbench.KeybindingCommandMonitor;
+import org.eclipse.mylyn.monitor.ui.workbench.PerspectiveChangeMonitor;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;

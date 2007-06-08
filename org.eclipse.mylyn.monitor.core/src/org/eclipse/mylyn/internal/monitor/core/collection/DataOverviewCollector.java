@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.monitor.core.collection;
+package org.eclipse.mylyn.internal.monitor.core.collection;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 public class DataOverviewCollector implements IUsageCollector {
 

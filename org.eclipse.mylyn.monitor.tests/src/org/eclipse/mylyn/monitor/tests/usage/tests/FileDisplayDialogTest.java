@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests.usage.tests;
+package org.eclipse.mylyn.monitor.tests.usage.tests;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.context.tests.support.FileTool;
-import org.eclipse.mylar.internal.monitor.usage.FileDisplayDialog;
-import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
+import org.eclipse.mylyn.context.tests.support.FileTool;
+import org.eclipse.mylyn.internal.monitor.usage.FileDisplayDialog;
+import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 import junit.framework.TestCase;
 

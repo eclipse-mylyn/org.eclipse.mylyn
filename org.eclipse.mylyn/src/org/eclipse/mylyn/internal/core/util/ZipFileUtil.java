@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.internal.core.util;
+package org.eclipse.mylyn.internal.core.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,7 +27,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylar.core.MylarStatusHandler;
+import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * Contains utility methods for working with zip files

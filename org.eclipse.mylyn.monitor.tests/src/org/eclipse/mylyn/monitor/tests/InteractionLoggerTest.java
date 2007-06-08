@@ -9,16 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
  * @author Mik Kersten

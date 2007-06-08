@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui;
+package org.eclipse.mylyn.monitor.ui;
 
-import org.eclipse.mylar.internal.context.core.InteractionContextManager;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 

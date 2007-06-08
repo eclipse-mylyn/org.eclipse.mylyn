@@ -11,7 +11,7 @@
 /*
  * Created on Jul 16, 2004
  */
-package org.eclipse.mylar.monitor.core;
+package org.eclipse.mylyn.monitor.core;
 
 import java.util.ArrayList;
 import java.util.List;

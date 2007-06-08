@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core;
+package org.eclipse.mylyn.core;
 
 import org.eclipse.core.runtime.IStatus;
 
@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
  * @author Mik Kersten
  */
 public interface IStatusHandler {
-
+ 
 	/**
 	 * Display/log internal failure
 	 * 

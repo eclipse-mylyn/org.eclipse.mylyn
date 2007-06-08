@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui;
+package org.eclipse.mylyn.monitor.ui;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.core.InteractionEvent.Kind;
+import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 

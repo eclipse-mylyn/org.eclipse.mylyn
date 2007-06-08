@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.internal.core.util;
+package org.eclipse.mylyn.internal.core.util;
 
 /**
  * @author Ken Sueda

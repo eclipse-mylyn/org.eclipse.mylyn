@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.core.net;
+package org.eclipse.mylyn.core.net;
 
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -28,7 +28,7 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylar.internal.core.MylarCorePlugin;
+import org.eclipse.mylyn.internal.core.MylarCorePlugin;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.ImageData;
 

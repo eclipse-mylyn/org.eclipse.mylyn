@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.reports.tests;
+package org.eclipse.mylyn.monitor.reports.tests;
 
 import java.io.File;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.context.core.IInteractionElement;
-import org.eclipse.mylar.internal.context.core.InteractionContext;
-import org.eclipse.mylar.internal.context.core.ScalingFactor;
-import org.eclipse.mylar.internal.context.core.ScalingFactors;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.context.core.ScalingFactor;
+import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 
 /**
  * @author Mik Kersten

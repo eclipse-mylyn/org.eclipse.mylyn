@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.mylar.context.tests.ContextTest;
-import org.eclipse.mylar.internal.monitor.core.collection.IUsageCollector;
-import org.eclipse.mylar.internal.monitor.core.collection.InteractionEventSummary;
-import org.eclipse.mylar.internal.monitor.core.collection.SummaryCollector;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.monitor.usage.ReportGenerator;
+import org.eclipse.mylyn.context.tests.ContextTest;
+import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
+import org.eclipse.mylyn.internal.monitor.core.collection.InteractionEventSummary;
+import org.eclipse.mylyn.internal.monitor.core.collection.SummaryCollector;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.monitor.usage.ReportGenerator;
 
 /**
  * @author Mik Kersten

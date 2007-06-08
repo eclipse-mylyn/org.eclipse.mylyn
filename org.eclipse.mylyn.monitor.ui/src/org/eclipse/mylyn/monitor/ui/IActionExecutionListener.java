@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui;
+package org.eclipse.mylyn.monitor.ui;
 
 import org.eclipse.jface.action.IAction;
 

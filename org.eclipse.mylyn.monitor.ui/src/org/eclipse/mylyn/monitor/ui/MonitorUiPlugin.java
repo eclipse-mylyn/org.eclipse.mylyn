@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui;
+package org.eclipse.mylyn.monitor.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.core.IInteractionEventListener;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveListener;
@@ -252,7 +252,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	class MonitorUiExtensionPointReader {
 
-		public static final String EXTENSION_ID_USER = "org.eclipse.mylar.monitor.ui.user";
+		public static final String EXTENSION_ID_USER = "org.eclipse.mylyn.monitor.ui.user";
 
 		public static final String ELEMENT_ACTIVITY_TIMER = "osActivityTimer";
 

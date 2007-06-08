@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
-import org.eclipse.mylar.monitor.core.IActivityTimerListener;
-import org.eclipse.mylar.monitor.core.ActivityTimerThread;
+import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
+import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
 
 import junit.framework.TestCase;
 

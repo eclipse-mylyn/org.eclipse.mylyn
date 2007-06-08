@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui.workbench;
+package org.eclipse.mylyn.monitor.ui.workbench;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.AbstractUserInteractionMonitor;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;

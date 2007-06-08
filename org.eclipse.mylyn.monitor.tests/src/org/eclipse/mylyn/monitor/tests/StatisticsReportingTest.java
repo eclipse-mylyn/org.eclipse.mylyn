@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -21,20 +21,20 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.mylar.context.core.ContextCorePlugin;
-import org.eclipse.mylar.context.ui.ContextUiPlugin;
-import org.eclipse.mylar.internal.java.MylarJavaPlugin;
-import org.eclipse.mylar.internal.java.ui.actions.FocusPackageExplorerAction;
-import org.eclipse.mylar.internal.monitor.core.collection.IUsageCollector;
-import org.eclipse.mylar.internal.monitor.reports.collectors.MylarUsageAnalysisCollector;
-import org.eclipse.mylar.internal.monitor.reports.collectors.MylarViewUsageCollector;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylar.monitor.core.InteractionEvent;
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylar.monitor.usage.ReportGenerator;
-import org.eclipse.mylar.monitor.usage.UsageStatisticsSummary;
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
+import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
+import org.eclipse.mylyn.internal.monitor.reports.collectors.MylarUsageAnalysisCollector;
+import org.eclipse.mylyn.internal.monitor.reports.collectors.MylarViewUsageCollector;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.usage.ReportGenerator;
+import org.eclipse.mylyn.monitor.usage.UsageStatisticsSummary;
 
 /**
  * @author Mik Kersten

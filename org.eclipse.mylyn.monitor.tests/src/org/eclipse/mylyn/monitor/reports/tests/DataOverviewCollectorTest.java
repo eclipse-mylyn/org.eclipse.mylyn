@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.reports.tests;
+package org.eclipse.mylyn.monitor.reports.tests;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,13 +18,13 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylar.internal.monitor.core.collection.DataOverviewCollector;
-import org.eclipse.mylar.internal.monitor.core.collection.IUsageCollector;
-import org.eclipse.mylar.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
-import org.eclipse.mylar.monitor.core.AbstractMonitorLog;
-import org.eclipse.mylar.monitor.tests.MonitorTestsPlugin;
-import org.eclipse.mylar.monitor.usage.ReportGenerator;
+import org.eclipse.mylyn.internal.monitor.core.collection.DataOverviewCollector;
+import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
+import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.monitor.core.AbstractMonitorLog;
+import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
+import org.eclipse.mylyn.monitor.usage.ReportGenerator;
 
 /**
  * 

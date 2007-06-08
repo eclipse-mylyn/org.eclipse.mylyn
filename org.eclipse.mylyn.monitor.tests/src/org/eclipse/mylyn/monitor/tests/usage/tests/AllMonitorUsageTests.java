@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests.usage.tests;
+package org.eclipse.mylyn.monitor.tests.usage.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllMonitorUsageTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.ui.usage.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.usage.tests");
 
 		// $JUnit-BEGIN$
 		suite.addTestSuite(FileDisplayDialogTest.class);

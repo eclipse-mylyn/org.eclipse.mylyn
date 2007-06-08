@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.ui.workbench;
+package org.eclipse.mylyn.monitor.ui.workbench;
 
-import org.eclipse.mylar.monitor.ui.MonitorUiPlugin;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;

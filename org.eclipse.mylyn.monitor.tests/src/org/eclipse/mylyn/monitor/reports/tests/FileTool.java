@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.reports.tests;
+package org.eclipse.mylyn.monitor.reports.tests;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Plug-in
-Bundle-SymbolicName: org.eclipse.mylar
+Bundle-SymbolicName: org.eclipse.mylyn
 Bundle-Version: 2.0.0.v20070607-1200
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
@@ -56,10 +56,10 @@ Export-Package: .,
  org.apache.xmlrpc.parser,
  org.apache.xmlrpc.serializer,
  org.apache.xmlrpc.util,
- org.eclipse.mylar.core,
- org.eclipse.mylar.core.net,
- org.eclipse.mylar.internal.core,
- org.eclipse.mylar.internal.core.util,
+ org.eclipse.mylyn.core,
+ org.eclipse.mylyn.core.net,
+ org.eclipse.mylyn.internal.core,
+ org.eclipse.mylyn.internal.core.util,
  org.jdom,
  org.jdom.adapters,
  org.jdom.filter,
@@ -68,5 +68,5 @@ Export-Package: .,
  org.jdom.transform,
  org.jdom.xpath
 Eclipse-LazyStart: true
-Bundle-Activator: org.eclipse.mylar.internal.core.MylarCorePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.core.MylarCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.monitor.tests;
+package org.eclipse.mylyn.monitor.tests;
 
-import org.eclipse.mylar.monitor.reports.tests.AllMonitorReportTests;
-import org.eclipse.mylar.monitor.tests.usage.tests.AllMonitorUsageTests;
+import org.eclipse.mylyn.monitor.reports.tests.AllMonitorReportTests;
+import org.eclipse.mylyn.monitor.tests.usage.tests.AllMonitorUsageTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 public class AllMonitorTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.monitor.ui.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.tests");
 
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorUsageTests.suite());
