@@ -15,8 +15,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -51,7 +51,7 @@ public class BugzillaProductParserTest extends TestCase {
 
 	private TaskRepository setRepository(String url) {
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, url);
-		Credentials credentials = MylarTestUtils.readCredentials();
+		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 		return repository;
 	}

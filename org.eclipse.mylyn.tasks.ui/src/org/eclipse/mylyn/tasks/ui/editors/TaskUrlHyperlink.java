@@ -15,9 +15,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 /**
  * @author Rob Elves
  */
-public class MylarUrlHyperlink extends URLHyperlink {
+public class TaskUrlHyperlink extends URLHyperlink {
 
-	public MylarUrlHyperlink(IRegion region, String urlString) {
+	public TaskUrlHyperlink(IRegion region, String urlString) {
 		super(region, urlString);
 	}
 	@Override

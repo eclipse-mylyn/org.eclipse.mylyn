@@ -15,9 +15,9 @@ import java.net.Proxy;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
@@ -75,7 +75,7 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 
 	public ITracClient connect(String url, Proxy proxy) throws Exception {
-		Credentials credentials = MylarTestUtils.readCredentials(level);
+		Credentials credentials = TestUtil.readCredentials(level);
 		return connect(url, credentials.username, credentials.password, proxy);
 	}
 

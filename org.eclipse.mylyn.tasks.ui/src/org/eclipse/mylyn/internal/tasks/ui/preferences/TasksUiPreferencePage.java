@@ -47,7 +47,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class TasksPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
 	
@@ -103,7 +103,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private int taskDataDirectoryAction = -1;
 
-	public TasksPreferencePage() {
+	public TasksUiPreferencePage() {
 		super();
 		setPreferenceStore(TasksUiPlugin.getDefault().getPreferenceStore());
 	}

@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.mylyn.tasks.tests.MylarTasksTestsPlugin;
+import org.eclipse.mylyn.tasks.tests.TasksTestsPlugin;
 
 /**
  * @author Mik Kersten
@@ -29,7 +29,7 @@ public class BugzillaTestUtil {
 
 	public static File getLocalFile(String path) {
 		try {
-			URL installURL = MylarTasksTestsPlugin.getDefault().getBundle().getEntry(path);
+			URL installURL = TasksTestsPlugin.getDefault().getBundle().getEntry(path);
 			URL localURL = FileLocator.toFileURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException e) {

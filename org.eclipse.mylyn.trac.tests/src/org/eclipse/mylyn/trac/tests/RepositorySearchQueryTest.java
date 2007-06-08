@@ -14,9 +14,9 @@ package org.eclipse.mylyn.trac.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
@@ -60,7 +60,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	}
 
 	protected void init(String url, Version version) {
-		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 
 		repository = new TaskRepository(TracCorePlugin.REPOSITORY_KIND, url);
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);

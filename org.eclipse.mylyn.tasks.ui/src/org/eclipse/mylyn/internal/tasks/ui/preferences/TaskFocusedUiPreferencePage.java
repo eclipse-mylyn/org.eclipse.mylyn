@@ -20,7 +20,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 /**
  * @author Mik Kersten
  */
-public class MylarPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class TaskFocusedUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	@Override
 	protected Control createContents(Composite parent) {

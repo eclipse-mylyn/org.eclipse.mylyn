@@ -25,7 +25,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
  * 
  * @author Rob Elves
  */
-public class MylarUrlHyperlinkDetector extends AbstractHyperlinkDetector {
+public class TaskUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region == null || textViewer == null)
@@ -109,6 +109,6 @@ public class MylarUrlHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		IRegion urlRegion = new Region(lineInfo.getOffset() + urlOffsetInLine, urlLength);
-		return new IHyperlink[] { new MylarUrlHyperlink(urlRegion, urlString) };
+		return new IHyperlink[] { new TaskUrlHyperlink(urlRegion, urlString) };
 	}
 }

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylyn.tasks.core.MylarMessages;
+import org.eclipse.mylyn.tasks.core.TasksMessages;
 
 /**
  * @author Rob Elves
@@ -59,12 +59,12 @@ public class BugzillaStatus extends Status implements IMylarStatusConstants {
 
 		switch (getCode()) {
 		case REPOSITORY_LOGIN_ERROR:
-			return MylarMessages
-					.bind(MylarMessages.repository_login_failure, this.getRepositoryUrl(), this.errorMessage);
+			return TasksMessages
+					.bind(TasksMessages.repository_login_failure, this.getRepositoryUrl(), this.errorMessage);
 		case REPOSITORY_NOT_FOUND:
-			return MylarMessages.bind(MylarMessages.repository_not_found, this.errorMessage);
+			return TasksMessages.bind(TasksMessages.repository_not_found, this.errorMessage);
 		case REPOSITORY_ERROR:
-			return MylarMessages.bind(MylarMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
+			return TasksMessages.bind(TasksMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
 		case IO_ERROR:
 			String string1 = "Unknown IO error occurred";
 			String string2 = "No message provided";
@@ -73,16 +73,16 @@ public class BugzillaStatus extends Status implements IMylarStatusConstants {
 				string2 = getException().getMessage();
 			}
 			Object[] strings = { getRepositoryUrl(), string1, string2 };
-			return MylarMessages.bind(MylarMessages.io_error, strings);
+			return TasksMessages.bind(TasksMessages.io_error, strings);
 		case INTERNAL_ERROR:
-			return MylarMessages.bind(MylarMessages.internal_error, this.errorMessage);
+			return TasksMessages.bind(TasksMessages.internal_error, this.errorMessage);
 		case OPERATION_CANCELLED:
-			return MylarMessages.bind(MylarMessages.operation_cancelled, this.errorMessage);
+			return TasksMessages.bind(TasksMessages.operation_cancelled, this.errorMessage);
 		case REPOSITORY_COLLISION:
-			return MylarMessages.bind(MylarMessages.repository_collision, this.errorMessage);
+			return TasksMessages.bind(TasksMessages.repository_collision, this.errorMessage);
 		case REPOSITORY_COMMENT_REQD:
 			if (errorMessage == null) {
-				return MylarMessages.repository_comment_reqd;
+				return TasksMessages.repository_comment_reqd;
 			} else {
 				return errorMessage;
 			}

@@ -15,9 +15,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracException;
 import org.eclipse.mylyn.internal.trac.core.TracLoginException;
@@ -51,7 +51,7 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 	}
 	
 	protected void validate(String url) throws Exception {
-		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		
 		// standard connect
 		connect(url);

@@ -28,7 +28,7 @@ public class TaskTestUtil {
 
 	public static File getLocalFile(String path) {
 		try {
-			URL installURL = MylarTasksTestsPlugin.getDefault().getBundle().getEntry(path);
+			URL installURL = TasksTestsPlugin.getDefault().getBundle().getEntry(path);
 			URL localURL = FileLocator.toFileURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException e) {

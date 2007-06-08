@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Mylar Tasks Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.tasks.tests;singleton:=true
 Bundle-Version: 0.0.0
-Bundle-Activator: org.eclipse.mylyn.tasks.tests.MylarTasksTestsPlugin
+Bundle-Activator: org.eclipse.mylyn.tasks.tests.TasksTestsPlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,

@@ -16,14 +16,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class MylarTasksTestsPlugin extends Plugin {
+public class TasksTestsPlugin extends Plugin {
 	// The shared instance.
-	private static MylarTasksTestsPlugin plugin;
+	private static TasksTestsPlugin plugin;
 
 	/**
 	 * The constructor.
 	 */
-	public MylarTasksTestsPlugin() {
+	public TasksTestsPlugin() {
 		super();
 		plugin = this;
 	}
@@ -42,7 +42,7 @@ public class MylarTasksTestsPlugin extends Plugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static MylarTasksTestsPlugin getDefault() {
+	public static TasksTestsPlugin getDefault() {
 		return plugin;
 	}
 

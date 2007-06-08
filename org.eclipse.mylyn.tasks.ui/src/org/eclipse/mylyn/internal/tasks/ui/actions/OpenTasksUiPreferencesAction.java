@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.preferences.TasksPreferencePage;
+import org.eclipse.mylyn.internal.tasks.ui.preferences.TasksUiPreferencePage;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
@@ -29,6 +29,6 @@ public class OpenTasksUiPreferencesAction extends Action {
 
 	@Override
 	public void run() {
-		TasksUiUtil.showPreferencePage(TasksPreferencePage.ID, new TasksPreferencePage());
+		TasksUiUtil.showPreferencePage(TasksUiPreferencePage.ID, new TasksUiPreferencePage());
 	}
 }

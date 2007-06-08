@@ -14,8 +14,8 @@ package org.eclipse.mylyn.bugzilla.tests.headless;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
@@ -57,7 +57,7 @@ public class BugzillaQueryTest extends TestCase {
 		connector.init(new TaskList());
 		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
-		Credentials credentials = MylarTestUtils.readCredentials();
+		Credentials credentials = TestUtil.readCredentials();
 		repository.setAuthenticationCredentials(credentials.username, credentials.password);
 	}
 
@@ -67,7 +67,7 @@ public class BugzillaQueryTest extends TestCase {
 	 */
 	public void testAddCredentials() {
 		if (!repository.hasCredentials()) {
-			Credentials credentials = MylarTestUtils.readCredentials();
+			Credentials credentials = TestUtil.readCredentials();
 			repository.setAuthenticationCredentials(credentials.username, credentials.password);
 
 			assertTrue(repository.hasCredentials());

@@ -25,9 +25,9 @@ import junit.framework.TestCase;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory;
 
 /**
@@ -61,7 +61,7 @@ public class TracXmlRpcTest extends TestCase {
 
 		random = new Random();
 
-		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.ADMIN);
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.ADMIN);
 		createConnection(new URL(Constants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.username, credentials.password);
 
 		tickets = new ArrayList<Integer>();

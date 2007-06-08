@@ -16,15 +16,15 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Rob Elves
  */
-public class MylarMessages extends NLS {
+public class TasksMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tasks.core.MylarMessages";//$NON-NLS-1$
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, MylarMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, TasksMessages.class);
 	}
 
-	private MylarMessages() {
+	private TasksMessages() {
 		// Do not instantiate
 	}
 

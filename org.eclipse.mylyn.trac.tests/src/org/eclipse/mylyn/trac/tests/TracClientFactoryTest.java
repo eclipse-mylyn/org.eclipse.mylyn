@@ -15,9 +15,9 @@ import java.net.Proxy;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.Credentials;
-import org.eclipse.mylyn.context.tests.support.MylarTestUtils.PrivilegeLevel;
+import org.eclipse.mylyn.context.tests.support.TestUtil;
+import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
+import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracWebClient;
 import org.eclipse.mylyn.internal.trac.core.TracClientFactory;
@@ -65,7 +65,7 @@ public class TracClientFactoryTest extends TestCase {
 	}
 
 	protected void probeClient(String url, boolean xmlrpcInstalled) throws Exception {
-		Credentials credentials = MylarTestUtils.readCredentials(PrivilegeLevel.USER);
+		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
 		Version version = TracClientFactory.probeClient(url, credentials.username, credentials.password, Proxy.NO_PROXY);
 		if (xmlrpcInstalled) {
 			assertEquals(Version.XML_RPC, version);
