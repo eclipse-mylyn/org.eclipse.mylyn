@@ -17,7 +17,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -53,7 +52,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -71,7 +70,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -93,7 +92,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -123,7 +122,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -152,7 +151,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -177,7 +176,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -201,7 +200,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -227,7 +226,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();
@@ -252,7 +251,7 @@ public class DuplicateDetetionTest extends TestCase {
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		NewTaskEditorInput input = new NewTaskEditorInput(repository, model);
-		TasksUiUtil.openEditor(input, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(input, TaskEditor.ID_EDITOR, page);
 
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		NewBugzillaTaskEditor editor = (NewBugzillaTaskEditor) taskEditor.getActivePageInstance();

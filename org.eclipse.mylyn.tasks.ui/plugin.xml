@@ -43,22 +43,22 @@
    </extension>
 
 	<extension point="org.eclipse.ui.views">
-     	<category name="Mylar" id="org.eclipse.mylar"/>
+     	<category name="Mylyn" id="org.eclipse.mylyn.ui"/>
     </extension>
 	
     <extension
          point="org.eclipse.ui.views">
       <view
          allowMultiple="true"
-         category="org.eclipse.mylar"
+         category="org.eclipse.mylyn.ui"
          class="org.eclipse.mylyn.internal.tasks.ui.views.TaskListView"
          icon="icons/eview16/task-list.gif"
-         id="org.eclipse.mylyn.tasks.ui.views.TaskListView"
+         id="org.eclipse.mylyn.tasks.ui.views.tasks"
          name="Task List"/> 
       <view
-            id="org.eclipse.mylyn.tasklist.repositories"
+            id="org.eclipse.mylyn.tasks.ui.views.repositories"
             allowMultiple="false"
-            category="org.eclipse.mylar"
+            category="org.eclipse.mylyn.ui"
             class="org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView"
             icon="icons/eview16/repositories.gif"
             name="Task Repositories">
@@ -66,7 +66,7 @@
   	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
-        <category name="Mylar" id="org.eclipse.mylyn.wizards"/>
+        <category name="Mylyn" id="org.eclipse.mylyn.ui.wizards"/>
     </extension>
 
     <extension
@@ -77,7 +77,7 @@
    <!--
 	<extension
          id="org.eclipse.mylyn.helpDocs"
-         name="Mylar Help"
+         name="Mylyn Help"
          point="org.eclipse.help.toc">
       <toc
             file="doc/toc.xml"
@@ -89,7 +89,7 @@
          point="org.eclipse.ui.elementFactories">
       <factory
             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory"
-            id="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory">
+            id="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInputFactory">
       </factory>
    </extension>
     <extension point="org.eclipse.ui.newWizards">
@@ -99,7 +99,7 @@
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard"
             hasPages="false"
             icon="icons/etool16/task-new.gif"
-            id="org.eclipse.mylyn.tasks.ui.wizard.new.task"
+            id="org.eclipse.mylyn.tasks.ui.wizards.new.task"
             name="Task"/>
       <wizard
             canFinishEarly="true"
@@ -107,26 +107,26 @@
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalCategoryWizard"
             hasPages="false"
             icon="icons/etool16/category-new.gif"
-            id="org.eclipse.mylyn.tasks.ui.wizard.new.category"
+            id="org.eclipse.mylyn.tasks.ui.wizards.new.category"
             name="Category">
       </wizard>
 	  <wizard
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
             icon="icons/etool16/task-repository-new.gif"
-            id="org.eclipse.mylyn.tasks.ui.wizard.new.repository.task"
+            id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"
             name="Repository Task"/>
       <wizard
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard"
             icon="icons/etool16/query-new.gif"
-            id="org.eclipse.mylyn.tasks.ui.wizard.new.query"
+            id="org.eclipse.mylyn.tasks.ui.wizards.new.query"
             name="Query"/>
 	  <wizard
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityWizard"
             icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylyn.tasks.ui.activity.report"
+            id="org.eclipse.mylyn.tasks.ui.wizards.activity.report"
             name="Task Activity Report">
       </wizard> 
 	</extension>
@@ -134,41 +134,41 @@
   <extension
         point="org.eclipse.ui.importWizards">
      <wizard
-           category="org.eclipse.mylyn.tasklist.importcategory"
+           category="org.eclipse.mylyn.tasks.ui.wizards.import.category"
            class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard"
            icon="icons/eview16/task-list.gif"
-           id="org.eclipse.mylyn.tasklist.ui.importWizard"
+           id="org.eclipse.mylyn.tasks.ui.wizards.import"
            name="Task List">
         <description>
            Import task data files from file system.
         </description>
      </wizard>
      <category
-           id="org.eclipse.mylyn.tasklist.importcategory"
-           name="Mylar"/>
+           id="org.eclipse.mylyn.tasks.ui.wizards.import.category"
+           name="Mylyn"/>
   </extension>
 
      <extension point="org.eclipse.ui.exportWizards"> 
       <wizard
-            category="org.eclipse.mylyn.tasklist.exportcategory"
+            category="org.eclipse.mylyn.tasks.ui.wizards.export.category"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard"
             icon="icons/eview16/task-list.gif"
-            id="org.eclipse.mylyn.tasklist.ui.exportWizard"
+            id="org.eclipse.mylyn.tasks.ui.wizards.export"
             name="Task Data"> 
          <description> 
             Export Task List data files to the file system.
          </description> 
       </wizard>
       <category
-            id="org.eclipse.mylyn.tasklist.exportcategory"
-            name="Mylar"/> 
+            id="org.eclipse.mylyn.tasks.ui.wizards.export.category"
+            name="Mylyn"/> 
     </extension> 
 
    <extension point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylyn.internal.tasks.ui.TaskLabelDecorator"
-            id="org.eclipse.mylyn.tasklist.ui.decorator.repositories"
-            label="Mylar Task Decorator"
+            id="org.eclipse.mylyn.tasks.ui.decorators.task"
+            label="Mylyn Task Decorator"
             lightweight="true"
             state="true">
          <description>
@@ -193,7 +193,7 @@
            class="org.eclipse.mylyn.tasks.ui.editors.TaskEditor"
            contributorClass="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor"
            icon="icons/etool16/task.gif"
-           id="org.eclipse.mylyn.tasklist.ui.taskEditor"
+           id="org.eclipse.mylyn.tasks.ui.editors.task"
            name="Task Editor"/>
 	    <editor
            icon="icons/etool16/task.gif"
@@ -445,7 +445,7 @@
 
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
-            name="Mylar"
+            name="Mylyn"
             class="org.eclipse.mylyn.internal.tasks.ui.preferences.MylarPreferencePage"
             id="org.eclipse.mylyn.ui.preferences">
             <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>
@@ -462,22 +462,10 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylar tasks"
+            label="mylyn tasks"
             id="org.eclipse.mylyn.tasks.keywords"/>
    </extension>
  
-
-
-<!--
-   <extension point="org.eclipse.ui.commands">
-        <command
-            name="Mylar Tasks"
-            description="Open Mylar Tasks View"
-            categoryId="org.eclipse.ui.category.views"
-            id="org.eclipse.mylyn.tasklist.ui.views.TaskListView">
-      </command>
-   </extension>
-   -->
   <extension point="org.eclipse.ui.bindings">
       <key
             sequence="M2+M3+Q K"
@@ -802,14 +790,14 @@
       <hyperlinkDetector            
             class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
             id="org.eclipse.mylyn.tasks.ui.taskhyperlinkdetector"
-            name="Mylar Task"
+            name="Mylyn Tasks"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
       <hyperlinkDetector
             class="org.eclipse.mylyn.tasks.ui.editors.MylarUrlHyperlinkDetector"
-            description="Mylar enabled URL hyperlink detector"
+            description="Mylyn enabled URL hyperlink detector"
             id="org.eclipse.mylyn.tasks.ui.mylarurlhyperlink"
-            name="Mylar URL"
+            name="Mylyn URLs"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
    </extension>

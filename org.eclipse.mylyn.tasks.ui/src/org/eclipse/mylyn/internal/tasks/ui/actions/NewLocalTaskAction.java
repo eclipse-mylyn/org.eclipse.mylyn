@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskInputDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -111,7 +111,7 @@ public class NewLocalTaskAction extends Action implements IViewActionDelegate {
 		
 		Calendar newTaskSchedule = Calendar.getInstance();
 		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 		// If past scheduledEndHour set for following day
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);

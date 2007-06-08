@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -150,29 +150,29 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				// shouldn't get here
 			}
 		}
-		getPreferenceStore().setValue(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED,
 				notificationEnabledButton.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL,
 				disableInternal.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.ACTIVATE_ON_OPEN, activateOnOpen.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN, activateOnOpen.getSelection());
 
 		// getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 		// synchQueries.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
 		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS,
 				"" + miliseconds);
 
-		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
-		getPreferenceStore().setValue(TaskListPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		backupNow.setEnabled(true);
 		
-		getPreferenceStore().setValue(TaskListPreferenceConstants.INCOMING_OVERLAID,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.INCOMING_OVERLAID,
 				incomingOverlaysButton.getSelection());
 		TaskListView view = TaskListView.getFromActivePerspective();
 		if (view != null) {
@@ -186,23 +186,23 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 	public boolean performCancel() {
 		taskDirectoryText.setText(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
-		backupScheduleTimeText.setText(getPreferenceStore().getString(TaskListPreferenceConstants.BACKUP_SCHEDULE));
+				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
+		backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
+		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
+				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		synchScheduleTime.setText(getMinutesString());
 
-		hourDayStart.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTHOUR));
-		hourDayEnd.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		backupNow.setEnabled(true);
 		return true;
 	}
@@ -227,30 +227,30 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		}
 
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(
-				TaskListPreferenceConstants.BACKUP_SCHEDULE));		
+				TasksUiPreferenceConstants.BACKUP_SCHEDULE));		
 		
 
 		reportEditor.setSelection(getPreferenceStore()
-				.getDefaultBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
+				.getDefaultBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+				TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
+				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getDefaultBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		// userRefreshOnly.setSelection(!enableBackgroundSynch.getSelection());
 		long miliseconds = getPreferenceStore().getDefaultLong(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
 		synchScheduleTime.setText("" + minutes);
 
-		hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TaskListPreferenceConstants.PLANNING_STARTHOUR));
-		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TaskListPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayStart.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayEnd.setSelection(getPreferenceStore().getDefaultInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		updateRefreshGroupEnablements();
 	}
 
@@ -269,7 +269,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		enableBackgroundSynch = new Button(enableSynch, SWT.CHECK);
 		enableBackgroundSynch.setText("Synchronize with repositories every");
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED));
 		enableBackgroundSynch.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				updateRefreshGroupEnablements();
@@ -294,7 +294,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		notificationEnabledButton = new Button(group, SWT.CHECK);
 		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.NOTIFICATIONS_ENABLED));
+				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
 		
 		// synchQueries = new Button(group, SWT.CHECK);
 		// synchQueries.setText("Synchronize on startup");
@@ -311,21 +311,21 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		container.setText("Open Repository Tasks with");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Editor if available (Recommended)");
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_EDITOR));
+		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL));
+		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
 
 		disableInternal = new Button(container, SWT.CHECK);
 		disableInternal.setText("Disable internal browser");
 		disableInternal.setEnabled(!reportInternal.getSelection());
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL));
+				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
 
 		activateOnOpen = new Button(container, SWT.CHECK);
 		activateOnOpen.setText("Active on double-click");
 		activateOnOpen.setEnabled(!reportInternal.getSelection());
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TaskListPreferenceConstants.ACTIVATE_ON_OPEN));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN));
 
 		reportInternal.addListener(SWT.Selection, new Listener() {
 
@@ -408,7 +408,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		gridData_1.widthHint = 13;
 		backupScheduleTimeText.setLayoutData(gridData_1);
 
-		backupScheduleTimeText.setText("" + getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE));
+		backupScheduleTimeText.setText("" + getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 		backupScheduleTimeText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateRefreshGroupEnablements();
@@ -445,7 +445,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		incomingOverlaysButton = new Button(group, SWT.CHECK);
 		incomingOverlaysButton.setText("Use Synchronize View style incoming overlays and placement");
 		incomingOverlaysButton.setSelection(getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.INCOMING_OVERLAID));
+				TasksUiPreferenceConstants.INCOMING_OVERLAID));
 	}
 
 	private void createSchedulingGroup(Composite container) {
@@ -488,7 +488,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		hourDayStart.setIncrement(1);
 		hourDayStart.setMaximum(23);
 		hourDayStart.setMinimum(0);
-		hourDayStart.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_STARTHOUR));
+		hourDayStart.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_STARTHOUR));
 		hourDayStart.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -509,7 +509,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		hourDayEnd.setIncrement(1);
 		hourDayEnd.setMaximum(23);
 		hourDayEnd.setMinimum(0);
-		hourDayEnd.setSelection(getPreferenceStore().getInt(TaskListPreferenceConstants.PLANNING_ENDHOUR));
+		hourDayEnd.setSelection(getPreferenceStore().getInt(TasksUiPreferenceConstants.PLANNING_ENDHOUR));
 		hourDayEnd.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -573,7 +573,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	private String getMinutesString() {
 		long miliseconds = getPreferenceStore().getLong(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 		long minutes = miliseconds / 60000;
 		return "" + minutes;
 	}

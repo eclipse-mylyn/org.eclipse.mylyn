@@ -17,13 +17,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -93,7 +93,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 			productPage.saveDataToModel();
 			NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, taskData);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+			TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 			return true;
 		} catch (Exception e) {
 			productPage.applyToStatusLine(new Status(IStatus.ERROR, "not_used", 0,

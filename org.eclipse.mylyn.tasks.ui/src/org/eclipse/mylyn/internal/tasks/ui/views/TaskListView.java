@@ -56,7 +56,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -161,7 +161,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String PRESENTATION_SCHEDULED = "Scheduled";
 
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.TaskListView";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.tasks";
 
 	public static final String LABEL_VIEW = "Task List";
 
@@ -736,11 +736,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		addFilter(filterWorkingSet);
 		addFilter(filterPriority);
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_COMPLETE_MODE)) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_COMPLETE_MODE)) {
 			addFilter(filterComplete);
 		}
 
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE)) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE)) {
 			addFilter(filterArchive);
 		}
 
@@ -1370,7 +1370,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
 				Object object = selection.getFirstElement();
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TaskListPreferenceConstants.ACTIVATE_ON_OPEN)) {
+						TasksUiPreferenceConstants.ACTIVATE_ON_OPEN)) {
 					ITask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
 						// TODO: move history stuff
@@ -1659,9 +1659,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public static String getCurrentPriorityLevel() {
-		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TaskListPreferenceConstants.SELECTED_PRIORITY)) {
+		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_PRIORITY)) {
 			return TasksUiPlugin.getDefault().getPreferenceStore().getString(
-					TaskListPreferenceConstants.SELECTED_PRIORITY);
+					TasksUiPreferenceConstants.FILTER_PRIORITY);
 		} else {
 			return Task.PriorityLevel.P5.toString();
 		}

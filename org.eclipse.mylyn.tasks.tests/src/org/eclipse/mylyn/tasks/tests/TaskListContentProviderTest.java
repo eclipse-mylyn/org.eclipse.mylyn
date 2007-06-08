@@ -10,7 +10,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.Task;
@@ -34,7 +34,7 @@ public class TaskListContentProviderTest extends TestCase {
 		TaskListView.openInActivePerspective();
 		view = TaskListView.getFromActivePerspective();
 		provider = (TaskListContentProvider) view.getViewer().getContentProvider();
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS, false);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_SUBTASKS, false);
 		view.clearFilters(true);
 		view.addFilter(view.getCompleteFilter());
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();

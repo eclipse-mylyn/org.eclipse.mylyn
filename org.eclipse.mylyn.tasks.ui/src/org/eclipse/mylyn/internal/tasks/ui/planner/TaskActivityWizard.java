@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
@@ -47,7 +47,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 				return false;
 			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(), planningGamePage
 					.getSelectedFilters(), TasksUiPlugin.getTaskListManager().getTaskList());
-			page.openEditor(input, TaskListPreferenceConstants.PLANNER_EDITOR_ID);
+			page.openEditor(input, TaskPlanningEditor.ID_EDITOR_PLANNING);
 		} catch (PartInitException ex) {
 			MylarStatusHandler.log(ex, "couldn't open summary editor");
 		}

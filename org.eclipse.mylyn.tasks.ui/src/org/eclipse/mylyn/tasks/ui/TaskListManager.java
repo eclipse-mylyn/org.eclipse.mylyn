@@ -39,7 +39,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
@@ -498,7 +498,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 		// TaskListPreferenceConstants.PLANNING_STARTHOUR);
 		scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 
 		activityWeekDays.clear();
 		for (int x = startDay; x < (startDay + 7); x++) {
@@ -1055,14 +1055,14 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTHOUR)
-				|| event.getProperty().equals(TaskListPreferenceConstants.PLANNING_ENDHOUR)) {
+		if (event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_STARTHOUR)
+				|| event.getProperty().equals(TasksUiPreferenceConstants.PLANNING_ENDHOUR)) {
 			// event.getProperty().equals(TaskListPreferenceConstants.PLANNING_STARTDAY)
 			// scheduledStartHour =
 			// TasksUiPlugin.getDefault().getPreferenceStore().getInt(
 			// TaskListPreferenceConstants.PLANNING_STARTHOUR);
 			scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-					TaskListPreferenceConstants.PLANNING_ENDHOUR);
+					TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 		}
 	}
 

@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.trac.ui.wizard;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -62,7 +62,7 @@ public class NewTracTaskWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(taskRepository, newTaskPage.getRepositoryTaskData());
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		return true;
 	}
 

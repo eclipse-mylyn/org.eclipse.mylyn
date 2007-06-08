@@ -1,0 +1,62 @@
+/*******************************************************************************
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     University Of British Columbia - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.mylyn.internal.tasks.ui;
+
+/**
+ * @author Mik Kersten
+ */
+@Deprecated
+public final class TasksUiPreferenceConstants {
+	
+	public static final String ACTIVATE_ON_OPEN = "org.eclipse.mylyn.tasks.ui.activate.onopen";
+
+	public static final String BACKUP_LAST = "org.eclipse.mylyn.tasks.ui.backup.last";
+
+	public static final String BACKUP_MAXFILES = "org.eclipse.mylyn.tasks.ui.backup.maxfiles";
+
+	public static final String BACKUP_SCHEDULE = "org.eclipse.mylyn.tasks.ui.backup.schedule";
+
+	public static final String FILTER_ARCHIVE_MODE = "org.eclipse.mylyn.tasks.ui.filters.archive";
+
+	public static final String FILTER_COMPLETE_MODE = "org.eclipse.mylyn.tasks.ui.filters.complete";
+
+	public static final String FILTER_PRIORITY = "org.eclipse.mylyn.tasks.ui.filters.priority";
+
+	public static final String FILTER_SUBTASKS = "org.eclipse.mylyn.tasks.ui.filters.subtasks";
+
+	public static final String INCOMING_OVERLAID = "org.eclipse.mylyn.tasks.ui.incoming.overlaid";
+
+	public static final String MULTIPLE_ACTIVE_TASKS = "org.eclipse.mylyn.tasks.ui.activation.multipe";
+
+	public static final String NOTIFICATIONS_ENABLED = "org.eclipse.mylyn.tasks.ui.notifications.enabled";
+
+	public static final String PLANNER_WIZARD_ID = "org.eclipse.mylyn.tasks.ui.planning.wizard";
+	
+	public static final String PLANNING_ENDHOUR = "org.eclipse.mylyn.tasks.ui.planning.end.hour";
+
+	public static final String PLANNING_STARTHOUR = "org.eclipse.mylyn.tasks.ui.planning.start.hour";
+
+	public static final String REPORT_DISABLE_INTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.disable.internal";
+	
+	public static final String REPORT_OPEN_EDITOR = "org.eclipse.mylyn.tasks.ui.reporting.open.editor";
+
+	public static final String REPORT_OPEN_EXTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.open.external";
+
+	public static final String REPORT_OPEN_INTERNAL = "org.eclipse.mylyn.tasks.ui.reporting.open.internal";
+	
+	public static final String REPOSITORY_SYNCH_SCHEDULE_ENABLED = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule";
+	
+	public static final String REPOSITORY_SYNCH_SCHEDULE_MILISECONDS = "org.eclipse.mylyn.tasks.ui.repositories.synch.schedule.miliseconds";
+
+	public static final String SAVE_TASKLIST_MODE = "org.eclipse.mylyn.tasks.ui.save.mode";
+
+}

@@ -34,7 +34,10 @@ import org.eclipse.ui.part.EditorPart;
  */
 public class CategoryEditor extends EditorPart {
 
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.category";
+	
 	private Text url;
+
 	private CategoryEditorInput input = null;
 
 	private boolean isDirty = false;
@@ -94,7 +97,7 @@ public class CategoryEditor extends EditorPart {
 		summarySection.setText("Category Summary");
 		summarySection.setLayout(new TableWrapLayout());
 		summarySection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		
+
 		Composite summaryContainer = toolkit.createComposite(summarySection);
 		summarySection.setClient(summaryContainer);
 		TableWrapLayout layout = new TableWrapLayout();
@@ -119,7 +122,7 @@ public class CategoryEditor extends EditorPart {
 		url = toolkit.createText(summaryContainer, input.getUrl(), SWT.FLAT);
 		url.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
 		url.addModifyListener(modifyListener);
-		
+
 		toolkit.paintBordersFor(summaryContainer);
 	}
 

@@ -59,7 +59,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 //		boolean enabled = MylarTaskListPlugin.getMylarCorePrefs().getBoolean(
 //				TaskListPreferenceConstants.BACKUP_AUTOMATICALLY);
 //		if (enabled) {
-		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+		int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 		if (days > 0) {
 			start(MINUTE);
 		}
@@ -110,7 +110,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
 				service.run(true, false, backupJob);
-				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
+				TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST,
 						new Date().getTime());
 			} catch (InterruptedException e) {
 				// ignore
@@ -124,7 +124,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 	/** public for testing purposes */
 	public void removeOldBackups(File folder) {
 
-		int maxBackups = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_MAXFILES);
+		int maxBackups = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_MAXFILES);
 
 		File[] files = folder.listFiles();
 		ArrayList<File> backupFiles = new ArrayList<File>();
@@ -194,8 +194,8 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 				return;
 			} else {
 				long lastBackup = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-						TaskListPreferenceConstants.BACKUP_LAST);
-				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TaskListPreferenceConstants.BACKUP_SCHEDULE);
+						TasksUiPreferenceConstants.BACKUP_LAST);
+				int days = TasksUiPlugin.getDefault().getPreferenceStore().getInt(TasksUiPreferenceConstants.BACKUP_SCHEDULE);
 				long waitPeriod = days * DAY;
 				final long now = new Date().getTime();
 
@@ -224,7 +224,7 @@ public class TaskListBackupManager implements IPropertyChangeListener {
 			try {
 				if (Platform.isRunning()) {
 					backupJob.run(monitor);
-					TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST,
+					TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST,
 							new Date().getTime());
 				}
 			} catch (InvocationTargetException e) {

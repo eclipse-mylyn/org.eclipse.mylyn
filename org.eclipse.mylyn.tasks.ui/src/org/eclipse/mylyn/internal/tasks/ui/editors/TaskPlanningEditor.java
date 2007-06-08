@@ -78,11 +78,11 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TaskPlanningEditor extends TaskFormPage {
 
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.planning";
+	
 	private static final String CLEAR = "Clear";
 
 	private static final String LABEL_DUE = "Due:";
-
-	public static final String PLANNING_EDITOR_ID = "org.eclipse.mylyn.editors.planning";
 
 	private static final String LABEL_SCHEDULE = "Scheduled for:";
 
@@ -182,8 +182,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private FormToolkit toolkit;
 
+	public static final String ID_EDITOR_PLANNING = "org.eclipse.mylyn.tasks.ui.planning.editor";
+
 	public TaskPlanningEditor(FormEditor editor) {
-		super(editor, PLANNING_EDITOR_ID, "Planning");
+		super(editor, ID_EDITOR, "Planning");
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(TASK_LIST_LISTENER);
 	}
 

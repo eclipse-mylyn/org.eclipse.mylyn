@@ -53,7 +53,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationReminder;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
@@ -316,9 +316,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS)) {
+			if (event.getProperty().equals(TasksUiPreferenceConstants.MULTIPLE_ACTIVE_TASKS)) {
 				TaskListView.getFromActivePerspective().togglePreviousAction(
-						!getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
+						!getPreferenceStore().getBoolean(TasksUiPreferenceConstants.MULTIPLE_ACTIVE_TASKS));
 				getTaskListManager().getTaskActivationHistory().clear();
 
 			}
@@ -602,39 +602,39 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		store.setDefault(ContextPreferenceContstants.PREF_DATA_DIR, getDefaultDataDirectory());
-		store.setDefault(TaskListPreferenceConstants.FILTER_SUBTASKS, true);
-		store.setDefault(TaskListPreferenceConstants.NOTIFICATIONS_ENABLED, true);
-		store.setDefault(TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
-		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EDITOR, true);
-		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_INTERNAL, false);
-		store.setDefault(TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL, false);
-		store.setDefault(TaskListPreferenceConstants.ACTIVATE_ON_OPEN, false);
-		store.setDefault(TaskListPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
+		store.setDefault(TasksUiPreferenceConstants.FILTER_SUBTASKS, true);
+		store.setDefault(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
+		store.setDefault(TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P5.toString());
+		store.setDefault(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR, true);
+		store.setDefault(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL, false);
+		store.setDefault(TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL, false);
+		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN, false);
+		store.setDefault(TasksUiPreferenceConstants.REPORT_OPEN_EXTERNAL, false);
 		// store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 		// false);
 
-		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
-		store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
+		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
+		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
 
 		// store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
 		// true);
 		// store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER,
 		// ContextCorePlugin.getDefault().getDataDirectory()
 		// + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_MAXFILES, 20);
-		store.setDefault(TaskListPreferenceConstants.BACKUP_LAST, 0f);
+		store.setDefault(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
+		store.setDefault(TasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
+		store.setDefault(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
 
-		store.setDefault(TaskListPreferenceConstants.FILTER_ARCHIVE_MODE, true);
-		store.setDefault(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
-		store.setValue(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
+		store.setDefault(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE, true);
+		store.setDefault(TasksUiPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
+		store.setValue(TasksUiPreferenceConstants.MULTIPLE_ACTIVE_TASKS, false);
 
 		// store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
 		// store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);
-		store.setDefault(TaskListPreferenceConstants.PLANNING_STARTHOUR, 9);
-		store.setDefault(TaskListPreferenceConstants.PLANNING_ENDHOUR, 18);
+		store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
+		store.setDefault(TasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 
-		store.setDefault(TaskListPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
+		store.setDefault(TasksUiPreferenceConstants.SAVE_TASKLIST_MODE, TaskListSaveMode.THREE_HOURS.toString());
 	}
 
 	public static TaskListManager getTaskListManager() {
@@ -680,7 +680,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	// TODO: remove
 	public boolean isMultipleActiveTasksMode() {
-		return getPreferenceStore().getBoolean(TaskListPreferenceConstants.MULTIPLE_ACTIVE_TASKS);
+		return getPreferenceStore().getBoolean(TasksUiPreferenceConstants.MULTIPLE_ACTIVE_TASKS);
 	}
 
 	public String[] getSaveOptions() {

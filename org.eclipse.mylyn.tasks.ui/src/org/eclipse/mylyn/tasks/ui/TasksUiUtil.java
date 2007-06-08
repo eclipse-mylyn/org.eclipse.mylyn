@@ -38,7 +38,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
@@ -250,7 +251,7 @@ public class TasksUiUtil {
 	}
 
 	private static String getTaskEditorId(final ITask task) {
-		String taskEditorId = TaskListPreferenceConstants.TASK_EDITOR_ID;
+		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task instanceof AbstractRepositoryTask) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask
@@ -283,7 +284,7 @@ public class TasksUiUtil {
 	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
 
 		final boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
+				TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL);
 
 		final String taskEditorId = getTaskEditorId(task);
 
@@ -393,7 +394,7 @@ public class TasksUiUtil {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (window != null) {
 					IWorkbenchPage page = window.getActivePage();
-					openEditor(input, TaskListPreferenceConstants.CATEGORY_EDITOR_ID, page);
+					openEditor(input, CategoryEditor.ID_EDITOR, page);
 				}
 			}
 		});

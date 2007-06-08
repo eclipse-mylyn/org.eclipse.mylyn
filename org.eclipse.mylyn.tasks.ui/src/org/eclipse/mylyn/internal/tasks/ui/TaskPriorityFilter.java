@@ -37,7 +37,7 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 	@Override
 	public boolean select(Object parent, Object element) {
 		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.FILTER_SUBTASKS);
+				TasksUiPreferenceConstants.FILTER_SUBTASKS);
 		if (element instanceof ITaskListElement) {
 			if (element instanceof ITask) {
 				ITask task = (ITask) element;

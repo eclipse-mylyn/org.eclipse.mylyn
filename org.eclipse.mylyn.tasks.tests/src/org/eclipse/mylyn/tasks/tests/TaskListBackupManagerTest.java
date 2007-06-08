@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -50,14 +50,14 @@ public class TaskListBackupManagerTest extends TestCase {
 		TaskListBackupManager backupManager = TasksUiPlugin.getDefault().getBackupManager();
 		// MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
 		// false);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST, 0f);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
 		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore()
-				.getLong(TaskListPreferenceConstants.BACKUP_LAST));
+				.getLong(TasksUiPreferenceConstants.BACKUP_LAST));
 		backupManager.start(5);
 		Thread.sleep(3000);
 		assertEquals(0, TasksUiPlugin.getDefault().getPreferenceStore()
-				.getLong(TaskListPreferenceConstants.BACKUP_LAST));
+				.getLong(TasksUiPreferenceConstants.BACKUP_LAST));
 	}
 
 	public void testAutoBackupEnabled() throws InterruptedException, InvocationTargetException, IOException {
@@ -70,18 +70,18 @@ public class TaskListBackupManagerTest extends TestCase {
 		deleteBackupFolder(backupFileFolder);
 		// MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_FOLDER,
 		// backupFolder);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_SCHEDULE, 1);
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_LAST, 0f);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
 		// MylarTaskListPlugin.getMylarCorePrefs().setValue(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
 		// true);
 		backupManager.backupNow(true);
-		assertFalse(TasksUiPlugin.getDefault().getPreferenceStore().getLong(TaskListPreferenceConstants.BACKUP_LAST) == 0);
+		assertFalse(TasksUiPlugin.getDefault().getPreferenceStore().getLong(TasksUiPreferenceConstants.BACKUP_LAST) == 0);
 		assertTrue(backupFileFolder.exists());
 		assertTrue(backupFileFolder.isDirectory());
 		assertTrue(backupFileFolder.listFiles().length == 1);
 
 		// Test removal of old backups
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.BACKUP_MAXFILES, 0);
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_MAXFILES, 0);
 		backupManager.removeOldBackups(backupFileFolder);
 		assertEquals(0, backupFileFolder.listFiles().length);
 

@@ -44,7 +44,7 @@ import org.eclipse.ui.part.ViewPart;
  */
 public class TaskRepositoriesView extends ViewPart {
 
-	public static final String ID = "org.eclipse.mylyn.tasklist.repositories";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.views.repositories";
 
 	private TableViewer viewer;
 

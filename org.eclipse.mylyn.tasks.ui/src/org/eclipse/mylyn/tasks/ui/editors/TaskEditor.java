@@ -22,7 +22,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
@@ -56,6 +56,8 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  */
 public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
+	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
+	
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
 	protected ITask task;
@@ -117,7 +119,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private int createBrowserPage(final String url) {
 		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
+				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
@@ -132,7 +134,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				});
 
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TaskListPreferenceConstants.REPORT_OPEN_INTERNAL);
+						TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL);
 
 				if (openWithBrowser) {
 					setActivePage(index);

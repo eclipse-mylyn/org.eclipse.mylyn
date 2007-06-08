@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -217,7 +217,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		scheduledForDate.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		Calendar newTaskSchedule = Calendar.getInstance();
 		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
-				TaskListPreferenceConstants.PLANNING_ENDHOUR);
+				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
 		// If past scheduledEndHour set for following day
 		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
 			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);

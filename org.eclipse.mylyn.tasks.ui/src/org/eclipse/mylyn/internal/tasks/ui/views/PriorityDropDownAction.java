@@ -12,7 +12,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Control;
@@ -81,7 +81,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P1.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P1.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
 			}
 		};
@@ -95,7 +95,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P2.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P2.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
 			}
 		};
@@ -109,7 +109,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P3.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P3.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
 			}
 		};
@@ -123,7 +123,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P4.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P4.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
 			}
 		};
@@ -137,7 +137,7 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TaskListPreferenceConstants.SELECTED_PRIORITY, Task.PriorityLevel.P5.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P5.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
 			}
 		};

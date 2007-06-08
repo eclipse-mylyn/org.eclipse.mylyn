@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
@@ -601,9 +601,9 @@ public class TaskListManagerTest extends TestCase {
 		int counter = 3;
 		ScheduledTaskListSynchJob.resetCount();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, 1000L);
 		assertEquals(0, ScheduledTaskListSynchJob.getCount());
 		TaskListSynchronizationScheduler manager = new TaskListSynchronizationScheduler(false);
 		manager.startSynchJob();
@@ -612,7 +612,7 @@ public class TaskListManagerTest extends TestCase {
 				.getCount() >= counter);
 		manager.cancelAll();
 		TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, false);
 	}
 
 	public void testgetQueriesAndHitsForHandle() {

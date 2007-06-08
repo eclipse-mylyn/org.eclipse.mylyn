@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -34,12 +34,12 @@ public class FilterSubTasksAction extends Action {
 		setId(ID);
 		// setImageDescriptor(TasksUiImages.FILTER_COMPLETE);
 		setChecked(TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.FILTER_SUBTASKS));
+				TasksUiPreferenceConstants.FILTER_SUBTASKS));
 	}
 
 	@Override
 	public void run() {
-		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.FILTER_SUBTASKS,
+		TasksUiPlugin.getDefault().getPreferenceStore().setValue(TasksUiPreferenceConstants.FILTER_SUBTASKS,
 				isChecked());
 		// TODO: refresh not getting rid of subtasks
 		try {

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -96,7 +96,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	private boolean taskHasUnfilteredChildren(ITask parent) {
 		boolean filterSubtasks = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.FILTER_SUBTASKS);
+				TasksUiPreferenceConstants.FILTER_SUBTASKS);
 		if (filterSubtasks)
 			return false;
 		Set<ITask> children = parent.getChildren();
@@ -194,7 +194,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	private boolean shouldAlwaysShow(Object parent, ITask task) {
 		for (AbstractTaskListFilter filter : this.view.getFilters()) {
 			if (filter.shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					TaskListPreferenceConstants.FILTER_SUBTASKS))) {
+					TasksUiPreferenceConstants.FILTER_SUBTASKS))) {
 				return true;
 			}
 		}

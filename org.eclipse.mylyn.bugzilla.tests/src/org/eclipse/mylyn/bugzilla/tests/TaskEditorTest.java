@@ -14,7 +14,6 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -65,7 +64,7 @@ public class TaskEditorTest extends TestCase {
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TasksUiUtil.openEditor(editorInput, TaskListPreferenceConstants.TASK_EDITOR_ID, page);
+		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
 		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);

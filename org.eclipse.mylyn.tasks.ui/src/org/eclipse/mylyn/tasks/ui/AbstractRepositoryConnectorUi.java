@@ -20,7 +20,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
-import org.eclipse.mylyn.internal.tasks.ui.TaskListPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -32,6 +31,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -75,7 +75,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Context pages.
 	 */
 	public String getTaskEditorId(AbstractRepositoryTask repositoryTask) {
-		return TaskListPreferenceConstants.TASK_EDITOR_ID;
+		return TaskEditor.ID_EDITOR;
 	}
 
 	public abstract boolean hasSearchPage();

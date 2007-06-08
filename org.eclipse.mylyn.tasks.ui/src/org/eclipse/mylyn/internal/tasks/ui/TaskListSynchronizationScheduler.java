@@ -42,7 +42,7 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 	
 	public TaskListSynchronizationScheduler(boolean refreshOnStartup) {		
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (refreshOnStartup && enabled) {
 			addJobToQueue(new ScheduledTaskListSynchJob(DELAY_QUERY_REFRESH_ON_STARTUP, TasksUiPlugin
 					.getTaskListManager()));
@@ -64,10 +64,10 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 			return;
 		}
 		boolean enabled = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
+				TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED);
 		if (enabled) {
 			long miliseconds = TasksUiPlugin.getDefault().getPreferenceStore().getLong(
-					TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
+					TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS);
 			refreshJob = new ScheduledTaskListSynchJob(miliseconds, TasksUiPlugin.getTaskListManager());
 			refreshJob.setRule(rule);
 			addJobToQueue(refreshJob);
@@ -102,8 +102,8 @@ public class TaskListSynchronizationScheduler implements IPropertyChangeListener
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
-				|| event.getProperty().equals(TaskListPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
+		if (event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED)
+				|| event.getProperty().equals(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS)) {
 			cancelAll();
 			startSynchJob();
 		}
