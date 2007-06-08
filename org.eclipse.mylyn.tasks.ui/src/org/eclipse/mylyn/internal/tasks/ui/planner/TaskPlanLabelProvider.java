@@ -14,8 +14,8 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 import java.text.DateFormat;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.mylyn.internal.monitor.core.DateUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;

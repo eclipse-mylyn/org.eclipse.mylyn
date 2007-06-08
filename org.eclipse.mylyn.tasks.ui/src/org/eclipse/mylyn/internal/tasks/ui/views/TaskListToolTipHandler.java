@@ -20,9 +20,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.internal.monitor.core.DateUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
