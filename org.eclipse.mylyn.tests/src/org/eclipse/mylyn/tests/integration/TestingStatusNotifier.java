@@ -16,7 +16,7 @@ import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.core.IStatusHandler;
-import org.eclipse.mylyn.internal.core.util.DateUtil;
+import org.eclipse.mylyn.internal.monitor.core.DateUtil;
 
 /**
  * @author Mik Kersten
