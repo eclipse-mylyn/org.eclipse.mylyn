@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.monitor.core.util;
+package org.eclipse.mylyn.monitor.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
