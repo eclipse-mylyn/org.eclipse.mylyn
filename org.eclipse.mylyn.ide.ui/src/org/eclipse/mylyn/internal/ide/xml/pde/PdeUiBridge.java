@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
 import org.eclipse.pde.internal.ui.editor.ISortableContentOutlinePage;
@@ -132,7 +132,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	 */
 	private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
 		if (file != null) {
-			IWorkbenchPage p = FocusedResourcesPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage p = ResourcesUiBridgePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (p != null && file.exists()) {
 				IEditorPart editorPart = IDE.openEditor(p, file, activate);
 				// initializeHighlightRange(editorPart);

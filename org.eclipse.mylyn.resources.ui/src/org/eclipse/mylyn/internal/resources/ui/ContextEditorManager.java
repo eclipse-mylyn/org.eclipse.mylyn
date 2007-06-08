@@ -31,7 +31,7 @@ import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
@@ -84,7 +84,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 				if (task != null) {
 					try {
-						mementoString = FocusedResourcesPlugin.getDefault().getPreferenceStore().getString(
+						mementoString = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(
 								PREFS_PREFIX + task.getHandleIdentifier());
 						if (mementoString != null && !mementoString.trim().equals("")) {
 							IMemento memento = XMLMemento.createReadRoot(new StringReader(mementoString));
@@ -122,7 +122,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				StringWriter writer = new StringWriter();
 				try {
 					memento.save(writer);
-					FocusedResourcesPlugin.getDefault().getPreferenceStore().setValue(
+					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 							PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 				} catch (IOException e) {
 					MylarStatusHandler.fail(e, "Could not store editor state", false);
@@ -146,7 +146,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			StringWriter writer = new StringWriter();
 			try {
 				memento.save(writer);
-				FocusedResourcesPlugin.getDefault().getPreferenceStore().setValue(
+				ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 			} catch (IOException e) {
 				MylarStatusHandler.fail(e, "Could not store editor state", false);

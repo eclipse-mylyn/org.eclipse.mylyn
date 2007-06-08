@@ -39,11 +39,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class FocusedJavaPlugin extends AbstractUIPlugin {
+public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.java";
 
-	private static FocusedJavaPlugin INSTANCE;
+	private static JavaUiBridgePlugin INSTANCE;
 
 	private ResourceBundle resourceBundle;
 
@@ -64,7 +64,7 @@ public class FocusedJavaPlugin extends AbstractUIPlugin {
 	@Deprecated
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
 	
-	public FocusedJavaPlugin() {
+	public JavaUiBridgePlugin() {
 		super();
 		INSTANCE = this;
 	}
@@ -204,7 +204,7 @@ public class FocusedJavaPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static FocusedJavaPlugin getDefault() {
+	public static JavaUiBridgePlugin getDefault() {
 		return INSTANCE;
 	}
 
@@ -213,7 +213,7 @@ public class FocusedJavaPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = FocusedJavaPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = JavaUiBridgePlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {

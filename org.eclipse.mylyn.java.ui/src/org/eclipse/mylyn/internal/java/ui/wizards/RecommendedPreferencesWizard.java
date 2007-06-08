@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetPage;
-import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
+import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;
@@ -48,7 +48,7 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 	public void init() {
 		setDefaultPageImageDescriptor(ContextUiImages.MYLAR);
 		setWindowTitle("Mylar Recommended Preferences");
-		super.setDefaultPageImageDescriptor(FocusedJavaPlugin.imageDescriptorFromPlugin(FocusedJavaPlugin.PLUGIN_ID,
+		super.setDefaultPageImageDescriptor(JavaUiBridgePlugin.imageDescriptorFromPlugin(JavaUiBridgePlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));
 		preferencePage = new RecommendedPreferencesWizardPage("Automatic preference settings");
 	}

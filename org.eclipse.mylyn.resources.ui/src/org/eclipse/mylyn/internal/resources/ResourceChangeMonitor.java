@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * @author Mik Kersten
@@ -68,8 +68,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}; 
 		try {
 			rootDelta.accept(visitor);
-			FocusedResourcesPlugin.getDefault().getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
-			FocusedResourcesPlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
+			ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
+			ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
 		} catch (CoreException e) {
 			MylarStatusHandler.log(e, "could not accept marker visitor");
 		}

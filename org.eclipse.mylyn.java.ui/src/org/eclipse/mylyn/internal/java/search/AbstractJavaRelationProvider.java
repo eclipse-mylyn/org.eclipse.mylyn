@@ -51,7 +51,7 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
 
@@ -157,7 +157,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
 					// how determine if a javaProject?
-					IResource resource = FocusedResourcesPlugin.getDefault().getResourceForElement(interesting, true);
+					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(interesting, true);
 					if (resource != null) {
 						IProject project = resource.getProject();
 						if (project != null && JavaProject.hasJavaNature(project) && project.exists()) {

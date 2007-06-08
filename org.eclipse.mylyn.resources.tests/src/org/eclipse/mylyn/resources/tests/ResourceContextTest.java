@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * @author Mik Kersten
@@ -32,14 +32,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		FocusedResourcesPlugin.getDefault().setResourceMonitoringEnabled(true);
-		FocusedResourcesPlugin.getDefault().getInterestUpdater().setSyncExec(true);
+		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
+		ResourcesUiBridgePlugin.getDefault().getInterestUpdater().setSyncExec(true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		FocusedResourcesPlugin.getDefault().getInterestUpdater().setSyncExec(false);
+		ResourcesUiBridgePlugin.getDefault().getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testResourceSelect() throws CoreException {
@@ -58,10 +58,10 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	}
 
 	public void testFileNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = FocusedResourcesPlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("boring");
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		IFile file = project.getProject().getFile("boring");
 		file.create(null, true, null);
@@ -69,14 +69,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 	
 	public void testPatternNotAddedIfExcluded() throws CoreException {
-		Set<String> previousExcludions = FocusedResourcesPlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("b*.txt");
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		IFile file = project.getProject().getFile("boring.txt");
 		file.create(null, true, null);
@@ -84,14 +84,14 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 
 		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 
 	public void testPatternNotAddedMatching() throws CoreException {
-		Set<String> previousExcludions = FocusedResourcesPlugin.getDefault().getExcludedResourcePatterns();
+		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add(".*");
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(exclude);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
 		
 		String pattern = ".*";
 		String segment = "boring";
@@ -112,7 +112,7 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 		
-		FocusedResourcesPlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
+		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
 	
 	public void testFileAdded() throws CoreException {

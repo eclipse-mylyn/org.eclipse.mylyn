@@ -22,7 +22,7 @@ import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReferencesSearchTest;
 import org.eclipse.mylyn.java.tests.search.JavaWriteAccessSearchPluginTest;
 import org.eclipse.mylyn.java.tests.xml.XmlSearchPluginTest;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * @author Mik Kersten
@@ -57,7 +57,7 @@ public class AllJavaTests {
 		suite.addTestSuite(XmlSearchPluginTest.class);
 		// $JUnit-END$
 
-		FocusedResourcesPlugin.getDefault().setResourceMonitoringEnabled(true);
+		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
 		return suite;
 	}
 }

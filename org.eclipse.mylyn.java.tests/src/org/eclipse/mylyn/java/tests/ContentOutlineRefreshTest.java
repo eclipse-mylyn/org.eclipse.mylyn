@@ -24,7 +24,7 @@ import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
-import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
+import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
@@ -45,7 +45,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 		view = openView(FocusOutlineAction.ID_CONTENT_OUTLINE);
 		assertNotNull(view);
 		assertNotNull(ContextUiPlugin.getDefault());
-		assertNotNull(FocusedJavaPlugin.getDefault());
+		assertNotNull(JavaUiBridgePlugin.getDefault());
 		action = new FocusOutlineAction();
 	}
 

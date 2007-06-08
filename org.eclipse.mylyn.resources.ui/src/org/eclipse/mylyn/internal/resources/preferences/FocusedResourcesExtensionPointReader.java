@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * Helper to get extension point contributors
@@ -48,7 +48,7 @@ public class FocusedResourcesExtensionPointReader {
 
 	private static void readExtensions() {
 		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(
-				FocusedResourcesPlugin.PLUGIN_ID + '.' + EXTENSION_CHANGE_MONITORING);
+				ResourcesUiBridgePlugin.PLUGIN_ID + '.' + EXTENSION_CHANGE_MONITORING);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];

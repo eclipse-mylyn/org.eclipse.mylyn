@@ -21,11 +21,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class FocusedIdePlugin extends AbstractUIPlugin {
+public class IdeUiBridgePlugin extends AbstractUIPlugin {
 	
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
 	
-	private static FocusedIdePlugin INSTANCE;
+	private static IdeUiBridgePlugin INSTANCE;
 
 	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
 
@@ -33,7 +33,7 @@ public class FocusedIdePlugin extends AbstractUIPlugin {
 
 	private AntEditingMonitor antEditingMonitor;
 		
-	public FocusedIdePlugin() {
+	public IdeUiBridgePlugin() {
 		INSTANCE = this;
 	}
 
@@ -77,7 +77,7 @@ public class FocusedIdePlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static FocusedIdePlugin getDefault() {
+	public static IdeUiBridgePlugin getDefault() {
 		return INSTANCE;
 	}
 

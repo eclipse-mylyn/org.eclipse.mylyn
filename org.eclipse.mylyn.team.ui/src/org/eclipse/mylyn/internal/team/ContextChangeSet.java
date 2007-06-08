@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.team.FocusedTeamPlugin;
@@ -118,8 +118,8 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 		if (!suppressInterestContribution && resource != null) {
 			Set<IResource> resources = new HashSet<IResource>();
 			resources.add(resource);
-			if (FocusedResourcesPlugin.getDefault() != null) {
-				FocusedResourcesPlugin.getDefault().getInterestUpdater().addResourceToContext(resources,
+			if (ResourcesUiBridgePlugin.getDefault() != null) {
+				ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(resources,
 						InteractionEvent.Kind.SELECTION);
 			}
 		}
@@ -167,10 +167,10 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 	public List<IResource> getAllResourcesInChangeContext() {
 		Set<IResource> allResources = new HashSet<IResource>();
 		allResources.addAll(Arrays.asList(super.getResources()));
-		if (Platform.isRunning() && FocusedResourcesPlugin.getDefault() != null && task.isActive()) {
+		if (Platform.isRunning() && ResourcesUiBridgePlugin.getDefault() != null && task.isActive()) {
 			// TODO: if super is always managed correctly should remove
 			// following line
-			allResources.addAll(FocusedResourcesPlugin.getDefault().getInterestingResources(ContextCorePlugin.getContextManager().getActiveContext()));
+			allResources.addAll(ResourcesUiBridgePlugin.getDefault().getInterestingResources(ContextCorePlugin.getContextManager().getActiveContext()));
 		}
 		return new ArrayList<IResource>(allResources);
 	}

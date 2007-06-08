@@ -25,7 +25,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
@@ -178,7 +178,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = FocusedResourcesPlugin.getDefault().getInterestingResources(
+					List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault().getInterestingResources(
 							context);
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
@@ -220,7 +220,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					element.getContentType());
 			try {
 				if (bridge.isDocument(element.getHandleIdentifier())) {
-					IResource resource = FocusedResourcesPlugin.getDefault().getResourceForElement(element, false);
+					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(element, false);
 					if (resource != null && resource.exists()) {
 						for (ContextChangeSet activeContextChangeSet : getActiveChangeSets()) {
 							if (!activeContextChangeSet.contains(resource)) {

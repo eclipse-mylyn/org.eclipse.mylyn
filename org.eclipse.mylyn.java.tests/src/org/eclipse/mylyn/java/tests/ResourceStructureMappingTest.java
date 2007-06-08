@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -34,7 +34,7 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 		IInteractionElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
 		
-		IResource containingResource = FocusedResourcesPlugin.getDefault().getResourceForElement(m1Node, true);
+		IResource containingResource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(m1Node, true);
 		assertEquals(m1.getCompilationUnit().getAdapter(IResource.class), containingResource);
 	}
 	

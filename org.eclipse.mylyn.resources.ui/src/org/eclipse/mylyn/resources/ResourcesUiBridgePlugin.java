@@ -42,11 +42,11 @@ import org.osgi.framework.BundleContext;
 /**
  * @author Mik Kersten
  */
-public class FocusedResourcesPlugin extends AbstractUIPlugin {
+public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources";
 	
-	private static FocusedResourcesPlugin plugin;
+	private static ResourcesUiBridgePlugin plugin;
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
@@ -66,7 +66,7 @@ public class FocusedResourcesPlugin extends AbstractUIPlugin {
 
 	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
 	
-	public FocusedResourcesPlugin() {
+	public ResourcesUiBridgePlugin() {
 		super();
 		plugin = this;
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
@@ -201,7 +201,7 @@ public class FocusedResourcesPlugin extends AbstractUIPlugin {
 		return editorManager;
 	}
 	
-	public static FocusedResourcesPlugin getDefault() {
+	public static ResourcesUiBridgePlugin getDefault() {
 		return plugin;
 	}
 
@@ -210,7 +210,7 @@ public class FocusedResourcesPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = FocusedResourcesPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = ResourcesUiBridgePlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {

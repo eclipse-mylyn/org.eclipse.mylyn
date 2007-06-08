@@ -59,9 +59,9 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 	}
 
 	public void propertyChange(PropertyChangeEvent event) {
-		if (FocusedJavaPlugin.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
-			if (FocusedJavaPlugin.getDefault().getPreferenceStore().getBoolean(
-					FocusedJavaPlugin.PREDICTED_INTEREST_ERRORS)) {
+		if (JavaUiBridgePlugin.PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
+			if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+					JavaUiBridgePlugin.PREDICTED_INTEREST_ERRORS)) {
 				enable();
 			} else {
 				disable();

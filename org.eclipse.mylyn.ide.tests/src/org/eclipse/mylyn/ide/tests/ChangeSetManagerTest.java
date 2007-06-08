@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.ide.FocusedIdePlugin;
+import org.eclipse.mylyn.internal.ide.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.team.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.resources.tests.AbstractResourceContextTest;
@@ -43,7 +43,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		assertNotNull(FocusedIdePlugin.getDefault());
+		assertNotNull(IdeUiBridgePlugin.getDefault());
 		changeSetManager = (ContextActiveChangeSetManager)FocusedTeamPlugin.getDefault().getContextChangeSetManagers().iterator().next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);

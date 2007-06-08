@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.views.DelegatingContextLabelProvider;
 import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
+import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.search.AbstractJavaRelationProvider;
 import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
 import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
@@ -44,7 +44,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	private static final String LABEL_ELEMENT_MISSING = "<missing element>";
 
-	private static final ImageDescriptor EDGE_REF_JUNIT = FocusedJavaPlugin
+	private static final ImageDescriptor EDGE_REF_JUNIT = JavaUiBridgePlugin
 			.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 
 	public JavaContextLabelProvider() {

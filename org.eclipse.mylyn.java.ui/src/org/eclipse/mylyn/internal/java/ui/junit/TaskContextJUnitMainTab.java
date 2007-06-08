@@ -18,7 +18,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationTab;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
+import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -86,6 +86,6 @@ class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	@Override
 	public Image getImage() {
-		return FocusedJavaPlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
+		return JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
 	}
 }

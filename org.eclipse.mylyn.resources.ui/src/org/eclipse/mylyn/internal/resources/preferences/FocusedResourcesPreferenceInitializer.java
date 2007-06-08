@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.mylyn.resources.FocusedResourcesPlugin;
+import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
  * This class is responsible for creating, storing and retrieving the values for
@@ -58,7 +58,7 @@ public class FocusedResourcesPreferenceInitializer extends AbstractPreferenceIni
 			store.append(string);
 			store.append(PREF_STORE_DELIM);
 		}
-		FocusedResourcesPlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
+		ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_RESOURCES_IGNORED, store.toString());
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class FocusedResourcesPreferenceInitializer extends AbstractPreferenceIni
 	 */
 	public static Set<String> getExcludedResourcePatterns() {
 		Set<String> ignored = new HashSet<String>();
-		String read = FocusedResourcesPlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
+		String read = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 		if (read != null) {
 			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 			while (st.hasMoreTokens()) {

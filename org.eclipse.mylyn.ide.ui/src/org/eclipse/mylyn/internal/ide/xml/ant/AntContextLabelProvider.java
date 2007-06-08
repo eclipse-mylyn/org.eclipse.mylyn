@@ -17,7 +17,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.ide.FocusedIdePlugin;
+import org.eclipse.mylyn.internal.ide.IdeUiBridgePlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -34,7 +34,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected Image getImage(IInteractionRelation edge) {
-		return ContextUiImages.getImage(FocusedIdePlugin.EDGE_REF_XML);
+		return ContextUiImages.getImage(IdeUiBridgePlugin.EDGE_REF_XML);
 	}
 
 	@Override
