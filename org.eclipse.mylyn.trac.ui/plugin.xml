@@ -34,14 +34,5 @@
          point="org.eclipse.mylyn.tasks.ui.editors">
       <editorFactory class="org.eclipse.mylyn.internal.trac.ui.editor.TracTaskEditorFactory"/>
    </extension>
-  <!-- <extension
-         point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-      <hyperlinkDetector
-            class="org.eclipse.mylyn.internal.trac.ui.TracHyperlinkDetector"
-            id="org.eclipse.mylyn.jira.ui.hyperlinkdetector"
-            name="Mylar Task - Trac"
-            targetId="org.eclipse.jdt.ui.javaCode">
-      </hyperlinkDetector>
-   </extension>-->
 
 </plugin>

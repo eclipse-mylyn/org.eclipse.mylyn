@@ -1370,7 +1370,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
 				Object object = selection.getFirstElement();
 				if (TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TasksUiPreferenceConstants.ACTIVATE_ON_OPEN)) {
+						TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED)) {
 					ITask selectedTask = TaskListView.getFromActivePerspective().getSelectedTask();
 					if (selectedTask != null) {
 						// TODO: move history stuff

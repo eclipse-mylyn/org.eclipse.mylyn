@@ -47,7 +47,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		this.taskListView = taskListView;
 		this.activationImageOffset = activationImageOffset;
 		this.taskListView.synchronizationOverlaid = TasksUiPlugin.getDefault().getPluginPreferences().getBoolean(
-				TasksUiPreferenceConstants.INCOMING_OVERLAID);
+				TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT);
 
 		if (SWT.getPlatform().equals("gtk")) {
 			platformSpecificSquish = 8;

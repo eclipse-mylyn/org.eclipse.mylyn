@@ -431,7 +431,7 @@
 
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
-            name="Mylyn"
+            name="Task-Focused UI"
             class="org.eclipse.mylyn.internal.tasks.ui.preferences.MylarPreferencePage"
             id="org.eclipse.mylyn.ui.preferences">
             <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>

@@ -154,11 +154,11 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 				notificationEnabledButton.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR, reportEditor.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL, reportInternal.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR, reportEditor.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL, reportInternal.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL,
 				disableInternal.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN, activateOnOpen.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, activateOnOpen.getSelection());
 
 		// getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
 		// synchQueries.getSelection());
@@ -172,7 +172,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
 		backupNow.setEnabled(true);
 		
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.INCOMING_OVERLAID,
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT,
 				incomingOverlaysButton.getSelection());
 		TaskListView view = TaskListView.getFromActivePerspective();
 		if (view != null) {
@@ -190,11 +190,11 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
+		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
+		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN));
+				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
@@ -233,11 +233,11 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		
 
 		reportEditor.setSelection(getPreferenceStore()
-				.getDefaultBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
+				.getDefaultBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
+				TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
 		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
+				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -311,21 +311,21 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		container.setText("Open Repository Tasks with");
 		reportEditor = new Button(container, SWT.RADIO);
 		reportEditor.setText("Editor if available (Recommended)");
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_EDITOR));
+		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
 		reportInternal = new Button(container, SWT.RADIO);
 		reportInternal.setText("Internal browser");
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL));
+		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
 
 		disableInternal = new Button(container, SWT.CHECK);
 		disableInternal.setText("Disable internal browser");
 		disableInternal.setEnabled(!reportInternal.getSelection());
 		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL));
+				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
 
 		activateOnOpen = new Button(container, SWT.CHECK);
 		activateOnOpen.setText("Active on double-click");
 		activateOnOpen.setEnabled(!reportInternal.getSelection());
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_ON_OPEN));
+		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
 
 		reportInternal.addListener(SWT.Selection, new Listener() {
 
@@ -445,7 +445,7 @@ public class TasksPreferencePage extends PreferencePage implements IWorkbenchPre
 		incomingOverlaysButton = new Button(group, SWT.CHECK);
 		incomingOverlaysButton.setText("Use Synchronize View style incoming overlays and placement");
 		incomingOverlaysButton.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.INCOMING_OVERLAID));
+				TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT));
 	}
 
 	private void createSchedulingGroup(Composite container) {

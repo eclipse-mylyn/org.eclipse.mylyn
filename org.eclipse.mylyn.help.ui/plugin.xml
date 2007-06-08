@@ -4,7 +4,7 @@
 <plugin>
 	<extension
          id="org.eclipse.mylyn.helpDocs"
-         name="Mylar Help"
+         name="Task-Focused UI"
          point="org.eclipse.help.toc">
       <toc
             file="doc/toc.xml"
@@ -15,17 +15,17 @@
     <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylar Documentation"
+            label="Mylyn Documentation"
             visible="true"> 
   		<action
           class="org.eclipse.mylyn.doc.internal.actions.ShowMylarLegendAction"
           definitionId="org.eclipse.mylyn.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
           id="org.eclipse.mylyn.doc.legend.show.action"
-          label="Mylar UI Legend"
+          label="Task-Focused UI Legend"
           menubarPath="help/helpStart"
           style="push"
-          tooltip="Mylar UI Legend"> 
+          tooltip="Task-Focused UI Legend"> 
       	</action> 
     </actionSet>
     </extension>
@@ -33,14 +33,14 @@
    <extension point="org.eclipse.ui.commands">
    <category
          id="org.eclipse.mylyn.doc.commands"
-         name="Mylar Documentation">
+         name="Task-Focused UI Documentation">
    </category>
 	  <command
          category="org.eclipse.mylyn.doc.commands"
          categoryId="org.eclipse.mylyn.doc.commands"
-         description="Show Mylar UI Legend"
+         description="Show Mylyn UI Legend"
          id="org.eclipse.mylyn.doc.legend.show"
-         name="Show Mylar UI Legend">
+         name="Task-Focused UI Legend">
       </command>
    </extension>
   
@@ -71,7 +71,7 @@
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="org.eclipse.mylyn.cheatsheet"
-            name="Mylar">
+            name="Task-Focused UI">
       </category>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"

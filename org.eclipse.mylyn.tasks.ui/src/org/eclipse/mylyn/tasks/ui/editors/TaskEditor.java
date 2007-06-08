@@ -119,7 +119,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private int createBrowserPage(final String url) {
 		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORT_DISABLE_INTERNAL)) {
+				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL)) {
 			try {
 				webBrowser = new Browser(getContainer(), SWT.NONE);
 				int index = addPage(webBrowser);
@@ -134,7 +134,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				});
 
 				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TasksUiPreferenceConstants.REPORT_OPEN_INTERNAL);
+						TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL);
 
 				if (openWithBrowser) {
 					setActivePage(index);
