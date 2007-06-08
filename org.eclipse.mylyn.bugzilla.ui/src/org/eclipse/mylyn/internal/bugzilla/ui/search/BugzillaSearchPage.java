@@ -879,7 +879,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			}
 			i--;
 		}
-		if (i >= 0) {
+		if (i >= 0 && match != null) {
 			match.operation = operation.getSelectionIndex();
 			// remove - will be added last (see below)
 			previousSearchQueryData.remove(match);

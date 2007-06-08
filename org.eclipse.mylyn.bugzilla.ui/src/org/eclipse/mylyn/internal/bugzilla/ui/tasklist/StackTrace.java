@@ -31,8 +31,7 @@ public class StackTrace {
 	private String stackTrace;
 
 	/**
-	 * This is the comment that the stack trace appeared in. String if
-	 * desciption else Comment
+	 * This is the comment that the stack trace appeared in. String if desciption else Comment
 	 */
 	private Object comment;
 
@@ -85,8 +84,7 @@ public class StackTrace {
 	/**
 	 * Get the Comment that this stack trace came from
 	 * 
-	 * @return Returns the Comment if it was a comment else a String if it was
-	 *         the summary
+	 * @return Returns the Comment if it was a comment else a String if it was the summary
 	 */
 	public Object getComment() {
 		return comment;
@@ -163,11 +161,10 @@ public class StackTrace {
 					// there wasn't so we are done this stack trace
 					inStackTrace = false;
 					if (stackTrace != null && stackTrace.size() > 1) {
-						stackTraces
-								.add(getStackTrace(stackTrace, charStackStart, charPos[0] - charStackStart, comment));
+						stackTraces.add(getStackTrace(stackTrace, charStackStart, charPos[0] - charStackStart, comment));
 					}
 					stackTrace = null;
-				} else {
+				} else if (stackTrace != null) {
 
 					// we had one, so add it to this stack trace
 					stackTrace.add(stack);
@@ -194,8 +191,7 @@ public class StackTrace {
 	}
 
 	/**
-	 * Get the next at clause from a potential stack trace -- looks ahead 4
-	 * lines
+	 * Get the next at clause from a potential stack trace -- looks ahead 4 lines
 	 * 
 	 * @param lines
 	 *            The array of all of the lines in the bug
@@ -204,9 +200,8 @@ public class StackTrace {
 	 * @param charPos
 	 *            The current character position in the original string
 	 * @return The next at clause, or <code>null</code><br>
-	 *         If an at line is matched, but the end isn't within the 4 lines,
-	 *         only the first line is returned. Also, charPos is updated as well
-	 *         as i
+	 *         If an at line is matched, but the end isn't within the 4 lines, only the first line is returned. Also,
+	 *         charPos is updated as well as i
 	 */
 	private static String getNextAt(String[] lines, int[] i, int[] charPos) {
 		String regexAtString = "^at.*";
@@ -254,7 +249,7 @@ public class StackTrace {
 				i[0] = index + 1;
 				charPos[0] += l2.length() + 2;
 				res += l2.trim();
-			} else if (l3 != null && l3.trim().matches(regexEndString)) {
+			} else if (l2 != null && l3 != null && l3.trim().matches(regexEndString)) {
 
 				// it was on the third line
 				// update the current position and the result string
@@ -262,7 +257,7 @@ public class StackTrace {
 				charPos[0] += l2.length() + l3.length() + 4;
 				res += l2.trim();
 				res += l3.trim();
-			} else if (l4 != null && l4.trim().matches(regexEndString)) {
+			} else if (l2 != null && l3 != null && l4 != null && l4.trim().matches(regexEndString)) {
 
 				// it was on the fourth line
 				// update the current position and the result string

@@ -67,7 +67,7 @@ public class TaskDataManager {
 
 	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, IPath path) {
 		this.primaryPath = path.append(OFFLINE_REPORTS);
-		this.backupPath = path.append(OFFLINE_REPORTS+".bak");
+		this.backupPath = path.append(OFFLINE_REPORTS + ".bak");
 		this.taskRepositoryManager = taskRepositoryManager;
 		this.primaryFile = primaryPath.toFile();
 		this.backupFile = backupPath.toFile();
@@ -131,8 +131,8 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Add a RepositoryTaskData to the offline reports file. Previously stored
-	 * taskData is held and can be retrieved via getOldTaskData()
+	 * Add a RepositoryTaskData to the offline reports file. Previously stored taskData is held and can be retrieved via
+	 * getOldTaskData()
 	 */
 	public void setNewTaskData(String taskHandle, RepositoryTaskData newEntry) {
 		if (taskHandle == null || newEntry == null) {
@@ -177,9 +177,8 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * @return Get the next available temporary taskId. This taskId is given to
-	 *         new unsubmitted repository tasks. Incremented each time this
-	 *         method is called.
+	 * @return Get the next available temporary taskId. This taskId is given to new unsubmitted repository tasks.
+	 *         Incremented each time this method is called.
 	 */
 	public synchronized String getNewRepositoryTaskId() {
 		dataStateChanged();
@@ -285,8 +284,7 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * Public for testing only force a reset of all data maps Does not signal
-	 * data changed (doesn't request save)
+	 * Public for testing only force a reset of all data maps Does not signal data changed (doesn't request save)
 	 */
 	public void clear() {
 		if (saverJob != null) {
@@ -296,14 +294,12 @@ public class TaskDataManager {
 	}
 
 	/**
-	 * After deserialization process the attributeFactory needs to be reset on
-	 * each RepositoryTaskData.
+	 * After deserialization process the attributeFactory needs to be reset on each RepositoryTaskData.
 	 */
 	private void updateAttributeFactory(RepositoryTaskData taskData) {
 		if (taskData == null)
 			return;
-		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData
-				.getRepositoryKind());
+		AbstractRepositoryConnector connector = taskRepositoryManager.getRepositoryConnector(taskData.getRepositoryKind());
 		if (connector != null && connector.getTaskDataHandler() != null) {
 			AbstractAttributeFactory factory = connector.getTaskDataHandler().getAttributeFactory(taskData);
 			if (factory != null) {
@@ -506,15 +502,19 @@ public class TaskDataManager {
 
 				outputStream.writeObject(oldObj);
 				outputStream.flush();
-				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream
-						.toByteArray());
+				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+						byteArrayOutputStream.toByteArray());
 				inputStream = new ObjectInputStream(byteArrayInputStream);
 				return inputStream.readObject();
 			} catch (Exception e) {
 				throw (e);
 			} finally {
-				outputStream.close();
-				inputStream.close();
+				if (outputStream != null) {
+					outputStream.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
 			}
 		}
 

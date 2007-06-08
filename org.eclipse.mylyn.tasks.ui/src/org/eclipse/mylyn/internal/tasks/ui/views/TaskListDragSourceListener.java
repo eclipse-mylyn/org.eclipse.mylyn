@@ -67,7 +67,7 @@ class TaskListDragSourceListener implements DragSourceListener {
 				}
 			}
 			event.data = tasks.toArray();
-		} else if (FileTransfer.getInstance().isSupportedType(event.dataType)) {	
+		} else if (FileTransfer.getInstance().isSupportedType(event.dataType) && selectedElement != null) {	
 			File file = ContextCorePlugin.getContextManager().getFileForContext(selectedElement.getHandleIdentifier());
 			if (file != null) {
 				event.data = new String[] { file.getAbsolutePath() };

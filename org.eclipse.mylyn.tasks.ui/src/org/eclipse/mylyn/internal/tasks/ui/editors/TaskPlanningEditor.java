@@ -215,7 +215,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		}
 
-		if (!priorityCombo.isDisposed()) {
+		if (!priorityCombo.isDisposed() && updateTask != null) {
 			PriorityLevel level = PriorityLevel.fromString(updateTask.getPriority());
 			if (level != null) {
 				int prioritySelectionIndex = priorityCombo.indexOf(level.getDescription());

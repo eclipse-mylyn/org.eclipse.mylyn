@@ -464,6 +464,10 @@ public class TasksUiUtil {
 				selection = (IStructuredSelection) windowSelection;
 			}
 		}
+		
+		if(selection == null) {
+			return null;
+		}
 
 		Object element = selection.getFirstElement();
 		if (element instanceof TaskRepository) {

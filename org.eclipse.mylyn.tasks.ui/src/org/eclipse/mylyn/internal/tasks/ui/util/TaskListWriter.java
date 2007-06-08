@@ -110,6 +110,7 @@ public class TaskListWriter {
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
 			MylarStatusHandler.log(e, "could not create document");
+			return;
 		}
 
 		Element root = doc.createElement(ELEMENT_TASK_LIST);
@@ -212,8 +213,7 @@ public class TaskListWriter {
 	/**
 	 * Writes the provided XML document out to the specified output stream.
 	 * 
-	 * doc - the document to be written outputStream - the stream to which the
-	 * document is to be written
+	 * doc - the document to be written outputStream - the stream to which the document is to be written
 	 */
 	private void writeDOMtoStream(Document doc, OutputStream outputStream) {
 		// Prepare the DOM document for writing
@@ -231,7 +231,7 @@ public class TaskListWriter {
 		// the transformation output to a variety of sinks
 
 		Transformer xformer = null;
-		try {			
+		try {
 			xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(TRANSFORM_PROPERTY_VERSION, XML_VERSION);
 			xformer.transform(source, result);
@@ -286,12 +286,12 @@ public class TaskListWriter {
 					try {
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
 								&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
-							
+
 							ITask task = delagatingExternalizer.readTask(child, taskList, null, null);
 							if (task == null) {
 								orphanedTaskNodes.add(child);
 							} else {
-								if(child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
+								if (child.getChildNodes() != null && child.getChildNodes().getLength() > 0) {
 									tasksWithSubtasks.put(task, child.getChildNodes());
 								}
 							}
@@ -307,7 +307,7 @@ public class TaskListWriter {
 						handleException(inFile, child, e);
 					}
 				}
-				
+
 				for (ITask task : tasksWithSubtasks.keySet()) {
 					NodeList nodes = tasksWithSubtasks.get(task);
 					delagatingExternalizer.readSubTasks(task, nodes, taskList);
@@ -330,7 +330,7 @@ public class TaskListWriter {
 									for (int ii = 0; ii < queryChildren.getLength(); ii++) {
 										Node queryNode = queryChildren.item(ii);
 										try {
-											delagatingExternalizer.readQueryHit((Element)queryNode, taskList, query);
+											delagatingExternalizer.readQueryHit((Element) queryNode, taskList, query);
 										} catch (TaskExternalizationException e) {
 											hasCaughtException = true;
 										}
@@ -368,9 +368,8 @@ public class TaskListWriter {
 	/**
 	 * Opens the specified XML file and parses it into a DOM Document.
 	 * 
-	 * Filename - the name of the file to open Return - the Document built from
-	 * the XML file Throws - XMLException if the file cannot be parsed as XML -
-	 * IOException if the file cannot be opened
+	 * Filename - the name of the file to open Return - the Document built from the XML file Throws - XMLException if
+	 * the file cannot be parsed as XML - IOException if the file cannot be opened
 	 */
 	private Document openAsDOM(File inputFile) throws IOException {
 
@@ -386,7 +385,9 @@ public class TaskListWriter {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException pce) {
 			inputFile.renameTo(new File(inputFile.getName() + FILE_SUFFIX_SAVE));
-			MylarStatusHandler.log(pce, "Failed to load XML file");
+			IOException ioe = new IOException("Failed to load XML file");
+			ioe.initCause(pce);
+			throw ioe;
 		}
 		try {
 			// Parse the content of the given file as an XML document
@@ -403,9 +404,8 @@ public class TaskListWriter {
 			// document = builder.parse(inputFile);
 		} catch (SAXException se) {
 			// TODO: Use TaskListBackupManager to attempt restore from backup
-			MessageDialog
-					.openWarning(null, "Mylar task list corrupt",
-							"Unable to read the Mylar task list. Please restore from previous backup via File > Import > Mylar Task Data");
+			MessageDialog.openWarning(null, "Mylar task list corrupt",
+					"Unable to read the Mylar task list. Please restore from previous backup via File > Import > Mylar Task Data");
 			// String message = "Restoring the tasklist failed. Would you like
 			// to attempt to restore from the backup?\n\nTasklist XML File
 			// location: "
@@ -433,8 +433,8 @@ public class TaskListWriter {
 		String name = inFile.getAbsolutePath();
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat();
-		sdf.applyPattern("yy-MM-dd-ss");		
-		name = name.substring(0, name.lastIndexOf('.')) + "-failed-"+sdf.format(date)+".zip";
+		sdf.applyPattern("yy-MM-dd-ss");
+		name = name.substring(0, name.lastIndexOf('.')) + "-failed-" + sdf.format(date) + ".zip";
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {

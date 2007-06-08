@@ -335,7 +335,7 @@ public class BugzillaCorePlugin extends Plugin {
 
 			if (bugzillaPlatform != null && platformAttribute != null) {
 				platformAttribute.setValue(bugzillaPlatform);
-			} else if (platformAttribute != null && platformAttribute.getOptionParameter(OPTION_ALL) != null) {
+			} else if (opSysAttribute != null && platformAttribute != null && platformAttribute.getOptionParameter(OPTION_ALL) != null) {
 				opSysAttribute.setValue(OPTION_ALL);
 			}
 
