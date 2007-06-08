@@ -46,7 +46,7 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylar resources"
+            label="mylyn resources"
             id="org.eclipse.mylyn.ide.keywords"/>
    </extension>
  
@@ -61,9 +61,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
   		</action> 
       </viewContribution> 
@@ -77,9 +77,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
   		</action> 
       </viewContribution> 
@@ -92,9 +92,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.ApplyMylarToProblemsListAction"
            label="Focus on Active Task"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task"> 
   		</action>  
       </viewContribution> 
@@ -107,9 +107,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.ApplyMylarToProblemsListAction"
            label="Focus on Active Task"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task"> 
   		</action>  
       </viewContribution> 

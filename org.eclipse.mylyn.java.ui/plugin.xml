@@ -3,7 +3,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="javaEditorContributor" 
-   		name="Mylar Java Editor Contributor" 
+   		name="Task-Focused Java Editor Contributor" 
    		schema="schema/javaEditorContributor.exsd"/>
 	
 	<extension
@@ -108,21 +108,21 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
-		name="Other Java Proposals (Mylar)">
+		name="Other Java Proposals (Task-Focused UI)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-other.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="Type Proposals (Mylar)">
+		name="Type Proposals (Task-Focused UI)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
 		<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="templateProposalCategory"
-		name="Template Proposals (Mylar)">
+		name="Template Proposals (Task-Focused UI)">
 		<proposalCategory
 			icon="/icons/elcl16/templateprop_co.gif"/>
 	</extension>
@@ -185,21 +185,11 @@
 			<partition type="__java_javadoc"/>
 		</javaCompletionProposalComputer>
 	</extension>
-	<!--
-	<extension
-		point="org.eclipse.jdt.ui.javaCompletionProposalSorters">
-		<proposalSorter
-			id="org.eclipse.mylyn.java.ui.editor.proposals.sorter"
-			name="Mylar Interest Sorter"
-			class="org.eclipse.mylyn.internal.java.ui.editor.MylarCompletionInterestSorter"/>
-	</extension>
-	-->
-	
-	
+
 	<extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            name="Mylar Context Test"
+            name="Task Context Test"
             delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylyn.java.junit.launchconfig"
@@ -216,7 +206,7 @@
       </launchConfigurationType>
          <launchConfigurationType
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-            name="Mylar Context Plug-in Test"
+            name="Task Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
             delegate="org.eclipse.mylyn.internal.java.ui.junit.MylarPdeJUnitLaunchConfiguration"
             modes="run, debug"
@@ -285,29 +275,10 @@
          </launchMode>
       </launchConfigurationTabGroup>
     </extension>	
-
-	<!--
-	<extension
-	     id="org.eclipse.mylyn.helpDocs"
-	     name="Mylar Help"
-	     point="org.eclipse.help.toc">
-	  <toc
-	        file="doc/toc.xml"
-	        primary="false">
-	  </toc>
-   </extension>
-  -->
   
    <extension point="org.eclipse.ui.perspectiveExtensions">
           <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
 			<viewShortcut id="org.eclipse.mylyn.ui.views.active.hierarchy"/>
-                <!--
-               <viewShortcut id="org.eclipse.mylyn.ui.views.active.search"/>
-               -->
-               <!--
-               <view id="org.eclipse.mylyn.ui.views.active.search"
-                    relative="org.eclipse.ui.views.ContentOutline"
-                    relationship="stack"/>-->
           </perspectiveExtension>
    </extension>
  
@@ -321,9 +292,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.actions.filter.packageExplorer"
            label="Focus on Active Task"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task (Alt+click to reveal filtered elements)"> 
   		</action> 
       </viewContribution>
@@ -341,9 +312,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.FilterResourceNavigatorAction"
            label="Focus on Active Task (Experimental)"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task (Experimental)"> 
   		</action> 
       </viewContribution> 
@@ -401,7 +372,7 @@
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet"
-            label="Mylar Java"
+            label="Task-Focused UI for Java"
             visible="false">
   		<action
           class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
@@ -440,16 +411,16 @@
    <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet.browsing"
-            label="Mylar Java Browsing"
+            label="Task-Focused UI for Java Browsing"
             visible="false"> 
 	    <action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
            id="org.eclipse.mylyn.java.ui.actions.ApplyMylarToBrowsingPerspectiveAction"
            style="toggle"
-	       label="Apply Mylar" 
+	       label="Focus Browsing Perspective" 
 	       icon="icons/elcl16/interest-filtering-browsing.gif"
 	       tooltip="Focus Java Browsing Views on Active Task"
-	       toolbarPath="mylar"
+	       toolbarPath="mylyn"
 	       enablesFor="*">
 	    </action>
   	</actionSet>
@@ -508,27 +479,5 @@
          name="Toggle Active Folding">
       </command>
    </extension>
-
-<!--
-   <extension point="org.eclipse.ui.bindings">   
-        <key
-            sequence="M1+M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.ui.interest.increment"
-            schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
-	  <key
-            sequence="M1+M2+M3+G"
-            contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.java.ui.search.context"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
-	  <key
-            sequence="M1+M2+M3+F"
-            contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.java.ui.editor.folding.auto"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key>
-   </extension> 
--->
+   
 </plugin>

@@ -204,7 +204,7 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylar context"
+            label="mylyn context"
             id="org.eclipse.mylyn.context.keywords"/>
    </extension>
  
@@ -276,7 +276,7 @@
    
   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
   	<specification annotationType="org.eclipse.mylyn.ui.landmark.annotation" 
-  		label="Mylar Landmark" 
+  		label="Task Context Landmark" 
   		icon="icons/elcl16/interest-landmark.gif" 
   		textPreferenceKey="landmarkIndication" 
   		textPreferenceValue="false" 
@@ -299,10 +299,10 @@
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Mylar"
-            description="Mylar"
+            label="Mylyn Focused UI"
+            description="Mylyn Focused UI"
             visible="true"
-            id="org.eclipse.mylyn.ui.mylar.actionSet">
+            id="org.eclipse.mylyn.context.ui.actionSet">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
                definitionId="org.eclipse.mylyn.ui.interest.decrement"
@@ -327,22 +327,6 @@
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylyn.context.ui.actions.open.context.dialog">
          </action>
-         <!--
-         <action
-               definitionId="org.eclipse.mylyn.ui.related.show"
-               label="Open Mylar related elements"
-               class="org.eclipse.mylyn.ui.actions.OpenRelatedElementsQuickView"
-               menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylyn.ui.actions.OpenRelatedElementsQuickView">
-         </action>
-         <action
-               definitionId="org.eclipse.mylyn.ui.show.filtered"
-               label="Make less interesting"
-               class="org.eclipse.mylyn.ui.actions.ShowFilteredAction"
-               menubarPath="navigate/open.ext2"
-               id="org.eclipse.mylyn.ui.actions.ShowFilteredAction">
-         </action>
-         -->
       </actionSet>
    </extension>
                               
@@ -403,15 +387,7 @@
             contextId="org.eclipse.ui.globalScope"
             commandId="org.eclipse.mylyn.ui.context.dialog.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key> 
-	  <!--
-      <key
-            sequence="M1+M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.ui.show.filtered"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
-      </key> 
-      -->
+      </key>
    </extension>     
 
    <extension point="org.eclipse.ui.decorators">
@@ -422,7 +398,7 @@
             state="true"
             id="org.eclipse.mylyn.ui.decorator.interest">
          <description>
-			Mylar degree of interest decorator
+			Task Context Interest Decorator
 		 </description>
          <enablement>
             <objectClass name="java.lang.Object"/>
@@ -437,7 +413,7 @@
     	<action
            class="org.eclipse.mylyn.internal.context.ui.actions.FocusTaskListAction"
            enablesFor="*"
-           icon="icons/eview16/mylar-apply-activity.gif"
+           icon="icons/eview16/focus-tasklist.gif"
            id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
            label="Focus on Workweek"
            menubarPath="additions"
@@ -455,9 +431,9 @@
            icon="icons/elcl16/interest-filtering.gif"
            id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
            label="Focus on Active Task (Alt+click to reveal filtered elements)"
-           menubarPath="mylar"
+           menubarPath="mylyn"
            style="toggle"
-           toolbarPath="mylar"
+           toolbarPath="mylyn"
            tooltip="Focus on Active Task"> 
   		</action> 
   	</viewContribution>
@@ -480,34 +456,12 @@
        <command
              defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
              id="org.eclipse.mylyn.ui.commands.applyMylar"
-             name="Apply Mylar to View">
+             name="Focus View">
           <commandParameter
                 id="viewId"
-                name="View ID to apply Mylar"
+                name="View ID to Focus"
                 optional="false"/>
        </command>
    </extension>
-    
- 
-   <!--
-   <extension point="org.eclipse.ui.workingSets">
-        <workingSet
-            id="org.eclipse.mylyn.workingSetPage"
-            name="Mylar Task Context"
-            icon="icons/elcl16/interest-working-set.gif"
-            pageClass="org.eclipse.mylyn.internal.context.ui.MylarWorkingSetPage"
-            updaterClass="org.eclipse.mylyn.internal.context.ui.MylarWorkingSetManager">
-        </workingSet>
-    </extension>
-    -->
+  
 </plugin>
-
-	    <!--
-	  	<action id="org.eclipse.mylyn.ui.actions.ShowFilteredAction" 
-              label="Raise children" 
-	      	  menubarPath="mylar" 
-              icon="icons/elcl16/raise-children.gif" 
-              tooltip="Show all children of the current element" 
-              class="org.eclipse.mylyn.ui.actions.ShowFilteredAction" 
-              enablesFor="1"/> 
-          --> 
