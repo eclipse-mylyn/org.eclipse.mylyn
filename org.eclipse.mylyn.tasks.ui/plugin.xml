@@ -43,11 +43,7 @@
    </extension>
 
 	<extension point="org.eclipse.ui.views">
-     	<category name="Mylyn" id="org.eclipse.mylyn.ui"/>
-    </extension>
-	
-    <extension
-         point="org.eclipse.ui.views">
+      <category name="Task Management" id="org.eclipse.mylyn.ui"/>
       <view
          allowMultiple="true"
          category="org.eclipse.mylyn.ui"
