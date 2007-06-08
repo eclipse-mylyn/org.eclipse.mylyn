@@ -275,13 +275,6 @@
          </launchMode>
       </launchConfigurationTabGroup>
     </extension>	
-  
-   <extension point="org.eclipse.ui.perspectiveExtensions">
-          <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-			<viewShortcut id="org.eclipse.mylyn.ui.views.active.hierarchy"/>
-          </perspectiveExtension>
-   </extension>
- 
    <extension point="org.eclipse.ui.viewActions"> 
 		<viewContribution 
 		id="org.eclipse.mylyn.java.explorer.contribution" 

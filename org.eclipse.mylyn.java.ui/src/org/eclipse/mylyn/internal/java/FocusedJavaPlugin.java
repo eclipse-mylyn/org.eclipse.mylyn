@@ -61,8 +61,8 @@ public class FocusedJavaPlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
-
+	@Deprecated
+	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
 	
 	public FocusedJavaPlugin() {
 		super();
