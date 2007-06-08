@@ -61,6 +61,23 @@ class TaskListCellModifier implements ICellModifier {
 		int columnIndex = -1;
 		try {
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
+			 if (((TreeItem) element).getData() instanceof ITask) {
+					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
+					ITask task = (ITask) taskListElement;
+					switch (columnIndex) {
+					case 0:
+						if (!(task instanceof AbstractRepositoryTask)) {
+							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
+									((String) value).trim());
+						}
+						break;
+					case 1:
+						break;
+					case 2:
+						toggleTaskActivation(taskListElement);
+						break;
+					}
+				} else
 			if (((TreeItem) element).getData() instanceof AbstractTaskContainer) {
 				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
 				switch (columnIndex) {
@@ -70,25 +87,6 @@ class TaskListCellModifier implements ICellModifier {
 				case 1:
 					break;
 				case 2:
-					break;
-				}
-			} else if (((TreeItem) element).getData() instanceof ITaskListElement) {
-				final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
-				ITask task = null;
-				if (taskListElement instanceof ITask) {
-					task = (ITask) taskListElement;
-				}
-				switch (columnIndex) {
-				case 0:
-					if (!(task instanceof AbstractRepositoryTask)) {
-						TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
-								((String) value).trim());
-					}
-					break;
-				case 1:
-					break;
-				case 2:
-					toggleTaskActivation(taskListElement);
 					break;
 				}
 			}
