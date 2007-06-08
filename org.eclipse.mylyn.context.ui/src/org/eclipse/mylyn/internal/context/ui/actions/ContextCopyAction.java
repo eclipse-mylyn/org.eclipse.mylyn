@@ -46,6 +46,7 @@ public class ContextCopyAction extends TaskContextAction {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
+			return;
 		}
 
 		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()

@@ -878,7 +878,7 @@ public class InteractionContextManager {
 		} else if (node instanceof InteractionContextElement) {
 			dominantNode = node;
 		}
-		if (node != null) {
+		if (dominantNode != null) {
 			return ((InteractionContextElement) dominantNode).getContext().getHandleIdentifier();
 		} else {
 			return null;
