@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -57,17 +56,18 @@ public class TaskListInterestSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof ITask) {
+		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
 			return 1;
 		}
-		if (o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
-			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+		
+		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
+			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return ((ITaskListElement) o1).getSummary().compareToIgnoreCase(((ITaskListElement) o2).getSummary());
 			} else {
 				return -1;
 			}
 		} else if (o1 instanceof ITaskListElement) {
-			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
 			} else if (o2 instanceof ITaskListElement) {
 				ITaskListElement element1 = (ITaskListElement) o1;
