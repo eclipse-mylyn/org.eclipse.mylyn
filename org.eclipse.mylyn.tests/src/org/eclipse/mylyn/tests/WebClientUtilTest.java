@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -21,10 +21,10 @@ import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.eclipse.mylar.core.net.AuthenticatedProxy;
-import org.eclipse.mylar.core.net.SslProtocolSocketFactory;
-import org.eclipse.mylar.core.net.WebClientUtil;
-import org.eclipse.mylar.tests.TestProxy.Message;
+import org.eclipse.mylyn.core.net.AuthenticatedProxy;
+import org.eclipse.mylyn.core.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.tests.TestProxy.Message;
 
 /**
  * @author Steffen Pingel

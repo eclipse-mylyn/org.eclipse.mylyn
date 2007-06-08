@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.misc;
+package org.eclipse.mylyn.tests.misc;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.internal.web.WebResourceStructureBridge;
+import org.eclipse.mylyn.internal.web.WebResourceStructureBridge;
 
 /**
  * @author Mik Kersten

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.integration;
+package org.eclipse.mylyn.tests.integration;
 
 import java.util.Calendar;
 import java.util.List;
@@ -17,14 +17,14 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylar.context.tests.UiTestUtil;
-import org.eclipse.mylar.internal.context.ui.TaskListInterestFilter;
-import org.eclipse.mylar.internal.tasks.ui.AbstractTaskListFilter;
-import org.eclipse.mylar.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylar.tasks.core.ITask;
-import org.eclipse.mylar.tasks.core.Task;
-import org.eclipse.mylar.tasks.ui.TaskListManager;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.context.tests.UiTestUtil;
+import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
+import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

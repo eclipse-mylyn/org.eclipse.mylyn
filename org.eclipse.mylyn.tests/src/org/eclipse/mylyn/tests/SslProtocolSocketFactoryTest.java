@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import java.net.InetAddress;
 import java.net.Socket;
@@ -17,7 +17,7 @@ import java.net.Socket;
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.eclipse.mylar.core.net.SslProtocolSocketFactory;
+import org.eclipse.mylyn.core.net.SslProtocolSocketFactory;
 
 public class SslProtocolSocketFactoryTest extends TestCase {
 

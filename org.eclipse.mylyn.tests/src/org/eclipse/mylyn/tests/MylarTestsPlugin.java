@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -31,7 +31,7 @@ public class MylarTestsPlugin extends AbstractUIPlugin {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylar.tests.MylarTestsPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.mylyn.tests.MylarTestsPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

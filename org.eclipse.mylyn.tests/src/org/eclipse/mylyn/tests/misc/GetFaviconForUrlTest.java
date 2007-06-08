@@ -9,15 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.misc;
+package org.eclipse.mylyn.tests.misc;
 
 import java.net.MalformedURLException;
 
-import org.eclipse.mylar.core.net.WebClientUtil;
+import junit.framework.TestCase;
+
+import org.eclipse.mylyn.core.net.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-
-import junit.framework.TestCase;
 
 /**
  * @author Leo Dos Santos

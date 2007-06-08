@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.bugzilla.tests.TaskListStandaloneTest;
-import org.eclipse.mylar.context.tests.ContextTest;
-import org.eclipse.mylar.context.tests.DegreeOfInterestTest;
+import org.eclipse.mylyn.bugzilla.tests.TaskListStandaloneTest;
+import org.eclipse.mylyn.context.tests.ContextTest;
+import org.eclipse.mylyn.context.tests.DegreeOfInterestTest;
 
 /**
  * @author Mik Kersten

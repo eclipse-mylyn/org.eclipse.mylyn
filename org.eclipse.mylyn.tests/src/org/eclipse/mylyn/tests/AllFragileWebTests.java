@@ -9,9 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
-import org.eclipse.mylar.tests.integration.LiveWebConnectorTemplatesTest;
+import org.eclipse.mylyn.tests.integration.LiveWebConnectorTemplatesTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 public class AllFragileWebTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 		//$JUnit-BEGIN$
 		suite.addTest(LiveWebConnectorTemplatesTest.suite());
 		//$JUnit-END$

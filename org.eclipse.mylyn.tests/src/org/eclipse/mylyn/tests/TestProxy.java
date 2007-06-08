@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.misc;
+package org.eclipse.mylyn.tests.misc;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 public class AllMiscTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 		// $JUnit-BEGIN$
 		// suite.addTestSuite(SharedTaskFolderTest.class);
 		// suite.addTestSuite(BugzillaSearchPluginTest.class);

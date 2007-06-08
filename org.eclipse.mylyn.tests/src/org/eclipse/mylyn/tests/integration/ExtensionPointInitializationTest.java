@@ -9,12 +9,12 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.integration;
+package org.eclipse.mylyn.tests.integration;
 
 import junit.framework.TestCase;
 
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.mylar.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten

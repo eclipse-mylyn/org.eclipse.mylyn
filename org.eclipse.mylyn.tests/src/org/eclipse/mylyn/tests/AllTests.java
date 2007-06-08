@@ -9,25 +9,25 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests;
+package org.eclipse.mylyn.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylar.bugzilla.tests.AllBugzillaTests;
-import org.eclipse.mylar.context.tests.AllContextTests;
-import org.eclipse.mylar.core.MylarStatusHandler;
-import org.eclipse.mylar.ide.tests.AllIdeTests;
-import org.eclipse.mylar.java.tests.AllJavaTests;
-import org.eclipse.mylar.jira.tests.AllJiraTests;
-import org.eclipse.mylar.monitor.tests.AllMonitorTests;
-import org.eclipse.mylar.resources.MylarResourcesPlugin;
-import org.eclipse.mylar.resources.tests.AllResourcesTests;
-import org.eclipse.mylar.tasks.tests.AllTasksTests;
-import org.eclipse.mylar.tests.integration.AllIntegrationTests;
-import org.eclipse.mylar.tests.integration.TestingStatusNotifier;
-import org.eclipse.mylar.tests.misc.AllMiscTests;
-import org.eclipse.mylar.trac.tests.AllTracTests;
+import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
+import org.eclipse.mylyn.context.tests.AllContextTests;
+import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.ide.tests.AllIdeTests;
+import org.eclipse.mylyn.java.tests.AllJavaTests;
+import org.eclipse.mylyn.jira.tests.AllJiraTests;
+import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
+import org.eclipse.mylyn.resources.MylarResourcesPlugin;
+import org.eclipse.mylyn.resources.tests.AllResourcesTests;
+import org.eclipse.mylyn.tasks.tests.AllTasksTests;
+import org.eclipse.mylyn.tests.integration.AllIntegrationTests;
+import org.eclipse.mylyn.tests.integration.TestingStatusNotifier;
+import org.eclipse.mylyn.tests.misc.AllMiscTests;
+import org.eclipse.mylyn.trac.tests.AllTracTests;
 
 /**
  * @author Mik Kersten
@@ -35,7 +35,7 @@ import org.eclipse.mylar.trac.tests.AllTracTests;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.mylar.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 
 		MylarStatusHandler.addStatusHandler(new TestingStatusNotifier());
 		MylarResourcesPlugin.getDefault().setResourceMonitoringEnabled(false);

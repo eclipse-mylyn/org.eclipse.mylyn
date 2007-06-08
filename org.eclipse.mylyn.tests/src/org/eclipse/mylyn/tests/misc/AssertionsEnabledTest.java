@@ -1,4 +1,4 @@
-package org.eclipse.mylar.tests.misc;
+package org.eclipse.mylyn.tests.misc;
 
 /*******************************************************************************
  * Copyright (c) 2004 - 2006 University Of British Columbia and others.

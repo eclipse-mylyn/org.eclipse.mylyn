@@ -9,14 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.integration;
+package org.eclipse.mylyn.tests.integration;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylar.core.IStatusHandler;
-import org.eclipse.mylar.internal.core.util.DateUtil;
+import org.eclipse.mylyn.core.IStatusHandler;
+import org.eclipse.mylyn.internal.core.util.DateUtil;
 
 /**
  * @author Mik Kersten

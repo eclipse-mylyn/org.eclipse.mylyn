@@ -9,10 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylar.tests.integration;
+package org.eclipse.mylyn.tests.integration;
 
-import org.eclipse.mylar.internal.monitor.usage.MonitorPreferenceConstants;
-import org.eclipse.mylar.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.MonitorPreferenceConstants;
+import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
 
 import junit.framework.TestCase;
 
