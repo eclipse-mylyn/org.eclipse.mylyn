@@ -23,13 +23,13 @@
  
   	<extension point = "org.eclipse.ui.popupMenus">
      <objectContribution
-        id="org.eclipse.mylyn.ui.interest"
+        id="org.eclipse.mylyn.context.ui.actions.interest.contribution"
         objectClass="org.eclipse.mylyn.context.core.IInteractionElement">
      	<action  
   		  	label="Mark Less Interesting" 
 	  		tooltip="Mark selected element as uninteresting"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylyn.context.ui.actions.InterestDecrementAction" 
+	  		id="org.eclipse.mylyn.context.ui.actions.interest.decrement" 
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
 	  		icon="icons/elcl16/interest-decrease.gif"
 	  		enablesFor="*"/>
@@ -37,7 +37,7 @@
   		  	label="Mark as Landmark" 
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="additions" 
-	  		id="org.eclipse.mylyn.context.ui.actions.InterestIncrementAction" 
+	  		id="org.eclipse.mylyn.context.ui.actions.interest.increment" 
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
@@ -45,76 +45,26 @@
 	 
 	 <objectContribution
             adaptable="false"
-            id="org.eclipse.mylyn.ide.team.ui.contribution.attachment.patch"
+            id="org.eclipse.mylyn.context.ui.context.retrieve.contribution"
             objectClass="org.eclipse.mylyn.tasks.core.RepositoryAttachment">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
                icon="icons/etool16/context-retrieve.gif"
-               id="org.eclipse.mylyn.ui.context.repository.retrieve"
+               id="org.eclipse.mylyn.context.ui.repository.task.retrieve"
                label="Retrieve Context..."
                menubarPath="actions">
          </action>
       </objectContribution>
-	 
-	 <!--
-     <viewerContribution 
-           id="org.eclipse.mylyn.ui.tasklist.contribution"
-           targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
-        <action
-              class="org.eclipse.mylyn.internal.ui.actions.ContextClearAction"
-              enablesFor="1"
-              icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylyn.ui.clear.context"
-              label="Clear Context"
-              menubarPath="context"
-              tooltip="Clear Context">
-           <enablement>
-              <or>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.ITask"/>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
-              </or>
-           </enablement>
-        </action>
-        <action
-              class="org.eclipse.mylyn.internal.ui.actions.ContextRetrieveAction"
-              enablesFor="1"
-              icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylyn.ui.context.repository.retrieve"
-              label="Retrieve Context"
-              menubarPath="context">
-           <enablement>
-              <or>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
-              </or>
-           </enablement>
-        </action> 
-        <action
-              class="org.eclipse.mylyn.internal.ui.actions.ContextAttachAction"
-              enablesFor="1"
-              icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylyn.ui.context.repository.attach"
-              label="Attach Context..."
-              menubarPath="context">
-           <enablement>
-              <or>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractQueryHit"/>
-              </or>
-           </enablement>
-        </action>
-             </viewerContribution>
-        -->
 
 	 <objectContribution
            adaptable="false"
-           id="org.eclipse.mylyn.ui.tasks.action.contribution"
+           id="org.eclipse.mylyn.context.ui.tasks.contribution"
            objectClass="org.eclipse.mylyn.tasks.core.ITask">
 		<action
               class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
               enablesFor="1"
               icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylyn.ui.clear.context"
+              id="org.eclipse.mylyn.context.ui.task.clear"
               label="Clear Context"
               menubarPath="context"
               tooltip="Clear Context">
@@ -122,7 +72,7 @@
   		<action
         	class="org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction"
         	icon="icons/elcl16/context-transfer.gif"
-        	id="org.eclipse.mylyn.context.ui.action.copy.context.to"
+        	id="org.eclipse.mylyn.context.ui.task.copy.context.to"
         	label="Copy Context to..."
         	menubarPath="context"
         	tooltip="Copy Context to...">
@@ -136,7 +86,7 @@
               class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
               enablesFor="1"
               icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylyn.ui.context.repository.retrieve"
+              id="org.eclipse.mylyn.context.ui.repository.task.retrieve"
               label="Retrieve Context..."
               menubarPath="context">
         </action> 
@@ -144,50 +94,11 @@
               class="org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction"
               enablesFor="1"
               icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylyn.ui.context.repository.attach"
+              id="org.eclipse.mylyn.context.ui.repository.task.attach"
               label="Attach Context..."
               menubarPath="context">
         </action>
 	 </objectContribution>
-	 <!-- NOTE: duplicate actions as above -->
-	 <!--<objectContribution
-           adaptable="false"
-           id="org.eclipse.mylyn.ui.tasks.repository.action.contribution"
-           objectClass="org.eclipse.mylyn.tasks.core.AbstractQueryHit">
-        <action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction"
-              enablesFor="1"
-              icon="icons/etool16/context-retrieve.gif"
-              id="org.eclipse.mylyn.ui.context.repository.retrieve"
-              label="Retrieve Context"
-              menubarPath="context">
-        </action> 
-        <action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction"
-              enablesFor="1"
-              icon="icons/etool16/context-attach.gif"
-              id="org.eclipse.mylyn.ui.context.repository.attach"
-              label="Attach Context..."
-              menubarPath="context">
-        </action>
-        <action
-              class="org.eclipse.mylyn.internal.context.ui.actions.ContextClearAction"
-              enablesFor="1"
-              icon="icons/elcl16/context-clear.gif"
-              id="org.eclipse.mylyn.ui.clear.context.hit"
-              label="Clear Context"
-              menubarPath="context"
-              tooltip="Clear Context">
-        </action>
-          <action
-        class="org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction"
-        icon="icons/elcl16/context-transfer.gif"
-        id="org.eclipse.mylyn.context.ui.action.copy.context.to"
-        label="Copy Context to..."
-        menubarPath="context"
-        tooltip="Copy Context to...">
-  </action>
-	 </objectContribution>-->
    </extension>
     
    <extension
@@ -204,12 +115,11 @@
    <extension
    		point="org.eclipse.ui.keywords">
       <keyword
-            label="mylyn context"
-            id="org.eclipse.mylyn.context.keywords"/>
+            label="mylyn context focus focused"
+            id="org.eclipse.mylyn.context.ui.keywords"/>
    </extension>
  
 	<!-- ==================== Common Navigator ==================== -->
-	
     <extension
          point="org.eclipse.ui.navigator.viewer">
        <!--
@@ -262,20 +172,20 @@
 	
     <extension point="org.eclipse.ui.ide.markerImageProviders">
     <imageprovider 
-  		markertype="org.eclipse.mylyn.ui.landmark" 
+  		markertype="org.eclipse.mylyn.context.ui.markers.landmark" 
   		icon="icons/elcl16/interest-landmark.gif" 
-  		id="org.eclipse.mylyn.landmarkMarkerProvider" /> 
+  		id="org.eclipse.mylyn.context.ui.landmarkMarkerProvider" /> 
    </extension> 
   
   <extension point="org.eclipse.ui.editors.annotationTypes">
   	<type
          markerSeverity="0"
-         markerType="org.eclipse.mylyn.ui.landmark"
-         name="org.eclipse.mylyn.ui.landmark.annotation"/> 
+         markerType="org.eclipse.mylyn.context.ui.markers.landmark"
+         name="org.eclipse.mylyn.context.ui.markers.landmark.annotation"/> 
   </extension> 
    
   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
-  	<specification annotationType="org.eclipse.mylyn.ui.landmark.annotation" 
+  	<specification annotationType="org.eclipse.mylyn.context.ui.markers.landmark.annotation" 
   		label="Task Context Landmark" 
   		icon="icons/elcl16/interest-landmark.gif" 
   		textPreferenceKey="landmarkIndication" 
@@ -294,34 +204,32 @@
   		showInNextPrevDropdownToolbarAction="true" /> 
   </extension>
     
-      <!--  ACTION STUFF -->
-    
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Mylyn Focused UI"
-            description="Mylyn Focused UI"
+            label="Task-Focused UI"
+            description="Task-Focused UI"
             visible="true"
             id="org.eclipse.mylyn.context.ui.actionSet">
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
-               definitionId="org.eclipse.mylyn.ui.interest.decrement"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
                icon="icons/elcl16/interest-decrease.gif"
-               id="org.eclipse.mylyn.ui.actions.InterestDecrementAction"
+               id="org.eclipse.mylyn.context.ui.actions.interest.decrement"
                label="Mark Less Interesting"
                menubarPath="navigate/open.ext2">
          </action>
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
-               definitionId="org.eclipse.mylyn.ui.interest.increment"
+               definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
                icon="icons/elcl16/interest-increase.gif"
-               id="org.eclipse.mylyn.ui.actions.InterestIncrementAction"
+               id="org.eclipse.mylyn.context.ui.actions.interest.increment"
                label="Mark as Landmark"
                menubarPath="navigate/open.ext2">
          </action>
 	
 	     <action
-               definitionId="org.eclipse.mylyn.ui.context.dialog.show"
+               definitionId="org.eclipse.mylyn.context.ui.context.dialog.show"
                label="Quick Context View"
                class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialog"
                menubarPath="navigate/open.ext2"
@@ -332,60 +240,51 @@
                               
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Mylar"
-            description="Mylar commands"
-            id="org.eclipse.mylyn.ui.commands">
+            name="Task-Focused UI"
+            description="Task-Focused UI Commands"
+            id="org.eclipse.mylyn.context.ui.commands">
       </category>
-      <command
-            name="Global Filtering"
-            id="org.eclipse.mylyn.ui.interest.filter.global"
-            categoryId="org.eclipse.mylyn.ui.commands">
-      </command>
-      <command
-            name="Show Related Elements"
-            description="Show Related Elements"
-            id="org.eclipse.mylyn.ui.context.dialog.show"
-            categoryId="org.eclipse.mylyn.ui.commands">
-      </command>
       <command
             name="Make Landmark"
             description="Make Landmark"
-            id="org.eclipse.mylyn.ui.interest.increment"
-            categoryId="org.eclipse.mylyn.ui.commands">
+            id="org.eclipse.mylyn.context.ui.commands.interest.increment"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
             name="Make Less Interesting"
             description="Make Less Interesting"
-            id="org.eclipse.mylyn.ui.interest.decrement"
-            categoryId="org.eclipse.mylyn.ui.commands">
+            id="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
-      <!--
       <command
-            name="Show Filtered Children"
-            description="Show Filtered Children"
-            id="org.eclipse.mylyn.ui.show.filtered"
-            categoryId="org.eclipse.mylyn.ui">
+            defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
+            id="org.eclipse.mylyn.context.ui.commands.focus.view"
+            name="Focus View">
+         <commandParameter
+               id="viewId"
+               name="View ID to Focus"
+               optional="false">
+         </commandParameter>
       </command>
-      -->
    </extension>
      
    <extension point="org.eclipse.ui.bindings">     
       <key
             sequence="M1+M2+M3+ARROW_UP"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.ui.interest.increment"
+            commandId="org.eclipse.mylyn.context.ui.commands.interest.increment"
             schemeId ="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_DOWN"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.ui.interest.decrement"
+            commandId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key
             sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.ui.context.dialog.show"
+            commandId="org.eclipse.mylyn.context.ui.dialog.show"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>     
@@ -393,12 +292,12 @@
    <extension point="org.eclipse.ui.decorators">
       <decorator
             lightweight="true"
-            label="Mylar Interest Decorator"
+            label="Task Context Decorator"
             class="org.eclipse.mylyn.internal.context.ui.InterestDecoratorLightweight"
             state="true"
-            id="org.eclipse.mylyn.ui.decorator.interest">
+            id="org.eclipse.mylyn.context.ui.decorator.interest">
          <description>
-			Task Context Interest Decorator
+			Decorates the labels of elements to indicate whether they are a part of the task context.
 		 </description>
          <enablement>
             <objectClass name="java.lang.Object"/>
@@ -408,39 +307,19 @@
 
  <extension point="org.eclipse.ui.viewActions"> 
  	<viewContribution 
-		id="org.eclipse.mylyn.ui.tasklist.apply" 
-   		targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
+		id="org.eclipse.mylyn.context.ui.taskList.contribution" 
+   		targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
     	<action
            class="org.eclipse.mylyn.internal.context.ui.actions.FocusTaskListAction"
            enablesFor="*"
            icon="icons/eview16/focus-tasklist.gif"
-           id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
+           id="org.eclipse.mylyn.context.ui.actions.tasklist.focus"
            label="Focus on Workweek"
            menubarPath="additions"
            style="toggle"
            toolbarPath="context"
-           tooltip="Focus on Workweek"> 
-  		</action> 
-  	</viewContribution>
-	<viewContribution 
-		id="org.eclipse.mylyn.outline.contribution.filter" 
-   		targetID="org.eclipse.ui.views.ContentOutline">
-    	<action
-           class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
-           enablesFor="*"
-           icon="icons/elcl16/interest-filtering.gif"
-           id="org.eclipse.mylyn.ui.actions.ApplyMylarToOutlineAction"
-           label="Focus on Active Task (Alt+click to reveal filtered elements)"
-           menubarPath="mylyn"
-           style="toggle"
-           toolbarPath="mylyn"
-           tooltip="Focus on Active Task"> 
-  		</action> 
-  	</viewContribution>
-    <viewContribution
-         id="org.eclipse.mylyn.tasks.contribution.context"
-         targetID="org.eclipse.mylyn.tasks.ui.views.TaskListView">
-      <action
+           tooltip="Focus on Workweek"/> 
+  	<action
             class="org.eclipse.mylyn.internal.context.ui.actions.ContextCapturePauseAction"
             icon="icons/elcl16/capture-pause.gif"
             id="org.eclipse.mylyn.ui.context.capture.pause"
@@ -448,20 +327,22 @@
             menubarPath="additions"
             style="toggle"
             tooltip="Pause Capturing Context"/>
-   </viewContribution>
+  	</viewContribution>
+	<viewContribution 
+		id="org.eclipse.mylyn..context.ui.outline.contribution" 
+   		targetID="org.eclipse.ui.views.ContentOutline">
+    	<action
+           class="org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction"
+           enablesFor="*"
+           icon="icons/elcl16/interest-filtering.gif"
+           id="org.eclipse.mylyn.context.ui.contentOutline.focus"
+           label="Focus on Active Task (Alt+click to reveal filtered elements)"
+           menubarPath="mylyn"
+           style="toggle"
+           toolbarPath="mylyn"
+           tooltip="Focus on Active Task"> 
+  		</action> 
+  	</viewContribution>
    </extension>
    
-   <extension
-          point="org.eclipse.ui.commands">
-       <command
-             defaultHandler="org.eclipse.mylyn.internal.context.ui.commands.FocusViewHandler"
-             id="org.eclipse.mylyn.ui.commands.applyMylar"
-             name="Focus View">
-          <commandParameter
-                id="viewId"
-                name="View ID to Focus"
-                optional="false"/>
-       </command>
-   </extension>
-  
 </plugin>

@@ -41,7 +41,7 @@ import org.eclipse.mylyn.internal.java.JavaStructureBridge;
  */
 public class LandmarkMarkerManager implements IInteractionContextListener {
 
-	private static final String MARKER_ID_LANDMARK = "org.eclipse.mylyn.ui.landmark";
+	private static final String ID_MARKER_LANDMARK = "org.eclipse.mylyn.context.ui.markers.landmark";
 
 	private Map<IInteractionElement, Long> markerMap = new HashMap<IInteractionElement, Long>();
 
@@ -93,7 +93,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 					if (resource instanceof IFile) {
 						IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 							public void run(IProgressMonitor monitor) throws CoreException {
-								IMarker marker = resource.createMarker(MARKER_ID_LANDMARK);
+								IMarker marker = resource.createMarker(ID_MARKER_LANDMARK);
 								if (marker != null && range != null) {
 									marker.setAttribute(IMarker.CHAR_START, range.getOffset());
 									marker.setAttribute(IMarker.CHAR_END, range.getOffset() + range.getLength());
