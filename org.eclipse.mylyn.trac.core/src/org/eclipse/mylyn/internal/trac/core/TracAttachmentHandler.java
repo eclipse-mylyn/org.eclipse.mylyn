@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -42,7 +41,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		String filename = attachment.getAttributeValue(RepositoryTaskAttribute.ATTACHMENT_FILENAME);
 		if (filename == null) {
 			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.ERROR, TracCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.REPOSITORY_ERROR, "Attachment download from " + repository.getUrl()
+					RepositoryStatus.ERROR_REPOSITORY, "Attachment download from " + repository.getUrl()
 							+ " failed, missing attachment filename."));
 		}
 
@@ -59,7 +58,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 			String comment, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.REPOSITORY_ERROR,
+					RepositoryStatus.ERROR_REPOSITORY,
 					"Attachments are not supported by this repository access type"));
 		}
 

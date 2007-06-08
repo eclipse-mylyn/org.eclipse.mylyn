@@ -16,8 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.core.IStatusHandler;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -53,7 +52,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 
 	public void displayStatus(final String title, final IStatus status) {
 
-		if (status.getCode() == IMylarStatusConstants.INTERNAL_ERROR) {
+		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
 			MylarStatusHandler.log(status);
 			fail(status, true);
 			return;
@@ -69,9 +68,9 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 							shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 						}
 
-						if (status instanceof MylarStatus && ((MylarStatus) status).isHtmlMessage()) {
+						if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
 							WebBrowserDialog.openAcceptAgreement(shell, title, status.getMessage(),
-									((MylarStatus) status).getHtmlMessage());
+									((RepositoryStatus) status).getHtmlMessage());
 							return;
 						}
 

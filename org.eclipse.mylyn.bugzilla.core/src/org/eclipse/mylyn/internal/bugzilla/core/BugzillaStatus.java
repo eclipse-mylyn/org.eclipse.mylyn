@@ -12,13 +12,13 @@
 package org.eclipse.mylyn.internal.bugzilla.core;
 
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TasksMessages;
 
 /**
  * @author Rob Elves
  */
-public class BugzillaStatus extends Status implements IMylarStatusConstants {
+public class BugzillaStatus extends Status {
 
 	private String errorMessage;
 
@@ -58,14 +58,14 @@ public class BugzillaStatus extends Status implements IMylarStatusConstants {
 	public String getMessage() {
 
 		switch (getCode()) {
-		case REPOSITORY_LOGIN_ERROR:
+		case RepositoryStatus.ERROR_REPOSITORY_LOGIN:
 			return TasksMessages
 					.bind(TasksMessages.repository_login_failure, this.getRepositoryUrl(), this.errorMessage);
-		case REPOSITORY_NOT_FOUND:
+		case RepositoryStatus.ERROR_REPOSITORY_NOT_FOUND:
 			return TasksMessages.bind(TasksMessages.repository_not_found, this.errorMessage);
-		case REPOSITORY_ERROR:
+		case RepositoryStatus.ERROR_REPOSITORY:
 			return TasksMessages.bind(TasksMessages.repository_error, this.getRepositoryUrl(), this.errorMessage);
-		case IO_ERROR:
+		case RepositoryStatus.ERROR_IO:
 			String string1 = "Unknown IO error occurred";
 			String string2 = "No message provided";
 			if(getException() != null) {
@@ -74,13 +74,13 @@ public class BugzillaStatus extends Status implements IMylarStatusConstants {
 			}
 			Object[] strings = { getRepositoryUrl(), string1, string2 };
 			return TasksMessages.bind(TasksMessages.io_error, strings);
-		case INTERNAL_ERROR:
+		case RepositoryStatus.ERROR_INTERNAL:
 			return TasksMessages.bind(TasksMessages.internal_error, this.errorMessage);
-		case OPERATION_CANCELLED:
+		case RepositoryStatus.OPERATION_CANCELLED:
 			return TasksMessages.bind(TasksMessages.operation_cancelled, this.errorMessage);
-		case REPOSITORY_COLLISION:
+		case RepositoryStatus.REPOSITORY_COLLISION:
 			return TasksMessages.bind(TasksMessages.repository_collision, this.errorMessage);
-		case REPOSITORY_COMMENT_REQD:
+		case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
 			if (errorMessage == null) {
 				return TasksMessages.repository_comment_reqd;
 			} else {

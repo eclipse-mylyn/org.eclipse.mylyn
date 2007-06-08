@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -255,7 +255,7 @@ public class TaskListToolTipHandler {
 			}
 			if (query.getStatus() != null) {
 				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage();
-				if (query.getStatus() instanceof MylarStatus && ((MylarStatus) query.getStatus()).isHtmlMessage()) {
+				if (query.getStatus() instanceof RepositoryStatus && ((RepositoryStatus) query.getStatus()).isHtmlMessage()) {
 					tooltip += " Please synchronize manually for full error message.";
 				}
 				tooltip += "\n";

@@ -19,9 +19,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -64,8 +63,8 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 
 		final ITaskDataHandler taskDataHandler = (ITaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
-			MylarStatusHandler.displayStatus("Error creating new task", new MylarStatus(IStatus.ERROR,
-					TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));
+			MylarStatusHandler.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
+					TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));
 			return false;
 		}
 
@@ -80,8 +79,8 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
-							throw new CoreException(new MylarStatus(IStatus.ERROR,
-									TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.REPOSITORY_ERROR, "The selected repository does not support creating new tasks."));						}
+							throw new CoreException(new RepositoryStatus(IStatus.ERROR,
+									TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

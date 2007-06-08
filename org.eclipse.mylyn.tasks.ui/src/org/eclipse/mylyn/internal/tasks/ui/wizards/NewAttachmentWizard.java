@@ -35,10 +35,9 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.LocalAttachment;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -144,7 +143,7 @@ public class NewAttachmentWizard extends Wizard {
 					if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
 						String contents = inputPage.getClipboardContents();
 						if (contents == null) {
-							throw new InvocationTargetException(new CoreException(new MylarStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.INTERNAL_ERROR, "Clipboard is empty", null)));
+							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Clipboard is empty", null)));
 						}
 						attachment.setContent(contents.getBytes());
 						attachment.setFilename(CLIPBOARD_FILENAME);
@@ -244,7 +243,7 @@ public class NewAttachmentWizard extends Wizard {
 	}
 
 	private void handleSubmitError(final CoreException exception) {
-		if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+		if (exception.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 			if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
 				// performFinish();
 			}

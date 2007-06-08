@@ -32,7 +32,5 @@ public interface IRepositoryConstants {
 	public static final String PROPERTY_DELIM = ":";
 
 	public static final String KIND_UNKNOWN = "<unknown>";
-	
-//	public static final String PROPERTY_MIGRATION060 = "migration060";
 
 }

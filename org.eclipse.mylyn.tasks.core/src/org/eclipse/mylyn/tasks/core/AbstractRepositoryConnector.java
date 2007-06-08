@@ -338,8 +338,8 @@ public abstract class AbstractRepositoryConnector {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new CoreException(new MylarStatus(IStatus.ERROR, "org.eclipse.mylyn.tasks.core",
-					IMylarStatusConstants.INTERNAL_ERROR, "Could not create context file", e));
+			throw new CoreException(new RepositoryStatus(IStatus.ERROR, "org.eclipse.mylyn.tasks.core",
+					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
 		}
 		return true;
 	}

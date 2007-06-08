@@ -17,8 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.osgi.framework.BundleContext;
@@ -101,13 +99,13 @@ public class TracCorePlugin extends Plugin {
 			if (message == null) {
 				message = "I/O error has occured";
 			}
-			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, message, e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, message, e);
 		} else if (e instanceof ClassCastException) {
-			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, "Unexpected server response: " + e.getMessage(), e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, "Unexpected server response: " + e.getMessage(), e);
 		} else if (e instanceof MalformedURLException) {
-			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.IO_ERROR, "Repository URL is invalid", e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_IO, "Repository URL is invalid", e);
 		} else {
-			return new MylarStatus(Status.ERROR, PLUGIN_ID, IMylarStatusConstants.INTERNAL_ERROR, "Unexpected error", e);
+			return new RepositoryStatus(Status.ERROR, PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Unexpected error", e);
 		}
 	}
 

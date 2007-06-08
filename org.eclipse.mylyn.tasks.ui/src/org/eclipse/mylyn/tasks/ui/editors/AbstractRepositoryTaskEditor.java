@@ -81,13 +81,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
@@ -2722,8 +2721,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						} else {
 							// null taskId, assume task could not be created...
 							throw new CoreException(
-									new MylarStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID,
-											IMylarStatusConstants.INTERNAL_ERROR,
+									new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID,
+											RepositoryStatus.ERROR_INTERNAL,
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
@@ -2906,16 +2905,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				if (form != null && !form.isDisposed()) {
-					if (exception.getStatus().getCode() == IMylarStatusConstants.IO_ERROR) {
+					if (exception.getStatus().getCode() == RepositoryStatus.ERROR_IO) {
 						parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
 						MylarStatusHandler.log(exception.getStatus());
-					} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_COMMENT_REQD) {
+					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
 						MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
 						if (!isDisposed && newCommentTextViewer != null
 								&& !newCommentTextViewer.getControl().isDisposed()) {
 							newCommentTextViewer.getControl().setFocus();
 						}
-					} else if (exception.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+					} else if (exception.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 						if (TasksUiUtil.openEditRepositoryWizard(repository) == MessageDialog.OK) {
 							submitToRepository();
 							return;

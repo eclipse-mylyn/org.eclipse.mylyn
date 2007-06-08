@@ -23,9 +23,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPER
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -77,7 +77,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 				taskData = client.getTaskData(bugId);
 			} catch (CoreException e) {
 				// TODO: Move retry handling into client
-				if (e.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 					taskData = client.getTaskData(bugId);
 				} else {
 					throw e;
@@ -99,7 +99,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
 		}
 	}
 
@@ -111,7 +111,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 				return client.postTaskData(taskData);
 			} catch (CoreException e) {
 				// TODO: Move retry handling into client
-				if (e.getStatus().getCode() == IMylarStatusConstants.REPOSITORY_LOGIN_ERROR) {
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
 					return client.postTaskData(taskData);
 				} else {
 					throw e;
@@ -121,7 +121,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
 		}
 	}
 

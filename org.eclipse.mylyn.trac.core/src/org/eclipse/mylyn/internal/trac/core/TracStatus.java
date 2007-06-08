@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 
 /**
@@ -21,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 public class TracStatus {
 
 	public static IStatus createPermissionDeniedError(String repositoryUrl, String pluginId) {
-		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IMylarStatusConstants.PERMISSION_DENIED_ERROR, "Permission denied.");
+		return new RepositoryStatus(repositoryUrl, IStatus.ERROR, TracCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_PERMISSION_DENIED, "Permission denied.");
 	}
 
 }

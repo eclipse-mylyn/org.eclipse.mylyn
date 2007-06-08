@@ -18,9 +18,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
-import org.eclipse.mylyn.tasks.core.MylarStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.dnd.Clipboard;
@@ -49,7 +48,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 				attachment.getRepositoryKind());
 		IAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
-			return new MylarStatus(IStatus.INFO, TasksUiPlugin.PLUGIN_ID, IMylarStatusConstants.INTERNAL_ERROR,
+			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
 					"The repository does not support attachments.");
 		}
 

@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.IMylarStatusConstants;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -42,7 +42,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			return client.getAttachmentData(attachment.getId());
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));			
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));			
 		}
 	}
 
@@ -54,7 +54,7 @@ public class BugzillaAttachmentHandler extends AbstractAttachmentHandler {
 			client.postAttachment(bugId, comment, attachment);
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					IMylarStatusConstants.IO_ERROR, repository.getUrl(), e));
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
 		}
 	}
 
