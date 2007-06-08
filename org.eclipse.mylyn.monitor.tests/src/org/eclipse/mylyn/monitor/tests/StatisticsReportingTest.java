@@ -23,13 +23,13 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.java.MylarJavaPlugin;
+import org.eclipse.mylyn.internal.java.FocusedJavaPlugin;
 import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
-import org.eclipse.mylyn.internal.monitor.reports.collectors.MylarUsageAnalysisCollector;
-import org.eclipse.mylyn.internal.monitor.reports.collectors.MylarViewUsageCollector;
+import org.eclipse.mylyn.internal.monitor.reports.collectors.FocusedUiUsageAnalysisCollector;
+import org.eclipse.mylyn.internal.monitor.reports.collectors.FocusedUiViewUsageCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -43,9 +43,9 @@ public class StatisticsReportingTest extends TestCase {
 
 	private InteractionEventLogger logger;
 
-	private MylarViewUsageCollector viewCollector = new MylarViewUsageCollector();
+	private FocusedUiViewUsageCollector viewCollector = new FocusedUiViewUsageCollector();
 
-	private MylarUsageAnalysisCollector editRatioCollector = new MylarUsageAnalysisCollector();;
+	private FocusedUiUsageAnalysisCollector editRatioCollector = new FocusedUiUsageAnalysisCollector();;
 
 	private ReportGenerator report;
 
@@ -53,12 +53,12 @@ public class StatisticsReportingTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		assertNotNull(ContextCorePlugin.getDefault());
-		assertNotNull(MylarJavaPlugin.getDefault());
+		assertNotNull(FocusedJavaPlugin.getDefault());
 		assertNotNull(PackageExplorerPart.openInActivePerspective());
 
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
-		assertTrue(MylarUsageMonitorPlugin.getDefault().isMonitoringEnabled());
-		logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
+		assertTrue(UiUsageMonitorPlugin.getDefault().isMonitoringEnabled());
+		logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 		logger.clearInteractionHistory();
 
 		List<IUsageCollector> collectors = new ArrayList<IUsageCollector>();
@@ -144,10 +144,10 @@ public class StatisticsReportingTest extends TestCase {
 
 	@SuppressWarnings("unused")
 	public void testFilteredModeDetection() throws IOException {
-		MylarUsageMonitorPlugin.getDefault().addMonitoredPreferences(
+		UiUsageMonitorPlugin.getDefault().addMonitoredPreferences(
 				ContextUiPlugin.getDefault().getPluginPreferences());
 
-		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
+		UiUsageMonitorPlugin.getDefault().getInteractionLogger().clearInteractionHistory();
 		mockExplorerSelection("A.java");
 		mockUserDelay();
 		mockExplorerSelection("A.java");
@@ -186,7 +186,7 @@ public class StatisticsReportingTest extends TestCase {
 				int filtered = viewCollector.getFilteredViewSelections().get(JavaUI.ID_PACKAGES);
 				assertEquals(2, filtered);
 
-				MylarUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
+				UiUsageMonitorPlugin.getDefault().removeMonitoredPreferences(
 						ContextUiPlugin.getDefault().getPluginPreferences());
 			}
 		});

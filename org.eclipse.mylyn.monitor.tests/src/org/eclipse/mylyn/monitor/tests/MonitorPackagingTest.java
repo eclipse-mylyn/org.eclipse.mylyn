@@ -24,7 +24,7 @@ import java.util.zip.ZipFile;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.core.util.ZipFileUtil;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
 /**
@@ -33,10 +33,10 @@ import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 public class MonitorPackagingTest extends AbstractContextTest {
 
 	public void testCreateUploadPackage() throws IOException, InterruptedException {
-		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().getInteractionLogger().stopMonitoring();
 		// MylarMonitorPlugin.getDefault().stopLog();
 
-		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = UiUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		// File logFile = MylarMonitorPlugin.getDefault().getLogFile();
 
 		List<File> files = new ArrayList<File>();
@@ -49,7 +49,7 @@ public class MonitorPackagingTest extends AbstractContextTest {
 		ZipFileUtil.createZipFile(zipFile, files);
 
 		// MylarMonitorPlugin.getDefault().startLog();
-		MylarUsageMonitorPlugin.getDefault().getInteractionLogger().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().getInteractionLogger().startMonitoring();
 
 		// pretend to upload
 		Thread.sleep(1000);

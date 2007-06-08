@@ -20,17 +20,17 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author Mik Kersten
  * @author Michael Valenta
  */
-public class MylarCorePlugin extends Plugin {
+public class MylynCorePlugin extends Plugin {
 
-	private static MylarCorePlugin INSTANCE;
+	private static MylynCorePlugin INSTANCE;
 
 	private ServiceTracker tracker;
 
-	public MylarCorePlugin() {
+	public MylynCorePlugin() {
 		INSTANCE = this;
 	}
 
-	public static MylarCorePlugin getDefault() {
+	public static MylynCorePlugin getDefault() {
 		return INSTANCE;
 	}
 

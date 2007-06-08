@@ -68,5 +68,5 @@ Export-Package: .,
  org.jdom.transform,
  org.jdom.xpath
 Eclipse-LazyStart: true
-Bundle-Activator: org.eclipse.mylyn.internal.core.MylarCorePlugin
+Bundle-Activator: org.eclipse.mylyn.internal.core.MylynCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

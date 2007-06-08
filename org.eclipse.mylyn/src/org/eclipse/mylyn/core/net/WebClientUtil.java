@@ -28,7 +28,7 @@ import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.core.MylarCorePlugin;
+import org.eclipse.mylyn.internal.core.MylynCorePlugin;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.ImageData;
 
@@ -213,7 +213,7 @@ public class WebClientUtil {
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		IProxyService service = MylarCorePlugin.getDefault().getProxyService();
+		IProxyService service = MylynCorePlugin.getDefault().getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
 			if (data.getHost() != null) {

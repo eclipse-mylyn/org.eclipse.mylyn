@@ -17,7 +17,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -25,7 +25,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  */
 public class InteractionLoggerTest extends TestCase {
 
-	private InteractionEventLogger logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
+	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	@Override
 	protected void setUp() throws Exception {
@@ -35,7 +35,7 @@ public class InteractionLoggerTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testClearHistory() throws IOException {

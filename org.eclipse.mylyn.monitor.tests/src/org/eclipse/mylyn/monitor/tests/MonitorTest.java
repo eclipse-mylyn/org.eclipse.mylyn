@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.IMylarMonitorLifecycleListener;
 import org.eclipse.mylyn.monitor.ui.workbench.BrowserMonitor;
@@ -36,7 +36,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListener {
 
-	private InteractionEventLogger logger = MylarUsageMonitorPlugin.getDefault().getInteractionLogger();
+	private InteractionEventLogger logger = UiUsageMonitorPlugin.getDefault().getInteractionLogger();
 
 	private MockSelectionMonitor selectionMonitor = new MockSelectionMonitor();
 
@@ -57,26 +57,26 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 	}
 
 	public void testEnablement() throws IOException {
-		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = UiUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		assertTrue(monitorFile.exists());
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 		logger.clearInteractionHistory();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 		generateSelection();
 		assertEquals(0, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection();
 		assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 		generateSelection();
 		assertEquals(1, logger.getHistoryFromFile(monitorFile).size());
 
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		generateSelection();
 		assertEquals(2, logger.getHistoryFromFile(monitorFile).size());
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 	}
 
 	public void testUrlFilter() {
@@ -92,14 +92,14 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 
 	@SuppressWarnings( { "deprecation", "unchecked" })
 	public void testLogging() throws InterruptedException {
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		logger.stopMonitoring();
-		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
+		UiUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
 		logger.startMonitoring();
 
 		generateSelection();
 		commandMonitor.preExecute("foo.command", new ExecutionEvent(new HashMap(), "trigger", "context"));
-		File monitorFile = MylarUsageMonitorPlugin.getDefault().getMonitorLogFile();
+		File monitorFile = UiUsageMonitorPlugin.getDefault().getMonitorLogFile();
 		assertTrue(monitorFile.exists());
 		logger.stopMonitoring();
 		List<InteractionEvent> events = logger.getHistoryFromFile(monitorFile);
@@ -108,7 +108,7 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 		logger.stopMonitoring();
 		events = logger.getHistoryFromFile(monitorFile);
 		assertTrue(events.size() >= 0);
-		MylarUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
+		UiUsageMonitorPlugin.getDefault().getMonitorLogFile().delete();
 		logger.startMonitoring();
 
 		generatePerspectiveSwitch();
@@ -143,21 +143,21 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 
 	public void testLifecycleCallbacks() {
 		assertFalse(monitorRunning);
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
-		MylarUsageMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().addMonitoringLifecycleListener(this);
 		assertTrue(monitorRunning);
 
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 		assertFalse(monitorRunning);
 
-		MylarUsageMonitorPlugin.getDefault().startMonitoring();
+		UiUsageMonitorPlugin.getDefault().startMonitoring();
 		assertTrue(monitorRunning);
-		MylarUsageMonitorPlugin.getDefault().stopMonitoring();
+		UiUsageMonitorPlugin.getDefault().stopMonitoring();
 		assertFalse(monitorRunning);
 
-		MylarUsageMonitorPlugin.getDefault().removeMonitoringLifecycleListener(this);
+		UiUsageMonitorPlugin.getDefault().removeMonitoringLifecycleListener(this);
 	}
 }
 

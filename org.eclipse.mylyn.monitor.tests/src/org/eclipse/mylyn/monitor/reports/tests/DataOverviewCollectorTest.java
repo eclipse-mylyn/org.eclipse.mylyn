@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.internal.monitor.core.collection.DataOverviewCollector;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
-import org.eclipse.mylyn.internal.monitor.usage.MylarUsageMonitorPlugin;
+import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.AbstractMonitorLog;
 import org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin;
 import org.eclipse.mylyn.monitor.usage.ReportGenerator;
@@ -85,7 +85,7 @@ public class DataOverviewCollectorTest extends TestCase {
 		dataOverviewCollector = new DataOverviewCollector("test-");
 		collectors.add(dataOverviewCollector);
 
-		ReportGenerator generator = new ReportGenerator(MylarUsageMonitorPlugin.getDefault().getInteractionLogger(),
+		ReportGenerator generator = new ReportGenerator(UiUsageMonitorPlugin.getDefault().getInteractionLogger(),
 				collectors);
 		generator.forceSyncForTesting(true);
 		generator.getStatisticsFromInteractionHistories(interactionHistoryFiles, null);
