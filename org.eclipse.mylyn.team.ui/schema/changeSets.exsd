@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.team">
+<schema targetNamespace="org.eclipse.mylar.team.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.team" id="changeSets" name="Mylar Chagne Set Integration"/>
+         <meta.schema plugin="org.eclipse.mylar.team.ui" id="changeSets" name="Mylar Chagne Set Integration"/>
       </appInfo>
       <documentation>
          Provides repository specific team integration for Mylar.

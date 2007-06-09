@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.ui.navigator.resources,
  org.eclipse.mylyn.monitor.core,
  org.eclipse.mylyn,
- org.eclipse.mylyn.team
+ org.eclipse.mylyn.team.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.team.ccvs
+Export-Package: org.eclipse.mylyn.internal.team.ccvs

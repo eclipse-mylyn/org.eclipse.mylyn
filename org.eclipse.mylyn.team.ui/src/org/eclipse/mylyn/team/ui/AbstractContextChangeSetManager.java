@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.team;
+package org.eclipse.mylyn.team.ui;
 
 import java.util.List;
 

@@ -17,9 +17,9 @@ import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.jface.fieldassist.IControlCreator;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.mylyn.internal.team.template.TemplateHandlerContentProposalProvider;
-import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
+import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.internal.team.ui.templates.TemplateHandlerContentProposalProvider;
+import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,7 +43,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 	public FocusedTeamPreferencePage() {
 		super();
-		setPreferenceStore(FocusedTeamPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(FocusedTeamUiPlugin.getDefault().getPreferenceStore());
 	}
 
 	@Override
@@ -63,16 +63,16 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(FocusedTeamPlugin.COMMIT_TEMPLATE, commitTemplate.getText());
-		getPreferenceStore().setValue(FocusedTeamPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
+		getPreferenceStore().setValue(FocusedTeamUiPlugin.COMMIT_TEMPLATE, commitTemplate.getText());
+		getPreferenceStore().setValue(FocusedTeamUiPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
 
 		if (manageChangeSets.getSelection()) {
-			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers()) {
 				changeSetManager.enable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
-			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers()) {
 				changeSetManager.disable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
@@ -89,8 +89,8 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 	public void performDefaults() {
 		super.performDefaults();
 		commitTemplate.setText(getPreferenceStore()
-				.getDefaultString(FocusedTeamPlugin.COMMIT_TEMPLATE));
-		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(FocusedTeamPlugin.CHANGE_SET_MANAGE));
+				.getDefaultString(FocusedTeamUiPlugin.COMMIT_TEMPLATE));
+		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(FocusedTeamUiPlugin.CHANGE_SET_MANAGE));
 	}
 
 //	private Label createLabel(Composite parent, String text) {
@@ -111,7 +111,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 
 		manageChangeSets = new Button(group, SWT.CHECK);
 		manageChangeSets.setText("Automatically create and manage with task context");
-		manageChangeSets.setSelection(getPreferenceStore().getBoolean(FocusedTeamPlugin.CHANGE_SET_MANAGE));
+		manageChangeSets.setSelection(getPreferenceStore().getBoolean(FocusedTeamUiPlugin.CHANGE_SET_MANAGE));
 	}
 
 	private void createCommitGroup(Composite parent) {
@@ -123,7 +123,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 //		Label completedLabel = createLabel(group, "Template: ");
 //		completedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
 
-		String completedTemplate = getPreferenceStore().getString(FocusedTeamPlugin.COMMIT_TEMPLATE);
+		String completedTemplate = getPreferenceStore().getString(FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 		commitTemplate = addTemplateField(group, completedTemplate, new TemplateHandlerContentProposalProvider());
 	}
 

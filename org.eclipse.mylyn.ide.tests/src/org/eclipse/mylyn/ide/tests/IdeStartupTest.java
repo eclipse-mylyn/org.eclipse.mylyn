@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
-import org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager;
+import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 
 /**
  * @author Mik Kersten

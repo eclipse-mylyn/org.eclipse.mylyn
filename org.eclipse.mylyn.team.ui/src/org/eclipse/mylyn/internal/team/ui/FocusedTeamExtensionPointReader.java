@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import java.text.MessageFormat;
 
@@ -18,9 +18,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
-import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
+import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
+import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 
 /**
  * Manages the registeres repository provides.
@@ -39,7 +38,7 @@ public class FocusedTeamExtensionPointReader {
 	private static final String EXT_POINT_TEAM_REPOSITORY_PROVIDER = "changeSets";
 
 	public void readExtensions() {
-		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamPlugin.PLUGIN_ID,
+		IExtensionPoint teamProvider = Platform.getExtensionRegistry().getExtensionPoint(FocusedTeamUiPlugin.PLUGIN_ID,
 				EXT_POINT_TEAM_REPOSITORY_PROVIDER);
 		IExtension[] extensions = teamProvider.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
@@ -52,7 +51,7 @@ public class FocusedTeamExtensionPointReader {
 					try {
 						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element
 								.createExecutableExtension(ATTR_CLASS);
-						FocusedTeamPlugin.getDefault().addActiveChangeSetProvider(provider);
+						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
 						MylarStatusHandler.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
@@ -71,7 +70,7 @@ public class FocusedTeamExtensionPointReader {
 					try {
 						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element
 								.createExecutableExtension(ATTR_CLASS);
-						FocusedTeamPlugin.getDefault().addContextChangeSetManager(manager);
+						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
 						// ignore, we
 						MylarStatusHandler.log(e, MessageFormat.format(

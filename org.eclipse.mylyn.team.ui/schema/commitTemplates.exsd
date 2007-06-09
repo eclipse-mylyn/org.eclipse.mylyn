@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.team">
+<schema targetNamespace="org.eclipse.mylar.team.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.team" id="commitTemplates" name="Mylar Commit Templates"/>
+         <meta.schema plugin="org.eclipse.mylar.team.ui" id="commitTemplates" name="Mylar Commit Templates"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

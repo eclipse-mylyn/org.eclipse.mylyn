@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.resources">
+<schema targetNamespace="org.eclipse.mylar.resources.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.resources" id="changeMonitoring" name="changeMonitoring"/>
+         <meta.schema plugin="org.eclipse.mylar.resources.ui" id="changeMonitoring" name="changeMonitoring"/>
       </appInfo>
       <documentation>
          This extension point is used so that plugins may contribute extensions that should be ignored by default (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=178931 for details)

@@ -8,7 +8,7 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylyn.internal.team.template;
+package org.eclipse.mylyn.internal.team.ui.templates;
 
 import java.util.List;
 import java.util.Locale;
@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.team.AbstractCommitTemplateVariable;
+import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
 /**
  * @author Eike Stepper

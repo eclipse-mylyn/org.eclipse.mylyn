@@ -4,7 +4,7 @@ Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.team.tests
 Bundle-Version: 1.0.0
 Bundle-Vendor: Eclipse.org
-Require-Bundle: org.eclipse.mylyn.team,
+Require-Bundle: org.eclipse.mylyn.team.ui,
  org.eclipse.mylyn.team.cvs,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.ui,

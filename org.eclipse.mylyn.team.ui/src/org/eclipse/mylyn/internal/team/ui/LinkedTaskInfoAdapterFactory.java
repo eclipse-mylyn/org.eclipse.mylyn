@@ -9,7 +9,7 @@
  *     Eugene Kuleshov - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.resources.IProject;

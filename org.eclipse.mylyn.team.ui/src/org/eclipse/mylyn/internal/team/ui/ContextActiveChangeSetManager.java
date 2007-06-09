@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +28,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.team.AbstractActiveChangeSetProvider;
-import org.eclipse.mylyn.team.AbstractContextChangeSetManager;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
+import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
+import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.IChangeSetChangeListener;
@@ -80,7 +79,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	};
 
 	public ContextActiveChangeSetManager() {
-		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamPlugin.getDefault().getActiveChangeSetProviders();
+		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault().getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {

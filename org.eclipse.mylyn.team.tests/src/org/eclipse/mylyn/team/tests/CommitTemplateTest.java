@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
 
 /**
  * @author Mik Kersten
@@ -26,24 +26,24 @@ import org.eclipse.mylyn.team.FocusedTeamPlugin;
 public class CommitTemplateTest extends TestCase {
 
 	public void testRepositoryTaskCommentParsing() {
-		String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
-				FocusedTeamPlugin.COMMIT_TEMPLATE);
+		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 		
 		AbstractRepositoryTask task = new MockRepositoryTask("12345");
-		String comment = FocusedTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 		
-		String taskId = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
 
 	public void testRepositoryTaskCommentParsingMultiline() {
-		String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
-				FocusedTeamPlugin.COMMIT_TEMPLATE);
+		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 		
 		AbstractRepositoryTask task = new MockRepositoryTask("12345");
-		String comment = FocusedTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
+		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
 		
-		String taskId = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
 	

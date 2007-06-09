@@ -2,14 +2,11 @@
 <?eclipse version="3.0"?>
 <?eclipse version="3.0"?>
 <plugin>
- 
+
    <extension
-         point="org.eclipse.mylyn.team.changeSets">
+         point="org.eclipse.mylyn.team.ui.changeSets">
       <activeChangeSetProvider 
-      	class="org.eclipse.mylyn.team.ccvs.CvsActiveChangeSetProvider"/>
-      <contextChangeSetManager
-            class="org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager">
-      </contextChangeSetManager>
+      	class="org.eclipse.mylyn.internal.team.ccvs.CvsActiveChangeSetProvider"/>
    </extension>
     
 </plugin>

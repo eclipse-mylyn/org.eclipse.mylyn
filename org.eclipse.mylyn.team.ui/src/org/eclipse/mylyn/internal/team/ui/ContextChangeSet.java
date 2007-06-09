@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *     Eike Stepper - template based commit templates
  *******************************************************************************/
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,6 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
@@ -94,11 +93,11 @@ public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
 
 	@Override
 	public String getComment() {
-		String template = FocusedTeamPlugin.getDefault().getPreferenceStore().getString(
-				FocusedTeamPlugin.COMMIT_TEMPLATE);
+		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
+				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 //		String progressTemplate = MylarTeamPlugin.getDefault().getPreferenceStore().getString(
 //				MylarTeamPlugin.COMMIT_TEMPLATE_PROGRESS);
-		return FocusedTeamPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
+		return FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 	}
 
 	@Override

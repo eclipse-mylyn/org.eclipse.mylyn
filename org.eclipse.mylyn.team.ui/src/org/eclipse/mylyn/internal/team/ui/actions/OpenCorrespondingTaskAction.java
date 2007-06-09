@@ -29,8 +29,9 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask;
-import org.eclipse.mylyn.internal.team.LinkedTaskInfo;
-import org.eclipse.mylyn.internal.team.template.CommitTemplateManager;
+import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
+import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
@@ -40,7 +41,6 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -167,7 +167,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			}
 		}
 		if (taskId == null && comment != null) {
-			CommitTemplateManager commitTemplateManager = FocusedTeamPlugin.getDefault().getCommitTemplateManager();
+			CommitTemplateManager commitTemplateManager = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager();
 			taskId = commitTemplateManager.getTaskIdFromCommentOrLabel(comment);
 			if (taskId == null) {
 				taskId = getTaskIdFromLegacy07Label(comment);

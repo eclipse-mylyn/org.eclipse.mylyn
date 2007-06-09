@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.core.resources.IResource;
 

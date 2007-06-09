@@ -8,14 +8,14 @@
  * Contributors:
  *    Eike Stepper - initial API and implementation
  **************************************************************************/
-package org.eclipse.mylyn.internal.team.template;
+package org.eclipse.mylyn.internal.team.ui.templates;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.mylyn.team.FocusedTeamPlugin;
+import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 
 /**
  * @author Eike Stepper
@@ -59,7 +59,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void initKeywords() {
-			keywords = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getRecognizedKeywords();
+			keywords = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getRecognizedKeywords();
 		}
 
 		private void initPrefix() {
@@ -88,7 +88,7 @@ public class TemplateHandlerContentProposalProvider implements IContentProposalP
 		}
 
 		private void addProposal(String proposal, String keyword) {
-			String description = FocusedTeamPlugin.getDefault().getCommitTemplateManager().getHandlerDescription(keyword);
+			String description = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getHandlerDescription(keyword);
 			result.add(new Proposal(proposal, keyword, description));
 		}
 

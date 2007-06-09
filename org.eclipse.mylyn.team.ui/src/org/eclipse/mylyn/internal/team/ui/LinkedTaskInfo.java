@@ -9,7 +9,7 @@
  *     Eugene Kuleshov - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team;
+package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.ITask;

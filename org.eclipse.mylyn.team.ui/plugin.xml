@@ -10,13 +10,11 @@
          name="Task-Focused UI Change Set Management"
          point="org.eclipse.ui.startup">
     </extension>
-    
-   <extension
-         point="org.eclipse.mylyn.team.changeSets">
-      <activeChangeSetProvider 
-      	class="org.eclipse.mylyn.team.ccvs.CvsActiveChangeSetProvider"/>
+
+  <extension
+         point="org.eclipse.mylyn.team.ui.changeSets">
       <contextChangeSetManager
-            class="org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager">
+            class="org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager">
       </contextChangeSetManager>
    </extension>
     
@@ -24,10 +22,10 @@
          point="org.eclipse.ui.decorators">
       <decorator
             class="org.eclipse.mylyn.internal.team.ui.ContextChangeSetDecorator"
-            id="org.eclipse.mylyn.team.changeset.decorator"
+            id="org.eclipse.mylyn.team.ui.changeset.decorator"
             label="Task Change Set Decorator"
             lightweight="true"
-            objectClass="org.eclipse.mylyn.internal.team.ContextChangeSet"
+            objectClass="org.eclipse.mylyn.internal.team.ui.ContextChangeSet"
             state="true">
       </decorator>
     </extension>
@@ -104,7 +102,7 @@
          <action
                class="org.eclipse.mylyn.internal.team.ui.actions.ApplyPatchAction"
                icon="icons/elcl16/apply-patch.gif"
-               id="org.eclipse.mylyn.team.ui.patch.apply"
+               id="org.eclipse.mylyn.team.ui.ui.patch.apply"
                label="Apply Patch..."
                menubarPath="actions"
                tooltip="Apply from Repository Task Attachment">
@@ -121,9 +119,9 @@
       <page 
          name="Team"
          class="org.eclipse.mylyn.internal.team.ui.preferences.FocusedTeamPreferencePage"
-         id="org.eclipse.mylyn.team.ui.preferences"
+         id="org.eclipse.mylyn.team.ui.ui.preferences"
          category="org.eclipse.mylyn.ui.preferences">
-         <keywordReference id="org.eclipse.mylyn.team.keywords"/>
+         <keywordReference id="org.eclipse.mylyn.team.ui.keywords"/>
       </page> 
    </extension>
    
@@ -131,7 +129,7 @@
    		point="org.eclipse.ui.keywords">
       <keyword
             label="mylyn team"
-            id="org.eclipse.mylyn.team.keywords"/>
+            id="org.eclipse.mylyn.team.ui.keywords"/>
    </extension>
   
    	<extension point="org.eclipse.ui.navigator.viewer">
@@ -144,98 +142,98 @@
 	   </viewerActionBinding>
     <dragAssistant
           class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant"
-          viewerId="org.eclipse.mylyn.team.cvs.ui.dragAssistant">
+          viewerId="org.eclipse.mylyn.team.ui.cvs.ui.dragAssistant">
     </dragAssistant>
 	</extension>
 	
     <extension
-          point="org.eclipse.mylyn.team.commitTemplates">
+          point="org.eclipse.mylyn.team.ui.commitTemplates">
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$ConnectorTaskPrefix"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$ConnectorTaskPrefix"
              description="Task repository-specific connector prefix, e.g. bug"
              recognizedKeyword="connector.task.prefix"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$RepositoryKind"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$RepositoryKind"
              description="Provides the repository kind of a task"
              recognizedKeyword="repository.kind"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$RepositoryUrl"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$RepositoryUrl"
              description="Provides the repository URL of a task."
              recognizedKeyword="repository.url"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskAssignee"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskAssignee"
              description="Provides the user a task is assigned to, if available."
              recognizedKeyword="task.assignee"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskCc"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskCc"
              description="Provides the comma separated CC list of a task, if available."
              recognizedKeyword="task.cc"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskDescription"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskDescription"
              description="Provides the description of a task."
              recognizedKeyword="task.description"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskId"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskId"
              description="Provides the ID of a task."
              recognizedKeyword="task.id"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskKey"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskKey"
              description="Provides the key of a task, for most repositories this is equals to the ID."
              recognizedKeyword="task.key"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskKeywords"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskKeywords"
              description="Provides the comma separated keyword list of a task, if available."
              recognizedKeyword="task.keywords"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskLastModified"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskLastModified"
              description="Provides the date of last modification of a task, if available."
              recognizedKeyword="task.lastmodified"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskNotes"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskNotes"
              description="Provides the notes of a task."
              recognizedKeyword="task.notes"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskPriority"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskPriority"
              description="Provides the priority of a task."
              recognizedKeyword="task.priority"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskProduct"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskProduct"
              description="Provides the prroduct a task belongs to, if available."
              recognizedKeyword="task.product"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskReporter"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskReporter"
              description="Provides the user who reported a task, if available."
              recognizedKeyword="task.reporter"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskResolution"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskResolution"
              description="Provides the resolution of a task, if available."
              recognizedKeyword="task.resolution"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskStatus"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskStatus"
              description="Provides the status of a task, if available."
              recognizedKeyword="task.status"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskSummary"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskSummary"
              description="Provides the summary or description of a task, whichever is available."
              recognizedKeyword="task.summary"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskType"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskType"
              description="Provides the type of a task."
              recognizedKeyword="task.type"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$TaskURL"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$TaskURL"
              description="Provides the URL of a task."
              recognizedKeyword="task.url"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCompletion"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskCompletion"
              description="Provides the completion date of a task."
              recognizedKeyword="task.completiondate"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskCreation"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskCreation"
              description="Provides the creation date of a task."
              recognizedKeyword="task.creationdate"/>
        <templateVariable
-             class="org.eclipse.mylyn.internal.team.template.CommitTemplateVariables$CommitTemplateDate$TaskReminder"
+             class="org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateVariables$CommitTemplateDate$TaskReminder"
              description="Provides the reminder date of a task."
              recognizedKeyword="task.reminderdate"/>
     </extension>
