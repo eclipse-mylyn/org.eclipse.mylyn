@@ -23,7 +23,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
  * Note that task repositories use Strings for storing time stamps because using

@@ -40,10 +40,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.core.net.HtmlTag;
-import org.eclipse.mylyn.core.net.WebClientUtil;
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -59,6 +55,10 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperat
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.web.core.HtmlTag;
+import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * Represents a Trac repository that is accessed through the Trac's query script

@@ -28,7 +28,7 @@ import org.apache.xmlrpc.client.XmlRpcCommonsTransport;
 import org.apache.xmlrpc.client.XmlRpcHttpClientConfig;
 import org.apache.xmlrpc.client.XmlRpcTransport;
 import org.apache.xmlrpc.client.XmlRpcTransportFactory;
-import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
  * A custom transport factory used to establish XML-RPC connections. Uses the
