@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.search,
  org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn
+ org.eclipse.mylyn,
+ org.eclipse.mylyn.web.core
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylyn.internal.trac.core,
  org.eclipse.mylyn.internal.trac.core.model,

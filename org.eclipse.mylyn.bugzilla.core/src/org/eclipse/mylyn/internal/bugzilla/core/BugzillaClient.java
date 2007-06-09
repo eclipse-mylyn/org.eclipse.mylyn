@@ -50,10 +50,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.core.net.HtmlTag;
-import org.eclipse.mylyn.core.net.WebClientUtil;
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -64,6 +60,10 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.web.core.HtmlTag;
+import org.eclipse.mylyn.web.core.WebClientUtil;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * @author Mik Kersten

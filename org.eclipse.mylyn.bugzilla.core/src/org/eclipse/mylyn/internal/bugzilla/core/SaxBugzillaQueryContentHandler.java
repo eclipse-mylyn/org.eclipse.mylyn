@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.util.Locale;
 import java.util.Set;
 
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

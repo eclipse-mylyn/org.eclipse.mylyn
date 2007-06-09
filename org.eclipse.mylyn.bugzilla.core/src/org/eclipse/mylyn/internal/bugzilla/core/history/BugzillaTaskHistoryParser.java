@@ -21,9 +21,9 @@ import java.text.ParseException;
 
 import javax.security.auth.login.LoginException;
 
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer;
-import org.eclipse.mylyn.core.net.HtmlTag;
-import org.eclipse.mylyn.core.net.HtmlStreamTokenizer.Token;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
+import org.eclipse.mylyn.web.core.HtmlTag;
+import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
 
 /**
  * Parses Bugzilla bug activity page to fill in a BugActivity object

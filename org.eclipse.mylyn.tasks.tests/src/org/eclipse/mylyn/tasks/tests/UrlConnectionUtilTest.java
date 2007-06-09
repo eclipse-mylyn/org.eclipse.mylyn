@@ -15,8 +15,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.NTCredentials;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.eclipse.mylyn.core.net.AuthenticatedProxy;
-import org.eclipse.mylyn.core.net.WebClientUtil;
+import org.eclipse.mylyn.web.core.AuthenticatedProxy;
+import org.eclipse.mylyn.web.core.WebClientUtil;
 
 public class UrlConnectionUtilTest extends TestCase {
 
