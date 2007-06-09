@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.core.net;
+package org.eclipse.mylyn.web.core;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +28,6 @@ import javax.net.ssl.TrustManager;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * @author Nathan Hapke
@@ -63,7 +62,8 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Could not initialize keystore");
+				throw new RuntimeException("Could not initialize keystore", e);
+//				throw new CoreException(new Status(Status.ERROR, WebCorePlugin.ID_PLUGIN, , e));
 			}
 		}
 
@@ -74,7 +74,8 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 			sslContext.init(keymanagers, new TrustManager[] { new TrustAllTrustManager() }, null);
 			this.socketFactory = sslContext.getSocketFactory();
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Could not initialize SSL context");
+			throw new RuntimeException("Could not initialize SSL context", e);
+//			throw new CoreException(new Status(Status.ERROR, WebCorePlugin.ID_PLUGIN, "Could not initialize SSL context", e));
 		}
 	}
 

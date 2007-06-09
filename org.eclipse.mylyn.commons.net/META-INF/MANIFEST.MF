@@ -19,7 +19,7 @@ Bundle-ClassPath: .,
  lib-rome/rome-0.8.jar,
  lib-rome/jdom-1.0.jar
 Export-Package: .,
- com.sun.syndication, 
+ com.sun.syndication,
  com.sun.syndication.feed,
  com.sun.syndication.feed.atom,
  com.sun.syndication.feed.impl,
@@ -56,6 +56,7 @@ Export-Package: .,
  org.apache.xmlrpc.parser,
  org.apache.xmlrpc.serializer,
  org.apache.xmlrpc.util,
+ org.eclipse.mylyn.web.core,
  org.jdom,
  org.jdom.adapters,
  org.jdom.filter,
@@ -63,4 +64,4 @@ Export-Package: .,
  org.jdom.output,
  org.jdom.transform,
  org.jdom.xpath
- 
+Bundle-Activator: org.eclipse.mylyn.web.core.WebCorePlugin

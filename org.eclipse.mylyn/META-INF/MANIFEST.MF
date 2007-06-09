@@ -8,9 +8,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.net,
  org.eclipse.mylyn.web.core
 Bundle-ClassPath: .
-Export-Package: org.eclipse.mylyn.core,
- org.eclipse.mylyn.core.net,
- org.eclipse.mylyn.internal.core
+Export-Package: org.eclipse.mylyn.core
 Eclipse-LazyStart: true
-Bundle-Activator: org.eclipse.mylyn.internal.core.MylynCorePlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

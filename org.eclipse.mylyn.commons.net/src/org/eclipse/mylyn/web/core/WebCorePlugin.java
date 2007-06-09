@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.core;
+package org.eclipse.mylyn.web.core;
 
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Plugin;
@@ -20,17 +20,19 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author Mik Kersten
  * @author Michael Valenta
  */
-public class MylynCorePlugin extends Plugin {
+public class WebCorePlugin extends Plugin {
 
-	private static MylynCorePlugin INSTANCE;
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.web.core";
+	
+	private static WebCorePlugin INSTANCE;
 
 	private ServiceTracker tracker;
 
-	public MylynCorePlugin() {
+	public WebCorePlugin() {
 		INSTANCE = this;
 	}
 
-	public static MylynCorePlugin getDefault() {
+	public static WebCorePlugin getDefault() {
 		return INSTANCE;
 	}
 

@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.core.net;
+package org.eclipse.mylyn.web.core;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -25,7 +25,6 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
-import org.eclipse.mylyn.internal.core.MylynCorePlugin;
 
 /**
  * @author Mik Kersten
@@ -208,7 +207,7 @@ public class WebClientUtil {
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		IProxyService service = MylynCorePlugin.getDefault().getProxyService();
+		IProxyService service = WebCorePlugin.getDefault().getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
 			if (data.getHost() != null) {
