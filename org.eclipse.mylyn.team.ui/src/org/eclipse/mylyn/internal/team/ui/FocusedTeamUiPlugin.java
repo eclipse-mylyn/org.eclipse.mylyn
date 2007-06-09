@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
  */
 public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.team";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.team.ui";
 
 	private static FocusedTeamUiPlugin INSTANCE;
 
