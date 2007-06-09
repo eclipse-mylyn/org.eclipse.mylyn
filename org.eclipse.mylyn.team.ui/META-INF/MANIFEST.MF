@@ -25,7 +25,6 @@ Require-Bundle: org.eclipse.team.core,
  org.eclipse.mylyn
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.mylyn.internal.team,
- org.eclipse.mylyn.internal.team.ccvs,
  org.eclipse.mylyn.internal.team.template,
  org.eclipse.mylyn.internal.team.ui,
  org.eclipse.mylyn.internal.team.ui.actions,

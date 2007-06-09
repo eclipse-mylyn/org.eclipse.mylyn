@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Core Tests Plug-in
-Bundle-SymbolicName: org.eclipse.mylyn.core.tests
+Bundle-Name: Mylyn Context Tests Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.context.tests
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylyn.context.tests.ContextTestsPlugin
 Bundle-Vendor: Eclipse.org

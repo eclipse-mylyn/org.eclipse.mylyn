@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?eclipse version="3.0"?>
+<plugin>
+ 
+   <extension
+         point="org.eclipse.mylyn.team.changeSets">
+      <activeChangeSetProvider 
+      	class="org.eclipse.mylyn.team.ccvs.CvsActiveChangeSetProvider"/>
+      <contextChangeSetManager
+            class="org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager">
+      </contextChangeSetManager>
+   </extension>
+    
+</plugin>
