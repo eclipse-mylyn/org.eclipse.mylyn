@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.core.util;
+package org.eclipse.mylyn.internal.monitor.core.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
