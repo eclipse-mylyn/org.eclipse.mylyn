@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.internal.pde.ui;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

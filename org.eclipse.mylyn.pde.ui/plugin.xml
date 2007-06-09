@@ -11,9 +11,6 @@
     <labelProvider
           class="org.eclipse.mylyn.internal.pde.ui.PdeContextLabelProvider"
           contentType="plugin.xml"/>
-    <labelProvider
-          class="org.eclipse.mylyn.internal.ide.ant.AntContextLabelProvider"
-          contentType="build.xml"/>
   </extension>
 
    	<extension point="org.eclipse.mylyn.context.core.bridges">

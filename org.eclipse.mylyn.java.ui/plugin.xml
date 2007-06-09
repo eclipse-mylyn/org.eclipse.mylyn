@@ -35,10 +35,12 @@
            class="org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider"
            contentType="java">
      </relationProvider>
+	<!--
      <relationProvider
            class="org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider"
            contentType="plugin.xml">
      </relationProvider>
+    -->
 	</extension>
 	   
 	<extension point="org.eclipse.mylyn.context.ui.bridges">
