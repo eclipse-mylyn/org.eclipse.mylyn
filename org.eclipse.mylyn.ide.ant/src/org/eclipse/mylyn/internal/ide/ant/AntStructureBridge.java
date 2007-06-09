@@ -11,7 +11,7 @@
 /*
  * Created on Apr 20, 2005
  */
-package org.eclipse.mylyn.internal.ide.xml.ant;
+package org.eclipse.mylyn.internal.ide.ant;
 
 //import java.lang.reflect.Method;
 import java.util.Collections;

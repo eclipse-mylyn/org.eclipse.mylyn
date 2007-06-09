@@ -11,7 +11,7 @@
 /*
  * Created on Apr 6, 2005
  */
-package org.eclipse.mylyn.internal.ide.xml.pde;
+package org.eclipse.mylyn.internal.pde.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

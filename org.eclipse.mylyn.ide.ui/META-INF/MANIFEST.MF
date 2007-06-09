@@ -27,10 +27,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.mylyn.monitor.core
 Eclipse-AutoStart: true
-Export-Package: org.eclipse.mylyn.internal.ide,
- org.eclipse.mylyn.internal.ide.ui,
+Export-Package: org.eclipse.mylyn.internal.ide.ui,
  org.eclipse.mylyn.internal.ide.ui.actions,
  org.eclipse.mylyn.internal.ide.xml,
- org.eclipse.mylyn.internal.ide.xml.ant,
  org.eclipse.mylyn.internal.ide.xml.pde
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

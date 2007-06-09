@@ -1,38 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<?eclipse version="3.0"?>
 <plugin> 
-   
-   	<extension point="org.eclipse.mylyn.context.core.bridges">
-		<structureBridge
-	        class="org.eclipse.mylyn.internal.ide.xml.ant.AntStructureBridge"
-	        name="Ant Structure Bridge"
-	        parentContentType="*"/>
-		<structureBridge
-	        class="org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge"
-	        name="PDE Structure Bridge"
-	        parentContentType="*"/>
-	</extension>
 
-   <extension point="org.eclipse.mylyn.context.ui.bridges">
-    <uiBridge
-          class="org.eclipse.mylyn.internal.ide.xml.pde.PdeUiBridge"
-          contentType="plugin.xml"
-          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	      activeSearchLabel="XML Search"/>
-    <labelProvider
-          class="org.eclipse.mylyn.internal.ide.xml.pde.PdeContextLabelProvider"
-          contentType="plugin.xml"/>
-    <uiBridge
-          class="org.eclipse.mylyn.internal.ide.xml.ant.AntUiBridge"
-          contentType="build.xml"
-          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
-	      activeSearchLabel="XML Search"/>
-    <labelProvider
-          class="org.eclipse.mylyn.internal.ide.xml.ant.AntContextLabelProvider"
-          contentType="build.xml"/>
-  </extension>
-  
  	<extension point="org.eclipse.ui.preferencePages">
       <page 
          name="Resources"
@@ -128,16 +97,5 @@
 	        menubarPath="org.eclipse.pde.runtime.LogView"/>
       </viewerContribution>
    </extension>
-    
-    <!--
-    <extension
-         id="org.eclipse.mylyn.helpDocs"
-         name="Mylar Help"
-         point="org.eclipse.help.toc">
-      <toc
-            file="doc/toc.xml"
-            primary="false">
-      </toc>
-   </extension>
-   -->
+
 </plugin>

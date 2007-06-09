@@ -11,7 +11,7 @@
 /*
  * Created on Feb 7, 2005
  */
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.pde.ui;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylyn.internal.ide.xml.pde.PdeStructureBridge;
+import org.eclipse.mylyn.internal.java.search.XmlActiveSearchUpdater;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;

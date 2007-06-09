@@ -11,7 +11,7 @@
 /*
  * Created on Apr 1, 2005
  */
-package org.eclipse.mylyn.internal.ide.xml.ant;
+package org.eclipse.mylyn.internal.ide.ant;
 
 //import java.lang.reflect.InvocationTargetException;
 //import java.lang.reflect.Method;

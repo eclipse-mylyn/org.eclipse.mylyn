@@ -36,7 +36,7 @@
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.XmlJavaRelationProvider"
+           class="org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider"
            contentType="plugin.xml">
      </relationProvider>
 	</extension>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin> 
+
+   <extension point="org.eclipse.mylyn.context.ui.bridges">
+    <uiBridge
+          class="org.eclipse.mylyn.internal.pde.ui.PdeUiBridge"
+          contentType="plugin.xml"
+          activeSearchIcon="icons/elcl16/edge-ref-xml.gif"
+	      activeSearchLabel="XML Search"/>
+    <labelProvider
+          class="org.eclipse.mylyn.internal.pde.ui.PdeContextLabelProvider"
+          contentType="plugin.xml"/>
+    <labelProvider
+          class="org.eclipse.mylyn.internal.ide.ant.AntContextLabelProvider"
+          contentType="build.xml"/>
+  </extension>
+
+   	<extension point="org.eclipse.mylyn.context.core.bridges">
+		<structureBridge
+	        class="org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge"
+	        name="PDE Structure Bridge"
+	        parentContentType="*"/>
+	</extension>
+	
+	
+
+</plugin>

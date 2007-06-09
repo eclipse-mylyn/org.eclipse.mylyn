@@ -11,7 +11,7 @@
 /*
  * Created on Apr 1, 2005
  */
-package org.eclipse.mylyn.internal.ide.xml.pde;
+package org.eclipse.mylyn.internal.pde.ui;
 
 import java.util.Locale;
 
