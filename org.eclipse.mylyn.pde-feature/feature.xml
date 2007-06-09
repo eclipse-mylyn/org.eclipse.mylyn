@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.java_feature"
-      label="Mylyn Java Feature"
+      label="Mylyn PDE Bridge"
       version="1.0.0"
-      provider-name="Eclipse.org">
+      provider-name="Eclipse.org"
+      plugin="org.eclipse.mylyn">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -16,5 +17,12 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <plugin
+         id="org.eclipse.mylyn.pde.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
