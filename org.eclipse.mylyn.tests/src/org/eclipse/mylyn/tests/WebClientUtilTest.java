@@ -21,10 +21,10 @@ import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.eclipse.mylyn.core.net.AuthenticatedProxy;
-import org.eclipse.mylyn.core.net.SslProtocolSocketFactory;
-import org.eclipse.mylyn.core.net.WebClientUtil;
 import org.eclipse.mylyn.tests.TestProxy.Message;
+import org.eclipse.mylyn.web.core.AuthenticatedProxy;
+import org.eclipse.mylyn.web.core.SslProtocolSocketFactory;
+import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
  * @author Steffen Pingel
