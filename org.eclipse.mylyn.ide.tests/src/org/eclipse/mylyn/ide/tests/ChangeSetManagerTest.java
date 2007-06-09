@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.ide.IdeUiBridgePlugin;
+import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.team.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.resources.tests.AbstractResourceContextTest;

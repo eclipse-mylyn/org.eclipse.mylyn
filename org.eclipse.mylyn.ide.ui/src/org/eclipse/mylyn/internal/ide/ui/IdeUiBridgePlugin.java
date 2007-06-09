@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.ide;
+package org.eclipse.mylyn.internal.ide.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.core.MylarStatusHandler;
