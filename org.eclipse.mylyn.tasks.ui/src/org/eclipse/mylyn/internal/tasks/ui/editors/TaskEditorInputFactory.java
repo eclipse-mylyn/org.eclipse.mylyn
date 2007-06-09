@@ -25,7 +25,7 @@ public class TaskEditorInputFactory implements IElementFactory {
 
 	private static final String TAG_TASK_HANDLE = "taskHandle";
 
-	public static final String ID_FACTORY = "org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory";
+	public static final String ID_FACTORY = "org.eclipse.mylyn.tasks.ui.elementFactories.task.editor";
 
 	public IAdaptable createElement(IMemento memento) {
 		String handle = memento.getString(TAG_TASK_HANDLE);

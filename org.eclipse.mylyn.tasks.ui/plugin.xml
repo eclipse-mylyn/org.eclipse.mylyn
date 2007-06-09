@@ -85,7 +85,7 @@
          point="org.eclipse.ui.elementFactories">
       <factory
             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory"
-            id="org.eclipse.mylyn.tasks.ui.editors.TaskEditorInputFactory">
+            id="org.eclipse.mylyn.tasks.ui.elementFactories.task.editor">
       </factory>
    </extension>
     <extension point="org.eclipse.ui.newWizards">
