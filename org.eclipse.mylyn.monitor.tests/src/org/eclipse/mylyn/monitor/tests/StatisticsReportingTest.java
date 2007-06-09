@@ -23,7 +23,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 import org.eclipse.mylyn.internal.monitor.core.collection.IUsageCollector;
 import org.eclipse.mylyn.internal.monitor.reports.collectors.FocusedUiUsageAnalysisCollector;
