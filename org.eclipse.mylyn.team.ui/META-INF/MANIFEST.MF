@@ -29,7 +29,6 @@ Export-Package: org.eclipse.mylyn.internal.team.ui,
  org.eclipse.mylyn.internal.team.ui.preferences,
  org.eclipse.mylyn.internal.team.ui.preferences.workaround,
  org.eclipse.mylyn.internal.team.ui.templates,
- org.eclipse.mylyn.internal.team.ui.wizards,
  org.eclipse.mylyn.team.ui
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

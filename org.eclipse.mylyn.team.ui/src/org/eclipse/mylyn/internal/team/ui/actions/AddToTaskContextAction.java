@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
 import org.eclipse.team.internal.ui.synchronize.SynchronizeModelElement;
@@ -77,8 +77,8 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		Object element = selection.getFirstElement();
 		IResource[] resources = null;
 
-		if (element instanceof CVSActiveChangeSet) {
-			resources = ((CVSActiveChangeSet)element).getResources();
+		if (element instanceof ActiveChangeSet) {
+			resources = ((ActiveChangeSet)element).getResources();
 		} else if (element instanceof DiffChangeSet) {
 			resources = ((DiffChangeSet)element).getResources();
 		} else if (element instanceof LinkedTaskInfo) {

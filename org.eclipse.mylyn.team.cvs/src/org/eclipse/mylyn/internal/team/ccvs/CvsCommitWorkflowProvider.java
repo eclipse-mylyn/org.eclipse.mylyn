@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.team.ui.AbstractCommitWorkflowProvider;
-import org.eclipse.mylyn.internal.team.ui.wizards.CommitContextWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.ui.PlatformUI;

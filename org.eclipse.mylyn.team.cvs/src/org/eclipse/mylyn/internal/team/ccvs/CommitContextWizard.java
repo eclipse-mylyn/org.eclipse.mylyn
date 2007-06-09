@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.team.ui.wizards;
+package org.eclipse.mylyn.internal.team.ccvs;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.mylyn.tasks.core.ITask;

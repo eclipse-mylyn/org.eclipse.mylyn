@@ -32,15 +32,15 @@ import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
-import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
+import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
 
 /**
  * @author Mik Kersten
  */
-public class ContextChangeSet extends CVSActiveChangeSet implements IAdaptable {
+public class ContextChangeSet extends ActiveChangeSet implements IAdaptable {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
