@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.ui.forms,
  org.eclipse.mylyn,
- org.eclipse.search
+ org.eclipse.search,
+ org.eclipse.mylyn.web.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: bugzilla-test.jar

@@ -23,7 +23,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;

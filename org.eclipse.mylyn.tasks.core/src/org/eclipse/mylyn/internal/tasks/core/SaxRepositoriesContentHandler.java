@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.core;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
