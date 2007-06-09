@@ -18,7 +18,7 @@
             label="Mylyn Documentation"
             visible="true"> 
   		<action
-          class="org.eclipse.mylyn.doc.internal.actions.ShowMylarLegendAction"
+          class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylarLegendAction"
           definitionId="org.eclipse.mylyn.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
           id="org.eclipse.mylyn.doc.legend.show.action"

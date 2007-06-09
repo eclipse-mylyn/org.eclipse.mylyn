@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.doc.internal.dialogs;
+package org.eclipse.mylyn.internal.help.ui.dialogs;
 
 import java.util.Collection;
 import java.util.List;

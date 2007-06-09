@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Documentation Plug-in
-Bundle-SymbolicName: org.eclipse.mylyn.doc; singleton:=true
+Bundle-Name: Mylar Help Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.help.ui;singleton:=true
 Bundle-Version: 2.0.0.v20070607-1200
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.cheatsheets,
  org.eclipse.ui.intro
-Export-Package: org.eclipse.mylyn.doc.internal.actions,
- org.eclipse.mylyn.doc.internal.dialogs
+Export-Package: org.eclipse.mylyn.internal.help.ui.actions,
+ org.eclipse.mylyn.internal.help.ui.dialogs
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
