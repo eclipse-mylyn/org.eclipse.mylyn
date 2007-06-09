@@ -4,3 +4,4 @@ Bundle-Name: Mylyn PDE UI Plug-in
 Bundle-SymbolicName: org.eclipse.mylyn.compatibility
 Bundle-Version: 1.0.0
 Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

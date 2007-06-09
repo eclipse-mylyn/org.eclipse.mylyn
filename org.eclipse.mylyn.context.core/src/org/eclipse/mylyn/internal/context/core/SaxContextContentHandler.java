@@ -16,7 +16,7 @@ package org.eclipse.mylyn.internal.context.core;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.eclipse.mylyn.internal.core.util.XmlStringConverter;
+import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.xml.sax.Attributes;
