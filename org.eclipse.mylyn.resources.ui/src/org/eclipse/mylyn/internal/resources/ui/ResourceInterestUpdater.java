@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.resources;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.ArrayList;
 import java.util.List;

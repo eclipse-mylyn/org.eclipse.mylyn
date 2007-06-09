@@ -24,7 +24,7 @@ import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.internal.context.ui.actions.FocusOutlineAction;
-import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;

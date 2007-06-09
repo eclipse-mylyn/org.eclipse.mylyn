@@ -9,42 +9,37 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.java.ui.search;
 
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.internal.java.ui.junit.InteractionContextTestUtil;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 
 /**
  * @author Mik Kersten
  */
-public class JUnitReferencesProvider extends AbstractJavaRelationProvider {
+public class JavaReferencesProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".junitreferences";
+	public static final String ID = ID_GENERIC + ".references";
 
-	public static final String NAME = "tested by";
+	public static final String NAME = "referenced by";
 
-	public JUnitReferencesProvider() {
+	public JavaReferencesProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);
 	}
 
 	@Override
 	protected boolean acceptResultElement(IJavaElement element) {
+		if (element instanceof IImportDeclaration)
+			return false;
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;
-			boolean isTestMethod = false;
-			boolean isTestCase = false;
-			if (method.getElementName().startsWith("test"))
-				isTestMethod = true;
-
-			IJavaElement parent = method.getParent();
-			if (parent instanceof IType) {
-				IType type = (IType) parent;
-				isTestCase = InteractionContextTestUtil.isTestType(type);
+			if (method.getElementName().startsWith("test")) {
+				return false; // HACK
+			} else {
+				return true;
 			}
-			return isTestMethod && isTestCase;
 		}
 		return false;
 	}

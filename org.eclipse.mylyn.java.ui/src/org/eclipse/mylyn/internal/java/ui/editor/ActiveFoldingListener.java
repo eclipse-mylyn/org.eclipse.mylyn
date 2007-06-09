@@ -34,7 +34,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 
 /**
  * @author Mik Kersten

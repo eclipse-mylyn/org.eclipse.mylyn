@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetPage;
-import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
+import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.swt.widgets.Display;

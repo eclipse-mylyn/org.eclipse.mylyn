@@ -27,14 +27,12 @@ import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.views.DelegatingContextLabelProvider;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.internal.java.JavaUiBridgePlugin;
-import org.eclipse.mylyn.internal.java.search.AbstractJavaRelationProvider;
-import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
-import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
-import org.eclipse.mylyn.internal.java.search.JavaReadAccessProvider;
-import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
-import org.eclipse.mylyn.internal.java.search.JavaWriteAccessProvider;
+import org.eclipse.mylyn.internal.java.ui.search.AbstractJavaRelationProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**

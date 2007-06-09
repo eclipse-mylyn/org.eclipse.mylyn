@@ -11,7 +11,7 @@
 /*
  * Created on Apr 7, 2005
  */
-package org.eclipse.mylyn.internal.java;
+package org.eclipse.mylyn.internal.java.ui;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,12 +45,12 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
-import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
-import org.eclipse.mylyn.internal.java.search.JavaReadAccessProvider;
-import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
-import org.eclipse.mylyn.internal.java.search.JavaWriteAccessProvider;
-import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
+import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 

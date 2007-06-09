@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.resources;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
@@ -44,7 +43,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}
 		final Set<IResource> addedResources = new HashSet<IResource>();
 		final Set<IResource> changedResources = new HashSet<IResource>();
-		final Set<String> excludedPatterns = FocusedResourcesPreferenceInitializer.getExcludedResourcePatterns();
+		final Set<String> excludedPatterns = ResourcesUiPreferenceInitializer.getExcludedResourcePatterns();
 		IResourceDelta rootDelta = event.getDelta();
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 			public boolean visit(IResourceDelta delta) {

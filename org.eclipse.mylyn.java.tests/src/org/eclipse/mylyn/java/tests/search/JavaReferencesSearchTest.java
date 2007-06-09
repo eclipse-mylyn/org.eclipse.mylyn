@@ -27,8 +27,8 @@ import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge;
 
 /**

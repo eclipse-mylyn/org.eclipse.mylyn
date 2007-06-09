@@ -11,7 +11,7 @@
 /*
  * Created on Apr 20, 2005
  */
-package org.eclipse.mylyn.internal.resources;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;

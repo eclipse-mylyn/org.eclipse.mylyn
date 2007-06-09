@@ -23,7 +23,6 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;

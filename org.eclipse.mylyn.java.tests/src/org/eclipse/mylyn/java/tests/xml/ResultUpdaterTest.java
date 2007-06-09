@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.pde.ui.XmlJavaRelationProvider;
 import org.eclipse.mylyn.java.tests.search.ActiveSearchNotifier;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;

@@ -9,30 +9,30 @@
 	<extension
 	       point="org.eclipse.mylyn.context.core.bridges">
 	    <structureBridge
-           class="org.eclipse.mylyn.internal.java.JavaStructureBridge"
+           class="org.eclipse.mylyn.internal.java.ui.JavaStructureBridge"
            name="Java Structure Bridge"
            parentContentType="*"/>
      <structureBridge
-           class="org.eclipse.mylyn.internal.java.JavaDebugStructureBridge"
+           class="org.eclipse.mylyn.internal.java.ui.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider"
+           class="org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.JavaReadAccessProvider"
+           class="org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.JavaReferencesProvider"
+           class="org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.JavaWriteAccessProvider"
+           class="org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider"
            contentType="java">
      </relationProvider>
      <relationProvider
-           class="org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider"
+           class="org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider"
            contentType="java">
      </relationProvider>
 	<!--

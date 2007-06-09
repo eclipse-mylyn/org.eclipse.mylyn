@@ -21,8 +21,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.mylyn
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
-Export-Package: org.eclipse.mylyn.internal.resources,
- org.eclipse.mylyn.internal.resources.ui,
+Export-Package: org.eclipse.mylyn.internal.resources.ui,
  org.eclipse.mylyn.internal.resources.ui.preferences,
  org.eclipse.mylyn.resources
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

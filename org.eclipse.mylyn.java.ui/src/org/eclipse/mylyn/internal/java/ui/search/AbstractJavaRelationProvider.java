@@ -11,7 +11,7 @@
 /*
  * Created on Jan 26, 2005
  */
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.java.ui.search;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -50,7 +50,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;

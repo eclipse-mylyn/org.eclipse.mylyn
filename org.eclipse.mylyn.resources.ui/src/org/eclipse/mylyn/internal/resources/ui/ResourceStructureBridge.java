@@ -11,7 +11,7 @@
 /*
  * Created on Apr 21, 2005
  */
-package org.eclipse.mylyn.internal.resources;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;

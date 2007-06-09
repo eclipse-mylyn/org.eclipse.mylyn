@@ -11,7 +11,7 @@
  * @author Fabio Zadrozny
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.resources.preferences;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
  * 
  * @author Fabio
  */
-public class FocusedResourcesExtensionPointReader {
+public class ResourcesUiExtensionPointReader {
 
 	public final static String EXTENSION_CHANGE_MONITORING = "changeMonitoring";
 

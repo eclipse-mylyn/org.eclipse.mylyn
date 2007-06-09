@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.mylyn.context.core.bridges">
       <structureBridge
-            class="org.eclipse.mylyn.internal.resources.ResourceStructureBridge"
+            class="org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge"
             name="Resource Structure Bridge"/> 
    </extension>
    
@@ -27,7 +27,7 @@
             contentType="*"/>
    </extension>  
    <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer"/>
+      <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>
    </extension>
    
    <!--

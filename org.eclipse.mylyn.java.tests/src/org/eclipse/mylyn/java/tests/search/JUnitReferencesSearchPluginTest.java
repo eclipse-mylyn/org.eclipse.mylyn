@@ -19,7 +19,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
-import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 
 public class JUnitReferencesSearchPluginTest extends TestCase implements ISearchPluginTest {
 

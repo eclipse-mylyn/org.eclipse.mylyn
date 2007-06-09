@@ -19,8 +19,8 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ScalingFactors;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiUtil;
-import org.eclipse.mylyn.internal.resources.ResourceInteractionMonitor;
-import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
+import org.eclipse.mylyn.internal.resources.ui.ResourceInteractionMonitor;
+import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 /**

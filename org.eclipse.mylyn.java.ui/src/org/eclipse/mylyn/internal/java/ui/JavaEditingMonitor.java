@@ -24,8 +24,8 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.java.search.JavaImplementorsProvider;
-import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 

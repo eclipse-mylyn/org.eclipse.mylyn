@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java;
+package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.List;
 import java.util.Map;

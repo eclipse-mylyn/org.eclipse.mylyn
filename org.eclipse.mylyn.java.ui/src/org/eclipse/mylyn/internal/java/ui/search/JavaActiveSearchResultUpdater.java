@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.java.ui.search;
 
 import java.util.HashSet;
 import java.util.Iterator;

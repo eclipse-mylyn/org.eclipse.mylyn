@@ -34,8 +34,8 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
-import org.eclipse.mylyn.internal.java.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 
 /**
  * @author Mik Kersten

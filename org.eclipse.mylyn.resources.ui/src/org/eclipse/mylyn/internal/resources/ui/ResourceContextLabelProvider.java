@@ -19,7 +19,6 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.AbstractContextLabelProvider;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.resources.ResourceStructureBridge;
 import org.eclipse.swt.graphics.Image;
 
 /**

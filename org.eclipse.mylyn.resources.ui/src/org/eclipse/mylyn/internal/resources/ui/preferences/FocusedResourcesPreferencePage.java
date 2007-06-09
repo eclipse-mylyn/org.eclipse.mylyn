@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.resources.preferences.FocusedResourcesPreferenceInitializer;
+import org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -111,7 +111,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 				removeIgnore();
 			}
 		});
-		fillTable(FocusedResourcesPreferenceInitializer.getExcludedResourcePatterns());
+		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns());
 		Dialog.applyDialogFont(group);
 		setButtonLayoutData(addButton);
 		setButtonLayoutData(removeButton);
@@ -129,7 +129,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		for (int i = 0; i < items.length; i++) {
 			patterns.add(items[i].getText());
 		}
-		FocusedResourcesPreferenceInitializer.setExcludedResourcePatterns(patterns);
+		ResourcesUiPreferenceInitializer.setExcludedResourcePatterns(patterns);
 		return true;
 	}
 
@@ -137,8 +137,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	protected void performDefaults() {
 		super.performDefaults();
 		ignoreTable.removeAll();
-		FocusedResourcesPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
-		fillTable(FocusedResourcesPreferenceInitializer.getExcludedResourcePatterns());
+		ResourcesUiPreferenceInitializer.restoreDefaultExcludedResourcePatterns();
+		fillTable(ResourcesUiPreferenceInitializer.getExcludedResourcePatterns());
 	}
 
 	/**

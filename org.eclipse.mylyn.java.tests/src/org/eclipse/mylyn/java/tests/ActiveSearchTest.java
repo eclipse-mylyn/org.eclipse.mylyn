@@ -28,7 +28,7 @@ import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
-import org.eclipse.mylyn.internal.java.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewReference;

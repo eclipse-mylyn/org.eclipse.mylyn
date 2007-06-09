@@ -8,7 +8,7 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.internal.java;
+package org.eclipse.mylyn.internal.java.ui;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -20,9 +20,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor;
-import org.eclipse.mylyn.internal.java.ui.JavaUiUtil;
-import org.eclipse.mylyn.internal.java.ui.LandmarkMarkerManager;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;

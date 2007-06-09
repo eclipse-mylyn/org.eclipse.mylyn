@@ -15,7 +15,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.ScalingFactors;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**

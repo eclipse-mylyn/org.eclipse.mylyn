@@ -9,39 +9,28 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.java.ui.search;
 
-import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 
 /**
  * @author Mik Kersten
  */
-public class JavaReferencesProvider extends AbstractJavaRelationProvider {
+public class JavaImplementorsProvider extends AbstractJavaRelationProvider {
 
-	public static final String ID = ID_GENERIC + ".references";
+	public static final String ID = ID_GENERIC + ".implementors";
 
-	public static final String NAME = "referenced by";
+	public static final String NAME = "implemented by";
 
-	public JavaReferencesProvider() {
+	public JavaImplementorsProvider() {
 		super(JavaStructureBridge.CONTENT_TYPE, ID);
 	}
 
 	@Override
-	protected boolean acceptResultElement(IJavaElement element) {
-		if (element instanceof IImportDeclaration)
-			return false;
-		if (element instanceof IMethod) {
-			IMethod method = (IMethod) element;
-			if (method.getElementName().startsWith("test")) {
-				return false; // HACK
-			} else {
-				return true;
-			}
-		}
-		return false;
+	protected boolean acceptElement(IJavaElement javaElement) {
+		return javaElement != null && javaElement instanceof IType;
 	}
 
 	@Override

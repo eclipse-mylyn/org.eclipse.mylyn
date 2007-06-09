@@ -11,7 +11,7 @@
  * @author Fabio Zadrozny
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.resources.preferences;
+package org.eclipse.mylyn.internal.resources.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
  * @author Fabio (bug 178931)
  * @author Mik Kersten
  */
-public class FocusedResourcesPreferenceInitializer extends AbstractPreferenceInitializer {
+public class ResourcesUiPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public static final String PREF_DEFAULT_SCOPE = "org.eclipse.mylyn.ide.resources";
 
@@ -46,7 +46,7 @@ public class FocusedResourcesPreferenceInitializer extends AbstractPreferenceIni
 	 * Restores the default values for the patterns to ignore.
 	 */
 	public static void restoreDefaultExcludedResourcePatterns() {
-		setExcludedResourcePatterns(FocusedResourcesExtensionPointReader.getDefaultResourceExclusions());
+		setExcludedResourcePatterns(ResourcesUiExtensionPointReader.getDefaultResourceExclusions());
 	}
 
 	/**

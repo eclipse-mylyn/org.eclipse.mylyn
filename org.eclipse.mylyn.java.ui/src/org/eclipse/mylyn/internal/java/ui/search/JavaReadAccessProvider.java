@@ -9,11 +9,11 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.search;
+package org.eclipse.mylyn.internal.java.ui.search;
 
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.mylyn.internal.java.JavaStructureBridge;
+import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 
 /**
  * @author Mik Kersten

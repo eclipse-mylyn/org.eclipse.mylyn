@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylyn.internal.java.search.XmlActiveSearchUpdater;
+import org.eclipse.mylyn.internal.java.ui.search.XmlActiveSearchUpdater;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;

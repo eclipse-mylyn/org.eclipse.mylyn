@@ -21,7 +21,7 @@ import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.java.InterestUpdateDeltaListener;
+import org.eclipse.mylyn.internal.java.ui.InterestUpdateDeltaListener;
 import org.eclipse.ui.IViewPart;
 
 /**

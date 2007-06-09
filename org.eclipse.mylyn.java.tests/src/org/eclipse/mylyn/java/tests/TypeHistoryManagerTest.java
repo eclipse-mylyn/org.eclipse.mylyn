@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.java.TypeHistoryManager;
+import org.eclipse.mylyn.internal.java.ui.TypeHistoryManager;
 
 /**
  * @author Mik Kersten

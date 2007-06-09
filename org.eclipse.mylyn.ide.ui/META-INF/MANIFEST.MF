@@ -7,25 +7,17 @@ Bundle-Activator: org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.forms,
  org.eclipse.jface.text,
  org.eclipse.ui.navigator,
  org.eclipse.ui.ide,
- org.eclipse.ant.ui,
- org.eclipse.pde.ui,
- org.eclipse.ui.views,
- org.eclipse.debug.ui,
- org.eclipse.pde.runtime,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.context.ui,
- org.eclipse.mylyn.monitor.ui,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.resources.ui,
  org.eclipse.mylyn,
- org.eclipse.search,
- org.eclipse.ui.editors,
- org.eclipse.mylyn.monitor.core
+ org.eclipse.ui.forms,
+ org.eclipse.pde.runtime,
+ org.eclipse.core.resources
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylyn.internal.ide.ui,
  org.eclipse.mylyn.internal.ide.ui.actions,

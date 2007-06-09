@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.mylyn.internal.resources.ResourceChangeMonitor;
+import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 
 /**
  * @author Mik Kersten
