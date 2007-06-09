@@ -21,9 +21,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.ui,
  org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.core.tests,
  org.eclipse.mylyn.java.ui,
- org.eclipse.mylyn.resources,
+ org.eclipse.mylyn.resources.ui,
  org.eclipse.mylyn.ide.ui,
  org.eclipse.mylyn.context.ui,
  org.eclipse.ui.ide,
@@ -35,7 +34,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.search,
  org.eclipse.mylyn.resources.tests,
  org.eclipse.mylyn.monitor.core,
- org.eclipse.mylyn.pde.ui
+ org.eclipse.mylyn.pde.ui,
+ org.eclipse.mylyn.context.tests
 Eclipse-AutoStart: true
 Bundle-ClassPath: mylar-java-tests.jar
 Export-Package: org.eclipse.mylyn.java.tests,

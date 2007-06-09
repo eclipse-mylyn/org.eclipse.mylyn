@@ -14,8 +14,6 @@ package org.eclipse.mylyn.java.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.mylyn.ide.tests.ChangeSetManagerTest;
-import org.eclipse.mylyn.ide.tests.CommitTemplateTest;
 import org.eclipse.mylyn.java.tests.search.JUnitReferencesSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaImplementorsSearchPluginTest;
 import org.eclipse.mylyn.java.tests.search.JavaReadAccessSearchPluginTest;
@@ -35,9 +33,7 @@ public class AllJavaTests {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(ContentSpecificContextTest.class);
 		suite.addTestSuite(ResourceStructureMappingTest.class);
-		suite.addTestSuite(CommitTemplateTest.class);
 		suite.addTestSuite(InterestManipulationTest.class);
-		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(EditorManagerTest.class);
 		suite.addTestSuite(RefactoringTest.class);
 		suite.addTestSuite(ContentOutlineRefreshTest.class);
