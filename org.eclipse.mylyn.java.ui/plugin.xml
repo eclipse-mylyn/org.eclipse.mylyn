@@ -461,14 +461,13 @@
    </extension>
 
    <extension point="org.eclipse.ui.commands">
+      <category
+            name="Mylyn Java"
+            description="Mylyn Jav Commands"
+            id="org.eclipse.mylyn.java.ui.commands">
+      </category>
 	  <command
-         categoryId="org.eclipse.mylyn.ui.commands"
-         description="Search the current task context"
-         id="org.eclipse.mylyn.java.ui.search.context"
-         name="Search Task Context">
-      </command>
-	  <command
-         categoryId="org.eclipse.mylyn.ui.commands"
+         categoryId="org.eclipse.mylyn.java.ui.commands"
          description="Toggle Active Folding"
          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
          name="Toggle Active Folding">

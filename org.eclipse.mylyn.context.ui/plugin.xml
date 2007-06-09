@@ -229,7 +229,7 @@
          </action>
 	
 	     <action
-               definitionId="org.eclipse.mylyn.context.ui.dialog.show"
+               definitionId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
                label="Quick Context View"
                class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialog"
                menubarPath="navigate/open.ext2"
@@ -240,8 +240,8 @@
                               
    <extension point="org.eclipse.ui.commands">
       <category
-            name="Task-Focused UI"
-            description="Task-Focused UI Commands"
+            name="Mylyn UI"
+            description="Mylyn UI Commands"
             id="org.eclipse.mylyn.context.ui.commands">
       </category>
       <command
@@ -254,6 +254,12 @@
             name="Make Less Interesting"
             description="Make Less Interesting"
             id="org.eclipse.mylyn.context.ui.commands.interest.decrement"
+            categoryId="org.eclipse.mylyn.context.ui.commands">
+      </command>
+      <command
+            name="Show Context Quick View"
+            description="Show Context Quick View"
+            id="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
             categoryId="org.eclipse.mylyn.context.ui.commands">
       </command>
       <command
@@ -284,7 +290,7 @@
       <key
             sequence="M1+M2+M3+ARROW_RIGHT"
             contextId="org.eclipse.ui.globalScope"
-            commandId="org.eclipse.mylyn.context.ui.dialog.show"
+            commandId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>     
