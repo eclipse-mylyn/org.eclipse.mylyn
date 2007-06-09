@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tests.misc;
 
 import junit.framework.TestCase;
 
-import org.eclipse.mylyn.internal.web.WebResourceStructureBridge;
+import org.eclipse.mylyn.internal.web.ui.WebResourceStructureBridge;
 
 /**
  * @author Mik Kersten
