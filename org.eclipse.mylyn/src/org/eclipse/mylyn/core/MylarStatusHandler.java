@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.core.MylynCorePlugin;
+import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * @author Mik Kersten
@@ -44,8 +44,8 @@ public class MylarStatusHandler {
 	 *            status to log
 	 */
 	public static void log(IStatus status) {
-		if (MylynCorePlugin.getDefault() != null) {
-			MylynCorePlugin.getDefault().getLog().log(status);
+		if (WebCorePlugin.getDefault() != null) {
+			WebCorePlugin.getDefault().getLog().log(status);
 		}
 	}
 

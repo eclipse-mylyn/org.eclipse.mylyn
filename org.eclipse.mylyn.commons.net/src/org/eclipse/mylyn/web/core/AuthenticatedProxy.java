@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.core.net;
+package org.eclipse.mylyn.web.core;
 
 import java.net.Proxy;
 import java.net.SocketAddress;
