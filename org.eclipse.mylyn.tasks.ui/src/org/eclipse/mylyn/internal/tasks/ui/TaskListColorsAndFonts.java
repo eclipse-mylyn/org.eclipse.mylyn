@@ -112,6 +112,6 @@ public class TaskListColorsAndFonts {
 		}
 	}
 
-	public static final String TASK_EDITOR_FONT = "org.eclipse.mylyn.tasklist.ui.fonts.task.editor.comment";
-
+	public static final String TASK_EDITOR_FONT = "org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment";
+												   
 }
