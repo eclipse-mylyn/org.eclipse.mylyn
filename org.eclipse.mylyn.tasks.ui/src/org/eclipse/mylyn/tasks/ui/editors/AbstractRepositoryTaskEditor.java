@@ -1146,20 +1146,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			attachmentsTableViewer.setInput(taskData);
 
-			final MenuManager popupMenu = new MenuManager();
-			final Menu menu = popupMenu.createContextMenu(attachmentsTable);
-			attachmentsTable.setMenu(menu);
-
-			popupMenu.addMenuListener(new IMenuListener() {
-				public void menuAboutToShow(IMenuManager manager) {
-					// TODO: use workbench mechanism for this?
-					ObjectActionContributorManager.getManager().contributeObjectActions(
-							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
-				}
-			});
-
-			final MenuManager openMenu = new MenuManager("Open With");
-
 			final Action openWithBrowserAction = new Action(LABEL_BROWSER) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
@@ -1268,19 +1254,24 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-			attachmentsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent e) {
-
-					if (e.getSelection().isEmpty()) {
+			final MenuManager popupMenu = new MenuManager();
+			final Menu menu = popupMenu.createContextMenu(attachmentsTable);
+			attachmentsTable.setMenu(menu);
+			final MenuManager openMenu = new MenuManager("Open With");
+			popupMenu.addMenuListener(new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					popupMenu.removeAll();
+					
+					ISelection selection = attachmentsTableViewer.getSelection();
+					if (selection.isEmpty()) {
 						return;
 					}
 
-					RepositoryAttachment att = (RepositoryAttachment) (((StructuredSelection) e.getSelection()).getFirstElement());
+					RepositoryAttachment att = (RepositoryAttachment) ((StructuredSelection) selection).getFirstElement();
 
-					popupMenu.removeAll();
+					// reinitialize menu
 					popupMenu.add(openMenu);
 					openMenu.removeAll();
-
 					IStorageEditorInput input = new RepositoryAttachmentEditorInput(repository, att);
 					IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(
 							input.getName());
@@ -1297,9 +1288,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						popupMenu.add(copyToClipAction);
 					}
 					popupMenu.add(new Separator("actions"));
+					
+					// TODO: use workbench mechanism for this?
+					ObjectActionContributorManager.getManager().contributeObjectActions(
+							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
 				}
-			});
-
+ 			});
 		} else {
 			Label label = toolkit.createLabel(attachmentsComposite, "No attachments");
 			registerDropListener(label);
