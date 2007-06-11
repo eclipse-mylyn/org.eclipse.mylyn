@@ -12,6 +12,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -34,8 +35,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * An editor used to view a locally created bug that does not yet exist on a
- * repository.
+ * An editor used to view a locally created bug that does not yet exist on a repository.
  * 
  * @author Rob Elves
  */
@@ -50,17 +50,18 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		expandedStateAttributes = true;
+
+		setExpandAttributeSection(true);
 	}
 
 	@Override
-	protected void updateTask() {
+	protected void saveTaskOffline(IProgressMonitor progressMonitor) {
 		String text = descriptionTextViewer.getTextWidget().getText();
 		if (repository.getVersion().startsWith("2.18")) {
 			text = formatTextToLineWrap(text, true);
 			descriptionTextViewer.getTextWidget().setText(text);
 		}
-		super.updateTask();
+		super.saveTaskOffline(progressMonitor);
 	}
 
 	@Override

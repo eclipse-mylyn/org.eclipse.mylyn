@@ -13,13 +13,13 @@ package org.eclipse.mylyn.tasks.ui.editors;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -42,6 +42,8 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -70,6 +72,8 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Rob Elves (modifications)
  */
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
+
+	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 
 	private static final int DEFAULT_FIELD_WIDTH = 150;
 
@@ -105,17 +109,14 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) {
-		NewTaskEditorInput ei = (NewTaskEditorInput) input;
-		setSite(site);
-		setInput(input);
-		editorInput = ei;
-		changedAttributes = new HashSet<RepositoryTaskAttribute>();
-		taskData = ei.getTaskData();
-		taskOutlineModel = RepositoryTaskOutlineNode.parseBugReport(taskData, false);
+		if (!(input instanceof NewTaskEditorInput)) {
+			return;
+		}
+
+		initTaskEditor(site, (RepositoryTaskEditorInput) input);
+		
+		setTaskOutlineModel(RepositoryTaskOutlineNode.parseBugReport(taskData, false));
 		newSummary = taskData.getSummary();
-		repository = editorInput.getRepository();
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
-		isDirty = false;
 	}
 
 	@Override
@@ -149,14 +150,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void createReportHeaderLayout(Composite comp) {
-		addSummaryText(comp);
-	}
-
-	@Override
-	protected void addSummaryText(Composite attributesComposite) {
-
-		Composite summaryComposite = toolkit.createComposite(attributesComposite);
+	protected void createSummaryLayout(Composite composite) {
+		Composite summaryComposite = getManagedForm().getToolkit().createComposite(composite);
 		GridLayout summaryLayout = new GridLayout(2, false);
 		summaryLayout.verticalSpacing = 0;
 		summaryLayout.marginHeight = 2;
@@ -174,10 +169,52 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			summaryText.setFont(summaryFont);
 
 			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
-			summaryText.addListener(SWT.KeyUp, new SummaryListener());
+			summaryText.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					String sel = summaryText.getText();
+					if (!(newSummary.equals(sel))) {
+						newSummary = sel;
+						markDirty(true);
+					}
+				}
+			});
 		}
-		toolkit.paintBordersFor(summaryComposite);
+		getManagedForm().getToolkit().paintBordersFor(summaryComposite);
 	}
+
+//	@Override
+//	protected void addSummaryText(Composite attributesComposite) {
+//
+//		Composite summaryComposite = getManagedForm().getToolkit().createComposite(attributesComposite);
+//		GridLayout summaryLayout = new GridLayout(2, false);
+//		summaryLayout.verticalSpacing = 0;
+//		summaryLayout.marginHeight = 2;
+//		summaryComposite.setLayout(summaryLayout);
+//		GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryComposite);
+//
+//		RepositoryTaskAttribute attribute = taskData.getAttribute(RepositoryTaskAttribute.SUMMARY);
+//		if (attribute != null) {
+//			createLabel(summaryComposite, attribute);
+//			summaryText = createTextField(summaryComposite, attribute, SWT.FLAT);
+//			summaryText.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+//			IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
+//			Font summaryFont = themeManager.getCurrentTheme().getFontRegistry().get(
+//					TaskListColorsAndFonts.TASK_EDITOR_FONT);
+//			summaryText.setFont(summaryFont);
+//
+//			GridDataFactory.fillDefaults().grab(true, false).hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(summaryText);
+//			summaryText.addModifyListener(new ModifyListener() {
+//				public void modifyText(ModifyEvent e) {
+//					String sel = summaryText.getText();
+//					if (!(newSummary.equals(sel))) {
+//						newSummary = sel;
+//						markDirty(true);
+//					}
+//				}
+//			});
+//		}
+//		getManagedForm().getToolkit().paintBordersFor(summaryComposite);
+//	}
 
 	@Override
 	protected void createAttachmentLayout(Composite comp) {
@@ -200,7 +237,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		section.setExpanded(true);
 
-		Composite sectionClient = toolkit.createComposite(section);
+		Composite sectionClient = getManagedForm().getToolkit().createComposite(section);
 		section.setClient(sectionClient);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 7;
@@ -210,7 +247,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		sectionClient.setLayoutData(clientDataLayout);
 
 		// Reminder
-		toolkit.createLabel(sectionClient, "Scheduled for:");
+		getManagedForm().getToolkit().createLabel(sectionClient, "Scheduled for:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		scheduledForDate = new DatePicker(sectionClient, SWT.NONE, DatePicker.LABEL_CHOOSE);
 		scheduledForDate.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -225,7 +262,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
 		}
 		scheduledForDate.setDate(newTaskSchedule);
-		Button removeReminder = toolkit.createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
+		Button removeReminder = getManagedForm().getToolkit().createButton(sectionClient, "Clear", SWT.PUSH | SWT.CENTER);
 		removeReminder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -234,14 +271,14 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		});
 
 		// 1 Blank column after Reminder clear button
-		Label dummy = toolkit.createLabel(sectionClient, "");
+		Label dummy = getManagedForm().getToolkit().createLabel(sectionClient, "");
 		GridData dummyLabelDataLayout = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
 		dummyLabelDataLayout.horizontalSpan = 1;
 		dummyLabelDataLayout.widthHint = 30;
 		dummy.setLayoutData(dummyLabelDataLayout);
 
 		// Estimated time
-		toolkit.createLabel(sectionClient, "Estimated time:");
+		getManagedForm().getToolkit().createLabel(sectionClient, "Estimated time:");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		estimatedTime = new Spinner(sectionClient, SWT.NONE);
 		estimatedTime.setDigits(0);
@@ -253,10 +290,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		GridData estimatedDataLayout = new GridData();
 		estimatedDataLayout.widthHint = 110;
 		estimatedTime.setLayoutData(estimatedDataLayout);
-		toolkit.createLabel(sectionClient, "hours ");
+		getManagedForm().getToolkit().createLabel(sectionClient, "hours ");
 		// label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 
-		toolkit.paintBordersFor(sectionClient);
+		getManagedForm().getToolkit().paintBordersFor(sectionClient);
 	}
 
 	@Override
@@ -271,10 +308,10 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	protected void updateTask() {
+	protected void saveTaskOffline(IProgressMonitor progressMonitor) {
 		taskData.setSummary(newSummary);
 		taskData.setDescription(descriptionTextViewer.getTextWidget().getText());
-		super.updateTask();
+		updateEditorTitle();
 	}
 
 	/**
@@ -285,15 +322,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
 					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
 							.getRepositoryKind(), "New Description", false, taskData.getSummary()))));
-		}
-	}
-
-	@Override
-	public void handleSummaryEvent() {
-		String sel = summaryText.getText();
-		if (!(newSummary.equals(sel))) {
-			newSummary = sel;
-			markDirty(true);
 		}
 	}
 
@@ -318,22 +346,22 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	 */
 	@Override
 	protected void createActionsLayout(Composite formComposite) {
-		Section section = toolkit.createSection(formComposite, ExpandableComposite.TITLE_BAR);
+		Section section = getManagedForm().getToolkit().createSection(formComposite, ExpandableComposite.TITLE_BAR);
 
 		section.setText(getSectionLabel(SECTION_NAME.ACTIONS_SECTION));
 		section.setExpanded(true);
 		section.setLayout(new GridLayout());
 		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).grab(true, true).applyTo(section);
 
-		Composite buttonComposite = toolkit.createComposite(section);
+		Composite buttonComposite = getManagedForm().getToolkit().createComposite(section);
 		buttonComposite.setLayout(new GridLayout(4, false));
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		section.setClient(buttonComposite);
 
-		addToCategory = toolkit.createButton(buttonComposite, "Add to Category", SWT.CHECK);
+		addToCategory = getManagedForm().getToolkit().createButton(buttonComposite, "Add to Category", SWT.CHECK);
 		categoryChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY);
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-		toolkit.adapt(categoryChooser, true, true);
+		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		List<AbstractTaskContainer> categories = taskList.getUserCategories();
@@ -365,7 +393,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		addActionButtons(buttonComposite);
 
-		toolkit.paintBordersFor(buttonComposite);
+		getManagedForm().getToolkit().paintBordersFor(buttonComposite);
 	}
 
 	/**
@@ -481,9 +509,9 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
 
-		// updatetask() needs to be called so that the description text is save before we
+		// called so that the description text is set on taskData before we
 		// search for duplicates
-		this.updateTask();
+		this.saveTaskOffline(new NullProgressMonitor());
 
 		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
 		if (collector != null) {

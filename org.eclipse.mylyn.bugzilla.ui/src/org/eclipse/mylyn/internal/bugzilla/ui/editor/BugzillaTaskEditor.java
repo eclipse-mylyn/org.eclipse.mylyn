@@ -124,7 +124,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Composite textFieldComposite = toolkit.createComposite(composite);
+			Composite textFieldComposite = getManagedForm().getToolkit().createComposite(composite);
 			GridLayout textLayout = new GridLayout();
 			textLayout.marginWidth = 1;
 			textLayout.marginHeight = 3;
@@ -136,14 +136,14 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 			final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT);
 			text.setLayoutData(textData);
-			toolkit.paintBordersFor(textFieldComposite);
+			getManagedForm().getToolkit().paintBordersFor(textFieldComposite);
 		}
 
 		attribute = this.taskData.getAttribute(BugzillaReportElement.BLOCKED.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			Label label = createLabel(composite, attribute);
 			GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-			Composite textFieldComposite = toolkit.createComposite(composite);
+			Composite textFieldComposite = getManagedForm().getToolkit().createComposite(composite);
 			GridLayout textLayout = new GridLayout();
 			textLayout.marginWidth = 1;
 			textLayout.marginHeight = 3;
@@ -154,7 +154,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			textData.widthHint = 135;
 			final Text text = createTextField(textFieldComposite, attribute, SWT.FLAT);
 			text.setLayoutData(textData);
-			toolkit.paintBordersFor(textFieldComposite);
+			getManagedForm().getToolkit().paintBordersFor(textFieldComposite);
 		}
 
 		String dependson = taskData.getAttributeValue(BugzillaReportElement.DEPENDSON.getKeyString());
@@ -177,7 +177,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// });
 
 		if (addHyperlinks) {
-			toolkit.createLabel(composite, "");
+			getManagedForm().getToolkit().createLabel(composite, "");
 			addBugHyperlinks(composite, BugzillaReportElement.DEPENDSON.getKeyString());
 		}
 
@@ -196,7 +196,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		// });
 
 		if (addHyperlinks) {
-			toolkit.createLabel(composite, "");
+			getManagedForm().getToolkit().createLabel(composite, "");
 			addBugHyperlinks(composite, BugzillaReportElement.BLOCKED.getKeyString());
 		}
 
@@ -236,7 +236,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		if (taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
-			addBugzillaTimeTracker(toolkit, composite);
+			addBugzillaTimeTracker(getManagedForm().getToolkit(), composite);
 
 	}
 
@@ -267,7 +267,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	private void addBugHyperlinks(Composite composite, String key) {
-		Composite hyperlinksComposite = toolkit.createComposite(composite);
+		Composite hyperlinksComposite = getManagedForm().getToolkit().createComposite(composite);
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.marginBottom = 0;
 		rowLayout.marginLeft = 0;
@@ -280,7 +280,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (values != null && values.length() > 0) {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
-				Hyperlink hyperlink = toolkit.createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
+				Hyperlink hyperlink = getManagedForm().getToolkit().createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
 				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), bugId);
 				if (task != null) {
 					hyperlink.setToolTipText(task.getSummary());
@@ -301,7 +301,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected void addRoles(Composite parent) {
-		Section rolesSection = toolkit.createSection(parent, ExpandableComposite.SHORT_TITLE_BAR);
+		Section rolesSection = getManagedForm().getToolkit().createSection(parent, ExpandableComposite.SHORT_TITLE_BAR);
 		rolesSection.setText("Users in the roles selected below can always view this bug");
 		rolesSection
 				.setDescription("(The assignee can always see a bug, and this section does not take effect unless the bug is restricted to at least one group.)");
@@ -311,7 +311,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		rolesSection.setLayout(gl);
 		rolesSection.setLayoutData(gd);
 
-		Composite rolesComposite = toolkit.createComposite(rolesSection);
+		Composite rolesComposite = getManagedForm().getToolkit().createComposite(rolesSection);
 		GridLayout attributesLayout = new GridLayout();
 		attributesLayout.numColumns = 4;
 		attributesLayout.horizontalSpacing = 5;
@@ -331,7 +331,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		Button button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(backgroundIncoming);
+			button.setBackground(getBackgroundIncoming());
 		}
 
 		attribute = null;
@@ -342,7 +342,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(backgroundIncoming);
+			button.setBackground(getBackgroundIncoming());
 		}
 	}
 
@@ -377,7 +377,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			name += "*";
 		}
 
-		final Button button = toolkit.createButton(rolesComposite, name, style);
+		final Button button = getManagedForm().getToolkit().createButton(rolesComposite, name, style);
 		if (!attribute.isReadOnly()) {
 			button.setData(attribute);
 			button.setSelection(attribute.getValue().equals("1"));
@@ -484,7 +484,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
-				deadlinePicker.setBackground(backgroundIncoming);
+				deadlinePicker.setBackground(getBackgroundIncoming());
 			}
 			deadlinePicker.addPickerSelectionListener(new SelectionListener() {
 
@@ -596,10 +596,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	}
 
 	protected void addVoting(Composite attributesComposite) {
-		Label label = toolkit.createLabel(attributesComposite, "Votes:");
-		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		Label label = getManagedForm().getToolkit().createLabel(attributesComposite, "Votes:");
+		label.setForeground(getManagedForm().getToolkit().getColors().getColor(IFormColors.TITLE));
 		GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(label);
-		Composite votingComposite = toolkit.createComposite(attributesComposite);
+		Composite votingComposite = getManagedForm().getToolkit().createComposite(attributesComposite);
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -618,7 +618,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		votesText.setEditable(false);
 
-		Hyperlink showVotesHyperlink = toolkit.createHyperlink(votingComposite, "Show votes", SWT.NONE);
+		Hyperlink showVotesHyperlink = getManagedForm().getToolkit().createHyperlink(votingComposite, "Show votes", SWT.NONE);
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
@@ -630,7 +630,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			}
 		});
 
-		Hyperlink voteHyperlink = toolkit.createHyperlink(votingComposite, "Vote", SWT.NONE);
+		Hyperlink voteHyperlink = getManagedForm().getToolkit().createHyperlink(votingComposite, "Vote", SWT.NONE);
 		voteHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {

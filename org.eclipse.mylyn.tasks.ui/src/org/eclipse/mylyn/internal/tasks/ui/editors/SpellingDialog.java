@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -66,7 +65,7 @@ public class SpellingDialog extends Dialog {
 		suggestions = new List(spellingComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.widthHint = 150;
-		gd.heightHint = AbstractRepositoryTaskEditor.RADIO_OPTION_WIDTH;
+		gd.heightHint = 120;
 		suggestions.setLayoutData(gd);
 
 		return c;
