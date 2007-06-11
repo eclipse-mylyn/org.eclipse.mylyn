@@ -553,7 +553,7 @@
        id="org.eclipse.mylyn.tasks.ui.fonts.task.editor.comment"
        isEditable="true"
        label="Task Editor - Notes and Comments"
-       value="org.eclipse.jface.dialogfont-">
+       value="org.eclipse.jface.dialogfont">
 	     <fontValue
             ws="win32" 
             value="Tahoma-regular-10">

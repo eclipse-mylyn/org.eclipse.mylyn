@@ -26,15 +26,15 @@ public class TaskListColorsAndFonts {
 
 	public static final String THEME_COLOR_TASKS_INCOMING_BACKGROUND = "org.eclipse.mylyn.tasks.ui.colors.incoming.background";
 
-	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylyn.tasklist.ui.colors.foreground.overdue";
+	public static final String THEME_COLOR_TASK_OVERDUE = "org.eclipse.mylyn.tasks.ui.colors.foreground.overdue";
 
-	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.thisweek.scheduled";
+	public static final String THEME_COLOR_TASK_THISWEEK_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.thisweek.scheduled";
 
-	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.completed";
+	public static final String THEME_COLOR_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.completed";
 
-	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.today.scheduled";
+	public static final String THEME_COLOR_TASK_TODAY_SCHEDULED = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.scheduled";
 
-	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylyn.tasklist.ui.colors.foreground.today.completed";
+	public static final String THEME_COLOR_TASK_TODAY_COMPLETED = "org.eclipse.mylyn.tasks.ui.colors.foreground.today.completed";
 
 	public static final String THEME_COLOR_CATEGORY_GRADIENT_START = "org.eclipse.mylyn.tasks.ui.colors.category.gradient.start";
 
