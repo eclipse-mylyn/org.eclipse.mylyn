@@ -469,7 +469,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected abstract void validateInput();
 
 	/**
-	 * Creates a new <code>AbstractRepositoryTaskEditor</code>. Sets up the default fonts and cut/copy/paste actions.
+	 * Creates a new <code>AbstractRepositoryTaskEditor</code>.
 	 */
 	public AbstractRepositoryTaskEditor(FormEditor editor) {
 		// set the scroll increments so the editor scrolls normally with the
