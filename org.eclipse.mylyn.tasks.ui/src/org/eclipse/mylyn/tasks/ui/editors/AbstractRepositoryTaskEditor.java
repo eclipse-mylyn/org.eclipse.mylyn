@@ -443,10 +443,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return repositoryTask;
 	}
 
-	public Color getBackgroundIncoming() {
-		return colorIncoming;
-	}
-
 	// @Override
 	// public void markDirty(boolean dirty) {
 	// if (repositoryTask != null) {

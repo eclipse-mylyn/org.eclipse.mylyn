@@ -331,7 +331,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		Button button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(getBackgroundIncoming());
+			button.setBackground(getColorIncoming());
 		}
 
 		attribute = null;
@@ -342,7 +342,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		button = addButtonField(rolesComposite, attribute, SWT.CHECK);
 		if (hasChanged(attribute)) {
-			button.setBackground(getBackgroundIncoming());
+			button.setBackground(getColorIncoming());
 		}
 	}
 
@@ -484,7 +484,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
-				deadlinePicker.setBackground(getBackgroundIncoming());
+				deadlinePicker.setBackground(getColorIncoming());
 			}
 			deadlinePicker.addPickerSelectionListener(new SelectionListener() {
 
