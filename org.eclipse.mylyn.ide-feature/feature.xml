@@ -4,7 +4,7 @@
       label="Mylar Focused UI (Recommended)"
       version="2.0.0.v20070607-1200"
       provider-name="Eclipse.org"
-      plugin="org.eclipse.mylar">
+      plugin="org.eclipse.mylyn">
 
    <description url="http://eclipse.org/mylar">
       Mylar Focused UI for reducing information overload when working with tasks. Filters and decorates views and editors to focus on the task context.
