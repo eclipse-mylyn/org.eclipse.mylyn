@@ -49,6 +49,9 @@
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector:"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
