@@ -17,7 +17,7 @@
 		<structureBridge
 	        class="org.eclipse.mylyn.internal.pde.ui.PdeStructureBridge"
 	        name="PDE Structure Bridge"
-	        parentContentType="*"/>
+	        parentContentType="resource"/>
 	</extension>
 	
 	

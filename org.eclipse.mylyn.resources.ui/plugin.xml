@@ -21,10 +21,10 @@
          point="org.eclipse.mylyn.context.ui.bridges">
       <uiBridge
             class="org.eclipse.mylyn.internal.resources.ui.ResourceUiBridge"
-            contentType="*"/>
+            contentType="resource"/>
       <labelProvider
             class="org.eclipse.mylyn.internal.resources.ui.ResourceContextLabelProvider"
-            contentType="*"/>
+            contentType="resource"/>
    </extension>  
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.mylyn.internal.resources.ui.ResourcesUiPreferenceInitializer"/>

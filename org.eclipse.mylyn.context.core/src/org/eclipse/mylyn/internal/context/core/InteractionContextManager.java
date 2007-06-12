@@ -385,7 +385,7 @@ public class InteractionContextManager {
 				AbstractContextStructureBridge canonicalBridge = ContextCorePlugin.getDefault().getStructureBridge(
 						resolved);
 				// HACK: hard-coded resource content type
-				if (!canonicalBridge.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_ANY)) {
+				if (!canonicalBridge.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_RESOURCE)) {
 					// NOTE: resetting bridge
 					bridge = canonicalBridge;
 				}

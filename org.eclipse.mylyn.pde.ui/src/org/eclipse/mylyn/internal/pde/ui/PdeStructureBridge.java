@@ -54,7 +54,6 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	public String getContentType(String elementHandle) {
 		if (elementHandle.endsWith(".xml")) {
 			return parentContentType;
-//			return parentBridge.getContentType();
 		} else {
 			return CONTENT_TYPE;
 		}

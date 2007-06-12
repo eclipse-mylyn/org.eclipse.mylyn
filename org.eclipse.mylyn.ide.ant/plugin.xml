@@ -6,7 +6,7 @@
 		<structureBridge
 	        class="org.eclipse.mylyn.internal.ide.ant.AntStructureBridge"
 	        name="Ant Structure Bridge"
-	        parentContentType="*"/>
+	        parentContentType="resource"/>
 	</extension>
 	
 	<extension point="org.eclipse.mylyn.context.ui.bridges">

@@ -11,7 +11,7 @@
 	    <structureBridge
            class="org.eclipse.mylyn.internal.java.ui.JavaStructureBridge"
            name="Java Structure Bridge"
-           parentContentType="*"/>
+           parentContentType="resource"/>
      <structureBridge
            class="org.eclipse.mylyn.internal.java.ui.JavaDebugStructureBridge"
            name="Java Debug Structure Bridge"/>

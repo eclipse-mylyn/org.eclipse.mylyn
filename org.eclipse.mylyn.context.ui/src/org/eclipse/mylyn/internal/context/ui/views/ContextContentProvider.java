@@ -69,7 +69,7 @@ public class ContextContentProvider implements IStructuredContentProvider, ITree
 				List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
 				nodes = new ArrayList<IInteractionElement>();
 				for (IInteractionElement node : landmarks) {
-					if (!node.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_ANY)
+					if (!node.getContentType().equals(ContextCorePlugin.CONTENT_TYPE_RESOURCE)
 							&& !node.getInterest().isPredicted()) {
 						// && node.getRelations().size() > 0) {
 						nodes.add(node);

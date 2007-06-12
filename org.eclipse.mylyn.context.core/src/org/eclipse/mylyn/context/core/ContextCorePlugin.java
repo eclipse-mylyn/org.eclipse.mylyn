@@ -38,7 +38,7 @@ public class ContextCorePlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.core";
 
-	public static final String CONTENT_TYPE_ANY = "*";
+	public static final String CONTENT_TYPE_RESOURCE = "resource";
 
 	private Map<String, AbstractContextStructureBridge> bridges = new HashMap<String, AbstractContextStructureBridge>();
 
@@ -230,7 +230,7 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	private void internalAddBridge(AbstractContextStructureBridge bridge) {
-		if (bridge.getContentType().equals(CONTENT_TYPE_ANY)) {
+		if (bridge.getContentType().equals(CONTENT_TYPE_RESOURCE)) {
 			defaultBridge = bridge;
 		} else {
 			bridges.put(bridge.getContentType(), bridge);
