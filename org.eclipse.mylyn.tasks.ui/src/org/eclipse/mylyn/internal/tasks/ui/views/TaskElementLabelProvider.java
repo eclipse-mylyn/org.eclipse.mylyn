@@ -50,50 +50,37 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
-	private boolean compositeImages = false;
-
 	private class CompositeImageDescriptor {
 
 		ImageDescriptor icon;
 
 		ImageDescriptor overlayKind;
-
-		ImageDescriptor overlaySynch;
+		
 	};
 
 	public TaskElementLabelProvider() {
 		super();
 	}
 
-	/**
-	 * @param treeViewer
-	 *            can be null
-	 */
-	public TaskElementLabelProvider(boolean compositeImages) {
-		super();
-		this.compositeImages = compositeImages;
-	}
-
 	@Override
 	public Image getImage(Object element) {
-		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element, compositeImages);
+		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
 		if (element instanceof ITask) {
 			if (compositeDescriptor.overlayKind == null) {
 				compositeDescriptor.overlayKind = TasksUiImages.OVERLAY_BLANK;
 			}
-			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind,
-					compositeDescriptor.overlaySynch);
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind);
 		} else if (element instanceof AbstractTaskContainer) {
-			if (compositeDescriptor.overlaySynch == null) {
-				compositeDescriptor.overlaySynch = TasksUiImages.OVERLAY_BLANK;
-			}
-			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon, compositeDescriptor.overlaySynch);
+//			if (compositeDescriptor.overlaySynch == null) {
+//				compositeDescriptor.overlaySynch = TasksUiImages.OVERLAY_BLANK;
+//			}
+			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon);
 		} else {
-			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null, null);
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null);
 		}
 	}
 
-	private CompositeImageDescriptor getImageDescriptor(Object object, boolean showSynchState) {
+	private CompositeImageDescriptor getImageDescriptor(Object object) {
 		CompositeImageDescriptor compositeDescriptor = new CompositeImageDescriptor();
 		if (object instanceof TaskArchive) {
 			compositeDescriptor.icon = TasksUiImages.CATEGORY_ARCHIVE;
@@ -112,9 +99,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
-				if (showSynchState) {
-					compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element, false);
-				}
 			} else if (element instanceof AbstractRepositoryQuery) {
 				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
@@ -123,12 +107,6 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 				compositeDescriptor.icon = connectorUi.getTaskListElementIcon(element);
 				return compositeDescriptor;
 			} else {
-				if (element instanceof ITask) {
-					if (showSynchState) {
-						compositeDescriptor.overlaySynch = getSynchronizationImageDescriptor(element, false);
-					}
-				}
-
 				if (element instanceof AbstractRepositoryQuery) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
 				} else if (element instanceof ITask) {

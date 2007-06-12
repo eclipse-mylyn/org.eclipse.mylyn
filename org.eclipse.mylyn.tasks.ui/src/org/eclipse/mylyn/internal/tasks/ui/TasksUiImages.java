@@ -279,16 +279,13 @@ public class TasksUiImages {
 	 * 
 	 * @param	icon	cannot be null
 	 */
-	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind, ImageDescriptor contextToggle) {	
+	public static Image getCompositeTaskImage(ImageDescriptor icon, ImageDescriptor overlayKind) {	
 		if (icon == null) {
 			return null;
 		}
 		String key = "" + icon.hashCode();
 		if (overlayKind != null) {
 			key += overlayKind.hashCode();
-		}
-		if (contextToggle != null) {
-			key += contextToggle.hashCode();
 		}
 				
 		Image image = getImageRegistry().get(key);
@@ -301,18 +298,14 @@ public class TasksUiImages {
 		return image;
 	}
 
-	public static Image getCompositeContainerImage(ImageDescriptor icon, ImageDescriptor overlay) {
+	public static Image getCompositeContainerImage(ImageDescriptor icon) {
 		if (icon == null) {
 			return null;
 		}
 		String key = "" + icon.hashCode();
-		if (overlay != null) {
-			key += overlay.hashCode();
-		}
-				
 		Image image = getImageRegistry().get(key);
 		if (image == null) {
-			CompositeContainerImageDescriptor imageDescriptor = new CompositeContainerImageDescriptor(icon, overlay);
+			CompositeContainerImageDescriptor imageDescriptor = new CompositeContainerImageDescriptor(icon, OVERLAY_BLANK);
 			image = imageDescriptor.createImage(true);
 			getImageRegistry().put(key, image);
 		}

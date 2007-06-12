@@ -152,7 +152,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
 
 		SearchViewTableLabelProvider taskListTableLabelProvider = new SearchViewTableLabelProvider(
-				new TaskElementLabelProvider(true),
+				new TaskElementLabelProvider(),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 
 		viewer.setLabelProvider(taskListTableLabelProvider);
