@@ -27,9 +27,6 @@
    <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <editorFactory class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
-    <!-- <hyperlinkDetector
-            class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
-            id="org.eclipse.mylyn.tasks.hyperlinkdetector.bugzillatask"/>-->
    </extension>
    
    <extension 
@@ -38,15 +35,5 @@
                <newWizardShortcut id="org.eclipse.mylyn.bugzilla.bugWizard"/>
           </perspectiveExtension>
 	</extension>
-	
-	
-	
-         <extension
-   		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
-            <detector class="org.eclipse.mylyn.internal.bugzilla.ui.search.StackTraceDuplicateDetector"
-                      name="Stack Trace">
-            </detector>
-          
-   </extension>
 	
 </plugin>
