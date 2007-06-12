@@ -45,7 +45,7 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskDataExportTest.class);
 		suite.addTestSuite(TaskDataImportTest.class);
 		suite.addTestSuite(TaskActivityTest.class);
-		suite.addTestSuite(TaskAttachmentActionsTest.class);
+		suite.addTestSuite(AttachmentJobTest.class);
 		suite.addTestSuite(RepositorySettingsPageTest.class);
 		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(UrlConnectionUtilTest.class);

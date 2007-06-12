@@ -37,6 +37,8 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	public static final String REPOSITORY_URL = "http://mockrepository.test";
 
+	private IAttachmentHandler attachmentHandler;
+
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
 		// ignore
@@ -51,8 +53,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IAttachmentHandler getAttachmentHandler() {
-		// ignore
-		return null;
+		return attachmentHandler;
 	}
 
 	@Override
@@ -157,4 +158,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 		return null;
 	}
 
+	public void setAttachmentHandler(IAttachmentHandler attachmentHandler) {
+		this.attachmentHandler = attachmentHandler;
+	}
 }

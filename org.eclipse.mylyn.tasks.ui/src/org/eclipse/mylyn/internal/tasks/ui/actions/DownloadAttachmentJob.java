@@ -8,7 +8,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,63 +24,64 @@ import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Steffen Pingel
  */
-public class CopyAttachmentToClipboardJob extends Job {
+public class DownloadAttachmentJob extends Job {
 
-	private RepositoryAttachment attachment;
+	private final RepositoryAttachment attachment;
 
-	public CopyAttachmentToClipboardJob(RepositoryAttachment attachment) {
-		super("Copying Attachment to Clipboard");
+	private final File targetFile;
+
+	public DownloadAttachmentJob(RepositoryAttachment attachment, File targetFile) {
+		super("Downloading Attachment");
 
 		if (attachment == null) {
-			throw new IllegalArgumentException("attachment may not be null");
+			throw new IllegalArgumentException("attachment must not be null");
 		}
-		
+		if (targetFile == null) {
+			throw new IllegalArgumentException("target must not be null");
+		}
+
 		this.attachment = attachment;
+		this.targetFile = targetFile;
 	}
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(attachment.getRepositoryKind(),
-				attachment.getRepositoryUrl());
+				this.attachment.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				attachment.getRepositoryKind());
+				this.attachment.getRepositoryKind());
 		IAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
-			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
+			return new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
 					"The repository does not support attachments.");
 		}
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		FileOutputStream out = null;
 		try {
+			out = new FileOutputStream(this.targetFile);
 			handler.downloadAttachment(repository, attachment, out, monitor);
 		} catch (final CoreException e) {
-			MylarStatusHandler.displayStatus("Copy Attachment to Clipboard", e.getStatus());
+			MylarStatusHandler.displayStatus("Download Attachment", e.getStatus());
 			return Status.OK_STATUS;
-		}
-		
-		String contents = new String(out.toByteArray());
-		contents = contents.replaceAll("\r\n|\n", System.getProperty("line.separator"));
-		copyToClipboard(contents);
-		
-		return Status.OK_STATUS;
-	}
-
-	private void copyToClipboard(final String contents) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
-				clipboard.setContents(new Object[] { contents }, new Transfer[] { TextTransfer.getInstance() });
-				clipboard.dispose();
+		} catch (IOException e) {
+			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
+					"Error while writing to attachment file.", e);
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					MylarStatusHandler.fail(e, "Could not close attachment file: " + this.targetFile.getAbsolutePath(),
+							false);
+				}
 			}
-		});
+		}
+
+		return Status.OK_STATUS;
 	}
 
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,7 +69,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
-import org.eclipse.mylyn.internal.tasks.ui.actions.SaveRemoteFileAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
@@ -79,7 +80,6 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -209,6 +209,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
+	
+	private static final String LABEL_SAVE = "Save...";
 
 	private RepositoryTaskEditorInput editorInput;
 
@@ -1199,7 +1201,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 			};
 
-			final Action saveAction = new Action(SaveRemoteFileAction.TITLE) {
+			final Action saveAction = new Action(LABEL_SAVE) {
 				public void run() {
 					RepositoryAttachment attachment = (RepositoryAttachment) (((StructuredSelection) attachmentsTableViewer.getSelection()).getFirstElement());
 					/* Launch Browser */
@@ -1222,26 +1224,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 					fileChooser.setFileName(fname);
 					String filePath = fileChooser.open();
-
-					// Check if the dialog was canceled or an error occured
+					// Check if the dialog was canceled or an error occurred
 					if (filePath == null) {
 						return;
 					}
 
-					// TODO: Use IAttachmentHandler instead
-					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-							.getRepositoryConnector(repository.getKind());
-					IAttachmentHandler handler = connector.getAttachmentHandler();
-
-					SaveRemoteFileAction save = new SaveRemoteFileAction();
-					try {
-						save.setInputStream(handler.getAttachmentAsStream(repository, attachment,
-								new NullProgressMonitor()));
-						save.setDestinationFilePath(filePath);
-						save.run();
-					} catch (CoreException e) {
-						MylarStatusHandler.fail(e.getStatus().getException(), "Attachment save failed", false);
-					}
+					DownloadAttachmentJob job = new DownloadAttachmentJob(attachment, new File(filePath));
+					job.setUser(true);
+					job.schedule();
 				}
 			};
 
