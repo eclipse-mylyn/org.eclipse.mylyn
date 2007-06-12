@@ -231,7 +231,7 @@
 	     <action
                definitionId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
                label="Quick Context View"
-               class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialog"
+               class="org.eclipse.mylyn.internal.context.ui.actions.OpenQuickContextPopupDialogAction"
                menubarPath="navigate/open.ext2"
                id="org.eclipse.mylyn.context.ui.actions.open.context.dialog">
          </action>

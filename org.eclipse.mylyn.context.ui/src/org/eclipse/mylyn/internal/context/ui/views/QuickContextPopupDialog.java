@@ -78,6 +78,12 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		create();
 	}
 
+	@Override
+	public boolean close() {
+		// nothing additional to dispose
+		return super.close();
+	}
+	
 	protected Control createDialogArea(Composite parent) {
 		createViewer(parent);
 		createUIListenersTreeViewer();

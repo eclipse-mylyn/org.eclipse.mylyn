@@ -26,10 +26,10 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Mik Kersten
  */
-public class OpenQuickContextPopupDialog implements IWorkbenchWindowActionDelegate {
+public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowActionDelegate {
+
 
 	private QuickContextPopupDialog inplaceDialog;
-
 	public void dispose() {
 		inplaceDialog = null;
 	}
