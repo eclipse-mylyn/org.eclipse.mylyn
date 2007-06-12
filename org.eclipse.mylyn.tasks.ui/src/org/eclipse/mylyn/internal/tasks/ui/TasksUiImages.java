@@ -23,6 +23,8 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * NOTE: if you create your own image descriptors you are responsible for disposing them.
+ * 
  * @author Mik Kersten
  */
 public class TasksUiImages {
