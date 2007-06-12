@@ -8,6 +8,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -22,6 +23,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.themes.IThemeManager;
 
 /**
  * Derived from JUnitProgressBar
@@ -58,17 +61,11 @@ public class WorkweekProgressBar extends Canvas {
 				paint(e);
 			}
 		});
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				completedColor.dispose();
-			}
-		});
-		Display display = parent.getDisplay();
-		completedColor = new Color(display, 95, 191, 124); //95);
-//			themeManager.getCurrentTheme().getColorRegistry().get(
-//				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		completedColor = themeManager.getCurrentTheme().getColorRegistry().get(
+				TaskListColorsAndFonts.THEME_COLOR_TASK_TODAY_COMPLETED);
 	}
-
+	
 	public void setMaximum(int max) {
 		maxTickCount = max;
 	}
