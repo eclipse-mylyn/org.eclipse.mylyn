@@ -579,13 +579,24 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			int green = Math.min(255, (int) (parentBackground.getGreen() * GRADIENT_TOP));
 			int blue = Math.min(255, (int) (parentBackground.getBlue() * GRADIENT_TOP));
 
-			categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
-
+			try {
+				categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
+			} catch (Exception e) {
+				categoryGradientStart = getViewer().getTree().getParent().getBackground();
+				MylarStatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+			}
 			red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
 			green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
 			blue = Math.max(0, (int) (parentBackground.getBlue() / GRADIENT_BOTTOM));
-			categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
-
+			if (red > 255) {
+				red = 255;
+			}
+			try {
+				categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
+			} catch (Exception e) {
+				categoryGradientStart = getViewer().getTree().getParent().getBackground();
+				MylarStatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+			}
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
 			getViewer().getTree().removeListener(SWT.EraseItem, CATEGORY_GRADIENT_DRAWER);
