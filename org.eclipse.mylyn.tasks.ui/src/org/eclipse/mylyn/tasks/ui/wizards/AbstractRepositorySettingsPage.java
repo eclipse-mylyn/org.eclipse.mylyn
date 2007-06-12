@@ -199,6 +199,16 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setNeedsValidation(true);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (toolkit != null) {
+			if (toolkit.getColors() != null) {
+				toolkit.dispose();
+			}
+		} 
+	}
+	
 	public void createControl(Composite parent) {
 		compositeContainer = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();

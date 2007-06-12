@@ -75,9 +75,19 @@ public class UiLegendDialog extends PopupDialog {
 	}
 
 	@Override
+	public boolean close() {
+		if (toolkit != null) {
+			if (toolkit.getColors() != null) {
+				toolkit.dispose();
+			}
+		}
+		return super.close();
+	}
+
+	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
-		getShell().setText("Mylar UI Legend");
+		getShell().setText("Mylyn UI Legend");
 
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
@@ -105,7 +115,6 @@ public class UiLegendDialog extends PopupDialog {
 		buttonsLayout.marginWidth = 0;
 		buttonsComposite.setLayout(buttonsLayout);
 		section.setTextClient(buttonsComposite);
-// buttonsComposite.setLayout(new RowLayout());
 		final ImageHyperlink closeHyperlink = toolkit.createImageHyperlink(buttonsComposite, SWT.NONE);
 		closeHyperlink.setLayout(buttonsLayout);
 		closeHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.NOTIFICATION_CLOSE));
