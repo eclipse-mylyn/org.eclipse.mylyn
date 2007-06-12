@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.TaskCommandIds;
+import org.eclipse.mylyn.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -39,7 +39,7 @@ public class AddRepositoryAction extends Action {
 	public void run() {
 		IHandlerService handlerSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 		try {
-			handlerSvc.executeCommand(TaskCommandIds.ADD_TASK_REPOSITORY, null);
+			handlerSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 		} catch (Exception e) {
 			MylarStatusHandler.fail(e, e.getMessage(), true);
 		}

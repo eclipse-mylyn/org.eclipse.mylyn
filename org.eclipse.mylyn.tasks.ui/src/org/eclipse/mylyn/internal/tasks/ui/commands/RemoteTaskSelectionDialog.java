@@ -46,7 +46,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.tasks.ui.TaskCommandIds;
+import org.eclipse.mylyn.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -206,7 +206,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			public void widgetSelected(SelectionEvent e) {
 				IHandlerService hndSvc = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
 				try {
-					hndSvc.executeCommand(TaskCommandIds.ADD_TASK_REPOSITORY, null);
+					hndSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 					repositoriesViewer.setInput(getTaskRepositories());
 				} catch (CommandException ex) {
 					MylarStatusHandler.fail(ex, ex.getMessage(), true);
