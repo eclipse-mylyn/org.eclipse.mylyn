@@ -25,7 +25,7 @@ public class MylarStatusHandler {
 
 	// private static boolean testingMode = false;
 
-	private static final String ID_PLUGIN = "org.eclipse.mylar";
+	private static final String ID_PLUGIN = "org.eclipse.mylyn";
 	
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
@@ -50,7 +50,7 @@ public class MylarStatusHandler {
 	}
 
 	public static void log(String message, Object source) {
-		message = "Mylar: " + message;
+		message = "Mylyn: " + message;
 		if (source != null)
 			message += ", source: " + source.getClass().getName();
 
