@@ -158,15 +158,15 @@ public interface IBugzillaConstants {
 
 	static final String ECLIPSE_BUGZILLA_URL = "https://bugs.eclipse.org/bugs";
 
-	static final String TEST_BUGZILLA_216_URL = "http://mylar.eclipse.org/bugs216";
+	static final String TEST_BUGZILLA_216_URL = "http://mylyn.eclipse.org/bugs216";
 
-	static final String TEST_BUGZILLA_218_URL = "http://mylar.eclipse.org/bugs218";
+	static final String TEST_BUGZILLA_218_URL = "http://mylyn.eclipse.org/bugs218";
 
-	static final String TEST_BUGZILLA_220_URL = "http://mylar.eclipse.org/bugs220";
+	static final String TEST_BUGZILLA_220_URL = "http://mylyn.eclipse.org/bugs220";
 
-	static final String TEST_BUGZILLA_2201_URL = "http://mylar.eclipse.org/bugs2201";
+	static final String TEST_BUGZILLA_2201_URL = "http://mylyn.eclipse.org/bugs2201";
 
-	static final String TEST_BUGZILLA_222_URL = "http://mylar.eclipse.org/bugs222";
+	static final String TEST_BUGZILLA_222_URL = "http://mylyn.eclipse.org/bugs222";
 
 	// Default values for keys
 
@@ -198,7 +198,7 @@ public interface IBugzillaConstants {
 
 	static final String[] DEFAULT_TARGET_VALUES = {};
 
-	public static final String TITLE_MESSAGE_DIALOG = "Mylar Bugzilla Connector";
+	public static final String TITLE_MESSAGE_DIALOG = "Mylyn Bugzilla Connector";
 
 	public static final String TITLE_NEW_BUG = "New Bugzilla Report";
 
