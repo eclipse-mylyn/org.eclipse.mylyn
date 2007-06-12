@@ -325,14 +325,6 @@
            style="toggle"
            toolbarPath="context"
            tooltip="Focus on Workweek"/> 
-  	<action
-            class="org.eclipse.mylyn.internal.context.ui.actions.ContextCapturePauseAction"
-            icon="icons/elcl16/capture-pause.gif"
-            id="org.eclipse.mylyn.ui.context.capture.pause"
-            label="Pause Capturing Context"
-            menubarPath="additions"
-            style="toggle"
-            tooltip="Pause Capturing Context"/>
   	</viewContribution>
 	<viewContribution 
 		id="org.eclipse.mylyn..context.ui.outline.contribution" 
