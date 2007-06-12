@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mylar Bugzilla Connector IDE Plug-in
+Bundle-SymbolicName: org.eclipse.mylyn.bugzilla.ide;singleton:=true
+Bundle-Version: 2.0.0.v20070607-1200
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.mylyn.tasks.core,
+ org.eclipse.mylyn.tasks.ui,
+ org.eclipse.mylyn.bugzilla.core,
+ org.eclipse.mylyn.bugzilla.ui,
+ org.eclipse.jface,
+ org.eclipse.mylyn
+Eclipse-AutoStart: true
+Bundle-Vendor: Eclipse.org
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -3,50 +3,21 @@
 <plugin>
       
    <extension
-         id="org.eclipse.mylyn.bugzilla.repository" 
-         name="Bugzilla Repository"
-         point="org.eclipse.mylyn.tasks.ui.repositories">
-
-      <connectorCore
-            class="org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector"
-            id="org.eclipse.mylyn.bugzilla.tasklist.repositories"
-            name="Bugzilla Repository Connector"
-            type="bugzilla"/>
-            
-      <connectorUi
-            brandingIcon="icons/eview16/bugzilla-logo.gif"
-            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
-            name="Bugzilla Repository Ui"
-            overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
-             
-		<externalizer 
-            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
-            id="org.eclipse.mylyn.bugzilla.tasklist.externalizer"/>
-   </extension> 
-  
-   <extension
-         point="org.eclipse.mylyn.tasks.ui.editors">
-      <editorFactory class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskEditorFactory"/>
-    <!-- <hyperlinkDetector
-            class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
-            id="org.eclipse.mylyn.tasks.hyperlinkdetector.bugzillatask"/>-->
-   </extension>
-   
-   <extension 
-   		point="org.eclipse.ui.perspectiveExtensions">
-          <perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-               <newWizardShortcut id="org.eclipse.mylyn.bugzilla.bugWizard"/>
-          </perspectiveExtension>
-	</extension>
-	
-	
-	
-         <extension
    		point="org.eclipse.mylyn.tasks.ui.duplicateDetectors">
             <detector class="org.eclipse.mylyn.internal.bugzilla.ui.search.StackTraceDuplicateDetector"
                       name="Stack Trace">
-            </detector>
-          
+            </detector>       
    </extension>
-	
+      
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            addAutomatically="true"
+            characterEncoding="ISO-8859-1"
+            label="Eclipse.org"
+            repositoryKind="bugzilla"
+            urlRepository="https://bugs.eclipse.org/bugs"
+            version="2.22"/>
+   </extension>    
+  
 </plugin>
