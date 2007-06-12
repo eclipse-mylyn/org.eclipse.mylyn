@@ -24,7 +24,7 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 
 /**
  * @author Meghan Allen
- */
+ */ 
 public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.";
