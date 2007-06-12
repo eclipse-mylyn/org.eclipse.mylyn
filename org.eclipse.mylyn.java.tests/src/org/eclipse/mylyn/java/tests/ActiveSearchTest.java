@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.UiTestUtil;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.java.tests.search.SearchPluginTestHelper;
@@ -142,7 +142,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		JavaReferencesProvider prov = new JavaReferencesProvider();
 
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
-		IMylarSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
 		if (o == null)
 			return null;
 

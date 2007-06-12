@@ -49,7 +49,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
@@ -274,7 +274,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 	}
 
 	@Override
-	public IMylarSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
+	public IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		if (javaElement == null || !javaElement.exists())
 			return null;
@@ -309,7 +309,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	}
 
-	protected static class JavaSearchOperation extends JavaSearchQuery implements IMylarSearchOperation {
+	protected static class JavaSearchOperation extends JavaSearchQuery implements IActiveSearchOperation {
 		private ISearchResult result = null;
 
 		@Override

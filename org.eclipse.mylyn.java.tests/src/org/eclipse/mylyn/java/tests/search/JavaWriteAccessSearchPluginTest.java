@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
 
 public class JavaWriteAccessSearchPluginTest extends TestCase implements ISearchPluginTest {
@@ -53,7 +53,7 @@ public class JavaWriteAccessSearchPluginTest extends TestCase implements ISearch
 		JavaWriteAccessProvider prov = new JavaWriteAccessProvider();
 
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
-		IMylarSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.WRITE_ACCESSES, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.WRITE_ACCESSES, dos);
 		SearchPluginTestHelper.search(o, l);
 		return l.getResults();
 	}

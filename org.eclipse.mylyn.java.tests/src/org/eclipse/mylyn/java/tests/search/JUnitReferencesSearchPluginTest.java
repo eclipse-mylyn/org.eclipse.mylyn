@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 
 public class JUnitReferencesSearchPluginTest extends TestCase implements ISearchPluginTest {
@@ -56,7 +56,7 @@ public class JUnitReferencesSearchPluginTest extends TestCase implements ISearch
 		JUnitReferencesProvider prov = new JUnitReferencesProvider();
 
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
-		IMylarSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
 		SearchPluginTestHelper.search(o, l);
 		return l.getResults();
 	}

@@ -14,7 +14,7 @@ package org.eclipse.mylyn.context.core;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.context.core.CompositeContextElement;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContextElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -65,7 +65,7 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	 *            Only used in thye AbstractJavaRelationshipProvider for the
 	 *            search type
 	 */
-	public abstract IMylarSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation);
+	public abstract IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation);
 
 	public abstract String getName();
 

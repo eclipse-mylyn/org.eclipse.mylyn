@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 
 /**
  * @author Shawn Minto
@@ -87,7 +87,7 @@ public class SearchPluginTestHelper extends TestCase {
 	/**
 	 * @return -1 if there was a prob, else the search time in seconds
 	 */
-	public static long search(IMylarSearchOperation op, IActiveSearchListener listener) {
+	public static long search(IActiveSearchOperation op, IActiveSearchListener listener) {
 		if (op == null)
 			return -1;
 

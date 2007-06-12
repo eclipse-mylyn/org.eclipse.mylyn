@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @author Mik Kersten
  */
-public interface IMylarSearchOperation {
+public interface IActiveSearchOperation {
 
 	public void addListener(IActiveSearchListener listener);
 

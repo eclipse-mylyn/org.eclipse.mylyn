@@ -25,7 +25,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
@@ -287,7 +287,7 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		JavaReferencesProvider prov = new JavaReferencesProvider();
 
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
-		IMylarSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.REFERENCES, dos);
 		if (o == null)
 			return null;
 

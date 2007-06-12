@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.ResourceHelper;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.internal.context.core.CompositeInteractionContext;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
@@ -121,7 +121,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 		// test with each of the sepatations
 		XmlJavaRelationProvider prov = new XmlJavaRelationProvider();
 
-		IMylarSearchOperation o = prov.getSearchOperation(node, 0, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, 0, dos);
 		if (o == null)
 			return null;
 

@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.tests.support.search.ISearchPluginTest;
 import org.eclipse.mylyn.context.tests.support.search.TestActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 
 /*
@@ -69,7 +69,7 @@ public class JavaImplementorsSearchPluginTest extends TestCase implements ISearc
 		// test with each of the sepatations
 		JavaImplementorsProvider prov = new JavaImplementorsProvider();
 
-		IMylarSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.IMPLEMENTORS, dos);
+		IActiveSearchOperation o = prov.getSearchOperation(node, IJavaSearchConstants.IMPLEMENTORS, dos);
 		TestActiveSearchListener l = new TestActiveSearchListener(prov);
 		SearchPluginTestHelper.search(o, l);
 		return l.getResults();

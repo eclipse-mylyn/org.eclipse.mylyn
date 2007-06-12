@@ -45,7 +45,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
-import org.eclipse.mylyn.internal.context.core.IMylarSearchOperation;
+import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.internal.java.ui.search.XmlActiveSearchUpdater;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
@@ -260,7 +260,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 	}
 
 	@Override
-	public IMylarSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
+	public IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
 		IJavaElement javaElement = JavaCore.create(node.getHandleIdentifier());
 		TextSearchScope scope = createTextSearchScope(degreeOfSeparation);
 		if (scope == null)
@@ -303,7 +303,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 	}
 
-	public static class XMLSearchOperation extends FileSearchQuery implements IMylarSearchOperation {
+	public static class XMLSearchOperation extends FileSearchQuery implements IActiveSearchOperation {
 
 		@Override
 		public ISearchResult getSearchResult() {
