@@ -58,7 +58,6 @@ import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
