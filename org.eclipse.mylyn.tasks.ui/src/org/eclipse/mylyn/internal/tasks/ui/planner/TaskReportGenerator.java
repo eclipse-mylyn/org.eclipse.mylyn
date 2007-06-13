@@ -23,7 +23,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 

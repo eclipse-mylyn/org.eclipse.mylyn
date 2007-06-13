@@ -14,13 +14,17 @@
 package org.eclipse.mylyn.tasks.core;
 
 
-
 /**
  * @author Mik Kersten
  */
-public class TaskCategory extends AbstractTaskCategory {
+public final class TaskCategory extends AbstractTaskCategory {
 
 	public TaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
+	}
+
+	@Override
+	public boolean isUserDefined() {
+		return true;
 	}
 }

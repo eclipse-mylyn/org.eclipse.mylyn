@@ -38,15 +38,6 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		assert handle != null;
 		this.handle = handleAndDescription;
 	}
-
-	/**
-	 * Override for custom-named elements.
-	 */
-	@Deprecated
-	public boolean canRename() {
-		return true;
-	}
-
 	
 	public Set<AbstractTask> getChildren() {
 		return Collections.unmodifiableSet(children);

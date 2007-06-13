@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -33,7 +33,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	private UnscheduledCategory unscheduledCategory = new UnscheduledCategory();
 	
-	class UnscheduledCategory extends TaskCategory {
+	private static final class UnscheduledCategory extends AbstractTaskCategory {
 
 		public static final String LABEL = "<Unscheduled>";
 
@@ -73,7 +73,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 		}
 
 		@Override
-		public boolean canRename() {
+		public boolean isUserDefined() {
 			return false;
 		}
 	}

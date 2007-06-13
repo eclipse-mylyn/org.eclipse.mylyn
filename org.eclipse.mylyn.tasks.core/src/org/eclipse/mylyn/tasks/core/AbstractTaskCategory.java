@@ -19,4 +19,10 @@ public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 	public AbstractTaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
 	}
+	
+	/**
+	 * Override to return true for categories that the user creates, deletes, and renames.
+	 * Return false for categories that are managed 
+	 */
+	public abstract boolean isUserDefined();
 }

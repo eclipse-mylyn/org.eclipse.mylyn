@@ -207,4 +207,9 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return startDate.compareTo(((ScheduledTaskContainer) taskListElement).startDate);
 	}
+
+	@Override
+	public boolean isUserDefined() {
+		return false;
+	}
 }

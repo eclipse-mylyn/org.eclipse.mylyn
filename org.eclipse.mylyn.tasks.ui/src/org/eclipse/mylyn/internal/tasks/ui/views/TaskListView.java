@@ -90,6 +90,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -1257,21 +1258,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof CopyTaskDetailsAction) {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
-				if (element instanceof AbstractTaskContainer) {
-					AbstractTaskContainer container = (AbstractTaskContainer) element;
-					action.setEnabled(container.canRename());
+				if (element instanceof AbstractTaskCategory) {
+					AbstractTaskCategory container = (AbstractTaskCategory)element;
+					action.setEnabled(container.isUserDefined());
+				} else if (element instanceof AbstractRepositoryQuery) {
+					action.setEnabled(true);	
 				}
-				// if (element instanceof TaskArchive)
-				// action.setEnabled(false);
-				// else
-				// action.setEnabled(true);
 			}
 		} else {
 			action.setEnabled(true);
 		}
-		// if(!canEnableGoInto){
-		// goIntoAction.setEnabled(false);
-		// }
 	}
 
 	private void makeActions() {

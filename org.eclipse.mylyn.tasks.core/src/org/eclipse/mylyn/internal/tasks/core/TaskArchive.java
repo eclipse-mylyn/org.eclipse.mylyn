@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.tasks.core;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
-
-
 /**
  * @author Mik Kersten
  */
@@ -44,7 +42,7 @@ public class TaskArchive extends AbstractTaskCategory {
 	}
 
 	@Override
-	public boolean canRename() {
+	public boolean isUserDefined() {
 		return false;
 	}
 }
