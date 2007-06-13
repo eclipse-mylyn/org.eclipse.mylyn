@@ -17,7 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -29,9 +29,9 @@ public class MarkTaskIncompleteAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.incomplete";
 
-	private List<AbstractTaskListElement> selectedElements;
+	private List<AbstractTaskContainer> selectedElements;
 
-	public MarkTaskIncompleteAction(List<AbstractTaskListElement> selectedElements) {
+	public MarkTaskIncompleteAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);

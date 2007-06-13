@@ -38,6 +38,8 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -52,13 +54,11 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
@@ -111,19 +111,19 @@ public class TaskListManager implements IPropertyChangeListener {
 	public static final String[] ESTIMATE_TIMES = new String[] { "0 Hours", "1 Hours", "2 Hours", "3 Hours", "4 Hours",
 			"5 Hours", "6 Hours", "7 Hours", "8 Hours", "9 Hours", "10 Hours" };
 
-	private DateRangeContainer activityPreviousWeek;
+	private ScheduledTaskContainer activityPreviousWeek;
 
-	private DateRangeContainer activityThisWeek;
+	private ScheduledTaskContainer activityThisWeek;
 
-	private List<DateRangeContainer> activityWeekDays = new ArrayList<DateRangeContainer>();
+	private List<ScheduledTaskContainer> activityWeekDays = new ArrayList<ScheduledTaskContainer>();
 
-	private DateRangeContainer activityNextWeek;
+	private ScheduledTaskContainer activityNextWeek;
 
-	private DateRangeContainer activityFuture;
+	private ScheduledTaskContainer activityFuture;
 
-	private DateRangeContainer activityPast;
+	private ScheduledTaskContainer activityPast;
 
-	private ArrayList<DateRangeContainer> dateRangeContainers = new ArrayList<DateRangeContainer>();
+	private ArrayList<ScheduledTaskContainer> dateRangeContainers = new ArrayList<ScheduledTaskContainer>();
 
 	private Set<AbstractTask> tasksWithReminders = new HashSet<AbstractTask>();
 
@@ -209,13 +209,13 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void containerAdded(AbstractTaskListElement container) {
+		public void containerAdded(AbstractTaskContainer container) {
 		}
 
-		public void containerDeleted(AbstractTaskListElement container) {
+		public void containerDeleted(AbstractTaskContainer container) {
 		}
 
-		public void containerInfoChanged(AbstractTaskListElement container) {
+		public void containerInfoChanged(AbstractTaskContainer container) {
 		}
 
 		public void localInfoChanged(AbstractTask task) {
@@ -231,7 +231,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			TaskListManager.this.resetAndRollOver();
 		}
 
-		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 		}
 
 	};
@@ -289,13 +289,13 @@ public class TaskListManager implements IPropertyChangeListener {
 		activityFuture.clear();
 		activityNextWeek.clear();
 
-		for (DateRangeContainer day : activityWeekDays) {
+		for (ScheduledTaskContainer day : activityWeekDays) {
 			day.clear();
 		}
 		HashSet<AbstractTask> toRemove = new HashSet<AbstractTask>();
 		toRemove.addAll(activityThisWeek.getDateRangeDelegates());
 		for (AbstractTask activity : toRemove) {
-			DateRangeActivityDelegate delegate = (DateRangeActivityDelegate) activity;
+			ScheduledTaskDelegate delegate = (ScheduledTaskDelegate) activity;
 			Calendar calendar = GregorianCalendar.getInstance();
 
 			Date schedDate = delegate.getScheduledForDate();
@@ -322,8 +322,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		allScheduledTasks.addAll(tasksWithDueDates);
 
 		for (AbstractTask task : allScheduledTasks) {
-			if (task instanceof DateRangeActivityDelegate) {
-				task = ((DateRangeActivityDelegate) task).getCorrespondingTask();
+			if (task instanceof ScheduledTaskDelegate) {
+				task = ((ScheduledTaskDelegate) task).getCorrespondingTask();
 			}
 
 			Date schedDate = task.getScheduledForDate();
@@ -334,25 +334,25 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (schedDate != null) {
 				tempCalendar.setTime(schedDate);
 				if (activityNextWeek.includes(tempCalendar)) {
-					activityNextWeek.addTask(new DateRangeActivityDelegate(activityNextWeek, task, tempCalendar,
+					activityNextWeek.addTask(new ScheduledTaskDelegate(activityNextWeek, task, tempCalendar,
 							tempCalendar));
 				} else if (activityFuture.includes(tempCalendar)) {
-					activityFuture.addTask(new DateRangeActivityDelegate(activityFuture, task, tempCalendar,
+					activityFuture.addTask(new ScheduledTaskDelegate(activityFuture, task, tempCalendar,
 							tempCalendar));
 				} else if (activityThisWeek.includes(tempCalendar) && !activityThisWeek.getChildren().contains(task)) {
-					activityThisWeek.addTask(new DateRangeActivityDelegate(activityThisWeek, task, tempCalendar,
+					activityThisWeek.addTask(new ScheduledTaskDelegate(activityThisWeek, task, tempCalendar,
 							tempCalendar));
 				} else if (activityPreviousWeek.includes(tempCalendar)
 						&& !activityPreviousWeek.getChildren().contains(task)) {
-					activityPreviousWeek.addTask(new DateRangeActivityDelegate(activityPreviousWeek, task,
+					activityPreviousWeek.addTask(new ScheduledTaskDelegate(activityPreviousWeek, task,
 							tempCalendar, tempCalendar));
 				} else if (activityPast.includes(tempCalendar) && !activityPast.getChildren().contains(task)) {
-					activityPast.addTask(new DateRangeActivityDelegate(activityPast, task, tempCalendar, tempCalendar));
+					activityPast.addTask(new ScheduledTaskDelegate(activityPast, task, tempCalendar, tempCalendar));
 				}
 
-				for (DateRangeContainer day : activityWeekDays) {
+				for (ScheduledTaskContainer day : activityWeekDays) {
 					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar,
+						day.addTask(new ScheduledTaskDelegate(day, task, tempCalendar, tempCalendar,
 								this.getElapsedTime(task)));
 					}
 				}
@@ -436,11 +436,11 @@ public class TaskListManager implements IPropertyChangeListener {
 	private void taskDeactivated(GregorianCalendar calendarEnd) {
 		currentTaskEnd = calendarEnd;
 
-		Set<DateRangeContainer> rangeSet = new HashSet<DateRangeContainer>();
+		Set<ScheduledTaskContainer> rangeSet = new HashSet<ScheduledTaskContainer>();
 		rangeSet.addAll(dateRangeContainers);
 		rangeSet.add(activityThisWeek);
 
-		for (DateRangeContainer week : rangeSet) {
+		for (ScheduledTaskContainer week : rangeSet) {
 			if (week.includes(currentTaskStart) && (!isWeekDay(week) && !week.isFuture())) {
 				if (currentTask != null) {
 					// add to date range 'bin'
@@ -448,7 +448,7 @@ public class TaskListManager implements IPropertyChangeListener {
 					if (activeTime == null) {
 						activeTime = new Long(0);
 					}
-					DateRangeActivityDelegate delegate = new DateRangeActivityDelegate(week, currentTask,
+					ScheduledTaskDelegate delegate = new ScheduledTaskDelegate(week, currentTask,
 							currentTaskStart, currentTaskEnd, activeTime);
 					week.addTask(delegate);
 					if (taskActivityHistoryInitialized) {
@@ -465,27 +465,27 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	/** public for testing * */
-	public DateRangeContainer getActivityThisWeek() {
+	public ScheduledTaskContainer getActivityThisWeek() {
 		return activityThisWeek;
 	}
 
 	/** public for testing * */
-	public DateRangeContainer getActivityPast() {
+	public ScheduledTaskContainer getActivityPast() {
 		return activityPast;
 	}
 
 	/** public for testing * */
-	public DateRangeContainer getActivityFuture() {
+	public ScheduledTaskContainer getActivityFuture() {
 		return activityFuture;
 	}
 
 	/** public for testing * */
-	public DateRangeContainer getActivityNextWeek() {
+	public ScheduledTaskContainer getActivityNextWeek() {
 		return activityNextWeek;
 	}
 
 	/** public for testing * */
-	public DateRangeContainer getActivityPrevious() {
+	public ScheduledTaskContainer getActivityPrevious() {
 		return activityPreviousWeek;
 	}
 
@@ -559,7 +559,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				summary = "Sunday";
 				break;
 			}
-			DateRangeContainer day = new DateRangeContainer(dayStart, dayEnd, summary);
+			ScheduledTaskContainer day = new ScheduledTaskContainer(dayStart, dayEnd, summary);
 			activityWeekDays.add(day);
 			dateRangeContainers.add(day);
 		}
@@ -572,7 +572,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		currentEnd.setFirstDayOfWeek(startDay);
 		currentEnd.setTime(startTime);
 		snapToEndOfWeek(currentEnd);
-		activityThisWeek = new DateRangeContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
+		activityThisWeek = new ScheduledTaskContainer(currentBegin, currentEnd, DESCRIPTION_THIS_WEEK);
 		// dateRangeContainers.add(activityThisWeek);
 
 		GregorianCalendar previousStart = new GregorianCalendar();
@@ -585,7 +585,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		previousEnd.setTime(startTime);
 		previousEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PREVIOUS);
 		snapToEndOfWeek(previousEnd);
-		activityPreviousWeek = new DateRangeContainer(previousStart.getTime(), previousEnd.getTime(),
+		activityPreviousWeek = new ScheduledTaskContainer(previousStart.getTime(), previousEnd.getTime(),
 				DESCRIPTION_PREVIOUS_WEEK);
 		dateRangeContainers.add(activityPreviousWeek);
 
@@ -599,7 +599,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		nextEnd.setTime(startTime);
 		nextEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_NEXT);
 		snapToEndOfWeek(nextEnd);
-		activityNextWeek = new DateRangeContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
+		activityNextWeek = new ScheduledTaskContainer(nextStart.getTime(), nextEnd.getTime(), DESCRIPTION_NEXT_WEEK);
 		dateRangeContainers.add(activityNextWeek);
 
 		GregorianCalendar futureStart = new GregorianCalendar();
@@ -612,7 +612,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		futureEnd.setTime(startTime);
 		futureEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_FUTURE_END);
 		snapToEndOfWeek(futureEnd);
-		activityFuture = new DateRangeContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE);
+		activityFuture = new ScheduledTaskContainer(futureStart.getTime(), futureEnd.getTime(), DESCRIPTION_FUTURE);
 		dateRangeContainers.add(activityFuture);
 
 		GregorianCalendar pastStart = new GregorianCalendar();
@@ -625,7 +625,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		pastEnd.setTime(startTime);
 		pastEnd.add(Calendar.WEEK_OF_YEAR, NUM_WEEKS_PAST_END);
 		snapToEndOfWeek(pastEnd);
-		activityPast = new DateRangeContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST);
+		activityPast = new ScheduledTaskContainer(pastStart.getTime(), pastEnd.getTime(), DESCRIPTION_PAST);
 		dateRangeContainers.add(activityPast);
 	}
 
@@ -687,7 +687,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		setScheduledEndOfDay(calendar);
 	}
 
-	public List<DateRangeContainer> getDateRanges() {
+	public List<ScheduledTaskContainer> getDateRanges() {
 		// parseFutureReminders();
 		// return dateRangeContainers.toArray(new
 		// ITaskListElement[dateRangeContainers.size()]);
@@ -1099,7 +1099,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				return;
 			} else {
 				Calendar now = GregorianCalendar.getInstance();
-				DateRangeContainer thisWeek = getActivityThisWeek();
+				ScheduledTaskContainer thisWeek = getActivityThisWeek();
 				if (!thisWeek.includes(now)) {
 					startTime = new Date();
 					resetAndRollOver();
@@ -1129,7 +1129,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	 *            if a query hit is passed you can either force construction of the task or not (if not and no task,
 	 *            null is returned) TODO: Move into TaskList?
 	 */
-	public AbstractTask getTaskForElement(AbstractTaskListElement element, boolean force) {
+	public AbstractTask getTaskForElement(AbstractTaskContainer element, boolean force) {
 		AbstractTask task = null;
 		if (element instanceof AbstractTask) {
 			task = (AbstractTask) element;
@@ -1142,11 +1142,11 @@ public class TaskListManager implements IPropertyChangeListener {
 		this.taskList.addChangeListener(taskListSaveManager);
 	}
 
-	public List<DateRangeContainer> getActivityWeekDays() {
+	public List<ScheduledTaskContainer> getActivityWeekDays() {
 		return activityWeekDays;
 	}
 
-	public boolean isWeekDay(DateRangeContainer dateRangeTaskContainer) {
+	public boolean isWeekDay(ScheduledTaskContainer dateRangeTaskContainer) {
 		return activityWeekDays.contains(dateRangeTaskContainer);
 	}
 

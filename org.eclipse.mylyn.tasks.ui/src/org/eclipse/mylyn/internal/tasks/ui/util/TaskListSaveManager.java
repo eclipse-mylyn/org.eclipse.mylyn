@@ -31,7 +31,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
@@ -240,7 +240,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 // // saveTimer.setForceSyncExec(on);
 // }
 
-	public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
+	public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 		saveTaskList(false, true);
 	}
 
@@ -248,11 +248,11 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		saveTaskList(false, true);
 	}
 
-	public void containerAdded(AbstractTaskListElement container) {
+	public void containerAdded(AbstractTaskContainer container) {
 		saveTaskList(false, true);
 	}
 
-	public void containerDeleted(AbstractTaskListElement container) {
+	public void containerDeleted(AbstractTaskContainer container) {
 		saveTaskList(false, true);
 	}
 
@@ -265,7 +265,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		return saveTimer;
 	}
 
-	public void containerInfoChanged(AbstractTaskListElement container) {
+	public void containerInfoChanged(AbstractTaskContainer container) {
 		saveTaskList(false, true);
 	}
 

@@ -14,15 +14,15 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskArchive;
-import org.eclipse.mylyn.tasks.core.AutomaticCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -61,10 +61,10 @@ public class TaskListTableSorter extends ViewerSorter {
 	 */
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof DateRangeContainer) {
-			if (o2 instanceof DateRangeContainer) {
-				DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
-				DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
+		if (o1 instanceof ScheduledTaskContainer) {
+			if (o2 instanceof ScheduledTaskContainer) {
+				ScheduledTaskContainer dateRangeTaskContainer1 = (ScheduledTaskContainer) o1;
+				ScheduledTaskContainer dateRangeTaskContainer2 = (ScheduledTaskContainer) o2;
 				return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
 			} else if (o2 instanceof AbstractTask) {
 				return 1;
@@ -73,15 +73,15 @@ public class TaskListTableSorter extends ViewerSorter {
 			}
 		}
 
-		if (o1 instanceof AutomaticCategory && o2 instanceof AbstractTaskListElement) {
+		if (o1 instanceof UnfiledCategory && o2 instanceof AbstractTaskContainer) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskListElement && o2 instanceof AutomaticCategory) {
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTaskListElement && o2 instanceof TaskArchive) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskListElement && o1 instanceof TaskArchive) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
 			return 1;
 		}
 
@@ -89,27 +89,27 @@ public class TaskListTableSorter extends ViewerSorter {
 			return 1;
 		}
 
-		if (o1 instanceof AbstractTask && !(o2 instanceof AbstractTaskListElement)) {
+		if (o1 instanceof AbstractTask && !(o2 instanceof AbstractTaskContainer)) {
 			return -1;
 		}
 
 		// if (o1 instanceof AbstractTaskContainer || o1 instanceof
 		// AbstractRepositoryQuery) {
 		if (!(o1 instanceof AbstractTask)) {
-			if (o2 instanceof AbstractTaskListElement || o2 instanceof AbstractRepositoryQuery) {
+			if (o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 
 				return this.view.sortDirection
-						* ((AbstractTaskListElement) o1).getSummary()
-								.compareToIgnoreCase(((AbstractTaskListElement) o2).getSummary());
+						* ((AbstractTaskContainer) o1).getSummary()
+								.compareToIgnoreCase(((AbstractTaskContainer) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof AbstractTaskListElement) {
+		} else if (o1 instanceof AbstractTaskContainer) {
 			if (!(o2 instanceof AbstractTask)) {
 				return -1;
-			} else if (o2 instanceof AbstractTaskListElement) {
-				AbstractTaskListElement element1 = (AbstractTaskListElement) o1;
-				AbstractTaskListElement element2 = (AbstractTaskListElement) o2;
+			} else if (o2 instanceof AbstractTaskContainer) {
+				AbstractTaskContainer element1 = (AbstractTaskContainer) o1;
+				AbstractTaskContainer element2 = (AbstractTaskContainer) o2;
 
 				return compareElements(element1, element2);
 			}
@@ -119,7 +119,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareElements(AbstractTaskListElement element1, AbstractTaskListElement element2) {
+	private int compareElements(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		if (SortByIndex.PRIORITY.equals(sortByIndex)) {
 			int result = this.view.sortDirection * element1.getPriority().compareTo(element2.getPriority());
 			if (result != 0) {
@@ -148,7 +148,7 @@ public class TaskListTableSorter extends ViewerSorter {
 		return 0;
 	}
 
-	public static String getSortableSummaryFromElement(AbstractTaskListElement element) {
+	public static String getSortableSummaryFromElement(AbstractTaskContainer element) {
 		String summary = element.getSummary();
 
 		if (element instanceof AbstractTask) {

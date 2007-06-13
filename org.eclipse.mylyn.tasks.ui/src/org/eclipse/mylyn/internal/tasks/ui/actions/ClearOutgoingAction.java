@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -32,9 +32,9 @@ public class ClearOutgoingAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
 
-	private List<AbstractTaskListElement> selectedElements;
+	private List<AbstractTaskContainer> selectedElements;
 
-	public ClearOutgoingAction(List<AbstractTaskListElement> selectedElements) {
+	public ClearOutgoingAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);

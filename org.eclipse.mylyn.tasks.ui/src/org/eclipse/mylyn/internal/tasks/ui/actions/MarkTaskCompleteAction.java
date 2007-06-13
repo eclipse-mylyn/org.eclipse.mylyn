@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -30,9 +30,9 @@ public class MarkTaskCompleteAction extends Action {
 
 	private static final String ACTION_NAME = "Complete";
 
-	private List<AbstractTaskListElement> selectedElements;
+	private List<AbstractTaskContainer> selectedElements;
 
-	public MarkTaskCompleteAction(List<AbstractTaskListElement> selectedElements) {
+	public MarkTaskCompleteAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);

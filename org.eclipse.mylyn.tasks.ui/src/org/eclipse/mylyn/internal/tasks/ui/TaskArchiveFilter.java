@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 
 /**
  * @author Mik Kersten

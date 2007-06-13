@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
@@ -54,14 +54,14 @@ class TaskListDragSourceListener implements DragSourceListener {
 
 	public void dragSetData(DragSourceEvent event) {
 		StructuredSelection selection = (StructuredSelection) this.view.getViewer().getSelection();
-		AbstractTaskListElement selectedElement = null;
-		if (((IStructuredSelection) selection).getFirstElement() instanceof AbstractTaskListElement) {
-			selectedElement = (AbstractTaskListElement)((IStructuredSelection) selection).getFirstElement();
+		AbstractTaskContainer selectedElement = null;
+		if (((IStructuredSelection) selection).getFirstElement() instanceof AbstractTaskContainer) {
+			selectedElement = (AbstractTaskContainer)((IStructuredSelection) selection).getFirstElement();
 		}
 		if (TaskTransfer.getInstance().isSupportedType(event.dataType)) {
 			List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-				AbstractTaskListElement element = (AbstractTaskListElement) iter.next();
+				AbstractTaskContainer element = (AbstractTaskContainer) iter.next();
 				if (element instanceof AbstractTask) {
 					tasks.add((AbstractTask)element);
 				}

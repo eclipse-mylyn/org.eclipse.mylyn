@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -26,7 +26,7 @@ public class MarkTaskReadAction extends AbstractTaskAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.read";
 
-	public MarkTaskReadAction(List<AbstractTaskListElement> selectedElements) {
+	public MarkTaskReadAction(List<AbstractTaskContainer> selectedElements) {
 		super.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);

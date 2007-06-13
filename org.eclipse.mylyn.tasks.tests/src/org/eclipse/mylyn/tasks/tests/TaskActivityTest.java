@@ -23,8 +23,8 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ScalingFactors;
-import org.eclipse.mylyn.internal.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylyn.internal.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -52,7 +52,7 @@ public class TaskActivityTest extends TestCase {
 
 	// TODO: Test scheduling into day bins
 	public void testDaysOfWeek() {
-		List<DateRangeContainer> days = TasksUiPlugin.getTaskListManager().getActivityWeekDays();
+		List<ScheduledTaskContainer> days = TasksUiPlugin.getTaskListManager().getActivityWeekDays();
 		assertNotNull(days);
 		assertEquals(7, days.size());
 	}
@@ -64,7 +64,7 @@ public class TaskActivityTest extends TestCase {
 		Calendar endDate = GregorianCalendar.getInstance();
 		endDate.setTimeInMillis(2000);
 
-		DateRangeContainer testContainer = new DateRangeContainer(startDate, endDate, "test date range container");
+		ScheduledTaskContainer testContainer = new ScheduledTaskContainer(startDate, endDate, "test date range container");
 		assertTrue(testContainer.includes(startDate));
 		assertTrue(testContainer.includes(endDate));
 		Calendar midTime = GregorianCalendar.getInstance();
@@ -79,18 +79,18 @@ public class TaskActivityTest extends TestCase {
 		Calendar currentTaskEnd = GregorianCalendar.getInstance();
 		currentTaskEnd.setTimeInMillis(currentEndMili);
 		testContainer
-				.addTask(new DateRangeActivityDelegate(testContainer, task1, currentTaskStart, currentTaskEnd, 10));
+				.addTask(new ScheduledTaskDelegate(testContainer, task1, currentTaskStart, currentTaskEnd, 10));
 		// assertEquals(currentEndMili - currentStartMili,
 		// testContainer.getTotalElapsed());
 		assertEquals(10, testContainer.getTotalElapsed());
 		testContainer
-				.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
+				.addTask(new ScheduledTaskDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
 		assertEquals(20, testContainer.getTotalElapsed());
 		// assertEquals(2 * (currentEndMili - currentStartMili),
 		// testContainer.getTotalElapsed());
 		assertEquals(2, testContainer.getDateRangeDelegates().size());
 		testContainer
-				.addTask(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
+				.addTask(new ScheduledTaskDelegate(testContainer, task2, currentTaskStart, currentTaskEnd, 10));
 
 		assertEquals(30, testContainer.getTotalElapsed());
 		// assertEquals(3 * (currentEndMili - currentStartMili),
@@ -98,7 +98,7 @@ public class TaskActivityTest extends TestCase {
 		// assertEquals(2 * (currentEndMili - currentStartMili),
 		// testContainer.getElapsed(new DateRangeActivityDelegate(
 		// testContainer, task2, currentTaskStart, currentTaskEnd)));
-		assertEquals(20, testContainer.getElapsed(new DateRangeActivityDelegate(testContainer, task2, currentTaskStart,
+		assertEquals(20, testContainer.getElapsed(new ScheduledTaskDelegate(testContainer, task2, currentTaskStart,
 				currentTaskEnd)));
 		assertEquals(2, testContainer.getDateRangeDelegates().size());
 	}
@@ -124,7 +124,7 @@ public class TaskActivityTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
 		// test this week
-		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -174,7 +174,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(2, thisWeekActivity.getChildren().size());
 
 		// test Past
-		DateRangeContainer pastActivity = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer pastActivity = TasksUiPlugin.getTaskListManager().getActivityPast();
 		assertNotNull(pastActivity);
 		assertEquals(0, pastActivity.getChildren().size());
 
@@ -191,7 +191,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(1, pastActivity.getChildren().size());
 
 		// test Future
-		DateRangeContainer futureActivity = TasksUiPlugin.getTaskListManager().getActivityFuture();
+		ScheduledTaskContainer futureActivity = TasksUiPlugin.getTaskListManager().getActivityFuture();
 		assertNotNull(futureActivity);
 		assertEquals(0, futureActivity.getChildren().size());
 
@@ -210,7 +210,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(0, futureActivity.getChildren().size());
 
 		// test Next week activity
-		DateRangeContainer activityNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		ScheduledTaskContainer activityNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
 		assertNotNull(activityNextWeek);
 		assertEquals(0, activityNextWeek.getChildren().size());
 
@@ -229,7 +229,7 @@ public class TaskActivityTest extends TestCase {
 		assertEquals(0, activityNextWeek.getChildren().size());
 
 		// test Previous week activity
-		DateRangeContainer activityPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		ScheduledTaskContainer activityPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
 		assertNotNull(activityPreviousWeek);
 		assertEquals(0, activityPreviousWeek.getChildren().size());
 
@@ -254,7 +254,7 @@ public class TaskActivityTest extends TestCase {
 	public void testTaskListManagerActivity2() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -310,7 +310,7 @@ public class TaskActivityTest extends TestCase {
 		// time2.getTime() - time1.getTime();
 		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
 		assertEquals(expectedTotalTime, TasksUiPlugin.getTaskListManager().getElapsedTime(task1));
-		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new DateRangeActivityDelegate(thisWeekActivity,
+		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new ScheduledTaskDelegate(thisWeekActivity,
 				task1, null, null)));
 	}
 
@@ -322,7 +322,7 @@ public class TaskActivityTest extends TestCase {
 	public void testTaskListManagerActivity3() {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
-		DateRangeContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer thisWeekActivity = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(thisWeekActivity);
 		assertEquals(0, thisWeekActivity.getChildren().size());
 		assertEquals(0, thisWeekActivity.getTotalElapsed());
@@ -391,7 +391,7 @@ public class TaskActivityTest extends TestCase {
 		long expectedTotalTime = time6.getTime() - time5.getTime() + time4.getTime() - time3.getTime()
 				+ time2.getTime() - time1.getTime();
 		assertEquals(expectedTotalTime, thisWeekActivity.getTotalElapsed());
-		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new DateRangeActivityDelegate(thisWeekActivity,
+		assertEquals(expectedTotalTime, thisWeekActivity.getElapsed(new ScheduledTaskDelegate(thisWeekActivity,
 				task1, null, null)));
 	}
 
@@ -400,7 +400,7 @@ public class TaskActivityTest extends TestCase {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -452,7 +452,7 @@ public class TaskActivityTest extends TestCase {
 		long expectedTotalTime = (activityEnd.getTime().getTime() - activityStart.getTime().getTime());
 
 		assertEquals(expectedTotalTime, activityThisWeek.getTotalElapsed());
-		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new DateRangeActivityDelegate(activityThisWeek,
+		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new ScheduledTaskDelegate(activityThisWeek,
 				task1, null, null)));
 
 	}
@@ -462,7 +462,7 @@ public class TaskActivityTest extends TestCase {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -507,7 +507,7 @@ public class TaskActivityTest extends TestCase {
 		// taskActivationStart.getTimeInMillis();
 		long expectedTotalTime = 0;
 		assertEquals(expectedTotalTime, activityThisWeek.getTotalElapsed());
-		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new DateRangeActivityDelegate(activityThisWeek,
+		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new ScheduledTaskDelegate(activityThisWeek,
 				task1, null, null)));
 	}
 
@@ -516,7 +516,7 @@ public class TaskActivityTest extends TestCase {
 		AbstractTask task1 = new LocalTask("task 1", "Task 1");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 
-		DateRangeContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer activityThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
 		assertNotNull(activityThisWeek);
 		assertEquals(0, activityThisWeek.getChildren().size());
 
@@ -552,17 +552,17 @@ public class TaskActivityTest extends TestCase {
 
 		long expectedTotalTime = 2 * (inactivityStart.getTimeInMillis() - taskActivationStart.getTimeInMillis());
 		assertEquals(expectedTotalTime, activityThisWeek.getTotalElapsed());
-		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new DateRangeActivityDelegate(activityThisWeek,
+		assertEquals(expectedTotalTime, activityThisWeek.getElapsed(new ScheduledTaskDelegate(activityThisWeek,
 				task1, null, null)));
 	}
 
 	public void testResetAndRollOver() {
 
-		DateRangeContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		DateRangeContainer previousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
-		DateRangeContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		DateRangeContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
-		DateRangeContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
+		ScheduledTaskContainer pastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer previousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		ScheduledTaskContainer thisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer nextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		ScheduledTaskContainer futureWeeks = TasksUiPlugin.getTaskListManager().getActivityFuture();
 
 		assertTrue(thisWeek.isPresent());
 		assertTrue(nextWeek.isFuture());
@@ -628,10 +628,10 @@ public class TaskActivityTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(activityEvent1);
 		TasksUiPlugin.getTaskListManager().parseInteractionEvent(event2);
 
-		DateRangeContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
-		DateRangeContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
-		DateRangeContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
-		DateRangeContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
+		ScheduledTaskContainer newPastWeeks = TasksUiPlugin.getTaskListManager().getActivityPast();
+		ScheduledTaskContainer newPreviousWeek = TasksUiPlugin.getTaskListManager().getActivityPrevious();
+		ScheduledTaskContainer newThisWeek = TasksUiPlugin.getTaskListManager().getActivityThisWeek();
+		ScheduledTaskContainer newNextWeek = TasksUiPlugin.getTaskListManager().getActivityNextWeek();
 		// DateRangeContainer newFutureWeeks =
 		// MylarTaskListPlugin.getTaskListManager().getActivityFuture();
 

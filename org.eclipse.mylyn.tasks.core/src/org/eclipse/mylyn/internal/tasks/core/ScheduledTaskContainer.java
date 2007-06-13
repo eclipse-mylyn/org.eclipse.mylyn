@@ -28,11 +28,11 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeContainer extends AbstractTaskCategory {
+public class ScheduledTaskContainer extends AbstractTaskCategory {
 
-	private Set<DateRangeActivityDelegate> dateRangeDelegates = new HashSet<DateRangeActivityDelegate>();
+	private Set<ScheduledTaskDelegate> dateRangeDelegates = new HashSet<ScheduledTaskDelegate>();
 
-	private Map<DateRangeActivityDelegate, Long> taskToDuration = new HashMap<DateRangeActivityDelegate, Long>();
+	private Map<ScheduledTaskDelegate, Long> taskToDuration = new HashMap<ScheduledTaskDelegate, Long>();
 
 	private Calendar startDate;
 
@@ -42,19 +42,19 @@ public class DateRangeContainer extends AbstractTaskCategory {
 
 	private long totalEstimated = 0;
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
+	public ScheduledTaskContainer(GregorianCalendar startDate, GregorianCalendar endDate, String description) {
 		super(description);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(Calendar startDate, Calendar endDate, String description) {
+	public ScheduledTaskContainer(Calendar startDate, Calendar endDate, String description) {
 		super(description);
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(GregorianCalendar startDate, GregorianCalendar endDate) {
+	public ScheduledTaskContainer(GregorianCalendar startDate, GregorianCalendar endDate) {
 		super(DateFormat.getDateInstance(DateFormat.FULL).format(startDate.getTime()) + " to "
 				+ DateFormat.getDateInstance(DateFormat.FULL).format(endDate.getTime()));
 		// super(startDate.hashCode() + endDate.hashCode() + "");
@@ -67,7 +67,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 		this.endDate = endDate;
 	}
 
-	public DateRangeContainer(Date time, Date time2, String description) {
+	public ScheduledTaskContainer(Date time, Date time2, String description) {
 		super(description);
 		startDate = new GregorianCalendar();
 		startDate.setTime(time);
@@ -89,7 +89,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 		super.clear();
 	}
 
-	public void addTask(DateRangeActivityDelegate taskWrapper) {
+	public void addTask(ScheduledTaskDelegate taskWrapper) {
 		long taskActivity = taskWrapper.getActivity();
 		if (taskActivity < 0)
 			taskActivity = 0;
@@ -106,7 +106,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 		super.add(taskWrapper.getCorrespondingTask());
 	}
 
-	public void remove(DateRangeActivityDelegate taskWrapper) {
+	public void remove(ScheduledTaskDelegate taskWrapper) {
 		dateRangeDelegates.remove(taskWrapper);
 		super.remove(taskWrapper.getCorrespondingTask());
 	}
@@ -123,7 +123,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 		return totalElapsed;
 	}
 
-	public long getElapsed(DateRangeActivityDelegate taskWrapper) {
+	public long getElapsed(ScheduledTaskDelegate taskWrapper) {
 		if (taskToDuration.containsKey(taskWrapper)) {
 			return taskToDuration.get(taskWrapper);
 		} else {
@@ -156,7 +156,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 		// ignore
 	}
 
-	public Set<DateRangeActivityDelegate> getDateRangeDelegates() {
+	public Set<ScheduledTaskDelegate> getDateRangeDelegates() {
 		return dateRangeDelegates;
 	}
 
@@ -185,7 +185,7 @@ public class DateRangeContainer extends AbstractTaskCategory {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final DateRangeContainer other = (DateRangeContainer) obj;
+		final ScheduledTaskContainer other = (ScheduledTaskContainer) obj;
 		if (startDate == null) {
 			if (other.startDate != null)
 				return false;
@@ -205,6 +205,6 @@ public class DateRangeContainer extends AbstractTaskCategory {
 	 */
 	@Override
 	public int compareTo(AbstractTaskContainer taskListElement) {
-		return startDate.compareTo(((DateRangeContainer) taskListElement).startDate);
+		return startDate.compareTo(((ScheduledTaskContainer) taskListElement).startDate);
 	}
 }

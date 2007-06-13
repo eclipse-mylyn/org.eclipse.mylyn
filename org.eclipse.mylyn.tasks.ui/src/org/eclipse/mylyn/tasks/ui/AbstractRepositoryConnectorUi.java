@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -81,7 +81,7 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public abstract boolean hasSearchPage();
 
-	public List<AbstractTaskListElement> getLegendItems() {
+	public List<AbstractTaskContainer> getLegendItems() {
 		return Collections.emptyList();
 	}
 	
@@ -108,7 +108,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * For connectors that have a decorator that they want to reuse, the connector can 
 	 * maintain a reference to the label provider and get the descriptor from the images it returns.
 	 */
-	public ImageDescriptor getTaskListElementIcon(AbstractTaskListElement element) {
+	public ImageDescriptor getTaskListElementIcon(AbstractTaskContainer element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			return TasksUiImages.QUERY;
 		} else if (element instanceof AbstractTask) {

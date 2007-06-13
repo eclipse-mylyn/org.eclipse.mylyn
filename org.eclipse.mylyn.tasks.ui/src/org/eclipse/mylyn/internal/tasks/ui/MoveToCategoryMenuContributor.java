@@ -17,8 +17,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -29,7 +29,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 
 	private static final String LABEL = "Move to";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskListElement> selectedElements) {
+	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 
 		//subMenuManager.setVisible(selectedElements.size() > 0 && !(selectedElements.get(0) instanceof AbstractTaskContainer || selectedElements.get(0) instanceof AbstractRepositoryQuery));
@@ -38,9 +38,9 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		.setVisible(selectedElements.size() > 0
 				&& selectedElements.get(0) instanceof AbstractTask);
 		
-		List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+		List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
 		Collections.sort(categories);
-		for (final AbstractTaskContainer category : categories) {
+		for (final AbstractTaskCategory category : categories) {
 			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 				Action action = new Action() {
 					@Override
@@ -98,8 +98,8 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	 * @param selectedElements
 	 * @param category 
 	 */
-	private void moveToCategory(final List<AbstractTaskListElement> selectedElements, AbstractTaskContainer category) {
-		for (AbstractTaskListElement element : selectedElements) {
+	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
+		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,
 						(AbstractTask) element);

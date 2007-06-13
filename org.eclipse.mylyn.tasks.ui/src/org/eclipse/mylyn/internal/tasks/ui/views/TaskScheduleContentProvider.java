@@ -14,10 +14,9 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
@@ -94,9 +93,9 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 			boolean containsActiveTask = false;
 			if (activeTask != null) {
-				for (AbstractTaskListElement taskListElement : ranges) {
-					if (taskListElement instanceof AbstractTaskListElement) {
-						if (((AbstractTaskListElement) taskListElement).getChildren().contains(activeTask)) {
+				for (AbstractTaskContainer taskListElement : ranges) {
+					if (taskListElement instanceof AbstractTaskContainer) {
+						if (((AbstractTaskContainer) taskListElement).getChildren().contains(activeTask)) {
 							containsActiveTask = true;
 						}
 					}
@@ -123,8 +122,8 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 	}
 
 	public boolean hasChildren(Object parent) {
-		if (parent instanceof DateRangeContainer) {
-			DateRangeContainer dateRangeTaskCategory = (DateRangeContainer) parent;
+		if (parent instanceof ScheduledTaskContainer) {
+			ScheduledTaskContainer dateRangeTaskCategory = (ScheduledTaskContainer) parent;
 			return dateRangeTaskCategory.getChildren() != null && dateRangeTaskCategory.getChildren().size() > 0;
 		} else {
 			return super.hasChildren(parent);

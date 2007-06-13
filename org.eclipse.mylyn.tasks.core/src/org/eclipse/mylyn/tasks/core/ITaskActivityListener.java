@@ -13,7 +13,7 @@ package org.eclipse.mylyn.tasks.core;
 
 import java.util.List;
 
-import org.eclipse.mylyn.internal.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 
 
 /**
@@ -29,7 +29,7 @@ public interface ITaskActivityListener {
 
 	public abstract void taskDeactivated(AbstractTask task);
 
-	public abstract void activityChanged(DateRangeContainer week);
+	public abstract void activityChanged(ScheduledTaskContainer week);
 	
 	public abstract void taskListRead();
 	

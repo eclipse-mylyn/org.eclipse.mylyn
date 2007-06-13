@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -35,9 +36,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AutomaticCategory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -301,7 +301,7 @@ public class TaskListManagerTest extends TestCase {
 		AbstractTask task1 = new LocalTask("t1", "t1");
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		assertEquals(AutomaticCategory.HANDLE, task1.getCategory().getHandleIdentifier());
+		assertEquals(UnfiledCategory.HANDLE, task1.getCategory().getHandleIdentifier());
 
 		TaskCategory cat1 = new TaskCategory("c1");
 		manager.getTaskList().addCategory(cat1);
@@ -313,7 +313,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(0, cat1.getChildren().size());
-		assertEquals(AutomaticCategory.HANDLE, task1.getCategory().getHandleIdentifier());
+		assertEquals(UnfiledCategory.HANDLE, task1.getCategory().getHandleIdentifier());
 	}
 
 	public void testEmpty() {
@@ -367,7 +367,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(3, manager.getTaskList().getCategories().size());
 		String newDesc = "newDescription";
 		manager.getTaskList().renameContainer(category, newDesc);
-		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle(newDesc);
+		AbstractTaskCategory container = manager.getTaskList().getContainerForHandle(newDesc);
 		assertNotNull(container);
 		assertEquals(newDesc, container.getSummary());
 		manager.getTaskList().deleteCategory(container);
@@ -395,7 +395,7 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory category2 = new TaskCategory("cat");
 		manager.getTaskList().addCategory(category2);
 		assertEquals(3, manager.getTaskList().getCategories().size());
-		AbstractTaskListElement container = manager.getTaskList().getContainerForHandle("cat");
+		AbstractTaskContainer container = manager.getTaskList().getContainerForHandle("cat");
 		assertEquals(container, category);
 	}
 
@@ -483,10 +483,10 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// read once
-		Set<AbstractTaskContainer> readCats = manager.getTaskList().getTaskContainers();
+		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
-		Iterator<AbstractTaskContainer> iterator = readCats.iterator();
-		AbstractTaskListElement readCat1 = iterator.next();
+		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
+		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(1, readCat1.getChildren().size());
 
@@ -571,10 +571,10 @@ public class TaskListManagerTest extends TestCase {
 			}
 		}
 
-		Set<AbstractTaskContainer> readCats = manager.getTaskList().getTaskContainers();
+		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
-		Iterator<AbstractTaskContainer> iterator = readCats.iterator();
-		AbstractTaskListElement readCat1 = iterator.next();
+		Iterator<AbstractTaskCategory> iterator = readCats.iterator();
+		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(cat1Contents, readCat1.getChildren());
 	}
@@ -763,7 +763,7 @@ public class TaskListManagerTest extends TestCase {
 		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
 		task1.setSyncState(RepositoryTaskSyncState.INCOMING);
 		task2.setSyncState(RepositoryTaskSyncState.INCOMING);
-		List<AbstractTaskListElement> elements = new ArrayList<AbstractTaskListElement>();
+		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
 		elements.add(task1);
 		elements.add(task2);
 		MarkTaskReadAction readAction = new MarkTaskReadAction(elements);
@@ -784,7 +784,7 @@ public class TaskListManagerTest extends TestCase {
 		readAction = new MarkTaskReadAction(elements);
 		readAction.run();
 		assertEquals(2, query.getChildren().size());
-		for (AbstractTaskListElement element : query.getChildren()) {
+		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockRepositoryTask) {
 				MockRepositoryTask mockTask = (MockRepositoryTask) element;
 				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSyncState());
@@ -799,7 +799,7 @@ public class TaskListManagerTest extends TestCase {
 		MockRepositoryTask task2 = new MockRepositoryTask(repositoryUrl, "2");
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task1.getSyncState());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task2.getSyncState());
-		List<AbstractTaskListElement> elements = new ArrayList<AbstractTaskListElement>();
+		List<AbstractTaskContainer> elements = new ArrayList<AbstractTaskContainer>();
 		elements.add(task1);
 		elements.add(task2);
 		MarkTaskUnreadAction unreadAction = new MarkTaskUnreadAction(elements);
@@ -820,7 +820,7 @@ public class TaskListManagerTest extends TestCase {
 		MarkTaskReadAction readAction = new MarkTaskReadAction(elements);
 		readAction.run();
 		assertEquals(2, query.getChildren().size());
-		for (AbstractTaskListElement element : query.getChildren()) {
+		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockRepositoryTask) {
 				MockRepositoryTask mockTask = (MockRepositoryTask) element;
 				assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, mockTask.getSyncState());
@@ -832,7 +832,7 @@ public class TaskListManagerTest extends TestCase {
 		unreadAction = new MarkTaskUnreadAction(elements);
 		unreadAction.run();
 		assertEquals(2, query.getChildren().size());
-		for (AbstractTaskListElement element : query.getChildren()) {
+		for (AbstractTaskContainer element : query.getChildren()) {
 			if (element instanceof MockRepositoryTask) {
 				MockRepositoryTask mockTask = (MockRepositoryTask) element;
 				assertEquals(RepositoryTaskSyncState.INCOMING, mockTask.getSyncState());

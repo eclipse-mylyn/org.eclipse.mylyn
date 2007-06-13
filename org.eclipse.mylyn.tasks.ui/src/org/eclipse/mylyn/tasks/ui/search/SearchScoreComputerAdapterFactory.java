@@ -13,12 +13,12 @@ package org.eclipse.mylyn.tasks.ui.search;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.search.ui.ISearchPageScoreComputer;
 
 /**
  * Implements a {@link IAdapterFactory} for {@link ISearchPageScoreComputer}s
- * which ranks {@link AbstractTaskListElement}s high for the task search page
+ * which ranks {@link AbstractTaskContainer}s high for the task search page
  * 
  * @author Willian Mitsuda
  */
@@ -30,7 +30,7 @@ public class SearchScoreComputerAdapterFactory implements IAdapterFactory {
 			if (!TaskSearchPage.ID.equals(pageId)) {
 				return ISearchPageScoreComputer.UNKNOWN;
 			}
-			if (input instanceof AbstractTaskListElement) {
+			if (input instanceof AbstractTaskContainer) {
 				return 100;
 			}
 			return ISearchPageScoreComputer.LOWEST;

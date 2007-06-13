@@ -19,13 +19,13 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskArchive;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -48,11 +48,11 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public String getColumnText(Object obj, int columnIndex) {
-		if (obj instanceof AbstractTaskListElement) {
+		if (obj instanceof AbstractTaskContainer) {
 			switch (columnIndex) {
 			case 0:
-				if (obj instanceof DateRangeContainer) {
-					if (((DateRangeContainer) obj).isPresent()) {
+				if (obj instanceof ScheduledTaskContainer) {
+					if (((ScheduledTaskContainer) obj).isPresent()) {
 						return super.getText(obj) + " - Today";
 					}
 				}
@@ -65,7 +65,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof AbstractTaskListElement)) {
+		if (!(element instanceof AbstractTaskContainer)) {
 			return null;
 		}
 		if (columnIndex == 0) {
@@ -83,8 +83,8 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
-			AbstractTaskListElement category = (AbstractTaskListElement) element;
+		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
+			AbstractTaskContainer category = (AbstractTaskContainer) element;
 			if (category instanceof TaskArchive) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {

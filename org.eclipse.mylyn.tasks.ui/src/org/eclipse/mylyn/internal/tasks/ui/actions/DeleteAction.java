@@ -21,7 +21,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -56,8 +56,8 @@ public class DeleteAction extends Action {
 		for (Object object : toDelete) {
 			i++;
 			if (i < 20) {
-				if (object instanceof AbstractTaskListElement) {
-					message += "    " + ((AbstractTaskListElement) object).getSummary() + "\n";
+				if (object instanceof AbstractTaskContainer) {
+					message += "    " + ((AbstractTaskContainer) object).getSummary() + "\n";
 				}
 			} else {
 				message += "...";

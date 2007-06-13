@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
@@ -96,7 +96,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 
 	@Override
 	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
-			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
+			AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary);
 		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setSeverity(element.getAttribute(KEY_SEVERITY));

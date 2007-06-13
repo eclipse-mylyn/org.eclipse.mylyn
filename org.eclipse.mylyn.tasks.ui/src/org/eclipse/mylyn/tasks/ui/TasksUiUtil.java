@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
@@ -47,10 +48,9 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -190,11 +190,11 @@ public class TasksUiUtil {
 		return opened;
 	}
 
-	public static void refreshAndOpenTaskListElement(AbstractTaskListElement element) {
-		if (element instanceof AbstractTask || element instanceof DateRangeActivityDelegate) {
+	public static void refreshAndOpenTaskListElement(AbstractTaskContainer element) {
+		if (element instanceof AbstractTask || element instanceof ScheduledTaskDelegate) {
 			final AbstractTask task;
-			if (element instanceof DateRangeActivityDelegate) {
-				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
+			if (element instanceof ScheduledTaskDelegate) {
+				task = ((ScheduledTaskDelegate) element).getCorrespondingTask();
 			} else {
 				task = (AbstractTask) element;
 			}

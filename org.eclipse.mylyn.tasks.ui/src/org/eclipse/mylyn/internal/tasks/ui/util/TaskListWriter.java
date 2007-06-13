@@ -44,7 +44,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
@@ -117,7 +117,7 @@ public class TaskListWriter {
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
 		// create the categories
-		for (AbstractTaskListElement category : taskList.getCategories()) {
+		for (AbstractTaskContainer category : taskList.getCategories()) {
 			// if (!category.getHandleIdentifier().equals(TaskArchive.HANDLE)) {
 			delagatingExternalizer.createCategoryElement(category, doc, root);
 			// }

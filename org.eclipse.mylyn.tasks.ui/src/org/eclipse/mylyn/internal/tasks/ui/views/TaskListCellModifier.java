@@ -15,8 +15,8 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -38,8 +38,8 @@ class TaskListCellModifier implements ICellModifier {
 	public Object getValue(Object element, String property) {
 		try {
 			int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (element instanceof AbstractTaskListElement) {
-				final AbstractTaskListElement taskListElement = (AbstractTaskListElement) element;
+			if (element instanceof AbstractTaskContainer) {
+				final AbstractTaskContainer taskListElement = (AbstractTaskContainer) element;
 				switch (columnIndex) {
 				case 0:
 					return taskListElement.getSummary();
@@ -60,7 +60,7 @@ class TaskListCellModifier implements ICellModifier {
 		try {
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
 			 if (((TreeItem) element).getData() instanceof AbstractTask) {
-					final AbstractTaskListElement taskListElement = (AbstractTaskListElement) ((TreeItem) element).getData();
+					final AbstractTaskContainer taskListElement = (AbstractTaskContainer) ((TreeItem) element).getData();
 					AbstractTask task = (AbstractTask) taskListElement;
 					switch (columnIndex) {
 					case 0:
@@ -76,8 +76,8 @@ class TaskListCellModifier implements ICellModifier {
 						break;
 					}
 				} else
-			if (((TreeItem) element).getData() instanceof AbstractTaskContainer) {
-				AbstractTaskContainer container = (AbstractTaskContainer) ((TreeItem) element).getData();
+			if (((TreeItem) element).getData() instanceof AbstractTaskCategory) {
+				AbstractTaskCategory container = (AbstractTaskCategory) ((TreeItem) element).getData();
 				switch (columnIndex) {
 				case 0:
 					TasksUiPlugin.getTaskListManager().getTaskList()
@@ -94,7 +94,7 @@ class TaskListCellModifier implements ICellModifier {
 		this.taskListView.getViewer().refresh();
 	}
 
-	public void toggleTaskActivation(AbstractTaskListElement taskListElement) {
+	public void toggleTaskActivation(AbstractTaskContainer taskListElement) {
 		AbstractTask task = null;
 		if (taskListElement instanceof AbstractTask) {
 			task = (AbstractTask) taskListElement;

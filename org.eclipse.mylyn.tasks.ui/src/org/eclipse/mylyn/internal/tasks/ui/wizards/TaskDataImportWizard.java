@@ -30,7 +30,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -226,7 +226,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 
 		allTasks.addAll(taskList.getRootTasks());
 
-		for (AbstractTaskListElement category : taskList.getCategories()) {
+		for (AbstractTaskContainer category : taskList.getCategories()) {
 			allTasks.addAll(category.getChildren());
 		}
 

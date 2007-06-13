@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Rob Elves
@@ -28,7 +28,7 @@ public class TaskStatusMenuContributor implements IDynamicSubMenuContributor {
 
 	private static final String LABEL = "Mark";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskListElement> selectedElements) {
+	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
 		AbstractTask singleTask = null;
 		if (selectedElements.size() == 1) {

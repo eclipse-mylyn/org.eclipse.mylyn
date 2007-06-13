@@ -79,8 +79,8 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -288,13 +288,13 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void containerAdded(AbstractTaskListElement container) {
+		public void containerAdded(AbstractTaskContainer container) {
 		}
 
-		public void containerDeleted(AbstractTaskListElement container) {
+		public void containerDeleted(AbstractTaskContainer container) {
 		}
 
-		public void containerInfoChanged(AbstractTaskListElement container) {
+		public void containerInfoChanged(AbstractTaskContainer container) {
 		}
 
 		public void localInfoChanged(AbstractTask task) {
@@ -337,7 +337,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 		public void taskDeleted(AbstractTask task) {
 		}
 
-		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 		}
 	};
 
@@ -2719,7 +2719,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 		return null;
 	}
 
-	protected AbstractTaskContainer getCategory() {
+	protected AbstractTaskCategory getCategory() {
 		return null;
 	}
 

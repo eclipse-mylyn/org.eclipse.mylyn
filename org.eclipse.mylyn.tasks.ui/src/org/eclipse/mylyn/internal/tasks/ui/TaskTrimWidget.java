@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -29,8 +30,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -91,7 +91,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			indicateNoActiveTask();
 		}
 
-		public void activityChanged(DateRangeContainer week) {
+		public void activityChanged(ScheduledTaskContainer week) {
 		}
 
 		public void calendarChanged() {
@@ -260,7 +260,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
-					List<AbstractTaskListElement> selectedElements = new ArrayList<AbstractTaskListElement>();
+					List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
 					selectedElements.add(activeTask);
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {

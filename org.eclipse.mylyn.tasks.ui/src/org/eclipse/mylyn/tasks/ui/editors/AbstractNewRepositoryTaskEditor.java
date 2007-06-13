@@ -26,13 +26,13 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AutomaticCategory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -365,16 +365,16 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		List<AbstractTaskContainer> categories = taskList.getUserCategories();
-		Collections.sort(categories, new Comparator<AbstractTaskListElement>() {
+		List<AbstractTaskCategory> categories = taskList.getUserCategories();
+		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
 
-			public int compare(AbstractTaskListElement c1, AbstractTaskListElement c2) {
+			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
 				return c1.getSummary().compareToIgnoreCase(c2.getSummary());
 			}
 
 		});
-		categoryChooser.add(AutomaticCategory.LABEL);
-		for (AbstractTaskListElement category : categories) {
+		categoryChooser.add(UnfiledCategory.LABEL);
+		for (AbstractTaskContainer category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
 		categoryChooser.select(0);
@@ -398,20 +398,20 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 	}
 
 	/**
-	 * Returns the {@link AbstractTaskListElement category} the new task belongs
+	 * Returns the {@link AbstractTaskContainer category} the new task belongs
 	 * to
 	 * 
-	 * @return {@link AbstractTaskListElement category} where the new task must be
+	 * @return {@link AbstractTaskContainer category} where the new task must be
 	 *         added to, or null if it must not be added to the task list
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractTaskContainer getCategory() {
+	protected AbstractTaskCategory getCategory() {
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			if (index == 0) {
 				return TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory();
 			}
-			return ((List<AbstractTaskContainer>) categoryChooser.getData()).get(index - 1);
+			return ((List<AbstractTaskCategory>) categoryChooser.getData()).get(index - 1);
 		}
 		return null;
 	}

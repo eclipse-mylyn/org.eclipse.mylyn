@@ -17,7 +17,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.swt.SWT;
@@ -83,8 +83,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
-		} else if (object instanceof AbstractTaskListElement) {
-			AbstractTaskListElement element = (AbstractTaskListElement) object;
+		} else if (object instanceof AbstractTaskContainer) {
+			AbstractTaskContainer element = (AbstractTaskContainer) object;
 			text = element.getSummary();
 		} else if (object instanceof RepositoryTaskSelection) {
 

@@ -23,8 +23,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskList;
 
 /**
@@ -96,8 +96,8 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 						collector.consumeTask(task);
 					}
 				}
-			} else if (element instanceof AbstractTaskListElement) {
-				AbstractTaskListElement cat = (AbstractTaskListElement) element;
+			} else if (element instanceof AbstractTaskContainer) {
+				AbstractTaskContainer cat = (AbstractTaskContainer) element;
 				for (AbstractTask task : cat.getChildren())
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);

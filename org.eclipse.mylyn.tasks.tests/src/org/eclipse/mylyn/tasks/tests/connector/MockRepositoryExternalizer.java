@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.tasks.tests.connector;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
@@ -63,7 +63,7 @@ public class MockRepositoryExternalizer extends DelegatingTaskExternalizer {
 	}
 	
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskListElement category, AbstractTask parent)
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList, AbstractTaskContainer category, AbstractTask parent)
 			throws TaskExternalizationException {
 		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, taskId, summary);
 		return task;

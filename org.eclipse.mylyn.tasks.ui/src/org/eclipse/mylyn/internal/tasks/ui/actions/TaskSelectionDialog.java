@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -155,7 +155,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		// Compute all existing tasks or query hits (if corresponding task does
 		// not exist yet...)
-		Set<AbstractTaskListElement> allTasks = new HashSet<AbstractTaskListElement>();
+		Set<AbstractTaskContainer> allTasks = new HashSet<AbstractTaskContainer>();
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		allTasks.addAll(taskList.getAllTasks());
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
@@ -175,7 +175,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		// make the task history appear first on the list is to add them before
 		// all other tasks; being a LinkedHashSet, it will not be duplicated
 		// (this is VERY IMPORTANT)
-		Set<AbstractTaskListElement> taskSet = new LinkedHashSet<AbstractTaskListElement>(taskHistory);
+		Set<AbstractTaskContainer> taskSet = new LinkedHashSet<AbstractTaskContainer>(taskHistory);
 		taskSet.addAll(allTasks);
 		viewer.setInput(taskSet);
 

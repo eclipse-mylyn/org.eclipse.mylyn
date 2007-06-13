@@ -11,9 +11,9 @@
 package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -32,8 +32,8 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 
 
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTaskListElement && !(parent instanceof DateRangeContainer)) {
-			return selectWorkingSet((AbstractTaskListElement) parent);
+		if (parent instanceof AbstractTaskContainer && !(parent instanceof ScheduledTaskContainer)) {
+			return selectWorkingSet((AbstractTaskContainer) parent);
 		}
 		if (element instanceof AbstractTask) {
 			AbstractRepositoryQuery query = taskList.getQueryForHandle(((AbstractTask) element).getHandleIdentifier());
@@ -44,16 +44,16 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
-	private boolean selectWorkingSet(AbstractTaskListElement container) {
+	private boolean selectWorkingSet(AbstractTaskContainer container) {
 		if (currentWorkingSet == null) {
 			return true;
 		}
 		boolean seenTaskWorkingSets = false;
 		String handleIdentifier = container.getHandleIdentifier();
 		for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			if (adaptable instanceof AbstractTaskListElement) {
+			if (adaptable instanceof AbstractTaskContainer) {
 				seenTaskWorkingSets = true;
-				if (handleIdentifier.equals(((AbstractTaskListElement) adaptable).getHandleIdentifier())) {
+				if (handleIdentifier.equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
 					return true;
 				}
 			}

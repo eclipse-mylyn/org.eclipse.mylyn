@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -27,7 +27,7 @@ public class MarkTaskUnreadAction extends AbstractTaskAction {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.unread";
 
-	public MarkTaskUnreadAction(List<AbstractTaskListElement> selectedElements) {
+	public MarkTaskUnreadAction(List<AbstractTaskContainer> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);

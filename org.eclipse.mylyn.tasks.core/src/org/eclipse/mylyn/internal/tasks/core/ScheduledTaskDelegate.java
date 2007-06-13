@@ -23,11 +23,11 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeActivityDelegate extends AbstractTask {
+public class ScheduledTaskDelegate extends AbstractTask {
 
 	private AbstractTask task = null;
 
-	private DateRangeContainer parent;
+	private ScheduledTaskContainer parent;
 
 	private long startMili = 0;
 
@@ -35,11 +35,11 @@ public class DateRangeActivityDelegate extends AbstractTask {
 
 	private long activity = 0;
 
-	public DateRangeActivityDelegate(DateRangeContainer parent, AbstractTask task, Calendar start, Calendar end) {
+	public ScheduledTaskDelegate(ScheduledTaskContainer parent, AbstractTask task, Calendar start, Calendar end) {
 		this(parent, task, start, end, 0);
 	}
 
-	public DateRangeActivityDelegate(DateRangeContainer parent, AbstractTask task, Calendar start, Calendar end, long activity) {
+	public ScheduledTaskDelegate(ScheduledTaskContainer parent, AbstractTask task, Calendar start, Calendar end, long activity) {
 		super(task.getRepositoryUrl(), task.getTaskId(), task.getSummary());
 		if (task == null) {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
@@ -88,7 +88,7 @@ public class DateRangeActivityDelegate extends AbstractTask {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final DateRangeActivityDelegate other = (DateRangeActivityDelegate) obj;
+		final ScheduledTaskDelegate other = (ScheduledTaskDelegate) obj;
 		if (task == null) {
 			if (other.task != null)
 				return false;
@@ -102,7 +102,7 @@ public class DateRangeActivityDelegate extends AbstractTask {
 		return true;
 	}
 
-	public DateRangeContainer getDateRangeContainer() {
+	public ScheduledTaskContainer getDateRangeContainer() {
 		return parent;
 	}
 

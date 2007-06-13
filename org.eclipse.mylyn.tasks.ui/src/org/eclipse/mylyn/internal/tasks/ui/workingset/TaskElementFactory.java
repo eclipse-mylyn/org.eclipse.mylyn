@@ -9,8 +9,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IElementFactory;
@@ -29,8 +29,8 @@ public class TaskElementFactory implements IElementFactory {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 		String handle = memento.getString(HANDLE_ID);
-		for (AbstractTaskListElement element : taskList.getRootElements()) {
-			if (element instanceof AbstractTaskListElement && element.getHandleIdentifier().equals(handle)) {
+		for (AbstractTaskContainer element : taskList.getRootElements()) {
+			if (element instanceof AbstractTaskContainer && element.getHandleIdentifier().equals(handle)) {
 				return (IAdaptable) element;
 			}
 		}

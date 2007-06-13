@@ -23,8 +23,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -180,8 +180,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
         tree.setSorter(new ViewerSorter());
         
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>) TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
-			if (element instanceof AbstractTaskListElement) {
+		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>)TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+			if (element instanceof AbstractTaskContainer) {
 				containers.add(element);
 			}
 		}
@@ -281,7 +281,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	protected void handleCheckStateChange(final CheckStateChangedEvent event) {
         BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
             public void run() {
-            	AbstractTaskListElement element = (AbstractTaskListElement) event.getElement();
+            	AbstractTaskContainer element = (AbstractTaskContainer) event.getElement();
             	tree.setGrayed(element, false);
 
                 // boolean state = event.getChecked();

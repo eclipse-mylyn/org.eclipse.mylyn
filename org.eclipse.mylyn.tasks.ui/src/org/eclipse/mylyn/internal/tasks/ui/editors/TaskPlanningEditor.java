@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -154,7 +154,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			localInfoChanged(task);
 		}
 
-		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			// ignore
 		}
 
@@ -162,11 +162,11 @@ public class TaskPlanningEditor extends TaskFormPage {
 			// ignore
 		}
 
-		public void containerAdded(AbstractTaskListElement container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			// ignore
 		}
 
-		public void containerDeleted(AbstractTaskListElement container) {
+		public void containerDeleted(AbstractTaskContainer container) {
 			// ignore
 		}
 
@@ -174,7 +174,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			// ignore
 		}
 
-		public void containerInfoChanged(AbstractTaskListElement container) {
+		public void containerInfoChanged(AbstractTaskContainer container) {
 			// ignore
 		}
 

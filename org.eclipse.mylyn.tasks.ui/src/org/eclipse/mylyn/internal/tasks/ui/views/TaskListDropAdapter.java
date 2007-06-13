@@ -27,15 +27,15 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
@@ -121,8 +121,8 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				} else {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getCategory(), task);
 				}
-			} else if (currentTarget instanceof DateRangeContainer) {
-				DateRangeContainer container = (DateRangeContainer)currentTarget;
+			} else if (currentTarget instanceof ScheduledTaskContainer) {
+				ScheduledTaskContainer container = (ScheduledTaskContainer)currentTarget;
 				Calendar newSchedule = Calendar.getInstance();
 				newSchedule.setTimeInMillis(container.getStart().getTimeInMillis());				
 				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
@@ -261,7 +261,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
-			} else if (getCurrentTarget() instanceof AbstractTaskListElement
+			} else if (getCurrentTarget() instanceof AbstractTaskContainer
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else {

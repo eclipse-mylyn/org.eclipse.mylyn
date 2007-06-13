@@ -30,7 +30,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -180,7 +180,7 @@ public class TaskListUiTest extends TestCase {
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());
-		ArrayList<AbstractTaskListElement> tasks = new ArrayList<AbstractTaskListElement>();
+		ArrayList<AbstractTaskContainer> tasks = new ArrayList<AbstractTaskContainer>();
 		tasks.add(webTask);
 		new MarkTaskCompleteAction(tasks).run();
 		assertTrue(webTask.isCompleted());
@@ -253,7 +253,7 @@ public class TaskListUiTest extends TestCase {
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<AbstractTaskListElement> selectedElements = new Vector<AbstractTaskListElement>();
+		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
 		selectedElements.add(cat1task1);
 		int nrOfCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
 		int nrOfSeparators = 1;
@@ -284,15 +284,15 @@ public class TaskListUiTest extends TestCase {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		MenuManager menuManager = null;
-		List<AbstractTaskListElement> selectedElements = new Vector<AbstractTaskListElement>();
+		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
 		selectedElements.add(cat1task1);
 
-		List<AbstractTaskListElement> emptySelection = new Vector<AbstractTaskListElement>();
+		List<AbstractTaskContainer> emptySelection = new Vector<AbstractTaskContainer>();
 
-		List<AbstractTaskListElement> categorySelection = new Vector<AbstractTaskListElement>();
+		List<AbstractTaskContainer> categorySelection = new Vector<AbstractTaskContainer>();
 		categorySelection.add(cat1);
 
-		List<AbstractTaskListElement> querySelection = new Vector<AbstractTaskListElement>();
+		List<AbstractTaskContainer> querySelection = new Vector<AbstractTaskContainer>();
 		querySelection.add(new MockRepositoryQuery("query", null));
 
 		//execute system under test & assert

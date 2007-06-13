@@ -14,9 +14,9 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -77,15 +77,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 				activationImage = taskInactive;
 			}
 		}
-		if (data instanceof AbstractTaskListElement) {
+		if (data instanceof AbstractTaskContainer) {
 			switch (event.type) {
 			case SWT.EraseItem: {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (!this.taskListView.synchronizationOverlaid) {
-					if (data instanceof AbstractTaskListElement) {
-						drawSyncronizationImage((AbstractTaskListElement) data, event);
+					if (data instanceof AbstractTaskContainer) {
+						drawSyncronizationImage((AbstractTaskContainer) data, event);
 					}
 				}
 				break;
@@ -94,8 +94,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				if (data instanceof AbstractTaskListElement) {
-					drawSyncronizationImage((AbstractTaskListElement) data, event);
+				if (data instanceof AbstractTaskContainer) {
+					drawSyncronizationImage((AbstractTaskContainer) data, event);
 				}
 				break;
 			}
@@ -103,7 +103,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private void drawSyncronizationImage(AbstractTaskListElement element, Event event) {
+	private void drawSyncronizationImage(AbstractTaskContainer element, Event event) {
 		Image image = null;
 		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
@@ -111,9 +111,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
-		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
+		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
 			if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
-					&& hasIncoming((AbstractTaskListElement) element)) {
+					&& hasIncoming((AbstractTaskContainer) element)) {
 				int additionalSquish = 0;
 				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 					additionalSquish = platformSpecificSquish + 3;
@@ -137,7 +137,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private boolean hasIncoming(AbstractTaskListElement container) {
+	private boolean hasIncoming(AbstractTaskContainer container) {
 		for (AbstractTask task : container.getChildren()) {
 			if (task instanceof AbstractTask) {
 				AbstractTask containedRepositoryTask = (AbstractTask) task;

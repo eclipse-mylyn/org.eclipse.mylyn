@@ -20,13 +20,13 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
@@ -52,16 +52,16 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
-			if (element instanceof DateRangeContainer) {
-				super.getImage((DateRangeContainer)element);
-			} else if (element instanceof DateRangeActivityDelegate) {
-				return super.getImage(((DateRangeActivityDelegate) element).getCorrespondingTask());
+			if (element instanceof ScheduledTaskContainer) {
+				super.getImage((ScheduledTaskContainer)element);
+			} else if (element instanceof ScheduledTaskDelegate) {
+				return super.getImage(((ScheduledTaskDelegate) element).getCorrespondingTask());
 			} else {
 				return super.getImage(element);
 			}
 		} else if (columnIndex == 1) {
-			if (element instanceof DateRangeActivityDelegate) {
-				DateRangeActivityDelegate taskElement = (DateRangeActivityDelegate) element;
+			if (element instanceof ScheduledTaskDelegate) {
+				ScheduledTaskDelegate taskElement = (ScheduledTaskDelegate) element;
 				return TasksUiImages.getImageForPriority(PriorityLevel.fromString(taskElement.getPriority()));
 			}
 		}
@@ -69,8 +69,8 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		if (element instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate activityDelegate = (DateRangeActivityDelegate) element;
+		if (element instanceof ScheduledTaskDelegate) {
+			ScheduledTaskDelegate activityDelegate = (ScheduledTaskDelegate) element;
 			AbstractTask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {			
 			case 2:
@@ -96,8 +96,8 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					return "";
 				}
 			}
-		} else if (element instanceof DateRangeContainer) {
-			DateRangeContainer taskCategory = (DateRangeContainer) element;
+		} else if (element instanceof ScheduledTaskContainer) {
+			ScheduledTaskContainer taskCategory = (ScheduledTaskContainer) element;
 			switch (columnIndex) {
 			case 2:
 				return taskCategory.getSummary();
@@ -120,7 +120,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	@Override
 	public Color getBackground(Object element) {
-		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
+		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
 			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);
@@ -129,13 +129,13 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	@Override
 	public Font getFont(Object element) {
-		if (element instanceof DateRangeContainer) {
-			DateRangeContainer container = (DateRangeContainer) element;
+		if (element instanceof ScheduledTaskContainer) {
+			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
 			if (container.isPresent()) {
 				return TaskListColorsAndFonts.BOLD;
 			}
-		} else if (element instanceof DateRangeActivityDelegate) {
-			DateRangeActivityDelegate durationDelegate = (DateRangeActivityDelegate) element;
+		} else if (element instanceof ScheduledTaskDelegate) {
+			ScheduledTaskDelegate durationDelegate = (ScheduledTaskDelegate) element;
 			return super.getFont(durationDelegate.getCorrespondingTask());
 		}
 		return super.getFont(element);

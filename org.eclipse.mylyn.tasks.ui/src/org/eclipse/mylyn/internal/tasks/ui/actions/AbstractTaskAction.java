@@ -13,9 +13,9 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -23,11 +23,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public abstract class AbstractTaskAction extends Action {
 
-	protected List<AbstractTaskListElement> selectedElements;
+	protected List<AbstractTaskContainer> selectedElements;
 
 	@Override
 	public void run() {
-		for (AbstractTaskListElement element : selectedElements) {
+		for (AbstractTaskContainer element : selectedElements) {
 			if (element instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
 				performActionOnTask(repositoryTask);
@@ -36,8 +36,8 @@ public abstract class AbstractTaskAction extends Action {
 				for (AbstractTask queryHit : repositoryQuery.getHits()) {
 					performActionOnTask(queryHit);
 				}
-			} else if (element instanceof AbstractTaskListElement) {
-				AbstractTaskListElement container = (AbstractTaskListElement) element;
+			} else if (element instanceof AbstractTaskContainer) {
+				AbstractTaskContainer container = (AbstractTaskContainer) element;
 				for (AbstractTask iTask : container.getChildren()) {
 					if (iTask instanceof AbstractTask) {
 						AbstractTask repositoryTask = (AbstractTask) iTask;
@@ -50,7 +50,7 @@ public abstract class AbstractTaskAction extends Action {
 
 	protected abstract void performActionOnTask(AbstractTask repositoryTask);
 
-	protected boolean containsArchiveContainer(List<AbstractTaskListElement> selectedElements) {
+	protected boolean containsArchiveContainer(List<AbstractTaskContainer> selectedElements) {
 		return selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 	}
 
