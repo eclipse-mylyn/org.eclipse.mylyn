@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -49,7 +49,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected TaskRepository repository;
 
-	protected getAllCategories taskList;
+	protected TaskList taskList;
 	
 	protected ITaskFactory taskFactory;
 

@@ -141,7 +141,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public Element createCategoryElement(AbstractTaskListElement category, Document doc, Element parent) {
 		if (category instanceof TaskArchive) {
 			return parent;
-		} else if (category instanceof UncategorizedCategory) {
+		} else if (category instanceof AutomaticCategory) {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
@@ -163,11 +163,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
-		if (task.getContainer() != null) {
-			if (task.getContainer().getHandleIdentifier().equals(UncategorizedCategory.HANDLE)) {
+		if (task.getCategory() != null) {
+			if (task.getCategory().getHandleIdentifier().equals(AutomaticCategory.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
-				node.setAttribute(KEY_CATEGORY, task.getContainer().getHandleIdentifier());
+				node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
 			}
 		} else {
 			// TODO: if/when subtasks are supported this should be handled
@@ -238,7 +238,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node;
 	}
 
-	public void readSubTasks(AbstractTask task, NodeList nodes, getAllCategories tasklist) {
+	public void readSubTasks(AbstractTask task, NodeList nodes, TaskList tasklist) {
 		for (int j = 0; j < nodes.getLength(); j++) {
 			Node child = nodes.item(j);
 			Element element = (Element) child;
@@ -283,7 +283,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node.getNodeName().equals(getCategoryTagName());
 	}
 
-	public void readCategory(Node node, getAllCategories taskList) throws TaskExternalizationException {
+	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 
@@ -327,7 +327,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	 * First tries to use a delegate externalizer to read, if none available,
 	 * reads itself.
 	 */
-	public final AbstractTask readTask(Node node, getAllCategories taskList, AbstractTaskListElement category, AbstractTask parent)
+	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskContainer category, AbstractTask parent)
 			throws TaskExternalizationException {
 		AbstractTask task = null;
 		String taskId = null;
@@ -372,7 +372,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	/**
 	 * Override for connector-specific implementation
 	 */
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, getAllCategories taskList,
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
 			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
 		String handle;
 		if (element.hasAttribute(KEY_HANDLE)) {
@@ -384,13 +384,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return task;
 	}
 
-	private void readTaskInfo(AbstractTask task, getAllCategories taskList, Element element, AbstractTask parent,
-			AbstractTaskListElement legacyCategory) throws TaskExternalizationException {
+	private void readTaskInfo(AbstractTask task, TaskList taskList, Element element, AbstractTask parent,
+			AbstractTaskContainer legacyCategory) throws TaskExternalizationException {
 
 		String categoryHandle = null;
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			categoryHandle = element.getAttribute(KEY_CATEGORY);
-			AbstractTaskListElement category = null;
+			AbstractTaskContainer category = null;
 			if (categoryHandle != null) {
 				category = taskList.getContainerForHandle(categoryHandle);
 			}
@@ -401,7 +401,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				taskList.internalAddRootTask(task);
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
-			task.setContainer(legacyCategory);
+			task.setCategory(legacyCategory);
 			legacyCategory.add(task);
 		} else if (legacyCategory == null && parent == null) {
 			if (task instanceof AbstractTask) {
@@ -620,7 +620,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	 * This happens on startup, so connectors should not perform any network
 	 * operations when reading queries.
 	 */
-	public AbstractRepositoryQuery readQuery(Node node, getAllCategories tlist) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
 		return null;
 	}
@@ -644,7 +644,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return false;
 	}
 
-	public final void readQueryHit(Element element, getAllCategories taskList, AbstractRepositoryQuery query)
+	public final void readQueryHit(Element element, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
 
 		if (element.hasAttribute(KEY_HANDLE)) {

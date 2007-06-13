@@ -51,9 +51,9 @@ public class TaskRepositoryManager {
 
 	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
-	private getAllCategories taskList;
+	private TaskList taskList;
 
-	public TaskRepositoryManager(getAllCategories taskList) {
+	public TaskRepositoryManager(TaskList taskList) {
 		this.taskList = taskList;
 	}
 
@@ -190,7 +190,7 @@ public class TaskRepositoryManager {
 		return repositories;
 	}
 
-	public TaskRepository getRepositoryForActiveTask(String repositoryKind, getAllCategories taskList) {
+	public TaskRepository getRepositoryForActiveTask(String repositoryKind, TaskList taskList) {
 		List<AbstractTask> activeTasks = taskList.getActiveTasks();
 		if (activeTasks.size() == 1) {
 			AbstractTask activeTask = activeTasks.get(0);

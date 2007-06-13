@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 
@@ -26,7 +26,7 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	
-	private final getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+	private final TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 	private IWorkingSet currentWorkingSet;
 

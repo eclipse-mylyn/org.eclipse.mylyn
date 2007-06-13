@@ -14,10 +14,12 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -30,6 +32,53 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	private TaskListManager taskListManager;
 
+	private UnscheduledCategory unscheduledCategory = new UnscheduledCategory();
+	
+	class UnscheduledCategory extends TaskCategory {
+
+		public static final String LABEL = "<Unscheduled>";
+
+		public static final String HANDLE = "unscheduled";
+
+		private AbstractTask activeTask = null;
+		
+		public UnscheduledCategory() {
+			super(HANDLE);
+		}
+
+		public void setActiveTask(AbstractTask activeTask) {
+			this.activeTask = activeTask;
+		}
+		
+		@Override
+		public Set<AbstractTask> getChildren() {
+			Set<AbstractTask> customChildren = new HashSet<AbstractTask>();
+			if (activeTask != null && activeTask.isActive()) {
+				customChildren.add(activeTask);
+			}
+			return customChildren;
+		}
+		
+		public String getPriority() {
+			return PriorityLevel.P1.toString();
+		}
+
+		@Override
+		public String getHandleIdentifier() {
+			return HANDLE;
+		}
+
+		@Override
+		public String getSummary() {
+			return LABEL;
+		}
+
+		@Override
+		public boolean canRename() {
+			return false;
+		}
+	}
+
 	public TaskScheduleContentProvider(TaskListView view, TaskListManager taskActivityManager) {
 		super(view);
 		this.taskListManager = taskActivityManager;
@@ -37,9 +86,10 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.view.getViewSite())) {
-			Set<AbstractTaskListElement> ranges = new HashSet<AbstractTaskListElement>();
+			unscheduledCategory.activeTask = null;
+			Set<AbstractTaskContainer> ranges = new HashSet<AbstractTaskContainer>();
+			
 			ranges.addAll(taskListManager.getDateRanges());
-
 			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 			boolean containsActiveTask = false;
@@ -52,10 +102,11 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 					}
 				}
 				if (!containsActiveTask) {
-					ranges.add(activeTask);
+					unscheduledCategory.activeTask = activeTask;
+					ranges.add(unscheduledCategory);
+//					ranges.add(activeTask);
 				}
 			}
-
 			return applyFilter(ranges).toArray();
 		} else {
 			return super.getElements(parent);
@@ -67,7 +118,7 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 //			DateRangeActivityDelegate dateRangeTaskWrapper = (DateRangeActivityDelegate) child;
 //			return dateRangeTaskWrapper.getParent();
 //		} else {
-			return null;
+		return null;
 //		}
 	}
 

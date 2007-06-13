@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.ui.planner.CompletedTaskCollector;
 import org.eclipse.mylyn.internal.tasks.ui.planner.TaskReportGenerator;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -115,7 +115,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
-		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
+		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -138,7 +138,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
-		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
+		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -164,7 +164,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 		manager.getTaskList().addQuery(bugQuery);
 
-		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
+		Set<AbstractTaskContainer> catagories = new HashSet<AbstractTaskContainer>();
 		catagories.add(bugQuery);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));

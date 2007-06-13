@@ -103,24 +103,24 @@ public class TaskListUiTest extends TestCase {
 
 			cat1task2 = manager.createNewLocalTask("task 2");
 			cat1task2.setPriority(PriorityLevel.P2.toString());
-			cat1task2.setContainer(cat1);
+			cat1task2.setCategory(cat1);
 			manager.getTaskList().moveToContainer(cat1, cat1task2);
 
 			cat1task3 = manager.createNewLocalTask("task 3");
 			cat1task3.setPriority(PriorityLevel.P3.toString());
 			cat1task3.setCompleted(true);
-			cat1task3.setContainer(cat1);
+			cat1task3.setCategory(cat1);
 			manager.getTaskList().moveToContainer(cat1, cat1task3);
 
 			cat1task4 = manager.createNewLocalTask("task 4");
 			cat1task4.setPriority(PriorityLevel.P4.toString());
-			cat1task4.setContainer(cat1);
+			cat1task4.setCategory(cat1);
 			manager.getTaskList().moveToContainer(cat1, cat1task4);
 
 			cat1task5 = manager.createNewLocalTask("task 5");
 			cat1task5.setPriority(PriorityLevel.P5.toString());
 			cat1task5.setCompleted(true);
-			cat1task5.setContainer(cat1);
+			cat1task5.setCategory(cat1);
 			manager.getTaskList().moveToContainer(cat1, cat1task5);
 
 			manager.getTaskList().addCategory(cat1);
@@ -130,7 +130,7 @@ public class TaskListUiTest extends TestCase {
 
 			cat2task1 = manager.createNewLocalTask("task 1");
 			cat2task1.setPriority(PriorityLevel.P1.toString());
-			cat2task1.setContainer(cat2);
+			cat2task1.setCategory(cat2);
 			manager.getTaskList().moveToContainer(cat2, cat2task1);
 
 			cat2task1sub1 = manager.createNewLocalTask("sub task 1");
@@ -140,23 +140,23 @@ public class TaskListUiTest extends TestCase {
 			cat2task2 = manager.createNewLocalTask("task 2");
 			cat2task2.setPriority(PriorityLevel.P2.toString());
 			cat2task2.setCompleted(true);
-			cat2task2.setContainer(cat2);
+			cat2task2.setCategory(cat2);
 			manager.getTaskList().moveToContainer(cat2, cat2task2);
 
 			cat2task3 = manager.createNewLocalTask("task 3");
 			cat2task3.setPriority(PriorityLevel.P3.toString());
-			cat2task3.setContainer(cat2);
+			cat2task3.setCategory(cat2);
 			manager.getTaskList().moveToContainer(cat2, cat2task3);
 
 			cat2task4 = manager.createNewLocalTask("task 4");
 			cat2task4.setPriority(PriorityLevel.P4.toString());
 			cat2task4.setCompleted(true);
-			cat2task4.setContainer(cat2);
+			cat2task4.setCategory(cat2);
 			manager.getTaskList().moveToContainer(cat2, cat2task4);
 
 			cat2task5 = manager.createNewLocalTask("task 5");
 			cat2task5.setPriority(PriorityLevel.P5.toString());
-			cat2task5.setContainer(cat2);
+			cat2task5.setCategory(cat2);
 			manager.getTaskList().moveToContainer(cat2, cat2task5);
 
 			manager.getTaskList().addCategory(cat2);
@@ -176,7 +176,7 @@ public class TaskListUiTest extends TestCase {
 		assertNotNull(view);
 		WebTask webTask = new WebTask("1", "1", "", "", "web");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(webTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
+				TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory());
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());

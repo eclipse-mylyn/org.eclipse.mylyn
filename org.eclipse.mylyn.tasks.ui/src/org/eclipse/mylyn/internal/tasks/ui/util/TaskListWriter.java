@@ -49,7 +49,7 @@ import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -100,7 +100,7 @@ public class TaskListWriter {
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
 	}
 
-	public void writeTaskList(getAllCategories taskList, File outFile) {
+	public void writeTaskList(TaskList taskList, File outFile) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
@@ -247,7 +247,7 @@ public class TaskListWriter {
 	/**
 	 * TODO: fix this old mess
 	 */
-	public void readTaskList(getAllCategories taskList, File inFile, TaskDataManager taskDataManager) {
+	public void readTaskList(TaskList taskList, File inFile, TaskDataManager taskDataManager) {
 		hasCaughtException = false;
 		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		orphanedTaskNodes.clear();

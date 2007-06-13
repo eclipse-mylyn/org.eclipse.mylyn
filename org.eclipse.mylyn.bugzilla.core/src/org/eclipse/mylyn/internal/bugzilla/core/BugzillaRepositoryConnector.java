@@ -41,7 +41,7 @@ import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -71,7 +71,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaClientManager clientManager;
 
 	@Override
-	public void init(getAllCategories taskList) {
+	public void init(TaskList taskList) {
 		super.init(taskList);
 		this.taskDataHandler = new BugzillaTaskDataHandler(this);
 		this.attachmentHandler = new BugzillaAttachmentHandler(this);

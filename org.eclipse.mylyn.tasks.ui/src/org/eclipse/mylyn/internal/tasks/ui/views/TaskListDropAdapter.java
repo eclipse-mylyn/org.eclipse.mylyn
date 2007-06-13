@@ -116,10 +116,10 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) currentTarget, task);
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
-				if (targetTask.getContainer() == null) {
+				if (targetTask.getCategory() == null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 				} else {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getContainer(), task);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getCategory(), task);
 				}
 			} else if (currentTarget instanceof DateRangeContainer) {
 				DateRangeContainer container = (DateRangeContainer)currentTarget;

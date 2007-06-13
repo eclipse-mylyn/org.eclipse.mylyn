@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -222,7 +222,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 	/** Returns all tasks in the task list root or a category in the task list */
 	protected List<AbstractTask> getAllTasks() {
 		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
-		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 		allTasks.addAll(taskList.getRootTasks());
 

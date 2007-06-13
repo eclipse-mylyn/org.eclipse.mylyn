@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -79,7 +79,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
 
-		getAllCategories taskList = manager.getTaskList();
+		TaskList taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
 		Set<AbstractTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
@@ -167,7 +167,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		Collection<AbstractTask> allTasks = manager.getTaskList().getAllTasks();
 		Set<AbstractTask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<AbstractTaskContainer> allCategories = manager.getTaskList().getCategories();
-		Set<AbstractTaskListElement> allRoots = manager.getTaskList().getRootElements();
+		Set<AbstractTaskContainer> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());
 
 		manager.saveTaskList();

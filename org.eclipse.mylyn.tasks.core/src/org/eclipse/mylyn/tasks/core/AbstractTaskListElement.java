@@ -79,7 +79,7 @@ public abstract class AbstractTaskListElement extends PlatformObject implements 
 	}
 
 	/**
-	 * Use {@link getAllCategories} methods instead.
+	 * Use {@link TaskList} methods instead.
 	 */
 	void add(AbstractTask task) {
 		children.add(task);
@@ -104,6 +104,7 @@ public abstract class AbstractTaskListElement extends PlatformObject implements 
 		return handle.hashCode();
 	}
 
+	@Deprecated
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -132,6 +133,7 @@ public abstract class AbstractTaskListElement extends PlatformObject implements 
 	/**
 	 * Override for custom-named elements.
 	 */
+	@Deprecated
 	public boolean canRename() {
 		return true;
 	}

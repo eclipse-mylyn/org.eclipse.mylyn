@@ -62,7 +62,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.swt.widgets.Display;
@@ -148,7 +148,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	private TaskListSaveManager taskListSaveManager;
 
 	// TODO: guard against overwriting the single instance?
-	private getAllCategories taskList = new getAllCategories();
+	private TaskList taskList = new TaskList();
 
 	private TaskActivationHistory taskActivityHistory = new TaskActivationHistory();
 
@@ -255,7 +255,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		ContextCorePlugin.getContextManager().removeActivityMetaContextListener(CONTEXT_LISTENER);
 	}
 
-	public getAllCategories resetTaskList() {
+	public TaskList resetTaskList() {
 		resetActivity();
 		taskList.reset();
 		taskListInitialized = true;
@@ -826,7 +826,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 	}
 
-	public getAllCategories getTaskList() {
+	public TaskList getTaskList() {
 		return taskList;
 	}
 
@@ -1191,12 +1191,12 @@ public class TaskListManager implements IPropertyChangeListener {
 			taskList.addTask(newTask, (TaskCategory) selectedObject);
 		} else if (selectedObject instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selectedObject;
-			if (task.getContainer() instanceof TaskCategory) {
-				taskList.addTask(newTask, task.getContainer());
+			if (task.getCategory() instanceof TaskCategory) {
+				taskList.addTask(newTask, task.getCategory());
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
+				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -1205,7 +1205,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, taskList.getUncategorizedCategory());
+			taskList.addTask(newTask, taskList.getAutomaticCategory());
 		}
 		return newTask;
 	}

@@ -47,13 +47,13 @@ public abstract class AbstractRepositoryConnector {
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
-	protected getAllCategories taskList;
+	protected TaskList taskList;
 
 	private boolean userManaged = true;
 
 	private TaskDataManager taskDataManager;
 
-	public void init(getAllCategories taskList) {
+	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
 

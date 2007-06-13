@@ -23,10 +23,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 
 /**
  * @author Ken Sueda
@@ -39,21 +38,21 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	private boolean finished;
 
-	private getAllCategories tasklist = null;
+	private TaskList tasklist = null;
 
 	private List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
 
 	private List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 
-	private Set<AbstractTaskListElement> filterCategories;
+	private Set<AbstractTaskContainer> filterCategories;
 
-	public TaskReportGenerator(getAllCategories tlist) {
+	public TaskReportGenerator(TaskList tlist) {
 		this(tlist, null);
 	}
 
-	public TaskReportGenerator(getAllCategories tlist, Set<AbstractTaskListElement> filterCategories) {
+	public TaskReportGenerator(TaskList tlist, Set<AbstractTaskContainer> filterCategories) {
 		tasklist = tlist;
-		this.filterCategories = filterCategories != null ? filterCategories : new HashSet<AbstractTaskListElement>();
+		this.filterCategories = filterCategories != null ? filterCategories : new HashSet<AbstractTaskContainer>();
 	}
 
 	public void addCollector(ITaskCollector collector) {
@@ -72,7 +71,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-		Set<AbstractTaskListElement> rootElements;
+		Set<AbstractTaskContainer> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRootElements();
 		} else {

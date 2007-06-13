@@ -17,11 +17,11 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 
 public class DummySearchHitProvider extends QueryHitCollector {
 
-	public DummySearchHitProvider(getAllCategories tasklist) {
+	public DummySearchHitProvider(TaskList tasklist) {
 		super(tasklist, new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData,

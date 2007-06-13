@@ -16,7 +16,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -32,7 +32,7 @@ public class TaskFactory implements ITaskFactory {
 
 	private TaskRepository repository;
 
-	private getAllCategories taskList;
+	private TaskList taskList;
 
 	//private TaskDataManager dataManager;
 

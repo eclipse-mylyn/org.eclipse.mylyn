@@ -51,11 +51,11 @@ public class QueryHitCollector {
 	/** The string to display to the user when the query is done */
 	private static final String DONE = "done";
 
-	protected getAllCategories taskList;
+	protected TaskList taskList;
 
 	protected ITaskFactory taskFactory;
 
-	public QueryHitCollector(getAllCategories tasklist, ITaskFactory taskFactory) {
+	public QueryHitCollector(TaskList tasklist, ITaskFactory taskFactory) {
 		this.taskList = tasklist;
 		this.taskFactory = taskFactory;
 	}

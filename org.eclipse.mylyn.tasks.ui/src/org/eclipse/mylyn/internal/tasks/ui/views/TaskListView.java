@@ -95,7 +95,7 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.core.AutomaticCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -487,7 +487,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					// category might appear or disappear
 					refresh(null);
 					AbstractTaskListElement rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-							.getUncategorizedCategory();
+							.getAutomaticCategory();
 					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
 						refresh(null);
 					} else {
@@ -538,7 +538,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						// HACK: should be part of policy
 						getViewer().refresh(false);
 					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList()
-							.getUncategorizedCategory())) {
+							.getAutomaticCategory())) {
 						refresh(null);
 					} else {
 						refresh(container);
@@ -1241,7 +1241,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			} else if (action instanceof MarkTaskIncompleteAction) {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
-				if (element instanceof TaskArchive || element instanceof UncategorizedCategory)
+				if (element instanceof TaskArchive || element instanceof AutomaticCategory)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1613,15 +1613,15 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					if (element instanceof AbstractTask) {
 						AbstractTask task = (AbstractTask) element;
 						AbstractTaskListElement rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-								.getUncategorizedCategory();
+								.getAutomaticCategory();
 						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
 								.getQueriesForHandle(task.getHandleIdentifier());
-						if (task.getContainer() == null || task.getContainer().equals(rootCategory)
+						if (task.getCategory() == null || task.getCategory().equals(rootCategory)
 								|| (task instanceof AbstractTask && queries.isEmpty())) {
 							// || task.getContainer() instanceof TaskArchive) {
 							refresh(null);
 						} else {
-							getViewer().refresh(task.getContainer(), true);
+							getViewer().refresh(task.getCategory(), true);
 							// refresh(task.getContainer());
 						}
 

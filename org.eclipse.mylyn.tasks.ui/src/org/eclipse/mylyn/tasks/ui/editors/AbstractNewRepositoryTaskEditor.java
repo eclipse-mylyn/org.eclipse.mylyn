@@ -30,11 +30,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AutomaticCategory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
-import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -363,8 +364,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		List<AbstractTaskListElement> categories = taskList.getUserCategories();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		List<AbstractTaskContainer> categories = taskList.getUserCategories();
 		Collections.sort(categories, new Comparator<AbstractTaskListElement>() {
 
 			public int compare(AbstractTaskListElement c1, AbstractTaskListElement c2) {
@@ -372,7 +373,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 			}
 
 		});
-		categoryChooser.add(UncategorizedCategory.LABEL);
+		categoryChooser.add(AutomaticCategory.LABEL);
 		for (AbstractTaskListElement category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
@@ -404,13 +405,13 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 	 *         added to, or null if it must not be added to the task list
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractTaskListElement getCategory() {
+	protected AbstractTaskContainer getCategory() {
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			if (index == 0) {
-				return TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory();
+				return TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory();
 			}
-			return ((List<AbstractTaskListElement>) categoryChooser.getData()).get(index - 1);
+			return ((List<AbstractTaskContainer>) categoryChooser.getData()).get(index - 1);
 		}
 		return null;
 	}

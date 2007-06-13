@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -66,7 +66,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, getAllCategories taskList,
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
 			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
 		TracTask task = new TracTask(repositoryUrl, taskId, summary);
 		return task;
@@ -131,7 +131,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public AbstractRepositoryQuery readQuery(Node node, getAllCategories taskList) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		String repositoryUrl;
 		String queryUrl;

@@ -46,7 +46,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 			if (page == null)
 				return false;
 			IEditorInput input = new TaskActivityEditorInput(planningGamePage.getReportStartDate(), planningGamePage
-					.getSelectedFilters(), TasksUiPlugin.getTaskListManager().getTaskList());
+					.getSelectedContainers(), TasksUiPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, TaskPlanningEditor.ID_EDITOR_PLANNING);
 		} catch (PartInitException ex) {
 			MylarStatusHandler.log(ex, "couldn't open summary editor");

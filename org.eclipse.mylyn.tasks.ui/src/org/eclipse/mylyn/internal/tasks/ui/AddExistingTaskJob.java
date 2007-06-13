@@ -13,8 +13,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -44,13 +45,14 @@ public class AddExistingTaskJob extends Job {
 	 * null, it will be added to the current selected task's category in task
 	 * list
 	 */
-	private AbstractTaskListElement taskContainer;
+	private AbstractTaskContainer taskContainer;
 
 	public AddExistingTaskJob(TaskRepository repository, String taskId) {
 		this(repository, taskId, null);
 	}
 
-	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskListElement taskContainer) {
+	@Deprecated // Use TaskCategory instead
+	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskContainer taskContainer) {
 		super(MessageFormat.format("Adding task: \"{0}\"...", taskId));
 		this.repository = repository;
 		this.taskId = taskId;
@@ -76,7 +78,7 @@ public class AddExistingTaskJob extends Job {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 					public void run() {
-						AbstractTaskListElement category = taskContainer;
+						AbstractTaskContainer category = taskContainer;
 						TaskListView taskListView = TaskListView.getFromActivePerspective();
 						if (category == null) {
 							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection())
@@ -84,7 +86,7 @@ public class AddExistingTaskJob extends Job {
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
 							} else {
-								category = TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory();
+								category = TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory();
 							}
 						}
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category, newTask);

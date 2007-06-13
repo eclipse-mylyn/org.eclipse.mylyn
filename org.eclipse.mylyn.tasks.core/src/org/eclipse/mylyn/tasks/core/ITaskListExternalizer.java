@@ -46,12 +46,12 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadCategory(Node node);
 
-	public abstract void readCategory(Node node, getAllCategories taskList) throws TaskExternalizationException;
+	public abstract void readCategory(Node node, TaskList taskList) throws TaskExternalizationException;
 
 	public abstract boolean canReadTask(Node node);
 
 	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element,
-			getAllCategories tlist, AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException;
+			TaskList tlist, AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException;
 
 	public abstract boolean canCreateElementFor(AbstractRepositoryQuery category);
 
@@ -59,5 +59,5 @@ public interface ITaskListExternalizer {
 
 	public abstract boolean canReadQuery(Node node);
 
-	public abstract AbstractRepositoryQuery readQuery(Node node, getAllCategories tlist) throws TaskExternalizationException;
+	public abstract AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException;
 }

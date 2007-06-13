@@ -25,7 +25,7 @@ import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchQuery;
@@ -54,7 +54,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	private ITaskFactory taskFactory;
 
-	public SearchHitCollector(getAllCategories tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
+	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
 		super(tasklist, taskFactory);
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;

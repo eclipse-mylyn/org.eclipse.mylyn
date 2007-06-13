@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -49,14 +49,14 @@ class SynchronizeQueryJob extends Job {
 
 	private boolean synchChangedTasks;
 
-	private getAllCategories taskList;
+	private TaskList taskList;
 
 // private RepositorySynchronizationManager synchronizationManager;
 
 	private boolean forced = false;
 
 	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager,
-			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, getAllCategories taskList) {
+			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
 		this.queries = queries;

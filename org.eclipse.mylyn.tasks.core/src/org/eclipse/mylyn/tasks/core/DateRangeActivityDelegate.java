@@ -106,8 +106,8 @@ public class DateRangeActivityDelegate extends AbstractTask {
 //		task.addSubTask(task);
 //	}
 
-	public AbstractTaskListElement getContainer() {
-		return task.getContainer();
+	public AbstractTaskContainer getCategory() {
+		return task.getCategory();
 	}
 
 	public Set<AbstractTask> getChildren() {
@@ -178,8 +178,8 @@ public class DateRangeActivityDelegate extends AbstractTask {
 		task.setActive(active);
 	}
 
-	public void setContainer(AbstractTaskListElement category) {
-		task.setContainer(category);
+	public void setCategory(AbstractTaskContainer category) {
+		task.setCategory(category);
 	}
 
 	public void setCompleted(boolean completed) {

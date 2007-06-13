@@ -40,7 +40,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 		
 		List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
 		Collections.sort(categories);
-		for (final AbstractTaskListElement category : categories) {
+		for (final AbstractTaskContainer category : categories) {
 			if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 				Action action = new Action() {
 					@Override
@@ -98,7 +98,7 @@ public class MoveToCategoryMenuContributor implements IDynamicSubMenuContributor
 	 * @param selectedElements
 	 * @param category 
 	 */
-	private void moveToCategory(final List<AbstractTaskListElement> selectedElements, AbstractTaskListElement category) {
+	private void moveToCategory(final List<AbstractTaskListElement> selectedElements, AbstractTaskContainer category) {
 		for (AbstractTaskListElement element : selectedElements) {
 			if (element instanceof AbstractTask) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category,

@@ -15,7 +15,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Element;
 
 /**
@@ -29,7 +29,7 @@ public class LocalTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, getAllCategories taskList,
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
 			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
 //		String handle;
 //		if (element.hasAttribute(KEY_HANDLE)) {

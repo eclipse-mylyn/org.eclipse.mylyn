@@ -32,7 +32,6 @@ public class WebTask extends AbstractTask {
 	public WebTask(String id, String label, String taskPrefix, String repositoryUrl, String repsitoryType) {
 		super(repositoryUrl, id, label);
 		this.taskPrefix = taskPrefix;
-		this.repositoryUrl = repositoryUrl;
 		this.repsitoryType = repsitoryType;
 		setTaskUrl(taskPrefix + id);
 	}

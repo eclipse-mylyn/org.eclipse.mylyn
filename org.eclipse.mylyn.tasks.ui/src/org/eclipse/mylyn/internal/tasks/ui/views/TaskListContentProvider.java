@@ -23,8 +23,7 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -64,7 +63,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 //			if (((ITask) child).getParent() != null) {
 //				return ((ITask) child).getParent();
 //			} else {
-			return ((AbstractTask) child).getContainer();
+			return ((AbstractTask) child).getCategory();
 //			}
 		}
 		return null;
@@ -107,16 +106,17 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
-	protected List<AbstractTaskListElement> applyFilter(Set<AbstractTaskListElement> roots) {
+	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
 		String filterText = (this.view.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
-			List<AbstractTaskListElement> filteredRoots = new ArrayList<AbstractTaskListElement>();
-			for (AbstractTaskListElement element : roots) {
-				if (element instanceof AbstractTask) {
-					if (!filter(null, element)) {
-						filteredRoots.add(element);
-					}
-				} else if (element instanceof AbstractRepositoryQuery) {
+			List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
+			for (AbstractTaskContainer element : roots) {
+//				if (element instanceof AbstractTask) {  // this case should not happen anymore
+//					if (!filter(null, element)) {
+//						filteredRoots.add(element);
+//					}
+//				} else 
+				if (element instanceof AbstractRepositoryQuery) {
 					if (selectQuery((AbstractRepositoryQuery) element)) {
 						filteredRoots.add(element);
 					}
@@ -128,7 +128,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 			}
 			return filteredRoots;
 		} else {
-			return new ArrayList<AbstractTaskListElement>(roots);
+			return new ArrayList<AbstractTaskContainer>(roots);
 		}
 	}
 

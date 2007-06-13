@@ -14,15 +14,17 @@ package org.eclipse.mylyn.tasks.core;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
+ * Category created for the user to hold uncategorized tasks.
+ * 
  * @author Rob Elves
  */
-public class UncategorizedCategory extends AbstractTaskContainer {
+public class AutomaticCategory extends TaskCategory {
 
-	public static final String LABEL = "<Uncategorized>";// "Root
+	public static final String LABEL = "<Uncategorized>";
 
 	public static final String HANDLE = "uncategorized";
 
-	public UncategorizedCategory() {
+	public AutomaticCategory() {
 		super(HANDLE);
 	}
 
@@ -43,10 +45,5 @@ public class UncategorizedCategory extends AbstractTaskContainer {
 	@Override
 	public boolean canRename() {
 		return false;
-	}
-	
-	@Override
-	public final boolean isLocal() {
-		return true;
 	}
 }

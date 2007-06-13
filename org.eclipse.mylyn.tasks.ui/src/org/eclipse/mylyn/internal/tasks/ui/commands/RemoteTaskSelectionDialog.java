@@ -40,9 +40,9 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -222,10 +222,10 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
-		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		LinkedList<AbstractTaskListElement> categories = new LinkedList<AbstractTaskListElement>(taskList
 				.getUserCategories());
-		categories.addFirst(taskList.getUncategorizedCategory());
+		categories.addFirst(taskList.getAutomaticCategory());
 		categoryViewer.setInput(categories);
 		categoryViewer.setLabelProvider(new LabelProvider() {
 
@@ -238,7 +238,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
-		categoryViewer.setSelection(new StructuredSelection(taskList.getUncategorizedCategory()));
+		categoryViewer.setSelection(new StructuredSelection(taskList.getAutomaticCategory()));
 
 		categoryViewer.getControl().setEnabled(addToTaskListCheck.getSelection());
 		addToTaskListCheck.addSelectionListener(new SelectionAdapter() {
@@ -337,7 +337,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	private boolean shouldAddToTaskList;
 
-	private AbstractTaskListElement selectedCategory;
+	private AbstractTaskContainer selectedCategory;
 
 	public String[] getSelectedIds() {
 		return selectedIds;
@@ -355,7 +355,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		return shouldAddToTaskList;
 	}
 
-	public AbstractTaskListElement getSelectedCategory() {
+	public AbstractTaskContainer getSelectedCategory() {
 		return selectedCategory;
 	}
 
@@ -372,7 +372,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		}
 		shouldAddToTaskList = addToTaskListCheck.getSelection();
 		if (shouldAddToTaskList) {
-			selectedCategory = (AbstractTaskListElement) ((IStructuredSelection) categoryViewer.getSelection())
+			selectedCategory = (AbstractTaskContainer) ((IStructuredSelection) categoryViewer.getSelection())
 					.getFirstElement();
 		}
 	}

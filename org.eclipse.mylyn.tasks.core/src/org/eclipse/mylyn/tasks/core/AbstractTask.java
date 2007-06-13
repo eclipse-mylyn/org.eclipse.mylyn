@@ -19,8 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
- * Virtual proxy for a repository task.
- * 
  * @author Mik Kersten
  * @author Rob Elves
  */
@@ -28,21 +26,68 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 	
 	@Deprecated
 	public static final String DEFAULT_TASK_KIND = "task";
+
+	private String repositoryUrl;
+
+	private String kind = DEFAULT_TASK_KIND;
+	
+	private String taskId;
+	
+	private String owner;
+	
+	private boolean active = false;
+	
+	private String summary;
+
+	private String priority = PriorityLevel.getDefault().toString();
+
+	private boolean completed;
+	
+	private boolean isNotifiedIncoming = false;
+	
+	private boolean hasReminded = false;
+
+	private String taskUrl = "";
+
+
+	@Deprecated
+	private AbstractTaskContainer parentCategory = null;
+	
+	
+	// ************ Synch ****************
 	
 	/** The last time this task's bug report was in a synchronized (read?) state. */
-	protected String lastSynchronizedDateStamp;
+	private String lastSynchronizedDateStamp;
 
-	protected String repositoryUrl;
+	private boolean currentlySynchronizing;
 
-	protected String taskId;
+	private boolean submitting;
 	
-	protected String owner;
-		
-	protected boolean isNotifiedIncoming = false;
+	private RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
 
+	// transient
+	private IStatus errorStatus = null;
+	
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
 	}
+	
+	// ************ Planning ****************
+	
+	private Date completionDate = null;
+
+	private Date creationDate = null;
+
+	private Date scheduledForDate = null;
+
+	private Date dueDate = null;
+	
+	private String notes = "";
+
+	private int estimatedTimeHours = 1;
+		
+
+
 
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
@@ -116,45 +161,6 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 			return P3;
 		}
 	}
-
-	protected RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
-
-	// transient
-	protected IStatus errorStatus = null;
-
-	// transient
-	protected boolean currentlySynchronizing;
-
-	// transient
-	protected boolean submitting;
-
-	private boolean active = false;
-
-	private boolean hasReminded = false;
-
-	private String summary;
-
-	private String priority = PriorityLevel.getDefault().toString();
-
-	private String notes = "";
-
-	private int estimatedTimeHours = 1;
-
-	private boolean completed;
-
-	private String taskUrl = "";
-
-	private AbstractTaskListElement parentCategory = null;
-
-	private Date completionDate = null;
-
-	private Date creationDate = null;
-
-	private Date scheduledForDate = null;
-
-	private Date dueDate = null;
-
-	protected String kind = DEFAULT_TASK_KIND;
 	
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
@@ -334,12 +340,16 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 
 	/**
 	 * Use TaskList for moving tasks between containers
+	 * 
+	 * TODO: get rid of this or we should make TaskCategory API.
 	 */
-	public void setContainer(AbstractTaskListElement cat) {
-		this.parentCategory = cat;
+	@Deprecated
+	public void setCategory(AbstractTaskContainer category) {
+		this.parentCategory = category;
 	}
 
-	public AbstractTaskListElement getContainer() {
+	@Deprecated
+	public AbstractTaskContainer getCategory() {
 		return parentCategory;
 	}
 

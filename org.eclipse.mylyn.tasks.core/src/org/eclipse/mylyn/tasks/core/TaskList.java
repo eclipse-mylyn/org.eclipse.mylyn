@@ -31,11 +31,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * 
  * @author Mik Kersten
  */
-public class getAllCategories {
-
-	// public static final String LABEL_ROOT = "Uncategorized";// "Root
-
-	// (automatic)";
+public class TaskList {
 
 	private int lastTaskNum = 0;
 
@@ -49,11 +45,11 @@ public class getAllCategories {
 
 	private TaskArchive archiveContainer;
 
-	private UncategorizedCategory uncategorizedCategory;
+	private AutomaticCategory automaticCategory;
 
 	private List<AbstractTask> activeTasks;
 
-	public getAllCategories() {
+	public TaskList() {
 		reset();
 	}
 
@@ -67,11 +63,11 @@ public class getAllCategories {
 		queries = new ConcurrentHashMap<String, AbstractRepositoryQuery>();
 
 		archiveContainer = new TaskArchive();
-		uncategorizedCategory = new UncategorizedCategory();
+		automaticCategory = new AutomaticCategory();
 
 		activeTasks = new CopyOnWriteArrayList<AbstractTask>();
 		lastTaskNum = 0;
-		categories.put(uncategorizedCategory.getHandleIdentifier(), uncategorizedCategory);
+		categories.put(automaticCategory.getHandleIdentifier(), automaticCategory);
 		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 	}
 
@@ -102,7 +98,7 @@ public class getAllCategories {
 	 * @param task to be added (hit, subtask, etc)
 	 * @param container task container, query or parent task
 	 */
-	public void addTask(AbstractTask task, AbstractTaskListElement container) {
+	public void addTask(AbstractTask task, AbstractTaskListElement parentElement) {
 
 		AbstractTask newTask = tasks.get(task.getHandleIdentifier());
 
@@ -110,20 +106,20 @@ public class getAllCategories {
 			newTask = task;
 			tasks.put(newTask.getHandleIdentifier(), newTask);
 			archiveContainer.add(newTask);
-			newTask.setContainer(archiveContainer);
+			newTask.setCategory(archiveContainer);
 			for (ITaskListChangeListener listener : changeListeners) {
 				listener.taskAdded(newTask);
 			}
 		}
 
-		if (container != null) {
-			container.add(newTask);
-			if (!(container instanceof AbstractTask) && !(container instanceof AbstractRepositoryQuery)) {
-				newTask.setContainer(container);
+		if (parentElement != null) {
+			parentElement.add(newTask);
+			if (parentElement instanceof TaskCategory) {
+				newTask.setCategory((TaskCategory)parentElement);
 			}
 		} else {
-			uncategorizedCategory.add(newTask);
-			newTask.setContainer(uncategorizedCategory);
+			automaticCategory.add(newTask);
+			newTask.setCategory(automaticCategory);
 		}
 	}
 
@@ -157,16 +153,16 @@ public class getAllCategories {
 	}
 
 	public void moveToRoot(AbstractTask task) {
-		moveToContainer(uncategorizedCategory, task);
+		moveToContainer(automaticCategory, task);
 	}
 
-	public void moveToContainer(AbstractTaskListElement toContainer, AbstractTask task) {
+	public void moveToContainer(AbstractTaskContainer toContainer, AbstractTask task) {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
 			tasks.put(task.getHandleIdentifier(), task);
 		}
 
-		AbstractTaskListElement fromContainer = task.getContainer();
-		if (fromContainer instanceof AbstractTaskListElement) {
+		AbstractTaskContainer fromContainer = task.getCategory();
+		if (fromContainer instanceof AbstractTaskContainer) {
 			(fromContainer).remove(task);
 		}
 		if (toContainer != null) {
@@ -202,7 +198,7 @@ public class getAllCategories {
 	}
 
 	public void renameContainer(AbstractTaskContainer container, String newDescription) {
-		if (!(container instanceof TaskArchive) && !(container instanceof UncategorizedCategory)) {
+		if (!(container instanceof TaskArchive) && !(container instanceof AutomaticCategory)) {
 			if (queries.remove(container.getHandleIdentifier()) != null) {
 				container.setDescription(newDescription);
 				if (container instanceof AbstractRepositoryQuery) {
@@ -233,10 +229,10 @@ public class getAllCategories {
 	 */
 	public void deleteTask(AbstractTask task) {
 		archiveContainer.remove(task);
-		uncategorizedCategory.remove(task);
-		if (task.getContainer() != null) {
-			task.getContainer().remove(task);
-			task.setContainer(null);
+		automaticCategory.remove(task);
+		if (task.getCategory() != null) {
+			task.getCategory().remove(task);
+			task.setCategory(null);
 		}
 		tasks.remove(task.getHandleIdentifier());
 		for (ITaskListChangeListener listener : changeListeners) {
@@ -244,9 +240,9 @@ public class getAllCategories {
 		}
 	}
 
-	public void deleteCategory(AbstractTaskListElement category) {
+	public void deleteCategory(AbstractTaskContainer category) {
 		for (AbstractTask task : category.getChildren()) {
-			uncategorizedCategory.add(task);
+			automaticCategory.add(task);
 		}
 		categories.remove(category.getHandleIdentifier());
 		for (ITaskListChangeListener listener : changeListeners) {
@@ -283,19 +279,21 @@ public class getAllCategories {
 		categories.put(category.getHandleIdentifier(), category);
 	}
 
-	public void internalAddTask(AbstractTask task, AbstractTaskListElement container) {
+	public void internalAddTask(AbstractTask task, AbstractTaskContainer container) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
-			task.setContainer(container);
 			container.add(task);
+			if (container instanceof TaskCategory) {
+				task.setCategory((AbstractTaskContainer)container);
+			}
 		} else {
-			task.setContainer(uncategorizedCategory);
-			uncategorizedCategory.add(task);
+			task.setCategory(automaticCategory);
+			automaticCategory.add(task);
 		}
 	}
 
 	public void internalAddRootTask(AbstractTask task) {
-		internalAddTask(task, uncategorizedCategory);
+		internalAddTask(task, automaticCategory);
 	}
 
 	public void internalAddQuery(AbstractRepositoryQuery query) {
@@ -342,16 +340,16 @@ public class getAllCategories {
 	}
 
 	public Set<AbstractTask> getRootTasks() {
-		return Collections.unmodifiableSet(uncategorizedCategory.getChildren());
+		return Collections.unmodifiableSet(automaticCategory.getChildren());
 	}
 
 	public Set<AbstractTaskContainer> getCategories() {
 		return Collections.unmodifiableSet(new HashSet<AbstractTaskContainer>(categories.values()));
 	}
 
-	public List<AbstractTaskListElement> getUserCategories() {
-		List<AbstractTaskListElement> included = new ArrayList<AbstractTaskListElement>();
-		for (AbstractTaskListElement category : categories.values()) {
+	public List<AbstractTaskContainer> getUserCategories() {
+		List<AbstractTaskContainer> included = new ArrayList<AbstractTaskContainer>();
+		for (AbstractTaskContainer category : categories.values()) {
 			if (!(category instanceof TaskArchive)) {
 				included.add(category);
 			}
@@ -364,10 +362,10 @@ public class getAllCategories {
 		return Collections.unmodifiableSet(new HashSet<AbstractRepositoryQuery>(queries.values()));
 	}
 
-	public Set<AbstractTaskListElement> getRootElements() {
-		Set<AbstractTaskListElement> roots = new HashSet<AbstractTaskListElement>();
-		roots.add(uncategorizedCategory);
-		for (AbstractTaskListElement cat : categories.values())
+	public Set<AbstractTaskContainer> getRootElements() {
+		Set<AbstractTaskContainer> roots = new HashSet<AbstractTaskContainer>();
+		roots.add(automaticCategory);
+		for (AbstractTaskContainer cat : categories.values())
 			roots.add(cat);
 		for (AbstractRepositoryQuery query : queries.values())
 			roots.add(query);
@@ -378,11 +376,10 @@ public class getAllCategories {
 		return Collections.unmodifiableCollection(tasks.values());
 	}
 
-	public Set<AbstractTaskListElement> getTaskContainers() {
-		Set<AbstractTaskListElement> containers = new HashSet<AbstractTaskListElement>();
-		for (AbstractTaskListElement container : categories.values()) {
-			if (container instanceof TaskCategory || container instanceof TaskArchive
-					|| container instanceof UncategorizedCategory) {
+	public Set<AbstractTaskContainer> getTaskContainers() {
+		Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
+		for (AbstractTaskContainer container : categories.values()) {
+			if (container instanceof TaskCategory || container instanceof TaskArchive) {
 				containers.add(container);
 			}
 		}
@@ -452,9 +449,9 @@ public class getAllCategories {
 		return null;
 	}
 
-	public AbstractTaskListElement getContainerForHandle(String categoryHandle) {
-		for (AbstractTaskListElement cat : categories.values()) {
-			if (cat instanceof AbstractTaskListElement) {
+	public AbstractTaskContainer getContainerForHandle(String categoryHandle) {
+		for (AbstractTaskContainer cat : categories.values()) {
+			if (cat instanceof AbstractTaskContainer) {
 				if (cat.getHandleIdentifier().equals(categoryHandle)) {
 					return cat;
 				}
@@ -463,8 +460,8 @@ public class getAllCategories {
 		return null;
 	}
 
-	public AbstractTaskListElement getUncategorizedCategory() {
-		return uncategorizedCategory;
+	public AbstractTaskContainer getAutomaticCategory() {
+		return automaticCategory;
 	}
 
 	public TaskArchive getArchiveContainer() {
@@ -583,7 +580,7 @@ public class getAllCategories {
 		}
 	}
 
-	public void notifyContainerUpdated(AbstractTaskListElement container) {
+	public void notifyContainerUpdated(AbstractTaskContainer container) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
 			try {
 				listener.containerInfoChanged(container);
@@ -610,7 +607,7 @@ public class getAllCategories {
 	public int findLargestTaskHandle() {
 		int max = 0;
 		max = Math.max(largestTaskHandleHelper(tasks.values()), max);
-		for (AbstractTaskListElement cat : getTaskContainers()) {
+		for (AbstractTaskContainer cat : getTaskContainers()) {
 			max = Math.max(largestTaskHandleHelper(cat.getChildren()), max);
 		}
 		return max;

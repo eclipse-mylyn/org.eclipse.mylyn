@@ -19,8 +19,8 @@ import java.util.Set;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -47,7 +47,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TaskActivityEditorInput(Date reportStartDate, Set<AbstractTaskListElement> chosenCategories, getAllCategories tlist) {
+	public TaskActivityEditorInput(Date reportStartDate, Set<AbstractTaskContainer> chosenCategories, TaskList tlist) {
 		this.reportStartDate = reportStartDate;
 		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 

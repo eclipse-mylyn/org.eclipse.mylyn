@@ -30,7 +30,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.getAllCategories;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
@@ -111,7 +111,7 @@ public class RepositorySynchronizationManager {
 	public final Job synchronize(AbstractRepositoryConnector connector,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
 			long delay, boolean syncChangedTasks, boolean userForcedSync) {
-		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
 		job.setSynchChangedTasks(syncChangedTasks);
 		job.setForced(userForcedSync);
@@ -177,7 +177,7 @@ public class RepositorySynchronizationManager {
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 			Set<AbstractTask> repositoryTasks = Collections.unmodifiableSet(taskList
 					.getRepositoryTasks(repository.getUrl()));
 
