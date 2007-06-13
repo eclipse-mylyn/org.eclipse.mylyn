@@ -25,26 +25,26 @@ public class SslProtocolSocketFactoryTest extends TestCase {
 		SslProtocolSocketFactory factory = SslProtocolSocketFactory.getInstance();
 		Socket s;
 
-		s = factory.createSocket("mylar.eclipse.org", 80);
+		s = factory.createSocket("mylyn.eclipse.org", 80);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 
 		InetAddress anyHost = new Socket().getLocalAddress();
 
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0);
+		s = factory.createSocket("mylyn.eclipse.org", 80, anyHost, 0);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 
 		HttpConnectionParams params = new HttpConnectionParams();
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, params);
+		s = factory.createSocket("mylyn.eclipse.org", 80, anyHost, 0, params);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
 
 		params.setConnectionTimeout(1000);
-		s = factory.createSocket("mylar.eclipse.org", 80, anyHost, 0, params);
+		s = factory.createSocket("mylyn.eclipse.org", 80, anyHost, 0, params);
 		assertNotNull(s);
 		assertTrue(s.isConnected());
 		s.close();
