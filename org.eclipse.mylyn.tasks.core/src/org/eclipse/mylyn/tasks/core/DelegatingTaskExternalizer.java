@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
@@ -378,7 +379,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			throw new TaskExternalizationException("Handle not stored for task");
 		}
-		Task task = new Task(handle, summary);
+		Task task = new LocalTask(handle, summary);
 		return task;
 	}
 

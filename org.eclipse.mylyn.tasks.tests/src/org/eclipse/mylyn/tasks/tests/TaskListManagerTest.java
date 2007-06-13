@@ -213,7 +213,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testIsActiveToday() {
-		ITask task = new Task("1", "task-1");
+		ITask task = new LocalTask("1", "task-1");
 		assertFalse(manager.isScheduledForToday(task));
 
 		task.setScheduledForDate(new Date());
@@ -235,7 +235,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testScheduledForToday() {
-		ITask task = new Task("1", "task-1");
+		ITask task = new LocalTask("1", "task-1");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, 2);
 		task.setScheduledForDate(cal.getTime());
@@ -258,7 +258,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testIsCompletedToday() {
-		ITask task = new Task("1", "task 1");
+		ITask task = new LocalTask("1", "task 1");
 		task.setCompleted(true);
 		task.setCompletionDate(new Date());
 		assertTrue(manager.isCompletedToday(task));
@@ -282,7 +282,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new Task("t1", "t1");
+		Task task1 = new LocalTask("t1", "t1");
 
 		TaskCategory cat1 = new TaskCategory("cat1");
 		manager.getTaskList().addCategory(cat1);
@@ -300,7 +300,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveToRoot() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new Task("t1", "t1");
+		Task task1 = new LocalTask("t1", "t1");
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(UncategorizedCategory.HANDLE, task1.getContainer().getHandleIdentifier());
@@ -321,7 +321,7 @@ public class TaskListManagerTest extends TestCase {
 	public void testEmpty() {
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		manager.getTaskList().internalAddRootTask(new Task("", ""));
+		manager.getTaskList().internalAddRootTask(new LocalTask("", ""));
 		assertFalse(manager.getTaskList().isEmpty());
 	}
 
@@ -402,7 +402,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteRootTask() {
-		ITask task = new Task("task-1", "label");
+		ITask task = new LocalTask("task-1", "label");
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
@@ -417,7 +417,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(2, manager.getTaskList().getCategories().size());
 
-		ITask task = new Task("task-1", "label");
+		ITask task = new LocalTask("task-1", "label");
 		TaskCategory category = new TaskCategory("handleAndDescription");
 		manager.getTaskList().addTask(task);
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
@@ -745,8 +745,8 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testAllTasksDeactivation() {
-		Task task1 = new Task("task1", "description1");
-		Task task2 = new Task("task2", "description2");
+		Task task1 = new LocalTask("task1", "description1");
+		Task task2 = new LocalTask("task2", "description2");
 		TaskList taskList = manager.getTaskList();
 		taskList.addTask(task1);
 		taskList.addTask(task2);

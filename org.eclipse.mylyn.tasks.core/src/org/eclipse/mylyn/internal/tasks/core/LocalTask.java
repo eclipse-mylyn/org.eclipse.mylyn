@@ -18,10 +18,15 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
  */
 public class LocalTask extends AbstractRepositoryTask {
 
-	public LocalTask(String repositoryUrl, String taskId, String summary) {
+	public LocalTask(String taskId, String summary) {
 		super(LocalRepositoryConnector.REPOSITORY_URL, taskId, summary);
 	}
 
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
+	
 	@Override
 	public String getRepositoryKind() {
 		return LocalRepositoryConnector.REPOSITORY_KIND;

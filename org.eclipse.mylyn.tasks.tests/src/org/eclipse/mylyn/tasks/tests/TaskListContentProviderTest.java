@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -48,13 +49,13 @@ public class TaskListContentProviderTest extends TestCase {
 
 	public void testHasChildren() {
 
-		Task parent = new Task("parent", "parent label");
-		Task completedChild = new Task("completed child", "completed child label");
+		Task parent = new LocalTask("parent", "parent label");
+		Task completedChild = new LocalTask("completed child", "completed child label");
 		completedChild.setCompleted(true);
 		taskList.addTask(completedChild, parent);
 		assertFalse(provider.hasChildren(parent));
 
-		Task incompleteChild = new Task("incomplete child", "incomplete child label");
+		Task incompleteChild = new LocalTask("incomplete child", "incomplete child label");
 		incompleteChild.setCompleted(false);
 		taskList.addTask(incompleteChild, parent);
 		assertTrue(provider.hasChildren(parent));

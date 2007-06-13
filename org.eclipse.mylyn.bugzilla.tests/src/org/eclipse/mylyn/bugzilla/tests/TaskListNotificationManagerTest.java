@@ -17,12 +17,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -46,9 +46,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		Date now = new Date();
 
-		ITask task0 = new Task("t0", "t0 - test 0");
-		ITask task1 = new Task("t1", "t1 - test 1");
-		ITask task2 = new Task("t2", "t2 - test 2");
+		ITask task0 = new LocalTask("t0", "t0 - test 0");
+		ITask task1 = new LocalTask("t1", "t1 - test 1");
+		ITask task2 = new LocalTask("t2", "t2 - test 2");
 
 		task0.setScheduledForDate(new Date(now.getTime() - 2000));
 		task1.setScheduledForDate(new Date(now.getTime() - 2000));

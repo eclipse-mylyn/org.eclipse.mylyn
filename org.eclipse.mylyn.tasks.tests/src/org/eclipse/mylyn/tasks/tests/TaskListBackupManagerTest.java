@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.Task;
@@ -32,7 +33,7 @@ public class TaskListBackupManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		task1 = new Task("handle", "label");
+		task1 = new LocalTask("handle", "label");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);

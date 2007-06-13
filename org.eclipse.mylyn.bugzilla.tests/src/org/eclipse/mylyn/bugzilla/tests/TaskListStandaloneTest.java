@@ -23,6 +23,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylyn.tasks.core.Task;
@@ -59,7 +60,7 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 	
 	public void testDueDateExternalization() {
-		ITask task = new Task("1", "task 1");
+		ITask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
 		manager.getTaskList().moveToRoot(task);
@@ -76,7 +77,7 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 
 	public void testPastReminder() {
-		ITask task = new Task("1", "1");
+		ITask task = new LocalTask("1", "1");
 		long now = new Date().getTime();
 		task.setScheduledForDate(new Date(now - 1000));
 		assertTrue(task.isPastReminder());
@@ -92,7 +93,7 @@ public class TaskListStandaloneTest extends TestCase {
 	public void testDates() {
 		Date start = Calendar.getInstance().getTime();
 		Date creation = new Date();
-		Task task = new Task("1", "task 1");
+		Task task = new LocalTask("1", "task 1");
 
 		manager.getTaskList().moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);

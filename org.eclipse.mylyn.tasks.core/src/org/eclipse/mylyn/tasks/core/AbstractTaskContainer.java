@@ -38,7 +38,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements IT
 		this.handle = handleAndDescription;
 	}
 
-	// XXX: Get rid of this
+	@Deprecated
 	public abstract boolean isLocal();
 
 	public Set<ITask> getChildren() {

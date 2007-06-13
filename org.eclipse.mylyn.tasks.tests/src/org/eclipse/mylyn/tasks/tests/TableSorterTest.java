@@ -13,6 +13,7 @@ package org.eclipse.mylyn.tasks.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.Task;
@@ -26,7 +27,7 @@ public class TableSorterTest extends TestCase {
 	public void testRootTaskSorting() {
 		TaskListTableSorter sorter = new TaskListTableSorter(TaskListView.getFromActivePerspective(), TaskListTableSorter.SortByIndex.SUMMARY);
 		 		
-		Task task = new Task("1", "");
+		Task task = new LocalTask("1", "");
 		TaskCategory category = new TaskCategory("cat");
 		
 		assertEquals(-1, sorter.compare(null, task, category));
