@@ -53,7 +53,6 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -1063,8 +1062,7 @@ public class BugzillaClient {
 					String taskId = itr.next();
 					formData[x] = new NameValuePair("id", taskId);
 					RepositoryTaskData taskData = new RepositoryTaskData(new BugzillaAttributeFactory(),
-							BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), taskId,
-							AbstractTask.DEFAULT_TASK_KIND);
+							BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), taskId);
 					setupExistingBugAttributes(repositoryUrl.toString(), taskData);
 					taskDataMap.put(taskId, taskData);
 				}

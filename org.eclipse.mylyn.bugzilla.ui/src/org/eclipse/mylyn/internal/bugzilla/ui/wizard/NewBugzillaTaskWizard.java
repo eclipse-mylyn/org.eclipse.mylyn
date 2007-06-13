@@ -57,7 +57,7 @@ public class NewBugzillaTaskWizard extends Wizard implements INewWizard {
 	public NewBugzillaTaskWizard(TaskRepository repository) {
 		this(false, repository);
 		taskData = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND,
-				repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
+				repository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
 		super.setDefaultPageImageDescriptor(BugzillaUiPlugin.imageDescriptorFromPlugin(
 				"org.eclipse.mylyn.internal.bugzilla.ui", "icons/wizban/bug-wizard.gif"));

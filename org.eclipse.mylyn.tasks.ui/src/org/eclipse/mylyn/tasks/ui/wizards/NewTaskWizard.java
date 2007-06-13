@@ -71,7 +71,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractTask.DEFAULT_TASK_KIND);
 		
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getKind(),
-				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
+				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
 
 		try {

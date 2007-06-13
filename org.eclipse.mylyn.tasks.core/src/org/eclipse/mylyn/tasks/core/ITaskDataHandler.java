@@ -30,6 +30,12 @@ public interface ITaskDataHandler {
 	 */
 	public String postTaskData(TaskRepository repository, RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * @param repositoryUrl
+	 * @param repositoryKind 
+	 * @param taskKind AbstractTask.DEFAULT_KIND or connector specific task kind string
+	 * @return
+	 */
 	public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind);
 	
 	/**

@@ -24,7 +24,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  */
 public abstract class AbstractTask extends AbstractTaskContainer {
 	
-	@Deprecated
 	public static final String DEFAULT_TASK_KIND = "task";
 
 	private String repositoryUrl;

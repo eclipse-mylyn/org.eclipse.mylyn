@@ -63,7 +63,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	public void testHasIncoming() {
 		AbstractTask task = new MockRepositoryTask(HANDLE1);
 		RepositoryTaskData taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(),
-				URL1, "1", AbstractTask.DEFAULT_TASK_KIND);
+				URL1, "1");
 		task.setLastSyncDateStamp("never");
 
 		assertTrue(TasksUiPlugin.getSynchronizationManager().checkHasIncoming(task, taskData));
@@ -101,7 +101,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// and again...
 
 		RepositoryTaskData taskData3 = new RepositoryTaskData(new MockAttributeFactory(),
-				connector.getRepositoryType(), URL1, "1", AbstractTask.DEFAULT_TASK_KIND);
+				connector.getRepositoryType(), URL1, "1");
 		taskData3.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_3);
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, taskData3, false);
 		// last modified stamp not updated until user synchronizes (newdata ==
@@ -315,8 +315,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		AbstractTask task = primeTaskAndRepository(RepositoryTaskSyncState.SYNCHRONIZED,
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		RepositoryTaskData taskData1 = new RepositoryTaskData(new MockAttributeFactory(),
-				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1",
-				AbstractTask.DEFAULT_TASK_KIND);
+				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
 		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(task.getHandleIdentifier(), taskData1);
 		taskData1 = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(task.getHandleIdentifier());
 
@@ -423,15 +422,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		RepositoryTaskData taskData = null;
 		AbstractTask task = new MockRepositoryTask(HANDLE1);
 
-		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1",
-				AbstractTask.DEFAULT_TASK_KIND);
+		taskData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
 		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(task.getHandleIdentifier(), taskData);
 		taskData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_1);
 		task.setLastSyncDateStamp(DATE_STAMP_1);
 		task.setSyncState(localState);
 
-		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1",
-				AbstractTask.DEFAULT_TASK_KIND);
+		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getRepositoryType(), URL1, "1");
 
 		switch (remoteState) {
 		case CONFLICT:

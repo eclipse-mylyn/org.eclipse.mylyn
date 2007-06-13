@@ -59,7 +59,7 @@ public class TaskEditorTest extends TestCase {
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-						.getTaskDataManager().getNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
+						.getTaskDataManager().getNewRepositoryTaskId());
 		model.setNew(true);
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);

@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+
 /**
  * This data structure is not to be subclassed but rather used directly to hold
  * repository task data (attribute key, value pairs along with valid options for
@@ -34,6 +36,8 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	private boolean isNew = false;
 
 	private String reportID;
+	
+	private String key;
 
 	private String repositoryURL;
 
@@ -51,10 +55,16 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/** The repositoryOperations that can be done on the report */
 	private List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
+	
+	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
+		this(factory, repositoryKind, repositoryURL, id, AbstractTask.DEFAULT_TASK_KIND);		
+	}
+	
 	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id,
 			String taskKind) {
 		super(factory);
 		this.reportID = id;
+		this.key = id;
 		this.repositoryKind = repositoryKind;
 		this.repositoryURL = repositoryURL;
 		this.taskKind = taskKind;
@@ -334,7 +344,15 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		this.repositoryURL = repositoryURL;
 	}
 	
-//	public final String getHandleIdentifier() {
-//		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
-//	}
+	public final String getHandleIdentifier() {
+		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 }

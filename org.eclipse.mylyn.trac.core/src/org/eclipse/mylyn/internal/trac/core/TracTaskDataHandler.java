@@ -68,7 +68,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 
 		try {
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getUrl(), id + "", AbstractTask.DEFAULT_TASK_KIND);
+					repository.getUrl(), id + "");
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(new NullProgressMonitor(), false);
 			TracTicket ticket = client.getTicket(id);

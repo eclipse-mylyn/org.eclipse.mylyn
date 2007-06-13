@@ -134,7 +134,7 @@ public class NewTracTaskPage extends WizardPage {
 		TracTaskDataHandler offlineHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
 		AbstractAttributeFactory attributeFactory = offlineHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractTask.DEFAULT_TASK_KIND);
 		this.taskData = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
+				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		this.taskData.setNew(true);
 		TracTaskDataHandler.createDefaultAttributes(taskData.getAttributeFactory(), taskData, client, false);
 	}
