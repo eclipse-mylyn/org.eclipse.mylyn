@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -95,14 +95,14 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	public void testTaskMove() {
-		ITask task = manager.createNewLocalTask("label");
+		AbstractTask task = manager.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
 		manager.getTaskList().moveToRoot(task);
 
-		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);
+		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
-		ITask readTaskAfterMove = manager.getTaskList().getTask(handle);
+		AbstractTask readTaskAfterMove = manager.getTaskList().getTask(handle);
 		
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
@@ -110,7 +110,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	// TODO: delete? using lastOpened date wrong
 	public void testBugzillaTaskMove() {
-//		String handle = AbstractRepositoryTask.getHandle("server", 1);
+//		String handle = AbstractTask.getHandle("server", 1);
 		BugzillaTask bugzillaTask = new BugzillaTask("server", "1", "bug1");
 		String refreshDate = (new Date()).toString();
 		bugzillaTask.setLastSyncDateStamp(refreshDate);

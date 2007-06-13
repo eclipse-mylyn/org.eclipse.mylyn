@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.context.ui.TaskListInterestFilter;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -37,15 +37,15 @@ public class TaskListFilterTest extends TestCase {
 	
 	private Set<AbstractTaskListFilter> previousFilters;
 	
-	private ITask taskCompleted;
+	private AbstractTask taskCompleted;
 	
-	private ITask taskIncomplete;
+	private AbstractTask taskIncomplete;
 	
-	private ITask taskOverdue;
+	private AbstractTask taskOverdue;
 	
-	private ITask taskDueToday;
+	private AbstractTask taskDueToday;
 	
-	private ITask taskCompletedToday;
+	private AbstractTask taskCompletedToday;
 	  
 	@Override
 	protected void setUp() throws Exception {

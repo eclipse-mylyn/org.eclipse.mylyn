@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -51,18 +51,18 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 	public void testRepositoryTemplate() throws Throwable {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		final List<AbstractRepositoryTask> hits = new ArrayList<AbstractRepositoryTask>();
+		final List<AbstractTask> hits = new ArrayList<AbstractTask>();
 		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				new ITaskFactory() {
 
-					public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData,
+					public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData,
 							boolean forced, IProgressMonitor monitor) throws CoreException {
 						// ignore
 						return null;
 					}
 				}) {
 			@Override
-			public void accept(AbstractRepositoryTask hit) {
+			public void accept(AbstractTask hit) {
 				hits.add(hit);
 			}
 		};

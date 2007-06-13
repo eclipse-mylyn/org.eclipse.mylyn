@@ -22,9 +22,9 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class ExtensionPointInitializationTest extends TestCase {
 
 //	public void testBugzillaHyperlinkListener() {
-//		IHyperlinkListener listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractRepositoryTaskEditor.HYPERLINK_TYPE_JAVA);
+//		IHyperlinkListener listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractTaskEditor.HYPERLINK_TYPE_JAVA);
 //		assertTrue(listener instanceof JavaStackTraceHyperlinkAdapter);
-//		listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractRepositoryTaskEditor.HYPERLINK_TYPE_TASK);
+//		listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractTaskEditor.HYPERLINK_TYPE_TASK);
 //		assertTrue(listener instanceof TaskHyperlinkAdapter);
 //	}
 	
