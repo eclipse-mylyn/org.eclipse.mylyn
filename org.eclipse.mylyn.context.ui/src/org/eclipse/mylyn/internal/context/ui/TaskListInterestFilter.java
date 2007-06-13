@@ -19,7 +19,6 @@ import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -138,7 +137,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 		if (task instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) task;
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+
+			if(repositoryTask.getLastSyncDateStamp() == null){
+				return true;
+			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 					&& !(parent instanceof DateRangeContainer)) {
