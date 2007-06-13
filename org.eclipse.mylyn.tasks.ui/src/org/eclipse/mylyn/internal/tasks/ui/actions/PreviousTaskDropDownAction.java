@@ -19,6 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Wesley Coelho
@@ -56,16 +57,19 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			item.fill(dropDownMenu, -1);
 		}
 
+		Separator separator = new Separator();
+		separator.fill(dropDownMenu, -1);
+
 		AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (active != null) {
-			Separator separator = new Separator();
-			separator.fill(dropDownMenu, -1);
-
 			Action deactivateAction = new DeactivateTaskAction();
 			ActionContributionItem item = new ActionContributionItem(deactivateAction);
 			item.fill(dropDownMenu, -1);
+		} else {
+			Action activateDialogAction = new ActivateDialogAction(new ActivateTaskDialogAction());
+			ActionContributionItem item = new ActionContributionItem(activateDialogAction);
+			item.fill(dropDownMenu, -1);
 		}
-
 	}
 
 	@Override
@@ -87,14 +91,38 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			setEnabled(true);
 			setChecked(false);
 			setImageDescriptor(null);
+					//TasksUiImages.TASK_INACTIVE);
 		}
-		
+
 		@Override
 		public void run() {
 			AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 			if (active != null) {
 				TasksUiPlugin.getTaskListManager().deactivateTask(active);
 			}
+		}
+
+	}
+
+	public class ActivateDialogAction extends Action {
+
+		private ActivateTaskDialogAction dialogAction;
+
+		public ActivateDialogAction(ActivateTaskDialogAction action) {
+			dialogAction = action;
+			dialogAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+
+			setText("Activate Task...");
+			setToolTipText("Activate Task...");
+			setEnabled(true);
+			setChecked(false);
+			setImageDescriptor(null);
+					//TasksUiImages.TASK_ACTIVE);
+		}
+
+		@Override
+		public void run() {
+			dialogAction.run(null);
 		}
 
 	}
