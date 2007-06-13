@@ -35,8 +35,8 @@ import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IViewPart;
@@ -74,7 +74,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException, PartInitException {
 		// need a task for mementos
-		Task task = new LocalTask(contextId, contextId);
+		AbstractRepositoryTask task = new LocalTask(contextId, contextId);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		manager.deleteContext(contextId);
 		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();

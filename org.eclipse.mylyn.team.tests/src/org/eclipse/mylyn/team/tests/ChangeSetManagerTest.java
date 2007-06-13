@@ -26,7 +26,7 @@ import org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager;
 import org.eclipse.mylyn.internal.team.ui.ContextChangeSet;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.resources.tests.AbstractResourceContextTest;
-import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.team.internal.ccvs.ui.CVSUIPlugin;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
@@ -69,7 +69,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.disable();
 //		MylarTeamPlugin.getDefault().getChangeSetManager().disable();
 
-		Task task1 = new LocalTask("task1", "label");
+		AbstractRepositoryTask task1 = new LocalTask("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 		assertEquals(0, collector.getSets().length);
@@ -89,7 +89,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager.clearActiveChangeSets();
 		assertEquals(0, changeSetManager.getActiveChangeSets().size());
 
-		Task task1 = new LocalTask("task1", "label");
+		AbstractRepositoryTask task1 = new LocalTask("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 		assertEquals(1, changeSetManager.getActiveChangeSets().size());
 		assertEquals(1, collector.getSets().length);
@@ -108,7 +108,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		IFile file = project.getProject().getFile(new Path("foo.txt"));
 		file.create(null, true, null);
 
-		Task task1 = new LocalTask("task1", "label");
+		AbstractRepositoryTask task1 = new LocalTask("task1", "label");
 		TasksUiPlugin.getTaskListManager().activateTask(task1);
 
 		monitor.selectionChanged(navigator, new StructuredSelection(file));
