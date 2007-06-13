@@ -14,7 +14,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 /**
  * @author Mik Kersten
  */
-public class ReportBugAction extends NewRepositoryTaskAction implements IWorkbenchWindowActionDelegate {
+public class ReportBugAction extends NewTaskAction implements IWorkbenchWindowActionDelegate {
 	
 	public void dispose() {
 	}

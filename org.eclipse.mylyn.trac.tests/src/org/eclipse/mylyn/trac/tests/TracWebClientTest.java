@@ -40,7 +40,7 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidateAnyPage() throws Exception {
-		connect("http://mylar.eclipse.org/");
+		connect("http://mylyn.eclipse.org/");
 		try {
 			repository.validate();
 			fail("Expected TracException");

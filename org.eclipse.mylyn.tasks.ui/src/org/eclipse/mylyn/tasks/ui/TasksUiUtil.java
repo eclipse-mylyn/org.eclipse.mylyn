@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -198,7 +199,10 @@ public class TasksUiUtil {
 				task = (ITask) element;
 			}
 
-			if (task instanceof AbstractRepositoryTask) {
+			
+			if(task instanceof LocalTask) {			
+				TasksUiUtil.openEditor(task, false);
+			} else if (task instanceof AbstractRepositoryTask) {
 
 				final AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				String repositoryKind = repositoryTask.getRepositoryKind();

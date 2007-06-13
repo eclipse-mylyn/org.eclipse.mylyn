@@ -36,7 +36,7 @@ public class NewWebTaskWizard extends Wizard implements INewWizard {
 		this.taskRepository = taskRepository;
 		this.newTaskUrl = newTaskUrl;
 
-		setWindowTitle("New Repository Task");
+		setWindowTitle("New Task");
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 	}
 

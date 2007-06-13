@@ -56,10 +56,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskArchiveFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -72,7 +72,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.GoUpAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.LinkWithEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskIncompleteAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
@@ -85,6 +84,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -222,7 +222,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private OpenWithBrowserAction openWithBrowser;
 
-	private NewLocalTaskAction newLocalTaskAction;
+	//private NewLocalTaskAction newLocalTaskAction;
 
 	private RenameAction renameAction;
 
@@ -843,14 +843,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.INSERT) {
-					newLocalTaskAction.run();
-				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
-					// Do nothing here since it is key code
+					new NewLocalTaskWizard().performFinish();
 				} else if (e.keyCode == SWT.F2 && e.stateMask == 0) {
 					if (renameAction.isEnabled()) {
 						renameAction.run();
 					}
-				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
+				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
+					// Do nothing here since it is key code
+				}  else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
 					copyDetailsAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
@@ -1228,8 +1228,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			} else if (action instanceof DeleteAction) {
 				action.setEnabled(true);
-			} else if (action instanceof NewLocalTaskAction) {
-				action.setEnabled(false);
 			} else if (action instanceof OpenTaskListElementAction) {
 				action.setEnabled(true);
 			} else if (action instanceof CopyTaskDetailsAction) {
@@ -1244,11 +1242,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				action.setEnabled(false);
 			} else if (action instanceof DeleteAction) {
 				if (element instanceof TaskArchive || element instanceof UncategorizedCategory)
-					action.setEnabled(false);
-				else
-					action.setEnabled(true);
-			} else if (action instanceof NewLocalTaskAction) {
-				if (element instanceof TaskArchive)
 					action.setEnabled(false);
 				else
 					action.setEnabled(true);
@@ -1288,7 +1281,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		goIntoAction = new GoIntoAction();
 		goUpAction = new GoUpAction(drillDownAdapter);
 
-		newLocalTaskAction = new NewLocalTaskAction(this);
+		//newLocalTaskAction = new NewLocalTaskAction(this);
 		removeFromCategoryAction = new RemoveFromCategoryAction(this);
 		renameAction = new RenameAction(this);
 		filteredTree.getViewer().addSelectionChangedListener(renameAction);

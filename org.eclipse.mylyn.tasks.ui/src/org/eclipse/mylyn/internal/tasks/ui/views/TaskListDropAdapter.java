@@ -29,7 +29,6 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -39,6 +38,7 @@ import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -222,14 +222,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			// }
 			retrieveTaskDescription(url);
 
-			newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), urlTitle);
-			NewLocalTaskAction.scheduleNewTask(newTask);
+			newTask = TasksUiPlugin.getTaskListManager().createNewLocalTask(urlTitle);
 
 			if (newTask == null) {
 				return false;
 			}
-
-			newTask.setPriority(Task.PriorityLevel.P3.toString());
 			newTask.setTaskUrl(url);
 
 			// NOTE: setting boolean param as false so that we go directly to
@@ -241,13 +238,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	}
 
 	public boolean createTaskFromString(String title) {
-		newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title);
-		NewLocalTaskAction.scheduleNewTask(newTask);
+		//newTask = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), title);
+		newTask = TasksUiPlugin.getTaskListManager().createNewLocalTask(title);
 
 		if (newTask == null) {
 			return false;
 		} else {
-			newTask.setPriority(Task.PriorityLevel.P3.toString());
+			//newTask.setPriority(Task.PriorityLevel.P3.toString());
 			TasksUiUtil.openEditor(newTask, false);
 			return true;
 		}

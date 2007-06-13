@@ -89,14 +89,14 @@
       </factory>
    </extension>
     <extension point="org.eclipse.ui.newWizards">
-      <wizard
+      <!--<wizard
             canFinishEarly="true" 
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard"
             hasPages="false"
             icon="icons/etool16/task-new.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.task"
-            name="Task"/>
+            name="Task"/> -->
       <wizard
             canFinishEarly="true"
             category="org.eclipse.mylyn.wizards"
@@ -108,10 +108,10 @@
       </wizard>
 	  <wizard
             category="org.eclipse.mylyn.wizards"
-            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard"
-            icon="icons/etool16/task-repository-new.gif"
+            class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard"
+            icon="icons/etool16/task-new.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"
-            name="Repository Task"/>
+            name="Task"/>
       <wizard
             category="org.eclipse.mylyn.wizards"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard"
@@ -323,16 +323,16 @@
     </action>
            		
   		<action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewRepositoryTaskAction"
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
                enablesFor="*"
-               icon="icons/etool16/task-repository-new.gif"
+               icon="icons/etool16/task-new.gif"
                id="org.eclipse.mylyn.tasks.ui.actions.new.repository.task"
-               label="New Repository Task"
+               label="New Task"
                style="push"
                toolbarPath="new"
-               tooltip="New Repository Task"> 
+               tooltip="New Task"> 
   		</action>
-    <action
+    <!--<action
           class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
           icon="icons/etool16/task-new.gif"
           id="org.eclipse.mylyn.tasks.ui.actions.new.task"
@@ -340,7 +340,7 @@
           style="push"
           toolbarPath="new"
           tooltip="New Task">
-    </action>
+    </action> -->
          <!--
     	<action
           class="org.eclipse.mylyn.internal.tasklist.ui.actions.CopyDetailsAction"
@@ -375,13 +375,13 @@
          </action>
   		
   		<action
-	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewRepositoryTaskAction"
+	        class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"
 	        enablesFor="*"
-	        icon="icons/etool16/task-repository-new.gif"
+	        icon="icons/etool16/task-new.gif"
 	        id="org.eclipse.mylyn.tasks.ui.new.repository.task"
-	        label="Repository Task..."
+	        label="Task..."
 	        menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
-	        tooltip="New Repository Task"/>
+	        tooltip="New Task"/>
 	              
 		<action
               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction"
@@ -404,7 +404,7 @@
            name="repository">
      </separator>
   </menu>
-  <action
+  <!--<action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction"
         icon="icons/etool16/task-new.gif"
         id="org.eclipse.mylyn.tasks.ui.actions.new.task"
@@ -412,7 +412,7 @@
         menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/local"
         style="push"
         tooltip="New Task">
-  </action>
+  </action>-->
   <action
         class="org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction"
         icon="icons/etool16/category-new.gif"
@@ -814,4 +814,26 @@
           id="org.eclipse.mylyn.tasks.ui.elementFactory">
     </factory>
 </extension>
+    <extension
+         id="org.eclipse.mylyn.tasks.local.repository" 
+         name="Local Task Repository"
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+
+      <connectorCore
+            class="org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector"
+            id="org.eclipse.mylyn.tasks.connector.local"
+            name="Local Repository Connector"
+            type="local"
+            userManaged="false"/>
+            
+      <connectorUi
+            brandingIcon="icons/etool16/bug-report.gif"
+            class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryUi"
+            name="Local Repository Ui"
+            overlayIcon="icons/eview16/overlay-due.gif"/>
+             
+		<externalizer 
+            class="org.eclipse.mylyn.internal.tasks.core.LocalTaskExternalizer"
+            id="org.eclipse.mylyn.tasks.local.externalizer"/>
+   </extension> 
 </plugin>

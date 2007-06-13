@@ -39,7 +39,7 @@ public class NewTracTaskWizard extends Wizard implements INewWizard {
 
 		newTaskPage = new NewTracTaskPage(taskRepository);
 		
-		setWindowTitle("New Repository Task");
+		setWindowTitle("New Task");
 		setDefaultPageImageDescriptor(TasksUiImages.BANNER_REPOSITORY);
 		
 		setNeedsProgressMonitor(true);

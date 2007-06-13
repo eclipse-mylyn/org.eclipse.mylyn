@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
@@ -620,7 +621,7 @@ public class TaskList {
 		int ihandle = 0;
 		int max = 0;
 		for (ITask task : tasks) {
-			if (!(task instanceof AbstractRepositoryTask)) {
+			if (task instanceof LocalTask) {
 				String string = task.getHandleIdentifier().substring(task.getHandleIdentifier().lastIndexOf('-') + 1,
 						task.getHandleIdentifier().length());
 				try {

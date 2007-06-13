@@ -96,8 +96,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-			Set<TaskRepository> connectorRepositories = repositoryManager
-					.getRepositories(connector.getRepositoryType());
+			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getRepositoryType());
 			for (TaskRepository repository : connectorRepositories) {
 				if (taskRepositoryFilter.accept(repository, connector)) {
 					repositories.add(repository);
@@ -114,7 +113,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 
 		Table table = createTableViewer(container);
 		viewer.setSorter(new TaskRepositoriesSorter());
-		
+
 		GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
 		table.setLayoutData(gridData);
 
@@ -140,8 +139,8 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		viewer = new TableViewer(container, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new RepositoryContentProvider());
 		// viewer.setLabelProvider(new TaskRepositoryLabelProvider());
-		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		viewer.setLabelProvider(new DecoratingLabelProvider(new TaskRepositoryLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		viewer.setInput(TasksUiPlugin.getRepositoryManager().getRepositoryConnectors());
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -149,9 +148,10 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if (selection.getFirstElement() instanceof TaskRepository) {
 					setSelectedNode(new CustomWizardNode((TaskRepository) selection.getFirstElement()));
-					setPageComplete(true);					
+					setPageComplete(true);
+				} else {
+					setPageComplete(false);
 				}
-				setPageComplete(false);
 			}
 		});
 
@@ -175,7 +175,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 	public boolean canFlipToNextPage() {
 		return getSelectedNode() != null && getNextPage() != null;
 	}
-	
+
 	public boolean canFinish() {
 		return getSelectedNode() != null && getNextPage() == null;
 	}
@@ -186,10 +186,10 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 			// by container
 			return false;
 		}
-		
+
 		return getSelectedNode().getWizard().performFinish();
 	}
-	
+
 	private class CustomWizardNode implements IWizardNode {
 
 		private final TaskRepository repository;

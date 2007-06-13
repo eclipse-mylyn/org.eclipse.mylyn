@@ -218,6 +218,9 @@ public class Task extends AbstractTaskContainer implements ITask {
 	}
 
 
+	/**
+	 * Use TaskList for moving tasks between containers
+	 */
 	public void setContainer(AbstractTaskContainer cat) {
 		this.parentCategory = cat;
 	}

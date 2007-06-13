@@ -40,6 +40,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
@@ -380,29 +381,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			// instantiates taskDataManager
 			readOfflineReports();
-
-			// add the automatically created templates
-			for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
-				connector.setTaskDataManager(taskDataManager);
-
-				for (RepositoryTemplate template : connector.getTemplates()) {
-					if (template.addAutomatically) {
-						try {
-							TaskRepository taskRepository = taskRepositoryManager.getRepository(
-									connector.getRepositoryType(), template.repositoryUrl);
-							if (taskRepository == null) {
-								taskRepository = new TaskRepository(connector.getRepositoryType(),
-										template.repositoryUrl, template.version);
-								taskRepository.setRepositoryLabel(template.label);
-								taskRepository.setAnonymous(true);
-								taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
-							}
-						} catch (Throwable t) {
-							MylarStatusHandler.fail(t, "Could not load repository template", false);
-						}
-					}
-				}
-			}
+			
+			loadTemplateRepositories();
 
 			// NOTE: task list must be read before Task List view can be
 			// initialized
@@ -506,6 +486,38 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	private void loadTemplateRepositories() {
+		
+		// Add standard local task repository
+		TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL, LocalRepositoryConnector.REPOSITORY_VERSION);
+		localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
+		localRepository.setAnonymous(true);
+		taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
+				
+		// Add the automatically created templates
+		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
+			connector.setTaskDataManager(taskDataManager);
+
+			for (RepositoryTemplate template : connector.getTemplates()) {
+				if (template.addAutomatically) {
+					try {
+						TaskRepository taskRepository = taskRepositoryManager.getRepository(
+								connector.getRepositoryType(), template.repositoryUrl);
+						if (taskRepository == null) {
+							taskRepository = new TaskRepository(connector.getRepositoryType(),
+									template.repositoryUrl, template.version);
+							taskRepository.setRepositoryLabel(template.label);
+							taskRepository.setAnonymous(true);
+							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
+						}
+					} catch (Throwable t) {
+						MylarStatusHandler.fail(t, "Could not load repository template", false);
+					}
+				}
+			}
+		}
+	}
+
 	private void checkForCredentials() {
 		for (TaskRepository repository : taskRepositoryManager.getAllRepositories()) {
 			if (!repository.isAnonymous()
@@ -591,6 +603,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		getTaskListManager().resetTaskList();
 		getTaskListManager().getTaskActivationHistory().clear();
 		getRepositoryManager().readRepositories(getRepositoriesFilePath());
+		loadTemplateRepositories();
 		ContextCorePlugin.getContextManager().loadActivityMetaContext();
 		getTaskListManager().setTaskListFile(
 				new File(getDataDirectory() + File.separator + ITasksUiConstants.DEFAULT_TASK_LIST_FILE));

@@ -22,6 +22,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
@@ -57,7 +58,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
-	
+
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
 	protected ITask task;
@@ -210,9 +211,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	}
 
 	/**
-	 * Saves the multi-page editor's document as another file. Also updates the
-	 * text for page 0's tab, and updates this multi-page editor's input to
-	 * correspond to the nested editor's.
+	 * Saves the multi-page editor's document as another file. Also updates the text for page 0's tab, and updates this
+	 * multi-page editor's input to correspond to the nested editor's.
 	 * 
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
@@ -486,12 +486,12 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
 			ITask task = ((TaskEditorInput) input).getTask();
-			if (task instanceof AbstractRepositoryTask) {
+			if (task instanceof LocalTask) {
+				getHeaderForm().getForm().setText("Task: " + task.getSummary());
+			} else {
 				setFormHeaderImage(((AbstractRepositoryTask) task).getRepositoryKind());
 				setFormHeaderLabel((AbstractRepositoryTask) task);
 				return;
-			} else {
-				getHeaderForm().getForm().setText("Task: " + task.getSummary());
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
 			ITask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
@@ -511,8 +511,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private void setFormHeaderImage(String repositoryKind) {
 		ImageDescriptor overlay = TasksUiPlugin.getDefault().getOverlayIcon(repositoryKind);
-		Image image = TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false,
-				false);
+		Image image = TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, overlay, false, false);
 		if (getHeaderForm() != null) {
 			getHeaderForm().getForm().setImage(image);
 		}

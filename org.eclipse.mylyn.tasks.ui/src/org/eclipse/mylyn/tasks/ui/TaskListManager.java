@@ -28,22 +28,28 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
+import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -56,9 +62,10 @@ import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * TODO: pull task activity management out into new TaskActivityManager
@@ -175,7 +182,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		}
 
 		public void interestChanged(List<IInteractionElement> elements) {
-			List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityMetaContext()
+			List<InteractionEvent> events = ContextCorePlugin.getContextManager()
+					.getActivityMetaContext()
 					.getInteractionHistory();
 			InteractionEvent event = events.get(events.size() - 1);
 			parseInteractionEvent(event);
@@ -267,7 +275,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (!TasksUiPlugin.getTaskListManager().isTaskListInitialized()) {
 			return;
 		}
-		List<InteractionEvent> events = ContextCorePlugin.getContextManager().getActivityMetaContext()
+		List<InteractionEvent> events = ContextCorePlugin.getContextManager()
+				.getActivityMetaContext()
 				.getInteractionHistory();
 		for (InteractionEvent event : events) {
 			parseInteractionEvent(event);
@@ -343,8 +352,8 @@ public class TaskListManager implements IPropertyChangeListener {
 
 				for (DateRangeContainer day : activityWeekDays) {
 					if (day.includes(tempCalendar) && !day.getChildren().contains(task)) {
-						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar, this
-								.getElapsedTime(task)));
+						day.addTask(new DateRangeActivityDelegate(day, task, tempCalendar, tempCalendar,
+								this.getElapsedTime(task)));
 					}
 				}
 			}
@@ -686,13 +695,11 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	/**
-	 * Every call to this method generates a unique handle, subsequent calls
-	 * will have incremented task numbers
+	 * Every call to this method generates a unique handle, subsequent calls will have incremented task numbers
 	 */
-	public String genUniqueTaskHandle() {
-		return TaskRepositoryManager.PREFIX_LOCAL + taskList.getNextTaskNum();
-	}
-
+//	public String genUniqueTaskHandle() {
+//		return TaskRepositoryManager.PREFIX_LOCAL + taskList.getNextTaskNum();
+//	}
 	public void refactorRepositoryUrl(String oldUrl, String newUrl) {
 		if (oldUrl == null || newUrl == null || oldUrl.equals(newUrl)) {
 			return;
@@ -740,10 +747,8 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (task instanceof AbstractRepositoryTask) {
 				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask
-							.getHandleIdentifier());
-					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask
-							.getHandleIdentifier());
+					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getHandleIdentifier());
 					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getHandleIdentifier());
 					taskDataManager.remove(repositoryTask.getHandleIdentifier());
 
@@ -1119,12 +1124,10 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	/**
 	 * @param element
-	 *            tasklist element to retrieve a task for currently will work
-	 *            for (ITask, AbstractQueryHit)
+	 *            tasklist element to retrieve a task for currently will work for (ITask, AbstractQueryHit)
 	 * @param force -
-	 *            if a query hit is passed you can either force construction of
-	 *            the task or not (if not and no task, null is returned) TODO:
-	 *            Move into TaskList?
+	 *            if a query hit is passed you can either force construction of the task or not (if not and no task,
+	 *            null is returned) TODO: Move into TaskList?
 	 */
 	public ITask getTaskForElement(ITaskListElement element, boolean force) {
 		ITask task = null;
@@ -1150,4 +1153,62 @@ public class TaskListManager implements IPropertyChangeListener {
 	public int getStartHour() {
 		return START_HOUR;
 	}
+
+	public static void scheduleNewTask(ITask newTask) {
+		newTask.setCreationDate(new Date());
+
+		Calendar newTaskSchedule = Calendar.getInstance();
+		int scheduledEndHour = TasksUiPlugin.getDefault().getPreferenceStore().getInt(
+				TasksUiPreferenceConstants.PLANNING_ENDHOUR);
+		// If past scheduledEndHour set for following day
+		if (newTaskSchedule.get(Calendar.HOUR_OF_DAY) >= scheduledEndHour) {
+			TasksUiPlugin.getTaskListManager().setSecheduledIn(newTaskSchedule, 1);
+		} else {
+			TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newTaskSchedule);
+		}
+		TasksUiPlugin.getTaskListManager().setScheduledFor(newTask, newTaskSchedule.getTime());
+	}
+
+	/**
+	 * Creates a new local task and schedules for today
+	 * @param summary if null DEFAULT_SUMMARY (New Task) used.
+	 */
+	public LocalTask createNewLocalTask(String summary) {
+		if (summary == null) {
+			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
+		}
+		LocalTask newTask = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "" + taskList.getNextTaskNum(),
+				summary);
+		newTask.setPriority(Task.PriorityLevel.P3.toString());
+
+		scheduleNewTask(newTask);
+
+		Object selectedObject = null;
+		TaskListView view = TaskListView.getFromActivePerspective();
+		if (view != null) {
+			selectedObject = ((IStructuredSelection) view.getViewer().getSelection()).getFirstElement();
+		}
+		if (selectedObject instanceof TaskCategory) {
+			taskList.addTask(newTask, (TaskCategory) selectedObject);
+		} else if (selectedObject instanceof ITask) {
+			ITask task = (ITask) selectedObject;
+			if (task.getContainer() instanceof TaskCategory) {
+				taskList.addTask(newTask, task.getContainer());
+			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+				taskList.addTask(newTask, view.getDrilledIntoCategory());
+			} else {
+				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
+			}
+		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
+			taskList.addTask(newTask, view.getDrilledIntoCategory());
+		} else {
+			if (view != null && view.getDrilledIntoCategory() != null) {
+				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
+						"The new task has been added to the root of the list, since tasks can not be added to a query.");
+			}
+			taskList.addTask(newTask, taskList.getUncategorizedCategory());
+		}
+		return newTask;
+	}
+
 }

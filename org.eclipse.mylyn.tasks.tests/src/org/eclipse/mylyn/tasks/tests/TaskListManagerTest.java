@@ -26,10 +26,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskReadAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskUnreadAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -85,13 +86,13 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testUniqueTaskID() {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
+		LocalTask task1 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task1);
-		Task task2 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
+		LocalTask task2 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task2);
 		assertEquals(2, manager.getTaskList().getLastTaskNum());
 		manager.getTaskList().deleteTask(task2);
-		Task task3 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
+		LocalTask task3 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task3);
 		assertTrue(task3.getHandleIdentifier() + " should end with 3", task3.getHandleIdentifier().endsWith("3"));
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
@@ -104,7 +105,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
-		Task task4 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "label");
+		Task task4 =manager.createNewLocalTask("label");
 		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}
 
@@ -510,15 +511,15 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testCreationAndExternalization() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
-		Task task1 = new Task(manager.genUniqueTaskHandle(), "task 1");
+		Task task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 
-		Task sub1 = new Task("subtask-1", "sub 1");
-		//manager.getTaskList().addTask(sub1);
+		Task sub1 = manager.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub1);
 
-		Task task2 = new Task(manager.genUniqueTaskHandle(), "task 2");
+		Task task2 = manager.createNewLocalTask("task 2");
 		manager.getTaskList().moveToRoot(task2);
 		rootTasks.add(task2);
 
@@ -527,14 +528,15 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
-		Task task3 = new Task(manager.genUniqueTaskHandle(), "task 3");
+		Task task3 =manager.createNewLocalTask("task 3");
 		manager.getTaskList().moveToContainer(cat1, task3);
 		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getContainer());
-		Task sub2 = new Task(manager.genUniqueTaskHandle(), "sub 2");
+		Task sub2 = manager.createNewLocalTask("sub 2");
 		manager.getTaskList().addTask(sub2, task3);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub2);
 
-		Task task4 = new Task(manager.genUniqueTaskHandle(), "task 4");
+		Task task4 = manager.createNewLocalTask("task 4");
 		manager.getTaskList().moveToContainer(cat1, task4);
 		cat1Contents.add(task4);
 
@@ -558,7 +560,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		assertNotNull(manager.getTaskList());
-		assertEquals(rootTasks, manager.getTaskList().getRootTasks());
+		assertTrue(rootTasks.containsAll(manager.getTaskList().getRootTasks()));
 
 		Set<ITask> readList = manager.getTaskList().getRootTasks();
 		for (ITask task : readList) {
@@ -584,7 +586,7 @@ public class TaskListManagerTest extends TestCase {
 
 // String handle = AbstractRepositoryTask.getHandle("http://url/repo-location",
 // 1);
-		Task task1 = new Task("http://url/repo-location-1", "task 1");
+		Task task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 

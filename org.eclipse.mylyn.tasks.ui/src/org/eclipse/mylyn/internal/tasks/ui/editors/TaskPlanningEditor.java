@@ -20,9 +20,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -79,7 +80,7 @@ import org.eclipse.ui.forms.widgets.Section;
 public class TaskPlanningEditor extends TaskFormPage {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.planning";
-	
+
 	private static final String CLEAR = "Clear";
 
 	private static final String LABEL_DUE = "Due:";
@@ -229,14 +230,14 @@ public class TaskPlanningEditor extends TaskFormPage {
 				statusCombo.select(1);
 			}
 		}
-		if (!(updateTask instanceof AbstractRepositoryTask) && !endDate.isDisposed()) {
+		if ((updateTask instanceof LocalTask) && !endDate.isDisposed()) {
 			endDate.setText(getTaskDateString(updateTask));
 		}
 	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		if (!(task instanceof AbstractRepositoryTask)) {
+		if (task instanceof LocalTask) {
 			String label = summary.getText();
 			// task.setDescription(label);
 			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task, label);
@@ -307,17 +308,13 @@ public class TaskPlanningEditor extends TaskFormPage {
 		editorLayout.verticalSpacing = 3;
 		editorComposite.setLayout(editorLayout);
 		editorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// try {
-		if (task instanceof AbstractRepositoryTask) {
-			// form.setText("Planning");
-		} else {
+		if (task instanceof LocalTask) {
 			createSummarySection(editorComposite);
-			// form.setText("Task: " + task.getSummary());
 		}
 		createPlanningSection(editorComposite);
 		createNotesSection(editorComposite);
 
-		if (summary != null && NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(summary.getText())) {
+		if (summary != null && LocalRepositoryConnector.DEFAULT_SUMMARY.equals(summary.getText())) {
 			summary.setSelection(0, summary.getText().length());
 			summary.setFocus();
 		} else if (summary != null) {
@@ -370,7 +367,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		summary.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		GridDataFactory.fillDefaults().minSize(100, SWT.DEFAULT).grab(true, false).applyTo(summary);
 
-		if (task instanceof AbstractRepositoryTask) {
+		if (!(task instanceof LocalTask)) {
 			summary.setEnabled(false);
 		} else {
 			summary.addModifyListener(new ModifyListener() {
@@ -409,7 +406,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			priorityCombo.select(prioritySelectionIndex);
 		}
 
-		if (task instanceof AbstractRepositoryTask) {
+		if (!(task instanceof LocalTask)) {
 			priorityCombo.setEnabled(false);
 		} else {
 			priorityCombo.addSelectionListener(new SelectionAdapter() {
@@ -434,7 +431,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else {
 			statusCombo.select(1);
 		}
-		if (task instanceof AbstractRepositoryTask) {
+		if (!(task instanceof LocalTask)) {
 			statusCombo.setEnabled(false);
 		} else {
 			statusCombo.addSelectionListener(new SelectionAdapter() {
@@ -477,7 +474,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		issueReportURL = toolkit.createText(urlComposite, task.getTaskUrl(), SWT.FLAT);
 		issueReportURL.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		if (task instanceof AbstractRepositoryTask) {
+		if (!(task instanceof LocalTask)) {
 			issueReportURL.setEditable(false);
 		} else {
 			issueReportURL.addModifyListener(new ModifyListener() {
@@ -536,8 +533,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	/**
-	 * Sets the Get Description button enabled or not depending on whether there
-	 * is a URL specified
+	 * Sets the Get Description button enabled or not depending on whether there is a URL specified
 	 */
 	protected void setButtonStatus() {
 		String url = issueReportURL.getText();
@@ -660,12 +656,12 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask)task).getRepositoryKind());
-				if(connector != null && connector.handlesDueDates((AbstractRepositoryTask)task)){
-					dueDatePicker.setEnabled(false);
-					clearDueDate.setEnabled(false);
-				}
+		if (task instanceof AbstractRepositoryTask && !(task instanceof LocalTask)) {
+			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
+			if (connector != null && connector.handlesDueDates((AbstractRepositoryTask) task)) {
+				dueDatePicker.setEnabled(false);
+				clearDueDate.setEnabled(false);
+			}
 		}
 
 		// Estimated time
@@ -771,7 +767,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TaskRepository repository = null;
-		if (task instanceof AbstractRepositoryTask) {
+		if (task instanceof AbstractRepositoryTask && !(task instanceof LocalTask)) {
 			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
 					repositoryTask.getRepositoryUrl());

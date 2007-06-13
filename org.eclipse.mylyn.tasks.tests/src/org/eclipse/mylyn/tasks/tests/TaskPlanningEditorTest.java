@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.tasks.tests;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -51,7 +53,7 @@ public class TaskPlanningEditorTest extends TestCase {
 
 
 	public void testDirtyOnEdit() {
-		Task task = new Task(MOCK_HANDLE, MOCK_LABEL);
+		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
@@ -73,7 +75,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	}
 
 	public void testNotDirtyOnRename() {
-		Task task = new Task(MOCK_HANDLE, MOCK_LABEL);
+		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
@@ -97,7 +99,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	 * editor remains dirty
 	 */
 	public void testRenameInDirtyState() {		
-		Task task = new Task(MOCK_HANDLE, MOCK_LABEL);
+		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);

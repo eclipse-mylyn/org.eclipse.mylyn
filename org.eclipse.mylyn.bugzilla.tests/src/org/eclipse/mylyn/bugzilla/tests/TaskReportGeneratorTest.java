@@ -55,7 +55,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
+		Task task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -71,7 +71,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 	
 	public void testCompletedTasksDateBoundsRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
+		Task task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		Thread.sleep(1000);
@@ -109,7 +109,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
-		Task task1 = new Task(TasksUiPlugin.getTaskListManager().genUniqueTaskHandle(), "task 1");
+		Task task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");

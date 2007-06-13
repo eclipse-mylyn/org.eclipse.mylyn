@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 
 /**
@@ -229,6 +230,7 @@ public class TaskRepositoryManager {
 
 		repositoryMap.clear();
 		orphanedRepositories.clear();
+		
 		loadRepositories(repositoriesFilePath);
 
 		for (ITaskRepositoryListener listener : listeners) {
