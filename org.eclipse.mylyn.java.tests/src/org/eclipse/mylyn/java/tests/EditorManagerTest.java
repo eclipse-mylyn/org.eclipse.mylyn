@@ -32,6 +32,7 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.ActiveFoldingEditorTracker;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.JavaUiBridgePlugin;
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -73,7 +74,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@SuppressWarnings("deprecation")
 	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException, PartInitException {
 		// need a task for mementos
-		Task task = new Task(contextId, contextId);
+		Task task = new LocalTask(contextId, contextId);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		manager.deleteContext(contextId);
 		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
@@ -200,7 +201,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	public void testActivationPreservesActiveTaskEditor() throws JavaModelException, InvocationTargetException,
 			InterruptedException {
 		assertEquals(0, page.getEditorReferences().length);
-		ITask task = new Task(contextId, contextId);
+		ITask task = new LocalTask(contextId, contextId);
 		TasksUiUtil.openEditor(task, false, false);
 		assertEquals(1, page.getEditorReferences().length);
 		manager.activateContext(contextId);
