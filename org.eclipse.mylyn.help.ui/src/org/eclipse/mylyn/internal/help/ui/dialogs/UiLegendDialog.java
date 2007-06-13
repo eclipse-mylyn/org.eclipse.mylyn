@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -305,7 +305,7 @@ public class UiLegendDialog extends PopupDialog {
 		for (AbstractRepositoryConnector connector : connectors) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 			if (connectorUi != null) {
-				List<AbstractTaskListElement> elements = connectorUi.getLegendItems();
+				List<AbstractTaskContainer> elements = connectorUi.getLegendItems();
 
 				if (!elements.isEmpty()) {
 					section = toolkit.createSection(connectorComposite, Section.TITLE_BAR);
@@ -319,7 +319,7 @@ public class UiLegendDialog extends PopupDialog {
 					sectionClient = toolkit.createComposite(section);
 					setSectionLayout(sectionClient, section, true);
 
-					for (AbstractTaskListElement taskListElement : elements) {
+					for (AbstractTaskContainer taskListElement : elements) {
 						image = toolkit.createLabel(sectionClient, "");
 						image.setImage(labelProvider.getImage(taskListElement));
 						toolkit.createLabel(sectionClient, taskListElement.getSummary());

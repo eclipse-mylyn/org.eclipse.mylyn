@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -20,11 +20,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+
 /**
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeContainer extends AbstractTaskContainer {
+public class DateRangeContainer extends AbstractTaskCategory {
 
 	private Set<DateRangeActivityDelegate> dateRangeDelegates = new HashSet<DateRangeActivityDelegate>();
 
@@ -200,12 +204,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 	 * different natural ordering.
 	 */
 	@Override
-	public int compareTo(AbstractTaskListElement taskListElement) {
+	public int compareTo(AbstractTaskContainer taskListElement) {
 		return startDate.compareTo(((DateRangeContainer) taskListElement).startDate);
-	}
-	
-	@Override
-	public final boolean isLocal() {
-		return true;
 	}
 }

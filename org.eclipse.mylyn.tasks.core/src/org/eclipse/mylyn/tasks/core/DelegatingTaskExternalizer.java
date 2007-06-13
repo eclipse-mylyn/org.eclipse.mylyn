@@ -22,6 +22,8 @@ import java.util.Locale;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
@@ -138,10 +140,10 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		this.delegateExternalizers = externalizers;
 	}
 
-	public Element createCategoryElement(AbstractTaskListElement category, Document doc, Element parent) {
+	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
 		if (category instanceof TaskArchive) {
 			return parent;
-		} else if (category instanceof AutomaticCategory) {
+		} else if (category instanceof UnfiledCategory) {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
@@ -164,7 +166,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
 		if (task.getCategory() != null) {
-			if (task.getCategory().getHandleIdentifier().equals(AutomaticCategory.HANDLE)) {
+			if (task.getCategory().getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
 				node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
@@ -287,7 +289,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 
-		AbstractTaskContainer category;
+		AbstractTaskCategory category;
 		if (element.hasAttribute(KEY_NAME)) {
 			category = new TaskCategory(element.getAttribute(KEY_NAME));
 			taskList.internalAddCategory((TaskCategory)category);
@@ -327,7 +329,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	 * First tries to use a delegate externalizer to read, if none available,
 	 * reads itself.
 	 */
-	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskContainer category, AbstractTask parent)
+	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskCategory category, AbstractTask parent)
 			throws TaskExternalizationException {
 		AbstractTask task = null;
 		String taskId = null;
@@ -373,7 +375,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	 * Override for connector-specific implementation
 	 */
 	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
-			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
+			AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
 		String handle;
 		if (element.hasAttribute(KEY_HANDLE)) {
 			handle = element.getAttribute(KEY_HANDLE);
@@ -385,12 +387,12 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	private void readTaskInfo(AbstractTask task, TaskList taskList, Element element, AbstractTask parent,
-			AbstractTaskContainer legacyCategory) throws TaskExternalizationException {
+			AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
 
 		String categoryHandle = null;
 		if (element.hasAttribute(KEY_CATEGORY)) {
 			categoryHandle = element.getAttribute(KEY_CATEGORY);
-			AbstractTaskContainer category = null;
+			AbstractTaskCategory category = null;
 			if (categoryHandle != null) {
 				category = taskList.getContainerForHandle(categoryHandle);
 			}

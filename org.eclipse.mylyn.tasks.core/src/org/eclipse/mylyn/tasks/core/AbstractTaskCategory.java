@@ -8,19 +8,15 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-/*
- * Created on Dec 26, 2004
- */
+
 package org.eclipse.mylyn.tasks.core;
-
-
 
 /**
  * @author Mik Kersten
- */
-public class TaskCategory extends AbstractTaskCategory {
+ */ 
+public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 
-	public TaskCategory(String handleAndDescription) {
+	public AbstractTaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
 	}
 }

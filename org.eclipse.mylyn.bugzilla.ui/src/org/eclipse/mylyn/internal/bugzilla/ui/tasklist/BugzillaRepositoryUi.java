@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -58,8 +58,8 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 	
 	@Override
-	public List<AbstractTaskListElement> getLegendItems() {
-		List<AbstractTaskListElement> legendItems = new ArrayList<AbstractTaskListElement>();
+	public List<AbstractTaskContainer> getLegendItems() {
+		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
 		
 		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker");
 		blocker.setSeverity("critical");		

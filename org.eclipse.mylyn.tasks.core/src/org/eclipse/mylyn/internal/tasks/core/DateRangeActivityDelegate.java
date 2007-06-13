@@ -9,11 +9,15 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
  * @author Rob Elves
@@ -106,7 +110,7 @@ public class DateRangeActivityDelegate extends AbstractTask {
 //		task.addSubTask(task);
 //	}
 
-	public AbstractTaskContainer getCategory() {
+	public AbstractTaskCategory getCategory() {
 		return task.getCategory();
 	}
 
@@ -178,7 +182,7 @@ public class DateRangeActivityDelegate extends AbstractTask {
 		task.setActive(active);
 	}
 
-	public void setCategory(AbstractTaskContainer category) {
+	public void setCategory(AbstractTaskCategory category) {
 		task.setCategory(category);
 	}
 
@@ -226,7 +230,7 @@ public class DateRangeActivityDelegate extends AbstractTask {
 		task.setTaskUrl(url);
 	}
 
-	public int compareTo(AbstractTaskListElement taskListElement) {
+	public int compareTo(AbstractTaskContainer taskListElement) {
 		return task.toString().compareTo(((AbstractTask) taskListElement).toString());
 	}
 

@@ -9,8 +9,9 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 
@@ -18,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 /**
  * @author Mik Kersten
  */
-public class TaskArchive extends AbstractTaskContainer {
+public class TaskArchive extends AbstractTaskCategory {
 
 	public static final String HANDLE = "archive";
 	
@@ -45,10 +46,5 @@ public class TaskArchive extends AbstractTaskContainer {
 	@Override
 	public boolean canRename() {
 		return false;
-	}
-	
-	@Override
-	public final boolean isLocal() {
-		return true;
 	}
 }

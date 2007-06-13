@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public abstract class AbstractTask extends AbstractTaskListElement {
+public abstract class AbstractTask extends AbstractTaskContainer {
 	
 	@Deprecated
 	public static final String DEFAULT_TASK_KIND = "task";
@@ -51,7 +51,7 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 
 
 	@Deprecated
-	private AbstractTaskContainer parentCategory = null;
+	private AbstractTaskCategory parentCategory = null;
 	
 	
 	// ************ Synch ****************
@@ -176,6 +176,8 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 	}
 
+	public abstract boolean isLocal();
+	
 	public abstract String getRepositoryKind();
 
 	public String getLastSyncDateStamp() {
@@ -344,12 +346,12 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 	 * TODO: get rid of this or we should make TaskCategory API.
 	 */
 	@Deprecated
-	public void setCategory(AbstractTaskContainer category) {
+	public void setCategory(AbstractTaskCategory category) {
 		this.parentCategory = category;
 	}
 
 	@Deprecated
-	public AbstractTaskContainer getCategory() {
+	public AbstractTaskCategory getCategory() {
 		return parentCategory;
 	}
 
@@ -429,7 +431,7 @@ public abstract class AbstractTask extends AbstractTaskListElement {
 		this.kind = kind;
 	}
 
-	public int compareTo(AbstractTaskListElement taskListElement) {
+	public int compareTo(AbstractTaskContainer taskListElement) {
 		return summary.compareTo(((AbstractTask)taskListElement).summary);
 	}
 

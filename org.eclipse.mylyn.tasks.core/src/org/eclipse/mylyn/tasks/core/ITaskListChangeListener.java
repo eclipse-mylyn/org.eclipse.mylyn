@@ -32,18 +32,18 @@ public interface ITaskListChangeListener {
 	
 	public abstract void taskDeleted(AbstractTask task);
 	
-	public abstract void containerAdded(AbstractTaskListElement container);
+	public abstract void containerAdded(AbstractTaskContainer container);
 		
-	public abstract void containerDeleted(AbstractTaskListElement container);
+	public abstract void containerDeleted(AbstractTaskContainer container);
 
-	public abstract void containerInfoChanged(AbstractTaskListElement container);
+	public abstract void containerInfoChanged(AbstractTaskContainer container);
 
 	/**
 	 * @param task
 	 * @param fromContainer	can be null
 	 * @param toContainer	can be null
 	 */
-	public abstract void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer);
+	public abstract void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer);
 
 	public abstract void taskAdded(AbstractTask task);
 

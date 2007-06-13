@@ -23,10 +23,10 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfInterest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.core.ScalingFactors;
+import org.eclipse.mylyn.internal.tasks.core.DateRangeActivityDelegate;
+import org.eclipse.mylyn.internal.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 

@@ -60,11 +60,6 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		return highestPriority;
 	}
 
-	@Override
-	public boolean isLocal() {
-		return false;
-	}
-
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}

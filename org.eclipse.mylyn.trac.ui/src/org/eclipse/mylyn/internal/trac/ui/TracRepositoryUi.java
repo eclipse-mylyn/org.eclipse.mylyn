@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -113,8 +113,8 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public List<AbstractTaskListElement> getLegendItems() {
-		List<AbstractTaskListElement> legendItems = new ArrayList<AbstractTaskListElement>();
+	public List<AbstractTaskContainer> getLegendItems() {
+		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
 		
 		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString());
 		defect.setKind(Kind.DEFECT.toString());		
