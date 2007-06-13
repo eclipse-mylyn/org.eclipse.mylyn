@@ -72,7 +72,7 @@ public class RepositorySearchQueryTest extends TestCase {
 	}
 
 	public void testSearch() {
-		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 
 		TracSearch search = new TracSearch();
 		String queryUrl = repository.getUrl() + ITracClient.QUERY_URL + search.toUrl();
@@ -82,7 +82,7 @@ public class RepositorySearchQueryTest extends TestCase {
 				
 		collector.run(new NullProgressMonitor());
 		for (AbstractRepositoryTask task : collector.getTaskHits()) {
-			assertEquals(Constants.TEST_TRAC_096_URL, task.getRepositoryUrl());		
+			assertEquals(TracTestConstants.TEST_TRAC_096_URL, task.getRepositoryUrl());		
 		}
 		assertEquals(data.tickets.size(), collector.getTaskHits().size());
 	}

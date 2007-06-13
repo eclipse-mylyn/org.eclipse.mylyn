@@ -39,7 +39,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -115,11 +114,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
 			IProgressMonitor monitor) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
-			// String taskId =
-			// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
 			try {
 				ITracClient connection = getClientManager().getRepository(repository);
-				TracTicket ticket = connection.getTicket(Integer.parseInt(repositoryTask.getTaskId()));
+				TracTicket ticket = connection.getTicket(getTicketId(repositoryTask.getTaskId()));
 				updateTaskFromTicket((TracTask) repositoryTask, ticket, false);
 			} catch (Exception e) {
 				throw new CoreException(TracCorePlugin.toStatus(e));
@@ -141,13 +138,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			for (TracTicket ticket : tickets) {
-				TracAttributeFactory attrFactory = new TracAttributeFactory();
-				RepositoryTaskData data = new RepositoryTaskData(attrFactory, TracCorePlugin.REPOSITORY_KIND,
-						repository.getUrl(), "" + ticket.getId(), Task.DEFAULT_TASK_KIND);
-				TracTaskDataHandler.createDefaultAttributes(attrFactory, data, tracClient, true);
-				TracTaskDataHandler.updateTaskData(repository, attrFactory, data, ticket);
-
-				resultCollector.accept(data);
+				AbstractRepositoryTask task = createTask(repository.getUrl(), ticket.getId() + "", "");
+				updateTaskFromTicket((TracTask) task, ticket, false);
+				resultCollector.accept(task);
 			}
 		} catch (Throwable e) {
 			return TracCorePlugin.toStatus(e, repository);
@@ -182,7 +175,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
 			if (!ids.isEmpty()) {
 				for (AbstractRepositoryTask task : tasks) {
-					Integer id = Integer.parseInt(task.getTaskId());
+					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
 						result.add(task);
 					}
@@ -206,8 +199,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				ITracClient connection = getClientManager().getRepository(repository);
 				TracTicket ticket = connection.getTicket(taskIdInt);
 
-				task = new TracTask(repository.getUrl(), taskId, getTicketDescription(ticket));
-				task.setCreationDate(new Date());
+				task = createTask(repository.getUrl(), taskId, "");
 				updateTaskFromTicket((TracTask) task, ticket, false);
 				taskList.addTask(task);
 			} catch (Exception e) {
@@ -219,7 +211,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
-		TracTask tracTask = new TracTask(repositoryUrl, id, "<description not set>");
+		TracTask tracTask = new TracTask(repositoryUrl, id, summary);
 		tracTask.setCreationDate(new Date());
 		return tracTask;
 	}
@@ -227,7 +219,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
 			RepositoryTaskData taskData) {
 		if (taskData != null) {
-			repositoryTask.setSummary(getTicketDescription(taskData));
+			repositoryTask.setSummary(taskData.getSummary());
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
 			repositoryTask.setTaskUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
@@ -259,27 +251,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return clientManager;
 	}
 
-//	public TracTask createTask(TracTicket ticket, String repositoryUrl, String taskId) {
-//		TracTask task;
-//		// String handleIdentifier =
-//		// AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
-//		ITask existingTask = taskList.getTask(repositoryUrl, taskId);
-//		if (existingTask instanceof TracTask) {
-//			task = (TracTask) existingTask;
-//		} else {
-//			task = new TracTask(repositoryUrl, taskId, getTicketDescription(ticket));
-//			task.setCreationDate(new Date());
-//			taskList.addTask(task);
-//		}
-//		return task;
-//	}
-
 	/**
 	 * Updates fields of <code>task</code> from <code>ticket</code>.
 	 */
 	public void updateTaskFromTicket(TracTask task, TracTicket ticket, boolean notify) {
 		if (ticket.getValue(Key.SUMMARY) != null) {
-			task.setSummary(getTicketDescription(ticket));
+			task.setSummary(ticket.getValue(Key.SUMMARY));
 		}
 		task.setCompleted(TracTask.isCompleted(ticket.getValue(Key.STATUS)));
 		task.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
@@ -294,14 +271,6 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		if (notify) {
 			taskList.notifyLocalInfoChanged(task);
 		}
-	}
-
-	public static String getTicketDescription(TracTicket ticket) {
-		return /* ticket.getId() + ": " + */ticket.getValue(Key.SUMMARY);
-	}
-
-	public static String getTicketDescription(RepositoryTaskData taskData) {
-		return /* taskData.getId() + ":" + */taskData.getSummary();
 	}
 
 	public static boolean hasChangedSince(TaskRepository repository) {
@@ -350,8 +319,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	public static TracTicket getTracTicket(TaskRepository repository, RepositoryTaskData data)
-			throws InvalidTicketException {
-		TracTicket ticket = new TracTicket(Integer.parseInt(data.getId()));
+			throws InvalidTicketException, CoreException {
+		TracTicket ticket = new TracTicket(getTicketId(data.getId()));
 
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {

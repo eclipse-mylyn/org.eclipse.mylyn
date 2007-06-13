@@ -33,6 +33,7 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -68,12 +69,15 @@ import org.eclipse.mylyn.web.core.HtmlStreamTokenizer.Token;
  */
 public class TracWebClient extends AbstractTracClient {
 
-	private HttpClient httpClient = new HttpClient();
+	private HttpClient httpClient;
 
 	private boolean authenticated;
 
 	public TracWebClient(URL url, Version version, String username, String password, Proxy proxy) {
 		super(url, version, username, password, proxy);
+		
+		 httpClient = new HttpClient();
+		 httpClient.setHttpConnectionManager(new MultiThreadedHttpConnectionManager());
 	}
 
 	private synchronized GetMethod connect(String serverURL) throws TracException {

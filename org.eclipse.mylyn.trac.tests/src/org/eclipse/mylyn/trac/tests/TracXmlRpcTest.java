@@ -62,7 +62,7 @@ public class TracXmlRpcTest extends TestCase {
 		random = new Random();
 
 		Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.ADMIN);
-		createConnection(new URL(Constants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.username, credentials.password);
+		createConnection(new URL(TracTestConstants.TEST_TRAC_010_URL + XMLRPC_URL), credentials.username, credentials.password);
 
 		tickets = new ArrayList<Integer>();
 	}
@@ -265,10 +265,10 @@ public class TracXmlRpcTest extends TestCase {
 
 	public void testGetTicketUmlaute() throws XmlRpcException, IOException {
 		Map<String, Object> attributes = new Hashtable<String, Object>();
-		int id = createTicket("summaryäÖÜ", "ßßß", attributes);
+		int id = createTicket("summaryï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½", attributes);
 
-		attributes.put("summary", "summaryäÖÜ");
-		attributes.put("description", "ßßß");
+		attributes.put("summary", "summaryï¿½ï¿½ï¿½");
+		attributes.put("description", "ï¿½ï¿½ï¿½");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
 		assertTicketHasAttributes(attributes, id, ticket);

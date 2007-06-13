@@ -95,7 +95,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 
 	public void testValidateAutomaticAnonymous() throws Exception {
 		version = null;
-		connect(Constants.TEST_TRAC_010_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 
 		validator.run(new NullProgressMonitor());
 		assertEquals(Version.TRAC_0_9, validator.getResult());

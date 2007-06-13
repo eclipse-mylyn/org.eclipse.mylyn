@@ -33,22 +33,22 @@ public class TracClientProxyTest extends AbstractTracClientTest {
 	
 	public void testConnectProxyWeb() throws Exception {
 		version = Version.TRAC_0_9;
-		connectProxy(Constants.TEST_TRAC_010_URL, "GET");
+		connectProxy(TracTestConstants.TEST_TRAC_010_URL, "GET");
 	}
 
 	public void testConnectProxyXmlRpc() throws Exception {
 		version = Version.XML_RPC;
-		connectProxy(Constants.TEST_TRAC_010_URL, "POST");
+		connectProxy(TracTestConstants.TEST_TRAC_010_URL, "POST");
 	}
 
 	public void testConnectProxySslWeb() throws Exception {
 		version = Version.TRAC_0_9;
-		connectProxy(Constants.TEST_TRAC_010_SSL_URL, "CONNECT");
+		connectProxy(TracTestConstants.TEST_TRAC_010_SSL_URL, "CONNECT");
 	}
 
 	public void testConnectProxySslXmlRpc() throws Exception {
 		version = Version.XML_RPC;
-		connectProxy(Constants.TEST_TRAC_010_SSL_URL, "CONNECT");
+		connectProxy(TracTestConstants.TEST_TRAC_010_SSL_URL, "CONNECT");
 	}
 
 	private void connectProxy(String url, String expectedMethod) throws Exception {

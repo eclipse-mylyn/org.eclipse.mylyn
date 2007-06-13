@@ -32,11 +32,11 @@ public class TracXmlRpcClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidate011() throws Exception {
-		validate(Constants.TEST_TRAC_011_URL);
+		validate(TracTestConstants.TEST_TRAC_011_URL);
 	}
 
 	public void testValidateFailNoAuth() throws Exception {
-		connect(Constants.TEST_TRAC_010_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		try {
 			repository.validate();
 			fail("Expected TracLoginException");

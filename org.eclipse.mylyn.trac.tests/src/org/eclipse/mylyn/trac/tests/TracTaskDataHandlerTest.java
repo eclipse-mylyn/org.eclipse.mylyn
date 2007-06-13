@@ -78,7 +78,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
-		init(Constants.TEST_TRAC_096_URL, Version.TRAC_0_9);
+		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
 
 		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
@@ -95,12 +95,12 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		getChangedSinceLastSync();
 	}
 
 	public void testGetChangedSinceLastSyncXmlRpc011() throws Exception {
-		init(Constants.TEST_TRAC_011_URL, Version.XML_RPC);
+		init(TracTestConstants.TEST_TRAC_011_URL, Version.XML_RPC);
 		getChangedSinceLastSync();
 	}
 

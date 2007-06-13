@@ -29,12 +29,12 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidate096() throws Exception {
-		validate(Constants.TEST_TRAC_096_URL);
+		validate(TracTestConstants.TEST_TRAC_096_URL);
 	}
 
 	public void testValidate011() throws Exception {
 		try {
-			validate(Constants.TEST_TRAC_011_URL);
+			validate(TracTestConstants.TEST_TRAC_011_URL);
 		} catch (TracException e) {
 		}
 	}
@@ -49,20 +49,20 @@ public class TracWebClientTest extends AbstractTracClientRepositoryTest {
 	}
 
 	public void testValidateAnonymousLogin() throws Exception {
-		connect(Constants.TEST_TRAC_010_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		repository.validate();
 		
-		connect(Constants.TEST_TRAC_096_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_096_URL, "", "");
 		repository.validate();
 	}
 
 	public void testUpdateAttributesAnonymous096() throws Exception {
-		connect(Constants.TEST_TRAC_096_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_096_URL, "", "");
 		updateAttributes();
 	}
 	
 	public void testUpdateAttributesAnonymous010() throws Exception {
-		connect(Constants.TEST_TRAC_010_URL, "", "");
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "");
 		updateAttributes();
 	}
 

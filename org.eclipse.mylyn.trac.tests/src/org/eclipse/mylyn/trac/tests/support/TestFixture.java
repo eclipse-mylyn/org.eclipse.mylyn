@@ -14,7 +14,7 @@ package org.eclipse.mylyn.trac.tests.support;
 import org.eclipse.mylyn.context.tests.support.TestUtil;
 import org.eclipse.mylyn.context.tests.support.TestUtil.Credentials;
 import org.eclipse.mylyn.context.tests.support.TestUtil.PrivilegeLevel;
-import org.eclipse.mylyn.trac.tests.Constants;
+import org.eclipse.mylyn.trac.tests.TracTestConstants;
 
 /**
  * Initializes Trac repositories to a defined state. This is done once per test
@@ -80,7 +80,7 @@ public class TestFixture {
 	public static XmlRpcServer.TestData init010() throws Exception {
 		if (data010 == null) {
 			Credentials credentials = TestUtil.readCredentials(PrivilegeLevel.USER);
-			XmlRpcServer server = new XmlRpcServer(Constants.TEST_TRAC_010_URL, credentials.username,
+			XmlRpcServer server = new XmlRpcServer(TracTestConstants.TEST_TRAC_010_URL, credentials.username,
 					credentials.password);
 
 			initializeTestData(server);

@@ -55,19 +55,19 @@ public abstract class AbstractTracClientTest extends TestCase {
 	}
 	
 	public ITracClient connect096() throws Exception {
-		return connect(Constants.TEST_TRAC_096_URL);
+		return connect(TracTestConstants.TEST_TRAC_096_URL);
 	}
 
 	public ITracClient connect010() throws Exception {
-		return connect(Constants.TEST_TRAC_010_URL);
+		return connect(TracTestConstants.TEST_TRAC_010_URL);
 	}
 
 	public ITracClient connect010DigestAuth() throws Exception {
-		return connect(Constants.TEST_TRAC_010_DIGEST_AUTH_URL);
+		return connect(TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL);
 	}
 
 	public ITracClient connect011() throws Exception {
-		return connect(Constants.TEST_TRAC_011_URL);
+		return connect(TracTestConstants.TEST_TRAC_011_URL);
 	}
 
 	public ITracClient connect(String url) throws Exception {

@@ -88,11 +88,11 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	public void testDownloadAttachmentXmlRpc010() throws Exception {
-		downloadAttachmentXmlRpc(Constants.TEST_TRAC_010_URL);
+		downloadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
 	}
 
 	public void testDownloadAttachmentXmlRpc011() throws Exception {
-		downloadAttachmentXmlRpc(Constants.TEST_TRAC_011_URL);
+		downloadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
 	}
 	
 	private void downloadAttachmentXmlRpc(String url) throws Exception {
@@ -118,11 +118,11 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	public void testGetAttachmentDataXmlRpc010() throws Exception {
-		getAttachmentDataXmlRpc(Constants.TEST_TRAC_010_URL);
+		getAttachmentDataXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
 	}
 	
 	public void testGetAttachmentDataXmlRpc011() throws Exception {
-		getAttachmentDataXmlRpc(Constants.TEST_TRAC_011_URL);
+		getAttachmentDataXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
 	}
 
 	private void getAttachmentDataXmlRpc(String url) throws Exception {
@@ -143,11 +143,11 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	public void testUploadAttachmentXmlRpc010() throws Exception {
-		uploadAttachmentXmlRpc(Constants.TEST_TRAC_010_URL);
+		uploadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_010_URL);
 	}
 	
 	public void testUploadAttachmentXmlRpc011() throws Exception {
-		uploadAttachmentXmlRpc(Constants.TEST_TRAC_011_URL);
+		uploadAttachmentXmlRpc(TracTestConstants.TEST_TRAC_011_URL);
 	}
 	
 	private void uploadAttachmentXmlRpc(String url) throws Exception {
@@ -173,25 +173,25 @@ public class TracAttachmentHandlerTest extends TestCase {
 	}
 
 	public void testCanUploadAttachmentXmlRpc() throws CoreException {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertTrue(attachmentHandler.canUploadAttachment(repository, task));
 	}
 
 	public void testCanUploadAttachmentWeb() throws CoreException {
-		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertFalse(attachmentHandler.canUploadAttachment(repository, task));
 	}
 
 	public void testCanDownloadAttachmentXmlRpc() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.XML_RPC);
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertTrue(attachmentHandler.canDownloadAttachment(repository, task));
 	}
 	
 	public void testCanDownloadAttachmentWeb() throws Exception {
-		init(Constants.TEST_TRAC_010_URL, Version.TRAC_0_9);
+		init(TracTestConstants.TEST_TRAC_010_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		assertFalse(attachmentHandler.canDownloadAttachment(repository, task));
 	}

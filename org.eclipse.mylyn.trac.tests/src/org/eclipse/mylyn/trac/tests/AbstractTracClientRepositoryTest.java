@@ -35,19 +35,19 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 	}
 
 	public void testValidate010() throws Exception {
-		validate(Constants.TEST_TRAC_010_URL);
+		validate(TracTestConstants.TEST_TRAC_010_URL);
 	}	
 
 	public void testValidate010DigestAuth() throws Exception {
-		validate(Constants.TEST_TRAC_010_DIGEST_AUTH_URL);
+		validate(TracTestConstants.TEST_TRAC_010_DIGEST_AUTH_URL);
 	}	
 
 	public void testValidate011() throws Exception {
-		validate(Constants.TEST_TRAC_011_URL);
+		validate(TracTestConstants.TEST_TRAC_011_URL);
 	}	
 
 	public void testValidate010FormAuth() throws Exception {
-		validate(Constants.TEST_TRAC_010_FORM_AUTH_URL);
+		validate(TracTestConstants.TEST_TRAC_010_FORM_AUTH_URL);
 	}
 	
 	protected void validate(String url) throws Exception {
@@ -83,14 +83,14 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 	}
 
 	public void testProxy() throws Exception {
-		connect(Constants.TEST_TRAC_010_URL, "", "", new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "", new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
 		try {
 			repository.validate();
 			fail("Expected IOException");
 		} catch (TracException e) {
 		}
 		
-		connect(Constants.TEST_TRAC_010_URL, "", "", null);
+		connect(TracTestConstants.TEST_TRAC_010_URL, "", "", null);
 		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
 		try {
 			repository.validate();
@@ -98,7 +98,7 @@ public class AbstractTracClientRepositoryTest extends AbstractTracClientTest {
 		} catch (TracException e) {
 		}
 
-		connect(Constants.TEST_TRAC_010_URL);
+		connect(TracTestConstants.TEST_TRAC_010_URL);
 		repository.validate();
 		repository.setProxy(new Proxy(Type.HTTP, new InetSocketAddress("invalidhostname", 8080)));
 		try {
