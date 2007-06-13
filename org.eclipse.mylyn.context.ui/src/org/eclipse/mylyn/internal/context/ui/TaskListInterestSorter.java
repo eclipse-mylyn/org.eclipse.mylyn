@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
-import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.core.AutomaticCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -50,9 +50,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 			}
 		}
 
-		if (o1 instanceof UncategorizedCategory && o2 instanceof AbstractTaskListElement) {
+		if (o1 instanceof AutomaticCategory && o2 instanceof AbstractTaskListElement) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskListElement && o2 instanceof UncategorizedCategory) {
+		} else if (o1 instanceof AbstractTaskListElement && o2 instanceof AutomaticCategory) {
 			return 1;
 		}
 
