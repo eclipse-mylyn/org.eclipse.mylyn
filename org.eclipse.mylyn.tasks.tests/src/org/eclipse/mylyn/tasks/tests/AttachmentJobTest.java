@@ -86,10 +86,6 @@ public class AttachmentJobTest extends TestCase {
 		job.schedule();
 		job.join();
 
-		// wait for any scheduled SWT jobs to finish
-		while (PlatformUI.getWorkbench().getDisplay().readAndDispatch()) {
-		}
-
 		Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 		assertEquals(expected, clipboard.getContents(TextTransfer.getInstance()));
 	}

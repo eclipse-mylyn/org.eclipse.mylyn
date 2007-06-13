@@ -72,7 +72,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 	}
 
 	private void copyToClipboard(final String contents) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				Clipboard clipboard = new Clipboard(PlatformUI.getWorkbench().getDisplay());
 				clipboard.setContents(new Object[] { contents }, new Transfer[] { TextTransfer.getInstance() });
