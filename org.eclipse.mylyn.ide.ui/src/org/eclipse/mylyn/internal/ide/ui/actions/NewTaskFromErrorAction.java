@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.wizards.NewRepositoryTaskWizard;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
@@ -54,7 +54,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 		if (selection == null) {
 			return;
 		}
-		NewRepositoryTaskWizard wizard = new NewRepositoryTaskWizard();
+		NewTaskWizard wizard = new NewTaskWizard();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
