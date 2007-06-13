@@ -20,7 +20,7 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.actions.EditHighlightersAction;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -30,14 +30,14 @@ public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributo
 
 	private static final String CHOOSE_HIGHLIGHTER = "Highlighter";
 
-	public MenuManager getSubMenuManager(final List<AbstractTaskListElement> selectedElements) {
+	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(CHOOSE_HIGHLIGHTER);
 		for (final Highlighter highlighter : ContextUiPlugin.getDefault().getHighlighters()) {
 			Action action = new Action() {
 				@Override
 				public void run() {
 					AbstractTask task = null;
-					for (AbstractTaskListElement selectedElement : selectedElements) {
+					for (AbstractTaskContainer selectedElement : selectedElements) {
 						if (selectedElement instanceof AbstractTask) {
 							task = (AbstractTask) selectedElement;
 						} 
