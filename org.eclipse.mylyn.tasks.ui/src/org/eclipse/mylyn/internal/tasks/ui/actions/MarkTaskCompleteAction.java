@@ -16,9 +16,9 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -38,8 +38,8 @@ public class MarkTaskCompleteAction extends Action {
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_COMPLETE);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
-			Task task = (Task) selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
+			AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
 			if (task instanceof WebTask) {
 				setEnabled(true);
 			} else {

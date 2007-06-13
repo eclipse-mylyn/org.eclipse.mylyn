@@ -24,9 +24,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -93,7 +93,7 @@ public class TaskListStandaloneTest extends TestCase {
 	public void testDates() {
 		Date start = Calendar.getInstance().getTime();
 		Date creation = new Date();
-		Task task = new LocalTask("1", "task 1");
+		AbstractRepositoryTask task = new LocalTask("1", "task 1");
 
 		manager.getTaskList().moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);

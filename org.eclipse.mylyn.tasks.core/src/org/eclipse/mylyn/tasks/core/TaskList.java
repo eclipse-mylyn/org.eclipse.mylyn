@@ -194,7 +194,7 @@ public class TaskList {
 		moveToContainer(archiveContainer, task);
 	}
 
-	public void renameTask(Task task, String description) {
+	public void renameTask(AbstractRepositoryTask task, String description) {
 		task.setSummary(description);
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.localInfoChanged(task);

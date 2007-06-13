@@ -11,18 +11,16 @@
 
 package org.eclipse.mylyn.tasks.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-
-import junit.framework.TestCase;
 
 /**
  * @author Rob Elves
@@ -30,8 +28,6 @@ import junit.framework.TestCase;
 public class TaskPlanningEditorTest extends TestCase {
 
 	private static final String MOCK_LABEL = "label";
-
-	private static final String MOCK_HANDLE = "handle";
 
 	private static final String DESCRIPTION = "summary";
 

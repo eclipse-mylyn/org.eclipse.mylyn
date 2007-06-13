@@ -20,7 +20,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;

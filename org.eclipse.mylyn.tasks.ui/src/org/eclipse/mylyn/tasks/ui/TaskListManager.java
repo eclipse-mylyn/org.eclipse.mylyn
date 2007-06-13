@@ -61,7 +61,6 @@ import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -941,7 +940,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isOwnedByUser(ITask task) {
-		if (task instanceof WebTask || (task instanceof Task && ((Task) task).isLocal())) {
+		if (task instanceof WebTask || (task instanceof AbstractRepositoryTask && ((AbstractRepositoryTask) task).isLocal())) {
 			return true;
 		}
 

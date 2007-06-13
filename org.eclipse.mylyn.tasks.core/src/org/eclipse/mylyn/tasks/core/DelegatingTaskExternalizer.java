@@ -246,7 +246,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				String handle = element.getAttribute(KEY_HANDLE);
 				ITask subTask = tasklist.getTask(handle);
 				if (subTask != null) {
-					tasklist.addTask(subTask, (Task)task);
+					tasklist.addTask(subTask, (AbstractRepositoryTask)task);
 				}
 			}
 		}
@@ -380,7 +380,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		} else {
 			throw new TaskExternalizationException("Handle not stored for task");
 		}
-		Task task = new LocalTask(handle, summary);
+		AbstractRepositoryTask task = new LocalTask(handle, summary);
 		return task;
 	}
 

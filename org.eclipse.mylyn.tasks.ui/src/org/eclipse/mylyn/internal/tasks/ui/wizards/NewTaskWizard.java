@@ -11,27 +11,20 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
-import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @author Steffen Pingel
  */
-public class NewRepositoryTaskPage extends SelectRepositoryPage {
+public class NewTaskWizard extends MultiRepositoryAwareWizard {
 
-	public NewRepositoryTaskPage(TaskRepositoryFilter taskRepositoryFilter) {
-		super(taskRepositoryFilter);
-	}
+	private static final String TITLE = "New Task";
 
-	@Override
-	protected IWizard createWizard(TaskRepository taskRepository) {
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-				taskRepository.getKind());
-		return connectorUi.getNewTaskWizard(taskRepository);  // TODO remove unused parameter
+	public NewTaskWizard() {
+		super(new NewTaskPage(TaskRepositoryFilter.CAN_CREATE_NEW_TASK), TITLE);
+		setNeedsProgressMonitor(true);
 	}
 
 }

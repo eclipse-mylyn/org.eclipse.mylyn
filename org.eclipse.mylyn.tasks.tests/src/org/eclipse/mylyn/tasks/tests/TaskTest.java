@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 
 /**
@@ -34,7 +33,7 @@ public class TaskTest extends TestCase {
 	}
 
 	public void testUrl() {
-		Task task = new LocalTask("handle", "label");
+		AbstractRepositoryTask task = new LocalTask("handle", "label");
 		task.setTaskUrl("http://eclipse.org/mylar/doc.php");
 		assertTrue(task.hasValidUrl());
 
@@ -52,7 +51,7 @@ public class TaskTest extends TestCase {
 	}
 	
 	public void testPriorityNeverNull() {
-		Task task = new LocalTask("handle", "label");
+		AbstractRepositoryTask task = new LocalTask("handle", "label");
 		assertNotNull(task.getPriority());
 		
 		PriorityLevel def = PriorityLevel.getDefault();		

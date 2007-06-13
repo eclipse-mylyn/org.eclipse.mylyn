@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public abstract class AbstractRepositoryTask extends Task {
+public abstract class AbstractRepositoryTask extends AbstractTaskContainer implements ITask {
 	
 	@Deprecated
 	public static final String DEFAULT_TASK_KIND = "task";
@@ -163,9 +163,12 @@ public abstract class AbstractRepositoryTask extends Task {
 		this.summary = summary;
 	}
 
-//	public final String getHandleIdentifier() {
-//		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
-//	}
+	public final String getHandleIdentifier() {
+		// Note: when removing this consider implications to repository url refactoring
+		// which only sets the repository url (so if we simply return handle here it will
+		// be incorrect after a refactoring). 
+		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
+	}
 
 	public abstract String getRepositoryKind();
 

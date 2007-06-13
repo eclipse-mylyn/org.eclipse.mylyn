@@ -22,8 +22,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -39,15 +39,15 @@ public class TaskHistoryTest extends TestCase {
 
 	protected TaskListView taskView = null;
 
-	protected Task task1 = null;
+	protected AbstractRepositoryTask task1 = null;
 
-	protected Task task2 = null;
+	protected AbstractRepositoryTask task2 = null;
 
-	protected Task task3 = null;
+	protected AbstractRepositoryTask task3 = null;
 
-	protected Task task4 = null;
+	protected AbstractRepositoryTask task4 = null;
 
-	protected Task task5 = null;
+	protected AbstractRepositoryTask task5 = null;
 
 	@Override
 	protected void setUp() throws Exception {

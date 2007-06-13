@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -28,7 +28,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskListBackupManagerTest extends TestCase {
 
-	private Task task1;
+	private AbstractRepositoryTask task1;
 
 	@Override
 	protected void setUp() throws Exception {

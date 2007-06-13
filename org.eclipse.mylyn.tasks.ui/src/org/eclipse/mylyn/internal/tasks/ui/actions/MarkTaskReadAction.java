@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -36,8 +35,8 @@ public class MarkTaskReadAction extends AbstractRepositoryTasksAction {
 			setEnabled(false);
 		} else {
 			setEnabled(selectedElements.size() > 0);
-			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof Task)) {
-				Task task = (Task) selectedElements.get(0);
+			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
+				AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
 				setEnabled(!task.isLocal());
 			} else {
 				setEnabled(true);

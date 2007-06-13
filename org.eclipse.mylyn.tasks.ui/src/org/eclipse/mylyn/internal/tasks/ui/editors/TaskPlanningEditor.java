@@ -31,7 +31,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -240,7 +239,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			String label = summary.getText();
 			// task.setDescription(label);
-			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task, label);
+			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractRepositoryTask) task, label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setTaskUrl(issueReportURL.getText());

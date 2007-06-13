@@ -39,7 +39,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -105,7 +104,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		assertEquals(3, manager.getTaskList().getLastTaskNum());
-		Task task4 =manager.createNewLocalTask("label");
+		AbstractRepositoryTask task4 =manager.createNewLocalTask("label");
 		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}
 
@@ -282,7 +281,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveCategories() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new LocalTask("t1", "t1");
+		AbstractRepositoryTask task1 = new LocalTask("t1", "t1");
 
 		TaskCategory cat1 = new TaskCategory("cat1");
 		manager.getTaskList().addCategory(cat1);
@@ -300,7 +299,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMoveToRoot() {
 		assertEquals(0, manager.getTaskList().getRootTasks().size());
-		Task task1 = new LocalTask("t1", "t1");
+		AbstractRepositoryTask task1 = new LocalTask("t1", "t1");
 		manager.getTaskList().moveToRoot(task1);
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 		assertEquals(UncategorizedCategory.HANDLE, task1.getContainer().getHandleIdentifier());
@@ -511,15 +510,15 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testCreationAndExternalization() {
 		Set<ITask> rootTasks = new HashSet<ITask>();
-		Task task1 = manager.createNewLocalTask("task 1");
+		AbstractRepositoryTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 
-		Task sub1 = manager.createNewLocalTask("sub 1");
+		AbstractRepositoryTask sub1 = manager.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
 		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub1);
 
-		Task task2 = manager.createNewLocalTask("task 2");
+		AbstractRepositoryTask task2 = manager.createNewLocalTask("task 2");
 		manager.getTaskList().moveToRoot(task2);
 		rootTasks.add(task2);
 
@@ -528,15 +527,15 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("Category 1");
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
-		Task task3 =manager.createNewLocalTask("task 3");
+		AbstractRepositoryTask task3 =manager.createNewLocalTask("task 3");
 		manager.getTaskList().moveToContainer(cat1, task3);
 		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getContainer());
-		Task sub2 = manager.createNewLocalTask("sub 2");
+		AbstractRepositoryTask sub2 = manager.createNewLocalTask("sub 2");
 		manager.getTaskList().addTask(sub2, task3);
 		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub2);
 
-		Task task4 = manager.createNewLocalTask("task 4");
+		AbstractRepositoryTask task4 = manager.createNewLocalTask("task 4");
 		manager.getTaskList().moveToContainer(cat1, task4);
 		cat1Contents.add(task4);
 
@@ -586,7 +585,7 @@ public class TaskListManagerTest extends TestCase {
 
 // String handle = AbstractRepositoryTask.getHandle("http://url/repo-location",
 // 1);
-		Task task1 = manager.createNewLocalTask("task 1");
+		AbstractRepositoryTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		rootTasks.add(task1);
 
@@ -745,8 +744,8 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testAllTasksDeactivation() {
-		Task task1 = new LocalTask("task1", "description1");
-		Task task2 = new LocalTask("task2", "description2");
+		AbstractRepositoryTask task1 = new LocalTask("task1", "description1");
+		AbstractRepositoryTask task2 = new LocalTask("task2", "description2");
 		TaskList taskList = manager.getTaskList();
 		taskList.addTask(task1);
 		taskList.addTask(task2);

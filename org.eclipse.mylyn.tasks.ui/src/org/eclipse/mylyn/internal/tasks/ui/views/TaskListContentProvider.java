@@ -26,14 +26,12 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
- * Provides custom content for the task list, e.g. guaranteed visibility of some
- * elements, ability to suppress containers showing if nothing should show under
- * them.
+ * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
+ * containers showing if nothing should show under them.
  * 
  * TODO: move to viewer filter architecture?
  * 
@@ -66,7 +64,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 //			if (((ITask) child).getParent() != null) {
 //				return ((ITask) child).getParent();
 //			} else {
-				return ((ITask) child).getContainer();
+			return ((ITask) child).getContainer();
 //			}
 		}
 		return null;
@@ -77,8 +75,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	/**
-	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered
-	 * children (see bug 145194).
+	 * NOTE: If parent is an ITask, this method checks if parent has unfiltered children (see bug 145194).
 	 */
 	public boolean hasChildren(Object parent) {
 		if (parent instanceof AbstractRepositoryQuery) {
@@ -201,6 +198,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return false;
 	}
 
+	// TODO: This can be simplified post bug#124321
 	private List<ITaskListElement> getFilteredChildrenFor(Object parent) {
 		if (containsNoFilterText((this.view.getFilteredTree().getFilterControl()).getText())) {
 			List<ITaskListElement> children = new ArrayList<ITaskListElement>();
@@ -233,8 +231,8 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 					}
 				}
 				return children;
-			} else if (parent instanceof Task) {
-				Set<ITask> subTasks = ((Task) parent).getChildren();
+			} else if (parent instanceof AbstractRepositoryTask) {
+				Set<ITask> subTasks = ((AbstractRepositoryTask) parent).getChildren();
 				for (ITask t : subTasks) {
 					if (!filter(parent, t)) {
 						children.add(t);
@@ -242,28 +240,10 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			}
-// else if (parent instanceof AbstractQueryHit) {
-// AbstractRepositoryTask task = ((AbstractQueryHit)
-// parent).getCorrespondingTask();
-// if (task != null) {
-// for (ITask t : task.getChildren()) {
-// if (!filter(parent, t)) {
-// children.add(t);
-// }
-// }
-// }
-// return children;
-// }
 		} else {
 			List<ITaskListElement> children = new ArrayList<ITaskListElement>();
-			if (parent instanceof AbstractRepositoryQuery) {
-				children.addAll(((AbstractRepositoryQuery) parent).getHits());
-				return children;
-			} else if (parent instanceof AbstractTaskContainer) {
+			if (parent instanceof AbstractTaskContainer) {
 				children.addAll(((AbstractTaskContainer) parent).getChildren());
-				return children;
-			} else if (parent instanceof Task) {
-				children.addAll(((Task) parent).getChildren());
 				return children;
 			}
 		}

@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskList;
 
 /**
@@ -84,28 +84,27 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 		for (Object element : rootElements) {
 			monitor.worked(1);
-			if (element instanceof AbstractTaskContainer) {
+			if (element instanceof AbstractRepositoryTask) {
+				AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+				for (ITaskCollector collector : collectors) {
+					collector.consumeTask(task);
+				}
+			} else if (element instanceof AbstractRepositoryQuery) {
+				// process queries
+				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
+				for (ITask task : repositoryQuery.getChildren()) {
+					for (ITaskCollector collector : collectors) {
+						collector.consumeTask(task);
+					}
+				}
+			} else if (element instanceof AbstractTaskContainer) {
 				AbstractTaskContainer cat = (AbstractTaskContainer) element;
 				for (ITask task : cat.getChildren())
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);
 					}
 
-			} else if (element instanceof Task) {
-				Task task = (Task) element;
-				for (ITaskCollector collector : collectors) {
-					collector.consumeTask(task);
-				}
-
-			} else if (element instanceof AbstractRepositoryQuery) {
-				// process queries
-				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
-				for(ITask task : repositoryQuery.getChildren()) {
-					for (ITaskCollector collector : collectors) {
-						collector.consumeTask(task);
-					}
-				}
-			} 
+			}
 		}
 		// Put the results all into one list (tasks)
 		for (ITaskCollector collector : collectors) {

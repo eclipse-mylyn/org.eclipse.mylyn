@@ -18,7 +18,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -67,7 +66,7 @@ class TaskListCellModifier implements ICellModifier {
 					switch (columnIndex) {
 					case 0:
 						if (!(task instanceof AbstractRepositoryTask)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((Task) task,
+							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractRepositoryTask) task,
 									((String) value).trim());
 						}
 						break;

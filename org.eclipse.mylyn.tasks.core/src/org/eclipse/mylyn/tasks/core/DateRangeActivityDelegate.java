@@ -231,7 +231,7 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 	}
 
 	public int compareTo(ITaskListElement taskListElement) {
-		return task.toString().compareTo(((Task) taskListElement).toString());
+		return task.toString().compareTo(((AbstractRepositoryTask) taskListElement).toString());
 	}
 
 	public void setSummary(String description) {
@@ -248,6 +248,6 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 
 	@Override
 	public boolean isLocal() {
-		return ((Task)task).isLocal();
+		return ((AbstractRepositoryTask)task).isLocal();
 	}
 }

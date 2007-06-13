@@ -32,13 +32,12 @@ import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -54,7 +53,7 @@ import org.eclipse.swt.dnd.TransferData;
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
-	private Task newTask = null;
+	private AbstractRepositoryTask newTask = null;
 
 	private TransferData currentTransfer;
 

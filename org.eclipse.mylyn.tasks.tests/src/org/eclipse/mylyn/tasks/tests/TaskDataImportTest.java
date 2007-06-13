@@ -16,12 +16,11 @@ import java.util.Collection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.tests.AbstractContextTest;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizardPage;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -113,7 +112,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
 
-		Task task1 = new LocalTask("999", "label");
+		AbstractRepositoryTask task1 = new LocalTask("999", "label");
 		taskList.addTask(task1);
 		Collection<ITask> tasks = taskList.getAllTasks();
 		assertEquals(1, tasks.size());

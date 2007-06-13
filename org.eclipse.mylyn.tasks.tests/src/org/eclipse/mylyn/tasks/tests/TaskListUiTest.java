@@ -27,10 +27,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -52,31 +52,31 @@ public class TaskListUiTest extends TestCase {
 
 	private TaskCategory cat1 = null;
 
-	private Task cat1task1 = null;
+	private AbstractRepositoryTask cat1task1 = null;
 
-	private Task cat1task2 = null;
+	private AbstractRepositoryTask cat1task2 = null;
 
-	private Task cat1task3 = null;
+	private AbstractRepositoryTask cat1task3 = null;
 
-	private Task cat1task4 = null;
+	private AbstractRepositoryTask cat1task4 = null;
 
-	private Task cat1task5 = null;
+	private AbstractRepositoryTask cat1task5 = null;
 
-	private Task cat1task1sub1 = null;
+	private AbstractRepositoryTask cat1task1sub1 = null;
 
 	private TaskCategory cat2 = null;
 
-	private Task cat2task1 = null;
+	private AbstractRepositoryTask cat2task1 = null;
 
-	private Task cat2task2 = null;
+	private AbstractRepositoryTask cat2task2 = null;
 
-	private Task cat2task3 = null;
+	private AbstractRepositoryTask cat2task3 = null;
 
-	private Task cat2task4 = null;
+	private AbstractRepositoryTask cat2task4 = null;
 
-	private Task cat2task5 = null;
+	private AbstractRepositoryTask cat2task5 = null;
 
-	private Task cat2task1sub1 = null;
+	private AbstractRepositoryTask cat2task1sub1 = null;
 
 	private final static int CHECK_COMPLETE_FILTER = 1;
 
