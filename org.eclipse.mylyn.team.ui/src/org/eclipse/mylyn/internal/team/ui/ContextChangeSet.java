@@ -26,21 +26,21 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
 import org.eclipse.team.core.mapping.provider.ResourceDiff;
+import org.eclipse.team.internal.ccvs.core.mapping.CVSActiveChangeSet;
 import org.eclipse.team.internal.ccvs.core.mapping.ChangeSetResourceMapping;
-import org.eclipse.team.internal.core.subscribers.ActiveChangeSet;
 import org.eclipse.team.internal.core.subscribers.ActiveChangeSetManager;
 import org.osgi.service.prefs.Preferences;
 
 /**
  * @author Mik Kersten
  */
-public class ContextChangeSet extends ActiveChangeSet implements IAdaptable {
+public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/ implements IAdaptable {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
