@@ -27,12 +27,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -105,7 +105,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private DatePicker datePicker;
 
-	private ITask task;
+	private AbstractTask task;
 
 	private Composite editorComposite;
 
@@ -135,7 +135,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(final ITask updateTask) {
+		public void localInfoChanged(final AbstractTask updateTask) {
 			if (updateTask != null && task != null
 					&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
 				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
@@ -150,31 +150,31 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		}
 
-		public void repositoryInfoChanged(ITask task) {
+		public void repositoryInfoChanged(AbstractTask task) {
 			localInfoChanged(task);
 		}
 
-		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 			// ignore
 		}
 
-		public void taskDeleted(ITask task) {
+		public void taskDeleted(AbstractTask task) {
 			// ignore
 		}
 
-		public void containerAdded(AbstractTaskContainer container) {
+		public void containerAdded(AbstractTaskListElement container) {
 			// ignore
 		}
 
-		public void containerDeleted(AbstractTaskContainer container) {
+		public void containerDeleted(AbstractTaskListElement container) {
 			// ignore
 		}
 
-		public void taskAdded(ITask task) {
+		public void taskAdded(AbstractTask task) {
 			// ignore
 		}
 
-		public void containerInfoChanged(AbstractTaskContainer container) {
+		public void containerInfoChanged(AbstractTaskListElement container) {
 			// ignore
 		}
 
@@ -190,7 +190,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 	}
 
 	/** public for testing */
-	public void updateTaskData(final ITask updateTask) {
+	public void updateTaskData(final AbstractTask updateTask) {
 		if (datePicker != null && !datePicker.isDisposed()) {
 			if (updateTask.getScheduledForDate() != null) {
 				Calendar cal = Calendar.getInstance();
@@ -239,7 +239,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		if (task instanceof LocalTask) {
 			String label = summary.getText();
 			// task.setDescription(label);
-			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractRepositoryTask) task, label);
+			TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractTask) task, label);
 
 			// TODO: refactor mutation into TaskList?
 			task.setTaskUrl(issueReportURL.getText());
@@ -655,9 +655,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		if (task instanceof AbstractRepositoryTask && !(task instanceof LocalTask)) {
-			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) task).getRepositoryKind());
-			if (connector != null && connector.handlesDueDates((AbstractRepositoryTask) task)) {
+		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
+			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractTask) task).getRepositoryKind());
+			if (connector != null && connector.handlesDueDates((AbstractTask) task)) {
 				dueDatePicker.setEnabled(false);
 				clearDueDate.setEnabled(false);
 			}
@@ -766,8 +766,8 @@ public class TaskPlanningEditor extends TaskFormPage {
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TaskRepository repository = null;
-		if (task instanceof AbstractRepositoryTask && !(task instanceof LocalTask)) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
+			AbstractTask repositoryTask = (AbstractTask) task;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
 					repositoryTask.getRepositoryUrl());
 		}
@@ -797,7 +797,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		toolkit.paintBordersFor(container);
 	}
 
-	private String getTaskDateString(ITask task) {
+	private String getTaskDateString(AbstractTask task) {
 
 		if (task == null)
 			return "";

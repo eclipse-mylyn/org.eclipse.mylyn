@@ -29,10 +29,10 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -83,13 +83,13 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 				return TasksUiPlugin.getTaskListManager().getTaskActivationHistory().getPreviousTasks().contains(
 						element);
 			}
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+			if (element instanceof AbstractTask) {
+				AbstractTask repositoryTask = (AbstractTask) element;
 				String taskString = repositoryTask.getTaskKey() + ": "
 						+ repositoryTask.getSummary();
 				return pattern.matcher(taskString).find();
-			} else if (element instanceof ITask) {
-				String taskString = ((ITask) element).getSummary();
+			} else if (element instanceof AbstractTask) {
+				String taskString = ((AbstractTask) element).getSummary();
 				return pattern.matcher(taskString).find();
 			} 
 			return false;
@@ -155,19 +155,19 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 
 		// Compute all existing tasks or query hits (if corresponding task does
 		// not exist yet...)
-		Set<ITaskListElement> allTasks = new HashSet<ITaskListElement>();
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		Set<AbstractTaskListElement> allTasks = new HashSet<AbstractTaskListElement>();
+		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		allTasks.addAll(taskList.getAllTasks());
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			allTasks.addAll(query.getChildren());
 			// TODO: should not need to do this
-			for (ITask hit : query.getHits()) {
+			for (AbstractTask hit : query.getHits()) {
 					allTasks.add(hit);
 			}
 		}
 
 		// Compute the task navigation history (in recent-to-older order)
-		final List<ITask> taskHistory = new ArrayList<ITask>(TasksUiPlugin.getTaskListManager()
+		final List<AbstractTask> taskHistory = new ArrayList<AbstractTask>(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory().getPreviousTasks());
 		Collections.reverse(taskHistory);
 
@@ -175,7 +175,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		// make the task history appear first on the list is to add them before
 		// all other tasks; being a LinkedHashSet, it will not be duplicated
 		// (this is VERY IMPORTANT)
-		Set<ITaskListElement> taskSet = new LinkedHashSet<ITaskListElement>(taskHistory);
+		Set<AbstractTaskListElement> taskSet = new LinkedHashSet<AbstractTaskListElement>(taskHistory);
 		taskSet.addAll(allTasks);
 		viewer.setInput(taskSet);
 
@@ -183,17 +183,17 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		viewer.addFilter(filter);
 		viewer.setComparator(new ViewerComparator() {
 
-			private ITask getCorrespondingTask(Object o) {
-				if (o instanceof ITask) {
-					return (ITask) o;
+			private AbstractTask getCorrespondingTask(Object o) {
+				if (o instanceof AbstractTask) {
+					return (AbstractTask) o;
 				}
 				return null;
 			}
 
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				ITask t1 = getCorrespondingTask(e1);
-				ITask t2 = getCorrespondingTask(e2);
+				AbstractTask t1 = getCorrespondingTask(e1);
+				AbstractTask t2 = getCorrespondingTask(e2);
 				boolean isInHistory1 = taskHistory.contains(t1);
 				boolean isInHistory2 = taskHistory.contains(t2);
 

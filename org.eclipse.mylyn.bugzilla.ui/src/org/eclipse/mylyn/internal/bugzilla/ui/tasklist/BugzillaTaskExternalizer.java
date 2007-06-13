@@ -14,11 +14,11 @@ package org.eclipse.mylyn.internal.bugzilla.ui.tasklist;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,7 +58,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, getAllCategories taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(element.getAttribute(KEY_REPOSITORY_URL), element
 				.getAttribute(KEY_QUERY_STRING), element.getAttribute(KEY_NAME));
@@ -72,7 +72,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public Element createTaskElement(ITask task, Document doc, Element parent) {
+	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
 		Element node = super.createTaskElement(task, doc, parent);
 		node.setAttribute(KEY_SEVERITY, ((BugzillaTask) task).getSeverity());
 		node.setAttribute(KEY_PRODUCT, ((BugzillaTask) task).getProduct());
@@ -85,7 +85,7 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public boolean canCreateElementFor(ITask task) {
+	public boolean canCreateElementFor(AbstractTask task) {
 		return task instanceof BugzillaTask;
 	}
 
@@ -95,8 +95,8 @@ public class BugzillaTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
-			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, getAllCategories taskList,
+			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary);
 		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setSeverity(element.getAttribute(KEY_SEVERITY));

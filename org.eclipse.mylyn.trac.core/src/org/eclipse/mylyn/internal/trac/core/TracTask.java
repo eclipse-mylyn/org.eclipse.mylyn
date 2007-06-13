@@ -11,12 +11,12 @@
 
 package org.eclipse.mylyn.internal.trac.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Steffen Pingel
  */
-public class TracTask extends AbstractRepositoryTask {
+public class TracTask extends AbstractTask {
 
 	public enum PriorityLevel {
 		BLOCKER, CRITICAL, MAJOR, MINOR, TRIVIAL;
@@ -152,7 +152,7 @@ public class TracTask extends AbstractRepositoryTask {
 				return priority.toString();
 			}
 		}
-		return AbstractRepositoryTask.PriorityLevel.P3.toString();
+		return AbstractTask.PriorityLevel.P3.toString();
 	}
 
 	public static boolean isCompleted(String tracStatus) {

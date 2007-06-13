@@ -26,7 +26,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -109,7 +109,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		boolean overwrite = exportPage.overwrite();
 		boolean zip = exportPage.zip();
 		
-		Collection<ITask> taskContextsToExport = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+		Collection<AbstractTask> taskContextsToExport = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 
 		// Get file paths to check for existence
 		String destDir = exportPage.getDestinationDirectory();
@@ -154,7 +154,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 				}
 
 				if (exportPage.exportTaskContexts()) {
-					for (ITask task : taskContextsToExport) {
+					for (AbstractTask task : taskContextsToExport) {
 						File contextFile = ContextCorePlugin.getContextManager()
 								.getFileForContext(task.getHandleIdentifier());
 						File destTaskFile = new File(destDir + File.separator + contextFile.getName());

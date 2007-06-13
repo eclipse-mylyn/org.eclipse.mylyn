@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -54,7 +54,7 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
-	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, ITaskAttachment attachment,
+	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		if (!TracRepositoryConnector.hasAttachmentSupport(repository, task)) {
 			throw new CoreException(new RepositoryStatus(repository.getUrl(), IStatus.INFO, TracCorePlugin.PLUGIN_ID,
@@ -80,14 +80,14 @@ public class TracAttachmentHandler extends AbstractAttachmentHandler {
 		}
 	}
 
-	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
 		if (repository == null) {
 			return false;
 		}
 		return TracRepositoryConnector.hasAttachmentSupport(repository, task);
 	}
 
-	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
 		if (repository == null) {
 			return false;
 		}

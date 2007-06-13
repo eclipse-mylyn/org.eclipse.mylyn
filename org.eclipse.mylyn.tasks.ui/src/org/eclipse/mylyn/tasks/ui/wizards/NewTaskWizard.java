@@ -19,7 +19,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -68,10 +68,10 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			return false;
 		}
 
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractRepositoryTask.DEFAULT_TASK_KIND);
+		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractTask.DEFAULT_TASK_KIND);
 		
 		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getKind(),
-				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractRepositoryTask.DEFAULT_TASK_KIND);
+				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
 		taskData.setNew(true);
 
 		try {

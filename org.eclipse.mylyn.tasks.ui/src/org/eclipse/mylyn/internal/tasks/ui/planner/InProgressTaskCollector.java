@@ -20,7 +20,7 @@ import java.util.Set;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Collects tasks that are not complete but have been worked on during the
@@ -31,11 +31,11 @@ import org.eclipse.mylyn.tasks.core.ITask;
  */
 public class InProgressTaskCollector implements ITaskCollector {
 
-	private Map<String, ITask> inProgressTasks = new HashMap<String, ITask>();
+	private Map<String, AbstractTask> inProgressTasks = new HashMap<String, AbstractTask>();
 
 	private Date periodStartDate;
 
-	protected static boolean hasActivitySince(ITask task, Date startDate) {
+	protected static boolean hasActivitySince(AbstractTask task, Date startDate) {
 		IInteractionContext mylarContext = ContextCorePlugin.getContextManager().loadContext(task.getHandleIdentifier());
 		if (mylarContext != null) {
 			List<InteractionEvent> events = mylarContext.getInteractionHistory();
@@ -57,15 +57,15 @@ public class InProgressTaskCollector implements ITaskCollector {
 		return "Tasks in Progress";
 	}
 
-	public void consumeTask(ITask task) {
+	public void consumeTask(AbstractTask task) {
 		if (!task.isCompleted() && hasActivitySince(task, periodStartDate)
 				&& !inProgressTasks.containsKey(task.getHandleIdentifier())) {
 			inProgressTasks.put(task.getHandleIdentifier(), task);
 		}
 	}
 
-	public Set<ITask> getTasks() {
-		Set<ITask> tasks = new HashSet<ITask>();
+	public Set<AbstractTask> getTasks() {
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.addAll(inProgressTasks.values());
 		return tasks;
 	}

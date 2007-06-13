@@ -17,7 +17,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -40,14 +40,14 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 
 	@Override
 	protected void addActionsToMenu() {
-		List<ITask> tasks = taskHistory.getPreviousTasks();
+		List<AbstractTask> tasks = taskHistory.getPreviousTasks();
 
 		if (tasks.size() > MAX_ITEMS_TO_DISPLAY) {
 			tasks = tasks.subList(tasks.size() - MAX_ITEMS_TO_DISPLAY, tasks.size());
 		}
 
 		for (int i = tasks.size() - 1; i >= 0; i--) {
-			ITask currTask = tasks.get(i);
+			AbstractTask currTask = tasks.get(i);
 			Action taskNavAction = new TaskNavigateAction(currTask);
 			ActionContributionItem item = new ActionContributionItem(taskNavAction);
 			if (currTask.isActive()) {
@@ -56,7 +56,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 			item.fill(dropDownMenu, -1);
 		}
 
-		ITask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (active != null) {
 			Separator separator = new Separator();
 			separator.fill(dropDownMenu, -1);
@@ -71,7 +71,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 	@Override
 	public void run() {
 		if (taskHistory.hasPrevious()) {
-			ITask previousTask = taskHistory.getPreviousTask();
+			AbstractTask previousTask = taskHistory.getPreviousTask();
 			new TaskActivateAction().run(previousTask);
 			setButtonStatus();
 			// view.refreshAndFocus(false);
@@ -91,7 +91,7 @@ public class PreviousTaskDropDownAction extends TaskNavigateDropDownAction {
 		
 		@Override
 		public void run() {
-			ITask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+			AbstractTask active = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 			if (active != null) {
 				TasksUiPlugin.getTaskListManager().deactivateTask(active);
 			}

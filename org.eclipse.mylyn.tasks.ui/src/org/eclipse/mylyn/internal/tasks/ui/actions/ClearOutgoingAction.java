@@ -16,9 +16,9 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -32,15 +32,15 @@ public class ClearOutgoingAction extends Action {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.discard";
 
-	private List<ITaskListElement> selectedElements;
+	private List<AbstractTaskListElement> selectedElements;
 
-	public ClearOutgoingAction(List<ITaskListElement> selectedElements) {
+	public ClearOutgoingAction(List<AbstractTaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
 		setId(ID);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
+			AbstractTask task = (AbstractTask) selectedElements.get(0);
 			setEnabled(task.getSyncState().equals(RepositoryTaskSyncState.OUTGOING));
 		} else {
 			setEnabled(false);
@@ -49,12 +49,12 @@ public class ClearOutgoingAction extends Action {
 
 	@Override
 	public void run() {
-		ArrayList<AbstractRepositoryTask> toClear = new ArrayList<AbstractRepositoryTask>();
+		ArrayList<AbstractTask> toClear = new ArrayList<AbstractTask>();
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof AbstractRepositoryTask
-					&& ((AbstractRepositoryTask) selectedObject).getSyncState()
+			if (selectedObject instanceof AbstractTask
+					&& ((AbstractTask) selectedObject).getSyncState()
 							.equals(RepositoryTaskSyncState.OUTGOING)) {
-				toClear.add(((AbstractRepositoryTask) selectedObject));
+				toClear.add(((AbstractTask) selectedObject));
 			}
 		}
 		if (toClear.size() > 0) {

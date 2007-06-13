@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListDropAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -66,7 +66,7 @@ public class TaskListDnDTest extends TestCase {
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		Set<ITask> tasks = manager.getTaskList().getRootTasks();
+		Set<AbstractTask> tasks = manager.getTaskList().getRootTasks();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.iterator().next().getTaskUrl());

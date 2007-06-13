@@ -11,12 +11,12 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves
  */
-public class LocalTask extends AbstractRepositoryTask {
+public class LocalTask extends AbstractTask {
 
 	public LocalTask(String taskId, String summary) {
 		super(LocalRepositoryConnector.REPOSITORY_URL, taskId, summary);

@@ -14,20 +14,20 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
  */
-public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
+public class MarkTaskUnreadAction extends AbstractTaskAction {
 
 	private static final String ACTION_NAME = "Unread";
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.mark.unread";
 
-	public MarkTaskUnreadAction(List<ITaskListElement> selectedElements) {
+	public MarkTaskUnreadAction(List<AbstractTaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText(ACTION_NAME);
@@ -37,8 +37,8 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 		if (containsArchiveContainer(selectedElements)) {
 			setEnabled(false);
 		} else {
-			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
-				AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
+			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
+				AbstractTask task = (AbstractTask) selectedElements.get(0);
 				setEnabled(!task.isLocal());
 			} else {
 				setEnabled(true);
@@ -47,7 +47,7 @@ public class MarkTaskUnreadAction extends AbstractRepositoryTasksAction {
 	}
 
 	@Override
-	protected void performActionOnTask(AbstractRepositoryTask repositoryTask) {
+	protected void performActionOnTask(AbstractTask repositoryTask) {
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, false);
 	}
 

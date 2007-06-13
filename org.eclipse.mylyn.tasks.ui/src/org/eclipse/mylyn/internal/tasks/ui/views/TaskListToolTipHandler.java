@@ -25,14 +25,14 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -153,8 +153,8 @@ public class TaskListToolTipHandler {
 			incommingTipLabelText.setLayoutData(textGridData);
 		}
 
-		ITaskListElement element = getTaskListElement(widget);
-		if (element instanceof AbstractTaskContainer) {
+		AbstractTaskListElement element = getTaskListElement(widget);
+		if (element instanceof AbstractTaskListElement) {
 			Composite progressComposite = new Composite(tipShell, SWT.NONE);
 			GridLayout progressLayout = new GridLayout(1, false);
 			progressLayout.marginWidth = 2;
@@ -173,13 +173,13 @@ public class TaskListToolTipHandler {
 	}
 
 	private String updateContainerProgressBar(WorkweekProgressBar taskProgressBar, Object object) {
-		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
+		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskListElement) {
 			String text = "";
-			AbstractTaskContainer container = (AbstractTaskContainer) object;
+			AbstractTaskListElement container = (AbstractTaskListElement) object;
 						
 			int total = container.getChildren().size();
 			int completed = 0;
-			for (ITask task : container.getChildren()) {
+			for (AbstractTask task : container.getChildren()) {
 				if (task.isCompleted()) {
 					completed++;
 				}
@@ -190,7 +190,7 @@ public class TaskListToolTipHandler {
 				total = 0;
 				completed = 0;
 				total += query.getHits().size();
-				for (AbstractRepositoryTask hit : query.getHits()) {
+				for (AbstractTask hit : query.getHits()) {
 					if (hit.isCompleted()) {
 						completed++;
 					}
@@ -205,14 +205,14 @@ public class TaskListToolTipHandler {
 		}
 	}
 
-	private ITaskListElement getTaskListElement(Object hoverObject) {
+	private AbstractTaskListElement getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
 			Object data = ((Widget) hoverObject).getData();
 			if (data != null) {
-				if (data instanceof ITaskListElement) {
-					return (ITaskListElement) data;
+				if (data instanceof AbstractTaskListElement) {
+					return (AbstractTaskListElement) data;
 				} else if (data instanceof IAdaptable) {
-					return (ITaskListElement) ((IAdaptable) data).getAdapter(ITaskListElement.class);
+					return (AbstractTaskListElement) ((IAdaptable) data).getAdapter(AbstractTaskListElement.class);
 				}
 			}
 		}
@@ -220,7 +220,7 @@ public class TaskListToolTipHandler {
 	}
 
 	protected String getBasicToolTextTip(Object object) {
-		ITaskListElement element = getTaskListElement(object);
+		AbstractTaskListElement element = getTaskListElement(object);
 		String tooltip = "";
 		String priority = "";
 
@@ -263,9 +263,9 @@ public class TaskListToolTipHandler {
 			return tooltip;
 		}
 
-		if (element instanceof AbstractRepositoryTask) {
+		if (element instanceof AbstractTask) {
 
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+			AbstractTask repositoryTask = (AbstractTask) element;
 
 			tooltip += (element).getSummary();
 			if (repositoryTask != null) {
@@ -295,18 +295,18 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private String getActivityText(ITaskListElement element) {
+	private String getActivityText(AbstractTaskListElement element) {
 
-		if (element != null && element instanceof ITask) {
+		if (element != null && element instanceof AbstractTask) {
 			try {
 				String result = "";
-				Date date = ((ITask) element).getScheduledForDate();
+				Date date = ((AbstractTask) element).getScheduledForDate();
 				if (date != null) {
 					result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.LONG).format(date) + " ("
 							+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + ")\n";
 				}
 
-				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((ITask) element);
+				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((AbstractTask) element);
 				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
 				if (!elapsedTimeString.equals("")) {
 					result += "Elapsed: " + elapsedTimeString + "\n";
@@ -319,10 +319,10 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	private String getIncommingText(ITaskListElement element) {
-		if (element instanceof AbstractRepositoryTask) {
+	private String getIncommingText(AbstractTaskListElement element) {
+		if (element instanceof AbstractTask) {
 
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+			AbstractTask repositoryTask = (AbstractTask) element;
 
 			if (repositoryTask != null && repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
@@ -347,7 +347,7 @@ public class TaskListToolTipHandler {
 	}
 
 	protected Image getImage(Object object) {
-		ITaskListElement element = getTaskListElement(object);
+		AbstractTaskListElement element = getTaskListElement(object);
 		if (object instanceof Control) {
 			return (Image) ((Control) object).getData("TIP_IMAGE");
 		} else if (element instanceof AbstractRepositoryQuery) {
@@ -357,8 +357,8 @@ public class TaskListToolTipHandler {
 			if (connector != null) {
 				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
 			}
-		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+		} else if (element instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) element;
 
 			if (repositoryTask != null) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
@@ -482,7 +482,7 @@ public class TaskListToolTipHandler {
 							scheduledText != null, incommingText != null);
 				}
 				
-				ITaskListElement element = getTaskListElement(widget);
+				AbstractTaskListElement element = getTaskListElement(widget);
 				String progressText = updateContainerProgressBar(taskProgressBar, element);
 
 				String dateText = "";

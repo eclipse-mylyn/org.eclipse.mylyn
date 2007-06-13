@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves
@@ -30,7 +30,7 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 	}
 
 	public Object[] getElements(Object inputElement) {
-		List<ITask> allTasks = new ArrayList<ITask>();
+		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
 		allTasks.addAll(editorInput.getCompletedTasks());
 		allTasks.addAll(editorInput.getInProgressTasks());
 		return allTasks.toArray();
@@ -45,12 +45,12 @@ public class TaskActivityContentProvider implements IStructuredContentProvider, 
 		// ignore
 	}
 
-	public void removeTask(ITask task) {
+	public void removeTask(AbstractTask task) {
 		editorInput.removeCompletedTask(task);
 		editorInput.removeInProgressTask(task);
 	}
 
-	public void addTask(ITask task) {
+	public void addTask(AbstractTask task) {
 		// ignore
 	}
 

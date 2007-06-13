@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -50,11 +50,11 @@ public abstract class TaskNavigateDropDownAction extends Action implements IMenu
 	 */
 	public class TaskNavigateAction extends Action {
 
-		private ITask targetTask;
+		private AbstractTask targetTask;
 
 		private static final int MAX_LABEL_LENGTH = 40;
 
-		public TaskNavigateAction(ITask task) {
+		public TaskNavigateAction(AbstractTask task) {
 			targetTask = task;
 			String taskDescription = task.getSummary();
 			if (taskDescription.length() > MAX_LABEL_LENGTH) {

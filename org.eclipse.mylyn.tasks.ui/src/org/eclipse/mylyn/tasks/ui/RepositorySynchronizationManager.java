@@ -27,12 +27,12 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -51,15 +51,15 @@ public class RepositorySynchronizationManager {
 
 	/**
 	 * Synchronize a single task. Note that if you have a collection of tasks to
-	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractRepositoryTask>
+	 * synchronize with this connector then you should call synchronize(Set<Set<AbstractTask>
 	 * repositoryTasks, ...)
 	 * 
 	 * @param listener
 	 *            can be null
 	 */
-	public final Job synchronize(AbstractRepositoryConnector connector, AbstractRepositoryTask repositoryTask,
+	public final Job synchronize(AbstractRepositoryConnector connector, AbstractTask repositoryTask,
 			boolean forceSynch, IJobChangeListener listener) {
-		Set<AbstractRepositoryTask> toSync = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> toSync = new HashSet<AbstractTask>();
 		toSync.add(repositoryTask);
 		return synchronize(connector, toSync, forceSynch, listener);
 	}
@@ -68,7 +68,7 @@ public class RepositorySynchronizationManager {
 	 * @param listener
 	 *            can be null
 	 */
-	public final Job synchronize(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks,
+	public final Job synchronize(AbstractRepositoryConnector connector, Set<AbstractTask> repositoryTasks,
 			boolean forceSynch, final IJobChangeListener listener) {
 
 		final SynchronizeTaskJob synchronizeJob = new SynchronizeTaskJob(connector, repositoryTasks);
@@ -78,7 +78,7 @@ public class RepositorySynchronizationManager {
 		if (listener != null) {
 			synchronizeJob.addJobChangeListener(listener);
 		}
-		for (AbstractRepositoryTask repositoryTask : repositoryTasks) {
+		for (AbstractTask repositoryTask : repositoryTasks) {
 			repositoryTask.setCurrentlySynchronizing(true);
 		}
 		if (!forceSyncExecForTesting) {
@@ -111,7 +111,7 @@ public class RepositorySynchronizationManager {
 	public final Job synchronize(AbstractRepositoryConnector connector,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
 			long delay, boolean syncChangedTasks, boolean userForcedSync) {
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
 		job.setSynchChangedTasks(syncChangedTasks);
 		job.setForced(userForcedSync);
@@ -167,7 +167,7 @@ public class RepositorySynchronizationManager {
 
 		private TaskRepository repository;
 
-		private Set<AbstractRepositoryTask> changedTasks;
+		private Set<AbstractTask> changedTasks;
 
 		public SynchronizeChangedTasksJob(AbstractRepositoryConnector connector, TaskRepository repository) {
 			super("Get Changed Tasks");
@@ -177,8 +177,8 @@ public class RepositorySynchronizationManager {
 
 		@Override
 		public IStatus run(IProgressMonitor monitor) {
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-			Set<AbstractRepositoryTask> repositoryTasks = Collections.unmodifiableSet(taskList
+			getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+			Set<AbstractTask> repositoryTasks = Collections.unmodifiableSet(taskList
 					.getRepositoryTasks(repository.getUrl()));
 
 			try {
@@ -215,7 +215,7 @@ public class RepositorySynchronizationManager {
 	 * @param modifiedAttributes
 	 *            attributes that have changed during edit session
 	 */
-	public synchronized void saveOutgoing(AbstractRepositoryTask repositoryTask,
+	public synchronized void saveOutgoing(AbstractTask repositoryTask,
 			Set<RepositoryTaskAttribute> modifiedAttributes) {
 		repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 		TasksUiPlugin.getDefault().getTaskDataManager().saveEdits(repositoryTask.getHandleIdentifier(),
@@ -228,7 +228,7 @@ public class RepositorySynchronizationManager {
 	 * 
 	 * @return true if call results in change of sync state
 	 */
-	public synchronized boolean saveIncoming(final AbstractRepositoryTask repositoryTask,
+	public synchronized boolean saveIncoming(final AbstractTask repositoryTask,
 			final RepositoryTaskData newTaskData, boolean forceSync) {
 		final RepositoryTaskSyncState startState = repositoryTask.getSyncState();
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
@@ -253,7 +253,7 @@ public class RepositorySynchronizationManager {
 			/**
 			 * If we set both so we don't see our own changes
 			 * 
-			 * @see RepositorySynchronizationManager.setTaskRead(AbstractRepositoryTask,
+			 * @see RepositorySynchronizationManager.setTaskRead(AbstractTask,
 			 *      boolean)
 			 */
 			// TasksUiPlugin.getDefault().getTaskDataManager().setOldTaskData(repositoryTask.getHandleIdentifier(),
@@ -295,12 +295,12 @@ public class RepositorySynchronizationManager {
 		return startState != repositoryTask.getSyncState();
 	}
 
-	public void saveOffline(AbstractRepositoryTask task, RepositoryTaskData taskData) {
+	public void saveOffline(AbstractTask task, RepositoryTaskData taskData) {
 		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(task.getHandleIdentifier(), taskData);
 	}
 
 	/** public for testing purposes */
-	public boolean checkHasIncoming(AbstractRepositoryTask repositoryTask, RepositoryTaskData newData) {
+	public boolean checkHasIncoming(AbstractTask repositoryTask, RepositoryTaskData newData) {
 		String lastModified = repositoryTask.getLastSyncDateStamp();
 
 		RepositoryTaskAttribute modifiedDateAttribute = newData.getAttribute(RepositoryTaskAttribute.DATE_MODIFIED);
@@ -324,7 +324,7 @@ public class RepositorySynchronizationManager {
 	 * @param read -
 	 *            true to mark as read, false to mark as unread
 	 */
-	public void setTaskRead(AbstractRepositoryTask repositoryTask, boolean read) {
+	public void setTaskRead(AbstractTask repositoryTask, boolean read) {
 		TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 				repositoryTask.getHandleIdentifier());
@@ -362,7 +362,7 @@ public class RepositorySynchronizationManager {
 		}
 	}
 
-	public void discardOutgoing(AbstractRepositoryTask repositoryTask) {
+	public void discardOutgoing(AbstractTask repositoryTask) {
 		TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		dataManager.discardEdits(repositoryTask.getHandleIdentifier());
 		repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
@@ -411,7 +411,7 @@ public class RepositorySynchronizationManager {
 		}
 	}
 
-	// public void mergeIncoming(AbstractRepositoryTask task) {
+	// public void mergeIncoming(AbstractTask task) {
 	// RepositoryTaskData newOutgoing =
 	// TasksUiPlugin.getDefault().getTaskDataManager().merge(
 	// task.getHandleIdentifier());

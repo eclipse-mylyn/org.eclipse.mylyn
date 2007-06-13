@@ -14,10 +14,9 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -39,8 +38,8 @@ class TaskListCellModifier implements ICellModifier {
 	public Object getValue(Object element, String property) {
 		try {
 			int columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			if (element instanceof ITaskListElement) {
-				final ITaskListElement taskListElement = (ITaskListElement) element;
+			if (element instanceof AbstractTaskListElement) {
+				final AbstractTaskListElement taskListElement = (AbstractTaskListElement) element;
 				switch (columnIndex) {
 				case 0:
 					return taskListElement.getSummary();
@@ -60,13 +59,13 @@ class TaskListCellModifier implements ICellModifier {
 		int columnIndex = -1;
 		try {
 			columnIndex = Arrays.asList(this.taskListView.columnNames).indexOf(property);
-			 if (((TreeItem) element).getData() instanceof ITask) {
-					final ITaskListElement taskListElement = (ITaskListElement) ((TreeItem) element).getData();
-					ITask task = (ITask) taskListElement;
+			 if (((TreeItem) element).getData() instanceof AbstractTask) {
+					final AbstractTaskListElement taskListElement = (AbstractTaskListElement) ((TreeItem) element).getData();
+					AbstractTask task = (AbstractTask) taskListElement;
 					switch (columnIndex) {
 					case 0:
-						if (!(task instanceof AbstractRepositoryTask)) {
-							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractRepositoryTask) task,
+						if (!(task instanceof AbstractTask)) {
+							TasksUiPlugin.getTaskListManager().getTaskList().renameTask((AbstractTask) task,
 									((String) value).trim());
 						}
 						break;
@@ -95,10 +94,10 @@ class TaskListCellModifier implements ICellModifier {
 		this.taskListView.getViewer().refresh();
 	}
 
-	public void toggleTaskActivation(ITaskListElement taskListElement) {
-		ITask task = null;
-		if (taskListElement instanceof ITask) {
-			task = (ITask) taskListElement;
+	public void toggleTaskActivation(AbstractTaskListElement taskListElement) {
+		AbstractTask task = null;
+		if (taskListElement instanceof AbstractTask) {
+			task = (AbstractTask) taskListElement;
 		}
 
 		if (task != null) {

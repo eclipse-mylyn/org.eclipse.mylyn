@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -53,15 +53,15 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 	}
 
 	private void runWithSelection(final Object selectedObject) {
-		AbstractRepositoryTask repositoryTask = null;
+		AbstractTask repositoryTask = null;
 		if (selectedObject instanceof TaskEditor) {
 			TaskEditor editor = (TaskEditor) selectedObject;
-			ITask task = editor.getTaskEditorInput().getTask();
-			if (task instanceof AbstractRepositoryTask) {
-				repositoryTask = (AbstractRepositoryTask) task;
+			AbstractTask task = editor.getTaskEditorInput().getTask();
+			if (task instanceof AbstractTask) {
+				repositoryTask = (AbstractTask) task;
 			}
-		} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
-			AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) selectedObject;
+		} else if (selectedObject instanceof AbstractTaskEditor) {
+			AbstractTaskEditor editor = (AbstractTaskEditor) selectedObject;
 			repositoryTask = editor.getRepositoryTask();
 		}
 
@@ -80,8 +80,8 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 										if (selectedObject instanceof TaskEditor) {
 											TaskEditor editor = (TaskEditor) selectedObject;
 											editor.refreshEditorContents();
-										} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
-											((AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
+										} else if (selectedObject instanceof AbstractTaskEditor) {
+											((AbstractTaskEditor) selectedObject).refreshEditor();
 										}
 									}
 								});

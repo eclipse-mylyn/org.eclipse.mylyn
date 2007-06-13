@@ -15,8 +15,8 @@ package org.eclipse.mylyn.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorInputFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
@@ -30,13 +30,13 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 
 	private static final int MAX_LABEL_LENGTH = 60;
 
-	private ITask task;
+	private AbstractTask task;
 
 	private String summary;
 
 	private boolean newTask = false;
 
-	public TaskEditorInput(ITask task, boolean newTask) {
+	public TaskEditorInput(AbstractTask task, boolean newTask) {
 		this.newTask = newTask;
 		this.task = task;
 		summary = truncateDescription(task.getSummary());
@@ -106,7 +106,7 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	/**
 	 * @return Returns the task.
 	 */
-	public ITask getTask() {
+	public AbstractTask getTask() {
 		return task;
 	}
 
@@ -114,8 +114,8 @@ public class TaskEditorInput implements IEditorInput, IPersistableElement {
 	 * @return Returns the label.
 	 */
 	public String getLabel() {
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask)task;
+		if (task instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask)task;
 			String idLabel = repositoryTask.getTaskKey();
 			
 			summary = "";

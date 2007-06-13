@@ -18,8 +18,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
@@ -45,8 +45,8 @@ public class OpenTaskListElementAction extends Action {
 		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 			Object element = (Object) iterator.next();
 //			if (element instanceof ITaskListElement && !(element instanceof AbstractTaskContainer)) {
-			if (element instanceof ITask) {
-				TasksUiUtil.refreshAndOpenTaskListElement((ITaskListElement) element);
+			if (element instanceof AbstractTask) {
+				TasksUiUtil.refreshAndOpenTaskListElement((AbstractTaskListElement) element);
 			}
 		}
 	}

@@ -15,9 +15,9 @@ import java.util.Set;
 
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -86,29 +86,29 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
 
-			public void containerAdded(AbstractTaskContainer container) {
+			public void containerAdded(AbstractTaskListElement container) {
 			}
 
-			public void containerDeleted(AbstractTaskContainer container) {
+			public void containerDeleted(AbstractTaskListElement container) {
 			}
 
-			public void containerInfoChanged(AbstractTaskContainer container) {
+			public void containerInfoChanged(AbstractTaskListElement container) {
 			}
 
-			public void localInfoChanged(ITask task) {
+			public void localInfoChanged(AbstractTask task) {
 				updateTaskProgressBar();
 			}
 
-			public void repositoryInfoChanged(ITask task) {
+			public void repositoryInfoChanged(AbstractTask task) {
 			}
 
-			public void taskAdded(ITask task) {
+			public void taskAdded(AbstractTask task) {
 			}
 
-			public void taskDeleted(ITask task) {
+			public void taskDeleted(AbstractTask task) {
 			}
 
-			public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+			public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 			}
 		});
 
@@ -121,16 +121,16 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			public void calendarChanged() {
 			}
 
-			public void taskActivated(ITask task) {
+			public void taskActivated(AbstractTask task) {
 			}
 
-			public void taskDeactivated(ITask task) {
+			public void taskDeactivated(AbstractTask task) {
 			}
 
 			public void taskListRead() {
 			}
 
-			public void tasksActivated(List<ITask> tasks) {
+			public void tasksActivated(List<AbstractTask> tasks) {
 			}
 
 		});
@@ -142,12 +142,12 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 			return;
 		}
 
-		Set<ITask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
+		Set<AbstractTask> tasksThisWeek = TasksUiPlugin.getTaskListManager().getScheduledForThisWeek();
 		totalTasks = tasksThisWeek.size();
 		completeTime = 0;
 		completeTasks = 0;
 		incompleteTime = 0;
-		for (ITask task : tasksThisWeek) {
+		for (AbstractTask task : tasksThisWeek) {
 			if (task.isCompleted()) {
 				completeTasks++;
 				if (task.getEstimateTimeHours() > 0) {
@@ -181,7 +181,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
-		ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
@@ -205,7 +205,7 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 		return activeTaskLabel;
 	}
 
-	public void indicateActiveTask(ITask task) {
+	public void indicateActiveTask(AbstractTask task) {
 		if (filterComposite.isDisposed()) {
 			return;
 		}

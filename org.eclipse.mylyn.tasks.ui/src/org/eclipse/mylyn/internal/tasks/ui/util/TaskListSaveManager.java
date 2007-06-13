@@ -31,8 +31,8 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -86,7 +86,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			TaskListManager taskListManager = TasksUiPlugin.getTaskListManager();
 			if (async) {
 				if (saveContext) {
-					for (ITask task : taskListManager.getTaskList().getActiveTasks()) {
+					for (AbstractTask task : taskListManager.getTaskList().getActiveTasks()) {
 						taskListSaverJob.addTaskContext(task);
 					}
 				}
@@ -95,7 +95,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 				taskListSaverJob.waitSaveCompleted();
 				InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
 				if (saveContext) {
-					for (ITask task : new ArrayList<ITask>(taskListManager.getTaskList().getActiveTasks())) {
+					for (AbstractTask task : new ArrayList<AbstractTask>(taskListManager.getTaskList().getActiveTasks())) {
 						contextManager.saveContext(task.getHandleIdentifier());
 					}
 				}
@@ -208,23 +208,23 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		}
 	}
 
-	public void taskActivated(ITask task) {
+	public void taskActivated(AbstractTask task) {
 		// ignore
 	}
 
-	public void tasksActivated(List<ITask> tasks) {
+	public void tasksActivated(List<AbstractTask> tasks) {
 		// ignore
 	}
 
-	public void taskDeactivated(ITask task) {
+	public void taskDeactivated(AbstractTask task) {
 		saveTaskList(true, true);
 	}
 
-	public void localInfoChanged(ITask task) {
+	public void localInfoChanged(AbstractTask task) {
 		saveTaskList(false, true);
 	}
 
-	public void repositoryInfoChanged(ITask task) {
+	public void repositoryInfoChanged(AbstractTask task) {
 		// ignore
 	}
 
@@ -240,23 +240,23 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 // // saveTimer.setForceSyncExec(on);
 // }
 
-	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+	public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 		saveTaskList(false, true);
 	}
 
-	public void taskDeleted(ITask task) {
+	public void taskDeleted(AbstractTask task) {
 		saveTaskList(false, true);
 	}
 
-	public void containerAdded(AbstractTaskContainer container) {
+	public void containerAdded(AbstractTaskListElement container) {
 		saveTaskList(false, true);
 	}
 
-	public void containerDeleted(AbstractTaskContainer container) {
+	public void containerDeleted(AbstractTaskListElement container) {
 		saveTaskList(false, true);
 	}
 
-	public void taskAdded(ITask task) {
+	public void taskAdded(AbstractTask task) {
 		saveTaskList(false, true);
 	}
 
@@ -265,7 +265,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		return saveTimer;
 	}
 
-	public void containerInfoChanged(AbstractTaskContainer container) {
+	public void containerInfoChanged(AbstractTaskListElement container) {
 		saveTaskList(false, true);
 	}
 
@@ -275,7 +275,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 
 	private class TaskListSaverJob extends Job {
 
-		private final Queue<ITask> taskQueue = new LinkedList<ITask>();
+		private final Queue<AbstractTask> taskQueue = new LinkedList<AbstractTask>();
 
 		private volatile boolean saveRequested = false;
 
@@ -294,7 +294,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 					saveCompleted = false;
 					InteractionContextManager contextManager = ContextCorePlugin.getContextManager();
 					while (!taskQueue.isEmpty()) {
-						ITask task = taskQueue.poll();
+						AbstractTask task = taskQueue.poll();
 						if (task != null) {
 							contextManager.saveContext(task.getHandleIdentifier());
 						}
@@ -316,7 +316,7 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 			}
 		}
 
-		void addTaskContext(ITask task) {
+		void addTaskContext(AbstractTask task) {
 			taskQueue.add(task);
 		}
 

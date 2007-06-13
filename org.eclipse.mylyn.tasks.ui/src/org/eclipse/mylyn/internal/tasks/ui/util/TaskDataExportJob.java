@@ -32,7 +32,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -63,7 +63,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	private File destZipFile = null;
 
-	private Collection<ITask> tasks;
+	private Collection<AbstractTask> tasks;
 
 	/** export all data */
 	public TaskDataExportJob(String destinationDirectory, boolean zipIt, String zipFileName) {
@@ -73,7 +73,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 
 	/** export specified data */
 	public TaskDataExportJob(String destinationDirectory, boolean exportTaskList, boolean exportActivationHistory,
-			boolean exportTaskContexts, boolean zipIt, String zipFileName, Collection<ITask> taskContextsToExport) {
+			boolean exportTaskContexts, boolean zipIt, String zipFileName, Collection<AbstractTask> taskContextsToExport) {
 		this.zipFileName = zipFileName;
 		this.zip = zipIt;
 		this.exportTaskList = exportTaskList;
@@ -193,7 +193,7 @@ public class TaskDataExportJob implements IRunnableWithProgress {
 		if (exportTaskContexts) {
 			// Prevent many repeated error messages
 			boolean errorDisplayed = false;
-			for (ITask task : tasks) {
+			for (AbstractTask task : tasks) {
 
 				if (!ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())) {
 					continue; // Tasks without a context have no file to

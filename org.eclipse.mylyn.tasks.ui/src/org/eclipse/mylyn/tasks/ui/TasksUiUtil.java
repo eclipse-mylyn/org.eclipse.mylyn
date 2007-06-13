@@ -46,15 +46,15 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -88,7 +88,7 @@ public class TasksUiUtil {
 	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
 		try {
 			if (useRichEditorIfAvailable) {
-				AbstractRepositoryTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
 				if (task != null) {
 					refreshAndOpenTaskListElement(task);
 				} else {
@@ -132,7 +132,7 @@ public class TasksUiUtil {
 
 	public static boolean openRepositoryTask(TaskRepository repository, String taskId) {
 		boolean opened = false;
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
 		if (task != null) {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
@@ -154,7 +154,7 @@ public class TasksUiUtil {
 	 */
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
-		ITask task = null;
+		AbstractTask task = null;
 		// TODO: move, must current be first due to JIRA Connector use of key
 		if (fullUrl != null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
@@ -190,21 +190,21 @@ public class TasksUiUtil {
 		return opened;
 	}
 
-	public static void refreshAndOpenTaskListElement(ITaskListElement element) {
-		if (element instanceof ITask || element instanceof DateRangeActivityDelegate) {
-			final ITask task;
+	public static void refreshAndOpenTaskListElement(AbstractTaskListElement element) {
+		if (element instanceof AbstractTask || element instanceof DateRangeActivityDelegate) {
+			final AbstractTask task;
 			if (element instanceof DateRangeActivityDelegate) {
 				task = ((DateRangeActivityDelegate) element).getCorrespondingTask();
 			} else {
-				task = (ITask) element;
+				task = (AbstractTask) element;
 			}
 
 			
 			if(task instanceof LocalTask) {			
 				TasksUiUtil.openEditor(task, false);
-			} else if (task instanceof AbstractRepositoryTask) {
+			} else if (task instanceof AbstractTask) {
 
-				final AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+				final AbstractTask repositoryTask = (AbstractTask) task;
 				String repositoryKind = repositoryTask.getRepositoryKind();
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
@@ -242,7 +242,7 @@ public class TasksUiUtil {
 				TasksUiUtil.openEditor(task, false);
 			}
 		} else if (element instanceof TaskCategory) {
-			TasksUiUtil.openEditor((AbstractTaskContainer) element);
+			TasksUiUtil.openEditor((TaskCategory) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(query.getRepositoryKind());
@@ -250,14 +250,14 @@ public class TasksUiUtil {
 		}
 	}
 
-	public static void openEditor(final ITask task, boolean newTask) {
+	public static void openEditor(final AbstractTask task, boolean newTask) {
 		openEditor(task, true, newTask);
 	}
 
-	private static String getTaskEditorId(final ITask task) {
+	private static String getTaskEditorId(final AbstractTask task) {
 		String taskEditorId = TaskEditor.ID_EDITOR;
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+		if (task instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) task;
 			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask
 					.getRepositoryKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
@@ -273,7 +273,7 @@ public class TasksUiUtil {
 	 * @param pageId
 	 *            the taskId of the page to activate after opening
 	 */
-	public static void openEditor(ITask task, String pageId) {
+	public static void openEditor(AbstractTask task, String pageId) {
 		final IEditorInput editorInput = new TaskEditorInput(task, false);
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IEditorPart part = openEditor(editorInput, getTaskEditorId(task), window.getActivePage());
@@ -285,7 +285,7 @@ public class TasksUiUtil {
 	/**
 	 * Set asyncExec false for testing purposes.
 	 */
-	public static void openEditor(final ITask task, boolean asyncExec, final boolean newTask) {
+	public static void openEditor(final AbstractTask task, boolean asyncExec, final boolean newTask) {
 
 		final boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL);
@@ -320,8 +320,8 @@ public class TasksUiUtil {
 
 							@Override
 							protected IStatus run(IProgressMonitor monitor) {
-								if (task instanceof AbstractRepositoryTask) {
-									AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+								if (task instanceof AbstractTask) {
+									AbstractTask repositoryTask = (AbstractTask) task;
 									if (!wasOpen) {
 										TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask, true);
 									}
@@ -354,8 +354,8 @@ public class TasksUiUtil {
 					IWorkbenchPage page = window.getActivePage();
 					openEditor(editorInput, taskEditorId, page);
 				}
-				if (task instanceof AbstractRepositoryTask) {
-					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractRepositoryTask) task, true);
+				if (task instanceof AbstractTask) {
+					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractTask) task, true);
 				}
 			} else {
 				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
@@ -366,10 +366,10 @@ public class TasksUiUtil {
 	/**
 	 * If task is already open and has incoming, must force refresh in place
 	 */
-	private static boolean refreshIfOpen(ITask task, IEditorInput editorInput) {
-		if (task instanceof AbstractRepositoryTask) {
-			if (((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.INCOMING
-					|| ((AbstractRepositoryTask) task).getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+	private static boolean refreshIfOpen(AbstractTask task, IEditorInput editorInput) {
+		if (task instanceof AbstractTask) {
+			if (((AbstractTask) task).getSyncState() == RepositoryTaskSyncState.INCOMING
+					|| ((AbstractTask) task).getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 				for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
 						editor.refreshEditorContents();
@@ -391,7 +391,7 @@ public class TasksUiUtil {
 		return null;
 	}
 
-	public static void openEditor(AbstractTaskContainer category) {
+	public static void openEditor(TaskCategory category) {
 		final IEditorInput input = new CategoryEditorInput(category);
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -439,7 +439,7 @@ public class TasksUiUtil {
 					TaskEditor taskEditor = (TaskEditor) editor;
 					if (taskEditor.getEditorInput() instanceof TaskEditorInput) {
 						TaskEditorInput input = (TaskEditorInput) taskEditor.getEditorInput();
-						if (input.getTask() instanceof AbstractRepositoryTask) {
+						if (input.getTask() instanceof AbstractTask) {
 							repositoryTaskEditors.add((TaskEditor) editor);
 						}
 					}
@@ -480,8 +480,8 @@ public class TasksUiUtil {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(),
 					query.getRepositoryUrl());
-		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+		} else if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
 			return TasksUiPlugin.getRepositoryManager()
 					.getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
@@ -493,9 +493,9 @@ public class TasksUiUtil {
 			if (resource != null) {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			} else {
-				ITask task = (ITask) adaptable.getAdapter(ITask.class);
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
+				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
+				if (task instanceof AbstractTask) {
+					AbstractTask rtask = (AbstractTask) task;
 					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getRepositoryKind(),
 							rtask.getRepositoryUrl());
 				}
@@ -524,7 +524,7 @@ public class TasksUiUtil {
 		});
 	}
 
-	public static void closeEditorInActivePage(ITask task) {
+	public static void closeEditorInActivePage(AbstractTask task) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			return;

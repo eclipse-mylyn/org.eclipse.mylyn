@@ -32,14 +32,14 @@ import org.eclipse.ui.themes.IThemeManager;
 public class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
 		ITableLabelProvider {
 
-	private final AbstractRepositoryTaskEditor abstractRepositoryTaskEditor;
+	private final AbstractTaskEditor AbstractTaskEditor;
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
-	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor abstractRepositoryTaskEditor,
+	public AttachmentTableLabelProvider(AbstractTaskEditor AbstractTaskEditor,
 			ILabelProvider provider, ILabelDecorator decorator) {
 		super(provider, decorator);
-		this.abstractRepositoryTaskEditor = abstractRepositoryTaskEditor;
+		this.AbstractTaskEditor = AbstractTaskEditor;
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -72,7 +72,7 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 			return attachment.getCreator();
 		case 3:
 			// TODO should retrieve Date object from IOfflineTaskHandler
-			return this.abstractRepositoryTaskEditor.formatDate(attachment.getDateCreated());
+			return this.AbstractTaskEditor.formatDate(attachment.getDateCreated());
 		}
 		return "unrecognized column";
 	}

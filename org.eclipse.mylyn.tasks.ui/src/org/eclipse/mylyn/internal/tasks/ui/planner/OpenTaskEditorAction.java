@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
@@ -43,8 +43,8 @@ public class OpenTaskEditorAction extends Action {
 	public void run() {
 		ISelection selection = viewer.getSelection();
 		Object object = ((IStructuredSelection) selection).getFirstElement();
-		if (object instanceof ITask) {
-			TasksUiUtil.openEditor((ITask)object, false);
+		if (object instanceof AbstractTask) {
+			TasksUiUtil.openEditor((AbstractTask)object, false);
 		}
 //		if (obj instanceof Task) {
 //			((Task) obj).openTaskInEditor(false);

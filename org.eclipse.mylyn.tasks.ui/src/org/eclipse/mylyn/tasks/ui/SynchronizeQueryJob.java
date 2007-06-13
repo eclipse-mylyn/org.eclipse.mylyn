@@ -25,10 +25,10 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
@@ -49,14 +49,14 @@ class SynchronizeQueryJob extends Job {
 
 	private boolean synchChangedTasks;
 
-	private TaskList taskList;
+	private getAllCategories taskList;
 
 // private RepositorySynchronizationManager synchronizationManager;
 
 	private boolean forced = false;
 
 	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager,
-			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
+			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, getAllCategories taskList) {
 		super(JOB_LABEL + ": " + connector.getRepositoryType());
 		this.connector = connector;
 		this.queries = queries;
@@ -120,7 +120,7 @@ class SynchronizeQueryJob extends Job {
 					}
 
 					repositoryQuery.clear();
-					for (AbstractRepositoryTask hit : collector.getTaskHits()) {
+					for (AbstractTask hit : collector.getTaskHits()) {
 						taskList.addTask(hit, repositoryQuery);
 					}
 

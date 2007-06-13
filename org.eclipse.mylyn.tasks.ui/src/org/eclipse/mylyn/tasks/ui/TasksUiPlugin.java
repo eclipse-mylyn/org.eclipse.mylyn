@@ -64,9 +64,9 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -75,8 +75,8 @@ import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
@@ -206,17 +206,17 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static ITaskActivityListener CONTEXT_TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
-		public void taskActivated(final ITask task) {
+		public void taskActivated(final AbstractTask task) {
 			ContextCorePlugin.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
-		public void tasksActivated(List<ITask> tasks) {
-			for (ITask task : tasks) {
+		public void tasksActivated(List<AbstractTask> tasks) {
+			for (AbstractTask task : tasks) {
 				taskActivated(task);
 			}
 		}
 
-		public void taskDeactivated(final ITask task) {
+		public void taskDeactivated(final AbstractTask task) {
 			ContextCorePlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
 
@@ -262,9 +262,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 		public Set<ITaskListNotification> getNotifications() {
 			Date currentDate = new Date();
-			Collection<ITask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
-			for (ITask task : allTasks) {
+			for (AbstractTask task : allTasks) {
 				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.hasBeenReminded()
 						&& task.getScheduledForDate().compareTo(currentDate) < 0) {
 					reminders.add(new TaskListNotificationReminder(task));
@@ -285,7 +285,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						repository.getKind());
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getKind());
 				if (connectorUi != null && !connectorUi.hasCustomNotificationHandling()) {
-					for (AbstractRepositoryTask repositoryTask : TasksUiPlugin.getTaskListManager()
+					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
 						if ((repositoryTask.getLastSyncDateStamp() == null || repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING)
@@ -302,7 +302,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(query.getRepositoryKind());
 				if (!connectorUi.hasCustomNotificationHandling()) {
-					for (AbstractRepositoryTask hit : query.getHits()) {
+					for (AbstractTask hit : query.getHits()) {
 						if (hit.isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
 							hit.setNotified(true);
@@ -923,7 +923,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public static TaskListNotificationIncoming getIncommingNotification(AbstractRepositoryConnector connector,
-			AbstractRepositoryTask repositoryTask) {
+			AbstractTask repositoryTask) {
 
 		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
 

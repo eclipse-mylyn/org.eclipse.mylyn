@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 
 /**
  * @author Ken Sueda
@@ -39,21 +39,21 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	private boolean finished;
 
-	private TaskList tasklist = null;
+	private getAllCategories tasklist = null;
 
 	private List<ITaskCollector> collectors = new ArrayList<ITaskCollector>();
 
-	private List<ITask> tasks = new ArrayList<ITask>();
+	private List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 
-	private Set<ITaskListElement> filterCategories;
+	private Set<AbstractTaskListElement> filterCategories;
 
-	public TaskReportGenerator(TaskList tlist) {
+	public TaskReportGenerator(getAllCategories tlist) {
 		this(tlist, null);
 	}
 
-	public TaskReportGenerator(TaskList tlist, Set<ITaskListElement> filterCategories) {
+	public TaskReportGenerator(getAllCategories tlist, Set<AbstractTaskListElement> filterCategories) {
 		tasklist = tlist;
-		this.filterCategories = filterCategories != null ? filterCategories : new HashSet<ITaskListElement>();
+		this.filterCategories = filterCategories != null ? filterCategories : new HashSet<AbstractTaskListElement>();
 	}
 
 	public void addCollector(ITaskCollector collector) {
@@ -72,7 +72,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-		Set<ITaskListElement> rootElements;
+		Set<AbstractTaskListElement> rootElements;
 		if (filterCategories.size() == 0) {
 			rootElements = tasklist.getRootElements();
 		} else {
@@ -84,22 +84,22 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 
 		for (Object element : rootElements) {
 			monitor.worked(1);
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+			if (element instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) element;
 				for (ITaskCollector collector : collectors) {
 					collector.consumeTask(task);
 				}
 			} else if (element instanceof AbstractRepositoryQuery) {
 				// process queries
 				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
-				for (ITask task : repositoryQuery.getChildren()) {
+				for (AbstractTask task : repositoryQuery.getChildren()) {
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);
 					}
 				}
-			} else if (element instanceof AbstractTaskContainer) {
-				AbstractTaskContainer cat = (AbstractTaskContainer) element;
-				for (ITask task : cat.getChildren())
+			} else if (element instanceof AbstractTaskListElement) {
+				AbstractTaskListElement cat = (AbstractTaskListElement) element;
+				for (AbstractTask task : cat.getChildren())
 					for (ITaskCollector collector : collectors) {
 						collector.consumeTask(task);
 					}
@@ -114,7 +114,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		monitor.done();
 	}
 
-	public List<ITask> getAllCollectedTasks() {
+	public List<AbstractTask> getAllCollectedTasks() {
 		return tasks;
 	}
 

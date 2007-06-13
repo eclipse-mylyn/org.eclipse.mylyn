@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Sorts search results (AbstractQueryHit) by taskId.
@@ -33,11 +33,11 @@ public class SearchResultSorterId extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		try {
 			// cast the object and get its bug taskId
-			AbstractRepositoryTask entry1 = (AbstractRepositoryTask) e1;
+			AbstractTask entry1 = (AbstractTask) e1;
 			Integer id1 = Integer.parseInt(entry1.getTaskId());
 
 			// cast the other object and get its bug taskId
-			AbstractRepositoryTask entry2 = (AbstractRepositoryTask) e2;
+			AbstractTask entry2 = (AbstractTask) e2;
 			Integer id2 = Integer.parseInt(entry2.getTaskId());
 
 			// if neither is null, compare the bug taskId's
@@ -64,7 +64,7 @@ public class SearchResultSorterId extends ViewerSorter {
 	@Override
 	public int category(Object element) {
 		try {
-			AbstractRepositoryTask hit = (AbstractRepositoryTask) element;
+			AbstractTask hit = (AbstractTask) element;
 			return Integer.parseInt(hit.getTaskId());
 		} catch (Exception ignored) {
 			// ignore

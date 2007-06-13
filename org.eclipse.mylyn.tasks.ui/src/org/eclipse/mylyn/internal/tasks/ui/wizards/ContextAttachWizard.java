@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ContextUiUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -28,11 +28,11 @@ public class ContextAttachWizard extends Wizard {
 
 	private final TaskRepository repository;
 
-	private final AbstractRepositoryTask task;
+	private final AbstractTask task;
 
 	private ContextAttachWizardPage wizardPage;
 
-	public ContextAttachWizard(AbstractRepositoryTask task) {
+	public ContextAttachWizard(AbstractTask task) {
 		repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 				task.getRepositoryUrl());
 		this.task = task;

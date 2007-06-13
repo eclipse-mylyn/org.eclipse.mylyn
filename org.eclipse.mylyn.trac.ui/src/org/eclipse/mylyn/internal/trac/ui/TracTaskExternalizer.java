@@ -15,12 +15,12 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,7 +56,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	// task related methods
 
 	@Override
-	public boolean canCreateElementFor(ITask task) {
+	public boolean canCreateElementFor(AbstractTask task) {
 		return task instanceof TracTask;
 	}
 
@@ -66,8 +66,8 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public ITask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
-			AbstractTaskContainer category, ITask parent) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, getAllCategories taskList,
+			AbstractTaskListElement category, AbstractTask parent) throws TaskExternalizationException {
 		TracTask task = new TracTask(repositoryUrl, taskId, summary);
 		return task;
 	}
@@ -103,7 +103,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		node.setAttribute(KEY_QUERY, query.getUrl());
 
-		for (AbstractRepositoryTask hit : query.getHits()) {
+		for (AbstractTask hit : query.getHits()) {
 			try {
 				Element element = null;
 				if (element == null) {
@@ -131,7 +131,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 	}
 
 	@Override
-	public AbstractRepositoryQuery readQuery(Node node, TaskList taskList) throws TaskExternalizationException {
+	public AbstractRepositoryQuery readQuery(Node node, getAllCategories taskList) throws TaskExternalizationException {
 		Element element = (Element) node;
 		String repositoryUrl;
 		String queryUrl;

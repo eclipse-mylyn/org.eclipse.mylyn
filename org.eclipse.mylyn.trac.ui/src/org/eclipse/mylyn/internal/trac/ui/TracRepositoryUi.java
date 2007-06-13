@@ -27,8 +27,8 @@ import org.eclipse.mylyn.internal.trac.ui.wizard.NewTracQueryWizard;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracCustomQueryPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -47,7 +47,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 		return TracHyperlinkUtil.findHyperlinks(repository, text, lineOffset, regionOffset);
 	}
 
-	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return "Ticket";
 	}
 
@@ -100,7 +100,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
 		Kind kind = Kind.fromString(task.getTaskKind());
 		if (kind == Kind.DEFECT) {
 			return TracImages.OVERLAY_DEFECT;
@@ -113,8 +113,8 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public List<ITaskListElement> getLegendItems() {
-		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
+	public List<AbstractTaskListElement> getLegendItems() {
+		List<AbstractTaskListElement> legendItems = new ArrayList<AbstractTaskListElement>();
 		
 		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString());
 		defect.setKind(Kind.DEFECT.toString());		

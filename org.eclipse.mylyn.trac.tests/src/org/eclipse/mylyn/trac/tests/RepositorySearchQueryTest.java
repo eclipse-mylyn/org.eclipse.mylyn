@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
@@ -81,7 +81,7 @@ public class RepositorySearchQueryTest extends TestCase {
 				.getTaskList(), repository, query, new TaskFactory(repository));
 				
 		collector.run(new NullProgressMonitor());
-		for (AbstractRepositoryTask task : collector.getTaskHits()) {
+		for (AbstractTask task : collector.getTaskHits()) {
 			assertEquals(TracTestConstants.TEST_TRAC_096_URL, task.getRepositoryUrl());		
 		}
 		assertEquals(data.tickets.size(), collector.getTaskHits().size());

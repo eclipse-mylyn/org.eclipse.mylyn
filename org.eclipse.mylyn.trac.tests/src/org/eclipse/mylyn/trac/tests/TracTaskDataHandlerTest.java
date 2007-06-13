@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -81,11 +81,11 @@ public class TracTaskDataHandlerTest extends TestCase {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
 
-		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 		
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
+		Set<AbstractTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		assertEquals(tasks, result);
 		assertEquals(null, repository.getSyncTimeStamp());
 		
@@ -111,11 +111,11 @@ public class TracTaskDataHandlerTest extends TestCase {
 		
 		int lastModified = Integer.parseInt(taskData.getLastModified());
 		
-		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractRepositoryTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
+		Set<AbstractTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		assertEquals(tasks, result);
 
 		// always returns the ticket because time comparison mode is >=

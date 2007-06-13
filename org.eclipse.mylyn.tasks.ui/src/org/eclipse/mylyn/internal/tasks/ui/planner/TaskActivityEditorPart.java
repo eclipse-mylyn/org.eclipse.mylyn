@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.monitor.core.DateUtil;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -167,7 +167,7 @@ public class TaskActivityEditorPart extends EditorPart {
 		createSummarySection(editorComposite, toolkit, editorInput.getReportStartDate());
 		String label = LABEL_PAST_ACTIVITY;
 
-		List<ITask> allTasks = new ArrayList<ITask>();
+		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
 		allTasks.addAll(editorInput.getCompletedTasks());
 		allTasks.addAll(editorInput.getInProgressTasks());
 
@@ -723,8 +723,8 @@ public class TaskActivityEditorPart extends EditorPart {
 		writer.write("</tr>");
 
 		for (Object element : planContentProvider.getElements(null)) {
-			if (element instanceof ITask) {
-				ITask currentTask = (ITask) element;
+			if (element instanceof AbstractTask) {
+				AbstractTask currentTask = (AbstractTask) element;
 
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);
@@ -773,8 +773,8 @@ public class TaskActivityEditorPart extends EditorPart {
 		writer.write("</tr>");
 
 		for (Object element : activityContentProvider.getElements(null)) {
-			if (element instanceof ITask) {
-				ITask currentTask = (ITask) element;
+			if (element instanceof AbstractTask) {
+				AbstractTask currentTask = (AbstractTask) element;
 
 				String formatString = "dd-MM-yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatString, Locale.ENGLISH);

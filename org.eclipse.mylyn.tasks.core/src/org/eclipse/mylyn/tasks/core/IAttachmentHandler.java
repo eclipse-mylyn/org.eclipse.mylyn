@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IAttachmentHandler {
 
-	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, ITaskAttachment attachment,
+	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException;
 
 	public void downloadAttachment(TaskRepository repository, RepositoryAttachment attachment, OutputStream target,
@@ -33,9 +33,9 @@ public interface IAttachmentHandler {
 	public InputStream getAttachmentAsStream(TaskRepository repository, RepositoryAttachment attachment,
 			IProgressMonitor monitor) throws CoreException;
 
-	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task);
+	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task);
 
-	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task);
+	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task);
 
 	public boolean canDeprecate(TaskRepository repository, RepositoryAttachment attachment);
 

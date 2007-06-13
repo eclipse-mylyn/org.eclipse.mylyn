@@ -19,7 +19,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
@@ -45,8 +45,8 @@ public class RemoveFromCategoryAction extends Action {
 		try {
 			ISelection selection = TaskListView.getFromActivePerspective().getViewer().getSelection();
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-				if (selectedObject instanceof ITask) { // && !((ITask) selectedObject).isLocal()) {
-					ITask task = (ITask) selectedObject;
+				if (selectedObject instanceof AbstractTask) { // && !((ITask) selectedObject).isLocal()) {
+					AbstractTask task = (AbstractTask) selectedObject;
 					if (task.isActive()) {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 								ITasksUiConstants.TITLE_DIALOG,

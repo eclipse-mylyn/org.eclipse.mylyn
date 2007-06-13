@@ -20,10 +20,10 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
@@ -33,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ContextUiUtil {
 
-	public static boolean downloadContext(final AbstractRepositoryTask task, final RepositoryAttachment attachment,
+	public static boolean downloadContext(final AbstractTask task, final RepositoryAttachment attachment,
 			final IRunnableContext context) {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task);
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -79,7 +79,7 @@ public class ContextUiUtil {
 		return true;
 	}
 
-	public static final boolean uploadContext(final TaskRepository repository, final AbstractRepositoryTask task,
+	public static final boolean uploadContext(final TaskRepository repository, final AbstractTask task,
 			final String comment, final IRunnableContext context) {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());

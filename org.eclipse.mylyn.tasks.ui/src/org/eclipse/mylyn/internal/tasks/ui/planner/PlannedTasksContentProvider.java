@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves
@@ -37,11 +37,11 @@ public class PlannedTasksContentProvider implements IStructuredContentProvider, 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	public void addTask(ITask task) {
+	public void addTask(AbstractTask task) {
 		editorInput.addPlannedTask(task);
 	}
 
-	public void removeTask(ITask task) {
+	public void removeTask(AbstractTask task) {
 		editorInput.removePlannedTask(task);
 	}
 

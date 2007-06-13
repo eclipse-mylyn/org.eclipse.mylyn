@@ -19,9 +19,9 @@ import java.util.Set;
  * @author Rob Elves
  * @author Mik Kersten
  */
-public class DateRangeActivityDelegate extends AbstractTaskContainer implements ITask {
+public class DateRangeActivityDelegate extends AbstractTask {
 
-	private ITask task = null;
+	private AbstractTask task = null;
 
 	private DateRangeContainer parent;
 
@@ -31,12 +31,12 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 
 	private long activity = 0;
 
-	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end) {
+	public DateRangeActivityDelegate(DateRangeContainer parent, AbstractTask task, Calendar start, Calendar end) {
 		this(parent, task, start, end, 0);
 	}
 
-	public DateRangeActivityDelegate(DateRangeContainer parent, ITask task, Calendar start, Calendar end, long activity) {
-		super(task.getHandleIdentifier());
+	public DateRangeActivityDelegate(DateRangeContainer parent, AbstractTask task, Calendar start, Calendar end, long activity) {
+		super(task.getRepositoryUrl(), task.getTaskId(), task.getSummary());
 		if (task == null) {
 			throw new RuntimeException("attempted to instantiated with null task: " + parent);
 		}
@@ -63,7 +63,7 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 		return activity;
 	}
 
-	public ITask getCorrespondingTask() {
+	public AbstractTask getCorrespondingTask() {
 		return task;
 	}
 
@@ -106,11 +106,11 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 //		task.addSubTask(task);
 //	}
 
-	public AbstractTaskContainer getContainer() {
+	public AbstractTaskListElement getContainer() {
 		return task.getContainer();
 	}
 
-	public Set<ITask> getChildren() {
+	public Set<AbstractTask> getChildren() {
 		return task.getChildren();
 	}
 
@@ -128,10 +128,6 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 
 	public int getEstimateTimeHours() {
 		return task.getEstimateTimeHours();
-	}
-
-	public String getHandleIdentifier() {
-		return task.getHandleIdentifier();
 	}
 
 	public String getTaskKind() {
@@ -182,7 +178,7 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 		task.setActive(active);
 	}
 
-	public void setContainer(AbstractTaskContainer category) {
+	public void setContainer(AbstractTaskListElement category) {
 		task.setContainer(category);
 	}
 
@@ -230,8 +226,8 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 		task.setTaskUrl(url);
 	}
 
-	public int compareTo(ITaskListElement taskListElement) {
-		return task.toString().compareTo(((AbstractRepositoryTask) taskListElement).toString());
+	public int compareTo(AbstractTaskListElement taskListElement) {
+		return task.toString().compareTo(((AbstractTask) taskListElement).toString());
 	}
 
 	public void setSummary(String description) {
@@ -248,6 +244,11 @@ public class DateRangeActivityDelegate extends AbstractTaskContainer implements 
 
 	@Override
 	public boolean isLocal() {
-		return ((AbstractRepositoryTask)task).isLocal();
+		return ((AbstractTask)task).isLocal();
+	}
+
+	@Override
+	public String getRepositoryKind() {
+		return task.getRepositoryKind();
 	}
 }

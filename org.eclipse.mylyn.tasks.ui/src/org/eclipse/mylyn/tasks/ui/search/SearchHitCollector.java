@@ -19,13 +19,13 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.search.ui.ISearchQuery;
@@ -54,7 +54,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 
 	private ITaskFactory taskFactory;
 
-	public SearchHitCollector(TaskList tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
+	public SearchHitCollector(getAllCategories tasklist, TaskRepository repository, AbstractRepositoryQuery repositoryQuery, ITaskFactory taskFactory) {
 		super(tasklist, taskFactory);
 		this.repository = repository;
 		this.repositoryQuery = repositoryQuery;
@@ -79,11 +79,11 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 	}
 
 	@Override
-	public void accept(AbstractRepositoryTask task) {
+	public void accept(AbstractTask task) {
 		if (task == null)
 			return;
 
-		ITask hitTask = taskList.getTask(task.getHandleIdentifier());
+		AbstractTask hitTask = taskList.getTask(task.getHandleIdentifier());
 		if (hitTask == null) {
 			hitTask = task;
 		}
@@ -94,7 +94,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			getProgressMonitor().worked(1);
 		}
 		
-		taskResults.add((AbstractRepositoryTask)hitTask);	
+		taskResults.add((AbstractTask)hitTask);	
 		this.searchResult.addMatch(new Match(hitTask, 0, 0));
 	}
 
@@ -104,7 +104,7 @@ public class SearchHitCollector extends QueryHitCollector implements ISearchQuer
 			return;
 		
 		
-		AbstractRepositoryTask task = taskFactory.createTask(taskData, false, false, new SubProgressMonitor(getProgressMonitor(), 1));
+		AbstractTask task = taskFactory.createTask(taskData, false, false, new SubProgressMonitor(getProgressMonitor(), 1));
 		if (task != null) {
 			
 			if (!getProgressMonitor().isCanceled()) {

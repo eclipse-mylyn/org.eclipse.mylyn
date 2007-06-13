@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -22,8 +22,8 @@ public class TaskCompletionFilter extends AbstractTaskListFilter {
 	public boolean select(Object parent, Object element) {
 		boolean exposeSubTasks = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.FILTER_SUBTASKS);
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
 			if (shouldAlwaysShow(parent, task, exposeSubTasks)) {
 				return true;
 			}

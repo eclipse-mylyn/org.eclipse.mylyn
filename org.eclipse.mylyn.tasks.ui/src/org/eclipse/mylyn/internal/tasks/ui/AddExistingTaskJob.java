@@ -13,8 +13,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -44,13 +44,13 @@ public class AddExistingTaskJob extends Job {
 	 * null, it will be added to the current selected task's category in task
 	 * list
 	 */
-	private AbstractTaskContainer taskContainer;
+	private AbstractTaskListElement taskContainer;
 
 	public AddExistingTaskJob(TaskRepository repository, String taskId) {
 		this(repository, taskId, null);
 	}
 
-	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskContainer taskContainer) {
+	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskListElement taskContainer) {
 		super(MessageFormat.format("Adding task: \"{0}\"...", taskId));
 		this.repository = repository;
 		this.taskId = taskId;
@@ -62,11 +62,11 @@ public class AddExistingTaskJob extends Job {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 		try {
-			final ITask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
+			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
 
-//			if (newTask instanceof AbstractRepositoryTask) {
+//			if (newTask instanceof AbstractTask) {
 //				// TODO: encapsulate in abstract connector
-//				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
+//				AbstractTask repositoryTask = (AbstractTask) newTask;
 //				TasksUiPlugin.getDefault().getTaskDataManager().push(newTask.getHandleIdentifier(),
 //						repositoryTask.getTaskData());
 //			}
@@ -76,7 +76,7 @@ public class AddExistingTaskJob extends Job {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 					public void run() {
-						AbstractTaskContainer category = taskContainer;
+						AbstractTaskListElement category = taskContainer;
 						TaskListView taskListView = TaskListView.getFromActivePerspective();
 						if (category == null) {
 							Object selectedObject = ((IStructuredSelection) taskListView.getViewer().getSelection())

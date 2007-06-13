@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
@@ -41,8 +41,8 @@ public class TaskPlanSorter extends TaskActivitySorter {
 
 	@Override
 	public int compare(Viewer viewer, Object obj1, Object obj2) {
-		ITask t1 = (ITask) obj1;
-		ITask t2 = (ITask) obj2;
+		AbstractTask t1 = (AbstractTask) obj1;
+		AbstractTask t2 = (AbstractTask) obj2;
 
 		switch (criteria) {
 		case PRIORITY:
@@ -60,7 +60,7 @@ public class TaskPlanSorter extends TaskActivitySorter {
 		}
 	}
 
-	private int compareReminder(ITask task1, ITask task2) {
+	private int compareReminder(AbstractTask task1, AbstractTask task2) {
 		if (task2.getScheduledForDate() == null)
 			return -1;
 		if (task1.getScheduledForDate() == null)

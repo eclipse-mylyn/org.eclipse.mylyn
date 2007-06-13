@@ -51,9 +51,9 @@ public class TaskRepositoryManager {
 
 	private TaskRepositoriesExternalizer externalizer = new TaskRepositoriesExternalizer();
 
-	private TaskList taskList;
+	private getAllCategories taskList;
 
-	public TaskRepositoryManager(TaskList taskList) {
+	public TaskRepositoryManager(getAllCategories taskList) {
 		this.taskList = taskList;
 	}
 
@@ -65,7 +65,7 @@ public class TaskRepositoryManager {
 		return repositoryConnectors.get(kind);
 	}
 
-	public AbstractRepositoryConnector getRepositoryConnector(AbstractRepositoryTask task) {
+	public AbstractRepositoryConnector getRepositoryConnector(AbstractTask task) {
 		return getRepositoryConnector(task.getRepositoryKind());
 	}
 
@@ -190,12 +190,12 @@ public class TaskRepositoryManager {
 		return repositories;
 	}
 
-	public TaskRepository getRepositoryForActiveTask(String repositoryKind, TaskList taskList) {
-		List<ITask> activeTasks = taskList.getActiveTasks();
+	public TaskRepository getRepositoryForActiveTask(String repositoryKind, getAllCategories taskList) {
+		List<AbstractTask> activeTasks = taskList.getActiveTasks();
 		if (activeTasks.size() == 1) {
-			ITask activeTask = activeTasks.get(0);
-			if (activeTask instanceof AbstractRepositoryTask) {
-				String repositoryUrl = ((AbstractRepositoryTask) activeTask).getRepositoryUrl();
+			AbstractTask activeTask = activeTasks.get(0);
+			if (activeTask instanceof AbstractTask) {
+				String repositoryUrl = ((AbstractTask) activeTask).getRepositoryUrl();
 				for (TaskRepository repository : getRepositories(repositoryKind)) {
 					if (repository.getUrl().equals(repositoryUrl)) {
 						return repository;

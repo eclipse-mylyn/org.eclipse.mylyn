@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.INewWizard;
@@ -75,7 +75,7 @@ public class NewLocalTaskWizard extends Wizard implements INewWizard {
 //			TasksUiPlugin.getTaskListManager().getTaskList().addTask(newTask,
 //					TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory());
 //		}
-		ITask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().createNewLocalTask(null);
 		if (task != null) {
 			TasksUiUtil.openEditor(task, true);
 			return true;

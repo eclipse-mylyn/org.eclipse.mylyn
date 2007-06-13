@@ -13,11 +13,11 @@ import java.util.Arrays;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -63,10 +63,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 	 */
 	public void handleEvent(Event event) {
 		Object data = event.item.getData();
-		ITask task = null;
+		AbstractTask task = null;
 		Image activationImage = null;
-		if (data instanceof ITask) {
-			task = (ITask) data;
+		if (data instanceof AbstractTask) {
+			task = (AbstractTask) data;
 		}
 		if (task != null) {
 			if (task.isActive()) {
@@ -77,15 +77,15 @@ class CustomTaskListDecorationDrawer implements Listener {
 				activationImage = taskInactive;
 			}
 		}
-		if (data instanceof ITaskListElement) {
+		if (data instanceof AbstractTaskListElement) {
 			switch (event.type) {
 			case SWT.EraseItem: {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
 				if (!this.taskListView.synchronizationOverlaid) {
-					if (data instanceof ITaskListElement) {
-						drawSyncronizationImage((ITaskListElement) data, event);
+					if (data instanceof AbstractTaskListElement) {
+						drawSyncronizationImage((AbstractTaskListElement) data, event);
 					}
 				}
 				break;
@@ -94,8 +94,8 @@ class CustomTaskListDecorationDrawer implements Listener {
 				if (activationImage != null) {
 					drawActivationImage(activationImageOffset, event, activationImage);
 				}
-				if (data instanceof ITaskListElement) {
-					drawSyncronizationImage((ITaskListElement) data, event);
+				if (data instanceof AbstractTaskListElement) {
+					drawSyncronizationImage((AbstractTaskListElement) data, event);
 				}
 				break;
 			}
@@ -103,7 +103,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private void drawSyncronizationImage(ITaskListElement element, Event event) {
+	private void drawSyncronizationImage(AbstractTaskListElement element, Event event) {
 		Image image = null;
 		int offsetX = 6;
 		int offsetY = (event.height / 2) - 5;
@@ -111,9 +111,9 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetX = event.x + 18 - platformSpecificSquish;
 			offsetY += 2;
 		}
-		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
+		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
 			if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
-					&& hasIncoming((AbstractTaskContainer) element)) {
+					&& hasIncoming((AbstractTaskListElement) element)) {
 				int additionalSquish = 0;
 				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 					additionalSquish = platformSpecificSquish + 3;
@@ -137,10 +137,10 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 	}
 
-	private boolean hasIncoming(AbstractTaskContainer container) {
-		for (ITask task : container.getChildren()) {
-			if (task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask containedRepositoryTask = (AbstractRepositoryTask) task;
+	private boolean hasIncoming(AbstractTaskListElement container) {
+		for (AbstractTask task : container.getChildren()) {
+			if (task instanceof AbstractTask) {
+				AbstractTask containedRepositoryTask = (AbstractTask) task;
 				if (containedRepositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 					return true;
 				}
@@ -148,7 +148,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 		}
 // if (container instanceof AbstractRepositoryQuery) {
 // AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-// for (AbstractRepositoryTask hit : query.getHits()) {
+// for (AbstractTask hit : query.getHits()) {
 // if (hit.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 // return true;
 // }

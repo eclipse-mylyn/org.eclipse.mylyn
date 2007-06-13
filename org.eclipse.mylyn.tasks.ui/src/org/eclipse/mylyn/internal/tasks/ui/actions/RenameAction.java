@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
 
@@ -38,8 +38,8 @@ public class RenameAction extends BaseSelectionListenerAction {
 	@Override
 	public void run() {
 		Object selectedObject = ((IStructuredSelection) this.view.getViewer().getSelection()).getFirstElement();
-		if (selectedObject instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) selectedObject;
+		if (selectedObject instanceof AbstractTaskListElement) {
+			AbstractTaskListElement element = (AbstractTaskListElement) selectedObject;
 			view.setInRenameAction(true);
 			view.getViewer().editElement(element, 0);
 			view.setInRenameAction(false);

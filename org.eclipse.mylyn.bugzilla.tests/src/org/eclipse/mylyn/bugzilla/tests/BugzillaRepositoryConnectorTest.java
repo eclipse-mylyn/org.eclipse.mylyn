@@ -31,12 +31,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.RepositorySearchResult;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
@@ -63,13 +63,13 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, false);
 
 		assertEquals(1, bugQuery.getHits().size());
-		AbstractRepositoryTask hit = (AbstractRepositoryTask) bugQuery.getHits().toArray()[0];
+		AbstractTask hit = (AbstractTask) bugQuery.getHits().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
 		TasksUiPlugin.getDefault().getTaskDataManager().remove(hit.getHandleIdentifier());
 
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, true);
 		assertEquals(1, bugQuery.getHits().size());
-		hit = (AbstractRepositoryTask) bugQuery.getHits().toArray()[0];
+		hit = (AbstractTask) bugQuery.getHits().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getHandleIdentifier()) != null);
 
 	}
@@ -121,7 +121,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		collector.run(new NullProgressMonitor());
 		assertEquals(2, result.getElements().length);
 
-		for (AbstractRepositoryTask hit : collector.getTaskHits()) {
+		for (AbstractTask hit : collector.getTaskHits()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 
@@ -253,8 +253,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		
 		assertEquals(2, taskList.getQueries().size());
 		assertEquals(1, taskList.getAllTasks().size());
-		for (AbstractRepositoryTask hit : query1.getHits()) {
-			for (AbstractRepositoryTask hit2 : query2.getHits()) {
+		for (AbstractTask hit : query1.getHits()) {
+			for (AbstractTask hit2 : query2.getHits()) {
 				assertTrue(hit.getClass().equals(hit2.getClass()));
 			}
 		}
@@ -375,7 +375,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task5.getSyncState());
 		assertEquals("5", taskData5.getId());
 
-		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task4);
 		tasks.add(task5);
 
@@ -386,7 +386,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		Set<AbstractRepositoryTask> changedTasks = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
+		Set<AbstractTask> changedTasks = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
 		// Always last known changed returned
 		assertEquals(1, changedTasks.size());
 
@@ -421,7 +421,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, changedTasks, true, null);
 
-		for (AbstractRepositoryTask task : changedTasks) {
+		for (AbstractTask task : changedTasks) {
 			if (task.getTaskId() == "4") {
 				assertEquals(priority4, task4.getPriority());
 			}
@@ -442,7 +442,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, task7.getSyncState());
 		assertEquals("7", recentTaskData.getId());
 
-		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task7);
 
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task7.getLastSyncDateStamp(),
@@ -513,7 +513,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		assertEquals(taskid + "", bugtaskdata.getId());
 		assertEquals(RepositoryTaskSyncState.SYNCHRONIZED, bugtask.getSyncState());
 
-		Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(bugtask);
 
 		// synchAndAssertState(tasks, RepositoryTaskSyncState.SYNCHRONIZED);
@@ -522,7 +522,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		// connector.synchronizeChanged(repository);
 
-		// Set<AbstractRepositoryTask> changedTasks =
+		// Set<AbstractTask> changedTasks =
 		// connector.getOfflineTaskHandler().getChangedSinceLastSync(repository,
 		// tasks);
 		// assertEquals(1, changedTasks.size());
@@ -553,7 +553,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		if (enableDeadline)
 			bugtaskdata.setAttributeValue(BugzillaReportElement.DEADLINE.getKeyString(), deadline);
 
-		for (AbstractRepositoryTask task : tasks) {
+		for (AbstractTask task : tasks) {
 			RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
 					task.getHandleIdentifier());
 			taskData.setAttributeValue(BugzillaReportElement.ADD_COMMENT.getKeyString(), "New Estimate: "

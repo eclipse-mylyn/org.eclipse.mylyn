@@ -12,11 +12,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -32,7 +32,7 @@ public class TaskFactory implements ITaskFactory {
 
 	private TaskRepository repository;
 
-	private TaskList taskList;
+	private getAllCategories taskList;
 
 	//private TaskDataManager dataManager;
 
@@ -55,9 +55,9 @@ public class TaskFactory implements ITaskFactory {
 	 *            user requested synchronization
 	 * @throws CoreException
 	 */
-	public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean updateTasklist, boolean forced,
+	public AbstractTask createTask(RepositoryTaskData taskData, boolean updateTasklist, boolean forced,
 			IProgressMonitor monitor) throws CoreException {
-		AbstractRepositoryTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
+		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
 
 			repositoryTask = connector.createTaskFromTaskData(repository, taskData, true, monitor);
@@ -79,7 +79,7 @@ public class TaskFactory implements ITaskFactory {
 						if (subId == null || subId.trim().equals("")) {
 							continue;
 						}
-						AbstractRepositoryTask subTask = connector.createTaskFromExistingId(repository, subId, false,
+						AbstractTask subTask = connector.createTaskFromExistingId(repository, subId, false,
 								new SubProgressMonitor(monitor, 1));
 						if (subTask != null) {
 							taskList.addTask(subTask, repositoryTask);
@@ -96,12 +96,12 @@ public class TaskFactory implements ITaskFactory {
 //	/**
 //	 * Create new repository task, adding result to tasklist
 //	 */
-//	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String id,
+//	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id,
 //			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
 //		ITask task = taskList.getTask(repository.getUrl(), id);
-//		AbstractRepositoryTask repositoryTask = null;
-//		if (task instanceof AbstractRepositoryTask) {
-//			repositoryTask = (AbstractRepositoryTask) task;
+//		AbstractTask repositoryTask = null;
+//		if (task instanceof AbstractTask) {
+//			repositoryTask = (AbstractTask) task;
 //		} else if (task == null && dataHandler != null) {
 //			RepositoryTaskData taskData = null;
 //			taskData = dataHandler.getTaskData(repository, id, new SubProgressMonitor(monitor, 1));
@@ -122,9 +122,9 @@ public class TaskFactory implements ITaskFactory {
 //	 * Creates a new task from the given task data. Does NOT add resulting task
 //	 * to the tasklist
 //	 */
-//	public AbstractRepositoryTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
+//	public AbstractTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
 //			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
-//		AbstractRepositoryTask repositoryTask = null;
+//		AbstractTask repositoryTask = null;
 //		if (monitor == null) {
 //			monitor = new NullProgressMonitor();
 //		}
@@ -142,7 +142,7 @@ public class TaskFactory implements ITaskFactory {
 //						if (subId == null || subId.trim().equals("")) {
 //							continue;
 //						}
-//						AbstractRepositoryTask subTask = createTaskFromExistingId(repository, subId, false,
+//						AbstractTask subTask = createTaskFromExistingId(repository, subId, false,
 //								new SubProgressMonitor(monitor, 1));
 //						if (subTask != null) {
 //							repositoryTask.addSubTask(subTask);

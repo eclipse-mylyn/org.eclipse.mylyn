@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Rob Elves
@@ -41,12 +41,12 @@ public class UncategorizedCategory extends AbstractTaskContainer {
 	}
 
 	@Override
-	public boolean isLocal() {
-		return true;
-	}
-
-	@Override
 	public boolean canRename() {
 		return false;
+	}
+	
+	@Override
+	public final boolean isLocal() {
+		return true;
 	}
 }

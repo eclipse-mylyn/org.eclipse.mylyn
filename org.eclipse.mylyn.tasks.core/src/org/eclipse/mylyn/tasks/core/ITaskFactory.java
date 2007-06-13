@@ -23,6 +23,6 @@ public interface ITaskFactory {
 	 * @param forced -
 	 *            user requested synchronization
 	 */
-	public abstract AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) throws CoreException;
+	public abstract AbstractTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) throws CoreException;
 
 }

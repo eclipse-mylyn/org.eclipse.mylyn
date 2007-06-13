@@ -39,10 +39,10 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -130,10 +130,10 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 				}
 
 				// Only shows exact task matches
-				if (!(element instanceof AbstractRepositoryTask)) {
+				if (!(element instanceof AbstractTask)) {
 					return false;
 				}
-				AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+				AbstractTask task = (AbstractTask) element;
 				String taskId = task.getTaskKey();
 				for (String id : selectedIds) {
 					if (id.equals(taskId)) {
@@ -222,8 +222,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		categoryViewer = new ComboViewer(addToTaskListComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		categoryViewer.setContentProvider(new ArrayContentProvider());
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList
+		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		LinkedList<AbstractTaskListElement> categories = new LinkedList<AbstractTaskListElement>(taskList
 				.getUserCategories());
 		categories.addFirst(taskList.getUncategorizedCategory());
 		categoryViewer.setInput(categories);
@@ -231,8 +231,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof AbstractTaskContainer) {
-					return ((AbstractTaskContainer) element).getSummary();
+				if (element instanceof AbstractTaskListElement) {
+					return ((AbstractTaskListElement) element).getSummary();
 				}
 				return super.getText(element);
 			}
@@ -277,8 +277,8 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			return getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
 
-		} else if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) element;
+		} else if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
 			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
@@ -289,9 +289,9 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			if (resource != null) {
 				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
 			} else {
-				ITask task = (ITask) adaptable.getAdapter(ITask.class);
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask rtask = (AbstractRepositoryTask) task;
+				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
+				if (task instanceof AbstractTask) {
+					AbstractTask rtask = (AbstractTask) task;
 					return getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
 				}
 			}
@@ -333,11 +333,11 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	private TaskRepository selectedRepository;
 
-	private AbstractRepositoryTask selectedTask;
+	private AbstractTask selectedTask;
 
 	private boolean shouldAddToTaskList;
 
-	private AbstractTaskContainer selectedCategory;
+	private AbstractTaskListElement selectedCategory;
 
 	public String[] getSelectedIds() {
 		return selectedIds;
@@ -347,7 +347,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		return selectedRepository;
 	}
 
-	public AbstractRepositoryTask getSelectedTask() {
+	public AbstractTask getSelectedTask() {
 		return selectedTask;
 	}
 
@@ -355,7 +355,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		return shouldAddToTaskList;
 	}
 
-	public AbstractTaskContainer getSelectedCategory() {
+	public AbstractTaskListElement getSelectedCategory() {
 		return selectedCategory;
 	}
 
@@ -365,14 +365,14 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		ISelection taskSelection = tasksViewer.getSelection();
 		if (!taskSelection.isEmpty()) {
-			selectedTask = (AbstractRepositoryTask) ((IStructuredSelection) taskSelection).getFirstElement();
+			selectedTask = (AbstractTask) ((IStructuredSelection) taskSelection).getFirstElement();
 		} else {
 			selectedRepository = (TaskRepository) ((IStructuredSelection) repositoriesViewer.getSelection())
 					.getFirstElement();
 		}
 		shouldAddToTaskList = addToTaskListCheck.getSelection();
 		if (shouldAddToTaskList) {
-			selectedCategory = (AbstractTaskContainer) ((IStructuredSelection) categoryViewer.getSelection())
+			selectedCategory = (AbstractTaskListElement) ((IStructuredSelection) categoryViewer.getSelection())
 					.getFirstElement();
 		}
 	}

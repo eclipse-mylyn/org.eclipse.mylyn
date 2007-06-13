@@ -29,14 +29,14 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -75,7 +75,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
  */
-public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
+public class BugzillaTaskEditor extends AbstractTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
@@ -281,7 +281,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
 				Hyperlink hyperlink = getManagedForm().getToolkit().createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
-				final ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), bugId);
+				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), bugId);
 				if (task != null) {
 					hyperlink.setToolTipText(task.getSummary());
 				}

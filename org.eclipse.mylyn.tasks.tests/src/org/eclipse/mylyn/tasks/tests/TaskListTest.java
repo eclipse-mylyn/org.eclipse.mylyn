@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 
 
 /**
@@ -20,7 +20,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 public class TaskListTest extends TestCase {
 
 	public void testGetUserCategories() {
-		TaskList taskList = new TaskList();
+		getAllCategories taskList = new getAllCategories();
 		taskList.addCategory(new TaskCategory("a"));
 		assertEquals(2, taskList.getUserCategories().size());
 	}

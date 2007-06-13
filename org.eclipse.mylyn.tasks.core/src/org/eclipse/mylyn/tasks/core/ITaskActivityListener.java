@@ -20,12 +20,12 @@ import java.util.List;
  */
 public interface ITaskActivityListener {
 
-	public abstract void taskActivated(ITask task);
+	public abstract void taskActivated(AbstractTask task);
 
 	@Deprecated
-	public abstract void tasksActivated(List<ITask> tasks);
+	public abstract void tasksActivated(List<AbstractTask> tasks);
 
-	public abstract void taskDeactivated(ITask task);
+	public abstract void taskDeactivated(AbstractTask task);
 
 	public abstract void activityChanged(DateRangeContainer week);
 	

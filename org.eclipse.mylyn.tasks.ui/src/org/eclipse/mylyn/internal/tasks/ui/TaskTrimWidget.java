@@ -15,7 +15,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -45,11 +45,11 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private final ITaskActivityListener TASK_CHANGE_LISTENER = new ITaskActivityListener() {
 
-		public void taskActivated(ITask task) {
+		public void taskActivated(AbstractTask task) {
 			indicateActiveTask(task);
 		}
 
-		public void taskDeactivated(ITask task) {
+		public void taskDeactivated(AbstractTask task) {
 			indicateNoActiveTask();
 		}
 
@@ -62,7 +62,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		public void taskListRead() {
 		}
 
-		public void tasksActivated(List<ITask> tasks) {
+		public void tasksActivated(List<AbstractTask> tasks) {
 		}
 		
 	};
@@ -116,7 +116,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
 		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
 
-		ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
@@ -140,7 +140,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		return activeTaskLabel;
 	}
 
-	public void indicateActiveTask(ITask task) {
+	public void indicateActiveTask(AbstractTask task) {
 		if (activeTaskLabel.isDisposed()) {
 			return;
 		}

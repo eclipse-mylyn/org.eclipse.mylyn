@@ -32,10 +32,10 @@ import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
@@ -53,7 +53,7 @@ import org.eclipse.swt.dnd.TransferData;
  */
 public class TaskListDropAdapter extends ViewerDropAdapter {
 
-	private AbstractRepositoryTask newTask = null;
+	private AbstractTask newTask = null;
 
 	private TransferData currentTransfer;
 
@@ -74,15 +74,15 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 	@Override
 	public boolean performDrop(Object data) {
 		Object currentTarget = getCurrentTarget();
-		List<ITask> tasksToMove = new ArrayList<ITask>();
+		List<AbstractTask> tasksToMove = new ArrayList<AbstractTask>();
 		ISelection selection = ((TreeViewer) getViewer()).getSelection();
 		if (isUrl(data) && createTaskFromUrl(data)) {
 			tasksToMove.add(newTask);
 		} else if (TaskTransfer.getInstance().isSupportedType(currentTransfer)) {
 			for (Object selectedObject : ((IStructuredSelection) selection).toList()) {
-				ITask toMove = null;
-				if (selectedObject instanceof ITask) {
-					toMove = (ITask) selectedObject;
+				AbstractTask toMove = null;
+				if (selectedObject instanceof AbstractTask) {
+					toMove = (AbstractTask) selectedObject;
 				} 
 				if (toMove != null) {
 					tasksToMove.add(toMove);
@@ -91,9 +91,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 		} else if (data instanceof String && createTaskFromString((String) data)) {
 			tasksToMove.add(newTask);
 		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			ITask targetTask = null;
-			if (getCurrentTarget() instanceof ITask) {
-				targetTask = (ITask) getCurrentTarget();
+			AbstractTask targetTask = null;
+			if (getCurrentTarget() instanceof AbstractTask) {
+				targetTask = (AbstractTask) getCurrentTarget();
 			}
 			if (targetTask != null) {
 				final String[] names = (String[]) data;
@@ -111,11 +111,11 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			}
 		}
 
-		for (ITask task : tasksToMove) {
+		for (AbstractTask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) currentTarget, task);
-			} else if (currentTarget instanceof ITask) {
-				ITask targetTask = (ITask) currentTarget;
+			} else if (currentTarget instanceof AbstractTask) {
+				AbstractTask targetTask = (AbstractTask) currentTarget;
 				if (targetTask.getContainer() == null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 				} else {
@@ -191,9 +191,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					try {
 						newTask = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
 
-//						if (newTask instanceof AbstractRepositoryTask) {
+//						if (newTask instanceof AbstractTask) {
 //							// TODO: encapsulate in abstract connector
-//							AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) newTask;
+//							AbstractTask repositoryTask = (AbstractTask) newTask;
 //							TasksUiPlugin.getDefault().getTaskDataManager().push(
 //									RepositoryTaskHandleUtil.getHandle(repository.getUrl(), id),
 //									repositoryTask.getTaskData());
@@ -255,13 +255,13 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		Object selectedObject = ((IStructuredSelection) ((TreeViewer) getViewer()).getSelection()).getFirstElement();
 		if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
-			if (getCurrentTarget() instanceof ITask) {
+			if (getCurrentTarget() instanceof AbstractTask) {
 				return true;
 			}
 		} else if (selectedObject != null && !(selectedObject instanceof AbstractRepositoryQuery)) {
 			if (getCurrentTarget() instanceof TaskCategory) {
 				return true;
-			} else if (getCurrentTarget() instanceof ITaskListElement
+			} else if (getCurrentTarget() instanceof AbstractTaskListElement
 					&& (getCurrentLocation() == ViewerDropAdapter.LOCATION_AFTER || getCurrentLocation() == ViewerDropAdapter.LOCATION_BEFORE)) {
 				return true;
 			} else {

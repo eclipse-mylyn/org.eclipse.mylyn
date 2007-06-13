@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
@@ -111,7 +111,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
 			IProgressMonitor monitor) throws CoreException {
 		if (repositoryTask instanceof TracTask) {
 			try {
@@ -138,7 +138,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			}
 
 			for (TracTicket ticket : tickets) {
-				AbstractRepositoryTask task = createTask(repository.getUrl(), ticket.getId() + "", "");
+				AbstractTask task = createTask(repository.getUrl(), ticket.getId() + "", "");
 				updateTaskFromTicket((TracTask) task, ticket, false);
 				resultCollector.accept(task);
 			}
@@ -150,8 +150,8 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException {
+	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
 		if (repository.getSyncTimeStamp() == null) {
 			return tasks;
 		}
@@ -172,9 +172,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			client = getClientManager().getRepository(repository);
 			Set<Integer> ids = client.getChangedTickets(since);
 
-			Set<AbstractRepositoryTask> result = new HashSet<AbstractRepositoryTask>();
+			Set<AbstractTask> result = new HashSet<AbstractTask>();
 			if (!ids.isEmpty()) {
-				for (AbstractRepositoryTask task : tasks) {
+				for (AbstractTask task : tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
 						result.add(task);
@@ -189,9 +189,9 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public AbstractRepositoryTask createTaskFromExistingId(TaskRepository repository, String taskId,
+	public AbstractTask createTaskFromExistingId(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
-		AbstractRepositoryTask task = super.createTaskFromExistingId(repository, taskId, monitor);
+		AbstractTask task = super.createTaskFromExistingId(repository, taskId, monitor);
 		if (task == null) {
 			// repository does not support XML-RPC, fall back to web access
 			try {
@@ -210,13 +210,13 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return task;
 	}
 
-	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
+	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
 		TracTask tracTask = new TracTask(repositoryUrl, id, summary);
 		tracTask.setCreationDate(new Date());
 		return tracTask;
 	}
 
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		if (taskData != null) {
 			repositoryTask.setSummary(taskData.getSummary());
@@ -281,11 +281,11 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 
-	public static boolean hasRichEditor(TaskRepository repository, AbstractRepositoryTask task) {
+	public static boolean hasRichEditor(TaskRepository repository, AbstractTask task) {
 		return hasRichEditor(repository);
 	}
 
-	public static boolean hasAttachmentSupport(TaskRepository repository, AbstractRepositoryTask task) {
+	public static boolean hasAttachmentSupport(TaskRepository repository, AbstractTask task) {
 		return Version.XML_RPC.name().equals(repository.getVersion());
 	}
 

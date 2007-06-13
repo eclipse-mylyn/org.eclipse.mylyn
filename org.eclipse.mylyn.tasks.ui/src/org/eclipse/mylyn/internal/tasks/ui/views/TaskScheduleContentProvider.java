@@ -14,10 +14,10 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -37,16 +37,16 @@ public class TaskScheduleContentProvider extends TaskListContentProvider {
 
 	public Object[] getElements(Object parent) {
 		if (parent.equals(this.view.getViewSite())) {
-			Set<ITaskListElement> ranges = new HashSet<ITaskListElement>();
+			Set<AbstractTaskListElement> ranges = new HashSet<AbstractTaskListElement>();
 			ranges.addAll(taskListManager.getDateRanges());
 
 			ranges.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
-			ITask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
+			AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 			boolean containsActiveTask = false;
 			if (activeTask != null) {
-				for (ITaskListElement taskListElement : ranges) {
-					if (taskListElement instanceof AbstractTaskContainer) {
-						if (((AbstractTaskContainer) taskListElement).getChildren().contains(activeTask)) {
+				for (AbstractTaskListElement taskListElement : ranges) {
+					if (taskListElement instanceof AbstractTaskListElement) {
+						if (((AbstractTaskListElement) taskListElement).getChildren().contains(activeTask)) {
 							containsActiveTask = true;
 						}
 					}

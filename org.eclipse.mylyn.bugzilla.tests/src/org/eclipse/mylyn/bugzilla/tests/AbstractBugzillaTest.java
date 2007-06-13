@@ -24,13 +24,13 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -49,7 +49,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 	protected TaskRepository repository;
 
-	protected TaskList taskList;
+	protected getAllCategories taskList;
 	
 	protected ITaskFactory taskFactory;
 
@@ -119,7 +119,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		return task;
 	}
 
-	protected void submit(AbstractRepositoryTask task, RepositoryTaskData taskData) throws CoreException {
+	protected void submit(AbstractTask task, RepositoryTaskData taskData) throws CoreException {
 		connector.getTaskDataHandler().postTaskData(repository, taskData, new NullProgressMonitor());
 		task.setSubmitting(true);
 	}
@@ -132,8 +132,8 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	// repository.getPassword(), repository.getCharacterEncoding());
 	// }
 
-	protected void synchAndAssertState(Set<AbstractRepositoryTask> tasks, RepositoryTaskSyncState state) {
-		for (AbstractRepositoryTask task : tasks) {
+	protected void synchAndAssertState(Set<AbstractTask> tasks, RepositoryTaskSyncState state) {
+		for (AbstractTask task : tasks) {
 			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 			assertEquals(task.getSyncState(), state);
 		}

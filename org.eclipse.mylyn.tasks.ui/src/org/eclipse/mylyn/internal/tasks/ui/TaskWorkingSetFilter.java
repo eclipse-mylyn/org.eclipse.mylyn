@@ -12,10 +12,10 @@ package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 
@@ -26,17 +26,17 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 	
-	private final TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+	private final getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
 	private IWorkingSet currentWorkingSet;
 
 
 	public boolean select(Object parent, Object element) {
-		if (parent instanceof AbstractTaskContainer && !(parent instanceof DateRangeContainer)) {
-			return selectWorkingSet((AbstractTaskContainer) parent);
+		if (parent instanceof AbstractTaskListElement && !(parent instanceof DateRangeContainer)) {
+			return selectWorkingSet((AbstractTaskListElement) parent);
 		}
-		if (element instanceof ITask) {
-			AbstractRepositoryQuery query = taskList.getQueryForHandle(((ITask) element).getHandleIdentifier());
+		if (element instanceof AbstractTask) {
+			AbstractRepositoryQuery query = taskList.getQueryForHandle(((AbstractTask) element).getHandleIdentifier());
 			if (query != null) {
 				return selectWorkingSet(query);
 			}
@@ -44,16 +44,16 @@ public class TaskWorkingSetFilter extends AbstractTaskListFilter {
 		return true;
 	}
 
-	private boolean selectWorkingSet(AbstractTaskContainer container) {
+	private boolean selectWorkingSet(AbstractTaskListElement container) {
 		if (currentWorkingSet == null) {
 			return true;
 		}
 		boolean seenTaskWorkingSets = false;
 		String handleIdentifier = container.getHandleIdentifier();
 		for (IAdaptable adaptable : currentWorkingSet.getElements()) {
-			if (adaptable instanceof AbstractTaskContainer) {
+			if (adaptable instanceof AbstractTaskListElement) {
 				seenTaskWorkingSets = true;
-				if (handleIdentifier.equals(((AbstractTaskContainer) adaptable).getHandleIdentifier())) {
+				if (handleIdentifier.equals(((AbstractTaskListElement) adaptable).getHandleIdentifier())) {
 					return true;
 				}
 			}

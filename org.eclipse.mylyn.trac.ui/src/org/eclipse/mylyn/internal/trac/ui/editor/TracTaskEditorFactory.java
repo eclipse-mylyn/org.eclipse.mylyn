@@ -11,7 +11,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
@@ -26,7 +26,7 @@ import org.eclipse.ui.IEditorPart;
  */
 public class TracTaskEditorFactory implements ITaskEditorFactory {
 
-	public boolean canCreateEditorFor(ITask task) {
+	public boolean canCreateEditorFor(AbstractTask task) {
 		if (task instanceof TracTask) {
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					TracCorePlugin.REPOSITORY_KIND, ((TracTask) task).getRepositoryUrl());
@@ -64,7 +64,7 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 		return null;
 	}
 
-	public IEditorInput createEditorInput(ITask task) {
+	public IEditorInput createEditorInput(AbstractTask task) {
 		TracTask tracTask = (TracTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
 				tracTask.getRepositoryUrl());

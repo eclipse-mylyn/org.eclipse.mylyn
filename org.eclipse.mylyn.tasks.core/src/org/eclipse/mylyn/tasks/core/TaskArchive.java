@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 
 
@@ -29,7 +29,7 @@ public class TaskArchive extends AbstractTaskContainer {
 	}
 
 	public String getPriority() {
-		return PriorityLevel.P1.toString();
+		return PriorityLevel.P5.toString();
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class TaskArchive extends AbstractTaskContainer {
 	}
 
 	@Override
-	public boolean isLocal() {
-		return true;
-	}
-
-	@Override
 	public boolean canRename() {
 		return false;
+	}
+	
+	@Override
+	public final boolean isLocal() {
+		return true;
 	}
 }

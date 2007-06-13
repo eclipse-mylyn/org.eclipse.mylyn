@@ -33,13 +33,13 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorInput;
@@ -71,9 +71,9 @@ public class NewAttachmentWizard extends Wizard {
 
 	private TaskRepository repository;
 
-	private AbstractRepositoryTask task;
+	private AbstractTask task;
 
-	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task) {
+	public NewAttachmentWizard(TaskRepository repository, AbstractTask task) {
 		super();
 		this.task = task;
 		this.repository = repository;
@@ -94,12 +94,12 @@ public class NewAttachmentWizard extends Wizard {
 		}
 	}
 
-	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task, File attachFile) {
+	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, File attachFile) {
 		this(repository, task);
 		attachment.setFilePath(attachFile.getAbsolutePath());
 	}
 
-	public NewAttachmentWizard(TaskRepository repository, AbstractRepositoryTask task, String attachContents) {
+	public NewAttachmentWizard(TaskRepository repository, AbstractTask task, String attachContents) {
 		this(repository, task);
 		inputPage.setUseClipboard(true);
 		inputPage.setClipboardContents(attachContents);
@@ -214,8 +214,8 @@ public class NewAttachmentWizard extends Wizard {
 	/**
 	 * If task is open, force inplace refresh Must be called from UI thread.
 	 */
-	public static boolean forceRefreshInplace(ITask task) {
-		if (task instanceof AbstractRepositoryTask) {
+	public static boolean forceRefreshInplace(AbstractTask task) {
+		if (task instanceof AbstractTask) {
 			String handleTarget = task.getHandleIdentifier();
 			for (TaskEditor editor : TasksUiUtil.getActiveRepositoryTaskEditors()) {
 				if (editor.getEditorInput() instanceof AbstractTaskEditorInput) {

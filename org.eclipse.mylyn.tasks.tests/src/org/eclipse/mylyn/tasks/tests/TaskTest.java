@@ -14,8 +14,8 @@ package org.eclipse.mylyn.tasks.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -33,7 +33,7 @@ public class TaskTest extends TestCase {
 	}
 
 	public void testUrl() {
-		AbstractRepositoryTask task = new LocalTask("handle", "label");
+		AbstractTask task = new LocalTask("handle", "label");
 		task.setTaskUrl("http://eclipse.org/mylar/doc.php");
 		assertTrue(task.hasValidUrl());
 
@@ -51,12 +51,12 @@ public class TaskTest extends TestCase {
 	}
 	
 	public void testPriorityNeverNull() {
-		AbstractRepositoryTask task = new LocalTask("handle", "label");
+		AbstractTask task = new LocalTask("handle", "label");
 		assertNotNull(task.getPriority());
 		
 		PriorityLevel def = PriorityLevel.getDefault();		
 		assertNotNull(def);		
-		assertEquals(def, AbstractRepositoryTask.PriorityLevel.fromDescription("garbage"));
-		assertEquals(def, AbstractRepositoryTask.PriorityLevel.fromString("garbage"));		
+		assertEquals(def, AbstractTask.PriorityLevel.fromDescription("garbage"));
+		assertEquals(def, AbstractTask.PriorityLevel.fromString("garbage"));		
 	}
 }

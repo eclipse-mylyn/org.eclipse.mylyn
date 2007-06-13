@@ -23,8 +23,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.tasks.ui.planner.CompletedTaskCollector;
 import org.eclipse.mylyn.internal.tasks.ui.planner.TaskReportGenerator;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -55,7 +55,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksRetrieved() throws InvocationTargetException, InterruptedException {
-		AbstractRepositoryTask task1 = manager.createNewLocalTask("task 1");
+		AbstractTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -71,7 +71,7 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 	
 	public void testCompletedTasksDateBoundsRetrieved() throws InvocationTargetException, InterruptedException {
-		AbstractRepositoryTask task1 = manager.createNewLocalTask("task 1");
+		AbstractTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		Thread.sleep(1000);
@@ -109,13 +109,13 @@ public class TaskReportGeneratorTest extends TestCase {
 	}
 
 	public void testCompletedTasksInCategoryRetrieved() throws InvocationTargetException, InterruptedException {
-		AbstractRepositoryTask task1 = manager.createNewLocalTask("task 1");
+		AbstractTask task1 = manager.createNewLocalTask("task 1");
 		manager.getTaskList().moveToRoot(task1);
 		task1.setCompleted(true);
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
-		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
+		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -138,7 +138,7 @@ public class TaskReportGeneratorTest extends TestCase {
 		TaskCategory cat1 = new TaskCategory("TaskReportGeneratorTest Category");
 		manager.getTaskList().addCategory(cat1);
 
-		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
+		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
 		catagories.add(cat1);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));
@@ -164,7 +164,7 @@ public class TaskReportGeneratorTest extends TestCase {
 
 		manager.getTaskList().addQuery(bugQuery);
 
-		Set<ITaskListElement> catagories = new HashSet<ITaskListElement>();
+		Set<AbstractTaskListElement> catagories = new HashSet<AbstractTaskListElement>();
 		catagories.add(bugQuery);
 
 		CompletedTaskCollector collector = new CompletedTaskCollector(new Date(0));

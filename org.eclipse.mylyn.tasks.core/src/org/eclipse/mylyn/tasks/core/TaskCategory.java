@@ -13,9 +13,6 @@
  */
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Set;
-
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 
 
 /**
@@ -25,24 +22,10 @@ public class TaskCategory extends AbstractTaskContainer {
 
 	public TaskCategory(String handleAndDescription) {
 		super(handleAndDescription);
-	}	
-
-	public String getPriority() {
-		String highestPriority = PriorityLevel.P5.toString();
-		Set<ITask> tasks = getChildren();
-		if (tasks.isEmpty()) {
-			return PriorityLevel.P1.toString();
-		}
-		for (ITask task : tasks) {
-			if (highestPriority.compareTo(task.getPriority()) > 0) {
-				highestPriority = task.getPriority();
-			}
-		}
-		return highestPriority;
 	}
-
+	
 	@Override
-	public boolean isLocal() {
+	public final boolean isLocal() {
 		return true;
 	}
 }

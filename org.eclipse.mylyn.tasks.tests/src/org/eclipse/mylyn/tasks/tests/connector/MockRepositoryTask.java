@@ -11,12 +11,12 @@
 
 package org.eclipse.mylyn.tasks.tests.connector;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
  */
-public class MockRepositoryTask extends AbstractRepositoryTask {
+public class MockRepositoryTask extends AbstractTask {
 	
 	private String ownerId;
 	

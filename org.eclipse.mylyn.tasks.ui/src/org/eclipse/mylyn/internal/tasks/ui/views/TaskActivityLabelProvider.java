@@ -23,12 +23,12 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeActivityDelegate;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -71,11 +71,11 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof DateRangeActivityDelegate) {
 			DateRangeActivityDelegate activityDelegate = (DateRangeActivityDelegate) element;
-			ITask task = activityDelegate.getCorrespondingTask();
+			AbstractTask task = activityDelegate.getCorrespondingTask();
 			switch (columnIndex) {			
 			case 2:
-				if(task instanceof AbstractRepositoryTask) {
-					return ((AbstractRepositoryTask)task).getTaskKey() +": " + task.getSummary();
+				if(task instanceof AbstractTask) {
+					return ((AbstractTask)task).getTaskKey() +": " + task.getSummary();
 				} else {
 					return task.getSummary();
 				}
@@ -120,7 +120,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 
 	@Override
 	public Color getBackground(Object element) {
-		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
+		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
 			return categoryBackgroundColor;
 		} else {
 			return super.getBackground(element);

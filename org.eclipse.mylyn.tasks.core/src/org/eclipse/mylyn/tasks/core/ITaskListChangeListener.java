@@ -22,29 +22,29 @@ public interface ITaskListChangeListener {
 	/**
 	 * called when task changes state (incoming/outgoing/synchronizing...)
 	 */
-	public abstract void localInfoChanged(ITask task);
+	public abstract void localInfoChanged(AbstractTask task);
 
 	/**
 	 * Called when task data (repository task data or edits) have changed
      * TODO: Extract into separate interface
 	 */
-	public abstract void repositoryInfoChanged(ITask task);
+	public abstract void repositoryInfoChanged(AbstractTask task);
 	
-	public abstract void taskDeleted(ITask task);
+	public abstract void taskDeleted(AbstractTask task);
 	
-	public abstract void containerAdded(AbstractTaskContainer container);
+	public abstract void containerAdded(AbstractTaskListElement container);
 		
-	public abstract void containerDeleted(AbstractTaskContainer container);
+	public abstract void containerDeleted(AbstractTaskListElement container);
 
-	public abstract void containerInfoChanged(AbstractTaskContainer container);
+	public abstract void containerInfoChanged(AbstractTaskListElement container);
 
 	/**
 	 * @param task
 	 * @param fromContainer	can be null
 	 * @param toContainer	can be null
 	 */
-	public abstract void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer);
+	public abstract void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer);
 
-	public abstract void taskAdded(ITask task);
+	public abstract void taskAdded(AbstractTask task);
 
 }

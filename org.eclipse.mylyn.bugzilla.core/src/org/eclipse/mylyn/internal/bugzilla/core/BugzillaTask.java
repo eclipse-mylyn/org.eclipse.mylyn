@@ -13,13 +13,13 @@
  */
 package org.eclipse.mylyn.internal.bugzilla.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaTask extends AbstractRepositoryTask {
+public class BugzillaTask extends AbstractTask {
 
 	private String severity;
 

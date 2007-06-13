@@ -173,7 +173,7 @@
          <enablement>
             <or>
                <objectClass
-                     name="org.eclipse.mylyn.tasks.core.ITaskListElement">
+                     name="org.eclipse.mylyn.tasks.core.AbstractTaskListElement">
                </objectClass>
                <objectClass
                      name="org.eclipse.mylyn.tasks.core.TaskRepository">
@@ -368,8 +368,8 @@
             <enablement>
                <or>
 					<objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery"/>
-               		<objectClass name="org.eclipse.mylyn.tasks.core.AbstractRepositoryTask"/>
-                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"/>
+               		<objectClass name="org.eclipse.mylyn.tasks.core.AbstractTask"/>
+                 <objectClass name="org.eclipse.mylyn.tasks.core.AbstractTaskListElement"/>
                </or>
             </enablement>
          </action>
@@ -761,7 +761,7 @@
     <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.eclipse.mylyn.tasks.core.ITaskListElement"
+            adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskListElement"
             class="org.eclipse.mylyn.tasks.ui.search.SearchScoreComputerAdapterFactory">
          <adapter
                type="org.eclipse.search.ui.ISearchPageScoreComputer">
@@ -800,7 +800,7 @@
  <extension
        point="org.eclipse.core.runtime.adapters">
     <factory
-          adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
+          adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskListElement"
           class="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskAdapterFactory">
        <adapter
              type="org.eclipse.ui.IPersistableElement">

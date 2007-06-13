@@ -26,8 +26,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -45,7 +45,7 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 
 	private Map<AbstractRepositoryConnector, List<AbstractRepositoryQuery>> queriesToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryQuery>>();
 
-	private Map<AbstractRepositoryConnector, List<AbstractRepositoryTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractRepositoryTask>>();
+	private Map<AbstractRepositoryConnector, List<AbstractTask>> tasksToSyncMap = new LinkedHashMap<AbstractRepositoryConnector, List<AbstractTask>>();
 
 	@Override
 	public void run(IAction action) {
@@ -68,15 +68,15 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 					}
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
-					for (ITask task : cat.getChildren()) {
-						if (task instanceof AbstractRepositoryTask) {
+					for (AbstractTask task : cat.getChildren()) {
+						if (task instanceof AbstractTask) {
 							AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
-									.getRepositoryConnector(((AbstractRepositoryTask) task).getRepositoryKind());
-							addTaskToSync(client, (AbstractRepositoryTask) task);
+									.getRepositoryConnector(((AbstractTask) task).getRepositoryKind());
+							addTaskToSync(client, (AbstractTask) task);
 						}
 					}
-				} else if (obj instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) obj;
+				} else if (obj instanceof AbstractTask) {
+					AbstractTask repositoryTask = (AbstractTask) obj;
 					AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 							repositoryTask.getRepositoryKind());
 					addTaskToSync(client, repositoryTask);
@@ -115,9 +115,9 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 			}
 			if (!tasksToSyncMap.isEmpty()) {
 				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
-					List<AbstractRepositoryTask> tasksToSync = tasksToSyncMap.get(connector);
+					List<AbstractTask> tasksToSync = tasksToSyncMap.get(connector);
 					if (tasksToSync != null && tasksToSync.size() > 0) {
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryTask>(tasksToSync), true, null);
+						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
 					}
 				}
 			}
@@ -134,11 +134,11 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 //		}		
 	}
 
-	private void addTaskToSync(AbstractRepositoryConnector client, AbstractRepositoryTask repositoryTask) {
+	private void addTaskToSync(AbstractRepositoryConnector client, AbstractTask repositoryTask) {
 		if (client != null) {
-			List<AbstractRepositoryTask> tasksToSync = tasksToSyncMap.get(client);
+			List<AbstractTask> tasksToSync = tasksToSyncMap.get(client);
 			if (tasksToSync == null) {
-				tasksToSync = new ArrayList<AbstractRepositoryTask>();
+				tasksToSync = new ArrayList<AbstractTask>();
 				tasksToSyncMap.put(client, tasksToSync);
 			}
 			tasksToSync.add(repositoryTask);

@@ -23,12 +23,11 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -80,12 +79,12 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().resetTaskList();
 		TasksUiPlugin.getTaskListManager().readExistingOrCreateNewList();
 
-		TaskList taskList = manager.getTaskList();
+		getAllCategories taskList = manager.getTaskList();
 		assertEquals(1, taskList.getAllTasks().size());
-		Set<AbstractRepositoryTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
+		Set<AbstractTask> tasksReturned = taskList.getRepositoryTasks(repositoryUrl);
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
-		for (AbstractRepositoryTask task : tasksReturned) {
+		for (AbstractTask task : tasksReturned) {
 			assertTrue(task.hasBeenReminded());
 		}
 	}
@@ -102,7 +101,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		AbstractRepositoryTask readTask = (AbstractRepositoryTask) manager.getTaskList().getRootTasks().iterator()
+		AbstractTask readTask = (AbstractTask) manager.getTaskList().getRootTasks().iterator()
 				.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
@@ -165,10 +164,10 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 		manager.setTaskListFile(originalFile);
 
-		Collection<ITask> allTasks = manager.getTaskList().getAllTasks();
-		Set<ITask> allRootTasks = manager.getTaskList().getRootTasks();
+		Collection<AbstractTask> allTasks = manager.getTaskList().getAllTasks();
+		Set<AbstractTask> allRootTasks = manager.getTaskList().getRootTasks();
 		Set<AbstractTaskContainer> allCategories = manager.getTaskList().getCategories();
-		Set<ITaskListElement> allRoots = manager.getTaskList().getRootElements();
+		Set<AbstractTaskListElement> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());
 
 		manager.saveTaskList();

@@ -78,9 +78,9 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInp
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -90,7 +90,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.osgi.util.NLS;
@@ -160,7 +160,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Jeff Pound (Attachment work)
  * @author Steffen Pingel
  */
-public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
+public abstract class AbstractTaskEditor extends TaskFormPage {
 
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
@@ -288,19 +288,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void containerAdded(AbstractTaskContainer container) {
+		public void containerAdded(AbstractTaskListElement container) {
 		}
 
-		public void containerDeleted(AbstractTaskContainer container) {
+		public void containerDeleted(AbstractTaskListElement container) {
 		}
 
-		public void containerInfoChanged(AbstractTaskContainer container) {
+		public void containerInfoChanged(AbstractTaskListElement container) {
 		}
 
-		public void localInfoChanged(ITask task) {
+		public void localInfoChanged(AbstractTask task) {
 		}
 
-		public void repositoryInfoChanged(final ITask task) {
+		public void repositoryInfoChanged(final AbstractTask task) {
 
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
@@ -309,7 +309,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (repositoryTask != null && task.equals(repositoryTask)) {
 						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 								|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-							// MessageDialog.openInformation(AbstractRepositoryTaskEditor.this.getSite().getShell(),
+							// MessageDialog.openInformation(AbstractTaskEditor.this.getSite().getShell(),
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will refresh with new incoming
 							// changes.");
@@ -331,13 +331,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		}
 
-		public void taskAdded(ITask task) {
+		public void taskAdded(AbstractTask task) {
 		}
 
-		public void taskDeleted(ITask task) {
+		public void taskDeleted(AbstractTask task) {
 		}
 
-		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 		}
 	};
 
@@ -383,7 +383,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	};
 
-	private AbstractRepositoryTask repositoryTask;
+	private AbstractTask repositoryTask;
 
 	private Set<RepositoryTaskAttribute> changedAttributes;
 
@@ -441,7 +441,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		isDirty = false;
 	}
 
-	public AbstractRepositoryTask getRepositoryTask() {
+	public AbstractTask getRepositoryTask() {
 		return repositoryTask;
 	}
 
@@ -471,9 +471,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	protected abstract void validateInput();
 
 	/**
-	 * Creates a new <code>AbstractRepositoryTaskEditor</code>.
+	 * Creates a new <code>AbstractTaskEditor</code>.
 	 */
-	public AbstractRepositoryTaskEditor(FormEditor editor) {
+	public AbstractTaskEditor(FormEditor editor) {
 		// set the scroll increments so the editor scrolls normally with the
 		// scroll wheel
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1281,7 +1281,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					
 					// TODO: use workbench mechanism for this?
 					ObjectActionContributorManager.getManager().contributeObjectActions(
-							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
+							AbstractTaskEditor.this, popupMenu, attachmentsTableViewer);
 				}
  			});
 		} else {
@@ -1296,7 +1296,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentControlsComposite, "Attach File...", SWT.PUSH);
 
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (task == null) {
 			addAttachmentButton.setEnabled(false);
 		}
@@ -1307,14 +1307,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 						taskData.getId());
-				if (!(task instanceof AbstractRepositoryTask)) {
+				if (!(task instanceof AbstractTask)) {
 					// Should not happen
 					return;
 				}
-				if (AbstractRepositoryTaskEditor.this.isDirty
-						|| ((AbstractRepositoryTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+				if (AbstractTaskEditor.this.isDirty
+						|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
 					MessageDialog.openInformation(attachmentsComposite.getShell(),
 							"Task not synchronized or dirty editor",
 							"Commit edits or synchronize task before adding attachments.");
@@ -1338,14 +1338,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				}
 
 				public void widgetSelected(SelectionEvent e) {
-					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
 							taskData.getId());
-					if (task == null || !(task instanceof AbstractRepositoryTask)) {
+					if (task == null || !(task instanceof AbstractTask)) {
 						// Should not happen
 						return;
 					}
-					if (AbstractRepositoryTaskEditor.this.isDirty
-							|| ((AbstractRepositoryTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+					if (AbstractTaskEditor.this.isDirty
+							|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
 								"Commit edits or synchronize task before deleting attachments.");
@@ -1912,7 +1912,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2215,7 +2215,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (parentEditor != null) {
 						getSite().getPage().closeEditor(parentEditor, false);
 					} else {
-						getSite().getPage().closeEditor(AbstractRepositoryTaskEditor.this, false);
+						getSite().getPage().closeEditor(AbstractTaskEditor.this, false);
 					}
 			}
 		});
@@ -2402,7 +2402,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return false;
 	}
 
-	protected void addAttachContextButton(Composite buttonComposite, ITask task) {
+	protected void addAttachContextButton(Composite buttonComposite, AbstractTask task) {
 		attachContextButton = toolkit.createButton(buttonComposite, "Attach Context", SWT.CHECK);
 		attachContextButton.setImage(TasksUiImages.getImage(TasksUiImages.CONTEXT_ATTACH));
 	}
@@ -2530,7 +2530,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				AbstractRepositoryTask modifiedTask = null;
+				AbstractTask modifiedTask = null;
 				try {
 					monitor.beginTask("Submitting task", 3);
 					String taskId = connector.getTaskDataHandler().postTaskData(repository, taskData,
@@ -2547,7 +2547,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager()
+						modifiedTask = (AbstractTask) TasksUiPlugin.getTaskListManager()
 								.getTaskList()
 								.getTask(repository.getUrl(), taskData.getId());
 					}
@@ -2560,7 +2560,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 
 						modifiedTask.setSubmitting(true);
-						final AbstractRepositoryTask finalModifiedTask = modifiedTask;
+						final AbstractTask finalModifiedTask = modifiedTask;
 						TasksUiPlugin.getSynchronizationManager().synchronize(connector, modifiedTask, true,
 								new JobChangeAdapter() {
 
@@ -2667,12 +2667,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// setFormHeaderLabel();
 							markDirty(false);
 							parentEditor.setMessage(null, 0);
-							AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
-									AbstractRepositoryTaskEditor.this.getId());
+							AbstractTaskEditor.this.getEditor().setActivePage(
+									AbstractTaskEditor.this.getId());
 
 							// Activate editor disabled: bug#179078
-							// AbstractRepositoryTaskEditor.this.getEditor().getEditorSite().getPage().activate(
-							// AbstractRepositoryTaskEditor.this);
+							// AbstractTaskEditor.this.getEditor().getEditorSite().getPage().activate(
+							// AbstractTaskEditor.this);
 
 							// TODO: expand sections that were previously
 							// expanded
@@ -2719,7 +2719,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return null;
 	}
 
-	protected AbstractTaskContainer getCategory() {
+	protected AbstractTaskListElement getCategory() {
 		return null;
 	}
 
@@ -2752,8 +2752,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return Status.OK_STATUS;
 	}
 
-	protected AbstractRepositoryTask handleNewBugPost(String postResult, IProgressMonitor monitor) throws CoreException {
-		final AbstractRepositoryTask newTask = connector.createTaskFromExistingId(repository, postResult, monitor);
+	protected AbstractTask handleNewBugPost(String postResult, IProgressMonitor monitor) throws CoreException {
+		final AbstractTask newTask = connector.createTaskFromExistingId(repository, postResult, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

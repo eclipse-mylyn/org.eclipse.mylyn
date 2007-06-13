@@ -18,9 +18,9 @@ import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.core.MylarStatusHandler;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -35,11 +35,11 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private static final String TASK_ACTIVITY_REPORT = "Task Activity Report";
 
-	private Set<ITask> completedTasks = new HashSet<ITask>();
+	private Set<AbstractTask> completedTasks = new HashSet<AbstractTask>();
 
-	private Set<ITask> inProgressTasks = new HashSet<ITask>();
+	private Set<AbstractTask> inProgressTasks = new HashSet<AbstractTask>();
 	
-	private Set<ITask> plannedTasks = new HashSet<ITask>();
+	private Set<AbstractTask> plannedTasks = new HashSet<AbstractTask>();
 
 	private TaskReportGenerator taskReportGenerator = null;
 
@@ -47,7 +47,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	private Date reportStartDate = null;
 
-	public TaskActivityEditorInput(Date reportStartDate, Set<ITaskListElement> chosenCategories, TaskList tlist) {
+	public TaskActivityEditorInput(Date reportStartDate, Set<AbstractTaskListElement> chosenCategories, getAllCategories tlist) {
 		this.reportStartDate = reportStartDate;
 		taskReportGenerator = new TaskReportGenerator(tlist, chosenCategories);
 
@@ -103,21 +103,21 @@ public class TaskActivityEditorInput implements IEditorInput {
 		return null;
 	}
 
-	public Set<ITask> getCompletedTasks() {
+	public Set<AbstractTask> getCompletedTasks() {
 		return completedTasks;
 	}
 
-	public Set<ITask> getInProgressTasks() {
+	public Set<AbstractTask> getInProgressTasks() {
 		return inProgressTasks;
 	}
 	
-	public Set<ITask> getPlannedTasks() {
+	public Set<AbstractTask> getPlannedTasks() {
 		return plannedTasks;
 	}
 
 	public long getTotalTimeSpentOnCompletedTasks() {
 		long duration = 0;
-		for (ITask t : completedTasks) {
+		for (AbstractTask t : completedTasks) {
 			duration += TasksUiPlugin.getTaskListManager().getElapsedTime(t);
 		}
 		return duration;
@@ -125,7 +125,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	public long getTotalTimeSpentOnInProgressTasks() {
 		long duration = 0;
-		for (ITask t : inProgressTasks) {
+		for (AbstractTask t : inProgressTasks) {
 			duration += TasksUiPlugin.getTaskListManager().getElapsedTime(t);
 		}
 		return duration;
@@ -135,7 +135,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 		return taskReportGenerator;
 	}
 
-	public boolean createdDuringReportPeriod(ITask task) {
+	public boolean createdDuringReportPeriod(AbstractTask task) {
 		Date creationDate = task.getCreationDate();
 		if (creationDate != null) {
 			return creationDate.compareTo(reportStartDate) > 0;
@@ -150,31 +150,31 @@ public class TaskActivityEditorInput implements IEditorInput {
 
 	public int getTotalTimeEstimated() {
 		int duration = 0;
-		for (ITask task : inProgressTasks) {
+		for (AbstractTask task : inProgressTasks) {
 			duration += task.getEstimateTimeHours();
 		}
 		return duration;
 	}
 	
-	public void removeCompletedTask( ITask task) {
+	public void removeCompletedTask( AbstractTask task) {
 		completedTasks.remove(task);				
 	}
 	
-	public void removeInProgressTask(ITask task) {
+	public void removeInProgressTask(AbstractTask task) {
 		inProgressTasks.remove(task);
 	}
 	
-	public void addPlannedTask(ITask task) {		
+	public void addPlannedTask(AbstractTask task) {		
 		plannedTasks.add(task);		
 	}
 	
-	public void removePlannedTask(ITask task) {
+	public void removePlannedTask(AbstractTask task) {
 		plannedTasks.remove(task);
 	}
 	
 	public int getPlannedEstimate() {
 		int estimated = 0;
-		for (ITask task : plannedTasks) {
+		for (AbstractTask task : plannedTasks) {
 			estimated += task.getEstimateTimeHours();
 		}
 		return estimated;

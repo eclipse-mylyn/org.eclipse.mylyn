@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTaskDataHandler;
 import org.eclipse.mylyn.internal.trac.ui.TracUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -132,9 +132,9 @@ public class NewTracTaskPage extends WizardPage {
 		}
 
 		TracTaskDataHandler offlineHandler = (TracTaskDataHandler) connector.getTaskDataHandler();
-		AbstractAttributeFactory attributeFactory = offlineHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractRepositoryTask.DEFAULT_TASK_KIND);
+		AbstractAttributeFactory attributeFactory = offlineHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractTask.DEFAULT_TASK_KIND);
 		this.taskData = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractRepositoryTask.DEFAULT_TASK_KIND);
+				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
 		this.taskData.setNew(true);
 		TracTaskDataHandler.createDefaultAttributes(taskData.getAttributeFactory(), taskData, client, false);
 	}

@@ -21,11 +21,11 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
 
@@ -54,7 +54,7 @@ public class BugzillaQueryTest extends TestCase {
 		// BugzillaCorePlugin.REPOSITORY_KIND);
 
 		connector = new BugzillaRepositoryConnector();
-		connector.init(new TaskList());
+		connector.init(new getAllCategories());
 		handler = connector.getTaskDataHandler();
 		repository = new TaskRepository(BugzillaCorePlugin.REPOSITORY_KIND, IBugzillaConstants.TEST_BUGZILLA_222_URL);
 		Credentials credentials = TestUtil.readCredentials();
@@ -131,14 +131,14 @@ public class BugzillaQueryTest extends TestCase {
 				+ "/buglist.cgi?query_format=advanced&short_desc_type=allwordssubstr&short_desc=search-match-test&product=TestProduct&long_desc_type=substring&long_desc=&bug_file_loc_type=allwordssubstr&bug_file_loc=&deadlinefrom=&deadlineto=&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&emailassigned_to1=1&emailtype1=substring&email1=&emailassigned_to2=1&emailreporter2=1&emailcc2=1&emailtype2=substring&email2=&bugidtype=include&bug_id=&votes=&chfieldfrom=&chfieldto=Now&chfieldvalue=&cmdtype=doit&order=Reuse+same+sort+as+last+time&field0-0-0=noop&type0-0-0=noop&value0-0-0=";
 
 		// holds onto actual hit objects
-		TaskList taskList = new TaskList();
+		getAllCategories taskList = new getAllCategories();
 		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "summary");
 		connector.performQuery(query, repository, new NullProgressMonitor(), collector, false);
 		assertEquals(2, collector.getTaskHits().size());
-		for (ITask hit : collector.getTaskHits()) {
+		for (AbstractTask hit : collector.getTaskHits()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 	}

@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -22,9 +22,9 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class CategoryEditorInput implements IEditorInput {
 
-	private AbstractTaskContainer category;
+	private TaskCategory category;
 
-	public CategoryEditorInput(AbstractTaskContainer cat) {
+	public CategoryEditorInput(TaskCategory cat) {
 		this.category = cat;
 	}
 

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
@@ -128,24 +128,24 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask, IProgressMonitor monitor) {
+	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask, IProgressMonitor monitor) {
 		// ignore
 	}
 
 	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException {
+	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
+	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
 		// ignore
 		return null;
 	}
 
 	@Override
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		// ignore
 

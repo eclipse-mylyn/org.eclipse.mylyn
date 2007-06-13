@@ -21,16 +21,16 @@ import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
@@ -65,12 +65,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	@Override
 	public Image getImage(Object element) {
 		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
-		if (element instanceof ITask) {
+		if (element instanceof AbstractTask) {
 			if (compositeDescriptor.overlayKind == null) {
 				compositeDescriptor.overlayKind = TasksUiImages.OVERLAY_BLANK;
 			}
 			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind);
-		} else if (element instanceof AbstractTaskContainer) {
+		} else if (element instanceof AbstractTaskListElement) {
 //			if (compositeDescriptor.overlaySynch == null) {
 //				compositeDescriptor.overlaySynch = TasksUiImages.OVERLAY_BLANK;
 //			}
@@ -89,13 +89,13 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			compositeDescriptor.icon = TasksUiImages.CATEGORY;
 		}
 
-		if (object instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) object;
+		if (object instanceof AbstractTaskListElement) {
+			AbstractTaskListElement element = (AbstractTaskListElement) object;
 
 			AbstractRepositoryConnectorUi connectorUi = null;
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
+			if (element instanceof AbstractTask) {
+				AbstractTask repositoryTask = (AbstractTask) element;
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getRepositoryKind());
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
@@ -109,7 +109,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				if (element instanceof AbstractRepositoryQuery) {
 					compositeDescriptor.icon = TasksUiImages.QUERY;
-				} else if (element instanceof ITask) {
+				} else if (element instanceof AbstractTask) {
 					compositeDescriptor.icon = TasksUiImages.TASK;
 				} else if (element instanceof DateRangeContainer) {
 					compositeDescriptor.icon = TasksUiImages.CALENDAR;
@@ -121,10 +121,10 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public static ImageDescriptor getSynchronizationImageDescriptor(Object element, boolean synchViewStyle) {
-		AbstractRepositoryTask repositoryTask = null;
+		AbstractTask repositoryTask = null;
 		ImageDescriptor imageDescriptor = null;
-		if (element instanceof AbstractRepositoryTask) {
-			repositoryTask = (AbstractRepositoryTask) element;
+		if (element instanceof AbstractTask) {
+			repositoryTask = (AbstractTask) element;
 		}
 		if (repositoryTask != null) {
 			if (repositoryTask.getLastSyncDateStamp() == null) {
@@ -154,8 +154,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;
 			}
-		} else if (element instanceof AbstractTaskContainer) {
-			AbstractTaskContainer container = (AbstractTaskContainer) element;
+		} else if (element instanceof AbstractTaskListElement) {
+			AbstractTaskListElement container = (AbstractTaskListElement) element;
 			if (container instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
 				if (query.getStatus() != null) {
@@ -169,15 +169,15 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	public static ImageDescriptor getPriorityImageDescriptor(Object element) {
 		AbstractRepositoryConnectorUi connectorUi;
-		if (element instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
-			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryTask) element).getRepositoryKind());
+		if (element instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) element;
+			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getRepositoryKind());
 			if (connectorUi != null) {
 				return connectorUi.getTaskPriorityOverlay(repositoryTask);
 			}
 		}
-		if (element instanceof ITask) {
-			ITask task = TaskElementLabelProvider.getCorrespondingTask((ITaskListElement) element);
+		if (element instanceof AbstractTask) {
+			AbstractTask task = TaskElementLabelProvider.getCorrespondingTask((AbstractTaskListElement) element);
 			if (task != null) {
 				return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
 			}
@@ -187,8 +187,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	@Override
 	public String getText(Object object) {
-		if (object instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) object;
+		if (object instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) object;
 			if (task.getSummary() == null) {
 				if (task.getTaskKey() != null) {
 					return task.getTaskKey() + NO_SUMMARY_AVAILABLE;
@@ -204,8 +204,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else {
 				return task.getSummary();
 			}
-		} else if (object instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) object;
+		} else if (object instanceof AbstractTaskListElement) {
+			AbstractTaskListElement element = (AbstractTaskListElement) object;
 			return element.getSummary();
 		} else {
 			return super.getText(object);
@@ -213,8 +213,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Color getForeground(Object object) {
-		if (object instanceof ITaskListElement && object instanceof ITask) {
-			ITask task = getCorrespondingTask((ITaskListElement) object);
+		if (object instanceof AbstractTaskListElement && object instanceof AbstractTask) {
+			AbstractTask task = getCorrespondingTask((AbstractTaskListElement) object);
 			if (task != null) {
 				if (TasksUiPlugin.getTaskListManager().isCompletedToday(task)) {
 					return themeManager.getCurrentTheme().getColorRegistry().get(
@@ -235,8 +235,8 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 							TaskListColorsAndFonts.THEME_COLOR_TASK_THISWEEK_SCHEDULED);
 				}
 			}
-		} else if (object instanceof AbstractTaskContainer) {
-			for (ITask child : ((AbstractTaskContainer) object).getChildren()) {
+		} else if (object instanceof AbstractTaskListElement) {
+			for (AbstractTask child : ((AbstractTaskListElement) object).getChildren()) {
 				if (child.isActive()) {
 					return TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 				} else if (child.isPastReminder() && !child.isCompleted()) {
@@ -251,17 +251,17 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	/**
 	 * TODO: move
 	 */
-	public static ITask getCorrespondingTask(ITaskListElement element) {
-		if (element instanceof ITask) {
-			return (ITask) element;
+	public static AbstractTask getCorrespondingTask(AbstractTaskListElement element) {
+		if (element instanceof AbstractTask) {
+			return (AbstractTask) element;
 		} else {
 			return null;
 		}
 	}
 
 	public Color getBackground(Object element) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
 			ITaskHighlighter highlighter = TasksUiPlugin.getDefault().getHighlighter();
 			if (highlighter != null) {
 				return highlighter.getHighlightColor(task);
@@ -271,23 +271,23 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 	}
 
 	public Font getFont(Object element) {
-		if (!(element instanceof ITaskListElement)) {
+		if (!(element instanceof AbstractTaskListElement)) {
 			return null;
 		}
-		ITask task = getCorrespondingTask((ITaskListElement) element);
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+		AbstractTask task = getCorrespondingTask((AbstractTaskListElement) element);
+		if (task instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) task;
 			if (repositoryTask.isSynchronizing()) {
 				return TaskListColorsAndFonts.ITALIC;
 			}
 		}
-		if (element instanceof AbstractTaskContainer) {
+		if (element instanceof AbstractTaskListElement) {
 			if (element instanceof AbstractRepositoryQuery) {
 				if (((AbstractRepositoryQuery) element).isSynchronizing()) {
 					return TaskListColorsAndFonts.ITALIC;
 				}
 			}
-			for (ITask child : ((AbstractTaskContainer) element).getChildren()) {
+			for (AbstractTask child : ((AbstractTaskListElement) element).getChildren()) {
 				if (child.isActive()) {
 					return TaskListColorsAndFonts.BOLD;
 				}
@@ -299,7 +299,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			} else if (task.isCompleted()) {
 				return TaskListColorsAndFonts.STRIKETHROUGH;
 			}
-			for (ITask child : task.getChildren()) {
+			for (AbstractTask child : task.getChildren()) {
 				if (child.isActive()) {
 					return TaskListColorsAndFonts.BOLD;
 				}

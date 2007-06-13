@@ -129,7 +129,7 @@ public class DateRangeContainer extends AbstractTaskContainer {
 
 	public long getTotalEstimated() {
 		totalEstimated = 0;
-		for (ITask task : dateRangeDelegates) {
+		for (AbstractTask task : dateRangeDelegates) {
 			totalEstimated += task.getEstimateTimeHours();
 		}
 		return totalEstimated;
@@ -195,17 +195,17 @@ public class DateRangeContainer extends AbstractTaskContainer {
 		return true;
 	}
 
-	@Override
-	public boolean isLocal() {
-		return true;
-	}
-
 	/**
 	 * The handle for most containers is their summary. Override to specify a
 	 * different natural ordering.
 	 */
 	@Override
-	public int compareTo(ITaskListElement taskListElement) {
+	public int compareTo(AbstractTaskListElement taskListElement) {
 		return startDate.compareTo(((DateRangeContainer) taskListElement).startDate);
+	}
+	
+	@Override
+	public final boolean isLocal() {
+		return true;
 	}
 }

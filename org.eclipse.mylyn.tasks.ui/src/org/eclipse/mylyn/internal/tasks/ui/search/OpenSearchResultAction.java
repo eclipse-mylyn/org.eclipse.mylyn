@@ -15,7 +15,7 @@ import java.util.Iterator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
 /**
@@ -53,8 +53,8 @@ public class OpenSearchResultAction extends Action {
 			IStructuredSelection selection = (IStructuredSelection) s;
 
 			// go through each of the selected items and show it in an editor
-			for (Iterator<AbstractRepositoryTask> it = selection.iterator(); it.hasNext();) {
-				AbstractRepositoryTask repositoryHit = it.next();
+			for (Iterator<AbstractTask> it = selection.iterator(); it.hasNext();) {
+				AbstractTask repositoryHit = it.next();
 				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getTaskUrl());
 				// try {
 				// int taskId = Integer.parseInt(repositoryHit.getId());

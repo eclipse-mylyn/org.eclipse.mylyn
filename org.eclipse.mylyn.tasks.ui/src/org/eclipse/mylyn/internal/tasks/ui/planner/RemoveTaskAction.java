@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Rob Elves
@@ -35,8 +35,8 @@ public class RemoveTaskAction extends Action {
 	@Override
 	public void run() {
 		for (Object object : ((IStructuredSelection) viewer.getSelection()).toList()) {
-			if (object instanceof ITask) {
-				ITask task = (ITask) object;
+			if (object instanceof AbstractTask) {
+				AbstractTask task = (AbstractTask) object;
 				if (task != null) {									
 					((ITaskPlannerContentProvider) (viewer.getContentProvider())).removeTask(task);
 				}

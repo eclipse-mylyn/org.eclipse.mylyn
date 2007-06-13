@@ -12,35 +12,35 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Rob Elves
  */
-public abstract class AbstractRepositoryTasksAction extends Action {
+public abstract class AbstractTaskAction extends Action {
 
-	protected List<ITaskListElement> selectedElements;
+	protected List<AbstractTaskListElement> selectedElements;
 
 	@Override
 	public void run() {
-		for (ITaskListElement element : selectedElements) {
-			if (element instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) element;
+		for (AbstractTaskListElement element : selectedElements) {
+			if (element instanceof AbstractTask) {
+				AbstractTask repositoryTask = (AbstractTask) element;
 				performActionOnTask(repositoryTask);
 			} else if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
-				for (AbstractRepositoryTask queryHit : repositoryQuery.getHits()) {
+				for (AbstractTask queryHit : repositoryQuery.getHits()) {
 					performActionOnTask(queryHit);
 				}
-			} else if (element instanceof AbstractTaskContainer) {
-				AbstractTaskContainer container = (AbstractTaskContainer) element;
-				for (ITask iTask : container.getChildren()) {
-					if (iTask instanceof AbstractRepositoryTask) {
-						AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) iTask;
+			} else if (element instanceof AbstractTaskListElement) {
+				AbstractTaskListElement container = (AbstractTaskListElement) element;
+				for (AbstractTask iTask : container.getChildren()) {
+					if (iTask instanceof AbstractTask) {
+						AbstractTask repositoryTask = (AbstractTask) iTask;
 						performActionOnTask(repositoryTask);
 					}
 				}
@@ -48,9 +48,9 @@ public abstract class AbstractRepositoryTasksAction extends Action {
 		}
 	}
 
-	protected abstract void performActionOnTask(AbstractRepositoryTask repositoryTask);
+	protected abstract void performActionOnTask(AbstractTask repositoryTask);
 
-	protected boolean containsArchiveContainer(List<ITaskListElement> selectedElements) {
+	protected boolean containsArchiveContainer(List<AbstractTaskListElement> selectedElements) {
 		return selectedElements.contains(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 	}
 

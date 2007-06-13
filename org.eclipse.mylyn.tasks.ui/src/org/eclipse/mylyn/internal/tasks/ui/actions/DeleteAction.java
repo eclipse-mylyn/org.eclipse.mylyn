@@ -20,8 +20,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -56,8 +56,8 @@ public class DeleteAction extends Action {
 		for (Object object : toDelete) {
 			i++;
 			if (i < 20) {
-				if (object instanceof ITaskListElement) {
-					message += "    " + ((ITaskListElement) object).getSummary() + "\n";
+				if (object instanceof AbstractTaskListElement) {
+					message += "    " + ((AbstractTaskListElement) object).getSummary() + "\n";
 				}
 			} else {
 				message += "...";
@@ -71,9 +71,9 @@ public class DeleteAction extends Action {
 		}
 
 		for (Object selectedObject : toDelete) {
-			if (selectedObject instanceof ITask) {
-				ITask task = null;
-				task = (ITask) selectedObject;
+			if (selectedObject instanceof AbstractTask) {
+				AbstractTask task = null;
+				task = (AbstractTask) selectedObject;
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
 				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
@@ -95,7 +95,7 @@ public class DeleteAction extends Action {
 				// if (!deleteConfirmed)
 				// return;
 				TaskCategory cat = (TaskCategory) selectedObject;
-				for (ITask task : cat.getChildren()) {
+				for (AbstractTask task : cat.getChildren()) {
 					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
 					TasksUiUtil.closeEditorInActivePage(task);
 				}

@@ -27,12 +27,12 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.actions.MarkTaskCompleteAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -52,31 +52,31 @@ public class TaskListUiTest extends TestCase {
 
 	private TaskCategory cat1 = null;
 
-	private AbstractRepositoryTask cat1task1 = null;
+	private AbstractTask cat1task1 = null;
 
-	private AbstractRepositoryTask cat1task2 = null;
+	private AbstractTask cat1task2 = null;
 
-	private AbstractRepositoryTask cat1task3 = null;
+	private AbstractTask cat1task3 = null;
 
-	private AbstractRepositoryTask cat1task4 = null;
+	private AbstractTask cat1task4 = null;
 
-	private AbstractRepositoryTask cat1task5 = null;
+	private AbstractTask cat1task5 = null;
 
-	private AbstractRepositoryTask cat1task1sub1 = null;
+	private AbstractTask cat1task1sub1 = null;
 
 	private TaskCategory cat2 = null;
 
-	private AbstractRepositoryTask cat2task1 = null;
+	private AbstractTask cat2task1 = null;
 
-	private AbstractRepositoryTask cat2task2 = null;
+	private AbstractTask cat2task2 = null;
 
-	private AbstractRepositoryTask cat2task3 = null;
+	private AbstractTask cat2task3 = null;
 
-	private AbstractRepositoryTask cat2task4 = null;
+	private AbstractTask cat2task4 = null;
 
-	private AbstractRepositoryTask cat2task5 = null;
+	private AbstractTask cat2task5 = null;
 
-	private AbstractRepositoryTask cat2task1sub1 = null;
+	private AbstractTask cat2task1sub1 = null;
 
 	private final static int CHECK_COMPLETE_FILTER = 1;
 
@@ -180,7 +180,7 @@ public class TaskListUiTest extends TestCase {
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());
-		ArrayList<ITaskListElement> tasks = new ArrayList<ITaskListElement>();
+		ArrayList<AbstractTaskListElement> tasks = new ArrayList<AbstractTaskListElement>();
 		tasks.add(webTask);
 		new MarkTaskCompleteAction(tasks).run();
 		assertTrue(webTask.isCompleted());
@@ -253,7 +253,7 @@ public class TaskListUiTest extends TestCase {
 	public void testGetSubMenuManagerContainsAllCategoriesPlusNewCategory() {
 		// setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
-		List<ITaskListElement> selectedElements = new Vector<ITaskListElement>();
+		List<AbstractTaskListElement> selectedElements = new Vector<AbstractTaskListElement>();
 		selectedElements.add(cat1task1);
 		int nrOfCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
 		int nrOfSeparators = 1;
@@ -284,15 +284,15 @@ public class TaskListUiTest extends TestCase {
 		//setup
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		MenuManager menuManager = null;
-		List<ITaskListElement> selectedElements = new Vector<ITaskListElement>();
+		List<AbstractTaskListElement> selectedElements = new Vector<AbstractTaskListElement>();
 		selectedElements.add(cat1task1);
 
-		List<ITaskListElement> emptySelection = new Vector<ITaskListElement>();
+		List<AbstractTaskListElement> emptySelection = new Vector<AbstractTaskListElement>();
 
-		List<ITaskListElement> categorySelection = new Vector<ITaskListElement>();
+		List<AbstractTaskListElement> categorySelection = new Vector<AbstractTaskListElement>();
 		categorySelection.add(cat1);
 
-		List<ITaskListElement> querySelection = new Vector<ITaskListElement>();
+		List<AbstractTaskListElement> querySelection = new Vector<AbstractTaskListElement>();
 		querySelection.add(new MockRepositoryQuery("query", null));
 
 		//execute system under test & assert
@@ -355,8 +355,8 @@ public class TaskListUiTest extends TestCase {
 			assertTrue(items[i].getData() instanceof TaskCategory);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
-				assertTrue(sub[j].getData() instanceof ITask);
-				ITask task = (ITask) sub[j].getData();
+				assertTrue(sub[j].getData() instanceof AbstractTask);
+				AbstractTask task = (AbstractTask) sub[j].getData();
 				if (checkComplete) {
 					assertTrue(task.isCompleted());
 				} else {
@@ -377,8 +377,8 @@ public class TaskListUiTest extends TestCase {
 			assertTrue(items[i].getData() instanceof TaskCategory);
 			TreeItem[] sub = items[i].getItems();
 			for (int j = 0; j < sub.length; j++) {
-				assertTrue(sub[j].getData() instanceof ITask);
-				ITask task = (ITask) sub[j].getData();
+				assertTrue(sub[j].getData() instanceof AbstractTask);
+				AbstractTask task = (AbstractTask) sub[j].getData();
 				assertTrue(task.getPriority().equals("P2") || task.getPriority().equals("P1"));
 				if (task.getPriority().equals("P2")) {
 					p2Count++;

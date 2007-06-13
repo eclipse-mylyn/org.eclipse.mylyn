@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetElementAdapter;
 
@@ -24,7 +24,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 	public IAdaptable[] adaptElements(IWorkingSet ws, IAdaptable[] elements) {
 		for (int i = 0; i < elements.length; i++) {
 			IAdaptable adaptable = elements[i];
-			if (!(adaptable instanceof AbstractTaskContainer)) {
+			if (!(adaptable instanceof AbstractTaskListElement)) {
 				return selectContainers(elements);
 			}
 		}
@@ -34,7 +34,7 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 	private IAdaptable[] selectContainers(IAdaptable[] elements) {
 		List<IAdaptable> containers = new ArrayList<IAdaptable>(elements.length);
 		for (IAdaptable adaptable : elements) {
-			if (adaptable instanceof AbstractTaskContainer) {
+			if (adaptable instanceof AbstractTaskListElement) {
 				containers.add(adaptable);
 			}
 		}

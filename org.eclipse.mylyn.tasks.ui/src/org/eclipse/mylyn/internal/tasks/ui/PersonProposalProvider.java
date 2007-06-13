@@ -20,8 +20,8 @@ import java.util.TreeSet;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
@@ -33,7 +33,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class PersonProposalProvider implements IContentProposalProvider {
 
-	private AbstractRepositoryTask currentTask;
+	private AbstractTask currentTask;
 
 	private RepositoryTaskData currentTaskData;
 
@@ -41,7 +41,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	
 	private Set<String> addressSet = null;
 
-	public PersonProposalProvider(AbstractRepositoryTask repositoryTask, RepositoryTaskData taskData) {
+	public PersonProposalProvider(AbstractTask repositoryTask, RepositoryTaskData taskData) {
 		this.currentTask = repositoryTask;
 		this.currentTaskData = taskData;
 	}
@@ -102,7 +102,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		}
 
 		if (repositoryUrl != null && repositoryKind != null) {
-			Set<AbstractRepositoryTask> tasks = new HashSet<AbstractRepositoryTask>();
+			Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 			if (currentTask != null) {
 				tasks.add(currentTask);
 			}
@@ -116,17 +116,17 @@ public class PersonProposalProvider implements IContentProposalProvider {
 					addressSet.add(currentUser);
 			}
 
-			Collection<ITask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
-			for (ITask task : allTasks) {
-				if (task instanceof AbstractRepositoryTask) {
-					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
+			for (AbstractTask task : allTasks) {
+				if (task instanceof AbstractTask) {
+					AbstractTask repositoryTask = (AbstractTask) task;
 					if (repositoryTask.getRepositoryUrl().equals(repositoryUrl)) {
 						tasks.add(repositoryTask);
 					}
 				}
 			}
 
-			for (AbstractRepositoryTask task : tasks) {
+			for (AbstractTask task : tasks) {
 				addAddresses(task, addressSet);
 			}
 		}
@@ -134,9 +134,9 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		return addressSet;
 	}
 
-	private void addAddresses(AbstractRepositoryTask task, Set<String> addressSet) {
+	private void addAddresses(AbstractTask task, Set<String> addressSet) {
 		// TODO: Owner, Creator, and CC should be stored on
-		// AbstractRepositoryTask
+		// AbstractTask
 		// RepositoryTaskData data =
 		// TasksUiPlugin.getDefault().getTaskData(task);
 

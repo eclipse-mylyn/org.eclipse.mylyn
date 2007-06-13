@@ -24,7 +24,7 @@ public interface ILinkedTaskInfo {
 
 	public abstract String getRepositoryUrl();
 	
-	public abstract ITask getTask();
+	public abstract AbstractTask getTask();
 	
 	public abstract String getComment();
 	

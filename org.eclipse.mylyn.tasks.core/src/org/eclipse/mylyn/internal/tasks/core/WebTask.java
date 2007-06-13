@@ -11,14 +11,14 @@
 
 package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Task used with generic web-based repositories
  * 
  * @author Eugene Kuleshov
  */
-public class WebTask extends AbstractRepositoryTask {
+public class WebTask extends AbstractTask {
 
 	// TODO: move
 	public static final String REPOSITORY_TYPE = "web";

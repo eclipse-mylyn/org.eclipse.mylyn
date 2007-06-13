@@ -15,8 +15,8 @@ import java.util.Date;
 
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
@@ -26,7 +26,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TaskListNotificationIncoming implements ITaskListNotification {
 
-	private final AbstractRepositoryTask task;
+	private final AbstractTask task;
 	
 	private String description = null;
 
@@ -35,7 +35,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 
 	private Date date;
 
-	public TaskListNotificationIncoming(AbstractRepositoryTask task) {
+	public TaskListNotificationIncoming(AbstractTask task) {
 		this.task = task;
 	}
 
@@ -82,7 +82,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 		return notification.getTask().equals(task);
 	}
 
-	private ITask getTask() {
+	private AbstractTask getTask() {
 		return task;
 	}
 

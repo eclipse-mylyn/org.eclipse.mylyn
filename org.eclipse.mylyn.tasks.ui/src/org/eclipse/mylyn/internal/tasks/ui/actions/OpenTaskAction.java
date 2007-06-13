@@ -12,7 +12,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -55,8 +55,8 @@ public class OpenTaskAction extends ActionDelegate implements IWorkbenchWindowAc
 		}
 
 		Object result = dlg.getFirstResult();
-		if (result instanceof ITask) {
-			ITask task = (ITask) result;
+		if (result instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) result;
 			if (dlg.getOpenInBrowser()) {
 				if (task.hasValidUrl()) {
 					TasksUiUtil.openUrl(task.getTaskUrl(), false);

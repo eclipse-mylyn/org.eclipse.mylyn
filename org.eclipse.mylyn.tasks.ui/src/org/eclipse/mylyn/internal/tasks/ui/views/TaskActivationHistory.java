@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -27,7 +27,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class TaskActivationHistory {
 
-	private List<ITask> history = new ArrayList<ITask>();
+	private List<AbstractTask> history = new ArrayList<AbstractTask>();
 
 	private int currentIndex = -1;
 
@@ -52,7 +52,7 @@ public class TaskActivationHistory {
 		history.clear();
 		for (int i = ContextCorePlugin.getContextManager().getActivityMetaContext().getInteractionHistory()
 				.size() - 1; i >= 0; i--) {
-			ITask prevTask = getHistoryTaskAt(i);
+			AbstractTask prevTask = getHistoryTaskAt(i);
 
 			if (prevTask != null && !history.contains(prevTask)) {
 				// !isDuplicate(prevTask, i + 1)) {
@@ -71,13 +71,13 @@ public class TaskActivationHistory {
 	 * Returns the task corresponding to the interaction event history item at
 	 * the specified position
 	 */
-	protected ITask getHistoryTaskAt(int pos) {
+	protected AbstractTask getHistoryTaskAt(int pos) {
 		InteractionEvent event = ContextCorePlugin.getContextManager().getActivityMetaContext()
 				.getInteractionHistory().get(pos);
 		return TasksUiPlugin.getTaskListManager().getTaskList().getTask(event.getStructureHandle());
 	}
 
-	public void addTask(ITask task) {
+	public void addTask(AbstractTask task) {
 		try {
 			if (!persistentHistoryLoaded) {
 				loadPersistentHistory();
@@ -92,10 +92,10 @@ public class TaskActivationHistory {
 		}
 	}
 
-	public ITask getPreviousTask() {
+	public AbstractTask getPreviousTask() {
 		try {
 			boolean active = false;
-			for (ITask task: history) {
+			for (AbstractTask task: history) {
 				if(task.isActive()) {
 					active = true;
 					break;
@@ -117,7 +117,7 @@ public class TaskActivationHistory {
 		}
 	}
 
-	public List<ITask> getPreviousTasks() {
+	public List<AbstractTask> getPreviousTasks() {
 		return history;
 	}
 

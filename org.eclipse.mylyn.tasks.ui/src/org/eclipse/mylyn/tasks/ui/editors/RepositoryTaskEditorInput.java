@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -25,19 +25,19 @@ public class RepositoryTaskEditorInput extends AbstractTaskEditorInput {
 
 	protected String url;
 
-	protected AbstractRepositoryTask repositoryTask = null;
+	protected AbstractTask repositoryTask = null;
 
 	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl, String taskId) {
 		super(repository, handle);
 		this.taskId = taskId;
 		this.url = taskUrl;
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
-		if (task != null && task instanceof AbstractRepositoryTask) {
-			this.repositoryTask = (AbstractRepositoryTask) task;
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		if (task != null && task instanceof AbstractTask) {
+			this.repositoryTask = (AbstractTask) task;
 		}
 	}
 
-	public AbstractRepositoryTask getRepositoryTask() {
+	public AbstractTask getRepositoryTask() {
 		return repositoryTask;
 	}
 

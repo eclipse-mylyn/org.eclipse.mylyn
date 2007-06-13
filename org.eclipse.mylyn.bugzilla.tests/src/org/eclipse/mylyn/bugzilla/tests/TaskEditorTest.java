@@ -14,12 +14,12 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaAttributeFactory;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -59,7 +59,7 @@ public class TaskEditorTest extends TestCase {
 
 		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(),
 				BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-						.getTaskDataManager().getNewRepositoryTaskId(), AbstractRepositoryTask.DEFAULT_TASK_KIND);
+						.getTaskDataManager().getNewRepositoryTaskId(), AbstractTask.DEFAULT_TASK_KIND);
 		model.setNew(true);
 		BugzillaRepositoryConnector.setupNewBugAttributes(repository, model);
 		NewTaskEditorInput editorInput = new NewTaskEditorInput(repository, model);
@@ -67,8 +67,8 @@ public class TaskEditorTest extends TestCase {
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
-		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
+		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractTaskEditor);
+		AbstractTaskEditor editor = (AbstractTaskEditor) taskEditor.getActivePageInstance();
 
 		String desc = DESCRIPTION;
 		String summary = "summary";

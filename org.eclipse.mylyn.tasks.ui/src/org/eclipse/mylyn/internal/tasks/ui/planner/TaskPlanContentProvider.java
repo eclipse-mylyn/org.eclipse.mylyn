@@ -16,14 +16,14 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * @author Ken Sueda
  */
 public class TaskPlanContentProvider implements IStructuredContentProvider {
 
-	private List<ITask> tasks = new ArrayList<ITask>();
+	private List<AbstractTask> tasks = new ArrayList<AbstractTask>();
 
 	public Object[] getElements(Object inputElement) {
 		return tasks.toArray();
@@ -35,17 +35,17 @@ public class TaskPlanContentProvider implements IStructuredContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	public void addTask(ITask t) {
+	public void addTask(AbstractTask t) {
 		if (!tasks.contains(t)) {
 			tasks.add(t);
 		}
 	}
 
-	public void removeTask(ITask t) {
+	public void removeTask(AbstractTask t) {
 		tasks.remove(t);
 	}
 
-	public List<ITask> getTasks() {
+	public List<AbstractTask> getTasks() {
 		return tasks;
 	}
 }

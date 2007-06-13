@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -36,8 +36,8 @@ public class AttachFileAction extends BaseSelectionListenerAction {
 			editor.showBusy(true);
 		}
 		Object selection = super.getStructuredSelection().getFirstElement();
-		if (selection instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) selection;
+		if (selection instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) selection;
 			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 

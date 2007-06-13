@@ -42,8 +42,8 @@ import org.eclipse.mylyn.internal.trac.core.model.TracVersion;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -139,7 +139,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 
 	protected void createTaskFromExistingKey() throws CoreException {
 		String id = data.tickets.get(0).getId() + "";
-		ITask task = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
+		AbstractTask task = connector.createTaskFromExistingId(repository, id, new NullProgressMonitor());
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
@@ -209,13 +209,13 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracRepositoryQuery query = new TracRepositoryQuery(url, queryUrl, "description");
 
 		//MultiStatus queryStatus = new MultiStatus(TracUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
-		final List<AbstractRepositoryTask> result = new ArrayList<AbstractRepositoryTask>();
+		final List<AbstractTask> result = new ArrayList<AbstractTask>();
 		QueryHitCollector hitCollector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(), new TaskFactory(repository)) {
 			public void accept(RepositoryTaskData data) {
 				fail("Unexpected call to accept()");
 			}
 			@Override
-			public void accept(AbstractRepositoryTask hit) {
+			public void accept(AbstractTask hit) {
 				result.add(hit);
 			}};
 		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector, false);
@@ -261,7 +261,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
-		assertEquals(AbstractRepositoryTask.DEFAULT_TASK_KIND, task.getTaskKind());
+		assertEquals(AbstractTask.DEFAULT_TASK_KIND, task.getTaskKind());
 	}
 
 	public void testUpdateAttributesWeb011() throws Exception {

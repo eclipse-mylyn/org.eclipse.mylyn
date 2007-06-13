@@ -44,12 +44,12 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DelegatingTaskExternalizer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -100,7 +100,7 @@ public class TaskListWriter {
 		this.delagatingExternalizer.setDelegateExternalizers(externalizers);
 	}
 
-	public void writeTaskList(TaskList taskList, File outFile) {
+	public void writeTaskList(getAllCategories taskList, File outFile) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc = null;
@@ -117,7 +117,7 @@ public class TaskListWriter {
 		root.setAttribute(ATTRIBUTE_VERSION, VALUE_VERSION);
 
 		// create the categories
-		for (AbstractTaskContainer category : taskList.getCategories()) {
+		for (AbstractTaskListElement category : taskList.getCategories()) {
 			// if (!category.getHandleIdentifier().equals(TaskArchive.HANDLE)) {
 			delagatingExternalizer.createCategoryElement(category, doc, root);
 			// }
@@ -143,7 +143,7 @@ public class TaskListWriter {
 		// Collection<ITask> allTasks =
 		// Collections.synchronizedCollection(taskList.getAllTasks());
 		// synchronized (allTasks) {
-		for (ITask task : taskList.getAllTasks()) {
+		for (AbstractTask task : taskList.getAllTasks()) {
 			createTaskElement(doc, root, task);
 		}
 
@@ -168,7 +168,7 @@ public class TaskListWriter {
 		return;
 	}
 
-	private void createTaskElement(Document doc, Element root, ITask task) {
+	private void createTaskElement(Document doc, Element root, AbstractTask task) {
 		try {
 			Element element = null;
 			for (ITaskListExternalizer externalizer : externalizers) {
@@ -247,9 +247,9 @@ public class TaskListWriter {
 	/**
 	 * TODO: fix this old mess
 	 */
-	public void readTaskList(TaskList taskList, File inFile, TaskDataManager taskDataManager) {
+	public void readTaskList(getAllCategories taskList, File inFile, TaskDataManager taskDataManager) {
 		hasCaughtException = false;
-		Map<ITask, NodeList> tasksWithSubtasks = new HashMap<ITask, NodeList>();
+		Map<AbstractTask, NodeList> tasksWithSubtasks = new HashMap<AbstractTask, NodeList>();
 		orphanedTaskNodes.clear();
 		orphanedQueryNodes.clear();
 		try {
@@ -287,7 +287,7 @@ public class TaskListWriter {
 						if (!child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_CATEGORY)
 								&& !child.getNodeName().endsWith(DelegatingTaskExternalizer.KEY_QUERY)) {
 
-							ITask task = delagatingExternalizer.readTask(child, taskList, null, null);
+							AbstractTask task = delagatingExternalizer.readTask(child, taskList, null, null);
 							if (task == null) {
 								orphanedTaskNodes.add(child);
 							} else {
@@ -308,7 +308,7 @@ public class TaskListWriter {
 					}
 				}
 
-				for (ITask task : tasksWithSubtasks.keySet()) {
+				for (AbstractTask task : tasksWithSubtasks.keySet()) {
 					NodeList nodes = tasksWithSubtasks.get(task);
 					delagatingExternalizer.readSubTasks(task, nodes, taskList);
 				}

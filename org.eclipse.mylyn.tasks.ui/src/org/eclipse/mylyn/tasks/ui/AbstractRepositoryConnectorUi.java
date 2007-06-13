@@ -25,13 +25,13 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 import org.eclipse.swt.widgets.Shell;
@@ -75,13 +75,13 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * the default task editor. As of Mylar 2.0M2 these are the Planning and
 	 * Context pages.
 	 */
-	public String getTaskEditorId(AbstractRepositoryTask repositoryTask) {
+	public String getTaskEditorId(AbstractTask repositoryTask) {
 		return TaskEditor.ID_EDITOR;
 	}
 
 	public abstract boolean hasSearchPage();
 
-	public List<ITaskListElement> getLegendItems() {
+	public List<AbstractTaskListElement> getLegendItems() {
 		return Collections.emptyList();
 	}
 	
@@ -89,7 +89,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * @param repositoryTask
 	 *            can be null
 	 */
-	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return LABEL_TASK_DEFAULT;
 	}
 	
@@ -108,10 +108,10 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * For connectors that have a decorator that they want to reuse, the connector can 
 	 * maintain a reference to the label provider and get the descriptor from the images it returns.
 	 */
-	public ImageDescriptor getTaskListElementIcon(ITaskListElement element) {
+	public ImageDescriptor getTaskListElementIcon(AbstractTaskListElement element) {
 		if (element instanceof AbstractRepositoryQuery) {
 			return TasksUiImages.QUERY;
-		} else if (element instanceof ITask) {
+		} else if (element instanceof AbstractTask) {
 			return TasksUiImages.TASK;
 		} else {
 			return null;
@@ -121,7 +121,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * Task kind overlay, recommended to override with connector-specific overlay.
 	 */
-	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
 		if (!(task instanceof LocalTask) && (!hasRichEditor() || task instanceof WebTask)) {
 			return TasksUiImages.OVERLAY_WEB;
 		}
@@ -132,7 +132,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Connector-specific priority icons.  Not recommended to override since priority
 	 * icons are used elsewhere in the Task List UI (e.g. filter selection in view menu).
 	 */
-	public ImageDescriptor getTaskPriorityOverlay(AbstractRepositoryTask task) {
+	public ImageDescriptor getTaskPriorityOverlay(AbstractTask task) {
 		return TasksUiImages.getImageDescriptorForPriority(PriorityLevel.fromString(task.getPriority()));
 	}
 
@@ -232,7 +232,7 @@ public abstract class AbstractRepositoryConnectorUi {
 		return customNotificationHandling;
 	}
 
-	public boolean handlesDueDates(AbstractRepositoryTask task) {
+	public boolean handlesDueDates(AbstractTask task) {
 		return false;
 	}
 

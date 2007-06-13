@@ -32,19 +32,19 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.UnrecognizedReponseException;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -71,7 +71,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	private BugzillaClientManager clientManager;
 
 	@Override
-	public void init(TaskList taskList) {
+	public void init(getAllCategories taskList) {
 		super.init(taskList);
 		this.taskDataHandler = new BugzillaTaskDataHandler(this);
 		this.attachmentHandler = new BugzillaAttachmentHandler(this);
@@ -98,13 +98,13 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
-	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
+	public AbstractTask createTask(String repositoryUrl, String id, String summary) {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, id, summary);
 		task.setCreationDate(new Date());
 		return task;
 	}
 
-	public void updateTaskFromTaskData(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData) {
 		BugzillaTask bugzillaTask = (BugzillaTask) repositoryTask;
 		if (taskData != null) {
@@ -224,10 +224,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 
 	@Override
-	public Set<AbstractRepositoryTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractRepositoryTask> tasks, IProgressMonitor monitor) throws CoreException {
+	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
+			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
 		try {
-			Set<AbstractRepositoryTask> changedTasks = new HashSet<AbstractRepositoryTask>();
+			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
 
 			if (repository.getSyncTimeStamp() == null) {
 				return tasks;
@@ -246,10 +246,10 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			urlQueryString = urlQueryBase + BUG_ID;
 
 			int queryCounter = -1;
-			Iterator<AbstractRepositoryTask> itr = tasks.iterator();
+			Iterator<AbstractTask> itr = tasks.iterator();
 			while (itr.hasNext()) {
 				queryCounter++;
-				AbstractRepositoryTask task = itr.next();
+				AbstractTask task = itr.next();
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
 				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
 						.length()) > IBugzillaConstants.MAX_URL_LENGTH) {
@@ -272,11 +272,11 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-	private void queryForChanged(final TaskRepository repository, Set<AbstractRepositoryTask> changedTasks,
+	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks,
 			String urlQueryString) throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList, new ITaskFactory() {
 
-			public AbstractRepositoryTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) {
+			public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
 				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 			}
@@ -286,12 +286,12 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		performQuery(query, repository, new NullProgressMonitor(), collector, false);
 
-		for (ITask taskHit : collector.getTaskHits()) {
+		for (AbstractTask taskHit : collector.getTaskHits()) {
 			// String handle =
-			// AbstractRepositoryTask.getHandle(repository.getUrl(),
+			// AbstractTask.getHandle(repository.getUrl(),
 			// hit.getId());
-			if (taskHit != null && taskHit instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) taskHit;
+			if (taskHit != null && taskHit instanceof AbstractTask) {
+				AbstractTask repositoryTask = (AbstractTask) taskHit;
 				// Hack to avoid re-syncing last task from previous
 				// synchronization
 				// This can be removed once we are getting a query timestamp
@@ -348,8 +348,8 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 			if (!forced) {
 				// Only retrieve data for hits we don't already have
-				for (ITask existingTask : query.getChildren()) {
-					AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) existingTask;
+				for (AbstractTask existingTask : query.getChildren()) {
+					AbstractTask repositoryTask = (AbstractTask) existingTask;
 					if (ids.contains(repositoryTask.getTaskId())) {
 						resultCollector.accept(repositoryTask);
 						ids.remove(repositoryTask.getTaskId());
@@ -407,7 +407,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateTaskFromRepository(TaskRepository repository, AbstractRepositoryTask repositoryTask,
+	public void updateTaskFromRepository(TaskRepository repository, AbstractTask repositoryTask,
 			IProgressMonitor monitor) {
 		// ignore
 	}

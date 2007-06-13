@@ -16,9 +16,9 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -30,16 +30,16 @@ public class MarkTaskCompleteAction extends Action {
 
 	private static final String ACTION_NAME = "Complete";
 
-	private List<ITaskListElement> selectedElements;
+	private List<AbstractTaskListElement> selectedElements;
 
-	public MarkTaskCompleteAction(List<ITaskListElement> selectedElements) {
+	public MarkTaskCompleteAction(List<AbstractTaskListElement> selectedElements) {
 		this.selectedElements = selectedElements;
 		setText(ACTION_NAME);
 		setToolTipText("Mark " + ACTION_NAME);
 		setId(ID);
 		setImageDescriptor(TasksUiImages.TASK_COMPLETE);
-		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractRepositoryTask)) {
-			AbstractRepositoryTask task = (AbstractRepositoryTask) selectedElements.get(0);
+		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
+			AbstractTask task = (AbstractTask) selectedElements.get(0);
 			if (task instanceof WebTask) {
 				setEnabled(true);
 			} else {
@@ -55,8 +55,8 @@ public class MarkTaskCompleteAction extends Action {
 	@Override
 	public void run() {
 		for (Object selectedObject : selectedElements) {
-			if (selectedObject instanceof ITask) {
-				TasksUiPlugin.getTaskListManager().getTaskList().markComplete(((ITask) selectedObject), true);
+			if (selectedObject instanceof AbstractTask) {
+				TasksUiPlugin.getTaskListManager().getTaskList().markComplete(((AbstractTask) selectedObject), true);
 			}
 		}
 	}

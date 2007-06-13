@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 
@@ -32,7 +32,7 @@ public class TaskDeactivateAction extends Action {
 		setImageDescriptor(TasksUiImages.TASK_INACTIVE);
 	}
 
-	public void run(ITask task) {
+	public void run(AbstractTask task) {
 		try {
 			if (task != null) {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);

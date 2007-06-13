@@ -15,7 +15,7 @@ import java.io.OutputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -33,12 +33,12 @@ public class MockAttachmentHandler implements IAttachmentHandler {
 		return false;
 	}
 
-	public boolean canDownloadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+	public boolean canDownloadAttachment(TaskRepository repository, AbstractTask task) {
 		// ignore
 		return true;
 	}
 
-	public boolean canUploadAttachment(TaskRepository repository, AbstractRepositoryTask task) {
+	public boolean canUploadAttachment(TaskRepository repository, AbstractTask task) {
 		// ignore
 		return true;
 	}
@@ -62,7 +62,7 @@ public class MockAttachmentHandler implements IAttachmentHandler {
 		// ignore
 	}
 
-	public void uploadAttachment(TaskRepository repository, AbstractRepositoryTask task, ITaskAttachment attachment,
+	public void uploadAttachment(TaskRepository repository, AbstractTask task, ITaskAttachment attachment,
 			String comment, IProgressMonitor monitor) throws CoreException {
 		// ignore
 	}

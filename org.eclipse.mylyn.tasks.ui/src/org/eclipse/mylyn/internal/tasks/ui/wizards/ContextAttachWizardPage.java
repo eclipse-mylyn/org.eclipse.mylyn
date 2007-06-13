@@ -12,9 +12,9 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -33,13 +33,13 @@ public class ContextAttachWizardPage extends WizardPage {
 		
 	private TaskRepository repository;
 
-	private AbstractRepositoryTask task;
+	private AbstractTask task;
 
 	private Text commentText;
 
 	private boolean complete = true;
 	
-	protected ContextAttachWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
+	protected ContextAttachWizardPage(TaskRepository repository, AbstractTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
 		this.repository = repository;
 		this.task = task; 

@@ -27,8 +27,8 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -61,7 +61,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
 
-	protected ITask task;
+	protected AbstractTask task;
 
 	private TaskPlanningEditor taskPlanningEditor;
 
@@ -178,8 +178,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	 */
 	public void refreshEditorContents() {
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
+			if (page instanceof AbstractTaskEditor) {
+				AbstractTaskEditor editor = (AbstractTaskEditor) page;
 				editor.refreshEditor();
 			}
 		}
@@ -377,9 +377,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 							if (input.getImageDescriptor() != null) {
 								setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
 							}
-							if (editor instanceof AbstractRepositoryTaskEditor) {
+							if (editor instanceof AbstractTaskEditor) {
 
-								((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
+								((AbstractTaskEditor) editor).setParentEditor(this);
 
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
@@ -415,7 +415,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 				setActivePage(selectedIndex);
 			}
 
-			if (task instanceof AbstractRepositoryTask) {
+			if (task instanceof AbstractTask) {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
 			} else if (getEditorInput() instanceof AbstractTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
@@ -460,8 +460,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		}
 
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractRepositoryTaskEditor) {
-				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
+			if (page instanceof AbstractTaskEditor) {
+				AbstractTaskEditor editor = (AbstractTaskEditor) page;
 				editor.showBusy(busy);
 			}
 		}
@@ -485,19 +485,19 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	protected void updateFormTitle() {
 		IEditorInput input = getEditorInput();
 		if (input instanceof TaskEditorInput) {
-			ITask task = ((TaskEditorInput) input).getTask();
+			AbstractTask task = ((TaskEditorInput) input).getTask();
 			if (task instanceof LocalTask) {
 				getHeaderForm().getForm().setText("Task: " + task.getSummary());
 			} else {
-				setFormHeaderImage(((AbstractRepositoryTask) task).getRepositoryKind());
-				setFormHeaderLabel((AbstractRepositoryTask) task);
+				setFormHeaderImage(((AbstractTask) task).getRepositoryKind());
+				setFormHeaderLabel((AbstractTask) task);
 				return;
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
-			ITask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
-			if (task != null && task instanceof AbstractRepositoryTask) {
-				setFormHeaderImage(((AbstractRepositoryTask) task).getRepositoryKind());
-				setFormHeaderLabel((AbstractRepositoryTask) task);
+			AbstractTask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
+			if (task != null && task instanceof AbstractTask) {
+				setFormHeaderImage(((AbstractTask) task).getRepositoryKind());
+				setFormHeaderLabel((AbstractTask) task);
 				return;
 			} else {
 				RepositoryTaskData data = ((RepositoryTaskEditorInput) input).getTaskData();
@@ -564,7 +564,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		}
 	}
 
-	private void setFormHeaderLabel(AbstractRepositoryTask repositoryTask) {
+	private void setFormHeaderLabel(AbstractTask repositoryTask) {
 
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
 		String kindLabel = "";

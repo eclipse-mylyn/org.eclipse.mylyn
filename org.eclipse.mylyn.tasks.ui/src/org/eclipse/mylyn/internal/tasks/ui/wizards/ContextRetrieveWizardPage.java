@@ -21,7 +21,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -56,13 +56,13 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private TaskRepository repository;
 
-	private AbstractRepositoryTask task;
+	private AbstractTask task;
 
 	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
 
 	private RepositoryAttachment selectedContextAttachment = null;
 
-	protected ContextRetrieveWizardPage(TaskRepository repository, AbstractRepositoryTask task) {
+	protected ContextRetrieveWizardPage(TaskRepository repository, AbstractTask task) {
 		super(ContextAttachWizard.WIZARD_TITLE);
 		this.repository = repository;
 		this.task = task;

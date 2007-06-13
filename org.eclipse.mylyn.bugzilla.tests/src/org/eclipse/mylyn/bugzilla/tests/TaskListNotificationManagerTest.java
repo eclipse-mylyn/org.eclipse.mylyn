@@ -21,10 +21,10 @@ import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationManager;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -46,9 +46,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		Date now = new Date();
 
-		ITask task0 = new LocalTask("0", "t0 - test 0");
-		ITask task1 = new LocalTask("1", "t1 - test 1");
-		ITask task2 = new LocalTask("2", "t2 - test 2");
+		AbstractTask task0 = new LocalTask("0", "t0 - test 0");
+		AbstractTask task1 = new LocalTask("1", "t1 - test 1");
+		AbstractTask task2 = new LocalTask("2", "t2 - test 2");
 
 		task0.setScheduledForDate(new Date(now.getTime() - 2000));
 		task1.setScheduledForDate(new Date(now.getTime() - 2000));
@@ -78,14 +78,14 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskRepository repository = new TaskRepository("bugzilla", "https://bugs.eclipse.org/bugs");
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		AbstractRepositoryTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
+		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
 		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
 		assertFalse(task.isNotified());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
-		task = (AbstractRepositoryTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+		task = (AbstractTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
 				"https://bugs.eclipse.org/bugs-142891");
 		assertNotNull(task);
 		assertTrue(task.isNotified());

@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -45,11 +45,11 @@ class SynchronizeTaskJob extends Job {
 
 	private final AbstractRepositoryConnector connector;
 
-	private Set<AbstractRepositoryTask> repositoryTasks;
+	private Set<AbstractTask> repositoryTasks;
 
 	private boolean forced = false;
 
-	public SynchronizeTaskJob(AbstractRepositoryConnector connector, Set<AbstractRepositoryTask> repositoryTasks) {
+	public SynchronizeTaskJob(AbstractRepositoryConnector connector, Set<AbstractTask> repositoryTasks) {
 		super(LABEL_SYNCHRONIZE_TASK + " (" + repositoryTasks.size() + " tasks)");
 		this.connector = connector;
 		this.repositoryTasks = repositoryTasks;
@@ -77,7 +77,7 @@ class SynchronizeTaskJob extends Job {
 			monitor.beginTask(LABEL_SYNCHRONIZE_TASK, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 
-			for (final AbstractRepositoryTask repositoryTask : repositoryTasks) {
+			for (final AbstractTask repositoryTask : repositoryTasks) {
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
 				}
@@ -116,7 +116,7 @@ class SynchronizeTaskJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void syncTask(IProgressMonitor monitor, AbstractRepositoryTask repositoryTask) throws CoreException {
+	private void syncTask(IProgressMonitor monitor, AbstractTask repositoryTask) throws CoreException {
 		monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getSummary());
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -149,7 +149,7 @@ class SynchronizeTaskJob extends Job {
 //					if (subId == null || subId.trim().equals("")) {
 //						continue;
 //					}
-//					AbstractRepositoryTask subTask = factory.createTaskFromExistingId(repository, subId, false,
+//					AbstractTask subTask = factory.createTaskFromExistingId(repository, subId, false,
 //							new SubProgressMonitor(monitor, 1));
 //					if (subTask != null) {
 //						repositoryTask.addSubTask(subTask);

@@ -19,8 +19,8 @@ import java.util.Set;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -188,7 +188,7 @@ public class TaskActivityWizardPage extends WizardPage {
 		}
 
 		// populate categories
-		for (AbstractTaskContainer category : manager.getTaskList().getTaskContainers()) {
+		for (AbstractTaskListElement category : manager.getTaskList().getTaskContainers()) {
 			TableItem item = new TableItem(filtersTable, SWT.NONE);
 			item.setImage(labelProvider.getImage(category));
 			item.setText(category.getSummary());
@@ -291,12 +291,12 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	}
 
-	public Set<ITaskListElement> getSelectedFilters() {
-		Set<ITaskListElement> result = new HashSet<ITaskListElement>();
+	public Set<AbstractTaskListElement> getSelectedFilters() {
+		Set<AbstractTaskListElement> result = new HashSet<AbstractTaskListElement>();
 		TableItem[] items = filtersTable.getItems();
 		for (TableItem item : items) {
-			if (item.getChecked() && item.getData() instanceof ITaskListElement) {
-				result.add((ITaskListElement)item.getData());
+			if (item.getChecked() && item.getData() instanceof AbstractTaskListElement) {
+				result.add((AbstractTaskListElement)item.getData());
 			}
 		}
 		return result;

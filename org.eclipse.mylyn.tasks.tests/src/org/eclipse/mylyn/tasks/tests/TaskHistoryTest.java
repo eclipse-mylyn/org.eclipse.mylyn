@@ -22,8 +22,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -39,15 +39,15 @@ public class TaskHistoryTest extends TestCase {
 
 	protected TaskListView taskView = null;
 
-	protected AbstractRepositoryTask task1 = null;
+	protected AbstractTask task1 = null;
 
-	protected AbstractRepositoryTask task2 = null;
+	protected AbstractTask task2 = null;
 
-	protected AbstractRepositoryTask task3 = null;
+	protected AbstractTask task3 = null;
 
-	protected AbstractRepositoryTask task4 = null;
+	protected AbstractTask task4 = null;
 
-	protected AbstractRepositoryTask task5 = null;
+	protected AbstractTask task5 = null;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -161,7 +161,7 @@ public class TaskHistoryTest extends TestCase {
 
 		assertTrue(task4.isActive());
 		//TaskActivationHistory taskHistory = taskView.getTaskActivationHistory();
-		List<ITask> prevHistoryList = history.getPreviousTasks();
+		List<AbstractTask> prevHistoryList = history.getPreviousTasks();
 
 		// Check that the previous history list looks right
 		assertTrue(prevHistoryList.size() >= 3);

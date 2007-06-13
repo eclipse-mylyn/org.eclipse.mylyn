@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 /**
  * Custom filters are used so that the "Find:" filter can 'see through'
@@ -22,7 +22,7 @@ public abstract class AbstractTaskListFilter {
 
 	public abstract boolean select(Object parent, Object element);
 
-	public boolean shouldAlwaysShow(Object parent, ITask task, boolean exposeSubTasks) {
+	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean exposeSubTasks) {
 		return task.isActive();
 	}
 }

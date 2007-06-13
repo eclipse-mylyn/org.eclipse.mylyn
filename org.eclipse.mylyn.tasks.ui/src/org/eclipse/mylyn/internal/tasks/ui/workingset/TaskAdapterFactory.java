@@ -9,7 +9,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
@@ -31,11 +31,11 @@ public class TaskAdapterFactory implements IAdapterFactory {
 	}
 
 	public Object getAdapter(final Object adaptableObject, @SuppressWarnings("unchecked") Class adapterType) {
-	    if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskContainer) {
+	    if (adapterType == IPersistableElement.class && adaptableObject instanceof AbstractTaskListElement) {
 	    	// 
 	    	return new IPersistableElement() {
 				public void saveState(IMemento memento) {
-					AbstractTaskContainer container = (AbstractTaskContainer) adaptableObject;
+					AbstractTaskListElement container = (AbstractTaskListElement) adaptableObject;
 					memento.putString(TaskElementFactory.HANDLE_ID, container.getHandleIdentifier());
 				}
 

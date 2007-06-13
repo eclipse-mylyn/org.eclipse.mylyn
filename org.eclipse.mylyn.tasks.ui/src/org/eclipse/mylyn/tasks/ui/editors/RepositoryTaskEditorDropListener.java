@@ -13,8 +13,8 @@ import java.io.File;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewAttachmentWizardDialog;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -30,7 +30,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	/**
 	 * 
 	 */
-	private final AbstractRepositoryTaskEditor abstractRepositoryTaskEditor;
+	private final AbstractTaskEditor AbstractTaskEditor;
 
 	private final FileTransfer fileTransfer;
 
@@ -38,9 +38,9 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final Control control;
 
-	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor abstractRepositoryTaskEditor,
+	public RepositoryTaskEditorDropListener(AbstractTaskEditor AbstractTaskEditor,
 			FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
-		this.abstractRepositoryTaskEditor = abstractRepositoryTaskEditor;
+		this.AbstractTaskEditor = AbstractTaskEditor;
 		this.fileTransfer = fileTransfer;
 		this.textTransfer = textTransfer;
 		this.control = control;
@@ -102,32 +102,32 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	public void drop(DropTargetEvent event) {
 		if (textTransfer.isSupportedType(event.currentDataType)) {
 			String text = (String) event.data;
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-					this.abstractRepositoryTaskEditor.repository.getUrl(),
-					this.abstractRepositoryTaskEditor.taskData.getId());
-			if (!(task instanceof AbstractRepositoryTask)) {
+			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+					this.AbstractTaskEditor.repository.getUrl(),
+					this.AbstractTaskEditor.taskData.getId());
+			if (!(task instanceof AbstractTask)) {
 				// Should not happen
 				return;
 			}
 
-			abstractRepositoryTaskEditor.setGlobalBusy(true);
-			NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository,
-					(AbstractRepositoryTask) task, text);
+			AbstractTaskEditor.setGlobalBusy(true);
+			NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
+					(AbstractTask) task, text);
 			openDialog(naw);
 		}
 		if (fileTransfer.isSupportedType(event.currentDataType)) {
 			String[] files = (String[]) event.data;
 			if (files.length > 0) {
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
-						this.abstractRepositoryTaskEditor.repository.getUrl(),
-						this.abstractRepositoryTaskEditor.taskData.getId());
-				if (!(task instanceof AbstractRepositoryTask)) {
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						this.AbstractTaskEditor.repository.getUrl(),
+						this.AbstractTaskEditor.taskData.getId());
+				if (!(task instanceof AbstractTask)) {
 					// Should not happen
 					return;
 				}
 
-				NewAttachmentWizard naw = new NewAttachmentWizard(this.abstractRepositoryTaskEditor.repository,
-						(AbstractRepositoryTask) task, new File(files[0]));
+				NewAttachmentWizard naw = new NewAttachmentWizard(this.AbstractTaskEditor.repository,
+						(AbstractTask) task, new File(files[0]));
 				openDialog(naw);
 
 			}
@@ -135,13 +135,13 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	}
 
 	private void openDialog(NewAttachmentWizard naw) {
-		abstractRepositoryTaskEditor.setGlobalBusy(true);
+		AbstractTaskEditor.setGlobalBusy(true);
 		NewAttachmentWizardDialog dialog = new NewAttachmentWizardDialog(control.getShell(), naw);
 		naw.setDialog(dialog);
 		dialog.create();
 		int result = dialog.open();
 		if (result != MessageDialog.OK) {
-			abstractRepositoryTaskEditor.setGlobalBusy(false);
+			AbstractTaskEditor.setGlobalBusy(false);
 		}
 	}
 }

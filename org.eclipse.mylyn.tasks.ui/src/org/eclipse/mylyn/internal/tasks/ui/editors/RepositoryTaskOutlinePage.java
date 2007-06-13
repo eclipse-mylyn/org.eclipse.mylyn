@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.TaskComment;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -36,7 +36,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 
 	protected final ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-			if ((part instanceof AbstractRepositoryTaskEditor) && (selection instanceof IStructuredSelection)) {
+			if ((part instanceof AbstractTaskEditor) && (selection instanceof IStructuredSelection)) {
 				if (((IStructuredSelection) selection).getFirstElement() instanceof IRepositoryTaskSelection) {
 					if (((IStructuredSelection) getSelection()).getFirstElement() instanceof IRepositoryTaskSelection) {
 						IRepositoryTaskSelection brs1 = (IRepositoryTaskSelection) ((IStructuredSelection) getSelection())

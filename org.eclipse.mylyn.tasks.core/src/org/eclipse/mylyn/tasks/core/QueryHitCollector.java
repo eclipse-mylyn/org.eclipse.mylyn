@@ -31,7 +31,7 @@ public class QueryHitCollector {
 
 	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
-	protected Set<AbstractRepositoryTask> taskResults = new HashSet<AbstractRepositoryTask>();
+	protected Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
 	/** The progress monitor for the search operation */
 	private IProgressMonitor monitor = new NullProgressMonitor();
@@ -51,11 +51,11 @@ public class QueryHitCollector {
 	/** The string to display to the user when the query is done */
 	private static final String DONE = "done";
 
-	protected TaskList taskList;
+	protected getAllCategories taskList;
 
 	protected ITaskFactory taskFactory;
 
-	public QueryHitCollector(TaskList tasklist, ITaskFactory taskFactory) {
+	public QueryHitCollector(getAllCategories tasklist, ITaskFactory taskFactory) {
 		this.taskList = tasklist;
 		this.taskFactory = taskFactory;
 	}
@@ -66,7 +66,7 @@ public class QueryHitCollector {
 		monitor.setTaskName(STARTING);
 	}
 
-	public void accept(AbstractRepositoryTask task) {
+	public void accept(AbstractTask task) {
 
 		if (!getProgressMonitor().isCanceled()) {
 			getProgressMonitor().subTask(getFormattedMatchesString(matchCount));
@@ -76,13 +76,13 @@ public class QueryHitCollector {
 		if (task == null)
 			return;
 
-		ITask hitTask = taskList.getTask(task.getHandleIdentifier());
+		AbstractTask hitTask = taskList.getTask(task.getHandleIdentifier());
 		if (hitTask == null) {
 			hitTask = task;
 			// task is new, add to tasklist
 			taskList.addTask(hitTask);
 		}
-		taskResults.add((AbstractRepositoryTask) hitTask);
+		taskResults.add((AbstractTask) hitTask);
 		matchCount++;
 	}
 
@@ -95,7 +95,7 @@ public class QueryHitCollector {
 			getProgressMonitor().worked(1);
 		}
 
-		AbstractRepositoryTask task = taskFactory.createTask(taskData, true, false, new SubProgressMonitor(monitor, 1));
+		AbstractTask task = taskFactory.createTask(taskData, true, false, new SubProgressMonitor(monitor, 1));
 		taskResults.add(task);
 		matchCount++;
 	}
@@ -129,7 +129,7 @@ public class QueryHitCollector {
 		this.monitor = monitor;
 	}
 
-	public Set<AbstractRepositoryTask> getTaskHits() {
+	public Set<AbstractTask> getTaskHits() {
 		return taskResults;
 	}
 

@@ -16,7 +16,7 @@ import java.text.DateFormat;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.monitor.core.DateUtil;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
@@ -35,8 +35,8 @@ public class TaskPlanLabelProvider extends TaskElementLabelProvider implements I
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		if (element instanceof ITask) {
-			ITask task = (ITask) element;
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
 			switch (columnIndex) {
 			case 1:
 				return task.getPriority();

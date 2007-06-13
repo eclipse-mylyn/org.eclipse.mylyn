@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
  * @author Mik Kersten
@@ -37,11 +37,11 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		super(description);
 	}
 
-	public synchronized Set<AbstractRepositoryTask> getHits() {
-		Set<AbstractRepositoryTask> repositoryTasks = new HashSet<AbstractRepositoryTask>();
-		for (ITask task : super.getChildren()) {
-			if (task instanceof AbstractRepositoryTask) {
-				repositoryTasks.add((AbstractRepositoryTask) task);
+	public synchronized Set<AbstractTask> getHits() {
+		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
+		for (AbstractTask task : super.getChildren()) {
+			if (task instanceof AbstractTask) {
+				repositoryTasks.add((AbstractTask) task);
 			}
 		}
 		return repositoryTasks;
@@ -52,7 +52,7 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 			return PriorityLevel.P1.toString();
 		}
 		String highestPriority = PriorityLevel.P5.toString();
-		for (AbstractRepositoryTask hit : getHits()) {
+		for (AbstractTask hit : getHits()) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}

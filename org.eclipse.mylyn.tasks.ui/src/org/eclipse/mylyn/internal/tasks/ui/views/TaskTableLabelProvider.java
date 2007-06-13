@@ -21,10 +21,10 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -48,7 +48,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public String getColumnText(Object obj, int columnIndex) {
-		if (obj instanceof ITaskListElement) {
+		if (obj instanceof AbstractTaskListElement) {
 			switch (columnIndex) {
 			case 0:
 				if (obj instanceof DateRangeContainer) {
@@ -65,7 +65,7 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
-		if (!(element instanceof ITaskListElement)) {
+		if (!(element instanceof AbstractTaskListElement)) {
 			return null;
 		}
 		if (columnIndex == 0) {
@@ -83,8 +83,8 @@ public class TaskTableLabelProvider extends DecoratingLabelProvider implements I
 	}
 
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof AbstractTaskContainer && !(element instanceof ITask)) {
-			AbstractTaskContainer category = (AbstractTaskContainer) element;
+		if (element instanceof AbstractTaskListElement && !(element instanceof AbstractTask)) {
+			AbstractTaskListElement category = (AbstractTaskListElement) element;
 			if (category instanceof TaskArchive) {
 				return TaskListColorsAndFonts.BACKGROUND_ARCHIVE;
 			} else {

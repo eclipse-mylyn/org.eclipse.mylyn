@@ -22,7 +22,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizard;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataExportWizardPage;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -41,7 +41,7 @@ public class TaskDataExportTest extends AbstractContextTest {
 
 	private File destinationDir = null;
 
-	private ITask task1 = null;
+	private AbstractTask task1 = null;
 
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
 

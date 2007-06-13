@@ -24,8 +24,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -60,7 +60,7 @@ public class TaskListStandaloneTest extends TestCase {
 	}
 	
 	public void testDueDateExternalization() {
-		ITask task = new LocalTask("1", "task 1");
+		AbstractTask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
 		manager.getTaskList().moveToRoot(task);
@@ -70,14 +70,14 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		Set<ITask> readList = manager.getTaskList().getRootTasks();
-		ITask readTask = readList.iterator().next();
+		Set<AbstractTask> readList = manager.getTaskList().getRootTasks();
+		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
 	}
 
 	public void testPastReminder() {
-		ITask task = new LocalTask("1", "1");
+		AbstractTask task = new LocalTask("1", "1");
 		long now = new Date().getTime();
 		task.setScheduledForDate(new Date(now - 1000));
 		assertTrue(task.isPastReminder());
@@ -93,7 +93,7 @@ public class TaskListStandaloneTest extends TestCase {
 	public void testDates() {
 		Date start = Calendar.getInstance().getTime();
 		Date creation = new Date();
-		AbstractRepositoryTask task = new LocalTask("1", "task 1");
+		AbstractTask task = new LocalTask("1", "task 1");
 
 		manager.getTaskList().moveToRoot(task);
 		assertDatesCloseEnough(task.getCreationDate(), start);
@@ -115,8 +115,8 @@ public class TaskListStandaloneTest extends TestCase {
 		// assertNotNull(manager.getTaskList());
 		assertEquals(1, manager.getTaskList().getRootTasks().size());
 
-		Set<ITask> readList = manager.getTaskList().getRootTasks();
-		ITask readTask = readList.iterator().next();
+		Set<AbstractTask> readList = manager.getTaskList().getRootTasks();
+		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
 		assertEquals("should be: " + creation, task.getCreationDate(), readTask.getCreationDate());

@@ -15,9 +15,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.swt.SWT;
@@ -64,14 +64,14 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 
 	public static String getTextForTask(Object object) {
 		String text = "";
-		if (object instanceof ITask) {
-			ITask task = null;
-			if (object instanceof ITask) {
-				task = (ITask) object;
+		if (object instanceof AbstractTask) {
+			AbstractTask task = null;
+			if (object instanceof AbstractTask) {
+				task = (AbstractTask) object;
 			}
 			if (task != null) {
-				if (task instanceof AbstractRepositoryTask) {
-					text += ((AbstractRepositoryTask) task).getTaskKey() + ": ";
+				if (task instanceof AbstractTask) {
+					text += ((AbstractTask) task).getTaskKey() + ": ";
 				}
 
 				text += task.getSummary();
@@ -83,8 +83,8 @@ public class CopyTaskDetailsAction extends BaseSelectionListenerAction {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) object;
 			text += query.getSummary();
 			text += "\n" + query.getUrl();
-		} else if (object instanceof ITaskListElement) {
-			ITaskListElement element = (ITaskListElement) object;
+		} else if (object instanceof AbstractTaskListElement) {
+			AbstractTaskListElement element = (AbstractTaskListElement) object;
 			text = element.getSummary();
 		} else if (object instanceof RepositoryTaskSelection) {
 

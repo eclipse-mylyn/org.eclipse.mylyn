@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.tasks.ui.editors;
 
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -22,13 +22,13 @@ public interface ITaskEditorFactory {
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
 
-	public IEditorInput createEditorInput(ITask task);
+	public IEditorInput createEditorInput(AbstractTask task);
 	
 	public boolean providesOutline();
 
 	public String getTitle();
 
-	public boolean canCreateEditorFor(ITask task);
+	public boolean canCreateEditorFor(AbstractTask task);
 	
 	public boolean canCreateEditorFor(IEditorInput input);
 }

@@ -29,11 +29,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
-import org.eclipse.mylyn.tasks.core.TaskList;
+import org.eclipse.mylyn.tasks.core.getAllCategories;
 import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
@@ -71,7 +71,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * 
  * @author Rob Elves (modifications)
  */
-public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
+public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor {
 
 	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 
@@ -363,17 +363,17 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		categoryChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
 		getManagedForm().getToolkit().adapt(categoryChooser, true, true);
 		categoryChooser.setFont(TEXT_FONT);
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		List<AbstractTaskContainer> categories = taskList.getUserCategories();
-		Collections.sort(categories, new Comparator<AbstractTaskContainer>() {
+		getAllCategories taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+		List<AbstractTaskListElement> categories = taskList.getUserCategories();
+		Collections.sort(categories, new Comparator<AbstractTaskListElement>() {
 
-			public int compare(AbstractTaskContainer c1, AbstractTaskContainer c2) {
+			public int compare(AbstractTaskListElement c1, AbstractTaskListElement c2) {
 				return c1.getSummary().compareToIgnoreCase(c2.getSummary());
 			}
 
 		});
 		categoryChooser.add(UncategorizedCategory.LABEL);
-		for (AbstractTaskContainer category : categories) {
+		for (AbstractTaskListElement category : categories) {
 			categoryChooser.add(category.getSummary());
 		}
 		categoryChooser.select(0);
@@ -397,20 +397,20 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	/**
-	 * Returns the {@link AbstractTaskContainer category} the new task belongs
+	 * Returns the {@link AbstractTaskListElement category} the new task belongs
 	 * to
 	 * 
-	 * @return {@link AbstractTaskContainer category} where the new task must be
+	 * @return {@link AbstractTaskListElement category} where the new task must be
 	 *         added to, or null if it must not be added to the task list
 	 */
 	@SuppressWarnings("unchecked")
-	protected AbstractTaskContainer getCategory() {
+	protected AbstractTaskListElement getCategory() {
 		int index = categoryChooser.getSelectionIndex();
 		if (addToCategory.getSelection() && index != -1) {
 			if (index == 0) {
 				return TasksUiPlugin.getTaskListManager().getTaskList().getUncategorizedCategory();
 			}
-			return ((List<AbstractTaskContainer>) categoryChooser.getData()).get(index - 1);
+			return ((List<AbstractTaskListElement>) categoryChooser.getData()).get(index - 1);
 		}
 		return null;
 	}
@@ -528,8 +528,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	public AbstractRepositoryTask handleNewBugPost(String id, IProgressMonitor monitor) throws CoreException {
-		final AbstractRepositoryTask newTask = super.handleNewBugPost(id, monitor);
+	public AbstractTask handleNewBugPost(String id, IProgressMonitor monitor) throws CoreException {
+		final AbstractTask newTask = super.handleNewBugPost(id, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

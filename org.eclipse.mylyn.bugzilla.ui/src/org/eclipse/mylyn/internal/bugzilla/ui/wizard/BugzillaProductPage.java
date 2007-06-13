@@ -47,7 +47,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -323,7 +323,7 @@ public class BugzillaProductPage extends WizardPage {
 			} else {
 				if (element instanceof IAdaptable) {
 					IAdaptable adaptable = (IAdaptable) element;
-					ITask task = (ITask) adaptable.getAdapter(ITask.class);
+					AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
 					if (task instanceof BugzillaTask) {
 						BugzillaTask bugzillaTask = (BugzillaTask) task;
 						if (bugzillaTask.getProduct() != null) {

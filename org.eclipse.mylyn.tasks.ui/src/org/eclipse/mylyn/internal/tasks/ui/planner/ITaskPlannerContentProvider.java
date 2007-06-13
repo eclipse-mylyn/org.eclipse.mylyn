@@ -11,10 +11,10 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.planner;
 
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 
 public interface ITaskPlannerContentProvider {
 
-	public void removeTask(ITask task);
-	public void addTask(ITask task);
+	public void removeTask(AbstractTask task);
+	public void addTask(AbstractTask task);
 }

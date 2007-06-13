@@ -31,8 +31,8 @@ import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaImages;
 import org.eclipse.mylyn.internal.bugzilla.ui.search.BugzillaSearchPage;
 import org.eclipse.mylyn.internal.bugzilla.ui.wizard.NewBugzillaTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -58,8 +58,8 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 	
 	@Override
-	public List<ITaskListElement> getLegendItems() {
-		List<ITaskListElement> legendItems = new ArrayList<ITaskListElement>();
+	public List<AbstractTaskListElement> getLegendItems() {
+		List<AbstractTaskListElement> legendItems = new ArrayList<AbstractTaskListElement>();
 		
 		BugzillaTask blocker = new BugzillaTask("", "critical", "Critical or Blocker");
 		blocker.setSeverity("critical");		
@@ -83,7 +83,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	private static final int TASK_NUM_GROUP = 3;
 
 	@Override
-	public ImageDescriptor getTaskKindOverlay(AbstractRepositoryTask task) {
+	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
 		if (task instanceof BugzillaTask) {
 			BugzillaTask bugzillaTask = (BugzillaTask)task;
 			String severity = bugzillaTask.getSeverity();
@@ -158,7 +158,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 		}
 	}
 	
-	public String getTaskKindLabel(AbstractRepositoryTask repositoryTask) {
+	public String getTaskKindLabel(AbstractTask repositoryTask) {
 		return IBugzillaConstants.BUGZILLA_TASK_KIND;
 	}
 	
@@ -207,7 +207,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public boolean handlesDueDates(AbstractRepositoryTask task) {
+	public boolean handlesDueDates(AbstractTask task) {
 		if(task instanceof BugzillaTask){
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here

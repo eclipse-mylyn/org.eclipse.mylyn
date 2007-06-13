@@ -39,12 +39,12 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -158,7 +158,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void contextMenuAboutToShow(IMenuManager mng) {
 		boolean addClipboard = this.getEditor().getActivePageInstance() != null
 				&& (this.getEditor().getActivePageInstance() instanceof TaskPlanningEditor || this.getEditor()
-						.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
+						.getActivePageInstance() instanceof AbstractTaskEditor);
 		contextMenuAboutToShow(mng, addClipboard);
 	}
 
@@ -171,12 +171,12 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskContainer> categories = new ArrayList<AbstractTaskContainer>(TasksUiPlugin
+			List<AbstractTaskListElement> categories = new ArrayList<AbstractTaskListElement>(TasksUiPlugin
 					.getTaskListManager().getTaskList().getCategories());
 			
 			// This is added to solve Bug 180252
 			Collections.sort(categories);
-			for (final AbstractTaskContainer category : categories) {
+			for (final AbstractTaskListElement category : categories) {
 				if (!category.equals(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer())) {
 					Action action = new Action() {
 						@Override
@@ -199,7 +199,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			return;
 		}
 
-		final ITask task = editor.getTaskEditorInput().getTask();
+		final AbstractTask task = editor.getTaskEditorInput().getTask();
 		if (task == null) {
 			return;
 		} else {
@@ -212,7 +212,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
 
 			manager.add(openWithBrowserAction);
-			if (task instanceof AbstractRepositoryTask) {
+			if (task instanceof AbstractTask) {
 				manager.add(attachFileAction);
 				manager.add(synchronizeEditorAction);
 			}
@@ -239,7 +239,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
-					List<ITaskListElement> selectedElements = new ArrayList<ITaskListElement>();
+					List<AbstractTaskListElement> selectedElements = new ArrayList<AbstractTaskListElement>();
 					selectedElements.add(task);
 					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
 					if (subMenuManager != null) {
@@ -275,7 +275,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-	private void moveToCategory(AbstractTaskContainer category) {
+	private void moveToCategory(AbstractTaskListElement category) {
 		IEditorInput input = getEditor().getEditorInput();
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput) input;

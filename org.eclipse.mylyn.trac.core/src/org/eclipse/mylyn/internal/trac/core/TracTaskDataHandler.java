@@ -31,7 +31,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracTicketField;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -68,7 +68,7 @@ public class TracTaskDataHandler implements ITaskDataHandler {
 
 		try {
 			RepositoryTaskData data = new RepositoryTaskData(attributeFactory, TracCorePlugin.REPOSITORY_KIND,
-					repository.getUrl(), id + "", AbstractRepositoryTask.DEFAULT_TASK_KIND);
+					repository.getUrl(), id + "", AbstractTask.DEFAULT_TASK_KIND);
 			ITracClient client = connector.getClientManager().getRepository(repository);
 			client.updateAttributes(new NullProgressMonitor(), false);
 			TracTicket ticket = client.getTicket(id);

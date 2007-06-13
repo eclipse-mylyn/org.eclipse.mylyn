@@ -13,10 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -44,10 +44,10 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	private void checkElementExistence(IWorkingSet workingSet) {
 		ArrayList<IAdaptable> list = new ArrayList<IAdaptable>();
 		for (IAdaptable adaptable : workingSet.getElements()) {
-			if (adaptable instanceof AbstractTaskContainer) {
-				String handle = ((AbstractTaskContainer) adaptable).getHandleIdentifier();
-				for (ITaskListElement element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
-					if (element instanceof AbstractTaskContainer && element.getHandleIdentifier().equals(handle)) {
+			if (adaptable instanceof AbstractTaskListElement) {
+				String handle = ((AbstractTaskListElement) adaptable).getHandleIdentifier();
+				for (AbstractTaskListElement element : TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+					if (element instanceof AbstractTaskListElement && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}
 				}
@@ -75,17 +75,17 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	
 	// ITaskListChangeListener
 	
-	public void containerAdded(AbstractTaskContainer container) {
+	public void containerAdded(AbstractTaskListElement container) {
 	}
 
-	public void containerDeleted(AbstractTaskContainer container) {
+	public void containerDeleted(AbstractTaskListElement container) {
 		synchronized (workingSets) {
 			for (IWorkingSet workingSet : workingSets) {
 				// TODO could filter by working set id
 				ArrayList<IAdaptable> remove = new ArrayList<IAdaptable>(); 
 				for (IAdaptable adaptable : workingSet.getElements()) {
-					if (adaptable instanceof AbstractTaskContainer
-							&& ((AbstractTaskContainer) adaptable).getHandleIdentifier().equals(
+					if (adaptable instanceof AbstractTaskListElement
+							&& ((AbstractTaskListElement) adaptable).getHandleIdentifier().equals(
 									container.getHandleIdentifier())) {
 						remove.add(adaptable);
 					}
@@ -99,22 +99,22 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		}
 	}
 
-	public void containerInfoChanged(AbstractTaskContainer container) {
+	public void containerInfoChanged(AbstractTaskListElement container) {
 	}
 
-	public void localInfoChanged(ITask task) {
+	public void localInfoChanged(AbstractTask task) {
 	}
 
-	public void repositoryInfoChanged(ITask task) {
+	public void repositoryInfoChanged(AbstractTask task) {
 	}
 
-	public void taskAdded(ITask task) {
+	public void taskAdded(AbstractTask task) {
 	}
 
-	public void taskDeleted(ITask task) {
+	public void taskDeleted(AbstractTask task) {
 	}
 
-	public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+	public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 	}
 	
 }
