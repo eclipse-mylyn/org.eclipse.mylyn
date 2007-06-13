@@ -14,9 +14,9 @@ package org.eclipse.mylyn.internal.context.ui;
 import java.util.Calendar;
 
 import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewLocalTaskAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
 import org.eclipse.mylyn.tasks.core.ITask;
@@ -82,7 +82,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				|| (isInterestingForThisWeek(parent, task) && !task.isCompleted())
 				|| (TasksUiPlugin.getTaskListManager().isOverdue(task))
 				|| hasInterestingSubTasks(parent, task, checkSubTasks)
-				|| NewLocalTaskAction.DESCRIPTION_DEFAULT.equals(task.getSummary());
+				|| LocalRepositoryConnector.DEFAULT_SUMMARY.equals(task.getSummary());
 		// || isCurrentlySelectedInEditor(task);
 	}
 
