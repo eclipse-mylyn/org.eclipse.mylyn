@@ -96,8 +96,8 @@ public class ChangeDataDirTest extends TestCase {
 	}
 
 	public void testTaskMove() {
-		String handle = "task-1";
-		ITask task = new Task(handle, "label");
+		ITask task = manager.createNewLocalTask("label");
+		String handle = task.getHandleIdentifier();
 		manager.getTaskList().moveToRoot(task);
 
 		ITask readTaskBeforeMove = manager.getTaskList().getTask(handle);

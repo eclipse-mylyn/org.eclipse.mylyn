@@ -278,7 +278,7 @@ public class WebClientUtilTest extends TestCase {
 			return;
 		}
 		
-		String url = "https://mylar.eclipse.org/secure/";
+		String url = "https://mylyn.eclipse.org/secure/";
 		WebClientUtil.setupHttpClient(client, null, url, "", "");
 
 		GetMethod method = new GetMethod(WebClientUtil.getRequestPath(url));
