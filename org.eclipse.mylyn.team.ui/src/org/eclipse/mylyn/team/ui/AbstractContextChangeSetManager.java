@@ -13,9 +13,9 @@ import java.util.List;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -48,7 +48,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 	
 	protected abstract void initContextChangeSets();
 	
-	protected abstract void updateChangeSetLabel(ITask task);
+	protected abstract void updateChangeSetLabel(AbstractTask task);
 	
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
@@ -56,15 +56,15 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 			initContextChangeSets();
 		}
 
-		public void taskActivated(ITask task) {
+		public void taskActivated(AbstractTask task) {
 			// ignore
 		}
 
-		public void tasksActivated(List<ITask> tasks) {
+		public void tasksActivated(List<AbstractTask> tasks) {
 			// ignore
 		}
 
-		public void taskDeactivated(ITask task) {
+		public void taskDeactivated(AbstractTask task) {
 			// ignore
 		}
 
@@ -79,35 +79,35 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(ITask task) {
+		public void localInfoChanged(AbstractTask task) {
 			updateChangeSetLabel(task);
 		}
 
-		public void repositoryInfoChanged(ITask task) {
+		public void repositoryInfoChanged(AbstractTask task) {
 			// ignore
 		}
 
-		public void taskMoved(ITask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
 			// ignore
 		}
 
-		public void taskDeleted(ITask task) {
+		public void taskDeleted(AbstractTask task) {
 			// ignore
 		}
 
-		public void containerAdded(AbstractTaskContainer container) {
+		public void containerAdded(AbstractTaskListElement container) {
 			// ignore
 		}
 
-		public void containerDeleted(AbstractTaskContainer container) {
+		public void containerDeleted(AbstractTaskListElement container) {
 			// ignore
 		}
 
-		public void taskAdded(ITask task) {
+		public void taskAdded(AbstractTask task) {
 			// ignore
 		}
 
-		public void containerInfoChanged(AbstractTaskContainer container) {
+		public void containerInfoChanged(AbstractTaskListElement container) {
 			// ignore
 		}
 	};

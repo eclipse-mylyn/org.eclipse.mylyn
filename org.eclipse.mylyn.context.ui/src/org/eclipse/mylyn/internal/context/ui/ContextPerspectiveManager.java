@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener4;
@@ -51,7 +51,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		managedPerspectiveIds.remove(id);
 	}
 
-	public void taskActivated(ITask task) {
+	public void taskActivated(AbstractTask task) {
 		try {
 			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 					.getPerspective();
@@ -64,7 +64,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		}
 	}
 
-	public void taskDeactivated(ITask task) {
+	public void taskDeactivated(AbstractTask task) {
 		try {
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
@@ -106,7 +106,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		// ignore
 	}
 
-	public void tasksActivated(List<ITask> tasks) {
+	public void tasksActivated(List<AbstractTask> tasks) {
 		// ignore
 	}
 

@@ -33,9 +33,9 @@ import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
 import org.eclipse.mylyn.internal.team.ui.LinkedTaskInfo;
 import org.eclipse.mylyn.internal.team.ui.templates.CommitTemplateManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -108,7 +108,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	 * dependencies.
 	 */
 	private static ILinkedTaskInfo reconsile(ILinkedTaskInfo info) {
-		ITask task = info.getTask();
+		AbstractTask task = info.getTask();
 		if (task != null) {
 			return info;
 		}
@@ -182,15 +182,15 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			if (taskId != null && repositoryUrl != null) {
 				// XXX fix this hack (jira ids don't work here)
 				if (!taskId.contains(RepositoryTaskHandleUtil.HANDLE_DELIM)) {
-//					String handle = AbstractRepositoryTask.getHandle(repositoryUrl, taskId);
+//					String handle = AbstractTask.getHandle(repositoryUrl, taskId);
 					task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
 				}
 			}
 			if (task == null && taskFullUrl != null) {
 				// search by fullUrl
-				for (ITask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
-					if (currTask instanceof AbstractRepositoryTask) {
-						String currUrl = ((AbstractRepositoryTask) currTask).getTaskUrl();
+				for (AbstractTask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
+					if (currTask instanceof AbstractTask) {
+						String currUrl = ((AbstractTask) currTask).getTaskUrl();
 						if (taskFullUrl.equals(currUrl)) {
 							return new LinkedTaskInfo(currTask, null);
 						}
@@ -271,7 +271,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 			if (info != null) {
 				info = reconsile(info);
-				final ITask task = info.getTask();
+				final AbstractTask task = info.getTask();
 				if (task != null) {
 					TasksUiUtil.refreshAndOpenTaskListElement(task);
 					return Status.OK_STATUS;

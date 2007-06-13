@@ -17,10 +17,10 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -37,10 +37,10 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				DateRangeContainer dateRangeTaskContainer = (DateRangeContainer) object;
 				return isDateRangeInteresting(dateRangeTaskContainer);
 			}
-			if (object instanceof ITask) {
-				ITask task = null;
-				if (object instanceof ITask) {
-					task = (ITask) object;
+			if (object instanceof AbstractTask) {
+				AbstractTask task = null;
+				if (object instanceof AbstractTask) {
+					task = (AbstractTask) object;
 				}
 				if (task != null) {
 					if (isUninteresting(parent, task)) {
@@ -60,7 +60,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return (TasksUiPlugin.getTaskListManager().isWeekDay(container));// ||dateRangeTaskContainer.isFuture();
 	}
 
-	protected boolean isUninteresting(Object parent, ITask task) {
+	protected boolean isUninteresting(Object parent, AbstractTask task) {
 		return !task.isActive()
 				&& !hasInterestingSubTasks(parent, task, true)
 				&& ((task.isCompleted() && !TasksUiPlugin.getTaskListManager().isCompletedToday(task) && !hasChanges(
@@ -69,13 +69,13 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 	}
 
 	// TODO: make meta-context more explicit
-	protected boolean isInteresting(Object parent, ITask task) {
+	protected boolean isInteresting(Object parent, AbstractTask task) {
 		return shouldAlwaysShow(parent, task, !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.FILTER_SUBTASKS));
 	}
 
 	@Override
-	public boolean shouldAlwaysShow(Object parent, ITask task, boolean checkSubTasks) {
+	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean checkSubTasks) {
 		return super.shouldAlwaysShow(parent, task, checkSubTasks) || hasChanges(parent, task)
 				|| (TasksUiPlugin.getTaskListManager().isCompletedToday(task))
 				|| shouldShowInFocusedWorkweekDateContainer(parent, task)
@@ -86,7 +86,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		// || isCurrentlySelectedInEditor(task);
 	}
 
-	private boolean hasInterestingSubTasks(Object parent, ITask task, boolean checkSubTasks) {
+	private boolean hasInterestingSubTasks(Object parent, AbstractTask task, boolean checkSubTasks) {
 		if (!checkSubTasks) {
 			return false;
 		}
@@ -94,7 +94,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 			return false;
 		}
 		if (task.getChildren() != null && task.getChildren().size() > 0) {
-			for (ITask subTask : task.getChildren()) {
+			for (AbstractTask subTask : task.getChildren()) {
 				if (shouldAlwaysShow(parent, subTask, false)) {
 					return true;
 				}
@@ -103,7 +103,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, ITask task) {
+	private static boolean shouldShowInFocusedWorkweekDateContainer(Object parent, AbstractTask task) {
 		if (parent instanceof DateRangeContainer) {
 
 			if (TasksUiPlugin.getTaskListManager().isOverdue(task) || task.isPastReminder())
@@ -121,7 +121,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		return false;
 	}
 
-	public static boolean isInterestingForThisWeek(Object parent, ITask task) {
+	public static boolean isInterestingForThisWeek(Object parent, AbstractTask task) {
 		if (parent instanceof DateRangeContainer) {
 			return shouldShowInFocusedWorkweekDateContainer(parent, task);
 		} else {
@@ -130,14 +130,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		}
 	}
 
-	public static boolean hasChanges(Object parent, ITask task) {
+	public static boolean hasChanges(Object parent, AbstractTask task) {
 		if (parent instanceof DateRangeContainer) {
 			if (!shouldShowInFocusedWorkweekDateContainer(parent, task)) {
 				return false;
 			}
 		}
-		if (task instanceof AbstractRepositoryTask) {
-			AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+		if (task instanceof AbstractTask) {
+			AbstractTask repositoryTask = (AbstractTask) task;
 			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
 			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING

@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
@@ -90,7 +90,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	@Override
-	protected void updateChangeSetLabel(ITask task) {
+	protected void updateChangeSetLabel(AbstractTask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
@@ -132,7 +132,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (!(restoredSet instanceof ContextChangeSet)) {
 					String encodedTitle = restoredSet.getName();
 					String taskHandle = ContextChangeSet.getHandleFromPersistedTitle(encodedTitle);
-					ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
+					AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskHandle);
 					if (task != null) {
 						try {
 							ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
@@ -155,7 +155,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		activeChangeSets.clear();
 	}
 
-	public IResource[] getResources(ITask task) {
+	public IResource[] getResources(AbstractTask task) {
 		for (ActiveChangeSetManager collector : changeSetManagers) {
 			ChangeSet[] sets = collector.getSets();
 			for (int i = 0; i < sets.length; i++) {
@@ -173,7 +173,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 
 	public void contextActivated(IInteractionContext context) {
 		try {
-			ITask task = getTask(context);
+			AbstractTask task = getTask(context);
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
@@ -250,8 +250,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 		return new ArrayList<ContextChangeSet>(activeChangeSets.values());
 	}
 
-	private ITask getTask(IInteractionContext context) {
-		List<ITask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+	private AbstractTask getTask(IInteractionContext context) {
+		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
 
 		// TODO: support multiple tasks
 		if (activeTasks.size() > 0) {

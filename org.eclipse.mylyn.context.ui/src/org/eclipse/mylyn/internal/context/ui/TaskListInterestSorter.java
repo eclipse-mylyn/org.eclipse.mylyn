@@ -15,10 +15,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -32,9 +32,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
+		if (o1 instanceof AbstractTaskListElement && o2 instanceof TaskArchive) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
+		} else if (o2 instanceof AbstractTaskListElement && o1 instanceof TaskArchive) {
 			return 1;
 		}
 
@@ -43,43 +43,43 @@ public class TaskListInterestSorter extends ViewerSorter {
 				DateRangeContainer dateRangeTaskContainer1 = (DateRangeContainer) o1;
 				DateRangeContainer dateRangeTaskContainer2 = (DateRangeContainer) o2;
 				return -1 * dateRangeTaskContainer2.getStart().compareTo(dateRangeTaskContainer1.getStart());
-			} else if (o2 instanceof ITask) {
+			} else if (o2 instanceof AbstractTask) {
 				return 1;
 			} else {
 				return -1;
 			}
 		}
 
-		if (o1 instanceof UncategorizedCategory && o2 instanceof AbstractTaskContainer) {
+		if (o1 instanceof UncategorizedCategory && o2 instanceof AbstractTaskListElement) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UncategorizedCategory) {
+		} else if (o1 instanceof AbstractTaskListElement && o2 instanceof UncategorizedCategory) {
 			return 1;
 		}
 
-		if (!(o1 instanceof ITask) && o2 instanceof ITask) {
+		if (!(o1 instanceof AbstractTask) && o2 instanceof AbstractTask) {
 			return 1;
 		}
 		
-		if (!(o1 instanceof ITask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
-			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((ITaskListElement) o1).getSummary().compareToIgnoreCase(((ITaskListElement) o2).getSummary());
+		if (!(o1 instanceof AbstractTask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
+			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+				return ((AbstractTaskListElement) o1).getSummary().compareToIgnoreCase(((AbstractTaskListElement) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof ITaskListElement) {
-			if (!(o2 instanceof ITask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
+		} else if (o1 instanceof AbstractTaskListElement) {
+			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
-			} else if (o2 instanceof ITaskListElement) {
-				ITaskListElement element1 = (ITaskListElement) o1;
-				ITaskListElement element2 = (ITaskListElement) o2;
+			} else if (o2 instanceof AbstractTaskListElement) {
+				AbstractTaskListElement element1 = (AbstractTaskListElement) o1;
+				AbstractTaskListElement element2 = (AbstractTaskListElement) o2;
 
-				ITask task1 = null;
-				ITask task2 = null;
-				if (element1 instanceof ITask) {
-					task1 = (ITask) element1;
+				AbstractTask task1 = null;
+				AbstractTask task2 = null;
+				if (element1 instanceof AbstractTask) {
+					task1 = (AbstractTask) element1;
 				}
-				if (element2 instanceof ITask) {
-					task2 = (ITask) element2;
+				if (element2 instanceof AbstractTask) {
+					task2 = (AbstractTask) element2;
 				}
 
 				if (task1 == null && task2 == null) {
@@ -121,7 +121,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareOverdue(ITask task1, ITask task2) {
+	private int compareOverdue(AbstractTask task1, AbstractTask task2) {
 		if (task1.isPastReminder() && !task2.isPastReminder()) {
 			return -1;
 		} else if (!task1.isPastReminder() && task2.isPastReminder()) {
@@ -131,7 +131,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 	}
 
-	private int compareToday(ITask task1, ITask task2) {
+	private int compareToday(AbstractTask task1, AbstractTask task2) {
 		if (TasksUiPlugin.getTaskListManager().isScheduledForToday(task1)
 				&& !TasksUiPlugin.getTaskListManager().isScheduledForToday(task2)) {
 			return -1;
@@ -155,7 +155,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 	// }
 	// }
 
-	private int compareThisWeek(ITask task1, ITask task2) {
+	private int compareThisWeek(AbstractTask task1, AbstractTask task2) {
 		if (TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task1)
 				&& !TasksUiPlugin.getTaskListManager().isScheduledForThisWeek(task2)) {
 			return 1;
@@ -167,7 +167,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 	}
 
-	private int compareCompleted(ITask task1, ITask task2) {
+	private int compareCompleted(AbstractTask task1, AbstractTask task2) {
 		if (task1.isCompleted() && !task2.isCompleted()) {
 			return 1;
 		} else if (!task1.isCompleted() && task2.isCompleted()) {
@@ -177,7 +177,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 	}
 
-	private int comparePrioritiesAndKeys(ITaskListElement element1, ITaskListElement element2) {
+	private int comparePrioritiesAndKeys(AbstractTaskListElement element1, AbstractTaskListElement element2) {
 		int priority = comparePriorities(element1, element2);
 		if (priority != 0) {
 			return priority;
@@ -190,13 +190,13 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareKeys(ITaskListElement element1, ITaskListElement element2) {
+	private int compareKeys(AbstractTaskListElement element1, AbstractTaskListElement element2) {
 		String summary1 = TaskListTableSorter.getSortableSummaryFromElement(element1);
 		String summary2 = TaskListTableSorter.getSortableSummaryFromElement(element2);
 		return taskKeyComparator.compare(summary1, summary2);
 	}
 
-	private int comparePriorities(ITaskListElement element1, ITaskListElement element2) {
+	private int comparePriorities(AbstractTaskListElement element1, AbstractTaskListElement element2) {
 		return element1.getPriority().compareTo(element2.getPriority());
 	}
 

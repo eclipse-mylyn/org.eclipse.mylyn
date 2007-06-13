@@ -32,7 +32,7 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -81,7 +81,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
 				String mementoString = null;
-				ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 				if (task != null) {
 					try {
 						mementoString = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(
@@ -116,7 +116,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
 					.saveState(memento);
 
-			ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
 				// TODO: avoid storing with preferneces due to bloat?
 				StringWriter writer = new StringWriter();
@@ -139,7 +139,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 		if (context == null) {
 			return;
 		}
-		ITask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 		if (task != null) {
 			// TODO: avoid storing with preferneces due to bloat?

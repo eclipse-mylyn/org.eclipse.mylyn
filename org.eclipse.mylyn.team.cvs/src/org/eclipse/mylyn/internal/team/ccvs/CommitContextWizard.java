@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.team.ccvs;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.team.internal.ccvs.core.CVSException;
 import org.eclipse.team.internal.ccvs.ui.wizards.CommitWizard;
 
@@ -21,7 +21,7 @@ import org.eclipse.team.internal.ccvs.ui.wizards.CommitWizard;
  */
 public class CommitContextWizard extends CommitWizard {
 
-	public CommitContextWizard(IResource[] resources, ITask task) throws CVSException {
+	public CommitContextWizard(IResource[] resources, AbstractTask task) throws CVSException {
 		super(resources);
 	}
 

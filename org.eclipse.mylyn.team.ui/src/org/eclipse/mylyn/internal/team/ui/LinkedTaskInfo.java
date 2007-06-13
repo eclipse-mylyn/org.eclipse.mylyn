@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 
 /**
@@ -22,7 +22,7 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
  */
 public class LinkedTaskInfo implements ILinkedTaskInfo {
 
-	private ITask task;
+	private AbstractTask task;
 	
 	private String repositoryUrl;
 	
@@ -34,7 +34,7 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 	
 	private ChangeSet changeSet = null;
 	
-	public LinkedTaskInfo(ITask task, ChangeSet changeSet) {
+	public LinkedTaskInfo(AbstractTask task, ChangeSet changeSet) {
 		this.task = task;
 		this.changeSet = changeSet;
 	}
@@ -54,7 +54,7 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 		return repositoryUrl;
 	}
 
-	public ITask getTask() {
+	public AbstractTask getTask() {
 		return task;
 	}
 

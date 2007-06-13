@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui.editors;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -27,7 +27,7 @@ public class ContextEditorFactory implements ITaskEditorFactory {
 
 	private static final String LABEL = "Context";
 
-	public boolean canCreateEditorFor(ITask task) {
+	public boolean canCreateEditorFor(AbstractTask task) {
 		return task != null && ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 	}
 
@@ -48,7 +48,7 @@ public class ContextEditorFactory implements ITaskEditorFactory {
 		return formPage;
 	}
 
-	public IEditorInput createEditorInput(ITask task) {
+	public IEditorInput createEditorInput(AbstractTask task) {
 		return new ContextEditorInput(task);
 	}
 

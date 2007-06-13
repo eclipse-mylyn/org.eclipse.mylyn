@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.IViewActionDelegate;
 
 /**
@@ -27,11 +27,11 @@ public abstract class TaskContextAction implements IViewActionDelegate {
 
 	protected ISelection selection;
 
-	protected ITask getSelectedTask(ISelection newSelection) {
+	protected AbstractTask getSelectedTask(ISelection newSelection) {
 		if (selection instanceof StructuredSelection) {
 			Object selectedObject = ((StructuredSelection) selection).getFirstElement();
-			if (selectedObject instanceof ITask) {
-				return (ITask) selectedObject;
+			if (selectedObject instanceof AbstractTask) {
+				return (AbstractTask) selectedObject;
 			}
 //			else if (selectedObject instanceof AbstractQueryHit) {
 //				return ((AbstractQueryHit) selectedObject).getCorrespondingTask();
@@ -42,7 +42,7 @@ public abstract class TaskContextAction implements IViewActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
-		ITask selectedTask = getSelectedTask(selection);
+		AbstractTask selectedTask = getSelectedTask(selection);
 		if (selectedTask != null) {
 			action.setEnabled(ContextCorePlugin.getContextManager().hasContext(
 					selectedTask.getHandleIdentifier()));

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
@@ -24,9 +24,9 @@ public class ContextEditorInput implements IEditorInput {
 
 	private static final String LABEL = "Task Context Editor";
 	
-	private ITask task;
+	private AbstractTask task;
 
-	public ContextEditorInput(ITask task) {
+	public ContextEditorInput(AbstractTask task) {
 		this.task = task;
 	}
 
@@ -55,7 +55,7 @@ public class ContextEditorInput implements IEditorInput {
 		return null;
 	}
 
-	public ITask getTask() {
+	public AbstractTask getTask() {
 		return task;
 	}
 

@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -42,7 +42,7 @@ public class ContextCopyAction extends TaskContextAction {
 		run(getSelectedTask(selection));
 	}
 
-	public void run(ITask sourceTask) {
+	public void run(AbstractTask sourceTask) {
 		if (sourceTask == null) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "No source task selected.");
@@ -67,9 +67,9 @@ public class ContextCopyAction extends TaskContextAction {
 
 		Object result = dialog.getFirstResult();
 
-		ITask targetTask = null;
-		if (result instanceof ITask) {
-			targetTask = (ITask) result;
+		AbstractTask targetTask = null;
+		if (result instanceof AbstractTask) {
+			targetTask = (AbstractTask) result;
 		}
 
 		if (targetTask != null) {

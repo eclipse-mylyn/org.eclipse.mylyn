@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
 /**
@@ -41,7 +41,7 @@ public class CommitTemplateManager {
 
 	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates";
 	
-	public String generateComment(ITask task, String template) {
+	public String generateComment(AbstractTask task, String template) {
 		return processKeywords(task, template);
 	}
 
@@ -164,7 +164,7 @@ public class CommitTemplateManager {
 		}.run();
 	}
 
-	private String processKeywords(ITask task, String template) {
+	private String processKeywords(AbstractTask task, String template) {
 		String[] segments = template.split("\\$\\{");
 		Stack<String> evaluated = new Stack<String>();
 		evaluated.add(segments[0]);
@@ -197,7 +197,7 @@ public class CommitTemplateManager {
  		return buffer.toString();
 	}
 
-	private String processKeyword(ITask task, String keyword) {
+	private String processKeyword(AbstractTask task, String keyword) {
 		try {
 			AbstractCommitTemplateVariable handler = createHandler(keyword);
 			if (handler != null) {

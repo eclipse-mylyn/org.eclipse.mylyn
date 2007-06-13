@@ -27,7 +27,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.provider.ThreeWayDiff;
@@ -49,9 +49,9 @@ public class ContextChangeSet extends ActiveChangeSet implements IAdaptable {
 
 	private boolean suppressInterestContribution = false;
 
-	private ITask task;
+	private AbstractTask task;
 
-	public ContextChangeSet(ITask task, ActiveChangeSetManager manager) {
+	public ContextChangeSet(AbstractTask task, ActiveChangeSetManager manager) {
 		super(manager, task.getSummary());
 		this.task = task;
 		initTitle();
@@ -201,7 +201,7 @@ public class ContextChangeSet extends ActiveChangeSet implements IAdaptable {
 		}
 	}
 
-	public ITask getTask() {
+	public AbstractTask getTask() {
 		return task;
 	}
 
@@ -209,7 +209,7 @@ public class ContextChangeSet extends ActiveChangeSet implements IAdaptable {
 	public Object getAdapter(Class adapter) {
 		if (adapter == ResourceMapping.class) {
 			return new ChangeSetResourceMapping(this);
-		} else if (adapter == ITask.class) {
+		} else if (adapter == AbstractTask.class) {
 			return task;
 		} else if (adapter == ILinkedTaskInfo.class) {
 			return new LinkedTaskInfo(getTask(), this);

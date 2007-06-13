@@ -34,8 +34,8 @@ import org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -82,7 +82,7 @@ public class ContextEditorFormPage extends FormPage {
 
 	private Scale doiScale;
 
-	private ITask task;
+	private AbstractTask task;
 
 	private IInteractionContextListener CONTEXT_LISTENER = new IInteractionContextListener() {
 
@@ -215,13 +215,13 @@ public class ContextEditorFormPage extends FormPage {
 		
 		Label attachImage = toolkit.createLabel(sectionClient, "");
 		attachImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_ATTACH));
-		attachImage.setEnabled(task instanceof AbstractRepositoryTask);
+		attachImage.setEnabled(task instanceof AbstractTask);
 		Hyperlink attachHyperlink = toolkit.createHyperlink(sectionClient, "Attach context...", SWT.NONE);
-		attachHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
+		attachHyperlink.setEnabled(task instanceof AbstractTask);
 		attachHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
-				new ContextAttachAction().run((AbstractRepositoryTask) task);
+				new ContextAttachAction().run((AbstractTask) task);
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {
@@ -235,13 +235,13 @@ public class ContextEditorFormPage extends FormPage {
 
 		Label retrieveImage = toolkit.createLabel(sectionClient, "");
 		retrieveImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_RETRIEVE));
-		retrieveImage.setEnabled(task instanceof AbstractRepositoryTask);
+		retrieveImage.setEnabled(task instanceof AbstractTask);
 		Hyperlink retrieveHyperlink = toolkit.createHyperlink(sectionClient, "Retrieve Context...", SWT.NONE);
-		retrieveHyperlink.setEnabled(task instanceof AbstractRepositoryTask);
+		retrieveHyperlink.setEnabled(task instanceof AbstractTask);
 		retrieveHyperlink.addMouseListener(new MouseListener() {
 
 			public void mouseUp(MouseEvent e) {
-				new ContextRetrieveAction().run((AbstractRepositoryTask) task);
+				new ContextRetrieveAction().run((AbstractTask) task);
 			}
 
 			public void mouseDoubleClick(MouseEvent e) {

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryTask;
 
 /**
@@ -29,7 +29,7 @@ public class CommitTemplateTest extends TestCase {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 		
-		AbstractRepositoryTask task = new MockRepositoryTask("12345");
+		AbstractTask task = new MockRepositoryTask("12345");
 		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
 		
 		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
@@ -40,7 +40,7 @@ public class CommitTemplateTest extends TestCase {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
 		
-		AbstractRepositoryTask task = new MockRepositoryTask("12345");
+		AbstractTask task = new MockRepositoryTask("12345");
 		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
 		
 		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);

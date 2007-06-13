@@ -56,9 +56,9 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.DateRangeContainer;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -115,7 +115,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private Map<String, Set<String>> preservedFilterIds = new HashMap<String, Set<String>>();
 
 	private final ITaskHighlighter DEFAULT_HIGHLIGHTER = new ITaskHighlighter() {
-		public Color getHighlightColor(ITask task) {
+		public Color getHighlightColor(AbstractTask task) {
 			Highlighter highlighter = getHighlighterForContextId("" + task.getHandleIdentifier());
 			if (highlighter != null) {
 				return highlighter.getHighlightColor();
@@ -209,10 +209,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		}
 
-		public void taskActivated(ITask task) {
+		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
-			if (!hasLocalContext && task instanceof AbstractRepositoryTask) {
-				AbstractRepositoryTask repositoryTask = (AbstractRepositoryTask) task;
+			if (!hasLocalContext && task instanceof AbstractTask) {
+				AbstractTask repositoryTask = (AbstractTask) task;
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						repositoryTask);
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -229,7 +229,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			}
 		}
 
-		public void taskDeactivated(ITask task) {
+		public void taskDeactivated(AbstractTask task) {
 			// ignore
 
 		}
@@ -239,7 +239,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		}
 
-		public void tasksActivated(List<ITask> tasks) {
+		public void tasksActivated(List<AbstractTask> tasks) {
 			// ignore
 
 		}
@@ -663,7 +663,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * @param task
 	 *            can be null to indicate no task
 	 */
-	public String getPerspectiveIdFor(ITask task) {
+	public String getPerspectiveIdFor(AbstractTask task) {
 		if (task != null) {
 			return getPreferenceStore().getString(
 					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier());
@@ -676,7 +676,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 * @param task
 	 *            can be null to indicate no task
 	 */
-	public void setPerspectiveIdFor(ITask task, String perspectiveId) {
+	public void setPerspectiveIdFor(AbstractTask task, String perspectiveId) {
 		if (task != null) {
 			getPreferenceStore().setValue(
 					ContextUiPrefContstants.PREFIX_TASK_TO_PERSPECTIVE + task.getHandleIdentifier(), perspectiveId);

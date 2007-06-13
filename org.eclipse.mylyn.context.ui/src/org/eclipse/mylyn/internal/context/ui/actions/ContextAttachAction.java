@@ -21,11 +21,11 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -39,7 +39,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ContextAttachAction implements IViewActionDelegate {
 
-	private AbstractRepositoryTask task;
+	private AbstractTask task;
 
 	private TaskRepository repository;
 
@@ -57,7 +57,7 @@ public class ContextAttachAction implements IViewActionDelegate {
 		}
 	}
 
-	public void run(AbstractRepositoryTask task) {
+	public void run(AbstractTask task) {
 		if (task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "Task must be synchronized before attaching context");
@@ -79,9 +79,9 @@ public class ContextAttachAction implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		ITask selectedTask = TaskListView.getSelectedTask(selection);
-		if (selectedTask instanceof AbstractRepositoryTask) {
-			task = (AbstractRepositoryTask) selectedTask;
+		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
+		if (selectedTask instanceof AbstractTask) {
+			task = (AbstractTask) selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());

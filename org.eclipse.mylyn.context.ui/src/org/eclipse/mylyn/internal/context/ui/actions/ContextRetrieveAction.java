@@ -20,9 +20,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ContextUiUtil;
@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ContextRetrieveAction implements IViewActionDelegate {
 
-	private AbstractRepositoryTask task;
+	private AbstractTask task;
 
 	private TaskRepository repository;
 
@@ -64,13 +64,13 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 				// HACK: need better way of getting task
 				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 						.getActiveEditor();
-				ITask currentTask = null;
+				AbstractTask currentTask = null;
 				if (activeEditor instanceof TaskEditor) {
 					currentTask = ((TaskEditor) activeEditor).getTaskEditorInput().getTask();
 				}
 
-				if (currentTask instanceof AbstractRepositoryTask) {
-					ContextUiUtil.downloadContext((AbstractRepositoryTask) currentTask, attachment, PlatformUI
+				if (currentTask instanceof AbstractTask) {
+					ContextUiUtil.downloadContext((AbstractTask) currentTask, attachment, PlatformUI
 							.getWorkbench().getProgressService());
 				} else {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -80,7 +80,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 		}
 	}
 
-	public void run(AbstractRepositoryTask task) {
+	public void run(AbstractTask task) {
 		ContextRetrieveWizard wizard = new ContextRetrieveWizard(task);
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		if (wizard != null && shell != null && !shell.isDisposed()) {
@@ -96,7 +96,7 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		ITask selectedTask = TaskListView.getSelectedTask(selection);
+		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 
 		if (selectedTask == null) {
 			StructuredSelection structuredSelection = (StructuredSelection) selection;
@@ -109,8 +109,8 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 					action.setEnabled(false);
 				}
 			}
-		} else if (selectedTask instanceof AbstractRepositoryTask) {
-			task = (AbstractRepositoryTask) selectedTask;
+		} else if (selectedTask instanceof AbstractTask) {
+			task = (AbstractTask) selectedTask;
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());

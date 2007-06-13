@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
-import org.eclipse.mylyn.tasks.core.ITask;
-import org.eclipse.mylyn.tasks.core.ITaskListElement;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -33,8 +33,8 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getHandleIdentifier(Object object) {
-		if (object instanceof ITask) {
-			return ((ITask)object).getHandleIdentifier();
+		if (object instanceof AbstractTask) {
+			return ((AbstractTask)object).getHandleIdentifier();
 		} else {
 			return null;
 		}
@@ -57,8 +57,8 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getName(Object object) {
-		if (object instanceof ITask) {
-			return ((ITask)object).getSummary();
+		if (object instanceof AbstractTask) {
+			return ((AbstractTask)object).getSummary();
 		} else {
 			return null;
 		}
@@ -71,17 +71,17 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean acceptsObject(Object object) {
-		return object instanceof ITaskListElement;
+		return object instanceof AbstractTaskListElement;
 	}
 
 	@Override
 	public boolean canFilter(Object object) {
-		return object instanceof ITask;
+		return object instanceof AbstractTask;
 	}
 
 	@Override
 	public boolean isDocument(String handle) {
-		return getObjectForHandle(handle) instanceof ITask;
+		return getObjectForHandle(handle) instanceof AbstractTask;
 	}
 
 	@Override

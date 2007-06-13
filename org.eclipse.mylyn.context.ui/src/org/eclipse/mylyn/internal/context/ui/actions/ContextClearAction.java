@@ -15,7 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.ITask;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
@@ -32,8 +32,8 @@ public class ContextClearAction extends TaskContextAction {
 	}
 
 	public void run(IAction action) {
-		ITask task = TaskListView.getFromActivePerspective().getSelectedTask();
-		if (task instanceof ITask) {
+		AbstractTask task = TaskListView.getFromActivePerspective().getSelectedTask();
+		if (task instanceof AbstractTask) {
 			boolean deleteConfirmed = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell(), "Confirm clear context", "Clear context for the selected task?");
 			if (!deleteConfirmed)
