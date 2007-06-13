@@ -65,6 +65,7 @@ import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -1177,9 +1178,8 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (summary == null) {
 			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
 		}
-		LocalTask newTask = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "" + taskList.getNextTaskNum(),
-				summary);
-		newTask.setPriority(Task.PriorityLevel.P3.toString());
+		LocalTask newTask = new LocalTask(""+taskList.getNextTaskNum(), summary);
+		newTask.setPriority(PriorityLevel.P3.toString());
 
 		scheduleNewTask(newTask);
 

@@ -93,10 +93,10 @@ import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskArchive;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.UncategorizedCategory;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -187,12 +187,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String LABEL_NO_TASKS = "no task active";
 
-	static final String[] PRIORITY_LEVELS = { Task.PriorityLevel.P1.toString(), Task.PriorityLevel.P2.toString(),
-			Task.PriorityLevel.P3.toString(), Task.PriorityLevel.P4.toString(), Task.PriorityLevel.P5.toString() };
+	static final String[] PRIORITY_LEVELS = { PriorityLevel.P1.toString(), PriorityLevel.P2.toString(),
+			PriorityLevel.P3.toString(), PriorityLevel.P4.toString(), PriorityLevel.P5.toString() };
 
-	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { Task.PriorityLevel.P1.getDescription(),
-			Task.PriorityLevel.P2.getDescription(), Task.PriorityLevel.P3.getDescription(),
-			Task.PriorityLevel.P4.getDescription(), Task.PriorityLevel.P5.getDescription() };
+	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { PriorityLevel.P1.getDescription(),
+			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(),
+			PriorityLevel.P4.getDescription(), PriorityLevel.P5.getDescription() };
 
 	private static final String PART_NAME = "Task List";
 
@@ -1651,9 +1651,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public Image[] getPirorityImages() {
-		Image[] images = new Image[Task.PriorityLevel.values().length];
-		for (int i = 0; i < Task.PriorityLevel.values().length; i++) {
-			images[i] = TasksUiImages.getImageForPriority(Task.PriorityLevel.values()[i]);
+		Image[] images = new Image[PriorityLevel.values().length];
+		for (int i = 0; i < PriorityLevel.values().length; i++) {
+			images[i] = TasksUiImages.getImageForPriority(PriorityLevel.values()[i]);
 		}
 		return images;
 	}
@@ -1667,7 +1667,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			return TasksUiPlugin.getDefault().getPreferenceStore().getString(
 					TasksUiPreferenceConstants.FILTER_PRIORITY);
 		} else {
-			return Task.PriorityLevel.P5.toString();
+			return PriorityLevel.P5.toString();
 		}
 	}
 

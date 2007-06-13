@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+
 
 
 /**
@@ -27,7 +29,7 @@ public class TaskArchive extends AbstractTaskContainer {
 	}
 
 	public String getPriority() {
-		return Task.PriorityLevel.P1.toString();
+		return PriorityLevel.P1.toString();
 	}
 
 	@Override

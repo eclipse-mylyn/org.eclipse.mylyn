@@ -46,9 +46,9 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		Date now = new Date();
 
-		ITask task0 = new LocalTask("t0", "t0 - test 0");
-		ITask task1 = new LocalTask("t1", "t1 - test 1");
-		ITask task2 = new LocalTask("t2", "t2 - test 2");
+		ITask task0 = new LocalTask("0", "t0 - test 0");
+		ITask task1 = new LocalTask("1", "t1 - test 1");
+		ITask task2 = new LocalTask("2", "t2 - test 2");
 
 		task0.setScheduledForDate(new Date(now.getTime() - 2000));
 		task1.setScheduledForDate(new Date(now.getTime() - 2000));
@@ -61,13 +61,13 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 
-		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t0");
+		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-0");
 		assertNotNull(task0);
 		assertTrue(task0.hasBeenReminded());
-		task1 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t1");
+		task1 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-1");
 		assertNotNull(task1);
 		assertTrue(task1.hasBeenReminded());
-		task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("t2");
+		task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-2");
 		assertNotNull(task2);
 		assertTrue(task2.hasBeenReminded());
 

@@ -44,7 +44,7 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.UnrecognizedReponseException;
-import org.eclipse.mylyn.tasks.core.Task.PriorityLevel;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 
 /**
  * @author Mik Kersten

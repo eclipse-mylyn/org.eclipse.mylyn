@@ -11,6 +11,8 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
+
 /**
  * @author Rob Elves
  */
@@ -25,7 +27,7 @@ public class UncategorizedCategory extends AbstractTaskContainer {
 	}
 
 	public String getPriority() {
-		return Task.PriorityLevel.P1.toString();
+		return PriorityLevel.P1.toString();
 	}
 
 	@Override

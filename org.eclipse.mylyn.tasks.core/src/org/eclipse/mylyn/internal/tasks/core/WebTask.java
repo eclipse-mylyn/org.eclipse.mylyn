@@ -54,5 +54,11 @@ public class WebTask extends AbstractRepositoryTask {
 	public String getOwner() {
 		return UNKNOWN_OWNER;
 	}
+
+	@Override
+	public boolean isLocal() {
+		// ignore
+		return false;
+	}
 	
 }

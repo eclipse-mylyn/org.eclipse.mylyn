@@ -21,6 +21,7 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
 import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -169,23 +170,23 @@ public class UiLegendDialog extends PopupDialog {
 
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_1));
-		toolkit.createLabel(sectionClient, Task.PriorityLevel.P1.getDescription());
+		toolkit.createLabel(sectionClient, PriorityLevel.P1.getDescription());
 
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_2));
-		toolkit.createLabel(sectionClient, Task.PriorityLevel.P2.getDescription());
+		toolkit.createLabel(sectionClient, PriorityLevel.P2.getDescription());
 
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_3));
-		toolkit.createLabel(sectionClient, Task.PriorityLevel.P3.getDescription() + " (default)");
+		toolkit.createLabel(sectionClient, PriorityLevel.P3.getDescription() + " (default)");
 
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_4));
-		toolkit.createLabel(sectionClient, Task.PriorityLevel.P4.getDescription());
+		toolkit.createLabel(sectionClient, PriorityLevel.P4.getDescription());
 
 		image = toolkit.createLabel(sectionClient, "");
 		image.setImage(TasksUiImages.getImage(TasksUiImages.PRIORITY_5));
-		toolkit.createLabel(sectionClient, Task.PriorityLevel.P5.getDescription());
+		toolkit.createLabel(sectionClient, PriorityLevel.P5.getDescription());
 
 		section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		section.setText("Task Activity                                                                   ");

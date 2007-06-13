@@ -113,7 +113,7 @@ public class TaskDataImportTest extends AbstractContextTest {
 		assertTrue(historyContext.getInteractionHistory().size() == 0);
 		assertEquals(2, TasksUiPlugin.getRepositoryManager().getAllRepositories().size());
 
-		Task task1 = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "999", "label");
+		Task task1 = new LocalTask("999", "label");
 		taskList.addTask(task1);
 		Collection<ITask> tasks = taskList.getAllTasks();
 		assertEquals(1, tasks.size());

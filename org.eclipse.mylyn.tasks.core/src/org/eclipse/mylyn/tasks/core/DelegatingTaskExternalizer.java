@@ -22,6 +22,7 @@ import java.util.Locale;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.RepositoryTaskSyncState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,7 +49,7 @@ import org.w3c.dom.NodeList;
  */
 public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 
-	private static final String DEFAULT_PRIORITY = Task.PriorityLevel.P3.toString();
+	private static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z";
 

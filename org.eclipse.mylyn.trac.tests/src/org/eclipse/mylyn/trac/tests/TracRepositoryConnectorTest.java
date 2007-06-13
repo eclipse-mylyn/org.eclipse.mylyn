@@ -46,7 +46,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.Task;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TaskFactory;
@@ -262,7 +261,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
-		assertEquals(Task.DEFAULT_TASK_KIND, task.getTaskKind());
+		assertEquals(AbstractRepositoryTask.DEFAULT_TASK_KIND, task.getTaskKind());
 	}
 
 	public void testUpdateAttributesWeb011() throws Exception {

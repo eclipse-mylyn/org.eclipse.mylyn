@@ -18,7 +18,7 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
@@ -363,7 +363,7 @@ public class TasksUiImages {
 
 	}
 	
-	public static Image getImageForPriority(Task.PriorityLevel priorityLevel) {
+	public static Image getImageForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;
 		} else {
@@ -375,7 +375,7 @@ public class TasksUiImages {
 		return null;
 	}
 
-	public static ImageDescriptor getImageDescriptorForPriority(Task.PriorityLevel priorityLevel) {
+	public static ImageDescriptor getImageDescriptorForPriority(PriorityLevel priorityLevel) {
 		if (priorityLevel == null) {
 			return null;
 		}

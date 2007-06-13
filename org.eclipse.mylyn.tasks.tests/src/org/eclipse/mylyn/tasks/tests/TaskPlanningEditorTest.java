@@ -53,7 +53,7 @@ public class TaskPlanningEditorTest extends TestCase {
 
 
 	public void testDirtyOnEdit() {
-		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
+		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
@@ -75,7 +75,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	}
 
 	public void testNotDirtyOnRename() {
-		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
+		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);
@@ -99,7 +99,7 @@ public class TaskPlanningEditorTest extends TestCase {
 	 * editor remains dirty
 	 */
 	public void testRenameInDirtyState() {		
-		LocalTask task = new LocalTask(LocalRepositoryConnector.REPOSITORY_URL, "1", MOCK_LABEL);
+		LocalTask task = new LocalTask("1", MOCK_LABEL);
 		task.setSummary(DESCRIPTION);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TasksUiUtil.openEditor(task, false, true);

@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.ITaskListElement;
-import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -24,7 +24,7 @@ public class TaskPriorityFilter extends AbstractTaskListFilter {
 
 	private static final String PRIORITY_PREFIX = "P";
 
-	private String priorityLevel = Task.PriorityLevel.P5.toString();
+	private String priorityLevel = PriorityLevel.P5.toString();
 
 	public TaskPriorityFilter() {
 		displayPrioritiesAbove(TaskListView.getCurrentPriorityLevel());

@@ -157,14 +157,15 @@ public abstract class AbstractRepositoryTask extends Task {
 	protected String kind = DEFAULT_TASK_KIND;
 	
 	public AbstractRepositoryTask(String repositoryUrl, String taskId, String summary) {
+		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.summary = summary;
 	}
 
-	public final String getHandleIdentifier() {
-		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
-	}
+//	public final String getHandleIdentifier() {
+//		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
+//	}
 
 	public abstract String getRepositoryKind();
 

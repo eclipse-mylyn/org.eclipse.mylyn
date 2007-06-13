@@ -69,4 +69,10 @@ public class BugzillaTask extends AbstractRepositoryTask {
 		this.product = product;
 	}
 
+	@Override
+	public boolean isLocal() {
+		// ignore
+		return false;
+	}
+
 }

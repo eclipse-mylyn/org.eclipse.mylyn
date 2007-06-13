@@ -37,7 +37,7 @@ public class LocalTaskExternalizer extends DelegatingTaskExternalizer {
 //		} else {
 //			throw new TaskExternalizationException("Handle not stored for task");
 //		}
-		LocalTask task = new LocalTask(repositoryUrl, taskId, summary);
+		LocalTask task = new LocalTask(taskId, summary);
 		return task;
 	}
 

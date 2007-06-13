@@ -55,4 +55,10 @@ public class MockRepositoryTask extends AbstractRepositoryTask {
 		return super.getHandleIdentifier();
 	}
 
+	@Override
+	public boolean isLocal() {
+		// ignore
+		return false;
+	}
+
 }

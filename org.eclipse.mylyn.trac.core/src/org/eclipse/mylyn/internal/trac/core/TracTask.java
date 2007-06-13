@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.internal.trac.core;
 
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask;
-import org.eclipse.mylyn.tasks.core.Task;
 
 /**
  * @author Steffen Pingel
@@ -153,12 +152,18 @@ public class TracTask extends AbstractRepositoryTask {
 				return priority.toString();
 			}
 		}
-		return Task.PriorityLevel.P3.toString();
+		return AbstractRepositoryTask.PriorityLevel.P3.toString();
 	}
 
 	public static boolean isCompleted(String tracStatus) {
 		TracTask.Status status = TracTask.Status.fromStatus(tracStatus);
 		return status == TracTask.Status.CLOSED;
+	}
+
+	@Override
+	public boolean isLocal() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

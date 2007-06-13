@@ -53,7 +53,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public AbstractRepositoryTask createTask(String repositoryUrl, String id, String summary) {
-		return new LocalTask(repositoryUrl, id, summary);
+		return new LocalTask(id, summary);
 	}
 
 	@Override

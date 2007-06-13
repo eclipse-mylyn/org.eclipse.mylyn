@@ -13,7 +13,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.tasks.core.Task;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -81,12 +81,12 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P1.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P1.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[0]);
 			}
 		};
 		priority1.setEnabled(true);
-		priority1.setText(Task.PriorityLevel.P1.getDescription());
+		priority1.setText(PriorityLevel.P1.getDescription());
 		priority1.setImageDescriptor(TasksUiImages.PRIORITY_1);
 		ActionContributionItem item = new ActionContributionItem(priority1);
 		item.fill(dropDownMenu, -1);
@@ -95,12 +95,12 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P2.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P2.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[1]);
 			}
 		};
 		priority2.setEnabled(true);
-		priority2.setText(Task.PriorityLevel.P2.getDescription());
+		priority2.setText(PriorityLevel.P2.getDescription());
 		priority2.setImageDescriptor(TasksUiImages.PRIORITY_2);
 		item = new ActionContributionItem(priority2);
 		item.fill(dropDownMenu, -1);
@@ -109,12 +109,12 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P3.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P3.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[2]);
 			}
 		};
 		priority3.setEnabled(true);
-		priority3.setText(Task.PriorityLevel.P3.getDescription());
+		priority3.setText(PriorityLevel.P3.getDescription());
 		priority3.setImageDescriptor(TasksUiImages.PRIORITY_3);
 		item = new ActionContributionItem(priority3);
 		item.fill(dropDownMenu, -1);
@@ -123,12 +123,12 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P4.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P4.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[3]);
 			}
 		};
 		priority4.setEnabled(true);
-		priority4.setText(Task.PriorityLevel.P4.getDescription());
+		priority4.setText(PriorityLevel.P4.getDescription());
 		priority4.setImageDescriptor(TasksUiImages.PRIORITY_4);
 		item = new ActionContributionItem(priority4);
 		item.fill(dropDownMenu, -1);
@@ -137,13 +137,13 @@ class PriorityDropDownAction extends Action implements IMenuCreator {
 			@Override
 			public void run() {
 				TasksUiPlugin.getDefault().getPreferenceStore().setValue(
-						TasksUiPreferenceConstants.FILTER_PRIORITY, Task.PriorityLevel.P5.toString());
+						TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
 				PriorityDropDownAction.this.taskListView.displayPrioritiesAbove(TaskListView.PRIORITY_LEVELS[4]);
 			}
 		};
 		priority5.setEnabled(true);
 		priority5.setImageDescriptor(TasksUiImages.PRIORITY_5);
-		priority5.setText(Task.PriorityLevel.P5.getDescription());
+		priority5.setText(PriorityLevel.P5.getDescription());
 		item = new ActionContributionItem(priority5);
 		item.fill(dropDownMenu, -1);
 

@@ -17,6 +17,11 @@ package org.eclipse.mylyn.tasks.core;
  */
 public abstract class Task extends AbstractTaskContainer implements ITask {
 
+	public Task(String handleAndDescription) {
+		super(handleAndDescription);
+		// ignore
+	}
+
 //	private static final String REPOSITORY_KIND_LOCAL = "local";
 //
 //	public static final String DEFAULT_TASK_KIND = "task";
