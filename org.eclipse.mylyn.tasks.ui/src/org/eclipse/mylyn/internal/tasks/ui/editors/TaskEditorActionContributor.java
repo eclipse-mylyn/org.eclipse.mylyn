@@ -35,6 +35,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ShowInTaskListAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
@@ -64,6 +65,7 @@ import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
+
 /**
  * @author Mik Kersten
  * @author Rob Elves
@@ -82,6 +84,8 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private AttachFileAction attachFileAction = new AttachFileAction();
 	
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
+
+	private ShowInTaskListAction showInTaskListAction = new ShowInTaskListAction();
 
 	private GlobalAction cutAction;
 
@@ -209,6 +213,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			attachFileAction.selectionChanged(selection);
 			attachFileAction.setEditor(editor);
 			synchronizeEditorAction.selectionChanged(new StructuredSelection(this.getEditor()));
+			showInTaskListAction.selectionChanged(selection);
 
 			manager.add(openWithBrowserAction);
 			if (task instanceof AbstractTask) {
@@ -232,6 +237,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					}
 				});
 			}
+			manager.add(showInTaskListAction);
 
 			manager.add(new Separator());
 
