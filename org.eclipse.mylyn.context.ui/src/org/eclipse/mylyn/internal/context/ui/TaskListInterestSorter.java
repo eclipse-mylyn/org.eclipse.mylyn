@@ -13,14 +13,14 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.TaskArchive;
-import org.eclipse.mylyn.tasks.core.AutomaticCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -32,9 +32,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 
 	@Override
 	public int compare(Viewer compareViewer, Object o1, Object o2) {
-		if (o1 instanceof AbstractTaskListElement && o2 instanceof TaskArchive) {
+		if (o1 instanceof AbstractTaskContainer && o2 instanceof TaskArchive) {
 			return -1;
-		} else if (o2 instanceof AbstractTaskListElement && o1 instanceof TaskArchive) {
+		} else if (o2 instanceof AbstractTaskContainer && o1 instanceof TaskArchive) {
 			return 1;
 		}
 
@@ -50,9 +50,9 @@ public class TaskListInterestSorter extends ViewerSorter {
 			}
 		}
 
-		if (o1 instanceof AutomaticCategory && o2 instanceof AbstractTaskListElement) {
+		if (o1 instanceof UnfiledCategory && o2 instanceof AbstractTaskContainer) {
 			return -1;
-		} else if (o1 instanceof AbstractTaskListElement && o2 instanceof AutomaticCategory) {
+		} else if (o1 instanceof AbstractTaskContainer && o2 instanceof UnfiledCategory) {
 			return 1;
 		}
 
@@ -62,16 +62,16 @@ public class TaskListInterestSorter extends ViewerSorter {
 		
 		if (!(o1 instanceof AbstractTask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((AbstractTaskListElement) o1).getSummary().compareToIgnoreCase(((AbstractTaskListElement) o2).getSummary());
+				return ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(((AbstractTaskContainer) o2).getSummary());
 			} else {
 				return -1;
 			}
-		} else if (o1 instanceof AbstractTaskListElement) {
+		} else if (o1 instanceof AbstractTaskContainer) {
 			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
 				return -1;
-			} else if (o2 instanceof AbstractTaskListElement) {
-				AbstractTaskListElement element1 = (AbstractTaskListElement) o1;
-				AbstractTaskListElement element2 = (AbstractTaskListElement) o2;
+			} else if (o2 instanceof AbstractTaskContainer) {
+				AbstractTaskContainer element1 = (AbstractTaskContainer) o1;
+				AbstractTaskContainer element2 = (AbstractTaskContainer) o2;
 
 				AbstractTask task1 = null;
 				AbstractTask task2 = null;
@@ -177,7 +177,7 @@ public class TaskListInterestSorter extends ViewerSorter {
 		}
 	}
 
-	private int comparePrioritiesAndKeys(AbstractTaskListElement element1, AbstractTaskListElement element2) {
+	private int comparePrioritiesAndKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		int priority = comparePriorities(element1, element2);
 		if (priority != 0) {
 			return priority;
@@ -190,13 +190,13 @@ public class TaskListInterestSorter extends ViewerSorter {
 		return 0;
 	}
 
-	private int compareKeys(AbstractTaskListElement element1, AbstractTaskListElement element2) {
+	private int compareKeys(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		String summary1 = TaskListTableSorter.getSortableSummaryFromElement(element1);
 		String summary2 = TaskListTableSorter.getSortableSummaryFromElement(element2);
 		return taskKeyComparator.compare(summary1, summary2);
 	}
 
-	private int comparePriorities(AbstractTaskListElement element1, AbstractTaskListElement element2) {
+	private int comparePriorities(AbstractTaskContainer element1, AbstractTaskContainer element2) {
 		return element1.getPriority().compareTo(element2.getPriority());
 	}
 

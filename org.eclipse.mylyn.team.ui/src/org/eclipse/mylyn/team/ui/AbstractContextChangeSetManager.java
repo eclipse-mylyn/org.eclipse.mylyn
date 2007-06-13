@@ -13,8 +13,8 @@ import java.util.List;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.tasks.core.AbstractTaskListElement;
-import org.eclipse.mylyn.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.internal.tasks.core.DateRangeContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -87,7 +87,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 			// ignore
 		}
 
-		public void taskMoved(AbstractTask task, AbstractTaskListElement fromContainer, AbstractTaskListElement toContainer) {
+		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
 			// ignore
 		}
 
@@ -95,11 +95,11 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 			// ignore
 		}
 
-		public void containerAdded(AbstractTaskListElement container) {
+		public void containerAdded(AbstractTaskContainer container) {
 			// ignore
 		}
 
-		public void containerDeleted(AbstractTaskListElement container) {
+		public void containerDeleted(AbstractTaskContainer container) {
 			// ignore
 		}
 
@@ -107,7 +107,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 			// ignore
 		}
 
-		public void containerInfoChanged(AbstractTaskListElement container) {
+		public void containerInfoChanged(AbstractTaskContainer container) {
 			// ignore
 		}
 	};
