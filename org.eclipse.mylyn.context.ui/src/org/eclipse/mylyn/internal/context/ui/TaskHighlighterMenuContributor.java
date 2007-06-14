@@ -44,7 +44,7 @@ public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributo
 						if (task != null) {
 							ContextUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 									highlighter.getName());
-							TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task);
+							TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 						}
 					}
 				}
