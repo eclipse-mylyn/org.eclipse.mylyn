@@ -616,15 +616,20 @@ public class TaskList {
 	}
 
 	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		for (AbstractTaskContainer abstractTaskContainer : containers) {
-			delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
-		}
-		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			try {
-				listener.containersChanged(delta);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+		if (containers == null) {
+			Set<TaskContainerDelta> rootDelta = new HashSet<TaskContainerDelta>();
+			rootDelta.add(new TaskContainerDelta(null, TaskContainerDelta.Kind.ROOT));
+		} else {
+			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+			for (AbstractTaskContainer abstractTaskContainer : containers) {
+				delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
+			}
+			for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
+				try {
+					listener.containersChanged(delta);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+				}
 			}
 		}
 	}

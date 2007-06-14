@@ -22,13 +22,13 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
@@ -151,15 +151,7 @@ class SynchronizeQueryJob extends Job {
 		for (TaskRepository repository : repositories) {
 			TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
 		}
-
-		// HACK: force entire Task List to refresh in case containers need to
-		// appear or disappear
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			// TODO: remove explicit refresh
-			view.getViewer().refresh();
-		}
-//		taskList.notifyContainersUpdated(null);
+		taskList.notifyContainersUpdated(null);
 
 		monitor.done();
 

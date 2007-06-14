@@ -20,7 +20,7 @@ package org.eclipse.mylyn.tasks.core;
 public final class TaskContainerDelta {
 
 	public enum Kind {
-		ADDED, REMOVED, CHANGED
+		ADDED, REMOVED, CHANGED, ROOT
 	}
 
 	private final AbstractTaskContainer container;

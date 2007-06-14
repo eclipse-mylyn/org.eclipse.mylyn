@@ -457,15 +457,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		public void containersChanged(final Set<TaskContainerDelta> containers) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (containers == null) {
-						refresh(null);
-						return;
-					}
-					
 					for (TaskContainerDelta taskContainerDelta : containers) {
 						if (taskContainerDelta.getContainer() instanceof AbstractTask) {
 							AbstractTask task = (AbstractTask)taskContainerDelta.getContainer();
 							switch (taskContainerDelta.getKind()) {
+							case ROOT:
+								refresh(null);
+								break;
 							case ADDED:
 								refresh(null);
 								break;
@@ -474,9 +472,13 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								break;
 							case CHANGED:
 								refresh(task);
+								break;
 							}							
 						} else { // category or query
 							switch (taskContainerDelta.getKind()) {
+							case ROOT:
+								refresh(null);
+								break;
 							case ADDED:
 								refresh(null);
 								break;
