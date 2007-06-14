@@ -243,10 +243,9 @@ public class TaskPlanningEditor extends TaskFormPage {
 		} else {
 			TasksUiPlugin.getTaskListManager().setDueDate(task, null);
 		}
-
-		if (parentEditor != null) {
-			parentEditor.notifyTaskChanged();
-		}
+//		if (parentEditor != null) {
+//			parentEditor.notifyTaskChanged();
+//		}
 		markDirty(false);
 	}
 

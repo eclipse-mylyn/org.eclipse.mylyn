@@ -164,7 +164,7 @@ public class RepositorySynchronizationManager {
 		repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
 		TasksUiPlugin.getDefault().getTaskDataManager().saveEdits(repositoryTask.getHandleIdentifier(),
 				Collections.unmodifiableSet(modifiedAttributes));
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 	}
 
 	/**
@@ -279,13 +279,13 @@ public class RepositorySynchronizationManager {
 				dataManager.setOldTaskData(repositoryTask.getHandleIdentifier(), taskData);
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		} else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.CONFLICT)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(taskData.getLastModified());
 			}
 			repositoryTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		} else if (read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			if (taskData != null && taskData.getLastModified() != null) {
 				repositoryTask.setLastSyncDateStamp(taskData.getLastModified());
@@ -302,7 +302,7 @@ public class RepositorySynchronizationManager {
 			}
 		} else if (!read && repositoryTask.getSyncState().equals(RepositoryTaskSyncState.SYNCHRONIZED)) {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
 	}
 
@@ -311,7 +311,7 @@ public class RepositorySynchronizationManager {
 		dataManager.discardEdits(repositoryTask.getHandleIdentifier());
 		repositoryTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
 		
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 	}
 
 	/**

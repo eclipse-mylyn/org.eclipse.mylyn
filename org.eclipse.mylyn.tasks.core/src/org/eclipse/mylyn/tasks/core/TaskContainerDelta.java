@@ -20,7 +20,32 @@ package org.eclipse.mylyn.tasks.core;
 public final class TaskContainerDelta {
 
 	public enum Kind {
-		ADDED, REMOVED, CHANGED, ROOT
+		/**
+		 * One container added to another or to the root.
+		 */
+		ADDED, 
+		
+		/**
+		 * One container removed from another or from the root.
+		 */
+		REMOVED, 
+		
+		/**
+		 * Container has changed, e.g. has new children, a task's priority or planning info.
+		 * For tasks changed state tends to be show in a view.
+		 */
+		CHANGED, 
+		
+		/**
+		 * The content of the container has changed, e.g. new data has been downloaded for a
+		 * task from the repository.  For tasks content tends to be show in an editor.
+		 */
+		CONTENT, 
+		
+		/**
+		 * The root of the data structure has changed.
+		 */
+		ROOT
 	}
 
 	private final AbstractTaskContainer container;

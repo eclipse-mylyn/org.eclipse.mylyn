@@ -277,7 +277,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		}
 
 		if (notify) {
-			taskList.notifyTaskChanged(task);
+			taskList.notifyTaskChanged(task, false);
 		}
 	}
 

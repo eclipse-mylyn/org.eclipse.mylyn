@@ -289,7 +289,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				@Override
 				protected void setTitle(final String pageTitle) {
 					newTask.setSummary(pageTitle);
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(newTask);
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(newTask, false);
 				}
 			};
 			job.schedule();

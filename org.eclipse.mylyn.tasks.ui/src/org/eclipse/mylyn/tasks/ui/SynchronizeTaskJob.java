@@ -85,7 +85,7 @@ class SynchronizeTaskJob extends Job {
 				repositoryTask.setStatus(null);
 
 				try {
-					syncTask(monitor, repositoryTask);
+					synchronizeTask(monitor, repositoryTask);
 				} catch (final CoreException e) {
 					repositoryTask.setStatus(e.getStatus());
 					if (forced) {
@@ -100,7 +100,7 @@ class SynchronizeTaskJob extends Job {
 				// TODO: Set in connector.updateTask
 				repositoryTask.setCurrentlySynchronizing(false);
 
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 				// TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
 				monitor.worked(1);
@@ -116,7 +116,7 @@ class SynchronizeTaskJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void syncTask(IProgressMonitor monitor, AbstractTask repositoryTask) throws CoreException {
+	private void synchronizeTask(IProgressMonitor monitor, AbstractTask repositoryTask) throws CoreException {
 		monitor.subTask(repositoryTask.getSummary());
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
@@ -128,7 +128,7 @@ class SynchronizeTaskJob extends Job {
 					null));
 		}
 
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
 			String taskId = repositoryTask.getTaskId();
@@ -167,7 +167,7 @@ class SynchronizeTaskJob extends Job {
 
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, true);
 				}
 			} else {
 				connector.updateTaskFromRepository(repository, repositoryTask, monitor);

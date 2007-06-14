@@ -1021,7 +1021,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithReminders.add(task);
 		}
 		parseFutureReminders();
-		taskList.notifyTaskChanged(task);
+		taskList.notifyTaskChanged(task, false);
 	}
 
 	public void setDueDate(AbstractTask task, Date dueDate) {
@@ -1033,7 +1033,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithDueDates.add(task);
 		}
 		parseFutureReminders();
-		taskList.notifyTaskChanged(task);
+		taskList.notifyTaskChanged(task, false);
 	}
 
 	/**

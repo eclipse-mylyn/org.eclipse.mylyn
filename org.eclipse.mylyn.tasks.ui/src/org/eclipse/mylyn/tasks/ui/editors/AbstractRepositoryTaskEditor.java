@@ -290,14 +290,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
-			AbstractTask task = null;
+			AbstractTask taskToRefresh = null;
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getContainer())) {
-					task = (AbstractTask)taskContainerDelta.getContainer();
-					break;
+					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
+						taskToRefresh = (AbstractTask)taskContainerDelta.getContainer();
+						break;
+					}
 				}
 			}
-			if (task != null) {
+			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
@@ -1926,8 +1928,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (repositoryTask != null) {
 			TasksUiPlugin.getSynchronizationManager().saveOutgoing(repositoryTask, changedAttributes);
 		}
-		if (parentEditor != null) {
-			parentEditor.notifyTaskChanged();
+		if (repositoryTask != null) {
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
 		markDirty(false);
 	}

@@ -603,11 +603,21 @@ public class TaskList {
 		return Collections.unmodifiableSet(changeListeners);
 	}
 
-	public void notifyTaskChanged(AbstractTask task) {
+	/**
+	 * @param task
+	 * @param content	true if the content for the task (e.g. repository task data) has changed
+	 */
+	public void notifyTaskChanged(AbstractTask task, boolean content) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
 			try {
 				Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-				delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
+				TaskContainerDelta.Kind kind;
+				if (content) {
+					kind = TaskContainerDelta.Kind.CONTENT;
+				} else {
+					kind = TaskContainerDelta.Kind.CHANGED;
+				}				
+				delta.add(new TaskContainerDelta(task, kind));
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
 				MylarStatusHandler.fail(t, "Notification failed for: " + listener, false);

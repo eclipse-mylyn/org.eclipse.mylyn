@@ -231,11 +231,11 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		setSite(site);
 	}
 
-	public void notifyTaskChanged() {
-		if (task != null) {
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task);
-		}
-	}
+//	public void notifyTaskChanged() {
+//		if (task != null) {
+//			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
+//		}
+//	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
