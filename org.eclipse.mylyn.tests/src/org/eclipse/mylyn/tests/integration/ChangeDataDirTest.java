@@ -97,7 +97,7 @@ public class ChangeDataDirTest extends TestCase {
 	public void testTaskMove() {
 		AbstractTask task = manager.createNewLocalTask("label");
 		String handle = task.getHandleIdentifier();
-		manager.getTaskList().moveToRoot(task);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task);
 
 		AbstractTask readTaskBeforeMove = manager.getTaskList().getTask(handle);
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
@@ -138,7 +138,7 @@ public class ChangeDataDirTest extends TestCase {
 
 		// BugzillaTaskHandler handler = new BugzillaTaskHandler();
 		// handler.addTaskToArchive(newTask);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), newTask);
 	}
 
 	// /**
