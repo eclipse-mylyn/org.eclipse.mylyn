@@ -175,6 +175,10 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 	}
 
+	/**
+	 * True for tasks that can be modified without a round-trip to a server.  For example,
+	 * such a task can be marked completed via the Task List.
+	 */
 	public abstract boolean isLocal();
 	
 	public abstract String getRepositoryKind();

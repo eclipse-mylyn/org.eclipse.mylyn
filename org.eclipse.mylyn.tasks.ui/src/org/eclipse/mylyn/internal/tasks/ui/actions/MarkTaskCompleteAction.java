@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -39,11 +38,11 @@ public class MarkTaskCompleteAction extends Action {
 		setImageDescriptor(TasksUiImages.TASK_COMPLETE);
 		if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
 			AbstractTask task = (AbstractTask) selectedElements.get(0);
-			if (task instanceof WebTask) {
-				setEnabled(true);
-			} else {
-				setEnabled(task.isLocal());
-			}
+//			if (task instanceof WebTask) {
+//				setEnabled(true);
+//			} else {
+			setEnabled(task.isLocal());
+//			}
 //		} else if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof WebQueryHit)) {
 //			setEnabled(true);
 		} else {

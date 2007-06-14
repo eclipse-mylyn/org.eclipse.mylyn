@@ -44,7 +44,6 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
-import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -925,7 +924,8 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public boolean isOwnedByUser(AbstractTask task) {
-		if (task instanceof WebTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
+//		if (task instanceof WebTask || (task instanceof AbstractTask && ((AbstractTask) task).isLocal())) {
+		if (task.isLocal()) {
 			return true;
 		}
 

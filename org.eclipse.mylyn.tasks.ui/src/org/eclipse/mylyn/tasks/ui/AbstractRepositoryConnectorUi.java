@@ -20,7 +20,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -121,9 +120,6 @@ public abstract class AbstractRepositoryConnectorUi {
 	 * Task kind overlay, recommended to override with connector-specific overlay.
 	 */
 	public ImageDescriptor getTaskKindOverlay(AbstractTask task) {
-		if (!(task instanceof LocalTask) && (!hasRichEditor() || task instanceof WebTask)) {
-			return TasksUiImages.OVERLAY_WEB;
-		}
 		return null;
 	}
 	
