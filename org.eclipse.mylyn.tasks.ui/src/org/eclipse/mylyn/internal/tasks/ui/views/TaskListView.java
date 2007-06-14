@@ -459,7 +459,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				public void run() {
 					for (TaskContainerDelta taskContainerDelta : containers) {
 						if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-							AbstractTask task = (AbstractTask)taskContainerDelta.getContainer();
+							AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
 							switch (taskContainerDelta.getKind()) {
 							case ROOT:
 								refresh(null);
@@ -471,9 +471,16 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								refresh(null);
 								break;
 							case CHANGED:
-								refresh(task);
+								// TODO: move logic into deltas
+								Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
+										TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
+												task.getHandleIdentifier()));
+								containers.addAll(task.getParentContainers());
+								for (AbstractTaskContainer container : containers) {
+									refresh(container);
+								}
 								break;
-							}							
+							}
 						} else { // category or query
 							switch (taskContainerDelta.getKind()) {
 							case ROOT:
@@ -490,9 +497,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 										scheduledPresentation.getPresentationName())) {
 									refresh(null);
 								} else {
-									if (taskContainerDelta.getContainer().equals(TasksUiPlugin.getTaskListManager()
-											.getTaskList()
-											.getDefaultCategory())) {
+									if (taskContainerDelta.getContainer().equals(
+											TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory())) {
 										refresh(null);
 									} else {
 										refresh(taskContainerDelta.getContainer());
@@ -504,7 +510,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			});
 		}
-		
+
 //		public void localInfoChanged(final AbstractTask task) {
 //			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 //				public void run() {
@@ -1639,28 +1645,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					if (element instanceof AbstractTask) {
 						AbstractTask task = (AbstractTask) element;
 						getViewer().refresh(task, true);
-//						AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager()
-//								.getTaskList()
-//								.getAutomaticCategory();
-//						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
-//								.getTaskList()
-//								.getQueriesForHandle(task.getHandleIdentifier());
-//						if (task.getCategory() == null || task.getCategory().equals(rootCategory)
-//								|| (task instanceof AbstractTask && queries.isEmpty())) {
-//							// || task.getContainer() instanceof TaskArchive) {
-//							refresh(null);
-//						} else {
-//							getViewer().refresh(task.getCategory(), true);
-//							// refresh(task.getContainer());
-//						}
-//						queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-//								task.getHandleIdentifier());
-//						for (AbstractRepositoryQuery query : queries) {
-//							refresh(query);
-//						}
 					} else {
 						getViewer().refresh(element, true);
-					} 
+					}
 				} catch (SWTException e) {
 					MylarStatusHandler.log(e, "Failed to refresh Task List");
 				}

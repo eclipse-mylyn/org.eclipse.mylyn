@@ -198,7 +198,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repositoryList.add(repository2);
 		repositoryList.add(repository1);
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-
-		assertEquals(1, manager.getAllRepositories().size());
+ 
+		assertEquals("got: " + manager.getAllRepositories(), 2, manager.getAllRepositories().size());
 	}
 }
