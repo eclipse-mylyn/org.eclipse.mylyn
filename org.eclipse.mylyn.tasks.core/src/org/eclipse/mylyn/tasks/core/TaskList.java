@@ -112,12 +112,15 @@ public class TaskList {
 		if (newTask == null) {
 			newTask = task;
 			tasks.put(newTask.getHandleIdentifier(), newTask);
-			archiveContainer.addChild(newTask);
-			newTask.addParentContainer(archiveContainer);
+//			archiveContainer.addChild(newTask);
+//			newTask.addParentContainer(archiveContainer);
 
 			// NOTE: only called for newly-created tasks
 			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 			delta.add(new TaskContainerDelta(newTask, TaskContainerDelta.Kind.ADDED));
+			if (parentContainer != null) {
+				delta.add(new TaskContainerDelta(parentContainer, TaskContainerDelta.Kind.ADDED));
+			}
 			for (ITaskListChangeListener listener : changeListeners) {
 				listener.containersChanged(delta);
 			}
@@ -131,6 +134,38 @@ public class TaskList {
 		} else {
 			defaultCategory.addChild(newTask);
 			newTask.addParentContainer(defaultCategory);
+		}
+	}
+
+	public void moveToContainer(AbstractTask task, AbstractTaskCategory container) {
+		if (!tasks.containsKey(task.getHandleIdentifier())) {
+			tasks.put(task.getHandleIdentifier(), task);
+		}
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+
+		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
+		for (AbstractTaskContainer taskContainer : currentContainers) {
+			if (taskContainer instanceof AbstractTaskCategory) {
+				if (!(taskContainer instanceof TaskArchive)) {
+					(taskContainer).removeChild(task);
+				}
+				task.removeParentContainer(taskContainer);
+				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
+			}
+		}
+		if (container != null) {
+			internalAddTask(task, container);
+			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
+			if (archiveContainer.contains(task.getHandleIdentifier())) {
+				archiveContainer.removeChild(task);
+				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));				
+			}
+		} else {
+			internalAddTask(task, archiveContainer);
+		}
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.containersChanged(delta);
 		}
 	}
 
@@ -163,37 +198,7 @@ public class TaskList {
 		}
 	}
 
-	public void moveToContainer(AbstractTaskCategory toContainer, AbstractTask task) {
-		if (!tasks.containsKey(task.getHandleIdentifier())) {
-			tasks.put(task.getHandleIdentifier(), task);
-		}
-		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(toContainer, TaskContainerDelta.Kind.CHANGED));
-
-		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
-		for (AbstractTaskContainer taskContainer : currentContainers) {
-			if (taskContainer instanceof AbstractTaskCategory) {
-				if (!(taskContainer instanceof TaskArchive)) {
-					(taskContainer).removeChild(task);
-				}
-				task.removeParentContainer(taskContainer);
-				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
-			}
-		}
-		if (toContainer != null) {
-			internalAddTask(task, toContainer);
-			if (archiveContainer.contains(task.getHandleIdentifier())) {
-				archiveContainer.removeChild(task);
-				delta.add(new TaskContainerDelta(toContainer, TaskContainerDelta.Kind.CHANGED));
-			}
-		} else {
-			internalAddTask(task, archiveContainer);
-		}
-		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containersChanged(delta);
-		}
-	}
-
+	
 	public void addCategory(TaskCategory category) {
 		categories.put(category.getHandleIdentifier(), category);
 
@@ -205,7 +210,7 @@ public class TaskList {
 	}
 
 	public void removeFromCategory(TaskCategory category, AbstractTask task) {
-		moveToContainer(archiveContainer, task);
+		moveToContainer(task, archiveContainer);
 	}
 
 	public void renameTask(AbstractTask task, String description) {

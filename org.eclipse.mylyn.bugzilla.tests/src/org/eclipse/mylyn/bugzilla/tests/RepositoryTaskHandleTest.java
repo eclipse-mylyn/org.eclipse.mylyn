@@ -57,7 +57,7 @@ public class RepositoryTaskHandleTest extends TestCase {
 		BugzillaTask bugTask = new BugzillaTask(repository, id, "label 124");
 		assertEquals(repository, bugTask.getRepositoryUrl());
 
-		manager.getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), bugTask);
+		manager.getTaskList().moveToContainer(bugTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		manager.saveTaskList();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();

@@ -59,7 +59,7 @@ public class TaskListStandaloneTest extends TestCase {
 		AbstractTask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task);
+		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
 		manager.saveTaskList();
@@ -91,7 +91,7 @@ public class TaskListStandaloneTest extends TestCase {
 		Date creation = new Date();
 		AbstractTask task = new LocalTask("1", "task 1");
 
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task);
+		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		assertDatesCloseEnough(task.getCreationDate(), start);
 
 		task.setCompleted(true);

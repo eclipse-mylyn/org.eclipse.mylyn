@@ -114,7 +114,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		BugzillaTask task = (BugzillaTask) connector.createTaskFromExistingId(repository, taskNumber, new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().setTaskRead(task, true);
 		assertNotNull(task);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), task);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		
 		return task;
 	}

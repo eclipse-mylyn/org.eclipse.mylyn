@@ -92,7 +92,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label");
 		repositoryTask.setKind("kind");
-		manager.getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), repositoryTask);
+		manager.getTaskList().moveToContainer(repositoryTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		manager.saveTaskList();
 
 		manager.resetTaskList();
@@ -177,7 +177,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
-		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren());
+		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());

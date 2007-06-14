@@ -109,7 +109,7 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testSingleTaskDeletion() {
 		MockRepositoryTask task = new MockRepositoryTask("1");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task);
+		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 
@@ -288,11 +288,11 @@ public class TaskListManagerTest extends TestCase {
 		TaskCategory cat2 = new TaskCategory("cat2");
 		manager.getTaskList().addCategory(cat2);
 
-		manager.getTaskList().moveToContainer(cat1, task1);
+		manager.getTaskList().moveToContainer(task1, cat1);
 		assertEquals(1, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
 		assertEquals(0, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());
 
-		manager.getTaskList().moveToContainer(cat2, task1);
+		manager.getTaskList().moveToContainer(task1, cat2);
 		assertEquals(0, manager.getTaskList().getContainerForHandle("cat1").getChildren().size());
 		assertEquals(1, manager.getTaskList().getContainerForHandle("cat2").getChildren().size());
 	}
@@ -300,18 +300,18 @@ public class TaskListManagerTest extends TestCase {
 	public void testMoveToRoot() {
 		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
 		AbstractTask task1 = new LocalTask("t1", "t1");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task1);
+		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(UnfiledCategory.HANDLE, task1.getParentContainers().iterator().next().getHandleIdentifier());
 
 		TaskCategory cat1 = new TaskCategory("c1");
 		manager.getTaskList().addCategory(cat1);
 
-		manager.getTaskList().moveToContainer(cat1, task1);
+		manager.getTaskList().moveToContainer(task1, cat1);
 		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(cat1, task1.getParentContainers().iterator().next());
 
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task1);
+		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(0, cat1.getChildren().size());
 		assertEquals(UnfiledCategory.HANDLE, task1.getParentContainers().iterator().next().getHandleIdentifier());
@@ -328,7 +328,7 @@ public class TaskListManagerTest extends TestCase {
 		MockRepositoryTask task = new MockRepositoryTask("1");
 		TaskCategory category = new TaskCategory("cat");
 		manager.getTaskList().addCategory(category);
-		manager.getTaskList().moveToContainer(category, task);
+		manager.getTaskList().moveToContainer(task, category);
 		assertNotNull(manager.getTaskList());
 		assertEquals(3, manager.getTaskList().getCategories().size());
 
@@ -422,7 +422,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());
 
 		manager.getTaskList().addCategory(category);
-		manager.getTaskList().moveToContainer(category, task);
+		manager.getTaskList().moveToContainer(task, category);
 		assertEquals(3, manager.getTaskList().getCategories().size());
 		assertEquals(1, category.getChildren().size());
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
@@ -443,7 +443,7 @@ public class TaskListManagerTest extends TestCase {
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, "1");
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		taskList.moveToContainer(manager.getTaskList().getDefaultCategory(), task);
+		taskList.moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		MockRepositoryQuery query = new MockRepositoryQuery("query");
 		taskList.addQuery(query);
 		taskList.addTask(task, query);
@@ -454,6 +454,20 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 	}
 
+	public void testCreateAndMove() {
+		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
+		repositoryTask.setKind("kind");
+		manager.getTaskList().addTask(repositoryTask, manager.getTaskList().getDefaultCategory());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
+		manager.saveTaskList();
+
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
+		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
+	}
+	
 	public void testArchiveRepositoryTaskExternalization() {
 		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
 		repositoryTask.setKind("kind");
@@ -473,7 +487,7 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(cat1);
 
 		MockRepositoryTask reportInCat1 = new MockRepositoryTask("123");
-		manager.getTaskList().moveToContainer(cat1, reportInCat1);
+		manager.getTaskList().moveToContainer(reportInCat1, cat1);
 		assertEquals(cat1, reportInCat1.getParentContainers().iterator().next());
 
 		manager.saveTaskList();
@@ -511,17 +525,17 @@ public class TaskListManagerTest extends TestCase {
 	public void testCreationAndExternalization() {
 		Set<AbstractTask> rootTasks = new HashSet<AbstractTask>();
 		AbstractTask task1 = manager.createNewLocalTask("task 1");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task1);
+		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 		rootTasks.add(task1);
 
 		AbstractTask sub1 = manager.createNewLocalTask("sub 1");
 		manager.getTaskList().addTask(sub1, task1);
 		System.err.println(">>> " + task1.getChildren());
 		
-		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub1);
+		manager.getTaskList().moveToContainer(sub1, manager.getTaskList().getArchiveContainer());
 
 		AbstractTask task2 = manager.createNewLocalTask("task 2");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task2);
+		manager.getTaskList().moveToContainer(task2, manager.getTaskList().getDefaultCategory());
 		rootTasks.add(task2);
 
 		Set<TaskCategory> categories = new HashSet<TaskCategory>();
@@ -530,24 +544,24 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addCategory(cat1);
 		categories.add(cat1);
 		AbstractTask task3 =manager.createNewLocalTask("task 3");
-		manager.getTaskList().moveToContainer(cat1, task3);
+		manager.getTaskList().moveToContainer(task3, cat1);
 		cat1Contents.add(task3);
 		assertEquals(cat1, task3.getParentContainers().iterator().next());
 		AbstractTask sub2 = manager.createNewLocalTask("sub 2");
 		manager.getTaskList().addTask(sub2, task3);
-		manager.getTaskList().moveToContainer(manager.getTaskList().getArchiveContainer(), sub2);
+		manager.getTaskList().moveToContainer(sub2, manager.getTaskList().getArchiveContainer());
 
 		AbstractTask task4 = manager.createNewLocalTask("task 4");
-		manager.getTaskList().moveToContainer(cat1, task4);
+		manager.getTaskList().moveToContainer(task4, cat1);
 		cat1Contents.add(task4);
 
 		MockRepositoryTask reportInCat1 = new MockRepositoryTask("123");
-		manager.getTaskList().moveToContainer(cat1, reportInCat1);
+		manager.getTaskList().moveToContainer(reportInCat1, cat1);
 		assertEquals(cat1, reportInCat1.getParentContainers().iterator().next());
 		cat1Contents.add(reportInCat1);
 
 		MockRepositoryTask reportInRoot = new MockRepositoryTask("124");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), reportInRoot);
+		manager.getTaskList().moveToContainer(reportInRoot, manager.getTaskList().getDefaultCategory());
 		rootTasks.add(reportInRoot);
 
 		assertEquals(3, manager.getTaskList().getRootElements().size());
@@ -591,7 +605,7 @@ public class TaskListManagerTest extends TestCase {
 // String handle = AbstractTask.getHandle("http://url/repo-location",
 // 1);
 		AbstractTask task1 = manager.createNewLocalTask("task 1");
-		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task1);
+		manager.getTaskList().moveToContainer(task1, manager.getTaskList().getDefaultCategory());
 		rootTasks.add(task1);
 
 		manager.saveTaskList();

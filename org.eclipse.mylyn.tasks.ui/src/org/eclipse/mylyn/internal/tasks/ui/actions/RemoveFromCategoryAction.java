@@ -59,7 +59,7 @@ public class RemoveFromCategoryAction extends Action {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
 					} else {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer(), task);
+						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 					} 
 					// just in case, should already be there
 //					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);

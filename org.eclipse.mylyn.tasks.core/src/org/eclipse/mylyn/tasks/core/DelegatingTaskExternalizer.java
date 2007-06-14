@@ -405,7 +405,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
 			task.addParentContainer(legacyCategory);
-			legacyCategory.addChild(task);
+			legacyCategory.addChild(task);			
 		} else if (legacyCategory == null && parent == null) {
 			if (task instanceof AbstractTask) {
 				taskList.internalAddTask(task, taskList.getArchiveContainer());

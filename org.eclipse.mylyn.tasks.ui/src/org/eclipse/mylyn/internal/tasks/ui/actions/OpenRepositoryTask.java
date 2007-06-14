@@ -58,8 +58,8 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 	 */
 	private void openExistingTask(RemoteTaskSelectionDialog dlg) {
 		if (dlg.shouldAddToTaskList()) {
-			TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(dlg.getSelectedCategory(),
-					dlg.getSelectedTask());
+			TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(dlg.getSelectedTask(),
+					dlg.getSelectedCategory());
 		}
 		TasksUiUtil.refreshAndOpenTaskListElement(dlg.getSelectedTask());
 	}

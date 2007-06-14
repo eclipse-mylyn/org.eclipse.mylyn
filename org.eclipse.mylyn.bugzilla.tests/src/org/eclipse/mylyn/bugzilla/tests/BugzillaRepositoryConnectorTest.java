@@ -190,7 +190,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 				task.getHandleIdentifier());
 		assertNotNull(taskData);
 
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), task);
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		int numComments = taskData.getComments().size();
 
 		// Modify it
