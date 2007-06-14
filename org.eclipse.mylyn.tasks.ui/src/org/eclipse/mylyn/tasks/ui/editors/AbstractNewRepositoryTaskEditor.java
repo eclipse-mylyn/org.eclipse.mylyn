@@ -550,7 +550,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor
 
 					if (selectedObject instanceof TaskCategory) {
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(
-								((TaskCategory) selectedObject), newTask);
+								newTask, ((TaskCategory) selectedObject));
 					}
 				}
 			});

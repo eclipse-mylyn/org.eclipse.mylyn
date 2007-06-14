@@ -112,7 +112,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 
 		for (AbstractTask task : tasksToMove) {
 			if (currentTarget instanceof TaskCategory) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) currentTarget, task);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, (TaskCategory) currentTarget);
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
 				TaskCategory targetCategory = null;
@@ -124,9 +124,9 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					}
 				}
 				if (targetCategory == null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), task);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 				} else {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetCategory, task);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, targetCategory);
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer container = (ScheduledTaskContainer)currentTarget;
@@ -135,7 +135,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
 				TasksUiPlugin.getTaskListManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), newTask);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		}
 

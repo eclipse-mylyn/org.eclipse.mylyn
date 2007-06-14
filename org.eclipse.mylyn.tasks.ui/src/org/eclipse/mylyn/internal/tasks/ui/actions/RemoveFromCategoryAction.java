@@ -58,9 +58,8 @@ public class RemoveFromCategoryAction extends Action {
 					if (item.getParentItem() != null && item.getParentItem().getData() instanceof TaskCategory) {
 						TaskCategory category = (TaskCategory) item.getParentItem().getData();
 						TasksUiPlugin.getTaskListManager().getTaskList().removeFromCategory(category, task);
-					} else {
-						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 					} 
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(task, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory()); 
 					// just in case, should already be there
 //					MylarTaskListPlugin.getTaskListManager().getTaskList().addTaskToArchive(task);
 //					ITaskContainer cat = task.getCategory();
