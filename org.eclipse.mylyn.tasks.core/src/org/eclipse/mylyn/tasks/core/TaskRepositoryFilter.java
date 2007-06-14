@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 
 /**
  * Task repository filter to build list of repositories with required capabilities.
@@ -22,6 +23,12 @@ public interface TaskRepositoryFilter {
 	public static TaskRepositoryFilter ALL = new TaskRepositoryFilter() {
 		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
 			return true;
+		}
+	};
+
+	public static TaskRepositoryFilter CAN_QUERY = new TaskRepositoryFilter() {
+		public boolean accept(TaskRepository repository, AbstractRepositoryConnector connector) {
+			return !(connector instanceof LocalRepositoryConnector);
 		}
 	};
 	

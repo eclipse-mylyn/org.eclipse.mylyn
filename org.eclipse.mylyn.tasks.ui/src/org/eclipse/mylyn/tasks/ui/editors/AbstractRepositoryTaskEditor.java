@@ -304,7 +304,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 								|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 							// MessageDialog.openInformation(AbstractTaskEditor.this.getSite().getShell(),
 							// "Changed - " + repositoryTask.getSummary(),
-							// "Editor will refresh with new incoming
+							// "Editor will Test with new incoming
 							// changes.");
 							parentEditor.setMessage("Task has incoming changes, synchronize to view",
 									IMessageProvider.WARNING);

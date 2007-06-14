@@ -215,7 +215,6 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				wizard = SelectRepositoryPage.this.createWizard(repository);
 				wizard.setContainer(getContainer());
 			}
-
 			return wizard;
 		}
 

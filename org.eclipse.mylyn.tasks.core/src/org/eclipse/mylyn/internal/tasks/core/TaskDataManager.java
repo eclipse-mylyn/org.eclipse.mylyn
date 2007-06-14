@@ -106,7 +106,6 @@ public class TaskDataManager {
 	}
 
 	private boolean restoreFromBackup() {
-		MylarStatusHandler.log("Restoring offline data from backup", this);
 		this.primaryFile = primaryPath.toFile();
 		this.backupFile = backupPath.toFile();
 
@@ -124,9 +123,7 @@ public class TaskDataManager {
 			} else {
 				MylarStatusHandler.log("Unable to restore from offline backup", this);
 			}
-		} else {
-			MylarStatusHandler.log("No offline backup found", this);
-		}
+		} 
 		return false;
 	}
 

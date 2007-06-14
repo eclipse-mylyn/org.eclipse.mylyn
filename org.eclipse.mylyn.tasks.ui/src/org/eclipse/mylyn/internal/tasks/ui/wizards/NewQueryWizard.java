@@ -32,7 +32,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 	
 	private static final class SelectRepositoryPageForNewQuery extends SelectRepositoryPage {
 		public SelectRepositoryPageForNewQuery() {
-			super(TaskRepositoryFilter.ALL);
+			super(TaskRepositoryFilter.CAN_QUERY);
 		}
 
 		@Override
