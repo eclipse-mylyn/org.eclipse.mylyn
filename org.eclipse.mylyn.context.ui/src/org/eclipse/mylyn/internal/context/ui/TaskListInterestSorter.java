@@ -18,7 +18,6 @@ import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskKeyComparator;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;

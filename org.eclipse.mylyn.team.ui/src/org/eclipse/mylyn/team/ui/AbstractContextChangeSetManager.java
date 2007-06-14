@@ -9,15 +9,16 @@
 package org.eclipse.mylyn.team.ui;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -79,36 +80,17 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 
 	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(AbstractTask task) {
-			updateChangeSetLabel(task);
-		}
-
-		public void repositoryInfoChanged(AbstractTask task) {
-			// ignore
-		}
-
-		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			// ignore
-		}
-
-		public void taskDeleted(AbstractTask task) {
-			// ignore
-		}
-
-		public void containerAdded(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void containerDeleted(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void taskAdded(AbstractTask task) {
-			// ignore
-		}
-
-		public void containerInfoChanged(AbstractTaskContainer container) {
-			// ignore
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+					AbstractTask task = (AbstractTask)taskContainerDelta.getContainer();
+					switch (taskContainerDelta.getKind()) {
+					case CHANGED:
+						updateChangeSetLabel(task);
+						break;
+					}
+				}
+			}
 		}
 	};
 
