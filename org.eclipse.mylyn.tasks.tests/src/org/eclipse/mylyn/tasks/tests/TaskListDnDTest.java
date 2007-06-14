@@ -60,13 +60,13 @@ public class TaskListDnDTest extends TestCase {
 	}
 
 	public void testUrlDrop() {
-		assertEquals(0, manager.getTaskList().getRootTasks().size());
+		assertEquals(0, manager.getTaskList().getDefaultCategory().getChildren().size());
 		String url = "http://eclipse.org/mylar";
 		String title = "Mylar Technology Project";
 		String urlData = url + "\n" + title;
 
 		dropAdapter.performDrop(urlData);
-		Set<AbstractTask> tasks = manager.getTaskList().getRootTasks();
+		Set<AbstractTask> tasks = manager.getTaskList().getDefaultCategory().getChildren();
 		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
 		assertEquals(url, tasks.iterator().next().getTaskUrl());

@@ -74,7 +74,7 @@ public class TaskList {
 	}
 
 	public void addTask(AbstractTask task) {
-		addTask(task, null);
+		addTask(task, archiveContainer);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class TaskList {
 			newTask = task;
 			tasks.put(newTask.getHandleIdentifier(), newTask);
 			archiveContainer.addChild(newTask);
-//			newTask.addParentContainer(archiveContainer);
+			newTask.addParentContainer(archiveContainer);
 
 			// NOTE: only called for newly-created tasks
 			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
@@ -121,11 +121,11 @@ public class TaskList {
 			for (ITaskListChangeListener listener : changeListeners) {
 				listener.containersChanged(delta);
 			}
-		}
+		} 
 
 		if (parentContainer != null) {
 			parentContainer.addChild(newTask);
-			if ((parentContainer instanceof AbstractTaskCategory && ((AbstractTaskCategory) parentContainer).isUserDefined())) {
+			if (!(parentContainer instanceof AbstractTask) &&  !!(parentContainer instanceof AbstractRepositoryQuery)) {
 				newTask.addParentContainer((TaskCategory) parentContainer);
 			}
 		} else {
@@ -182,6 +182,10 @@ public class TaskList {
 		}
 		if (toContainer != null) {
 			internalAddTask(task, toContainer);
+			if (archiveContainer.contains(task.getHandleIdentifier())) {
+				archiveContainer.removeChild(task);
+				delta.add(new TaskContainerDelta(toContainer, TaskContainerDelta.Kind.CHANGED));
+			}
 		} else {
 			internalAddTask(task, archiveContainer);
 		}
@@ -325,7 +329,7 @@ public class TaskList {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
 			container.addChild(task);
-			if (container instanceof TaskCategory) {
+			if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
 				task.addParentContainer(container);
 			}
 		} else {
@@ -379,10 +383,6 @@ public class TaskList {
 		} else {
 			return null;
 		}
-	}
-
-	public Set<AbstractTask> getRootTasks() {
-		return Collections.unmodifiableSet(defaultCategory.getChildren());
 	}
 
 	public Set<AbstractTaskCategory> getCategories() {

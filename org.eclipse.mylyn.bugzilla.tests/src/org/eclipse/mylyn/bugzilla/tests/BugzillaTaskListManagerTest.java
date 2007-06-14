@@ -100,8 +100,8 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// TaskList list = new TaskList();
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
-		assertEquals(1, manager.getTaskList().getRootTasks().size());
-		AbstractTask readTask = (AbstractTask) manager.getTaskList().getRootTasks().iterator()
+		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
+		AbstractTask readTask = (AbstractTask) manager.getTaskList().getDefaultCategory().getChildren().iterator()
 				.next();
 
 		assertEquals(repositoryTask.getHandleIdentifier(), readTask.getHandleIdentifier());
@@ -165,7 +165,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		manager.setTaskListFile(originalFile);
 
 		Collection<AbstractTask> allTasks = manager.getTaskList().getAllTasks();
-		Set<AbstractTask> allRootTasks = manager.getTaskList().getRootTasks();
+		Set<AbstractTask> allRootTasks = manager.getTaskList().getDefaultCategory().getChildren();
 		Set<AbstractTaskCategory> allCategories = manager.getTaskList().getCategories();
 		Set<AbstractTaskContainer> allRoots = manager.getTaskList().getRootElements();
 		assertEquals(0, allRootTasks.size());
@@ -177,7 +177,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
-		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
+		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
@@ -190,7 +190,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
-		assertEquals(allRootTasks.size(), manager.getTaskList().getRootTasks().size());
+		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());

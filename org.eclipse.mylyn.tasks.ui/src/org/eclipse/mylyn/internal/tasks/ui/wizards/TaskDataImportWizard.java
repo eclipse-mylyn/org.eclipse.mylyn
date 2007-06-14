@@ -224,7 +224,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		List<AbstractTask> allTasks = new ArrayList<AbstractTask>();
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 
-		allTasks.addAll(taskList.getRootTasks());
+		allTasks.addAll(taskList.getDefaultCategory().getChildren());
 
 		for (AbstractTaskContainer category : taskList.getCategories()) {
 			allTasks.addAll(category.getChildren());

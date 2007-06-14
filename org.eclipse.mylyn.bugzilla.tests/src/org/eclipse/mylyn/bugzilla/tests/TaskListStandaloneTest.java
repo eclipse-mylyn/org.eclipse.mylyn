@@ -43,12 +43,9 @@ public class TaskListStandaloneTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		manager = TasksUiPlugin.getTaskListManager();
 
-		// file = new File("tasklist" + TasksUiPlugin.FILE_EXTENSION);
-		// file.deleteOnExit();
-		// new TaskListManager(writer, file);
 		manager.resetTaskList();
-		assertEquals("should be empty: " + manager.getTaskList().getRootTasks(), 0, manager.getTaskList()
-				.getRootTasks().size());
+		assertEquals("should be empty: " + manager.getTaskList().getDefaultCategory().getChildren(), 0,
+				manager.getTaskList().getDefaultCategory().getChildren().size());
 	}
 
 	@Override
@@ -57,19 +54,19 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.saveTaskList();
 		super.tearDown();
 	}
-	
+
 	public void testDueDateExternalization() {
 		AbstractTask task = new LocalTask("1", "task 1");
 		Date dueDate = new Date();
 		task.setDueDate(dueDate);
 		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task);
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		
+
 		manager.saveTaskList();
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
-		Set<AbstractTask> readList = manager.getTaskList().getRootTasks();
+		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 		assertTrue(readTask.getDueDate().compareTo(dueDate) == 0);
@@ -112,9 +109,9 @@ public class TaskListStandaloneTest extends TestCase {
 		// assertEquals(0, manager.getTaskList().getRootTasks().size());
 		// manager.readOrCreateTaskList();
 		// assertNotNull(manager.getTaskList());
-		assertEquals(1, manager.getTaskList().getRootTasks().size());
+		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
 
-		Set<AbstractTask> readList = manager.getTaskList().getRootTasks();
+		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		AbstractTask readTask = readList.iterator().next();
 		assertTrue(readTask.getSummary().equals("task 1"));
 
@@ -204,7 +201,7 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.readExistingOrCreateNewList();
 
 		// ensure that task now gets loaded
-		assertEquals(1, manager.getTaskList().getQueries().size());		
+		assertEquals(1, manager.getTaskList().getQueries().size());
 		manager.getTaskListWriter().setDelegateExternalizers(originalExternalizers);
 	}
 
