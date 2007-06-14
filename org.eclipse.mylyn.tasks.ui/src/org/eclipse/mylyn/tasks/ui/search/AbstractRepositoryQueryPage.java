@@ -138,7 +138,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 				repository.getKind());
 		if (connector != null) {
 			SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-					repository, getQuery(), new TaskFactory(repository));
+					repository, getQuery(), new TaskFactory(repository, false, false));
 			NewSearchUI.runQueryInBackground(collector);
 		}
 		return true;

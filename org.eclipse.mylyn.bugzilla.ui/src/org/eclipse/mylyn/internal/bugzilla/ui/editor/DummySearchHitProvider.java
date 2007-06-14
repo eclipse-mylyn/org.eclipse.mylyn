@@ -24,8 +24,7 @@ public class DummySearchHitProvider extends QueryHitCollector {
 	public DummySearchHitProvider(TaskList tasklist) {
 		super(tasklist, new ITaskFactory() {
 
-			public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData,
-					boolean forced, IProgressMonitor monitor) throws CoreException {
+			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
 		});

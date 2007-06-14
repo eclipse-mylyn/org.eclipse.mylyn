@@ -39,7 +39,7 @@ import org.eclipse.ui.progress.IProgressConstants;
  */
 class SynchronizeTaskJob extends Job {
 
-	private static final String LABEL_SYNCHRONIZING = "Synchronizing ";
+	private static final String LABEL_SYNCHRONIZING = "Synchronizing task ";
 
 	private static final String LABEL_SYNCHRONIZE_TASK = "Task Synchronization";
 
@@ -74,7 +74,7 @@ class SynchronizeTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		try {
-			monitor.beginTask(LABEL_SYNCHRONIZE_TASK, repositoryTasks.size());
+			monitor.beginTask(LABEL_SYNCHRONIZING, repositoryTasks.size());
 			setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 
 			for (final AbstractTask repositoryTask : repositoryTasks) {
@@ -117,7 +117,7 @@ class SynchronizeTaskJob extends Job {
 	}
 
 	private void syncTask(IProgressMonitor monitor, AbstractTask repositoryTask) throws CoreException {
-		monitor.setTaskName(LABEL_SYNCHRONIZING + repositoryTask.getSummary());
+		monitor.subTask(repositoryTask.getSummary());
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
@@ -138,9 +138,8 @@ class SynchronizeTaskJob extends Job {
 				// HACK: part of hack below
 				Date oldDueDate = repositoryTask.getDueDate();
 				
-				
-				TaskFactory factory = new TaskFactory(repository);
-				repositoryTask = factory.createTask(downloadedTaskData, true, forced, new SubProgressMonitor(monitor, 1));
+				TaskFactory factory = new TaskFactory(repository, true, forced);
+				repositoryTask = factory.createTask(downloadedTaskData, new SubProgressMonitor(monitor, 1));
 
 //				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
 //				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
@@ -176,5 +175,7 @@ class SynchronizeTaskJob extends Job {
 		} else {
 			connector.updateTaskFromRepository(repository, repositoryTask, monitor);
 		}
+		
+		repositoryTask.setStale(false);
 	}
 }

@@ -26,28 +26,37 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  */
 public class TaskFactory implements ITaskFactory {
 
-	private AbstractRepositoryConnector connector;
+	private final AbstractRepositoryConnector connector;
 
-	private RepositorySynchronizationManager synchManager;
+	private final RepositorySynchronizationManager synchManager;
 
-	private TaskRepository repository;
+	private final TaskRepository repository;
 
-	private TaskList taskList;
+	private final TaskList taskList;
 
 	//private TaskDataManager dataManager;
 
-	private ITaskDataHandler dataHandler;
+	private final ITaskDataHandler dataHandler;
 
-	public TaskFactory(TaskRepository repository) {
+	private final boolean updateTasklist;
+
+	private final boolean forced;
+
+	public TaskFactory(TaskRepository repository, boolean updateTasklist, boolean forced) {
 		this.repository = repository;
+		this.updateTasklist = updateTasklist;
+		this.forced = forced;
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
 		synchManager = TasksUiPlugin.getSynchronizationManager();
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		//dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
 		dataHandler = connector.getTaskDataHandler();
-
 	}
 
+	public TaskFactory(TaskRepository repository) {
+		this(repository, true, false);
+	}
+	
 	/**
 	 * @param updateTasklist -
 	 *            synchronize task with the provided taskData
@@ -55,8 +64,7 @@ public class TaskFactory implements ITaskFactory {
 	 *            user requested synchronization
 	 * @throws CoreException
 	 */
-	public AbstractTask createTask(RepositoryTaskData taskData, boolean updateTasklist, boolean forced,
-			IProgressMonitor monitor) throws CoreException {
+	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
 
