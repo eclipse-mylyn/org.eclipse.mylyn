@@ -175,7 +175,7 @@ public class TaskListUiTest extends TestCase {
 		assertNotNull(view);
 		WebTask webTask = new WebTask("1", "1", "", "", "web");
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(webTask,
-				TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory());
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		view.getViewer().refresh();
 		// Arrays.asList(view.getViewer().getVisibleExpandedElements());
 		assertFalse(webTask.isCompleted());

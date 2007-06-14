@@ -43,7 +43,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	 * Use {@link TaskList} methods instead.
 	 */
 	@Deprecated
-	protected void addChild(AbstractTask task) {
+	public void addChild(AbstractTask task) {
 		children.add(task);
 	}
 

@@ -1182,7 +1182,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {
-				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory());
+				taskList.addTask(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 			}
 		} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 			taskList.addTask(newTask, view.getDrilledIntoCategory());
@@ -1191,7 +1191,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), ITasksUiConstants.TITLE_DIALOG,
 						"The new task has been added to the root of the list, since tasks can not be added to a query.");
 			}
-			taskList.addTask(newTask, taskList.getAutomaticCategory());
+			taskList.addTask(newTask, taskList.getDefaultCategory());
 		}
 		return newTask;
 	}

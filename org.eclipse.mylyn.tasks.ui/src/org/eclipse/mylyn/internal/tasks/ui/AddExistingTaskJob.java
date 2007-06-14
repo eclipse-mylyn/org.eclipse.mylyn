@@ -85,7 +85,7 @@ public class AddExistingTaskJob extends Job {
 							if (selectedObject instanceof TaskCategory) {
 								category = (TaskCategory) selectedObject;
 							} else {
-								category = TasksUiPlugin.getTaskListManager().getTaskList().getAutomaticCategory();
+								category = TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory();
 							}
 						}
 						TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(category, newTask);

@@ -490,7 +490,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 								} else {
 									if (taskContainerDelta.getContainer().equals(TasksUiPlugin.getTaskListManager()
 											.getTaskList()
-											.getAutomaticCategory())) {
+											.getDefaultCategory())) {
 										refresh(null);
 									} else {
 										refresh(taskContainerDelta.getContainer());

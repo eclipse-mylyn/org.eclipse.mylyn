@@ -47,7 +47,7 @@ public class TaskList {
 
 	private TaskArchive archiveContainer;
 
-	private UnfiledCategory automaticCategory;
+	private UnfiledCategory defaultCategory;
 
 	private List<AbstractTask> activeTasks;
 
@@ -65,11 +65,11 @@ public class TaskList {
 		queries = new ConcurrentHashMap<String, AbstractRepositoryQuery>();
 
 		archiveContainer = new TaskArchive();
-		automaticCategory = new UnfiledCategory();
+		defaultCategory = new UnfiledCategory();
 
 		activeTasks = new CopyOnWriteArrayList<AbstractTask>();
 		lastTaskNum = 0;
-		categories.put(automaticCategory.getHandleIdentifier(), automaticCategory);
+		categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 	}
 
@@ -129,8 +129,8 @@ public class TaskList {
 				newTask.addParentContainer((TaskCategory) parentContainer);
 			}
 		} else {
-			automaticCategory.addChild(newTask);
-			newTask.addParentContainer(automaticCategory);
+			defaultCategory.addChild(newTask);
+			newTask.addParentContainer(defaultCategory);
 		}
 	}
 
@@ -161,11 +161,6 @@ public class TaskList {
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
 		}
-	}
-
-	@Deprecated
-	public void moveToRoot(AbstractTask task) {
-		moveToContainer(automaticCategory, task);
 	}
 
 	public void moveToContainer(AbstractTaskCategory toContainer, AbstractTask task) {
@@ -206,10 +201,6 @@ public class TaskList {
 	}
 
 	public void removeFromCategory(TaskCategory category, AbstractTask task) {
-		moveToContainer(archiveContainer, task);
-	}
-
-	public void removeFromRoot(AbstractTask task) {
 		moveToContainer(archiveContainer, task);
 	}
 
@@ -265,7 +256,7 @@ public class TaskList {
 	 */
 	public void deleteTask(AbstractTask task) {
 		archiveContainer.removeChild(task);
-		automaticCategory.removeChild(task);
+		defaultCategory.removeChild(task);
 
 		for (AbstractTaskContainer container : task.getParentContainers()) {
 			container.removeChild(task);
@@ -282,12 +273,12 @@ public class TaskList {
 
 	public void deleteCategory(AbstractTaskCategory category) {
 		for (AbstractTask task : category.getChildren()) {
-			automaticCategory.addChild(task);
+			defaultCategory.addChild(task);
 		}
 		categories.remove(category.getHandleIdentifier());
 
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-		delta.add(new TaskContainerDelta(automaticCategory, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(defaultCategory, TaskContainerDelta.Kind.CHANGED));
 		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
 
 		for (ITaskListChangeListener listener : changeListeners) {
@@ -338,13 +329,13 @@ public class TaskList {
 				task.addParentContainer(container);
 			}
 		} else {
-			automaticCategory.addChild(task);
-			task.addParentContainer(automaticCategory);
+			defaultCategory.addChild(task);
+			task.addParentContainer(defaultCategory);
 		}
 	}
 
 	public void internalAddRootTask(AbstractTask task) {
-		internalAddTask(task, automaticCategory);
+		internalAddTask(task, defaultCategory);
 	}
 
 	public void internalAddQuery(AbstractRepositoryQuery query) {
@@ -391,7 +382,7 @@ public class TaskList {
 	}
 
 	public Set<AbstractTask> getRootTasks() {
-		return Collections.unmodifiableSet(automaticCategory.getChildren());
+		return Collections.unmodifiableSet(defaultCategory.getChildren());
 	}
 
 	public Set<AbstractTaskCategory> getCategories() {
@@ -415,7 +406,7 @@ public class TaskList {
 
 	public Set<AbstractTaskContainer> getRootElements() {
 		Set<AbstractTaskContainer> roots = new HashSet<AbstractTaskContainer>();
-		roots.add(automaticCategory);
+		roots.add(defaultCategory);
 		for (AbstractTaskCategory cat : categories.values())
 			roots.add(cat);
 		for (AbstractRepositoryQuery query : queries.values())
@@ -511,8 +502,8 @@ public class TaskList {
 		return null;
 	}
 
-	public AbstractTaskCategory getAutomaticCategory() {
-		return automaticCategory;
+	public AbstractTaskCategory getDefaultCategory() {
+		return defaultCategory;
 	}
 
 	public TaskArchive getArchiveContainer() {

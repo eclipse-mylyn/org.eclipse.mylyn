@@ -225,7 +225,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		LinkedList<AbstractTaskContainer> categories = new LinkedList<AbstractTaskContainer>(taskList
 				.getUserCategories());
-		categories.addFirst(taskList.getAutomaticCategory());
+		categories.addFirst(taskList.getDefaultCategory());
 		categoryViewer.setInput(categories);
 		categoryViewer.setLabelProvider(new LabelProvider() {
 
@@ -238,7 +238,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 			}
 
 		});
-		categoryViewer.setSelection(new StructuredSelection(taskList.getAutomaticCategory()));
+		categoryViewer.setSelection(new StructuredSelection(taskList.getDefaultCategory()));
 
 		categoryViewer.getControl().setEnabled(addToTaskListCheck.getSelection());
 		addToTaskListCheck.addSelectionListener(new SelectionAdapter() {

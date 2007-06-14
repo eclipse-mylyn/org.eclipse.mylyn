@@ -57,19 +57,19 @@ public class TaskHistoryTest extends TestCase {
 		resetHistory();
 
 		task1 = manager.createNewLocalTask("task 1");
-		manager.getTaskList().moveToRoot(task1);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task1);
 
 		task2 = manager.createNewLocalTask("task 2");
-		manager.getTaskList().moveToRoot(task2);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task2);
 
 		task3 = manager.createNewLocalTask("task 3");
-		manager.getTaskList().moveToRoot(task3);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task3);
 
 		task4 = manager.createNewLocalTask("task 4");
-		manager.getTaskList().moveToRoot(task4);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task4);
 
 		task5 = manager.createNewLocalTask("task 5");
-		manager.getTaskList().moveToRoot(task5);
+		manager.getTaskList().moveToContainer(manager.getTaskList().getDefaultCategory(), task5);
 
 		history = manager.getTaskActivationHistory();
 	}

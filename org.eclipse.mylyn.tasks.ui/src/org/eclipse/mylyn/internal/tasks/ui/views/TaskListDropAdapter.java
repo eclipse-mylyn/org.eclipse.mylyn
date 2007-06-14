@@ -124,7 +124,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 					}
 				}
 				if (targetCategory == null) {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), task);
 				} else {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetCategory, task);
 				}
@@ -135,7 +135,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TasksUiPlugin.getTaskListManager().setScheduledEndOfDay(newSchedule);
 				TasksUiPlugin.getTaskListManager().setScheduledFor(task, newSchedule.getTime());
 			} else if (currentTarget == null) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(newTask);
+				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), newTask);
 			}
 		}
 

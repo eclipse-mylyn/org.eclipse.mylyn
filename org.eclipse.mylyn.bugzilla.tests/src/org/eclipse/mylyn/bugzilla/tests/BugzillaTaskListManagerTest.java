@@ -92,7 +92,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label");
 		repositoryTask.setKind("kind");
-		manager.getTaskList().moveToRoot(repositoryTask);
+		manager.getTaskList().moveToContainer(TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory(), repositoryTask);
 		manager.saveTaskList();
 
 		manager.resetTaskList();
