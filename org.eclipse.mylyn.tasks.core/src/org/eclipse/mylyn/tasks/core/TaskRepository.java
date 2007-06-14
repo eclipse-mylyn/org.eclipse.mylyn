@@ -124,12 +124,16 @@ public class TaskRepository {
 		this.properties.put(IRepositoryConstants.PROPERTY_VERSION, version);
 		this.properties.put(IRepositoryConstants.PROPERTY_ENCODING, encoding);
 		this.properties.put(IRepositoryConstants.PROPERTY_TIMEZONE, timeZoneId);
+		// use platform proxy by default (headless will need to set this to false)
+		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
 	}
 
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
 		this.properties.put(IRepositoryConstants.PROPERTY_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
+		// use platform proxy by default (headless will need to set this to false)
+		this.setProperty(TaskRepository.PROXY_USEDEFAULT, new Boolean(true).toString());
 	}
 
 	public String getUrl() {
