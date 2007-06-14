@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -34,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
@@ -221,61 +221,79 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		}
 	}
 
-
 	@Override
-	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
+	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
+			throws CoreException {
 		try {
-			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
+			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
 			if (repository.getSyncTimeStamp() == null) {
-				return tasks;
+				for (AbstractTask task : tasks) {
+					task.setStale(true);
+				}
+				return true;
 			}
 
 			String dateString = repository.getSyncTimeStamp();
 			if (dateString == null) {
 				dateString = "";
 			}
-			String urlQueryBase;
-			String urlQueryString;
 
-			urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
+			String urlQueryBase = repository.getUrl() + CHANGED_BUGS_CGI_QUERY
 					+ URLEncoder.encode(dateString, repository.getCharacterEncoding()) + CHANGED_BUGS_CGI_ENDDATE;
 
-			urlQueryString = urlQueryBase + BUG_ID;
+			String urlQueryString = urlQueryBase + BUG_ID;
 
+			// Need to replace this with query that would return list of tasks since last sync
+			// the trouble is that bugzilla only have 1 hour granularity for "changed since" query
+			// so, we can't say that no tasks has changed in repository
+
+			Set<AbstractTask> changedTasks = new HashSet<AbstractTask>();
 			int queryCounter = -1;
 			Iterator<AbstractTask> itr = tasks.iterator();
 			while (itr.hasNext()) {
 				queryCounter++;
 				AbstractTask task = itr.next();
 				String newurlQueryString = URLEncoder.encode(task.getTaskId() + ",", repository.getCharacterEncoding());
-				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF
-						.length()) > IBugzillaConstants.MAX_URL_LENGTH) {
+				if ((urlQueryString.length() + newurlQueryString.length() + IBugzillaConstants.CONTENT_TYPE_RDF.length()) > IBugzillaConstants.MAX_URL_LENGTH) {
 					queryForChanged(repository, changedTasks, urlQueryString);
 					queryCounter = 0;
 					urlQueryString = urlQueryBase + BUG_ID;
-					urlQueryString += newurlQueryString;
-				} else if (!itr.hasNext()) {
-					urlQueryString += newurlQueryString;
+				}
+				urlQueryString += newurlQueryString;
+				if (!itr.hasNext()) {
 					queryForChanged(repository, changedTasks, urlQueryString);
-				} else {
-					urlQueryString += newurlQueryString;
 				}
 			}
-			return changedTasks;
+
+			for (AbstractTask task : tasks) {
+				if (changedTasks.contains(task)) {
+					task.setStale(true);
+				}
+			}
+
+//			for (AbstractTask task : changedTasks) {
+//				task.setStale(true);
+//			}
+
+			// FIXME check if new tasks were added
+			//return changedTasks.isEmpty();
+			return true;
 		} catch (UnsupportedEncodingException e) {
+			// XXX throw CoreException instead?
 			MylarStatusHandler.fail(e, "Repository configured with unsupported encoding: "
 					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
-			return tasks;
+			return false;
+		} finally {
+			monitor.done();
 		}
 	}
 
-	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks,
-			String urlQueryString) throws UnsupportedEncodingException, CoreException {
+	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks, String urlQueryString)
+			throws UnsupportedEncodingException, CoreException {
 		QueryHitCollector collector = new QueryHitCollector(taskList, new ITaskFactory() {
 
-			public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData, boolean forced, IProgressMonitor monitor) {
+			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
 				return taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 			}
@@ -283,7 +301,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
 
-		performQuery(query, repository, new NullProgressMonitor(), collector, false);
+		performQuery(query, repository, new NullProgressMonitor(), collector);
 
 		for (AbstractTask taskHit : collector.getTaskHits()) {
 			// String handle =
@@ -332,49 +350,30 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(final AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, QueryHitCollector resultCollector, boolean forced) {
-		IStatus queryStatus = Status.OK_STATUS;
+			IProgressMonitor monitor, ITaskCollector resultCollector) {
 		try {
+			monitor.beginTask("Running query", IProgressMonitor.UNKNOWN);
 			BugzillaClient client = getClientManager().getClient(repository);
-			resultCollector.clear();
-			Set<String> ids = client.getSearchHits(query);
-			if (ids.size() == 0) {
+			boolean hitsReceived = client.getSearchHits(query, resultCollector);
+			if (!hitsReceived) {
 				// XXX: HACK in case of ip change bugzilla can return 0 hits
 				// due to invalid authorization token, forcing relogin fixes
 				client.logout();
-				ids = client.getSearchHits(query);
+				client.getSearchHits(query, resultCollector);
 			}
 
-			if (!forced) {
-				// Only retrieve data for hits we don't already have
-				for (AbstractTask existingTask : query.getChildren()) {
-					AbstractTask repositoryTask = (AbstractTask) existingTask;
-					if (ids.contains(repositoryTask.getTaskId())) {
-						resultCollector.accept(repositoryTask);
-						ids.remove(repositoryTask.getTaskId());
-					}
-				}
-			}
-
-			Map<String, RepositoryTaskData> hits = client.getTaskData(ids);
-			for (RepositoryTaskData data : hits.values()) {
-				if (data != null) {
-					taskDataHandler.configureTaskData(repository, data);
-					resultCollector.accept(data);
-				}
-			}
-
+			return Status.OK_STATUS;
 		} catch (UnrecognizedReponseException e) {
-			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.INFO,
 					"Unrecognized response from server", e);
 		} catch (IOException e) {
-			queryStatus = new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
+			return new Status(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID, Status.ERROR,
 					"Check repository configuration: " + e.getMessage(), e);
 		} catch (CoreException e) {
-			queryStatus = e.getStatus();
+			return e.getStatus();
+		} finally {
+			monitor.done();
 		}
-		return queryStatus;
-
 	}
 
 	@Override

@@ -13,9 +13,7 @@ package org.eclipse.mylyn.internal.trac.core;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,8 +31,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -126,7 +124,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector, boolean force) {
+			ITaskCollector resultCollector) {
 
 		final List<TracTicket> tickets = new ArrayList<TracTicket>();
 
@@ -150,41 +148,51 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
+	public boolean markStaleTasks(TaskRepository repository,
 			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
-		if (repository.getSyncTimeStamp() == null) {
-			return tasks;
-		}
-
-		if (!TracRepositoryConnector.hasChangedSince(repository)) {
-			// return an empty list to avoid causing all tasks to synchronized
-			return Collections.emptySet();
-		}
-
-		Date since = new Date(0);
 		try {
-			since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
-		} catch (NumberFormatException e) {
-		}
+			monitor.beginTask("Getting changed tasks", IProgressMonitor.UNKNOWN);
+			
+			if (!TracRepositoryConnector.hasChangedSince(repository)) {
+				// always run the queries for web mode
+				return true;
+			}
 
-		ITracClient client;
-		try {
-			client = getClientManager().getRepository(repository);
-			Set<Integer> ids = client.getChangedTickets(since);
+			if (repository.getSyncTimeStamp() == null) {
+				for (AbstractTask task : tasks) {
+					task.setStale(true);
+				}
+				return true;
+			}
 
-			Set<AbstractTask> result = new HashSet<AbstractTask>();
-			if (!ids.isEmpty()) {
+			Date since = new Date(0);
+			try {
+				since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
+			} catch (NumberFormatException e) {
+			}
+
+			try {
+				ITracClient client = getClientManager().getRepository(repository);
+				Set<Integer> ids = client.getChangedTickets(since);
+				if (ids.isEmpty()) {
+					// repository is unchanged
+					return false; 
+				}
+
 				for (AbstractTask task : tasks) {
 					Integer id = getTicketId(task.getTaskId());
 					if (ids.contains(id)) {
-						result.add(task);
+						task.setStale(true);
 					}
 				}
+
+				return true;
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
+						"Could not determine changed tasks", e));
 			}
-			return result;
-		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, TracCorePlugin.PLUGIN_ID, IStatus.OK,
-					"could not determine changed tasks", e));
+		} finally {
+			monitor.done();
 		}
 	}
 

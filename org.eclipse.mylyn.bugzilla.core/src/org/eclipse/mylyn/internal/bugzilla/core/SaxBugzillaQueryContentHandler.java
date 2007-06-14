@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.util.Locale;
 import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
+import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -29,18 +32,20 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	/** The bug id */
 	private String id;
 
-//	/** The summary of the bug */
-//	private String description = "";
-//
-//	/** The priority of the bug */
-//	private String priority = Task.PriorityLevel.getDefault().toString();
-//
-//	/** The state of the bug */
-//	private String state = "";
+	/** The summary of the bug */
+	private String description = "";
+
+	/** The priority of the bug */
+	private String priority = AbstractTask.PriorityLevel.getDefault().toString();
+
+	/** The state of the bug */
+	private String state = "";
 
 	private StringBuffer characters;
 
-//	private String repositoryUrl;
+	private ITaskCollector collector;
+
+	private String repositoryUrl;
 
 	private Set<String> bugIds;
 
@@ -48,9 +53,10 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 
 	private int numCollected = 0;
 
-	public SaxBugzillaQueryContentHandler(String repositoryUrl, Set<String> hits, int maxHits) {
-		//this.repositoryUrl = repositoryUrl;
+	public SaxBugzillaQueryContentHandler(String repositoryUrl, ITaskCollector collector, Set<String> hits, int maxHits) {
+		this.repositoryUrl = repositoryUrl;
 		this.maxHits = maxHits;
+		this.collector = collector;
 		this.bugIds = hits;
 	}
 
@@ -96,42 +102,42 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 					//System.err.println(">>> "+id);
 					bugIds.add(id);
 					numCollected++;
-				} 
+				}
 				break;
-// // case BUG_SEVERITY:
-// // severity = parsedText;
-// // break;
-// case PRIORITY:
-// priority = parsedText;
-// break;
-// // case REP_PLATFORM:
-// // platform = parsedText;
-// // break;
-// case ASSIGNED_TO:
-// //hit.setOwner(parsedText);
-// break;
-// case BUG_STATUS:
-// state = parsedText;
-// break;
-// // case RESOLUTION:
-// // resolution = parsedText;
-// // break;
-// case SHORT_DESC:
-// description = parsedText;
-// break;
-// case SHORT_SHORT_DESC:
-// description = parsedText;
-// break;
-// case LI:
-// if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS)
-// {
-// hit = new BugzillaQueryHit(taskList, description, priority, repositoryUrl,
-// id, null, state);
-// collector.accept(hit);
-// numCollected++;
-// } else {
-// break;
-// }
+			// case BUG_SEVERITY:
+			// severity = parsedText;
+			// break;
+			case PRIORITY:
+				priority = parsedText;
+				break;
+			// case REP_PLATFORM:
+			// platform = parsedText;
+			// break;
+			case ASSIGNED_TO:
+				//hit.setOwner(parsedText);
+				break;
+			case BUG_STATUS:
+				state = parsedText;
+				break;
+			// case RESOLUTION:
+			// resolution = parsedText;
+			// break;
+			case SHORT_DESC:
+				description = parsedText;
+				break;
+			case SHORT_SHORT_DESC:
+				description = parsedText;
+				break;
+			case LI:
+				if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
+					BugzillaTask task = new BugzillaTask(repositoryUrl, id, description);
+					task.setPriority(priority);
+					// TODO set state
+					collector.accept(task);
+					numCollected++;
+				} else {
+					break;
+				}
 			}
 		} catch (RuntimeException e) {
 			if (e instanceof IllegalArgumentException) {

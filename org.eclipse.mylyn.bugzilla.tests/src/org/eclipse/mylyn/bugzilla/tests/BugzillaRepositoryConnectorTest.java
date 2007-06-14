@@ -386,9 +386,11 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		TasksUiPlugin.getRepositoryManager().setSyncTime(repository, task5.getLastSyncDateStamp(),
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		Set<AbstractTask> changedTasks = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
+		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
 		// Always last known changed returned
-		assertEquals(1, changedTasks.size());
+		assertFalse(task4.isStale());
+		assertTrue(task5.isStale());
 
 		String priority4 = null;
 		if (task4.getPriority().equals("P1")) {
@@ -414,14 +416,15 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		submit(task4, taskData4);
 		submit(task5, taskData5);
 
-		changedTasks = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 
-		assertEquals("Changed reports expected ", 2, changedTasks.size());
-		assertTrue(tasks.containsAll(changedTasks));
+		assertTrue(task4.isStale());
+		assertTrue(task5.isStale());
 
-		TasksUiPlugin.getSynchronizationManager().synchronize(connector, changedTasks, true, null);
+		TasksUiPlugin.getSynchronizationManager().synchronize(connector, tasks, true, null);
 
-		for (AbstractTask task : changedTasks) {
+
+		for (AbstractTask task : tasks) {
 			if (task.getTaskId() == "4") {
 				assertEquals(priority4, task4.getPriority());
 			}

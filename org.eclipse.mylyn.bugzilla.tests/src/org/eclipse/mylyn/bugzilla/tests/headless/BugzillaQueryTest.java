@@ -136,7 +136,7 @@ public class BugzillaQueryTest extends TestCase {
 		BugzillaRepositoryConnector connector = new BugzillaRepositoryConnector();
 		connector.init(taskList);
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), queryUrlString, "summary");
-		connector.performQuery(query, repository, new NullProgressMonitor(), collector, false);
+		connector.performQuery(query, repository, new NullProgressMonitor(), collector);
 		assertEquals(2, collector.getTaskHits().size());
 		for (AbstractTask hit : collector.getTaskHits()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));

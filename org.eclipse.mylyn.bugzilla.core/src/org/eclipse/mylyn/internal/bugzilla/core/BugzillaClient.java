@@ -53,6 +53,7 @@ import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -436,53 +437,9 @@ public class BugzillaClient {
 	// }
 	// }
 
-// public void getSearchHits(AbstractRepositoryQuery query, QueryHitCollector
-// collector, TaskList taskList)
-// throws IOException, CoreException {
-// GetMethod method = null;
-// try {
-// String queryUrl = query.getUrl();
-// // Test that we don't specify content type twice.
-// // Should only be specified here (not in passed in url if possible)
-// if (!queryUrl.contains("ctype=rdf")) {
-// queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
-// }
-//
-// method = getConnect(queryUrl);
-// if (method.getResponseHeader("Content-Type") != null) {
-// Header responseTypeHeader = method.getResponseHeader("Content-Type");
-// for (String type : VALID_CONFIG_CONTENT_TYPES) {
-// if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type))
-// {
-// RepositoryQueryResultsFactory queryFactory = new
-// RepositoryQueryResultsFactory(method
-// .getResponseBodyAsStream(), characterEncoding);
-// queryFactory.performQuery(taskList, repositoryUrl.toString(), collector,
-// QueryHitCollector.MAX_HITS);
-//						
-//
-//						
-//						
-// //getTaskData(queryFactory.get)
-// // pass t
-//						
-// return;
-// }
-// }
-// }
-// parseHtmlError(new BufferedReader(
-// new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
-// } finally {
-// if (method != null) {
-// method.releaseConnection();
-// }
-// }
-// }
-
-	/**
-	 * Returns ids of bugs that match given query
-	 */
-	public Set<String> getSearchHits(AbstractRepositoryQuery query) throws IOException, CoreException {
+	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector
+			collector)
+	throws IOException, CoreException {
 		GetMethod method = null;
 		try {
 			String queryUrl = query.getUrl();
@@ -496,12 +453,14 @@ public class BugzillaClient {
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
-						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type))
+					{
+						RepositoryQueryResultsFactory queryFactory = new
+						RepositoryQueryResultsFactory(method
 								.getResponseBodyAsStream(), characterEncoding);
-						queryFactory.performQuery(repositoryUrl.toString(), QueryHitCollector.MAX_HITS);
-
-						return queryFactory.getHits();
+						queryFactory.performQuery(repositoryUrl.toString(), collector,
+								QueryHitCollector.MAX_HITS);
+						return !queryFactory.getHits().isEmpty();
 					}
 				}
 			}
@@ -512,8 +471,44 @@ public class BugzillaClient {
 				method.releaseConnection();
 			}
 		}
-		return new HashSet<String>();
+		return false;
 	}
+
+//	/**
+//	 * Returns ids of bugs that match given query
+//	 */
+//	public Set<String> getSearchHits(AbstractRepositoryQuery query) throws IOException, CoreException {
+//		GetMethod method = null;
+//		try {
+//			String queryUrl = query.getUrl();
+//			// Test that we don't specify content type twice.
+//			// Should only be specified here (not in passed in url if possible)
+//			if (!queryUrl.contains("ctype=rdf")) {
+//				queryUrl = queryUrl.concat(IBugzillaConstants.CONTENT_TYPE_RDF);
+//			}
+//
+//			method = getConnect(queryUrl);
+//			if (method.getResponseHeader("Content-Type") != null) {
+//				Header responseTypeHeader = method.getResponseHeader("Content-Type");
+//				for (String type : VALID_CONFIG_CONTENT_TYPES) {
+//					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+//						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(method
+//								.getResponseBodyAsStream(), characterEncoding);
+//						queryFactory.performQuery(repositoryUrl.toString(), QueryHitCollector.MAX_HITS);
+//
+//						return queryFactory.getHits();
+//					}
+//				}
+//			}
+//			parseHtmlError(new BufferedReader(
+//					new InputStreamReader(method.getResponseBodyAsStream(), characterEncoding)));
+//		} finally {
+//			if (method != null) {
+//				method.releaseConnection();
+//			}
+//		}
+//		return new HashSet<String>();
+//	}
 
 	public static void setupExistingBugAttributes(String serverUrl, RepositoryTaskData existingReport) {
 		// ordered list of elements as they appear in UI

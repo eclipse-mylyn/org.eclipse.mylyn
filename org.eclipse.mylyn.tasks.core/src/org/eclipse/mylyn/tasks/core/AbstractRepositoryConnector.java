@@ -171,7 +171,7 @@ public abstract class AbstractRepositoryConnector {
 	 *            IQueryHitCollector that collects the hits found
 	 */
 	public abstract IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository,
-			IProgressMonitor monitor, QueryHitCollector resultCollector, boolean forced);
+			IProgressMonitor monitor, ITaskCollector resultCollector);
 
 	/**
 	 * The connector's summary i.e. "JIRA (supports 3.3.1 and later)"
@@ -250,18 +250,23 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Of <code>tasks</code> provided, return all that have changed since last
-	 * synchronization of <code>repository</code>
+	 * Of <code>tasks</code> provided, return all that have changed since last synchronization of
+	 * <code>repository</code>.
 	 * 
-	 * All errors should be thrown as <code>CoreException</code> for the
-	 * framework to handle, since background synchronizations fail silently when
-	 * disconnected.
+	 * Tasks that need to be synchronized (i.e. task data updated) should be passed to
+	 * <code>collector.accept(Task)</code> method, or if repository connector can update task data, it can use
+	 * <code>collector.accept(RepositoryTaskData)</code> call.
 	 * 
-	 * TODO: Add progress monitor as parameter
+	 * All errors should be thrown as <code>CoreException</code> for the framework to handle, since background
+	 * synchronizations fail silently when disconnected.
+	 * @param tasks TODO
+	 * 
+	 * @return null if there was no tasks changed in the repository, otherwise collection of updated tasks (within
+	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
 	 */
-	public abstract Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
+	public abstract boolean markStaleTasks(TaskRepository repository, 
 			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException;
 
 	/**
@@ -392,7 +397,7 @@ public abstract class AbstractRepositoryConnector {
 	 * synchronization timestamp. Override to return actual timestamp from
 	 * repository.
 	 */
-	public String getLastSyncTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
+	public String getSynchronizationTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
 		Date mostRecent = new Date(0);
 		String mostRecentTimeStamp = repository.getSyncTimeStamp();
 		for (AbstractTask task : changedTasks) {
@@ -431,5 +436,6 @@ public abstract class AbstractRepositoryConnector {
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
+
 
 }

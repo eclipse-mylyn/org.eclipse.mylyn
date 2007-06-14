@@ -12,17 +12,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -103,22 +96,23 @@ public class RepositorySynchronizationManager {
 	 */
 	public final Job synchronize(AbstractRepositoryConnector connector, final AbstractRepositoryQuery repositoryQuery,
 			IJobChangeListener listener, boolean forceSync) {
-		HashSet<AbstractRepositoryQuery> items = new HashSet<AbstractRepositoryQuery>();
-		items.add(repositoryQuery);
-		return synchronize(connector, items, listener, Job.LONG, 0, true, forceSync);
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
+		return synchronize(connector, repository, Collections.singleton(repositoryQuery), listener, Job.LONG, 0, forceSync);
 	}
 
-	public final Job synchronize(AbstractRepositoryConnector connector,
+	public final Job synchronize(AbstractRepositoryConnector connector, TaskRepository repository,
 			final Set<AbstractRepositoryQuery> repositoryQueries, final IJobChangeListener listener, int priority,
-			long delay, boolean syncChangedTasks, boolean userForcedSync) {
+			long delay, boolean userForcedSync) {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		final SynchronizeQueryJob job = new SynchronizeQueryJob(this, connector, repositoryQueries, taskList);
-		job.setSynchChangedTasks(syncChangedTasks);
-		job.setForced(userForcedSync);
 		for (AbstractRepositoryQuery repositoryQuery : repositoryQueries) {
 			repositoryQuery.setCurrentlySynchronizing(true);
 			// TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 		}
+
+		final SynchronizeQueryJob job = new SynchronizeQueryJob(connector, repository, repositoryQueries, taskList);
+		job.setSynchronizeChangedTasks(true);
+		job.setForced(userForcedSync);
 		if (listener != null) {
 			job.addJobChangeListener(listener);
 		}
@@ -145,69 +139,19 @@ public class RepositorySynchronizationManager {
 	 * TaskRepository.syncTime.
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
-		if (connector.getTaskDataHandler() != null) {
-			final SynchronizeChangedTasksJob getChangedTasksJob = new SynchronizeChangedTasksJob(connector, repository);
-			getChangedTasksJob.setSystem(true);
-			getChangedTasksJob.setRule(new RepositoryMutexRule(repository));
-			if (!forceSyncExecForTesting) {
-				getChangedTasksJob.schedule();
-			} else {
-				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						getChangedTasksJob.run(new NullProgressMonitor());
-					}
-				});
-			}
+		final SynchronizeChangedTasksJob synchronizeChangedTasksJob = new SynchronizeChangedTasksJob(connector, repository);
+		synchronizeChangedTasksJob.setSystem(true);
+		synchronizeChangedTasksJob.setRule(new RepositoryMutexRule(repository));
+		if (!forceSyncExecForTesting) {
+			synchronizeChangedTasksJob.schedule();
+		} else {
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					synchronizeChangedTasksJob.run(new NullProgressMonitor());
+				}
+			});
 		}
 	}
-
-	private class SynchronizeChangedTasksJob extends Job {
-
-		private AbstractRepositoryConnector connector;
-
-		private TaskRepository repository;
-
-		private Set<AbstractTask> changedTasks;
-
-		public SynchronizeChangedTasksJob(AbstractRepositoryConnector connector, TaskRepository repository) {
-			super("Get Changed Tasks");
-			this.connector = connector;
-			this.repository = repository;
-		}
-
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-			Set<AbstractTask> repositoryTasks = Collections.unmodifiableSet(taskList
-					.getRepositoryTasks(repository.getUrl()));
-
-			try {
-				changedTasks = connector.getChangedSinceLastSync(repository, repositoryTasks, monitor);
-
-				if (changedTasks == null || changedTasks.size() == 0) {
-					return Status.OK_STATUS;
-				}
-
-				synchronize(connector, changedTasks, false, new JobChangeAdapter() {
-
-					@Override
-					public void done(IJobChangeEvent event) {
-						if (!Platform.isRunning() || TasksUiPlugin.getRepositoryManager() == null) {
-							return;
-						}
-						TasksUiPlugin.getRepositoryManager().setSyncTime(repository,
-								connector.getLastSyncTimestamp(repository, changedTasks),
-								TasksUiPlugin.getDefault().getRepositoriesFilePath());
-					}
-				});
-
-			} catch (final CoreException e) {
-				// ignore, indicates working offline
-				// error reported in ui (tooltip and warning icon)
-			}
-			return Status.OK_STATUS;
-		};
-	};
 
 	/**
 	 * @param repositoryTask

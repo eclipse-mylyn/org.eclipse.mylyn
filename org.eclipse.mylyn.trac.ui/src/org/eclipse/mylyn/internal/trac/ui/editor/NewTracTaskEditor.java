@@ -49,7 +49,7 @@ public class NewTracTaskEditor extends AbstractNewRepositoryTaskEditor {
 		TracRepositoryQuery query = new TracRepositoryQuery(repository.getUrl(), sb.toString(), "<Duplicate Search>");
 
 		SearchHitCollector collector = new SearchHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				repository, query, new TaskFactory(repository));
+				repository, query, new TaskFactory(repository, false, false));
 		return collector;
 	}
 

@@ -118,7 +118,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
 
-		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector, false);
+		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector);
 
 		// results.addAll(connector.performQuery(repositoryQuery, new
 		// NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID,

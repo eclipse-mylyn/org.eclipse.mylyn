@@ -66,6 +66,8 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	// transient
 	private IStatus errorStatus = null;
+
+	private boolean stale = false;
 	
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
@@ -446,4 +448,13 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	public void setDueDate(Date date) {
 		this.dueDate = date;
 	}
+
+	public boolean isStale() {
+		return stale;
+	}
+	
+	public void setStale(boolean stale) {
+		this.stale = stale;
+	}
+	
 }

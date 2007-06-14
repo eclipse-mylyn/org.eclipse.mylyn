@@ -294,8 +294,23 @@ public class TaskRepository {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof TaskRepository && getUrl() != null) {
-			return getUrl().equals(((TaskRepository) object).getUrl());
+		if (object instanceof TaskRepository) {
+			TaskRepository repository = (TaskRepository) object;
+			if (getUrl() == null) {
+				if (repository.getUrl() != null) {
+					return false;
+				}
+			} else {
+				if(!getUrl().equals(repository.getUrl())) {
+					return false;
+				}
+			}
+			if (getKind() == null) {
+				return repository.getKind() == null;
+			} else {
+				return getKind().equals(repository.getKind());
+			}
+
 		} else {
 			return super.equals(object);
 		}
@@ -303,11 +318,8 @@ public class TaskRepository {
 
 	@Override
 	public int hashCode() {
-		if (getUrl() != null) {
-			return getUrl().hashCode();
-		} else {
-			return super.hashCode();
-		}
+		int res = getUrl()==null ? 1 : getUrl().hashCode();
+		return res * 31 + (getKind()==null ? 1 : getKind().hashCode());
 	}
 
 	@Override

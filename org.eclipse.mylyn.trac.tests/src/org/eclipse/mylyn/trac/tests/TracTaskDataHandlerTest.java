@@ -79,19 +79,23 @@ public class TracTaskDataHandlerTest extends TestCase {
 
 	public void testGetChangedSinceLastSyncWeb096() throws Exception {
 		init(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
 
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
-		
+
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
-		assertEquals(tasks, result);
+		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertEquals(true, changed);
 		assertEquals(null, repository.getSyncTimeStamp());
-		
-		int time = (int)(System.currentTimeMillis() / 1000) + 1;
+		assertFalse(task.isStale());
+
+		int time = (int) (System.currentTimeMillis() / 1000) + 1;
 		repository.setSyncTimeStamp(time + "");
-		assertEquals(tasks, result);
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertEquals(true, changed);
+		assertFalse(task.isStale());
 	}
 
 	public void testGetChangedSinceLastSyncXmlRpc010() throws Exception {
@@ -105,28 +109,35 @@ public class TracTaskDataHandlerTest extends TestCase {
 	}
 
 	private void getChangedSinceLastSync() throws Exception {
-		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "", new NullProgressMonitor());
+		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.offlineHandlerTicketId + "",
+				new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
-		
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+				task.getHandleIdentifier());
+
 		int lastModified = Integer.parseInt(taskData.getLastModified());
-		
+
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
 		assertEquals(null, repository.getSyncTimeStamp());
-		Set<AbstractTask> result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
-		assertEquals(tasks, result);
+		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
 
 		// always returns the ticket because time comparison mode is >=
+		task.setStale(false);
 		repository.setSyncTimeStamp(lastModified + "");
-		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());
-		assertEquals(tasks, result);
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
 
+		task.setStale(false);
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());		
-		assertTrue(result.isEmpty());
-		
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertFalse(task.isStale());
+
 		// change ticket making sure it gets a new change time
 		Thread.sleep(1000);
 		ITracClient client = connector.getClientManager().getRepository(repository);
@@ -138,11 +149,13 @@ public class TracTaskDataHandlerTest extends TestCase {
 		}
 		client.updateTicket(ticket, "comment");
 
+		task.setStale(false);
 		repository.setSyncTimeStamp((lastModified + 1) + "");
-		result = connector.getChangedSinceLastSync(repository, tasks, new NullProgressMonitor());		
-		assertEquals(tasks, result);
+		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
+		assertTrue(changed);
+		assertTrue(task.isStale());
 	}
-	
+
 	public void testNonNumericTaskId() {
 		try {
 			connector.getTaskDataHandler().getTaskData(repository, "abc", new NullProgressMonitor());
@@ -150,6 +163,5 @@ public class TracTaskDataHandlerTest extends TestCase {
 		} catch (CoreException e) {
 		}
 	}
-	
 
 }

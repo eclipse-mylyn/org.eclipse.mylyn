@@ -22,8 +22,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -133,9 +133,10 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public Set<AbstractTask> getChangedSinceLastSync(TaskRepository repository,
-			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException {
-		return Collections.emptySet();
+	public boolean markStaleTasks(TaskRepository repository,
+			Set<AbstractTask> tasks, IProgressMonitor monitor) {
+		// ignore
+		return false;
 	}
 
 	@Override
@@ -153,7 +154,7 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public IStatus performQuery(AbstractRepositoryQuery query, TaskRepository repository, IProgressMonitor monitor,
-			QueryHitCollector resultCollector, boolean forced) {
+			ITaskCollector resultCollector) {
 		// ignore
 		return null;
 	}

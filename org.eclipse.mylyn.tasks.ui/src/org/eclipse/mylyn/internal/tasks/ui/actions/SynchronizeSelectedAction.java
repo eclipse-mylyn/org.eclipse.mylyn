@@ -29,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewActionDelegate;
@@ -68,11 +69,9 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				} else if (obj instanceof TaskCategory) {
 					TaskCategory cat = (TaskCategory) obj;
 					for (AbstractTask task : cat.getChildren()) {
-						if (task instanceof AbstractTask) {
-							AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
-									.getRepositoryConnector(((AbstractTask) task).getRepositoryKind());
-							addTaskToSync(client, (AbstractTask) task);
-						}
+						AbstractRepositoryConnector client = TasksUiPlugin.getRepositoryManager()
+								.getRepositoryConnector(((AbstractTask) task).getRepositoryKind());
+						addTaskToSync(client, (AbstractTask) task);
 					}
 				} else if (obj instanceof AbstractTask) {
 					AbstractTask repositoryTask = (AbstractTask) obj;
@@ -82,41 +81,41 @@ public class SynchronizeSelectedAction extends ActionDelegate implements IViewAc
 				}
 			}
 
+			RepositorySynchronizationManager syncManager = TasksUiPlugin.getSynchronizationManager();
 			if (!queriesToSyncMap.isEmpty()) {
 				
 				// determine which repositories to synch changed tasks for
-				HashMap<String, Set<TaskRepository>> repositoriesToSync = new HashMap<String, Set<TaskRepository>>();
+				HashMap<TaskRepository, Set<AbstractRepositoryQuery>> repositoriesToSync = new HashMap<TaskRepository, Set<AbstractRepositoryQuery>>();
 				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
 					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
+					if(queriesToSync==null || queriesToSync.isEmpty()) {
+						continue;
+					}
+					
 					for (AbstractRepositoryQuery query : queriesToSync) {
 						TaskRepository repos = TasksUiPlugin.getRepositoryManager().getRepository(query.getRepositoryKind(), query.getRepositoryUrl());
-						Set<TaskRepository> repositories = repositoriesToSync.get(connector.getRepositoryType());
-						if(repositories == null) {
-							repositories = new HashSet<TaskRepository>();
-							repositoriesToSync.put(connector.getRepositoryType(), repositories);
+						Set<AbstractRepositoryQuery> queries = repositoriesToSync.get(repos);
+						if(queries == null) {
+							queries = new HashSet<AbstractRepositoryQuery>();
+							repositoriesToSync.put(repos, queries);
 						}
-						repositories.add(repos);
+						queries.add(query);
 					}
 				}
 				
-				// synch the queries followed by the repositories
-				for (AbstractRepositoryConnector connector : queriesToSyncMap.keySet()) {
-					List<AbstractRepositoryQuery> queriesToSync = queriesToSyncMap.get(connector);
-					if (queriesToSync != null && queriesToSync.size() > 0) {
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractRepositoryQuery>(queriesToSync), null, Job.LONG, 0,
-								false, true);
-					}
-					//XXX enable?
-//					for (TaskRepository taskRepository : repositoriesToSync.get(connector.getRepositoryType())) {
-//						TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, taskRepository);
-//					}
-				}				
+				for (Map.Entry<TaskRepository, Set<AbstractRepositoryQuery>> entry : repositoriesToSync.entrySet()) {
+					TaskRepository repository = entry.getKey();
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
+							.getRepositoryConnector(repository.getKind());
+					Set<AbstractRepositoryQuery> queries = entry.getValue();
+					syncManager.synchronize(connector, repository, queries, null, Job.LONG, 0L, true);
+				}
 			}
 			if (!tasksToSyncMap.isEmpty()) {
 				for (AbstractRepositoryConnector connector : tasksToSyncMap.keySet()) {
 					List<AbstractTask> tasksToSync = tasksToSyncMap.get(connector);
 					if (tasksToSync != null && tasksToSync.size() > 0) {
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
+						syncManager.synchronize(connector, new HashSet<AbstractTask>(tasksToSync), true, null);
 					}
 				}
 			}

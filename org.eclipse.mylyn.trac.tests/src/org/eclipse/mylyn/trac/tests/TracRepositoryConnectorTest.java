@@ -217,7 +217,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 			public void accept(AbstractTask hit) {
 				result.add(hit);
 			}};
-		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector, false);
+		IStatus queryStatus = connector.performQuery(query, repository, new NullProgressMonitor(), hitCollector);
 
 		assertTrue(queryStatus.isOK());
 		assertEquals(3, result.size());

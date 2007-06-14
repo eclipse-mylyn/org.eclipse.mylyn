@@ -11,24 +11,26 @@
 
 package org.eclipse.mylyn.tasks.ui;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
-import org.eclipse.mylyn.tasks.core.RepositoryStatus;
-import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.ui.PlatformUI;
@@ -37,52 +39,48 @@ import org.eclipse.ui.progress.IProgressConstants;
 /**
  * @author Mik Kersten
  * @author Rob Elves
+ * @author Steffen Pingel
  */
 class SynchronizeQueryJob extends Job {
 
 	private final AbstractRepositoryConnector connector;
 
-	private static final String JOB_LABEL = "Synchronizing queries";
+	private final TaskRepository repository;
 
-	private Set<AbstractRepositoryQuery> queries;
+	private final Set<AbstractRepositoryQuery> queries;
 
-	private Set<TaskRepository> repositories;
+	private final TaskList taskList;
 
-	private boolean synchChangedTasks;
-
-	private TaskList taskList;
-
-// private RepositorySynchronizationManager synchronizationManager;
+	private boolean synchronizeChangedTasks;
 
 	private boolean forced = false;
 
-	public SynchronizeQueryJob(RepositorySynchronizationManager synchronizationManager,
-			AbstractRepositoryConnector connector, Set<AbstractRepositoryQuery> queries, TaskList taskList) {
-		super(JOB_LABEL + ": " + connector.getRepositoryType());
+	private HashSet<AbstractTask> tasksToBeSynchronized = new HashSet<AbstractTask>();
+
+	public SynchronizeQueryJob(AbstractRepositoryConnector connector, TaskRepository repository,
+			Set<AbstractRepositoryQuery> queries, TaskList taskList) {
+		super("Synchronizying queries for " + repository.getRepositoryLabel());
+
 		this.connector = connector;
+		this.repository = repository;
 		this.queries = queries;
 		this.taskList = taskList;
-		this.repositories = new HashSet<TaskRepository>();
-		// TODO: remove once architecture established
-		// this.synchronizationManager = synchronizationManager;
 	}
 
-	public void setSynchChangedTasks(boolean syncChangedTasks) {
-		this.synchChangedTasks = syncChangedTasks;
+	public void setSynchronizeChangedTasks(boolean synchronizeChangedTasks) {
+		this.synchronizeChangedTasks = synchronizeChangedTasks;
 	}
 
 	/**
-	 * Returns true, if synchronization was triggered manually and not by an
-	 * automatic background job.
+	 * Returns true, if synchronization was triggered manually and not by an automatic background job.
 	 */
 	public boolean isForced() {
 		return forced;
 	}
 
 	/**
-	 * Indicates a manual synchronization (User initiated). If set to true, a
-	 * dialog will be displayed in case of errors. Any tasks with missing data
-	 * will be retrieved.
+	 * Indicates a manual synchronization (User initiated). If set to true, a dialog will be displayed in case of
+	 * errors. Any tasks with missing data will be retrieved.
 	 */
 	public void setForced(boolean forced) {
 		this.forced = forced;
@@ -90,72 +88,121 @@ class SynchronizeQueryJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		monitor.beginTask(JOB_LABEL, queries.size());
+		try {
+			monitor.beginTask("Synchronizing " + queries.size() + " queries", 20 + queries.size() * 10 + 40);
 
-		taskList.notifyContainersUpdated(queries);
-		for (AbstractRepositoryQuery repositoryQuery : queries) {
-//			taskList.notifyContainerUpdated(repositoryQuery);
-			repositoryQuery.setStatus(null);
+			Set<AbstractTask> allTasks = Collections.unmodifiableSet(taskList.getRepositoryTasks(repository.getUrl()));
 
-			monitor.setTaskName("Synchronizing: " + repositoryQuery.getSummary());
-			setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					repositoryQuery.getRepositoryKind(), repositoryQuery.getRepositoryUrl());
-			if (repository == null) {
-				repositoryQuery.setStatus(RepositoryStatus.createNotFoundError(repositoryQuery.getRepositoryUrl(),
-						TasksUiPlugin.PLUGIN_ID));
-			} else {
-
-				QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
-				SubProgressMonitor collectorMonitor = new SubProgressMonitor(monitor, 1);
-				collector.setProgressMonitor(collectorMonitor);
-				final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, collectorMonitor,
-						collector, forced);
-
-				if (resultingStatus.getSeverity() == IStatus.CANCEL) {
-					// do nothing
-				} else if (resultingStatus.isOK()) {
-
-					if (collector.getTaskHits().size() >= QueryHitCollector.MAX_HITS) {
-						MylarStatusHandler.log(
-								QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
+			// check if the repository has changed at all and have the connector mark tasks that need synchronization 
+			try {
+				monitor.subTask("Checking for changed tasks");
+				boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks,
+						new SubProgressMonitor(monitor, 20));
+				if (!hasChangedOrNew && !forced) {
+					for (AbstractRepositoryQuery repositoryQuery : queries) {
+						repositoryQuery.setStatus(null);
+						repositoryQuery.setCurrentlySynchronizing(false);
+						taskList.notifyContainersUpdated(queries);
 					}
+					return Status.OK_STATUS;
+				}
+			} catch (CoreException e) {
+				// there is no good way of informing the user at this point, just log the error
+				MylarStatusHandler.log(e.getStatus());
+			}
 
-					repositoryQuery.clear();
-					for (AbstractTask hit : collector.getTaskHits()) {
-						taskList.addTask(hit, repositoryQuery);
-					}
+			// synchronize queries
+			int n = 0;
+			for (AbstractRepositoryQuery repositoryQuery : queries) {
+				repositoryQuery.setStatus(null);
+				taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
 
-					if (synchChangedTasks) {
-						repositories.add(repository);
-					}
+				monitor.setTaskName("Synchronizing " + ++n + "/" + queries.size() + ": " + repositoryQuery.getSummary());
+				synchronizeQuery(repositoryQuery, new SubProgressMonitor(monitor, 10));
 
-					repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
-				} else {
-					repositoryQuery.setStatus(resultingStatus);
-					if (isForced()) {
-						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								MylarStatusHandler.displayStatus("Query Synchronization Failed", resultingStatus);
-							}
-						});
+				repositoryQuery.setCurrentlySynchronizing(false);
+				taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
+			}
+
+			// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
+			if (forced) {
+				for (AbstractTask task : allTasks) {
+					if (task.isStale()) {
+						tasksToBeSynchronized.add(task);
+						task.setCurrentlySynchronizing(true);
 					}
 				}
 			}
 
-			repositoryQuery.setCurrentlySynchronizing(false);
-			taskList.notifyContainersUpdated(queries);
-//			taskList.notifyContainerUpdated(repositoryQuery);
+			// synchronize tasks that were marked by the connector
+			if (!tasksToBeSynchronized.isEmpty()) {
+				monitor.setTaskName("Synchronizing " + tasksToBeSynchronized.size() + " changed tasks");
+				SynchronizeTaskJob job = new SynchronizeTaskJob(connector, tasksToBeSynchronized);
+				job.setForced(forced);
+				job.run(new SubProgressMonitor(monitor, 40));
+
+				if (Platform.isRunning() && !(TasksUiPlugin.getRepositoryManager() == null)) {
+					TasksUiPlugin.getRepositoryManager().setSyncTime(repository,
+							connector.getSynchronizationTimestamp(repository, tasksToBeSynchronized),
+							TasksUiPlugin.getDefault().getRepositoriesFilePath());
+				}
+			}
+
+
+			taskList.notifyContainersUpdated(null);
+
+//			// HACK: force entire Task List to refresh in case containers need to
+//			// appear or disappear
+//			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+//				public void run() {
+//					TaskListView view = TaskListView.getFromActivePerspective();
+//					if (view != null) {
+//						// TODO: remove explicit refresh
+//						view.getViewer().refresh();
+//					}
+//				}				
+//			});
+
+			return Status.OK_STATUS;
+		} finally {
+			monitor.done();
 		}
+	}
 
-		for (TaskRepository repository : repositories) {
-			TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
+	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor) {
+		setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
+
+		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
+
+		final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
+		if (resultingStatus.getSeverity() == IStatus.CANCEL) {
+			// do nothing
+		} else if (resultingStatus.isOK()) {
+			if (collector.getTaskHits().size() >= QueryHitCollector.MAX_HITS) {
+				MylarStatusHandler.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
+			}
+
+			repositoryQuery.clear();
+
+			for (AbstractTask hit : collector.getTaskHits()) {
+				taskList.addTask(hit, repositoryQuery);
+				if (synchronizeChangedTasks && hit.isStale()) {
+					tasksToBeSynchronized.add(hit);
+					hit.setCurrentlySynchronizing(true);
+				}
+			}
+
+			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
+		} else {
+			repositoryQuery.setStatus(resultingStatus);
+			if (isForced()) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						MylarStatusHandler.displayStatus("Query Synchronization Failed", resultingStatus);
+					}
+				});
+			}
 		}
-		taskList.notifyContainersUpdated(null);
-
-		monitor.done();
-
-		return Status.OK_STATUS;
 	}
 
 }

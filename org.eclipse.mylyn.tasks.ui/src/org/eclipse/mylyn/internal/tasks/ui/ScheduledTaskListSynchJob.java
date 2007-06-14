@@ -11,23 +11,20 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -68,12 +65,8 @@ public class ScheduledTaskListSynchJob extends Job {
 	}
 
 	@Override
-	public IStatus run(IProgressMonitor monitor) {
+	public IStatus run(final IProgressMonitor monitor) {
 		try {
-			if (monitor == null) {
-				monitor = new NullProgressMonitor();
-			}
-
 			taskList = taskListManager.getTaskList();
 			if (repositories == null) {
 				repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
@@ -113,22 +106,11 @@ public class ScheduledTaskListSynchJob extends Job {
 					updateJob.schedule();
 				}
 
-				Set<AbstractRepositoryQuery> queries = Collections.unmodifiableSet(taskList
-						.getRepositoryQueries(repository.getUrl()));
-				if (queries.size() > 0) {
-					if (connector != null) {
-						JobChangeAdapter jobAdapter = new JobChangeAdapter() {
-							@Override
-							public void done(IJobChangeEvent event) {
-								TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
-							}
-						};
-						TasksUiPlugin.getSynchronizationManager().synchronize(connector, queries, jobAdapter,
-								Job.DECORATE, 0, false, false);
-					}
-				} else {
-					TasksUiPlugin.getSynchronizationManager().synchronizeChanged(connector, repository);
-				}
+				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
+				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
+				synchronizationManager.synchronize(connector, repository, queries, null,
+						Job.DECORATE, 0, false);
+				
 				monitor.worked(1);
 			}
 		} finally {

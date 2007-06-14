@@ -126,6 +126,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_SYNC_STATE = "offlineSyncState";
 
 	public static final String KEY_OWNER = "Owner";
+	
+	public static final String KEY_STALE = "Stale";
 
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
 
@@ -203,6 +205,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
+		}
+		if (task.isStale()) {
+			node.setAttribute(KEY_STALE, VAL_TRUE);
+		} else {
+			node.setAttribute(KEY_STALE, VAL_FALSE);
 		}
 
 		if (task instanceof AbstractTask) {
@@ -482,6 +489,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			task.setReminded(true);
 		} else {
 			task.setReminded(false);
+		}
+		if (element.hasAttribute(KEY_STALE) && element.getAttribute(KEY_STALE).compareTo(VAL_TRUE) == 0) {
+			task.setStale(true);
+		} else {
+			task.setStale(false);
 		}
 
 		if (task instanceof AbstractTask) {
