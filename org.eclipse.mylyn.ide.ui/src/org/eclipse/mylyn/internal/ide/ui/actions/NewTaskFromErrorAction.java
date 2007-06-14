@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.pde.internal.runtime.logview.LogEntry;
 import org.eclipse.swt.dnd.Clipboard;
@@ -66,7 +66,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			}
 
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			AbstractTaskEditor editor = null;
+			AbstractRepositoryTaskEditor editor = null;
 
 			String summary = ""; 
 //				selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
@@ -78,7 +78,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 
 			try {
 				TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-				editor = (AbstractTaskEditor) taskEditor.getActivePageInstance();
+				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 			} catch (ClassCastException e) {
 				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
 				clipboard.setContents(new Object[] { summary + "\n" + description }, new Transfer[] { TextTransfer
