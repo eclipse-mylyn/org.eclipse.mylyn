@@ -43,7 +43,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -157,7 +157,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	public void contextMenuAboutToShow(IMenuManager mng) {
 		boolean addClipboard = this.getEditor().getActivePageInstance() != null
 				&& (this.getEditor().getActivePageInstance() instanceof TaskPlanningEditor || this.getEditor()
-						.getActivePageInstance() instanceof AbstractTaskEditor);
+						.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
 		contextMenuAboutToShow(mng, addClipboard);
 	}
 

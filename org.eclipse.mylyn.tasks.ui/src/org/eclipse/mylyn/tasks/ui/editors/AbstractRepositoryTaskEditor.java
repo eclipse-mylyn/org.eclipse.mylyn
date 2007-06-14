@@ -160,7 +160,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * @author Jeff Pound (Attachment work)
  * @author Steffen Pingel
  */
-public abstract class AbstractTaskEditor extends TaskFormPage {
+public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private static final String ERROR_NOCONNECTIVITY = "Unable to submit at this time. Check connectivity and retry.";
 
@@ -457,7 +457,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 	/**
 	 * Creates a new <code>AbstractTaskEditor</code>.
 	 */
-	public AbstractTaskEditor(FormEditor editor) {
+	public AbstractRepositoryTaskEditor(FormEditor editor) {
 		// set the scroll increments so the editor scrolls normally with the
 		// scroll wheel
 		super(editor, "id", "label"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1265,7 +1265,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 					
 					// TODO: use workbench mechanism for this?
 					ObjectActionContributorManager.getManager().contributeObjectActions(
-							AbstractTaskEditor.this, popupMenu, attachmentsTableViewer);
+							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
 				}
  			});
 		} else {
@@ -1297,7 +1297,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 					// Should not happen
 					return;
 				}
-				if (AbstractTaskEditor.this.isDirty
+				if (AbstractRepositoryTaskEditor.this.isDirty
 						|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
 					MessageDialog.openInformation(attachmentsComposite.getShell(),
 							"Task not synchronized or dirty editor",
@@ -1328,7 +1328,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 						// Should not happen
 						return;
 					}
-					if (AbstractTaskEditor.this.isDirty
+					if (AbstractRepositoryTaskEditor.this.isDirty
 							|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
@@ -2199,7 +2199,7 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 					if (parentEditor != null) {
 						getSite().getPage().closeEditor(parentEditor, false);
 					} else {
-						getSite().getPage().closeEditor(AbstractTaskEditor.this, false);
+						getSite().getPage().closeEditor(AbstractRepositoryTaskEditor.this, false);
 					}
 			}
 		});
@@ -2651,8 +2651,8 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 							// setFormHeaderLabel();
 							markDirty(false);
 							parentEditor.setMessage(null, 0);
-							AbstractTaskEditor.this.getEditor().setActivePage(
-									AbstractTaskEditor.this.getId());
+							AbstractRepositoryTaskEditor.this.getEditor().setActivePage(
+									AbstractRepositoryTaskEditor.this.getId());
 
 							// Activate editor disabled: bug#179078
 							// AbstractTaskEditor.this.getEditor().getEditorSite().getPage().activate(

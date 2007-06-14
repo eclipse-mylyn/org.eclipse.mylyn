@@ -18,7 +18,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -66,8 +66,8 @@ public class TaskEditorTest extends TestCase {
 		TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 		assertTrue(page.getActiveEditor() instanceof TaskEditor);
 		TaskEditor taskEditor = (TaskEditor) page.getActiveEditor();
-		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractTaskEditor);
-		AbstractTaskEditor editor = (AbstractTaskEditor) taskEditor.getActivePageInstance();
+		assertTrue(taskEditor.getActivePageInstance() instanceof AbstractRepositoryTaskEditor);
+		AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 
 		String desc = DESCRIPTION;
 		String summary = "summary";

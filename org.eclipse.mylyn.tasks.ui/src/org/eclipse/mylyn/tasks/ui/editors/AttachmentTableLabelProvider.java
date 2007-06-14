@@ -32,11 +32,11 @@ import org.eclipse.ui.themes.IThemeManager;
 public class AttachmentTableLabelProvider extends DecoratingLabelProvider implements ITableColorProvider,
 		ITableLabelProvider {
 
-	private final AbstractTaskEditor AbstractTaskEditor;
+	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 
-	public AttachmentTableLabelProvider(AbstractTaskEditor AbstractTaskEditor,
+	public AttachmentTableLabelProvider(AbstractRepositoryTaskEditor AbstractTaskEditor,
 			ILabelProvider provider, ILabelDecorator decorator) {
 		super(provider, decorator);
 		this.AbstractTaskEditor = AbstractTaskEditor;

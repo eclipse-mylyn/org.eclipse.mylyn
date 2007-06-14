@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.bugzilla.ui.editor.NewBugzillaTaskEditor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -35,7 +35,7 @@ public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
 	private static final String TITLE = "Bugzilla";
 
 	public EditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
-		AbstractTaskEditor editor = null;
+		AbstractRepositoryTaskEditor editor = null;
 		if (editorInput instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) editorInput;
 			if (taskInput.getTaskData().isNew()) {

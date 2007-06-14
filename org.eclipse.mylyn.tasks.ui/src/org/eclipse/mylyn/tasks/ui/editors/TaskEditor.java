@@ -54,7 +54,7 @@ import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
  * @author Eric Booth (initial prototype)
  * @author Rob Elves
  */
-public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
+public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
 
@@ -177,8 +177,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 	 */
 	public void refreshEditorContents() {
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditor) {
-				AbstractTaskEditor editor = (AbstractTaskEditor) page;
+			if (page instanceof AbstractRepositoryTaskEditor) {
+				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
 				editor.refreshEditor();
 			}
 		}
@@ -376,9 +376,9 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 							if (input.getImageDescriptor() != null) {
 								setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
 							}
-							if (editor instanceof AbstractTaskEditor) {
+							if (editor instanceof AbstractRepositoryTaskEditor) {
 
-								((AbstractTaskEditor) editor).setParentEditor(this);
+								((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
 
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
 									RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) getEditorInput();
@@ -416,7 +416,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 			if (task instanceof AbstractTask) {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
-			} else if (getEditorInput() instanceof AbstractTaskEditorInput) {
+			} else if (getEditorInput() instanceof AbstractRepositoryTaskEditorInput) {
 				this.setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REMOTE));
 			} else { //if (getUrl() != null) {
 				setTitleImage(TasksUiImages.getImage(TasksUiImages.TASK_REPOSITORY));
@@ -459,8 +459,8 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 		}
 
 		for (IFormPage page : getPages()) {
-			if (page instanceof AbstractTaskEditor) {
-				AbstractTaskEditor editor = (AbstractTaskEditor) page;
+			if (page instanceof AbstractRepositoryTaskEditor) {
+				AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) page;
 				editor.showBusy(busy);
 			}
 		}

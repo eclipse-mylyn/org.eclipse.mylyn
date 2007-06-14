@@ -25,7 +25,7 @@ import org.eclipse.ui.IPersistableElement;
 /**
  * @author Rob Elves (modifications)
  */
-public abstract class AbstractTaskEditorInput implements IEditorInput {
+public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput {
 
 	protected String toolTipText = "";
 
@@ -39,7 +39,7 @@ public abstract class AbstractTaskEditorInput implements IEditorInput {
 	
 	private Set<RepositoryTaskAttribute> oldEdits; 
 
-	protected AbstractTaskEditorInput(TaskRepository repository, String handle) {
+	protected AbstractRepositoryTaskEditorInput(TaskRepository repository, String handle) {
 		this.handle = handle;
 		this.repository = repository;
 		this.refreshInput();

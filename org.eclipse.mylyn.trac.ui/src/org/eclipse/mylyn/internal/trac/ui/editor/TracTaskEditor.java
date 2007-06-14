@@ -8,13 +8,13 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
  * @author Steffen Pingel
  */
-public class TracTaskEditor extends AbstractTaskEditor {
+public class TracTaskEditor extends AbstractRepositoryTaskEditor {
 
 	public TracTaskEditor(FormEditor editor) {
 		super(editor);

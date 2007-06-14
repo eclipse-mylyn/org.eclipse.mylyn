@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
@@ -59,8 +59,8 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 			if (task instanceof AbstractTask) {
 				repositoryTask = (AbstractTask) task;
 			}
-		} else if (selectedObject instanceof AbstractTaskEditor) {
-			AbstractTaskEditor editor = (AbstractTaskEditor) selectedObject;
+		} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
+			AbstractRepositoryTaskEditor editor = (AbstractRepositoryTaskEditor) selectedObject;
 			repositoryTask = editor.getRepositoryTask();
 		}
 
@@ -79,8 +79,8 @@ public class SynchronizeEditorAction extends BaseSelectionListenerAction {
 										if (selectedObject instanceof TaskEditor) {
 											TaskEditor editor = (TaskEditor) selectedObject;
 											editor.refreshEditorContents();
-										} else if (selectedObject instanceof AbstractTaskEditor) {
-											((AbstractTaskEditor) selectedObject).refreshEditor();
+										} else if (selectedObject instanceof AbstractRepositoryTaskEditor) {
+											((AbstractRepositoryTaskEditor) selectedObject).refreshEditor();
 										}
 									}
 								});

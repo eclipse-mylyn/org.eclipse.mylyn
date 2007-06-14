@@ -29,7 +29,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 	/**
 	 * 
 	 */
-	private final AbstractTaskEditor AbstractTaskEditor;
+	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
 	private final FileTransfer fileTransfer;
 
@@ -37,7 +37,7 @@ class RepositoryTaskEditorDropListener implements DropTargetListener {
 
 	private final Control control;
 
-	public RepositoryTaskEditorDropListener(AbstractTaskEditor AbstractTaskEditor,
+	public RepositoryTaskEditorDropListener(AbstractRepositoryTaskEditor AbstractTaskEditor,
 			FileTransfer fileTransfer, TextTransfer textTransfer, Control control) {
 		this.AbstractTaskEditor = AbstractTaskEditor;
 		this.fileTransfer = fileTransfer;

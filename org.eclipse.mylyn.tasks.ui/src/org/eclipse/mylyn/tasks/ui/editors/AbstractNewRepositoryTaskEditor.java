@@ -72,7 +72,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * 
  * @author Rob Elves (modifications)
  */
-public abstract class AbstractNewRepositoryTaskEditor extends AbstractTaskEditor {
+public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final int DESCRIPTION_WIDTH = 79 * 7; // 500;
 

@@ -36,7 +36,7 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
-import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
@@ -75,7 +75,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
  */
-public class BugzillaTaskEditor extends AbstractTaskEditor {
+public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	private static final String LABEL_TIME_TRACKING = "Bugzilla Time Tracking";
 
