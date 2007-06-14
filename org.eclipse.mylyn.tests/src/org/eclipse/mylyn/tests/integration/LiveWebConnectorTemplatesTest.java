@@ -55,8 +55,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
 				new ITaskFactory() {
 
-					public AbstractTask createTask(RepositoryTaskData taskData, boolean synchData,
-							boolean forced, IProgressMonitor monitor) throws CoreException {
+					public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 						// ignore
 						return null;
 					}
