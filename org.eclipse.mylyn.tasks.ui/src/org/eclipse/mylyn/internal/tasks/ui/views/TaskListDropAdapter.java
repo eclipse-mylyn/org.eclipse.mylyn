@@ -117,7 +117,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
 				TaskCategory targetCategory = null;
 				// TODO: just look for categories?
-				if (targetTask.getParentContainers().size() == 1) {
+				if (targetTask.getParentContainers().size() > 0) {
 					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
 					if (container instanceof TaskCategory) {
 						targetCategory = (TaskCategory)container;

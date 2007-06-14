@@ -380,7 +380,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 			// instantiates taskDataManager
 			readOfflineReports();
-			
+
 			loadTemplateRepositories();
 
 			// NOTE: task list must be read before Task List view can be
@@ -486,13 +486,16 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void loadTemplateRepositories() {
-		
+
 		// Add standard local task repository
-		TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.REPOSITORY_KIND, LocalRepositoryConnector.REPOSITORY_URL, LocalRepositoryConnector.REPOSITORY_VERSION);
-		localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
-		localRepository.setAnonymous(true);
-		taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
-				
+		if (taskRepositoryManager.getRepository(LocalRepositoryConnector.REPOSITORY_URL) == null) {
+			TaskRepository localRepository = new TaskRepository(LocalRepositoryConnector.REPOSITORY_KIND,
+					LocalRepositoryConnector.REPOSITORY_URL, LocalRepositoryConnector.REPOSITORY_VERSION);
+			localRepository.setRepositoryLabel(LocalRepositoryConnector.REPOSITORY_LABEL);
+			localRepository.setAnonymous(true);
+			taskRepositoryManager.addRepository(localRepository, getRepositoriesFilePath());
+		}
+
 		// Add the automatically created templates
 		for (AbstractRepositoryConnector connector : taskRepositoryManager.getRepositoryConnectors()) {
 			connector.setTaskDataManager(taskDataManager);
@@ -503,8 +506,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						TaskRepository taskRepository = taskRepositoryManager.getRepository(
 								connector.getRepositoryType(), template.repositoryUrl);
 						if (taskRepository == null) {
-							taskRepository = new TaskRepository(connector.getRepositoryType(),
-									template.repositoryUrl, template.version);
+							taskRepository = new TaskRepository(connector.getRepositoryType(), template.repositoryUrl,
+									template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setAnonymous(true);
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());

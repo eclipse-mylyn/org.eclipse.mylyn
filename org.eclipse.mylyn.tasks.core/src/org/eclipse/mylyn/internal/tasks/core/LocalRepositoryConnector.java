@@ -128,5 +128,10 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 		// ignore
 
 	}
+	
+	@Override
+	public boolean isUserManaged() {
+		return false;
+	}
 
 }

@@ -1176,7 +1176,11 @@ public class TaskListManager implements IPropertyChangeListener {
 			taskList.addTask(newTask, (TaskCategory) selectedObject);
 		} else if (selectedObject instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selectedObject;
-			AbstractTaskContainer container = task.getParentContainers().iterator().next();
+			
+			AbstractTaskContainer container = null;
+			if(task.getChildren().size() > 0) {
+				container = task.getParentContainers().iterator().next();
+			}
 			if (container instanceof TaskCategory) {
 				taskList.addTask(newTask, container);
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {

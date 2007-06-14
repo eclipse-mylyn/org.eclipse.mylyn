@@ -54,7 +54,7 @@ public class TaskRepositoriesView extends ViewPart {
 
 	private BaseSelectionListenerAction repositoryPropertiesAction;
 
-	private BaseSelectionListenerAction resetConrigurationAction;
+	private BaseSelectionListenerAction resetConfigurationAction;
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
@@ -155,8 +155,8 @@ public class TaskRepositoriesView extends ViewPart {
 		repositoryPropertiesAction = new EditRepositoryPropertiesAction();
 		viewer.addSelectionChangedListener(repositoryPropertiesAction);
 		
-		resetConrigurationAction = new ResetRepositoryConfigurationAction();
-		viewer.addSelectionChangedListener(resetConrigurationAction);
+		resetConfigurationAction = new ResetRepositoryConfigurationAction();
+		viewer.addSelectionChangedListener(resetConfigurationAction);
 	}
 
 	private void hookContextMenu() {
@@ -186,7 +186,7 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(addRepositoryAction);
 		manager.add(new Separator());
 		manager.add(deleteRepositoryAction);
-		manager.add(resetConrigurationAction);
+		manager.add(resetConfigurationAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
 		manager.add(repositoryPropertiesAction);

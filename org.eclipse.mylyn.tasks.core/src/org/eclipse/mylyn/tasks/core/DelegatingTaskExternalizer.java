@@ -32,18 +32,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Subclass externalizers must override the get*TagName() methods for the types
- * of externalized items they support to ensure that their externalizer does not
- * externalize tasks from other connectors incorrectly.
+ * Subclass externalizers must override the get*TagName() methods for the types of externalized items they support to
+ * ensure that their externalizer does not externalize tasks from other connectors incorrectly.
  * 
- * These tag names uniquely identify the externalizer to be used to read the
- * task from externalized form on disk.
+ * These tag names uniquely identify the externalizer to be used to read the task from externalized form on disk.
  * 
- * The canCreateElementFor methods specify which tasks the externalizer should
- * write to disk.
+ * The canCreateElementFor methods specify which tasks the externalizer should write to disk.
  * 
- * The TaskList is read on startup, so externalizers extending this should not
- * perform any slow (i.e., network) operations when overriding methods.
+ * The TaskList is read on startup, so externalizers extending this should not perform any slow (i.e., network)
+ * operations when overriding methods.
  * 
  * @author Mik Kersten
  * @author Ken Sueda (XML serialization support)
@@ -120,8 +117,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_REMINDED = "Reminded";
 
 	/**
-	 * This element holds the date stamp recorded upon last transition to a
-	 * synchronized state.
+	 * This element holds the date stamp recorded upon last transition to a synchronized state.
 	 */
 	public static final String KEY_LAST_MOD_DATE = "LastModified";
 
@@ -165,7 +161,11 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
-		AbstractTaskContainer container = task.getParentContainers().iterator().next();
+		AbstractTaskContainer container = null;
+
+		if (task.getParentContainers().size() > 0) {
+			container = task.getParentContainers().iterator().next();
+		}
 		if (container != null) {
 			if (container.getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
@@ -249,7 +249,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				String handle = element.getAttribute(KEY_HANDLE);
 				AbstractTask subTask = tasklist.getTask(handle);
 				if (subTask != null) {
-					tasklist.addTask(subTask, (AbstractTask)task);
+					tasklist.addTask(subTask, (AbstractTask) task);
 				}
 			}
 		}
@@ -293,7 +293,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		AbstractTaskCategory category;
 		if (element.hasAttribute(KEY_NAME)) {
 			category = new TaskCategory(element.getAttribute(KEY_NAME));
-			taskList.internalAddCategory((TaskCategory)category);
+			taskList.internalAddCategory((TaskCategory) category);
 		} else {
 			// LEGACY: registry categories did not have names
 			category = taskList.getArchiveContainer();
@@ -327,8 +327,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	/**
-	 * First tries to use a delegate externalizer to read, if none available,
-	 * reads itself.
+	 * First tries to use a delegate externalizer to read, if none available, reads itself.
 	 */
 	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskCategory category, AbstractTask parent)
 			throws TaskExternalizationException {
@@ -375,8 +374,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	/**
 	 * Override for connector-specific implementation
 	 */
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element, TaskList taskList,
-			AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element,
+			TaskList taskList, AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
 		String handle;
 		if (element.hasAttribute(KEY_HANDLE)) {
 			handle = element.getAttribute(KEY_HANDLE);
@@ -405,7 +404,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
 			task.addParentContainer(legacyCategory);
-			legacyCategory.addChild(task);			
+			legacyCategory.addChild(task);
 		} else if (legacyCategory == null && parent == null) {
 			if (task instanceof AbstractTask) {
 				taskList.internalAddTask(task, taskList.getArchiveContainer());
@@ -620,8 +619,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	}
 
 	/**
-	 * This happens on startup, so connectors should not perform any network
-	 * operations when reading queries.
+	 * This happens on startup, so connectors should not perform any network operations when reading queries.
 	 */
 	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
 		// doesn't know how to read any queries
