@@ -190,7 +190,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// manager.setTaskList(list);
 		manager.readExistingOrCreateNewList();
 
-		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren());
+		assertEquals(allRootTasks.size(), manager.getTaskList().getDefaultCategory().getChildren().size());
 		assertEquals(allCategories, manager.getTaskList().getCategories());
 		assertEquals(allRoots.size(), manager.getTaskList().getRootElements().size());
 		assertEquals(allTasks.size(), manager.getTaskList().getAllTasks().size());
