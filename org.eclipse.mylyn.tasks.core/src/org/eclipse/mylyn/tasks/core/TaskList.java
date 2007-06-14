@@ -121,12 +121,12 @@ public class TaskList {
 			for (ITaskListChangeListener listener : changeListeners) {
 				listener.containersChanged(delta);
 			}
-		} 
+		}
 
 		if (parentContainer != null) {
 			parentContainer.addChild(newTask);
-			if (!(parentContainer instanceof AbstractTask) &&  !!(parentContainer instanceof AbstractRepositoryQuery)) {
-				newTask.addParentContainer((TaskCategory) parentContainer);
+			if (!(parentContainer instanceof AbstractTask) && !(parentContainer instanceof AbstractRepositoryQuery)) {
+				newTask.addParentContainer(parentContainer);
 			}
 		} else {
 			defaultCategory.addChild(newTask);
