@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.web.tasks.WebRepositoryConnector;
-import org.eclipse.mylyn.internal.web.tasks.WebTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
@@ -75,7 +74,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 // }
 		}
 
-		TaskRepository repository = new TaskRepository(WebTask.REPOSITORY_TYPE, template.repositoryUrl, params);
+		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, template.repositoryUrl, params);
 		String url = repository.getUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
@@ -116,7 +115,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		TestSuite suite = new ActiveTestSuite(LiveWebConnectorTemplatesTest.class.getName());
 
 		AbstractRepositoryConnector repositoryConnector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				WebTask.REPOSITORY_TYPE);
+				WebRepositoryConnector.REPOSITORY_TYPE);
 		for (RepositoryTemplate template : repositoryConnector.getTemplates()) {
 			if (excluded.indexOf(template.repositoryUrl + ",") == -1) {
 				suite.addTest(new LiveWebConnectorTemplatesTest(template));
