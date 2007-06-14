@@ -61,7 +61,7 @@ public class ContextUiUtil {
 						ITasksUiConstants.TITLE_DIALOG,
 						AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
 			} else {
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task);
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 			}
 		} catch (InvocationTargetException e) {
