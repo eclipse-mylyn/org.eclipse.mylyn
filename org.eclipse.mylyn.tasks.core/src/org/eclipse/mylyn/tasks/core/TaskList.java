@@ -159,7 +159,7 @@ public class TaskList {
 			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 			if (archiveContainer.contains(task.getHandleIdentifier())) {
 				archiveContainer.removeChild(task);
-				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));				
+				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));
 			}
 		} else {
 			internalAddTask(task, archiveContainer);
@@ -198,7 +198,6 @@ public class TaskList {
 		}
 	}
 
-	
 	public void addCategory(TaskCategory category) {
 		categories.put(category.getHandleIdentifier(), category);
 
@@ -617,25 +616,15 @@ public class TaskList {
 	}
 
 	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
-		if (containers == null) {
-			for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-				try {
-					listener.containersChanged(null);
-				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-				}
-			}
-		} else {
-			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
-			for (AbstractTaskContainer abstractTaskContainer : containers) {
-				delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
-			}
-			for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-				try {
-					listener.containersChanged(delta);
-				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
-				}
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		for (AbstractTaskContainer abstractTaskContainer : containers) {
+			delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
+		}
+		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
+			try {
+				listener.containersChanged(delta);
+			} catch (Throwable t) {
+				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
 			}
 		}
 	}
