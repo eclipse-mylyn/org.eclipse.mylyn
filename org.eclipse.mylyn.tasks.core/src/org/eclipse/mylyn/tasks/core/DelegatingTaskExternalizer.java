@@ -165,11 +165,12 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
 
-		if (task.getCategory() != null) {
-			if (task.getCategory().getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
+		AbstractTaskContainer container = task.getParentContainers().iterator().next();
+		if (container != null) {
+			if (container.getHandleIdentifier().equals(UnfiledCategory.HANDLE)) {
 				node.setAttribute(KEY_CATEGORY, VAL_ROOT);
 			} else {
-				node.setAttribute(KEY_CATEGORY, task.getCategory().getHandleIdentifier());
+				node.setAttribute(KEY_CATEGORY, container.getHandleIdentifier());
 			}
 		} else {
 			// TODO: if/when subtasks are supported this should be handled
@@ -303,7 +304,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			Node child = list.item(i);
 			try {
 				// LEGACY: categories used to contain tasks?
-				category.add(readTask(child, taskList, category, null));
+				category.addChild(readTask(child, taskList, category, null));
 				// boolean read = false;
 				// for (ITaskListExternalizer externalizer :
 				// delegateExternalizers) {
@@ -403,8 +404,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 				taskList.internalAddRootTask(task);
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
-			task.setCategory(legacyCategory);
-			legacyCategory.add(task);
+			task.addParentContainer(legacyCategory);
+			legacyCategory.addChild(task);
 		} else if (legacyCategory == null && parent == null) {
 			if (task instanceof AbstractTask) {
 				taskList.internalAddTask(task, taskList.getArchiveContainer());

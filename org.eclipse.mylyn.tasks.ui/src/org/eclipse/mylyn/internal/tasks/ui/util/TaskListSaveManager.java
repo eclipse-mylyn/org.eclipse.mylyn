@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,9 +32,9 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
@@ -232,40 +233,12 @@ public class TaskListSaveManager implements ITaskListChangeListener, IBackground
 		// ignore
 	}
 
-// /**
-// * For testing.
-// */
-// public void setForceBackgroundSave(boolean on) {
-// forceBackgroundSave = on;
-// // saveTimer.setForceSyncExec(on);
-// }
-
-	public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-		saveTaskList(false, true);
-	}
-
-	public void taskDeleted(AbstractTask task) {
-		saveTaskList(false, true);
-	}
-
-	public void containerAdded(AbstractTaskContainer container) {
-		saveTaskList(false, true);
-	}
-
-	public void containerDeleted(AbstractTaskContainer container) {
-		saveTaskList(false, true);
-	}
-
-	public void taskAdded(AbstractTask task) {
-		saveTaskList(false, true);
-	}
-
 	/** For testing only * */
 	public BackgroundSaveTimer getSaveTimer() {
 		return saveTimer;
 	}
 
-	public void containerInfoChanged(AbstractTaskContainer container) {
+	public void containersChanged(Set<TaskContainerDelta> containers) {
 		saveTaskList(false, true);
 	}
 

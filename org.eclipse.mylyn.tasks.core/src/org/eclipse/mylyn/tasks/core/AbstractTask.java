@@ -14,6 +14,8 @@ package org.eclipse.mylyn.tasks.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -48,9 +50,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private String taskUrl = "";
 
-
-	@Deprecated
-	private AbstractTaskCategory parentCategory = null;
+	private Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 	
 	
 	// ************ Synch ****************
@@ -340,18 +340,19 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * Use TaskList for moving tasks between containers
-	 * 
-	 * TODO: get rid of this or we should make TaskCategory API.
+	 * Limitation: can currently only add one container.
 	 */
-	@Deprecated
-	public void setCategory(AbstractTaskCategory category) {
-		this.parentCategory = category;
+	public void addParentContainer(AbstractTaskContainer container) {
+		containers.clear();
+		containers.add(container);
 	}
 
-	@Deprecated
-	public AbstractTaskCategory getCategory() {
-		return parentCategory;
+	public void removeParentContainer(AbstractTaskContainer container) {
+		containers.remove(container);
+	}
+	
+	public Set<AbstractTaskContainer> getParentContainers() {
+		return containers;
 	}
 
 	public String getSummary() {

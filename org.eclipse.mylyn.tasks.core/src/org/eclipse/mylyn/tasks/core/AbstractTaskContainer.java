@@ -39,6 +39,29 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		this.handle = handleAndDescription;
 	}
 	
+	/**
+	 * Use {@link TaskList} methods instead.
+	 */
+	@Deprecated
+	protected void addChild(AbstractTask task) {
+		children.add(task);
+	}
+
+	/**
+	 * Does not delete task from TaskList
+	 */
+	@Deprecated
+	protected void removeChild(AbstractTask task) {
+		children.remove(task);
+	}
+
+	/**
+	 * Does not delete tasks from TaskList
+	 */
+	public void clear() {
+		children.clear();
+	}
+	
 	public Set<AbstractTask> getChildren() {
 		return Collections.unmodifiableSet(children);
 	}
@@ -75,39 +98,18 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		this.handle = handle;
 	}
 
-	/**
-	 * Use {@link TaskList} methods instead.
-	 */
-	@Deprecated
-	protected void add(AbstractTask task) {
-		children.add(task);
-	}
-
-	/**
-	 * Does not delete task from TaskList
-	 */
-	@Deprecated
-	protected void remove(AbstractTask task) {
-		children.remove(task);
-	}
-
-	/**
-	 * Does not delete tasks from TaskList
-	 */
-	public void clear() {
-		children.clear();
-	}
-
 	@Override
 	public int hashCode() {
 		return handle.hashCode();
 	}
 
-	@Deprecated
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	/**
+	 * @return	can be null
+	 */
 	public String getUrl() {
 		return url;
 	}

@@ -74,7 +74,7 @@ public class TaskList {
 	}
 
 	public void addTask(AbstractTask task) {
-		addTask(task, archiveContainer);
+		addTask(task, null);
 	}
 
 	/**
@@ -94,44 +94,51 @@ public class TaskList {
 		return result;
 	}
 
-
 	/**
 	 * Precondition: {@code container} already exists in tasklist (be it a parent task, category, or query)
-	 * @param task to be added (hit, subtask, etc)
-	 * @param container task container, query or parent task
+	 * 
+	 * @param task
+	 *            to be added (hit, subtask, etc)
+	 * @param container
+	 *            task container, query or parent task
 	 */
-	public void addTask(AbstractTask task, AbstractTaskContainer parentElement) {
+	public void addTask(AbstractTask task, AbstractTaskContainer parentContainer) {
+		if (task == null) {
+			return;
+		}
 
 		AbstractTask newTask = tasks.get(task.getHandleIdentifier());
 
 		if (newTask == null) {
 			newTask = task;
 			tasks.put(newTask.getHandleIdentifier(), newTask);
-			archiveContainer.add(newTask);
-			newTask.setCategory(archiveContainer);
+			archiveContainer.addChild(newTask);
+//			newTask.addParentContainer(archiveContainer);
+
+			// NOTE: only called for newly-created tasks
+			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+			delta.add(new TaskContainerDelta(newTask, TaskContainerDelta.Kind.ADDED));
 			for (ITaskListChangeListener listener : changeListeners) {
-				listener.taskAdded(newTask);
+				listener.containersChanged(delta);
 			}
 		}
 
-		if (parentElement != null) {
-			parentElement.add(newTask);
-			if (parentElement instanceof TaskCategory) {
-				newTask.setCategory((TaskCategory)parentElement);
+		if (parentContainer != null) {
+			parentContainer.addChild(newTask);
+			if ((parentContainer instanceof AbstractTaskCategory && ((AbstractTaskCategory) parentContainer).isUserDefined())) {
+				newTask.addParentContainer((TaskCategory) parentContainer);
 			}
 		} else {
-			automaticCategory.add(newTask);
-			newTask.setCategory(automaticCategory);
+			automaticCategory.addChild(newTask);
+			newTask.addParentContainer(automaticCategory);
 		}
 	}
-
 
 	public void refactorRepositoryUrl(String oldRepositoryUrl, String newRepositoryUrl) {
 		for (AbstractTask task : tasks.values()) {
 			if (task instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) task;
-				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask
-						.getHandleIdentifier()))) {
+				if (oldRepositoryUrl.equals(RepositoryTaskHandleUtil.getRepositoryUrl(repositoryTask.getHandleIdentifier()))) {
 					tasks.remove(repositoryTask.getHandleIdentifier());
 					repositoryTask.setRepositoryUrl(newRepositoryUrl);
 					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
@@ -144,16 +151,19 @@ public class TaskList {
 			}
 		}
 
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		for (AbstractRepositoryQuery query : queries.values()) {
 			if (query.getRepositoryUrl().equals(oldRepositoryUrl)) {
 				query.setRepositoryUrl(newRepositoryUrl);
-				for (ITaskListChangeListener listener : changeListeners) {
-					listener.containerInfoChanged(query);
-				}
+				delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.CHANGED));
 			}
+		}
+		for (ITaskListChangeListener listener : changeListeners) {
+			listener.containersChanged(delta);
 		}
 	}
 
+	@Deprecated
 	public void moveToRoot(AbstractTask task) {
 		moveToContainer(automaticCategory, task);
 	}
@@ -162,10 +172,18 @@ public class TaskList {
 		if (!tasks.containsKey(task.getHandleIdentifier())) {
 			tasks.put(task.getHandleIdentifier(), task);
 		}
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(toContainer, TaskContainerDelta.Kind.CHANGED));
 
-		AbstractTaskCategory fromContainer = task.getCategory();
-		if (fromContainer instanceof AbstractTaskCategory) {
-			(fromContainer).remove(task);
+		Set<AbstractTaskContainer> currentContainers = task.getParentContainers();
+		for (AbstractTaskContainer taskContainer : currentContainers) {
+			if (taskContainer instanceof AbstractTaskCategory) {
+				if (!(taskContainer instanceof TaskArchive)) {
+					(taskContainer).removeChild(task);
+				}
+				task.removeParentContainer(taskContainer);
+				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
+			}
 		}
 		if (toContainer != null) {
 			internalAddTask(task, toContainer);
@@ -173,14 +191,17 @@ public class TaskList {
 			internalAddTask(task, archiveContainer);
 		}
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskMoved(task, fromContainer, toContainer);
+			listener.containersChanged(delta);
 		}
 	}
 
 	public void addCategory(TaskCategory category) {
 		categories.put(category.getHandleIdentifier(), category);
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.ADDED));
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containerAdded(category);
+			listener.containersChanged(delta);
 		}
 	}
 
@@ -194,8 +215,12 @@ public class TaskList {
 
 	public void renameTask(AbstractTask task, String description) {
 		task.setSummary(description);
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
+
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.localInfoChanged(task);
+			listener.containersChanged(delta);
 		}
 	}
 
@@ -213,61 +238,80 @@ public class TaskList {
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
 				container.setDescription(newDescription);
-				this.addCategory((TaskCategory)container);
+				this.addCategory((TaskCategory) container);
 			}
 		}
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containerInfoChanged(container);
+			listener.containersChanged(delta);
 		}
 	}
 
 	public void addQuery(AbstractRepositoryQuery query) {
 		queries.put(query.getHandleIdentifier(), query);
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containerAdded(query);
+			listener.containersChanged(delta);
 		}
 	}
 
 	/**
 	 * TODO: refactor around querying containers for their tasks
 	 * 
-	 * Task is removed from all containers: root, archive, category, and tasks
-	 * catchall (Currently no support for deletion of subtasks)
+	 * Task is removed from all containers: root, archive, category, and tasks catchall (Currently no support for
+	 * deletion of subtasks)
 	 */
 	public void deleteTask(AbstractTask task) {
-		archiveContainer.remove(task);
-		automaticCategory.remove(task);
-		if (task.getCategory() != null) {
-			task.getCategory().remove(task);
-			task.setCategory(null);
+		archiveContainer.removeChild(task);
+		automaticCategory.removeChild(task);
+
+		for (AbstractTaskContainer container : task.getParentContainers()) {
+			container.removeChild(task);
+			task.removeParentContainer(container);
 		}
 		tasks.remove(task.getHandleIdentifier());
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.REMOVED));
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.taskDeleted(task);
+			listener.containersChanged(delta);
 		}
 	}
 
 	public void deleteCategory(AbstractTaskCategory category) {
 		for (AbstractTask task : category.getChildren()) {
-			automaticCategory.add(task);
+			automaticCategory.addChild(task);
 		}
 		categories.remove(category.getHandleIdentifier());
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(automaticCategory, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
+
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containerDeleted(category);
+			listener.containersChanged(delta);
 		}
 	}
 
 	public void deleteQuery(AbstractRepositoryQuery query) {
 		queries.remove(query.getHandleIdentifier());
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.REMOVED));
 		for (ITaskListChangeListener listener : changeListeners) {
-			listener.containerDeleted(query);
+			listener.containersChanged(delta);
 		}
 	}
 
 	public void markComplete(AbstractTask task, boolean complete) {
 		task.setCompleted(complete);
+
+		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+		delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			listener.localInfoChanged(task);
+			listener.containersChanged(delta);
 		}
 	}
 
@@ -289,13 +333,13 @@ public class TaskList {
 	public void internalAddTask(AbstractTask task, AbstractTaskCategory container) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
-			container.add(task);
+			container.addChild(task);
 			if (container instanceof TaskCategory) {
-				task.setCategory((AbstractTaskCategory)container);
+				task.addParentContainer(container);
 			}
 		} else {
-			task.setCategory(automaticCategory);
-			automaticCategory.add(task);
+			automaticCategory.addChild(task);
+			task.addParentContainer(automaticCategory);
 		}
 	}
 
@@ -564,35 +608,38 @@ public class TaskList {
 		return Collections.unmodifiableSet(changeListeners);
 	}
 
-	/**
-	 * TODO: refactor into task deltas?
-	 */
-	public void notifyLocalInfoChanged(AbstractTask task) {
+	public void notifyTaskChanged(AbstractTask task) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
 			try {
-				listener.localInfoChanged(task);
+				Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+				delta.add(new TaskContainerDelta(task, TaskContainerDelta.Kind.CHANGED));
+				listener.containersChanged(delta);
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+				MylarStatusHandler.fail(t, "Notification failed for: " + listener, false);
 			}
 		}
 	}
 
-	public void notifyRepositoryInfoChanged(AbstractTask task) {
-		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			try {
-				listener.repositoryInfoChanged(task);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+	public void notifyContainersUpdated(Set<? extends AbstractTaskContainer> containers) {
+		if (containers == null) {
+			for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
+				try {
+					listener.containersChanged(null);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+				}
 			}
-		}
-	}
-
-	public void notifyContainerUpdated(AbstractTaskContainer container) {
-		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
-			try {
-				listener.containerInfoChanged(container);
-			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+		} else {
+			Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
+			for (AbstractTaskContainer abstractTaskContainer : containers) {
+				delta.add(new TaskContainerDelta(abstractTaskContainer, TaskContainerDelta.Kind.CHANGED));
+			}
+			for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
+				try {
+					listener.containersChanged(delta);
+				} catch (Throwable t) {
+					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+				}
 			}
 		}
 	}

@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.tasks.ui.editors;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -28,9 +29,8 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -135,47 +135,22 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(final AbstractTask updateTask) {
-			if (updateTask != null && task != null
-					&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-				if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-
-							updateTaskData(updateTask);
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+					final AbstractTask updateTask = (AbstractTask)taskContainerDelta.getContainer();
+					if (updateTask != null && task != null
+							&& updateTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
+						if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
+							PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+								public void run() {
+									updateTaskData(updateTask);
+								}
+							});
 						}
-
-					});
+					}
 				}
 			}
-		}
-
-		public void repositoryInfoChanged(AbstractTask task) {
-			localInfoChanged(task);
-		}
-
-		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-			// ignore
-		}
-
-		public void taskDeleted(AbstractTask task) {
-			// ignore
-		}
-
-		public void containerAdded(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void containerDeleted(AbstractTaskContainer container) {
-			// ignore
-		}
-
-		public void taskAdded(AbstractTask task) {
-			// ignore
-		}
-
-		public void containerInfoChanged(AbstractTaskContainer container) {
-			// ignore
 		}
 
 	};

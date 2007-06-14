@@ -91,8 +91,9 @@ class SynchronizeQueryJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask(JOB_LABEL, queries.size());
 
+		taskList.notifyContainersUpdated(queries);
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			taskList.notifyContainerUpdated(repositoryQuery);
+//			taskList.notifyContainerUpdated(repositoryQuery);
 			repositoryQuery.setStatus(null);
 
 			monitor.setTaskName("Synchronizing: " + repositoryQuery.getSummary());
@@ -142,8 +143,8 @@ class SynchronizeQueryJob extends Job {
 			}
 
 			repositoryQuery.setCurrentlySynchronizing(false);
-
-			taskList.notifyContainerUpdated(repositoryQuery);
+			taskList.notifyContainersUpdated(queries);
+//			taskList.notifyContainerUpdated(repositoryQuery);
 		}
 
 		for (TaskRepository repository : repositories) {
@@ -152,7 +153,7 @@ class SynchronizeQueryJob extends Job {
 
 		// HACK: force entire Task List to refresh in case containers need to
 		// appear or disappear
-		taskList.notifyContainerUpdated(null);
+		taskList.notifyContainersUpdated(null);
 
 		monitor.done();
 

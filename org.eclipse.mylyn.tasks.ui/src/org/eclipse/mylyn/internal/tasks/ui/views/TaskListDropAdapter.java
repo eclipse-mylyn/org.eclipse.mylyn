@@ -34,7 +34,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -116,10 +115,18 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((TaskCategory) currentTarget, task);
 			} else if (currentTarget instanceof AbstractTask) {
 				AbstractTask targetTask = (AbstractTask) currentTarget;
-				if (targetTask.getCategory() == null) {
+				TaskCategory targetCategory = null;
+				// TODO: just look for categories?
+				if (targetTask.getParentContainers().size() == 1) {
+					AbstractTaskContainer container = targetTask.getParentContainers().iterator().next();
+					if (container instanceof TaskCategory) {
+						targetCategory = (TaskCategory)container;
+					}
+				}
+				if (targetCategory == null) {
 					TasksUiPlugin.getTaskListManager().getTaskList().moveToRoot(task);
 				} else {
-					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetTask.getCategory(), task);
+					TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(targetCategory, task);
 				}
 			} else if (currentTarget instanceof ScheduledTaskContainer) {
 				ScheduledTaskContainer container = (ScheduledTaskContainer)currentTarget;
@@ -282,7 +289,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 				@Override
 				protected void setTitle(final String pageTitle) {
 					newTask.setSummary(pageTitle);
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(newTask);
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(newTask);
 				}
 			};
 			job.schedule();

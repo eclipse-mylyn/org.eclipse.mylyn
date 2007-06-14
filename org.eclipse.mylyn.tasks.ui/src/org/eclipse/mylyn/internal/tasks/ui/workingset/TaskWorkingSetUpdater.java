@@ -10,13 +10,15 @@ package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
@@ -72,40 +74,31 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(this);
 	}
 
-	
-	// ITaskListChangeListener
-	
-	public void containerAdded(AbstractTaskContainer container) {
-	}
-
-	public void containerDeleted(AbstractTaskContainer container) {
-		synchronized (workingSets) {
-			for (IWorkingSet workingSet : workingSets) {
-				// TODO could filter by working set id
-				ArrayList<IAdaptable> remove = new ArrayList<IAdaptable>(); 
-				for (IAdaptable adaptable : workingSet.getElements()) {
-					if (adaptable instanceof AbstractTaskContainer
-							&& ((AbstractTaskContainer) adaptable).getHandleIdentifier().equals(
-									container.getHandleIdentifier())) {
-						remove.add(adaptable);
+	public void containersChanged(Set<TaskContainerDelta> containers) {
+		for (TaskContainerDelta taskContainerDelta : containers) {
+				switch (taskContainerDelta.getKind()) {
+				case REMOVED:
+					synchronized (workingSets) {
+						for (IWorkingSet workingSet : workingSets) {
+							// TODO could filter by working set id
+							Set<IAdaptable> remove = new HashSet<IAdaptable>(); 
+							for (IAdaptable adaptable : workingSet.getElements()) {
+								if (adaptable instanceof AbstractTaskContainer
+										&& ((AbstractTaskContainer) adaptable).getHandleIdentifier().equals(
+												taskContainerDelta.getContainer().getHandleIdentifier())) {
+									remove.add(adaptable);
+								}
+							}
+							if(!remove.isEmpty()) {
+								ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
+								elements.removeAll(remove);
+								workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+							}
+						}
 					}
-				}
-				if(!remove.isEmpty()) {
-					ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
-					elements.removeAll(remove);
-					workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
-				}
+					break;
 			}
 		}
-	}
-
-	public void containerInfoChanged(AbstractTaskContainer container) {
-	}
-
-	public void localInfoChanged(AbstractTask task) {
-	}
-
-	public void repositoryInfoChanged(AbstractTask task) {
 	}
 
 	public void taskAdded(AbstractTask task) {

@@ -16,10 +16,10 @@ import java.util.Set;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
@@ -86,29 +86,13 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(new ITaskListChangeListener() {
 
-			public void containerAdded(AbstractTaskContainer container) {
-			}
-
-			public void containerDeleted(AbstractTaskContainer container) {
-			}
-
-			public void containerInfoChanged(AbstractTaskContainer container) {
-			}
-
-			public void localInfoChanged(AbstractTask task) {
-				updateTaskProgressBar();
-			}
-
-			public void repositoryInfoChanged(AbstractTask task) {
-			}
-
-			public void taskAdded(AbstractTask task) {
-			}
-
-			public void taskDeleted(AbstractTask task) {
-			}
-
-			public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+			public void containersChanged(Set<TaskContainerDelta> containers) {
+				for (TaskContainerDelta taskContainerDelta : containers) {
+					if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+						updateTaskProgressBar();
+						break;
+					}
+				}
 			}
 		});
 

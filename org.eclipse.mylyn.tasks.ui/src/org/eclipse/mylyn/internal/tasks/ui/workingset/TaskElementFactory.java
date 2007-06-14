@@ -10,7 +10,6 @@ package org.eclipse.mylyn.internal.tasks.ui.workingset;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IElementFactory;

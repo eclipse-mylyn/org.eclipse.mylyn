@@ -38,11 +38,11 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.WebTask;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
@@ -55,13 +55,12 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -209,31 +208,17 @@ public class TaskListManager implements IPropertyChangeListener {
 
 	private final ITaskListChangeListener CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void containerAdded(AbstractTaskContainer container) {
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+					switch(taskContainerDelta.getKind()) {
+					case REMOVED:
+						TaskListManager.this.resetAndRollOver();
+						return;
+					}
+				}
+			}
 		}
-
-		public void containerDeleted(AbstractTaskContainer container) {
-		}
-
-		public void containerInfoChanged(AbstractTaskContainer container) {
-		}
-
-		public void localInfoChanged(AbstractTask task) {
-		}
-
-		public void repositoryInfoChanged(AbstractTask task) {
-		}
-
-		public void taskAdded(AbstractTask task) {
-		}
-
-		public void taskDeleted(AbstractTask task) {
-			TaskListManager.this.resetAndRollOver();
-		}
-
-		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
-		}
-
 	};
 
 	private int timeTicks = 0;
@@ -1036,7 +1021,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithReminders.add(task);
 		}
 		parseFutureReminders();
-		taskList.notifyLocalInfoChanged(task);
+		taskList.notifyTaskChanged(task);
 	}
 
 	public void setDueDate(AbstractTask task, Date dueDate) {
@@ -1048,7 +1033,7 @@ public class TaskListManager implements IPropertyChangeListener {
 			tasksWithDueDates.add(task);
 		}
 		parseFutureReminders();
-		taskList.notifyLocalInfoChanged(task);
+		taskList.notifyTaskChanged(task);
 	}
 
 	/**
@@ -1191,8 +1176,9 @@ public class TaskListManager implements IPropertyChangeListener {
 			taskList.addTask(newTask, (TaskCategory) selectedObject);
 		} else if (selectedObject instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) selectedObject;
-			if (task.getCategory() instanceof TaskCategory) {
-				taskList.addTask(newTask, task.getCategory());
+			AbstractTaskContainer container = task.getParentContainers().iterator().next();
+			if (container instanceof TaskCategory) {
+				taskList.addTask(newTask, container);
 			} else if (view != null && view.getDrilledIntoCategory() instanceof TaskCategory) {
 				taskList.addTask(newTask, view.getDrilledIntoCategory());
 			} else {

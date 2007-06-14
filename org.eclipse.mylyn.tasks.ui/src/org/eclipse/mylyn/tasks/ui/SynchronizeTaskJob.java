@@ -100,7 +100,7 @@ class SynchronizeTaskJob extends Job {
 				// TODO: Set in connector.updateTask
 				repositoryTask.setCurrentlySynchronizing(false);
 
-				TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
+				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
 				// TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
 
 				monitor.worked(1);
@@ -128,7 +128,7 @@ class SynchronizeTaskJob extends Job {
 					null));
 		}
 
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(repositoryTask);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
 		ITaskDataHandler taskDataHandler = connector.getTaskDataHandler();
 		if (taskDataHandler != null) {
 			String taskId = repositoryTask.getTaskId();
@@ -168,7 +168,7 @@ class SynchronizeTaskJob extends Job {
 
 				if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 						|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
-					TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(repositoryTask);
+					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask);
 				}
 			} else {
 				connector.updateTaskFromRepository(repository, repositoryTask, monitor);

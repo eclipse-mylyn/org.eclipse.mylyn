@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 
 /**
@@ -106,12 +105,9 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return parent;
 	}
 
-//	public void addSubTask(ITask task) {
-//		task.addSubTask(task);
-//	}
-
-	public AbstractTaskCategory getCategory() {
-		return task.getCategory();
+	@Override
+	public Set<AbstractTaskContainer> getParentContainers() {
+		return task.getParentContainers();
 	}
 
 	public Set<AbstractTask> getChildren() {
@@ -174,16 +170,18 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task.isPastReminder();
 	}
 
-//	public void removeSubTask(ITask task) {
-//		task.removeSubTask(task);
-//	}
-
 	public void setActive(boolean active) {
 		task.setActive(active);
 	}
 
-	public void setCategory(AbstractTaskCategory category) {
-		task.setCategory(category);
+	@Override
+	public void addParentContainer(AbstractTaskContainer container) {
+		task.addParentContainer(container);
+	}
+	
+	@Override
+	public void removeParentContainer(AbstractTaskContainer container) {
+		task.removeParentContainer(container);
 	}
 
 	public void setCompleted(boolean completed) {

@@ -11,7 +11,11 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.editors;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
@@ -68,7 +72,10 @@ public class CategoryEditorInput implements IEditorInput {
 	
 	public void setUrl(String url) {
 		category.setUrl(url);
-		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(category);
+		Set<AbstractTaskContainer> updated = new HashSet<AbstractTaskContainer>();
+		updated.add(category);
+		TasksUiPlugin.getTaskListManager().getTaskList().notifyContainersUpdated(updated);
+//		.notifyContainerUpdated(category);
 	}
 	
 }

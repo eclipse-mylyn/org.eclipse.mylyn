@@ -80,7 +80,6 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -89,6 +88,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -286,27 +286,20 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 		}
 	};
 
+
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
-		public void containerAdded(AbstractTaskContainer container) {
-		}
-
-		public void containerDeleted(AbstractTaskContainer container) {
-		}
-
-		public void containerInfoChanged(AbstractTaskContainer container) {
-		}
-
-		public void localInfoChanged(AbstractTask task) {
-		}
-
-		public void repositoryInfoChanged(final AbstractTask task) {
-
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-				public void run() {
-
-					if (repositoryTask != null && task.equals(repositoryTask)) {
+		public void containersChanged(Set<TaskContainerDelta> containers) {
+			AbstractTask task = null;
+			for (TaskContainerDelta taskContainerDelta : containers) {
+				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getContainer())) {
+					task = (AbstractTask)taskContainerDelta.getContainer();
+					break;
+				}
+			}
+			if (task != null) {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
 						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
 								|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
 							// MessageDialog.openInformation(AbstractTaskEditor.this.getSite().getShell(),
@@ -326,20 +319,11 @@ public abstract class AbstractTaskEditor extends TaskFormPage {
 							refreshEditor();
 						}
 					}
-				}
-			});
-
-		}
-
-		public void taskAdded(AbstractTask task) {
-		}
-
-		public void taskDeleted(AbstractTask task) {
-		}
-
-		public void taskMoved(AbstractTask task, AbstractTaskContainer fromContainer, AbstractTaskContainer toContainer) {
+				});
+			}	
 		}
 	};
+	
 
 	private List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 

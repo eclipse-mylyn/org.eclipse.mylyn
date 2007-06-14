@@ -23,11 +23,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -234,7 +233,7 @@ public class TaskEditor extends SharedHeaderFormEditor implements IBusyEditor {
 
 	public void notifyTaskChanged() {
 		if (task != null) {
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyLocalInfoChanged(task);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task);
 		}
 	}
 

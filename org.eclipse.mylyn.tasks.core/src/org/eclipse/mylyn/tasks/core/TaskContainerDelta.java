@@ -11,16 +11,33 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Set;
-
 
 /**
- * Listener for task list modifications and task content modifications.
+ * Immutable.
  * 
  * @author Mik Kersten
  */
-public interface ITaskListChangeListener {
+public final class TaskContainerDelta {
 
-	public abstract void containersChanged(Set<TaskContainerDelta> containers);
+	public enum Kind {
+		ADDED, REMOVED, CHANGED
+	}
+
+	private final AbstractTaskContainer container;
+	
+	private final Kind kind;
+	
+	public TaskContainerDelta(AbstractTaskContainer container, Kind kind) {
+		this.container = container;
+		this.kind = kind;
+	}
+
+	public AbstractTaskContainer getContainer() {
+		return container;
+	}
+
+	public Kind getKind() {
+		return kind;
+	}
 	
 }

@@ -59,13 +59,13 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public Object getParent(Object child) {
-		if (child instanceof AbstractTask) {
+//		if (child instanceof AbstractTask) {
 //			if (((ITask) child).getParent() != null) {
 //				return ((ITask) child).getParent();
 //			} else {
-			return ((AbstractTask) child).getCategory();
+//			return ((AbstractTask) child).getCategory();
 //			}
-		}
+//		}
 		return null;
 	}
 

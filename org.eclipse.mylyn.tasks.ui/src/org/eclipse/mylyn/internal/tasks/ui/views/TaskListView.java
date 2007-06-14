@@ -92,11 +92,10 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -192,8 +191,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			PriorityLevel.P3.toString(), PriorityLevel.P4.toString(), PriorityLevel.P5.toString() };
 
 	public static final String[] PRIORITY_LEVEL_DESCRIPTIONS = { PriorityLevel.P1.getDescription(),
-			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(),
-			PriorityLevel.P4.getDescription(), PriorityLevel.P5.getDescription() };
+			PriorityLevel.P2.getDescription(), PriorityLevel.P3.getDescription(), PriorityLevel.P4.getDescription(),
+			PriorityLevel.P5.getDescription() };
 
 	private static final String PART_NAME = "Task List";
 
@@ -342,7 +341,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final Listener CATEGORY_GRADIENT_DRAWER = new Listener() {
 		public void handleEvent(Event event) {
-			if (event.item.getData() instanceof AbstractTaskContainer && !(event.item.getData() instanceof AbstractTask)) {
+			if (event.item.getData() instanceof AbstractTaskContainer
+					&& !(event.item.getData() instanceof AbstractTask)) {
 				Scrollable scrollable = (Scrollable) event.widget;
 				GC gc = event.gc;
 
@@ -454,99 +454,133 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {
 
-		public void localInfoChanged(final AbstractTask task) {
+		public void containersChanged(final Set<TaskContainerDelta> containers) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					if (getCurrentPresentation().getPresentationName().equals(
-							scheduledPresentation.getPresentationName())) {
+					if (containers == null) {
 						refresh(null);
-					} else {
-						refresh(task);
+						return;
 					}
-				}
-			});
-			if (task.isActive()) {
-				String activeTaskLabel = filteredTree.getActiveTaskLabelText();
-				if (activeTaskLabel != null && !activeTaskLabel.equals(task.getSummary())) {
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							filteredTree.indicateActiveTask(task);
+					
+					for (TaskContainerDelta taskContainerDelta : containers) {
+						if (taskContainerDelta.getContainer() instanceof AbstractTask) {
+							AbstractTask task = (AbstractTask)taskContainerDelta.getContainer();
+							switch (taskContainerDelta.getKind()) {
+							case ADDED:
+								refresh(null);
+								break;
+							case REMOVED:
+								refresh(null);
+								break;
+							case CHANGED:
+								refresh(task);
+							}							
+						} else { // category or query
+							switch (taskContainerDelta.getKind()) {
+							case ADDED:
+								refresh(null);
+								break;
+							case REMOVED:
+								refresh(null);
+								break;
+							case CHANGED:
+								if (getCurrentPresentation().getPresentationName().equals(
+										scheduledPresentation.getPresentationName())) {
+									refresh(null);
+								} else {
+									if (taskContainerDelta.getContainer().equals(TasksUiPlugin.getTaskListManager()
+											.getTaskList()
+											.getAutomaticCategory())) {
+										refresh(null);
+									} else {
+										refresh(taskContainerDelta.getContainer());
+									}
+								}
+							}
 						}
-					});
-				}
-			}
-		}
-
-		public void repositoryInfoChanged(AbstractTask task) {
-			localInfoChanged(task);
-		}
-
-		public void taskMoved(final AbstractTask task, final AbstractTaskContainer fromContainer,
-				final AbstractTaskContainer toContainer) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					// category might appear or disappear
-					refresh(null);
-					AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-							.getAutomaticCategory();
-					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
-						refresh(null);
-					} else {
-						refresh(toContainer);
-						refresh(task);
-						refresh(fromContainer);
 					}
 				}
 			});
 		}
+		
+//		public void localInfoChanged(final AbstractTask task) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					if (getCurrentPresentation().getPresentationName().equals(
+//							scheduledPresentation.getPresentationName())) {
+//						refresh(null);
+//					} else {
+//						refresh(task);
+//					}
+//				}
+//			});
+//			if (task.isActive()) {
+//				String activeTaskLabel = filteredTree.getActiveTaskLabelText();
+//				if (activeTaskLabel != null && !activeTaskLabel.equals(task.getSummary())) {
+//					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//						public void run() {
+//							filteredTree.indicateActiveTask(task);
+//						}
+//					});
+//				}
+//			}
+//		}
 
-		public void taskDeleted(AbstractTask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(null);
-				}
-			});
-		}
+//		public void repositoryInfoChanged(AbstractTask task) {
+//			localInfoChanged(task);
+//		}
 
-		public void containerAdded(AbstractTaskContainer container) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(null);
-				}
-			});
-		}
+//		public void taskMoved(final AbstractTask task, final AbstractTaskContainer fromContainer,
+//				final AbstractTaskContainer toContainer) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					// category might appear or disappear
+//					refresh(null);
+//					AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager()
+//							.getTaskList()
+//							.getAutomaticCategory();
+//					if (rootCategory.equals(fromContainer) || rootCategory.equals(toContainer)) {
+//						refresh(null);
+//					} else {
+//						refresh(toContainer);
+//						refresh(task);
+//						refresh(fromContainer);
+//					}
+//				}
+//			});
+//		}
 
-		public void containerDeleted(AbstractTaskContainer container) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(null);
-				}
-			});
-		}
+//		public void taskDeleted(AbstractTask task) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					refresh(null);
+//				}
+//			});
+//		}
 
-		public void taskAdded(AbstractTask task) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(null);
-				}
-			});
-		}
+//		public void containerAdded(AbstractTaskContainer container) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					refresh(null);
+//				}
+//			});
+//		}
+//
+//		public void containerDeleted(AbstractTaskContainer container) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					refresh(null);
+//				}
+//			});
+//		}
 
-		public void containerInfoChanged(final AbstractTaskContainer container) {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					if (container == null) {
-						// HACK: should be part of policy
-						getViewer().refresh(false);
-					} else if (container.equals(TasksUiPlugin.getTaskListManager().getTaskList()
-							.getAutomaticCategory())) {
-						refresh(null);
-					} else {
-						refresh(container);
-					}
-				}
-			});
-		}
+//		public void taskAdded(AbstractTask task) {
+//			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+//				public void run() {
+//					refresh(null);
+//				}
+//			});
+//		}
 	};
 
 	private final IPropertyChangeListener THEME_CHANGE_LISTENER = new IPropertyChangeListener() {
@@ -554,7 +588,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			if (event.getProperty().equals(IThemeManager.CHANGE_CURRENT_THEME)
 					|| TaskListColorsAndFonts.isTaskListTheme(event.getProperty())) {
 				configureGradientColors();
-				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme().getColorRegistry()
+				taskListTableLabelProvider.setCategoryBackgroundColor(themeManager.getCurrentTheme()
+						.getColorRegistry()
 						.get(TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY));
 				getViewer().refresh();
 			}
@@ -786,8 +821,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
+		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 
 		CellEditor[] editors = new CellEditor[columnNames.length];
@@ -851,7 +886,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 					}
 				} else if ((e.keyCode & SWT.KEYCODE_BIT) != 0) {
 					// Do nothing here since it is key code
-				}  else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
+				} else if (e.keyCode == 'c' && e.stateMask == SWT.MOD1) {
 					copyDetailsAction.run();
 				} else if (e.keyCode == SWT.DEL) {
 					deleteAction.run();
@@ -1259,10 +1294,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				action.setEnabled(true);
 			} else if (action instanceof RenameAction) {
 				if (element instanceof AbstractTaskCategory) {
-					AbstractTaskCategory container = (AbstractTaskCategory)element;
+					AbstractTaskCategory container = (AbstractTaskCategory) element;
 					action.setEnabled(container.isUserDefined());
 				} else if (element instanceof AbstractRepositoryQuery) {
-					action.setEnabled(true);	
+					action.setEnabled(true);
 				}
 			}
 		} else {
@@ -1326,15 +1361,14 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	/**
-	 * Recursive function that checks for the occurrence of a certain task
-	 * taskId. All children of the supplied node will be checked.
+	 * Recursive function that checks for the occurrence of a certain task taskId. All children of the supplied node
+	 * will be checked.
 	 * 
 	 * @param task
 	 *            The <code>ITask</code> object that is to be searched.
 	 * @param taskId
 	 *            The taskId that is being searched for.
-	 * @return <code>true</code> if the taskId was found in the node or any of
-	 *         its children
+	 * @return <code>true</code> if the taskId was found in the node or any of its children
 	 */
 	protected boolean lookForId(String taskId) {
 		return (TasksUiPlugin.getTaskListManager().getTaskList().getTask(taskId) == null);
@@ -1520,8 +1554,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		isPaused = paused;
 		IStatusLineManager statusLineManager = getViewSite().getActionBars().getStatusLineManager();
 		if (isPaused) {
-			statusLineManager
-					.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylar context capture paused");
+			statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST), "Mylar context capture paused");
 			setPartName("(paused) " + PART_NAME);
 		} else {
 			statusLineManager.setMessage("");
@@ -1598,47 +1631,34 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private void refresh(final AbstractTaskContainer element) {
 		if (getViewer().getControl() != null && !getViewer().getControl().isDisposed()) {
 			if (element == null) {
-				try {
-					// getViewer().getControl().setRedraw(false);
-					getViewer().refresh(true);
-				} finally {
-					// getViewer().getControl().setRedraw(true);
-				}
+				getViewer().refresh(true);
 			} else {
 				try {
 					if (element instanceof AbstractTask) {
 						AbstractTask task = (AbstractTask) element;
-						AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager().getTaskList()
-								.getAutomaticCategory();
-						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager().getTaskList()
-								.getQueriesForHandle(task.getHandleIdentifier());
-						if (task.getCategory() == null || task.getCategory().equals(rootCategory)
-								|| (task instanceof AbstractTask && queries.isEmpty())) {
-							// || task.getContainer() instanceof TaskArchive) {
-							refresh(null);
-						} else {
-							getViewer().refresh(task.getCategory(), true);
-							// refresh(task.getContainer());
-						}
-
-// AbstractQueryHit hit =
-// TasksUiPlugin.getTaskListManager().getTaskList().getQueryHit(
-// task.getHandleIdentifier());
-// if (hit != null) {
-// refresh(hit);
-// }
-// } else if (element instanceof AbstractQueryHit) {
-// AbstractQueryHit hit = (AbstractQueryHit) element;
-						queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
-								task.getHandleIdentifier());
-						for (AbstractRepositoryQuery query : queries) {
-							refresh(query);
-						}
-					} else if (element instanceof AbstractTaskContainer) {
-						getViewer().refresh(element, true);
+						getViewer().refresh(task, true);
+//						AbstractTaskContainer rootCategory = TasksUiPlugin.getTaskListManager()
+//								.getTaskList()
+//								.getAutomaticCategory();
+//						Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
+//								.getTaskList()
+//								.getQueriesForHandle(task.getHandleIdentifier());
+//						if (task.getCategory() == null || task.getCategory().equals(rootCategory)
+//								|| (task instanceof AbstractTask && queries.isEmpty())) {
+//							// || task.getContainer() instanceof TaskArchive) {
+//							refresh(null);
+//						} else {
+//							getViewer().refresh(task.getCategory(), true);
+//							// refresh(task.getContainer());
+//						}
+//						queries = TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
+//								task.getHandleIdentifier());
+//						for (AbstractRepositoryQuery query : queries) {
+//							refresh(query);
+//						}
 					} else {
 						getViewer().refresh(element, true);
-					}
+					} 
 				} catch (SWTException e) {
 					MylarStatusHandler.log(e, "Failed to refresh Task List");
 				}
@@ -1660,8 +1680,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public static String getCurrentPriorityLevel() {
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_PRIORITY)) {
-			return TasksUiPlugin.getDefault().getPreferenceStore().getString(
-					TasksUiPreferenceConstants.FILTER_PRIORITY);
+			return TasksUiPlugin.getDefault()
+					.getPreferenceStore()
+					.getString(TasksUiPreferenceConstants.FILTER_PRIORITY);
 		} else {
 			return PriorityLevel.P5.toString();
 		}
