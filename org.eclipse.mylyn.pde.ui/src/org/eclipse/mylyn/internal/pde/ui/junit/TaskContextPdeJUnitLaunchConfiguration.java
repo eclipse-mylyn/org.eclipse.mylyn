@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.ui.junit;
+package org.eclipse.mylyn.internal.pde.ui.junit;
 
 import java.util.Set;
 
@@ -19,6 +19,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.mylyn.internal.java.ui.junit.InteractionContextTestUtil;
 import org.eclipse.pde.ui.launcher.JUnitLaunchConfigurationDelegate;
 import org.eclipse.ui.PlatformUI;
 

@@ -9,13 +9,14 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.java.ui.junit;
+package org.eclipse.mylyn.internal.pde.ui.junit;
 
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.EnvironmentTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
+import org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitMainTab;
 import org.eclipse.pde.ui.launcher.ConfigurationTab;
 import org.eclipse.pde.ui.launcher.JUnitTabGroup;
 import org.eclipse.pde.ui.launcher.PluginJUnitMainTab;
@@ -37,7 +38,7 @@ public class TaskContextPdeJUnitTabGroup extends JUnitTabGroup {
 				new TaskContextJUnitMainTab(true),
 //				new JUnitLaunchConfigurationTab(),
 				new PluginJUnitMainTab(), 
-				new JavaArgumentsTab(),
+				new JavaArgumentsTab(), 
 				new PluginsTab(false),	
 				new ConfigurationTab(true), 
 				new TracingTab(),

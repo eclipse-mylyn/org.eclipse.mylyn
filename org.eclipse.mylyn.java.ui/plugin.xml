@@ -210,7 +210,7 @@
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             name="Task Context Plug-in Test"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
-            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
+            delegate="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
             modes="run, debug"
             id="org.eclipse.mylyn.pde.junit.launchconfig">
          <fileExtension
@@ -264,7 +264,7 @@
       <launchConfigurationTabGroup
             type="org.eclipse.mylyn.pde.junit.launchconfig"
             helpContextId="org.eclipse.jdt.junit.junit_tab_group"
-            class="org.eclipse.mylyn.internal.java.ui.junit.TaskContextPdeJUnitTabGroup"
+            class="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitTabGroup"
             id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
          <launchMode
                perspective="org.eclipse.debug.ui.DebugPerspective"

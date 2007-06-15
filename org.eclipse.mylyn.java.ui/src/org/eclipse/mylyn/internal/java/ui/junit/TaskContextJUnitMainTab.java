@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Label;
 /**
  * @author Mik Kersten
  */
-class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
+public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 
 	private static final String DESCRIPTION = "Subclasses of TestCase in the active task context automatically added to suite.";
 
