@@ -86,7 +86,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		GridLayout gridLayout = new GridLayout(4, false);
+		GridLayout gridLayout = new GridLayout(5, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 2;
 		gridLayout.verticalSpacing = 0;

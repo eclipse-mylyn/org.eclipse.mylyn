@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -163,6 +165,10 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	@Override
 	protected Composite createStatusComposite(Composite container) {
 
+		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
+		manager.add(new TaskWorkingSetAction());
+		manager.createControl(container);
+		
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
