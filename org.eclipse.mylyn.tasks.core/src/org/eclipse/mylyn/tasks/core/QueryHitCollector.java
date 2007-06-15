@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
  * Collects QueryHits resulting from repository search
@@ -48,6 +49,7 @@ public class QueryHitCollector implements ITaskCollector {
 		AbstractTask existingTask = taskList.getTask(task.getHandleIdentifier());
 		if (existingTask == null) {
 			task.setStale(true);
+			task.setSyncState(RepositoryTaskSyncState.INCOMING);
 		} else {
 			// preserve meta attributes of existing task
 			task.setLastSyncDateStamp(existingTask.getLastSyncDateStamp());

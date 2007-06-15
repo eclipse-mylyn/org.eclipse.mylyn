@@ -18,6 +18,8 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
  */
 public class LocalTask extends AbstractTask {
 
+	public static final String SYNC_DATE_NOW = "now";
+
 	public LocalTask(String taskId, String summary) {
 		super(LocalRepositoryConnector.REPOSITORY_URL, taskId, summary);
 	}
@@ -37,7 +39,7 @@ public class LocalTask extends AbstractTask {
 	}
 	
 	public String getLastSyncDateStamp() {
-		return "now";
+		return SYNC_DATE_NOW;
 	}
 	
 	public String getOwner() {

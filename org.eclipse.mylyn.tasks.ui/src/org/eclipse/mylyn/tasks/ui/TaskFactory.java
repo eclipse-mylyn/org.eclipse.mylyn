@@ -18,6 +18,7 @@ import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
  * Interim factory
@@ -67,9 +68,8 @@ public class TaskFactory implements ITaskFactory {
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
-
 			repositoryTask = connector.createTaskFromTaskData(repository, taskData, true, monitor);
-
+			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
 				synchManager.saveIncoming(repositoryTask, taskData, forced);

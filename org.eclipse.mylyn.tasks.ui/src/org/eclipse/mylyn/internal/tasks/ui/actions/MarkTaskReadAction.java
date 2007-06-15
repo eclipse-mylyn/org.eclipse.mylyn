@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -37,7 +38,7 @@ public class MarkTaskReadAction extends AbstractTaskAction {
 			setEnabled(selectedElements.size() > 0);
 			if (selectedElements.size() == 1 && (selectedElements.get(0) instanceof AbstractTask)) {
 				AbstractTask task = (AbstractTask) selectedElements.get(0);
-				setEnabled(!task.isLocal());
+				setEnabled(!(task instanceof LocalTask));
 			} else {
 				setEnabled(true);
 			}
