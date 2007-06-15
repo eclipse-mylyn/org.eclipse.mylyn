@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.java.ui.wizards;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,12 +34,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 public class RecommendedPreferencesWizardPage extends WizardPage {
 
 	private static final String DESCRIPTION = 
-		"Configures Mylar preferences to the recommended defaults. To alter these\n"
-      + "re-invoke this wizard via the File -> New menu.";
+		"You have activated a task for the first time.\n" +
+		"The following Java preferences are recommended for the Task-Focused UI.\n";
 
 	private static final String AUTO_FOLDING = "Turn automatic Java editor folding on";
-
-	private static final String AUTO_CLOSE = "Automatically manage open editors to match task context";
 
 	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist, requires Eclipse restart.";
 
@@ -51,13 +48,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 	private Button turnOnAutoFoldingButton;
 
 	private boolean autoFolding = true;
-
-	// TODO: remove
-	private boolean createWorkingSet = false;
-
-	private Button closeEditorsOnDeactivationButton;
-
-	private boolean closeEditors = true;
 
 	private boolean openTaskList = true;
 
@@ -122,32 +112,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("Toggle via toolbar button ");
 		
-		
-		closeEditorsOnDeactivationButton = new Button(buttonComposite, SWT.CHECK);
-		gd = new GridData();
-		closeEditorsOnDeactivationButton.setLayoutData(gd);
-		closeEditorsOnDeactivationButton.setSelection(true);
-		closeEditorsOnDeactivationButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				closeEditors = closeEditorsOnDeactivationButton.getSelection();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// don't care about this event
-			}
-		});
-		
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setText(AUTO_CLOSE);
-		gd = new GridData();
-		label.setLayoutData(gd);
-
-		label = new Label(buttonComposite, SWT.NONE);
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-		label.setText("Toggle via Mylyn preferences page ");
-		
 //		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
 //		gd = new GridData();
 //		addMylarActiveWorkingSetButton.setSelection(true);
@@ -181,7 +145,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
 		hyperlink.setUnderlined(true);
 		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
-		hyperlink.setText("If this is your first time using Mylyn please watch the short Getting Started video");
+		hyperlink.setText("If this is your first time using Mylyn please watch the Getting Started video");
 
 		label = new Label(containerComposite, SWT.NONE);
 		label.setText("For a legend of the icons used by Mylyn open: Help (menu) -> Mylyn UI Legend");
@@ -202,19 +166,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 				// ignore
 			}
 		});
-		
-//		Composite browserComposite = new Composite(containerComposite, SWT.NULL);
-//		browserComposite.setLayout(new GridLayout());
-//		try {
-//			Browser browser = new Browser(browserComposite, SWT.NONE);
-//			browser.setText(htmlDocs);
-//			GridData browserLayout = new GridData(GridData.FILL_HORIZONTAL);
-//			browserLayout.heightHint = 100;
-//			browserLayout.widthHint = 600;
-//			browser.setLayoutData(browserLayout);
-//		} catch (Throwable t) {
-//			// fail silently if there is no browser
-//		}
 
 		setControl(containerComposite);
 	}
@@ -223,16 +174,8 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		return autoFolding;
 	}
 
-	public boolean closeEditors() {
-		return closeEditors;
-	}
-
 	public boolean isMylarContentAssistDefault() {
 		return contentAssistButton.getSelection();
-	}
-
-	public boolean isCreateWorkingSet() {
-		return createWorkingSet;
 	}
 
 	public boolean isOpenTaskList() {

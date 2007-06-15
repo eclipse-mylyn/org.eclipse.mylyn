@@ -253,15 +253,6 @@ public class ContextCorePlugin extends Plugin {
 		ContextCorePlugin.contextStore = contextStore;
 	}
 
-	public boolean suppressWizardsOnStartup() {
-		List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
-		if (commandLineArgs.contains("-showmylarwizards")) {
-			return false;
-		} else {
-			return commandLineArgs.contains("-pdelaunch");
-		}
-	}
-
 	/**
 	 * TODO: remove
 	 */

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui;
 
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -19,6 +20,10 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.context.core.IInteractionContext;
+import org.eclipse.mylyn.context.core.IInteractionContextListener;
+import org.eclipse.mylyn.context.core.IInteractionElement;
+import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
@@ -38,7 +43,7 @@ import org.osgi.framework.BundleContext;
  */
 public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.java";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.java.ui";
 
 	private static JavaUiBridgePlugin INSTANCE;
 
@@ -59,7 +64,54 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
 	@Deprecated
-	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.interest.prediction.errors";
+	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.ui.interest.prediction.errors";
+	
+	private final IInteractionContextListener PREFERENCES_WIZARD_LISTENER = new IInteractionContextListener() {
+
+		public void contextActivated(IInteractionContext context) {
+			if (!getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
+				JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
+				if (!MonitorUiPlugin.getDefault().suppressConfigurationWizards()) {
+					RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
+					Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+					if (wizard != null && shell != null && !shell.isDisposed()) {
+						WizardDialog dialog = new WizardDialog(shell, wizard);
+						dialog.create();
+						dialog.open();
+						getPreferenceStore().putValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, "false");
+					}
+				}
+			}
+		}
+
+		public void contextCleared(IInteractionContext context) {
+			// ignore
+		}
+
+		public void contextDeactivated(IInteractionContext context) {
+			// ignore
+		}
+
+		public void elementDeleted(IInteractionElement element) {
+			// ignore
+		}
+
+		public void interestChanged(List<IInteractionElement> elements) {
+			// ignore
+		}
+
+		public void landmarkAdded(IInteractionElement element) {
+			// ignore
+		}
+
+		public void landmarkRemoved(IInteractionElement element) {
+			// ignore
+		}
+
+		public void relationsChanged(IInteractionElement element) {
+			// ignore
+		}
+	};
 	
 	public JavaUiBridgePlugin() {
 		super();
@@ -78,7 +130,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-//					ContextCorePlugin.getContextManager().addListener(packageExplorerManager);
+					ContextCorePlugin.getContextManager().addListener(PREFERENCES_WIZARD_LISTENER);
 					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
 					
 					try {
@@ -97,22 +149,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 					javaEditingMonitor = new JavaEditingMonitor();
 					MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
-
-					if (!getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
-						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);
-					}
-
-					if (!ContextCorePlugin.getDefault().suppressWizardsOnStartup()
-							&& !getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
-						RecommendedPreferencesWizard wizard = new RecommendedPreferencesWizard();
-						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-						if (wizard != null && shell != null && !shell.isDisposed()) {
-							WizardDialog dialog = new WizardDialog(shell, wizard);
-							dialog.create();
-							dialog.open();
-							getPreferenceStore().putValue(RecommendedPreferencesWizard.MYLAR_FIRST_RUN, "false");
-						}
-					}
 
 					JavaCore.addElementChangedListener(javaElementChangeListener);
 				} catch (Throwable t) {
@@ -134,22 +170,12 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			INSTANCE = null;
 			resourceBundle = null;
 
-//			ContextCorePlugin.getContextManager().removeListener(packageExplorerManager);
+			ContextCorePlugin.getContextManager().removeListener(PREFERENCES_WIZARD_LISTENER);
 			ContextCorePlugin.getContextManager().removeListener(typeHistoryManager);
 			ContextCorePlugin.getContextManager().removeListener(landmarkMarkerManager);
 
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(javaEditingMonitor);
 
-//			if (FocusPackageExplorerAction.getDefault() != null) {
-//				getPreferenceStore().removePropertyChangeListener(FocusPackageExplorerAction.getDefault());
-//			}
-
-//			if (PlatformUI.getWorkbench() != null && !PlatformUI.getWorkbench().isClosing()) {
-//				for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
-//					ISelectionService service = w.getSelectionService();
-//					service.removePostSelectionListener(packageExplorerManager);
-//				}
-//  		}
 			JavaCore.removeElementChangedListener(javaElementChangeListener);
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
