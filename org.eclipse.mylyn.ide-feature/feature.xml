@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.ide_feature"
-      label="Mylar Focused UI (Recommended)"
-      version="2.0.0.v20070607-1200"
+      label="Mylyn Focused UI (Recommended)"
+      version="2.0.0.v20070614-1800"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -214,7 +214,7 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylar for Eclipse 3.3" url="http://download.eclipse.org/technology/mylar/update-site/e3.3"/>
+      <update label="Mylyn for Eclipse 3.3" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
    </url>
 
    <requires>
@@ -225,35 +225,35 @@ litigation.
          id="org.eclipse.mylyn.context.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.ide.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.web.tasks"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.resources.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
 </feature>
