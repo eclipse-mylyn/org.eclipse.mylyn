@@ -29,7 +29,7 @@ public class TaskFocusedUiPreferencePage extends PreferencePage implements IWork
 		container.setLayout(layout);
 
 		Label label = new Label(container, SWT.NULL);
-		label.setText("Please select a preference page below \"Mylar\".");
+		label.setText("Please select a preference page below \"Mylyn\".");
 		
 		return container;
 	}

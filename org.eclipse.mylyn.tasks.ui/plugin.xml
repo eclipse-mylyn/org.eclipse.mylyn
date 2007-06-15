@@ -45,7 +45,7 @@
    </extension>
 
 	<extension point="org.eclipse.ui.views">
-      <category name="Task Management" id="org.eclipse.mylyn.ui"/>
+      <category name="Mylyn" id="org.eclipse.mylyn.ui"/>
       <view
          allowMultiple="true"
          category="org.eclipse.mylyn.ui"
@@ -429,7 +429,7 @@
 
   <extension point="org.eclipse.ui.preferencePages">
 	  <page
-            name="Task-Focused UI"
+            name="Mylyn"
             class="org.eclipse.mylyn.internal.tasks.ui.preferences.TaskFocusedUiPreferencePage"
             id="org.eclipse.mylyn.ui.preferences">
             <keywordReference id="org.eclipse.mylyn.tasks.keywords"/>

@@ -74,6 +74,8 @@ public class TasksUiImages {
 			"task-repository-completed.gif");
 
 	public static final ImageDescriptor TASK_REMOTE = create(T_TOOL, "task-remote.gif");
+	
+	public static final ImageDescriptor TASK_WORKING_SET = create(T_TOOL, "open-task.gif");
 
 	public static final ImageDescriptor TASKLIST = create("eview16", "task-list.gif");
 
