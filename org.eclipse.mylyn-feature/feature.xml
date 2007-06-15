@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn_feature"
-      label="Mylar Task List (Required)"
-      version="2.0.0.v20070607-1200"
+      label="Mylyn Task List (Required)"
+      version="2.0.0.v20070614-1800"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -214,60 +214,82 @@ litigation.
    </license>
 
    <url>
-      <update label="Mylar for Eclipse 3.3" url="http://download.eclipse.org/technology/mylar/update-site/e3.3"/>
+      <update label="Mylyn for Eclipse 3.3" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
    </url>
 
    <requires>
       <import plugin="org.eclipse.ui" version="3.3.0.I20070503" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.mylyn.tasks.core"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui"/>
+      <import plugin="org.eclipse.mylyn"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.cheatsheets"/>
+      <import plugin="org.eclipse.ui.intro"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.eclipse.mylyn.web.core"/>
+      <import plugin="org.eclipse.mylyn.monitor.core"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.mylyn.context.core"/>
+      <import plugin="org.eclipse.update.core"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ui.net"/>
    </requires>
 
    <plugin
          id="org.eclipse.mylyn.help.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.context.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.monitor.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.tasks.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.monitor.core"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070607-1200"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
 </feature>
