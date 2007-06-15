@@ -69,10 +69,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			}
 			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind);
 		} else if (element instanceof AbstractTaskContainer) {
-//			if (compositeDescriptor.overlaySynch == null) {
-//				compositeDescriptor.overlaySynch = TasksUiImages.OVERLAY_BLANK;
-//			}
-			return TasksUiImages.getCompositeContainerImage(compositeDescriptor.icon);
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, TasksUiImages.OVERLAY_BLANK);
 		} else {
 			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null);
 		}
