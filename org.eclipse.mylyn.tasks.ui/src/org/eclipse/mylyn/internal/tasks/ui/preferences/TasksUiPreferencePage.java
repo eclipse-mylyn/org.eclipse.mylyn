@@ -90,8 +90,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button backupNow = null;
 
 	private Button notificationEnabledButton = null;
-
-	private Button incomingOverlaysButton = null;
 	
 	private Text backupScheduleTimeText;
 
@@ -121,7 +119,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		
 		createTaskRefreshScheduleGroup(container);
-		createNotificationsGroup(container);
 		createSchedulingGroup(container);
 		createOpenWith(container);
 		createTaskDataControl(container);
@@ -133,7 +130,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
-
+	
 	@Override
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
@@ -170,15 +167,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		backupNow.setEnabled(true);
-		
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT,
-				incomingOverlaysButton.getSelection());
-		TaskListView view = TaskListView.getFromActivePerspective();
-		if (view != null) {
-			view.setSynchronizationOverlaid(incomingOverlaysButton.getSelection());
-		}
-		
+		backupNow.setEnabled(true);		
 		return true;
 	}
 
@@ -435,17 +424,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPlugin.getDefault().getBackupManager().backupNow(true);
 			}
 		});
-	}
-
-	private void createNotificationsGroup(Composite parent) {
-		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		group.setText("Layout");
-		group.setLayout(new GridLayout(1, false));
-		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		incomingOverlaysButton = new Button(group, SWT.CHECK);
-		incomingOverlaysButton.setText("Use Synchronize View style incoming overlays and placement");
-		incomingOverlaysButton.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.OVERLAYS_INCOMING_TIGHT));
 	}
 
 	private void createSchedulingGroup(Composite container) {
