@@ -4,7 +4,7 @@
 <plugin>
 	<extension
          id="org.eclipse.mylyn.helpDocs"
-         name="Task-Focused UI"
+         name="Mylyn"
          point="org.eclipse.help.toc">
       <toc
             file="doc/toc.xml"
@@ -33,14 +33,14 @@
    <extension point="org.eclipse.ui.commands">
    <category
          id="org.eclipse.mylyn.doc.commands"
-         name="Task-Focused UI Documentation">
+         name="Mylyn Help">
    </category>
 	  <command
          category="org.eclipse.mylyn.doc.commands"
          categoryId="org.eclipse.mylyn.doc.commands"
          description="Show Mylyn UI Legend"
          id="org.eclipse.mylyn.doc.legend.show"
-         name="Task-Focused UI Legend">
+         name="Show Mylyn UI Legend">
       </command>
    </extension>
   
@@ -71,24 +71,24 @@
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="org.eclipse.mylyn.cheatsheet"
-            name="Task-Focused UI">
+            name="Mylyn">
       </category>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"
             contentFile="cheatsheets/Query.xml"
             id="org.eclipse.mylyn.cheatsheet.query"
-            name="Create a query from bugs.eclipse.org">
+            name="Create a task repository query">
          <description>
-            Learn how to create a query from bugs.eclipse.org
+            Learn how to work with task and queries using the Task List
          </description>
       </cheatsheet>
       <cheatsheet
             category="org.eclipse.mylyn.cheatsheet"
             contentFile="cheatsheets/TaskFocus.xml"
             id="org.eclipse.mylyn.cheatsheet.taskfocus"
-            name="Use Task-Focused UI">
+            name="Work with task context">
          <description>
-            Learn how to use Task-Focused UI
+            Learn how to activate tasks and use the Task-Focused UI
          </description>
       </cheatsheet>
    </extension> 

@@ -612,7 +612,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.eclipse.mylyn.tasks.ui.navigation"
-            label="Task Navigation"
+            label="Mylyn Task Navigation"
             visible="true">
 		<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.DeactivateAllTasksAction"
