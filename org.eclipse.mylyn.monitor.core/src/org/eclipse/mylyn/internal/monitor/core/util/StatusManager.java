@@ -9,24 +9,25 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.core;
+package org.eclipse.mylyn.internal.monitor.core.util;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.internal.runtime.InternalPlatform;
+import org.eclipse.core.internal.runtime.PlatformActivator;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.web.core.WebCorePlugin;
 
 /**
  * @author Mik Kersten
  */
-public class MylarStatusHandler {
-
-	// private static boolean testingMode = false;
+@Deprecated
+public class StatusManager {
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
-	
+
 	private static Set<IStatusHandler> handlers = new HashSet<IStatusHandler>();
 
 	public static void addStatusHandler(IStatusHandler handler) {
@@ -44,8 +45,12 @@ public class MylarStatusHandler {
 	 *            status to log
 	 */
 	public static void log(IStatus status) {
-		if (WebCorePlugin.getDefault() != null) {
-			WebCorePlugin.getDefault().getLog().log(status);
+		if (InternalPlatform.getDefault() != null && PlatformActivator.getContext() != null) {
+//			InternalPlatform.getDefault().log(status);
+			ILog log = InternalPlatform.getDefault().getLog(PlatformActivator.getContext().getBundle());
+			if (log != null) {
+				log.log(status);
+			}
 		}
 	}
 

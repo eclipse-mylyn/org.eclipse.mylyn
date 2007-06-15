@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.core;
+package org.eclipse.mylyn.internal.monitor.core.util;
 
 import org.eclipse.core.runtime.IStatus;
 

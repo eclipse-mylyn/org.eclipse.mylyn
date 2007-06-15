@@ -27,7 +27,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 
 /**
  * Contains utility methods for working with zip files
@@ -155,7 +154,7 @@ public class ZipFileUtil {
 					monitor.worked(1);
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Could not add " + file.getName() + " to zip");
+				StatusManager.log(e, "Could not add " + file.getName() + " to zip");
 			}
 		}
 

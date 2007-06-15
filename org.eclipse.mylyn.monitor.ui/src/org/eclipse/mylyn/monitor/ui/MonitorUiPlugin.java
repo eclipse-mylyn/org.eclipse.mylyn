@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.IInteractionEventListener;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IPageListener;
@@ -125,7 +125,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					activityContextManager = new ActivityContextManager(TIMEOUT_INACTIVITY_MILLIS, activityMonitor);
 					activityContextManager.start();
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Mylar Monitor start failed", false);
+					StatusManager.fail(e, "Mylar Monitor start failed", false);
 				}
 			}
 		});
@@ -148,7 +148,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Monitor stop failed", false);
+			StatusManager.fail(e, "Mylar Monitor stop failed", false);
 		}
 		INSTANCE = null;
 	}
@@ -281,7 +281,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "could not read monitor extension", false);
+				StatusManager.fail(t, "could not read monitor extension", false);
 			}
 		}
 
@@ -294,7 +294,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					}
 				}
 			} catch (CoreException throwable) {
-				MylarStatusHandler.log(throwable, "could not load activity timer");
+				StatusManager.log(throwable, "could not load activity timer");
 			}
 		}
 	}

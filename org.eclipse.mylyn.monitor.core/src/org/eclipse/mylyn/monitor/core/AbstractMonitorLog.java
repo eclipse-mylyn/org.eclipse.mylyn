@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -45,7 +45,7 @@ public class AbstractMonitorLog {
 				outputFile.createNewFile();
 			outputStream = new FileOutputStream(outputFile, true);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not resolve log to file: " + outputFile.getAbsolutePath(), true);
+			StatusManager.fail(e, "could not resolve log to file: " + outputFile.getAbsolutePath(), true);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class AbstractMonitorLog {
 			}
 			started = false;
 		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "could not close interaction event stream", false);
+			StatusManager.fail(e, "could not close interaction event stream", false);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class AbstractMonitorLog {
 			}
 			this.outputFile = newFile;
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not set logger output file", true);
+			StatusManager.fail(e, "Could not set logger output file", true);
 		}
 		startMonitoring();
 		return newFile;

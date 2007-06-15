@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
@@ -110,7 +110,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 				return ((BrowserViewer) browserObject).getBrowser();
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "could not add browser listener");
+			StatusManager.log(e, "could not add browser listener");
 		}
 		return null;
 	}

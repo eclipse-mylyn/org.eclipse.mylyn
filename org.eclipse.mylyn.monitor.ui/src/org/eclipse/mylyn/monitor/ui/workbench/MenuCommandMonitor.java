@@ -14,7 +14,7 @@ package org.eclipse.mylyn.monitor.ui.workbench;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
@@ -96,7 +96,7 @@ public class MenuCommandMonitor implements Listener {
 			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not log selection", false);
+			StatusManager.fail(t, "Could not log selection", false);
 		}
 	}
 
