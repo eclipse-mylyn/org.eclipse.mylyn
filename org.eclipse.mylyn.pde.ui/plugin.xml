@@ -20,6 +20,59 @@
 	        parentContentType="resource"/>
 	</extension>
 	
-	
+	<extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            name="Task Context Test"
+            delegate="org.eclipse.mylyn.internal.java.ui.junit.TaskContextJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylyn.java.junit.launchconfig"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+         <fileExtension
+               default="false"
+               extension="java">
+         </fileExtension>
+         <fileExtension
+               default="false"
+               extension="class">
+         </fileExtension>
+      </launchConfigurationType>
+         <launchConfigurationType
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            name="Task Context Plug-in Test"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
+            delegate="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitLaunchConfiguration"
+            modes="run, debug"
+            id="org.eclipse.mylyn.pde.junit.launchconfig">
+         <fileExtension
+               default="false"
+               extension="java">
+         </fileExtension>
+         <fileExtension
+               default="false"
+               extension="class">
+         </fileExtension>
+      </launchConfigurationType>
+    </extension>
+
+	<extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.eclipse.mylyn.pde.junit.launchconfig"
+            helpContextId="org.eclipse.jdt.junit.junit_tab_group"
+            class="org.eclipse.mylyn.internal.pde.ui.junit.TaskContextPdeJUnitTabGroup"
+            id="org.eclipse.mylyn.pde.junit.launchconfig.tabgroup">
+         <launchMode
+               perspective="org.eclipse.debug.ui.DebugPerspective"
+               description="Test suite automatically populated by elements in the task context."
+               mode="debug">
+         </launchMode>
+         <launchMode
+               description="Test suite automatically populated by elements in the task context."
+               mode="run">
+         </launchMode>
+      </launchConfigurationTabGroup>
+    </extension>	
 
 </plugin>
