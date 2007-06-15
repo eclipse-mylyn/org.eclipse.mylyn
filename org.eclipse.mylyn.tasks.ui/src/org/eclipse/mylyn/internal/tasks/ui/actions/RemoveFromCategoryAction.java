@@ -15,7 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
@@ -76,7 +76,7 @@ public class RemoveFromCategoryAction extends Action {
 				}
 			}
 		} catch (NullPointerException npe) {
-			MylarStatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
+			StatusManager.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
 		}
 	}
 }

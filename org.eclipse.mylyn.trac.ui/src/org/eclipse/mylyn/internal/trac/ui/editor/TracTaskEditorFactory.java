@@ -7,7 +7,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
@@ -71,7 +71,7 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 		try {
 			return new RepositoryTaskEditorInput(repository, tracTask.getHandleIdentifier(), tracTask.getTaskUrl(), tracTask.getTaskId());
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not create Trac editor input", true);
+			StatusManager.fail(e, "Could not create Trac editor input", true);
 		}
 		return null;
 	}

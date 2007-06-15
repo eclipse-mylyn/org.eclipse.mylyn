@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
@@ -168,7 +168,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			return false;
 		if (newTasklistFile.exists()) {
 			if (!newTasklistFile.delete()) {
-				MylarStatusHandler.fail(null, "Could not overwrite tasklist", false);
+				StatusManager.fail(null, "Could not overwrite tasklist", false);
 				return false;
 			}
 		}
@@ -178,12 +178,12 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Tasklist Data", 1);
 			ZipFileUtil.createZipFile(newTasklistFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldTasklistFile.delete()) {
-				MylarStatusHandler.fail(null, "Could not remove old tasklist.", false);
+				StatusManager.fail(null, "Could not remove old tasklist.", false);
 				return false;
 			}
 			monitor.worked(1);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating old tasklist: " + e.getMessage(), true);
+			StatusManager.fail(e, "Error occurred while migrating old tasklist: " + e.getMessage(), true);
 			return false;
 		} finally {
 			monitor.done();
@@ -198,7 +198,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			return false;
 		if (newRepositoriesFile.exists()) {
 			if (!newRepositoriesFile.delete()) {
-				MylarStatusHandler.fail(null,
+				StatusManager.fail(null,
 						"Could not overwrite repositories file. Check read/write permission on data directory.", false);
 				return false;
 			}
@@ -209,7 +209,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Repository Data", 1);
 			ZipFileUtil.createZipFile(newRepositoriesFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldRepositoriesFile.delete()) {
-				MylarStatusHandler
+				StatusManager
 						.fail(
 								null,
 								"Could not remove old repositories file. Check read/write permission on data directory.",
@@ -218,7 +218,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			}
 			monitor.worked(1);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
+			StatusManager.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
 			return false;
 		} finally {
 			monitor.done();
@@ -242,7 +242,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 			if (!contextsFolder.exists()) {
 				if (!contextsFolder.mkdir()) {
-					MylarStatusHandler.fail(null,
+					StatusManager.fail(null,
 							"Could not create contexts folder. Check read/write permission on data directory.", false);
 					return false;
 				}
@@ -253,7 +253,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 				File newContextFile = new File(contextsFolder, file.getName()+".zip");
 				if (newContextFile.exists()) {
 					if (!newContextFile.delete()) {
-						MylarStatusHandler.fail(null,
+						StatusManager.fail(null,
 								"Could not overwrite context file. Check read/write permission on data directory.",
 								false);
 						return false;
@@ -261,14 +261,14 @@ class TaskListDataMigration implements IRunnableWithProgress {
 				}
 				ZipFileUtil.createZipFile(newContextFile, filesToZip, new SubProgressMonitor(monitor, 1));
 				if (!file.delete()) {
-					MylarStatusHandler.fail(null,
+					StatusManager.fail(null,
 							"Could not remove old context file. Check read/write permission on data directory.", false);
 					return false;
 				}
 				monitor.worked(1);
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
+			StatusManager.fail(e, "Error occurred while migrating old repositories data: " + e.getMessage(), true);
 			return false;
 		} finally {
 			monitor.done();
@@ -284,7 +284,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		File contextsFolder = new File(dataDirectory, WorkspaceAwareContextStore.CONTEXTS_DIRECTORY);
 		if (!contextsFolder.exists()) {
 			if (!contextsFolder.mkdir()) {
-				MylarStatusHandler.fail(null,
+				StatusManager.fail(null,
 						"Could not create contexts folder. Check read/write permission on data directory.", false);
 				return false;
 			}
@@ -294,7 +294,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 		
 		if (newActivityFile.exists()) {
 			if (!newActivityFile.delete()) {
-				MylarStatusHandler.fail(null,
+				StatusManager.fail(null,
 						"Could not overwrite activity file. Check read/write permission on data directory.", false);
 				return false;
 			}
@@ -305,7 +305,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			monitor.beginTask("Migrate Activity Data", 1);
 			ZipFileUtil.createZipFile(newActivityFile, filesToZip, new SubProgressMonitor(monitor, 1));
 			if (!oldActivityFile.delete()) {
-				MylarStatusHandler
+				StatusManager
 						.fail(
 								null,
 								"Could not remove old activity file. Check read/write permission on data directory.",
@@ -314,7 +314,7 @@ class TaskListDataMigration implements IRunnableWithProgress {
 			}
 			monitor.worked(1);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error occurred while migrating old activity data: " + e.getMessage(), true);
+			StatusManager.fail(e, "Error occurred while migrating old activity data: " + e.getMessage(), true);
 			return false;
 		} finally {
 			monitor.done();

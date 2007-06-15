@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
@@ -424,7 +424,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "Could not format creation date", true);
+			StatusManager.fail(e, "Could not format creation date", true);
 		}
 		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
 
@@ -501,7 +501,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			job.schedule();
 
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not open task web page", false);
+			StatusManager.fail(e, "could not open task web page", false);
 		}
 	}
 
@@ -676,7 +676,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "Could not format elapsed time", true);
+			StatusManager.fail(e, "Could not format elapsed time", true);
 		}
 
 		final Text elapsedTimeText = new Text(nameValueComp, SWT.READ_ONLY | SWT.FLAT);
@@ -702,7 +702,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 					}
 
 				} catch (RuntimeException e1) {
-					MylarStatusHandler.fail(e1, "Could not format elapsed time", true);
+					StatusManager.fail(e1, "Could not format elapsed time", true);
 				}
 				elapsedTimeText.setText(elapsedTimeString);
 			}
@@ -782,7 +782,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "Could not format date", true);
+			StatusManager.fail(e, "Could not format date", true);
 			return completionDateString;
 		}
 		return completionDateString;

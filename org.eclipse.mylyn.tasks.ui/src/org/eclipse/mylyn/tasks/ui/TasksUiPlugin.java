@@ -38,8 +38,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
@@ -428,7 +428,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						}
 						taskListManager.initActivityHistory();
 					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not initialize task activity", false);
+						StatusManager.fail(t, "Could not initialize task activity", false);
 					}
 
 					try {
@@ -438,7 +438,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						taskListNotificationManager.startNotification(NOTIFICATION_DELAY);
 						getPreferenceStore().addPropertyChangeListener(taskListNotificationManager);
 					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not initialize notifications", false);
+						StatusManager.fail(t, "Could not initialize notifications", false);
 					}
 
 					try {
@@ -448,7 +448,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						synchronizationScheduler = new TaskListSynchronizationScheduler(true);
 						synchronizationScheduler.startSynchJob();
 					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not initialize task list backup and synchronization", false);
+						StatusManager.fail(t, "Could not initialize task list backup and synchronization", false);
 					}
 
 					try {
@@ -470,7 +470,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						}
 						checkForCredentials();
 					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not finish Tasks UI initialization", false);
+						StatusManager.fail(t, "Could not finish Tasks UI initialization", false);
 					}
 				}
 			});
@@ -481,7 +481,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			MylarStatusHandler.fail(e, "Mylar Task List initialization failed", false);
+			StatusManager.fail(e, "Mylar Task List initialization failed", false);
 		}
 	}
 
@@ -513,7 +513,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 							taskRepositoryManager.addRepository(taskRepository, getRepositoriesFilePath());
 						}
 					} catch (Throwable t) {
-						MylarStatusHandler.fail(t, "Could not load repository template", false);
+						StatusManager.fail(t, "Could not load repository template", false);
 					}
 				}
 			}
@@ -540,7 +540,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						}
 					}
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, e.getMessage(), true);
+					StatusManager.fail(e, e.getMessage(), true);
 				}
 			}
 		}
@@ -575,7 +575,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "Mylar Task List stop terminated abnormally");
+			StatusManager.log(e, "Mylar Task List stop terminated abnormally");
 		} finally {
 			super.stop(context);
 		}
@@ -801,7 +801,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public TaskDataManager getTaskDataManager() {
 		if (taskDataManager == null) {
-			MylarStatusHandler.fail(null, "Offline reports file not created, try restarting.", true);
+			StatusManager.fail(null, "Offline reports file not created, try restarting.", true);
 		}
 		return taskDataManager;
 	}

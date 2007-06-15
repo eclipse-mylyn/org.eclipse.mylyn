@@ -25,7 +25,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -387,7 +387,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 						}
 					}
 				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+					StatusManager.fail(t, "could not set field value for: " + repository, false);
 				}
 			}
 		}
@@ -563,7 +563,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				repositoryUserNameEditor.setStringValue(repository.getUserName());
 				repositoryPasswordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "could not set field value for: " + repository, false);
+				StatusManager.fail(t, "could not set field value for: " + repository, false);
 			}
 		} else {
 			oldUsername = "";
@@ -953,7 +953,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			try {
 				super.refreshValidState();
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "problem refreshing password field");
+				StatusManager.log(e, "problem refreshing password field");
 			}
 		}
 
@@ -1170,7 +1170,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			MylarStatusHandler.fail(e.getCause(), "Internal error validating repository", true);
+			StatusManager.fail(e.getCause(), "Internal error validating repository", true);
 			return;
 		} catch (InterruptedException e) {
 			// canceled

@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
@@ -208,7 +208,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {
-						MylarStatusHandler.fail(e, "could not create task", false);
+						StatusManager.fail(e, "could not create task", false);
 						return false;
 					}
 				}
@@ -294,7 +294,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			};
 			job.schedule();
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not open task web page", false);
+			StatusManager.fail(e, "could not open task web page", false);
 		}
 	}
 }

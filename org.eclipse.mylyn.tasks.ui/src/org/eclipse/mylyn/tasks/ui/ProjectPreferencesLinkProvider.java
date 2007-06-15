@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.osgi.service.prefs.BackingStoreException;
@@ -70,7 +70,7 @@ public class ProjectPreferencesLinkProvider extends AbstractTaskRepositoryLinkPr
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				MylarStatusHandler.fail(e, "Failed to save task repository to project association preference", false);
+				StatusManager.fail(e, "Failed to save task repository to project association preference", false);
 			}
 		}
 		return false;

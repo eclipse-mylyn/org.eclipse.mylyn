@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
@@ -178,7 +178,7 @@ public class ProjectTaskRepositoryPage extends PropertyPage {
 					plugin.setRepositoryForResource(project, selectedRepository);
 				}
 			} catch (CoreException e) {
-				MylarStatusHandler.fail(e, "Unable to associate project with task repository", true);
+				StatusManager.fail(e, "Unable to associate project with task repository", true);
 			}
 		}
 		return true;

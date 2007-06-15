@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.mylyn.context.core,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.tasks.core,
- org.eclipse.mylyn
+ org.eclipse.mylyn.monitor.core
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylyn.internal.bugzilla.ui,
  org.eclipse.mylyn.internal.bugzilla.ui.editor,

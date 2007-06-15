@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
@@ -582,7 +582,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
-			MylarStatusHandler.fail(e, "Could not parse end date", false);
+			StatusManager.fail(e, "Could not parse end date", false);
 		}
 		return date;
 	}
@@ -619,7 +619,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 // if (element == null)
 				createQueryHitElement(hit, doc, node);
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, e.getMessage());
+				StatusManager.log(e, e.getMessage());
 			}
 		}
 		parent.appendChild(node);

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
@@ -620,7 +620,7 @@ public class TaskList {
 				delta.add(new TaskContainerDelta(task, kind));
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "Notification failed for: " + listener, false);
+				StatusManager.fail(t, "Notification failed for: " + listener, false);
 			}
 		}
 	}
@@ -638,7 +638,7 @@ public class TaskList {
 				try {
 					listener.containersChanged(delta);
 				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "notification failed for: " + listener, false);
+					StatusManager.fail(t, "notification failed for: " + listener, false);
 				}
 			}
 		}

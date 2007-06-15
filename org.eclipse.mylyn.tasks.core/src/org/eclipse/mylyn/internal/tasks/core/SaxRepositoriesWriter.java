@@ -22,7 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.ContentHandler;
@@ -61,7 +61,7 @@ public class SaxRepositoriesWriter {
 					new SAXSource(new RepositoriesWriter(), new TaskRepositoriesInputSource(repositories)),
 					new StreamResult(outputStream));
 		} catch (TransformerException e) {
-			MylarStatusHandler.fail(e, "could not write repositories", false);
+			StatusManager.fail(e, "could not write repositories", false);
 			throw new IOException(e.getMessage());
 		}
 

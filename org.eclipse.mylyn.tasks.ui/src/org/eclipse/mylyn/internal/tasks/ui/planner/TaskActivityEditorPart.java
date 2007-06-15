@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -705,9 +705,9 @@ public class TaskActivityEditorPart extends EditorPart {
 			writer.write("</body></html>");
 			writer.close();
 		} catch (FileNotFoundException e) {
-			MylarStatusHandler.log(e, "could not resolve file");
+			StatusManager.log(e, "could not resolve file");
 		} catch (IOException e) {
-			MylarStatusHandler.log(e, "could not write to file");
+			StatusManager.log(e, "could not write to file");
 		}
 	}
 

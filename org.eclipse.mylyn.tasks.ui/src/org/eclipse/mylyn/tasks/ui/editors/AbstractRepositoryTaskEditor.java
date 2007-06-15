@@ -61,7 +61,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
@@ -1165,7 +1165,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, desc.getId());
 					} catch (PartInitException e) {
-						MylarStatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusManager.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -1182,7 +1182,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 					} catch (PartInitException e) {
-						MylarStatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusManager.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -2591,7 +2591,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						modifiedTask.setSubmitting(false);
 					}
-					MylarStatusHandler.fail(e, e.getMessage(), true);
+					StatusManager.fail(e, e.getMessage(), true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							setGlobalBusy(false);// enableButtons();
@@ -2715,9 +2715,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (form != null && !form.isDisposed()) {
 					if (exception.getStatus().getCode() == RepositoryStatus.ERROR_IO) {
 						parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
-						MylarStatusHandler.log(exception.getStatus());
+						StatusManager.log(exception.getStatus());
 					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-						MylarStatusHandler.displayStatus("Comment required", exception.getStatus());
+						StatusManager.displayStatus("Comment required", exception.getStatus());
 						if (!isDisposed && newCommentTextViewer != null
 								&& !newCommentTextViewer.getControl().isDisposed()) {
 							newCommentTextViewer.getControl().setFocus();
@@ -2728,7 +2728,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							return;
 						}
 					} else {
-						MylarStatusHandler.displayStatus("Submit failed", exception.getStatus());
+						StatusManager.displayStatus("Submit failed", exception.getStatus());
 					}
 					setGlobalBusy(false);
 				}

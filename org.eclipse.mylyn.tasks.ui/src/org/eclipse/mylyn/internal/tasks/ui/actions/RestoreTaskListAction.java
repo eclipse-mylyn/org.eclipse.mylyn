@@ -13,7 +13,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.TaskDataImportWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -43,7 +43,7 @@ public class RestoreTaskListAction implements IViewActionDelegate {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
+			StatusManager.fail(e, e.getMessage(), true);
 		}
 	}
 

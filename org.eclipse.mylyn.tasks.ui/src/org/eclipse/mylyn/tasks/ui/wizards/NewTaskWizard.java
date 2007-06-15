@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -63,7 +63,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 
 		final ITaskDataHandler taskDataHandler = (ITaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
-			MylarStatusHandler.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
+			StatusManager.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
 					TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));
 			return false;
 		}
@@ -90,9 +90,9 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			getContainer().run(true, true, runnable);
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				MylarStatusHandler.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
+				StatusManager.displayStatus("Error creating new task", ((CoreException) e.getCause()).getStatus());
 			} else {
-				MylarStatusHandler.fail(e.getCause(), "Error creating new task", true);
+				StatusManager.fail(e.getCause(), "Error creating new task", true);
 			}
 			return false;
 		} catch (InterruptedException e) {

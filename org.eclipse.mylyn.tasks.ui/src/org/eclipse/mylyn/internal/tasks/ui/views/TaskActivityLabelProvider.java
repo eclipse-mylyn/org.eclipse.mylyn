@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
@@ -107,7 +107,7 @@ public class TaskActivityLabelProvider extends DecoratingLabelProvider implement
 					if (elapsedTimeString.equals(""))
 						elapsedTimeString = NO_MINUTES;
 				} catch (RuntimeException e) {
-					MylarStatusHandler.fail(e, "Could not format elapsed time", true);
+					StatusManager.fail(e, "Could not format elapsed time", true);
 				}
 				return elapsedTimeString;
 			case 4:

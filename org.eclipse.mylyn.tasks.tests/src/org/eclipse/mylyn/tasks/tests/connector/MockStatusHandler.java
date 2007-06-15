@@ -11,7 +11,7 @@ package org.eclipse.mylyn.tasks.tests.connector;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.core.IStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
 
 public class MockStatusHandler implements IStatusHandler {
 

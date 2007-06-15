@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -107,7 +107,7 @@ class SynchronizeQueryJob extends Job {
 				}
 			} catch (CoreException e) {
 				// there is no good way of informing the user at this point, just log the error
-				MylarStatusHandler.log(e.getStatus());
+				StatusManager.log(e.getStatus());
 			}
 
 			// synchronize queries
@@ -178,7 +178,7 @@ class SynchronizeQueryJob extends Job {
 			// do nothing
 		} else if (resultingStatus.isOK()) {
 			if (collector.getTaskHits().size() >= QueryHitCollector.MAX_HITS) {
-				MylarStatusHandler.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
+				StatusManager.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 			}
 
 			repositoryQuery.clear();
@@ -197,7 +197,7 @@ class SynchronizeQueryJob extends Job {
 			if (isForced()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						MylarStatusHandler.displayStatus("Query Synchronization Failed", resultingStatus);
+						StatusManager.displayStatus("Query Synchronization Failed", resultingStatus);
 					}
 				});
 			}

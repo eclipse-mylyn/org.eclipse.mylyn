@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -91,7 +91,7 @@ class SynchronizeTaskJob extends Job {
 					if (forced) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								MylarStatusHandler.displayStatus("Task Synchronization Failed", e.getStatus());
+								StatusManager.displayStatus("Task Synchronization Failed", e.getStatus());
 							}
 						});
 					}
@@ -108,7 +108,7 @@ class SynchronizeTaskJob extends Job {
 			// TasksUiPlugin.getDefault().getTaskDataManager().save();
 
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not download report", false);
+			StatusManager.fail(e, "Could not download report", false);
 		} finally {
 			monitor.done();
 		}

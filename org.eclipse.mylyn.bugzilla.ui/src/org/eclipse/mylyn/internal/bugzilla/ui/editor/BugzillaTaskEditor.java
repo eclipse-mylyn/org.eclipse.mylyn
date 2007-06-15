@@ -22,11 +22,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -357,7 +357,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		try {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
-			MylarStatusHandler.log(e, "Unrecognized operatoin: " + repositoryOperation.getKnobName());
+			StatusManager.log(e, "Unrecognized operatoin: " + repositoryOperation.getKnobName());
 			operation = null;
 		}
 

@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
@@ -46,7 +46,7 @@ public class NewQueryAction extends Action implements IViewActionDelegate {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
+			StatusManager.fail(e, e.getMessage(), true);
 		}
 	}
 

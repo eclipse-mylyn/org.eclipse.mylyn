@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.TitleEvent;
@@ -72,7 +72,7 @@ public abstract class RetrieveTitleFromUrlJob extends Job implements TitleListen
 			try {
 				Thread.sleep(SLEEP_INTERVAL_MILLIS);
 			} catch (InterruptedException e) {
-				MylarStatusHandler.fail(e, "Thread interrupted during sleep", false);
+				StatusManager.fail(e, "Thread interrupted during sleep", false);
 			}
 			timeWaitedMillis += SLEEP_INTERVAL_MILLIS;
 		}

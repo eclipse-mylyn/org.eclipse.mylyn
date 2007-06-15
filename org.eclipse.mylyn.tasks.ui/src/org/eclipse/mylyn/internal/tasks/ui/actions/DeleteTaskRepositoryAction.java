@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -85,7 +85,7 @@ public class DeleteTaskRepositoryAction extends AbstractTaskRepositoryAction {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
+			StatusManager.fail(e, e.getMessage(), true);
 		}
 	}
 }

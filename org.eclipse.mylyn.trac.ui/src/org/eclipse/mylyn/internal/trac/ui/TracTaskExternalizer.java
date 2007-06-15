@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -109,7 +109,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 					createQueryHitElement(hit, doc, node);
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, e.getMessage());
+				StatusManager.log(e, e.getMessage());
 			}
 		}
 		parent.appendChild(node);

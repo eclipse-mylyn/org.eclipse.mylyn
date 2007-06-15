@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
@@ -61,7 +61,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 			refreshJob = (Job) refreshField.get(this);
 			refreshPolicy = new AdaptiveRefreshPolicy(refreshJob, super.getFilterControl());
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not get refresh job", false);
+			StatusManager.fail(e, "Could not get refresh job", false);
 		}
 		setInitialText("");
 	}

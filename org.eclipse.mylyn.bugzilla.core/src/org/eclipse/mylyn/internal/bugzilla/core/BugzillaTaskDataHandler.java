@@ -18,10 +18,10 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -144,7 +144,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
 		} catch (RuntimeException e) {
-			MylarStatusHandler.log(e, "Unrecognized status: " + bugReport.getStatus());
+			StatusManager.log(e, "Unrecognized status: " + bugReport.getStatus());
 			status = BUGZILLA_REPORT_STATUS.NEW;
 		}
 		switch (status) {

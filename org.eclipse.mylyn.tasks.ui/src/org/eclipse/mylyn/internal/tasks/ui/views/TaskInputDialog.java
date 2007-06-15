@@ -15,7 +15,7 @@ import java.util.Date;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.swt.SWT;
@@ -241,7 +241,7 @@ public class TaskInputDialog extends Dialog {
 			job.schedule();
 
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not open task web page", false);
+			StatusManager.fail(e, "could not open task web page", false);
 		}
 	}
 

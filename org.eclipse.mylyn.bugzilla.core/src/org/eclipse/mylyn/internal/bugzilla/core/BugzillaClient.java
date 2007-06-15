@@ -49,12 +49,12 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
@@ -688,7 +688,7 @@ public class BugzillaClient {
 			return postMethod;
 		} else {
 			postMethod.releaseConnection();
-			MylarStatusHandler.log("Post failed: " + HttpStatus.getStatusText(status), this);
+			StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
 

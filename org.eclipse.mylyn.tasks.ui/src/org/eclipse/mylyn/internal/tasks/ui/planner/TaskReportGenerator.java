@@ -20,7 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -64,7 +64,7 @@ public class TaskReportGenerator implements IRunnableWithProgress {
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {
-			MylarStatusHandler.log(e, "Could not collect tasks");
+			StatusManager.log(e, "Could not collect tasks");
 		}
 	}
 

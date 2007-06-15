@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
@@ -113,7 +113,7 @@ public class TracQueryWizardPage extends WizardPage {
 			if (field != null) {
 				showSearchField(field, filter);
 			} else {
-				MylarStatusHandler.log("Ignoring invalid search filter: " + filter, this);
+				StatusManager.log("Ignoring invalid search filter: " + filter, this);
 			}
 		}
 	}

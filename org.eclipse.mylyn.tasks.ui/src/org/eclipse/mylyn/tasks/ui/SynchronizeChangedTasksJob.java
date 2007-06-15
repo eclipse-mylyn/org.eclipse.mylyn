@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -78,7 +78,7 @@ public class SynchronizeChangedTasksJob extends Job {
 
 			TasksUiPlugin.getSynchronizationManager().synchronize(connector, tasks, forced, null);
 		} catch (final CoreException e) {
-			MylarStatusHandler.log(e.getStatus());
+			StatusManager.log(e.getStatus());
 		} finally {
 			monitor.done();
 		}

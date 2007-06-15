@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -88,7 +88,7 @@ public class TaskActivationHistory {
 			history.add(task);
 			currentIndex = history.size() - 1;
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not add task to history", false);
+			StatusManager.fail(e, "could not add task to history", false);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class TaskActivationHistory {
 				return null;
 			}
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not get previous task from history", false);
+			StatusManager.fail(e, "could not get previous task from history", false);
 			return null;
 		}
 	}
@@ -130,7 +130,7 @@ public class TaskActivationHistory {
 
 			return (currentIndex == 0 && !history.get(currentIndex).isActive()) || currentIndex > 0;
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could determine previous task", false);
+			StatusManager.fail(e, "could determine previous task", false);
 			return false;
 		}
 	}
@@ -140,7 +140,7 @@ public class TaskActivationHistory {
 			history.clear();
 			currentIndex = -1;
 		} catch (RuntimeException e) {
-			MylarStatusHandler.fail(e, "could not clear history", false);
+			StatusManager.fail(e, "could not clear history", false);
 		}
 	}
 

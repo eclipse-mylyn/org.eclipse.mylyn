@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.util;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.ActivityTimerThread;
 import org.eclipse.mylyn.monitor.core.IActivityTimerListener;
 
@@ -73,7 +73,7 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 			listener.saveRequested();
 // }
 		} catch (RuntimeException e) {
-			MylarStatusHandler.log("Could not schedule save job", this);
+			StatusManager.log("Could not schedule save job", this);
 		}
 	}
 

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -179,7 +179,7 @@ public class RepositorySynchronizationManager {
 		RepositoryTaskSyncState status = repositoryTask.getSyncState();
 
 		if (newTaskData == null) {
-			MylarStatusHandler.log("Download of " + repositoryTask.getSummary() + " from "
+			StatusManager.log("Download of " + repositoryTask.getSummary() + " from "
 					+ repositoryTask.getRepositoryUrl() + " failed.", this);
 			return false;
 		}

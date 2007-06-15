@@ -24,7 +24,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.model.TracAttachment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComment;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
@@ -520,10 +520,10 @@ public class TracXmlRpcClient extends AbstractTracClient {
 				attribute.value = (value instanceof Integer) ? (Integer) value : Integer.parseInt((String) value);
 				attributes.add(attribute);
 			} catch (ClassCastException e) {
-				MylarStatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
+				StatusManager.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
 						+ "'");
 			} catch (NumberFormatException e) {
-				MylarStatusHandler.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
+				StatusManager.log(e, "Invalid response from Trac repository for attribute type: '" + attributeType
 						+ "'");
 			}
 		}
@@ -567,7 +567,7 @@ public class TracXmlRpcClient extends AbstractTracClient {
 			try {
 				in.close();
 			} catch (IOException e) {
-				MylarStatusHandler.fail(e, "Error closing attachment stream", false);
+				StatusManager.fail(e, "Error closing attachment stream", false);
 			}
 		}
 	}

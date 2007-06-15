@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracException;
@@ -178,7 +178,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 			if (field != null) {
 				field.setFilter(filter);
 			} else {
-				MylarStatusHandler.log("Ignoring invalid search filter: " + filter, this);
+				StatusManager.log("Ignoring invalid search filter: " + filter, this);
 			}
 		}
 	}

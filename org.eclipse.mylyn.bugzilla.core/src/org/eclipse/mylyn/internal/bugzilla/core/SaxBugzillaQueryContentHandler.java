@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
-import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

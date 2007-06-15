@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 
 /**
@@ -236,7 +236,7 @@ public class TaskRepositoryManager {
 			try {
 				listener.repositoriesRead();
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "repository listener failed", false);
+				StatusManager.fail(t, "repository listener failed", false);
 			}
 		}
 		return repositoryMap;
@@ -278,7 +278,7 @@ public class TaskRepositoryManager {
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not load repositories", false);
+			StatusManager.fail(t, "could not load repositories", false);
 		}
 	}
 
@@ -366,7 +366,7 @@ public class TaskRepositoryManager {
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not save repositories", false);
+			StatusManager.fail(t, "could not save repositories", false);
 			return false;
 		}
 		return true;

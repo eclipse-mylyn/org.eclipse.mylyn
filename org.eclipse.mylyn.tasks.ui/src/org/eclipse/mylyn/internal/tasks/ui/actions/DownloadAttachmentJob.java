@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -65,7 +65,7 @@ public class DownloadAttachmentJob extends Job {
 			out = new FileOutputStream(this.targetFile);
 			handler.downloadAttachment(repository, attachment, out, monitor);
 		} catch (final CoreException e) {
-			MylarStatusHandler.displayStatus("Download Attachment", e.getStatus());
+			StatusManager.displayStatus("Download Attachment", e.getStatus());
 			return Status.OK_STATUS;
 		} catch (IOException e) {
 			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
@@ -75,7 +75,7 @@ public class DownloadAttachmentJob extends Job {
 				try {
 					out.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Could not close attachment file: " + this.targetFile.getAbsolutePath(),
+					StatusManager.fail(e, "Could not close attachment file: " + this.targetFile.getAbsolutePath(),
 							false);
 				}
 			}

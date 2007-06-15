@@ -40,7 +40,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -109,7 +109,7 @@ public class TaskListWriter {
 			db = dbf.newDocumentBuilder();
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
-			MylarStatusHandler.log(e, "could not create document");
+			StatusManager.log(e, "could not create document");
 			return;
 		}
 
@@ -134,10 +134,10 @@ public class TaskListWriter {
 					delagatingExternalizer.createQueryElement(query, doc, root);
 				}
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
+				StatusManager.fail(t, "Did not externalize: " + query.getSummary(), true);
 			}
 			if (element == null) {
-				MylarStatusHandler.log("Did not externalize: " + query, this);
+				StatusManager.log("Did not externalize: " + query, this);
 			}
 		}
 		// Collection<ITask> allTasks =
@@ -182,10 +182,10 @@ public class TaskListWriter {
 				// {
 				delagatingExternalizer.createTaskElement(task, doc, root);
 			} else if (element == null) {
-				MylarStatusHandler.log("Did not externalize: " + task, this);
+				StatusManager.log("Did not externalize: " + task, this);
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, e.getMessage());
+			StatusManager.log(e, e.getMessage());
 		}
 	}
 
@@ -206,7 +206,7 @@ public class TaskListWriter {
 			outputStream.closeEntry();
 			outputStream.close();
 		} catch (Exception fnfe) {
-			MylarStatusHandler.log(fnfe, "TaskList could not be found");
+			StatusManager.log(fnfe, "TaskList could not be found");
 		}
 	}
 
@@ -264,7 +264,7 @@ public class TaskListWriter {
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-				MylarStatusHandler.log("version: " + readVersion + " not supported", this);
+				StatusManager.log("version: " + readVersion + " not supported", this);
 			} else {
 				NodeList list = root.getChildNodes();
 
@@ -438,7 +438,7 @@ public class TaskListWriter {
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
-				MylarStatusHandler.log("Unable to delete old backup tasklist file", this);
+				StatusManager.log("Unable to delete old backup tasklist file", this);
 				return;
 			}
 		}
@@ -446,10 +446,10 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			MylarStatusHandler.log(e, ITasksUiConstants.MESSAGE_RESTORE);
+			StatusManager.log(e, ITasksUiConstants.MESSAGE_RESTORE);
 		} else {
 			e.printStackTrace(); // in case logging plug-in has not yet started
-			MylarStatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
+			StatusManager.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}
 	}
 

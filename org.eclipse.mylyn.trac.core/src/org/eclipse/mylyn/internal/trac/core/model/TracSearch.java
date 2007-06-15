@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
 
@@ -146,7 +146,7 @@ public class TracSearch {
 					sb.append(URLEncoder.encode(filter.getOperator().getQueryValue(), ITracClient.CHARSET));
 					sb.append(URLEncoder.encode(value, ITracClient.CHARSET));
 				} catch (UnsupportedEncodingException e) {
-					MylarStatusHandler.log(e, "Unexpected exception while decoding URL");
+					StatusManager.log(e, "Unexpected exception while decoding URL");
 				}
 			}
 		}
@@ -173,7 +173,7 @@ public class TracSearch {
 						addFilter(key, value);
 					}
 				} catch (UnsupportedEncodingException e) {
-					MylarStatusHandler.log(e, "Unexpected exception while decoding URL");
+					StatusManager.log(e, "Unexpected exception while decoding URL");
 				}
 			}
 		}

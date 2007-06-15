@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Rob Elves
@@ -48,12 +48,12 @@ public class AttributeContainer implements Serializable {
 
 	public void addAttribute(String key, RepositoryTaskAttribute attribute) {
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
 		if(mapped == null) {
-			MylarStatusHandler.log("Mylar Error: mapped value for "+key+" returned null.", this);
+			StatusManager.log("Mylar Error: mapped value for "+key+" returned null.", this);
 			return;
 		} if (!attributes.containsKey(mapped)) {
 			attributeKeys.add(mapped);
@@ -63,7 +63,7 @@ public class AttributeContainer implements Serializable {
 
 	public RepositoryTaskAttribute getAttribute(String key) {
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return null;
 		}
 		String mapped = attributeFactory.mapCommonAttributeKey(key);
@@ -93,7 +93,7 @@ public class AttributeContainer implements Serializable {
 
 	public void addAttributeValue(String key, String value) {
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);
@@ -112,7 +112,7 @@ public class AttributeContainer implements Serializable {
 	 */
 	public void setAttributeValue(String key, String value) {
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);
@@ -125,7 +125,7 @@ public class AttributeContainer implements Serializable {
 
 	public String getAttributeValue(String key) {
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return "";
 		}
 		String returnValue = "";
@@ -139,7 +139,7 @@ public class AttributeContainer implements Serializable {
 	public List<String> getAttributeValues(String key) {
 		List<String> returnValue = new ArrayList<String>();
 		if (attributeFactory == null) {
-			MylarStatusHandler.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
+			StatusManager.log(ERROR_NO_ATTRIBUTE_FACTORY, this);
 			return returnValue;
 		}
 		RepositoryTaskAttribute attrib = getAttribute(key);

@@ -49,7 +49,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
@@ -628,7 +628,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
 			} catch (Exception e) {
 				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				MylarStatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				StatusManager.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
 			}
 			red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
 			green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
@@ -640,7 +640,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			} catch (Exception e) {
 				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				MylarStatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				StatusManager.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
 			}
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
@@ -664,7 +664,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		try {
 			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not show Task List view", false);
+			StatusManager.fail(e, "Could not show Task List view", false);
 			e.printStackTrace();
 			return null;
 		}
@@ -1650,7 +1650,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						getViewer().refresh(element, true);
 					}
 				} catch (SWTException e) {
-					MylarStatusHandler.log(e, "Failed to refresh Task List");
+					StatusManager.log(e, "Failed to refresh Task List");
 				}
 			}
 		}

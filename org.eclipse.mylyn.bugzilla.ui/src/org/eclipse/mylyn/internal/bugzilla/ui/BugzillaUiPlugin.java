@@ -20,11 +20,11 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -222,7 +222,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		try {
 			config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
+			StatusManager.fail(e, "Could not retrieve repository configuration for: " + repository, true);
 			return;
 		}
 

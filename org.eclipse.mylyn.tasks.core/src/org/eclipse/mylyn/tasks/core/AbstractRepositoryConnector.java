@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
@@ -339,7 +339,7 @@ public abstract class AbstractRepositoryConnector {
 				try {
 					out.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Could not close context file", false);
+					StatusManager.fail(e, "Could not close context file", false);
 				}
 			}
 		} catch (FileNotFoundException e) {

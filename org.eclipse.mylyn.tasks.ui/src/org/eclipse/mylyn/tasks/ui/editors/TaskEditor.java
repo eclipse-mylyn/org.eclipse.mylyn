@@ -21,7 +21,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -141,9 +141,9 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 				}
 				return index;
 			} catch (SWTError e) {
-				MylarStatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
+				StatusManager.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 			} catch (RuntimeException e) {
-				MylarStatusHandler.fail(e, "could not create issue report page", false);
+				StatusManager.fail(e, "could not create issue report page", false);
 			}
 		}
 		return 0;
@@ -397,7 +397,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 							contentOutlineProvider = editor;
 						}
 					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
+						StatusManager.fail(e, "Could not create editor via factory: " + factory, true);
 					}
 				}
 			}
@@ -424,7 +424,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			}
 
 		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "failed to create task editor pages", false);
+			StatusManager.fail(e, "failed to create task editor pages", false);
 		}
 	}
 

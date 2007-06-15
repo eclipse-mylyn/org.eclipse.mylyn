@@ -22,8 +22,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskDataExportJob;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -116,7 +116,7 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		final File destDirFile = new File(destDir);
 		if (!destDirFile.exists() || !destDirFile.isDirectory()) {
 			// This should never happen
-			MylarStatusHandler.fail(new Exception("File Export Exception"),
+			StatusManager.fail(new Exception("File Export Exception"),
 					"Could not export data because specified location does not exist or is not a folder", true);
 			return false;
 		}
@@ -181,9 +181,9 @@ public class TaskDataExportWizard extends Wizard implements IExportWizard {
 		try {
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			MylarStatusHandler.fail(e, "Could not export files", true);
+			StatusManager.fail(e, "Could not export files", true);
 		} catch (InterruptedException e) {
-			MylarStatusHandler.fail(e, "Could not export files", true);
+			StatusManager.fail(e, "Could not export files", true);
 		}
 
 		exportPage.saveSettings();

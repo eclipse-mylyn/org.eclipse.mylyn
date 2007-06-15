@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -40,7 +40,7 @@ public class TaskDeactivateAction extends Action {
 				TasksUiUtil.closeEditorInActivePage(task);
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, " Closing task editor on task deactivation failed");
+			StatusManager.log(e, " Closing task editor on task deactivation failed");
 		}
 	}
 

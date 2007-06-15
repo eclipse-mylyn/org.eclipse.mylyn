@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -76,7 +76,7 @@ public class TaskDataManager {
 			try {
 				readOfflineData();
 			} catch (Throwable e) {
-				MylarStatusHandler.fail(e, "Error loading offline task data", false);
+				StatusManager.fail(e, "Error loading offline task data", false);
 				if (restoreFromBackup()) {
 					try {
 						readOfflineData();
@@ -112,7 +112,7 @@ public class TaskDataManager {
 		if (backupFile.exists()) {
 			if (primaryFile.exists()) {
 				if (!primaryFile.delete()) {
-					MylarStatusHandler.log("Unable to retire primary offline data", this);
+					StatusManager.log("Unable to retire primary offline data", this);
 				}
 			}
 			this.primaryFile = primaryPath.toFile();
@@ -121,7 +121,7 @@ public class TaskDataManager {
 				this.backupFile = backupPath.toFile();
 				return true;
 			} else {
-				MylarStatusHandler.log("Unable to restore from offline backup", this);
+				StatusManager.log("Unable to restore from offline backup", this);
 			}
 		} 
 		return false;
@@ -202,7 +202,7 @@ public class TaskDataManager {
 				clone = (RepositoryTaskData) ObjectCloner.deepCopy(data);
 				updateAttributeFactory(clone);
 			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "Error constructing modifiable task", false);
+				StatusManager.fail(e, "Error constructing modifiable task", false);
 				return null;
 			}
 			for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
@@ -328,14 +328,14 @@ public class TaskDataManager {
 					try {
 						in.close();
 					} catch (IOException e) {
-						MylarStatusHandler.fail(e, "Could not close stream", false);
+						StatusManager.fail(e, "Could not close stream", false);
 					}
 				}
 				if (fileInputStream != null) {
 					try {
 						fileInputStream.close();
 					} catch (IOException e) {
-						MylarStatusHandler.fail(e, "Could not close stream", false);
+						StatusManager.fail(e, "Could not close stream", false);
 					}
 				}
 			}
@@ -381,13 +381,13 @@ public class TaskDataManager {
 				try {
 					if (backupFile.exists()) {
 						if (!backupFile.delete()) {
-							MylarStatusHandler.log("Unable to retire old offline backup.", this);
+							StatusManager.log("Unable to retire old offline backup.", this);
 							return;
 						}
 					}
 
 					if (primaryFile.exists() && !primaryFile.renameTo(backupFile)) {
-						MylarStatusHandler.log("Unable to backup offline data.", this);
+						StatusManager.log("Unable to backup offline data.", this);
 						return;
 					}
 
@@ -395,21 +395,21 @@ public class TaskDataManager {
 					out = new ObjectOutputStream(fileOuputStream);
 					out.writeObject(dataStore);
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "Error occurred during save of offline task data.", false);
+					StatusManager.fail(e, "Error occurred during save of offline task data.", false);
 					restoreFromBackup();
 				} finally {
 					if (out != null) {
 						try {
 							out.close();
 						} catch (IOException e) {
-							MylarStatusHandler.fail(e, "Could not close stream", false);
+							StatusManager.fail(e, "Could not close stream", false);
 						}
 					}
 					if (fileOuputStream != null) {
 						try {
 							fileOuputStream.close();
 						} catch (IOException e) {
-							MylarStatusHandler.fail(e, "Could not close stream", false);
+							StatusManager.fail(e, "Could not close stream", false);
 						}
 					}
 				}

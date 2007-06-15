@@ -37,7 +37,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -109,7 +109,7 @@ public class TasksUiUtil {
 				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 				support.getExternalBrowser().openURL(new URL(url));
 			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "could not open task url", true);
+				StatusManager.fail(e, "could not open task url", true);
 			}
 		} else {
 			IWebBrowser browser = null;
@@ -140,7 +140,7 @@ public class TasksUiUtil {
 				try {
 					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 				} catch (Exception e) {
-					MylarStatusHandler.log(e, "Internal error while opening repository task");
+					StatusManager.log(e, "Internal error while opening repository task");
 				}
 			}
 		}
@@ -211,7 +211,7 @@ public class TasksUiUtil {
 						repositoryTask.getRepositoryUrl());
 
 				if (repository == null) {
-					MylarStatusHandler.fail(null, "No repository found for task. Please create repository in "
+					StatusManager.fail(null, "No repository found for task. Please create repository in "
 							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 					return;
 				}
@@ -356,7 +356,7 @@ public class TasksUiUtil {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractTask) task, true);
 				}
 			} else {
-				MylarStatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
+				StatusManager.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
 		}
 	}
@@ -384,7 +384,7 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
+			StatusManager.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
 		}
 		return null;
 	}
@@ -421,7 +421,7 @@ public class TasksUiUtil {
 				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
+			StatusManager.fail(e, e.getMessage(), true);
 		}
 		return Dialog.OK;
 	}

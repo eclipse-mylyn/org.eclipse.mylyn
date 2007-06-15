@@ -11,7 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import java.util.Arrays;
 
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -50,7 +50,7 @@ class TaskListCellModifier implements ICellModifier {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, e.getMessage());
+			StatusManager.log(e, e.getMessage());
 		}
 		return "";
 	}
@@ -89,7 +89,7 @@ class TaskListCellModifier implements ICellModifier {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, e.getMessage(), true);
+			StatusManager.fail(e, e.getMessage(), true);
 		}
 		this.taskListView.getViewer().refresh();
 	}

@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.xml.sax.InputSource;
@@ -63,13 +63,13 @@ public class TaskRepositoriesExternalizer {
 			outputStream.close();
 
 		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+			StatusManager.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		} finally {
 			if (outputStream != null) {
 				try {
 					outputStream.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Unable to terminate output stream to repositories file.", false);
+					StatusManager.fail(e, "Unable to terminate output stream to repositories file.", false);
 				}
 			}
 		}
@@ -90,14 +90,14 @@ public class TaskRepositoriesExternalizer {
 			return contentHandler.getRepositories();
 		} catch (Throwable e) {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
-			MylarStatusHandler.log(e, "Error while reading context file");
+			StatusManager.log(e, "Error while reading context file");
 			return null;
 		} finally {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Failed to close repositories input stream.", false);
+					StatusManager.fail(e, "Failed to close repositories input stream.", false);
 				}
 			}
 		}

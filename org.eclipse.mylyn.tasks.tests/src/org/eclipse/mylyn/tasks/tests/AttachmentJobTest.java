@@ -14,7 +14,7 @@ import java.io.RandomAccessFile;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -64,7 +64,7 @@ public class AttachmentJobTest extends TestCase {
 		manager.addRepositoryConnector(connector);
 
 		statusHandler = new MockStatusHandler();
-		MylarStatusHandler.addStatusHandler(statusHandler);
+		StatusManager.addStatusHandler(statusHandler);
 		
 		attachment = new RepositoryAttachment(null);
 		attachment.setRepositoryKind(repository.getKind());
@@ -74,7 +74,7 @@ public class AttachmentJobTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		if (statusHandler != null) {
-			MylarStatusHandler.removeStatusHandler(statusHandler);
+			StatusManager.removeStatusHandler(statusHandler);
 		}
 	}
 
