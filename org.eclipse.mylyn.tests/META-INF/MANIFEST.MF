@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Tests Plug-in
+Bundle-Name: Mylar Tests
 Bundle-SymbolicName: org.eclipse.mylyn.tests
 Bundle-Version: 0.0.0
 Eclipse-AutoStart: true
