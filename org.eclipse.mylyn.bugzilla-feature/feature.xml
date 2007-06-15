@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.bugzilla_feature"
-      label="Mylar Connector: Bugzilla"
+      label="Mylyn Connector: Bugzilla"
       version="2.0.0.v20070614-1800"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
@@ -218,7 +218,6 @@ litigation.
    </url>
 
    <requires>
-      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070513-1500" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.mylyn.tasks.core"/>
       <import plugin="org.eclipse.mylyn"/>
@@ -239,6 +238,9 @@ litigation.
       <import plugin="org.eclipse.mylyn.bugzilla.core"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
       <import plugin="org.eclipse.mylyn.tasks.ui"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.mylyn.bugzilla.ui"/>
+      <import feature="org.eclipse.mylyn_feature" version="2.0.0.v20070513-1500" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -250,6 +252,13 @@ litigation.
 
    <plugin
          id="org.eclipse.mylyn.bugzilla.ui"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.v20070614-1800"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.bugzilla.ide"
          download-size="0"
          install-size="0"
          version="2.0.0.v20070614-1800"
