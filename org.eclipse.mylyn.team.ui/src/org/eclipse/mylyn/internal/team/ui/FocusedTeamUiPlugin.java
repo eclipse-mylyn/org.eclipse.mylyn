@@ -65,8 +65,6 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 					FocusedTeamExtensionPointReader extensionPointReader = new FocusedTeamExtensionPointReader();
 					extensionPointReader.readExtensions();
 
-					LinkedTaskInfoAdapterFactory.registerAdapters();
-
 					if (getPreferenceStore().getBoolean(CHANGE_SET_MANAGE)) {
 						for (AbstractContextChangeSetManager changeSetManager : changeSetManagers) {
 							changeSetManager.enable();
@@ -90,8 +88,6 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 		for (AbstractContextChangeSetManager changeSetManager : changeSetManagers) {
 			changeSetManager.disable();
 		}
-
-		LinkedTaskInfoAdapterFactory.unregisterAdapters();
 	}
 
 	private void initPreferenceDefaults() {

@@ -12,23 +12,14 @@
 package org.eclipse.mylyn.internal.team.ui;
 
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IAdapterManager;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.tasks.core.ILinkedTaskInfo;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.team.core.variants.IResourceVariant;
-import org.eclipse.team.internal.ccvs.core.CVSException;
-import org.eclipse.team.internal.ccvs.core.ICVSResource;
-import org.eclipse.team.internal.ccvs.core.client.listeners.LogEntry;
-import org.eclipse.team.internal.ccvs.core.resources.CVSWorkspaceRoot;
-import org.eclipse.team.internal.ccvs.core.resources.RemoteResource;
 import org.eclipse.team.internal.core.subscribers.ChangeSet;
 import org.eclipse.team.internal.core.subscribers.DiffChangeSet;
 import org.eclipse.team.internal.ui.synchronize.ChangeSetDiffNode;
@@ -43,34 +34,6 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
 	private static final Class[] ADAPTER_TYPES = new Class[] { ILinkedTaskInfo.class };
-
-	private static IAdapterFactory FACTORY = new LinkedTaskInfoAdapterFactory();
-
-
-	public static void registerAdapters() {
-		IAdapterManager adapterManager = Platform.getAdapterManager();
-
-		// Mylar
-		adapterManager.registerAdapters(FACTORY, ContextChangeSet.class);
-
-		// Team public
-		adapterManager.registerAdapters(FACTORY, IFileRevision.class);
-
-		// Team internal
-		adapterManager.registerAdapters(FACTORY, DiffChangeSet.class); // CVSCheckedInChangeSet
-		adapterManager.registerAdapters(FACTORY, ChangeSetDiffNode.class);
-		adapterManager.registerAdapters(FACTORY, SynchronizeModelElement.class);
-
-		// Team CVS internal; is it used? Maybe CVS History view in Eclipse 3.1?
-		adapterManager.registerAdapters(FACTORY, LogEntry.class);
-	}
-
-	public static void unregisterAdapters() {
-		Platform.getAdapterManager().unregisterAdapters(FACTORY);
-	}
-
-	private LinkedTaskInfoAdapterFactory() {
-	}
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object object, Class adapterType) {
@@ -134,8 +97,6 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 			return ((ChangeSetDiffNode) element).getName();
 		} else if (element instanceof IFileRevision) {
 			return ((IFileRevision) element).getComment();
-		} else if (element instanceof LogEntry) {
-			return ((LogEntry) element).getComment();
 		}
 		return null;
 	}
@@ -163,31 +124,6 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 				}
 			}
 		} 
-		if (element instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) element;
-			IResourceVariant resourceVariant = (IResourceVariant) adaptable.getAdapter(IResourceVariant.class);
-			if (resourceVariant != null && resourceVariant instanceof RemoteResource) {
-				RemoteResource remoteResource = (RemoteResource) resourceVariant;
-				// TODO is there a better way then iterating trough all projects?
-				String path = remoteResource.getRepositoryRelativePath();
-				if (path != null) {
-					for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-						if (project.isAccessible()) {
-							ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
-							try {
-								String repositoryRelativePath = cvsResource.getRepositoryRelativePath();
-								if (cvsResource != null && repositoryRelativePath != null
-										&& path.startsWith(repositoryRelativePath)) {
-									return project;
-								}
-							} catch (CVSException ex) {
-								// ignore
-							}
-						}
-					}
-				}
-			}
-		}
 
 		// TODO any other resource types?
 
