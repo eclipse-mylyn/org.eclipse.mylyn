@@ -22,8 +22,8 @@ import org.eclipse.ant.internal.ui.model.AntModel;
 import org.eclipse.ant.internal.ui.model.AntProjectNode;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
@@ -74,7 +74,7 @@ public class AntEditingMonitor extends AbstractUserInteractionMonitor {
 					XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), path);
 					super.handleElementSelection(part, xnode, contributeToContext);
 				} catch (Exception e) {
-					MylarStatusHandler.log(e, "selection resolve failed");
+					StatusManager.log(e, "selection resolve failed");
 				}
 			}
 		}

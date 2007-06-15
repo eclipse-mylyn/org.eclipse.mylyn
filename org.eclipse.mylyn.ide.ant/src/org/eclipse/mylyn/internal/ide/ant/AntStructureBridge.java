@@ -34,8 +34,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
@@ -286,7 +286,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "Could not find element for: " + marker, false);
+				StatusManager.fail(t, "Could not find element for: " + marker, false);
 				return null;
 			}
 		} else if (resource instanceof IFile) {
@@ -313,7 +313,7 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Unable to get handle for offset in object");
+				StatusManager.log(e, "Unable to get handle for offset in object");
 			}
 		}
 		return null;

@@ -25,13 +25,13 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -356,7 +356,7 @@ public class ContextEditorFormPage extends FormPage {
 				Method method = clazz.getDeclaredMethod("setIsFlatLayout", new Class[] { boolean.class });
 				method.invoke(treeContentProvider, new Object[] { true });
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "couldn't set flat layout on Java content provider");
+				StatusManager.log(e, "couldn't set flat layout on Java content provider");
 			}
 		}
 	}

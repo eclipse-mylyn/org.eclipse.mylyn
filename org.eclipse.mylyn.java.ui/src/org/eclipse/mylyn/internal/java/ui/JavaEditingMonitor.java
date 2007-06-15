@@ -23,9 +23,9 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -128,7 +128,7 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 		} catch (JavaModelException e) {
 			// ignore, fine to fail to resolve an element if the model is not up-to-date
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "Failed to update model based on selection.");
+			StatusManager.log(t, "Failed to update model based on selection.");
 		}
 	}
 

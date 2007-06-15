@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.ide.ui.MarkerViewLabelProvider;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.markers.internal.TableView;
 import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
@@ -47,7 +47,7 @@ public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 					}
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "couldn't get problems view viewer");
+				StatusManager.log(e, "couldn't get problems view viewer");
 			}
 		}
 		if (cachedViewer != null) {

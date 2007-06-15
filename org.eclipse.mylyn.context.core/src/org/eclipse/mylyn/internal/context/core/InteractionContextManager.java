@@ -37,7 +37,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
@@ -140,7 +140,7 @@ public class InteractionContextManager {
 			}
 		} else {
 			resetActivityHistory();
-			MylarStatusHandler.log("No context store installed, not restoring activity context.", this);
+			StatusManager.log("No context store installed, not restoring activity context.", this);
 		}
 	}
 
@@ -152,7 +152,7 @@ public class InteractionContextManager {
 				changed.add(element);
 				listener.interestChanged(changed);
 			} catch (Throwable t) {
-				MylarStatusHandler.fail(t, "context listener failed", false);
+				StatusManager.fail(t, "context listener failed", false);
 			}
 		}
 	}
@@ -434,7 +434,7 @@ public class InteractionContextManager {
 					listeners.add(listener);
 			}
 		} else {
-			MylarStatusHandler.log("attempted to add null lisetener", this);
+			StatusManager.log("attempted to add null lisetener", this);
 		}
 	}
 
@@ -485,18 +485,18 @@ public class InteractionContextManager {
 					try {
 						listener.contextActivated(context);
 					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "context listener failed", false);
+						StatusManager.fail(e, "context listener failed", false);
 					}
 				}
 				// refreshRelatedElements();
 			} else {
-				MylarStatusHandler.log("Could not load context", this);
+				StatusManager.log("Could not load context", this);
 			}
 			suppressListenerNotification = false;
 			listeners.addAll(waitingListeners);
 			waitingListeners.clear();
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "Could not activate context");
+			StatusManager.log(t, "Could not activate context");
 		}
 	}
 
@@ -543,7 +543,7 @@ public class InteractionContextManager {
 					try {
 						listener.contextDeactivated(context);
 					} catch (Exception e) {
-						MylarStatusHandler.fail(e, "context listener failed", false);
+						StatusManager.fail(e, "context listener failed", false);
 					}
 				}
 				if (context.getAllElements().size() == 0) {
@@ -558,7 +558,7 @@ public class InteractionContextManager {
 			}
 			saveActivityContext();
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "Could not deactivate context");
+			StatusManager.log(t, "Could not deactivate context");
 		}
 	}
 
@@ -579,7 +579,7 @@ public class InteractionContextManager {
 				contextFiles.add(getFileForContext(handleIdentifier));
 			}
 		} catch (SecurityException e) {
-			MylarStatusHandler.fail(e, "Could not delete context file", false);
+			StatusManager.fail(e, "Could not delete context file", false);
 		}
 	}
 
@@ -630,7 +630,7 @@ public class InteractionContextManager {
 			}
 			contextFiles.add(getFileForContext(context.getHandleIdentifier()));
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not save context", false);
+			StatusManager.fail(t, "could not save context", false);
 		} finally {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
@@ -669,7 +669,7 @@ public class InteractionContextManager {
 
 			externalizer.writeContextToXml(tempContext, getFileForContext(CONTEXT_HISTORY_FILE_NAME));
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not save activity history", false);
+			StatusManager.fail(t, "could not save activity history", false);
 		} finally {
 			if (!wasPaused) {
 				setContextCapturePaused(false);
@@ -702,7 +702,7 @@ public class InteractionContextManager {
 			}
 			attention.clear();
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Error during meta activity collapse", false);
+			StatusManager.fail(e, "Error during meta activity collapse", false);
 		}
 	}
 
@@ -714,7 +714,7 @@ public class InteractionContextManager {
 			File contextFile = new File(contextDirectory, encoded + CONTEXT_FILE_EXTENSION);
 			return contextFile;
 		} catch (UnsupportedEncodingException e) {
-			MylarStatusHandler.fail(e, "Could not determine path for context", false);
+			StatusManager.fail(e, "Could not determine path for context", false);
 		}
 		return null;
 	}
@@ -942,7 +942,7 @@ public class InteractionContextManager {
 		try {
 			copy(file, contextFile);
 		} catch (IOException e) {
-			MylarStatusHandler.fail(e, "Cold not transfer context", false);
+			StatusManager.fail(e, "Cold not transfer context", false);
 		}
 	}
 

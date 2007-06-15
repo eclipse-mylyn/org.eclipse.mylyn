@@ -13,7 +13,7 @@ package org.eclipse.mylyn.internal.context.ui;
 
 import java.util.Calendar;
 
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.ui.AbstractTaskListFilter;
@@ -50,7 +50,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "interest filter failed", false);
+			StatusManager.fail(t, "interest filter failed", false);
 		}
 		return false;
 	}

@@ -20,7 +20,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -54,7 +54,7 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "could not update on marker change");
+			StatusManager.log(e, "could not update on marker change");
 		}
 	}
 

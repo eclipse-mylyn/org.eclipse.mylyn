@@ -42,12 +42,12 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
 import org.eclipse.mylyn.internal.java.ui.search.XmlActiveSearchUpdater;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.core.text.TextSearchScope;
 import org.eclipse.search.internal.ui.text.FileSearchQuery;
@@ -128,7 +128,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 						IPath path = new Path(filename);
 						element = ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
 					} catch (Exception e) {
-						MylarStatusHandler.log(e, "scope creation failed");
+						StatusManager.log(e, "scope creation failed");
 					}
 					l.add(element);
 				}
@@ -234,7 +234,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 											}
 										}
 									} catch (Exception e) {
-										MylarStatusHandler.log(e, "search failed - unable to create match");
+										StatusManager.log(e, "search failed - unable to create match");
 									}
 								}
 							}
@@ -320,7 +320,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 				}
 				return fResult;
 			} catch (Exception e) {
-				MylarStatusHandler.log(e.getMessage(), this);
+				StatusManager.log(e.getMessage(), this);
 			}
 			return super.getSearchResult();
 		}

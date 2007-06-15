@@ -12,7 +12,7 @@
 package org.eclipse.mylyn.internal.java.ui.editor;
 
 import org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -70,7 +70,7 @@ public class AutoFoldPreferenceBlock implements IJavaFoldingPreferenceBlock {
 
 			return inner;
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not create folding preferences page", true);
+			StatusManager.fail(t, "Could not create folding preferences page", true);
 		}
 		return null;
 	}

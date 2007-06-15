@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -58,7 +58,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 				IDE.openEditor(activePage, file, activate);
 			}
 		} catch (PartInitException e) {
-			MylarStatusHandler.fail(e, "failed to open editor for: " + file, false);
+			StatusManager.fail(e, "failed to open editor for: " + file, false);
 		}
 	}
 

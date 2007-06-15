@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
 
 /**
@@ -84,7 +84,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 					}
 					return childHandles;
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not get child", false);
+					StatusManager.fail(e, "could not get child", false);
 				}
 			} else if (resource instanceof IFile) {
 				// delegate to child bridges
@@ -196,7 +196,7 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 			}
 			return null;
 		} catch (Throwable t) {
-			MylarStatusHandler.log(t, "Could not find element for: " + marker);
+			StatusManager.log(t, "Could not find element for: " + marker);
 			return null;
 		}
 	}

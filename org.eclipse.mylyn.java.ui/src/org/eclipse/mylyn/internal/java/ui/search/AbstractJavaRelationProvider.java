@@ -46,11 +46,11 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
@@ -94,7 +94,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		if (node == null)
 			return;
 		if (node.getContentType() == null) {
-			MylarStatusHandler.log("null content type for: " + node, this);
+			StatusManager.log("null content type for: " + node, this);
 			return;
 		}
 		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE))
@@ -199,7 +199,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				MylarStatusHandler.log("null content type for: " + interesting.getHandleIdentifier(), this);
+				StatusManager.log("null content type for: " + interesting.getHandleIdentifier(), this);
 				return false;
 			} else {
 				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
@@ -340,9 +340,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 				return runStatus;
 			} catch (ConcurrentModificationException cme) {
-				MylarStatusHandler.log(cme, "java search failed");
+				StatusManager.log(cme, "java search failed");
 			} catch (Throwable t) {
-				MylarStatusHandler.log(t, "java search failed");
+				StatusManager.log(t, "java search failed");
 			}
 
 			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,

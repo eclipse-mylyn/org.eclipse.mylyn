@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.team.ui.AbstractActiveChangeSetProvider;
 import org.eclipse.mylyn.team.ui.AbstractContextChangeSetManager;
 
@@ -53,7 +53,7 @@ public class FocusedTeamExtensionPointReader {
 								.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
-						MylarStatusHandler.log(e, MessageFormat.format(
+						StatusManager.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
 										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
 					}
@@ -73,7 +73,7 @@ public class FocusedTeamExtensionPointReader {
 						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
 						// ignore, we
-						MylarStatusHandler.log(e, MessageFormat.format(
+						StatusManager.log(e, MessageFormat.format(
 								"Error while initializing repository contribution {0} from plugin {1}.", element
 										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
 					}

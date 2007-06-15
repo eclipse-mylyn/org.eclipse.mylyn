@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.mylyn.core.IStatusHandler;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -146,7 +146,7 @@ public class ContextCorePlugin extends Plugin {
 				provider.stopAllRunningJobs();
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Core stop failed", false);
+			StatusManager.fail(e, "Mylar Core stop failed", false);
 		}
 	}
 
@@ -343,7 +343,7 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (!(object instanceof AbstractContextStructureBridge)) {
-					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
+					StatusManager.log("Could not load bridge: " + object.getClass().getCanonicalName()
 							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				}
@@ -358,7 +358,7 @@ public class ContextCorePlugin extends Plugin {
 				}
 				ContextCorePlugin.getDefault().internalAddBridge(bridge);
 			} catch (CoreException e) {
-				MylarStatusHandler.log(e, "Could not load bridge extension");
+				StatusManager.log(e, "Could not load bridge extension");
 			}
 		}
 		
@@ -371,7 +371,7 @@ public class ContextCorePlugin extends Plugin {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.log(e, "Could not load relation provider");
+				StatusManager.log(e, "Could not load relation provider");
 			}
 		}
 	}
@@ -408,13 +408,13 @@ public class ContextCorePlugin extends Plugin {
 			try {
 				Object object = element.createExecutableExtension(ELEMENT_CLASS);
 				if (!(object instanceof IStatusHandler)) {
-					MylarStatusHandler.log("Could not load handler: " + object.getClass().getCanonicalName()
+					StatusManager.log("Could not load handler: " + object.getClass().getCanonicalName()
 							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				}
 
 				IStatusHandler handler = (IStatusHandler) object;
-				MylarStatusHandler.addStatusHandler(handler);
+				StatusManager.addStatusHandler(handler);
 			} catch (CoreException e) {
 			}
 		}

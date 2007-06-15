@@ -23,7 +23,7 @@ import org.eclipse.jdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -59,7 +59,7 @@ public class TypeHistoryManager implements IInteractionContextListener {
 					}
 				}
 			} catch (JavaModelException e) {
-				MylarStatusHandler.log(e, "failed to update history for a type");
+				StatusManager.log(e, "failed to update history for a type");
 			}
 		}
 	}

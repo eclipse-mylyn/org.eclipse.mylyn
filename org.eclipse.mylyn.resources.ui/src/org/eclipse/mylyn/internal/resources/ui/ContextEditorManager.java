@@ -29,8 +29,8 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -93,7 +93,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 							}
 						}
 					} catch (Exception e) {
-						MylarStatusHandler.log(e, "Could not restore all editors, memento: " + mementoString + ".");
+						StatusManager.log(e, "Could not restore all editors, memento: " + mementoString + ".");
 					}
 				}
 				IInteractionElement activeNode = context.getActiveNode();
@@ -101,7 +101,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 					ContextUiPlugin.getDefault().getUiBridge(activeNode.getContentType()).open(activeNode);
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "failed to open editors on activation", false);
+				StatusManager.fail(e, "failed to open editors on activation", false);
 			} finally {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 			}
@@ -125,7 +125,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 					ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 							PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Could not store editor state", false);
+					StatusManager.fail(e, "Could not store editor state", false);
 				}
 
 				Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -149,7 +149,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				ResourcesUiBridgePlugin.getDefault().getPreferenceStore().setValue(
 						PREFS_PREFIX + task.getHandleIdentifier(), writer.getBuffer().toString());
 			} catch (IOException e) {
-				MylarStatusHandler.fail(e, "Could not store editor state", false);
+				StatusManager.fail(e, "Could not store editor state", false);
 			}
 
 			Workbench.getInstance().getPreferenceStore().setValue(IPreferenceConstants.REUSE_EDITORS_BOOLEAN,
@@ -208,7 +208,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Could not restore editors", false);
+			StatusManager.fail(e, "Could not restore editors", false);
 		}
 	}
 
@@ -231,7 +231,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not auto close editor.", false);
+			StatusManager.fail(t, "Could not auto close editor.", false);
 		}
 	}
 

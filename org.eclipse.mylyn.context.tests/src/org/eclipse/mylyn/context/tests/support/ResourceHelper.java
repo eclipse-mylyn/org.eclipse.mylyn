@@ -30,7 +30,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.mylyn.context.tests.ContextTestsPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.pde.internal.core.natures.PDE;
 import org.eclipse.pde.internal.core.natures.PluginProject;
 
@@ -59,7 +59,7 @@ public class ResourceHelper {
 						i = MAX_RETRY;
 					} catch (CoreException e) {
 						if (i == MAX_RETRY - 1) {
-							MylarStatusHandler.log(e.getStatus());
+							StatusManager.log(e.getStatus());
 							throw e;
 						}
 						System.gc(); // help windows to really close file

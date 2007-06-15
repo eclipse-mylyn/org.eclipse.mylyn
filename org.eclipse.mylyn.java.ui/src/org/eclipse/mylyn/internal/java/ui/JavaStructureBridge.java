@@ -44,12 +44,12 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaImplementorsProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReadAccessProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaReferencesProvider;
 import org.eclipse.mylyn.internal.java.ui.search.JavaWriteAccessProvider;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.resources.ui.ResourceStructureBridge;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.views.markers.internal.ConcreteMarker;
@@ -125,7 +125,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				} catch (JavaModelException e) {
 					// ignore these, usually indicate no-existent element
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not get child", false);
+					StatusManager.fail(e, "could not get child", false);
 				}
 			}
 		}
@@ -137,7 +137,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		try {
 			return JavaCore.create(handle);
 		} catch (Throwable t) {
-			MylarStatusHandler.log("Could not create java element for handle: " + handle, this);
+			StatusManager.log("Could not create java element for handle: " + handle, this);
 			return null;
 		}
 	}
@@ -300,7 +300,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
 			return null;
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "Could not find element for: " + marker, false);
+			StatusManager.fail(t, "Could not find element for: " + marker, false);
 			return null;
 		}
 	}

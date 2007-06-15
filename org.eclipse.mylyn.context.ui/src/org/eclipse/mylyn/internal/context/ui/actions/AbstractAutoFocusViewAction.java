@@ -20,8 +20,8 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -59,7 +59,7 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 						update(true);
 					} 
 				} catch (Exception e) {
-					MylarStatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
+					StatusManager.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
 				}
 			}
 		});

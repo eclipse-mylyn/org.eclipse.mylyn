@@ -24,9 +24,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
@@ -64,7 +64,7 @@ public class DomContextReader implements IInteractionContextReader {
 			}
 			return t;
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not read context, recreating", false);
+			StatusManager.fail(e, "could not read context, recreating", false);
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		}
@@ -82,15 +82,15 @@ public class DomContextReader implements IInteractionContextReader {
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(inputStream);
 		} catch (SAXException se) {
-			MylarStatusHandler.log(se, "could not build");
+			StatusManager.log(se, "could not build");
 		} catch (ParserConfigurationException e) {
-			MylarStatusHandler.log(e, "could not parse");
+			StatusManager.log(e, "could not parse");
 		} finally {
 			if(inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Failed to close context input stream.", false);
+					StatusManager.fail(e, "Failed to close context input stream.", false);
 				}
 			}
 		}
@@ -116,7 +116,7 @@ public class DomContextReader implements IInteractionContextReader {
 					navigation, delta, Float.parseFloat(interest), format.parse(startDate), format.parse(endDate));
 			return ie;
 		} catch (ParseException e) {
-			MylarStatusHandler.log(e, "could not read interaction event");
+			StatusManager.log(e, "could not read interaction event");
 		}
 		return null;
 	}

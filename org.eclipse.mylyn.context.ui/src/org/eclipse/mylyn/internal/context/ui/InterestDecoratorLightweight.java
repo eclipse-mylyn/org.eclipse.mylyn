@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -61,7 +61,7 @@ public class InterestDecoratorLightweight implements ILightweightLabelDecorator 
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.log(e, "decoration failed");
+			StatusManager.log(e, "decoration failed");
 		}
 	}
 

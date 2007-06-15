@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.mylyn.tasks.core,
  org.eclipse.mylyn.bugzilla.core,
  org.eclipse.mylyn.tasks.ui,
- org.eclipse.mylyn
+ org.eclipse.mylyn.monitor.core
 Eclipse-AutoStart: true
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .

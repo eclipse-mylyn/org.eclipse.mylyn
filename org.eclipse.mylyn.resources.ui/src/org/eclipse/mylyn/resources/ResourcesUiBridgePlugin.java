@@ -28,7 +28,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.resources.ui.ContextEditorManager;
 import org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor;
 import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
@@ -123,7 +123,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			ContextCorePlugin.getContextManager().removeListener(editorManager);
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar XML stop failed", false);
+			StatusManager.fail(e, "Mylar XML stop failed", false);
 		}
 	}
 	

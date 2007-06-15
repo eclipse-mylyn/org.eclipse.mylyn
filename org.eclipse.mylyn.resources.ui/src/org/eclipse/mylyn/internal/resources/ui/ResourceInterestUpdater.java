@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -50,7 +50,7 @@ public class ResourceInterestUpdater {
 				}
 			}
 		} catch (Throwable t) {
-			MylarStatusHandler.fail(t, "could not add resource to context: " + resources, false);
+			StatusManager.fail(t, "could not add resource to context: " + resources, false);
 		}
 	}
 

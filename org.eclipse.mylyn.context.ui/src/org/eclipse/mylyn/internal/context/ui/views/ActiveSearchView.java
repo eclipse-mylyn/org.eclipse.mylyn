@@ -35,13 +35,13 @@ import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ActiveViewSelectionDragAdapter;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.DoiOrderSorter;
 import org.eclipse.mylyn.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ToggleRelationshipProviderAction;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -155,7 +155,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						MylarStatusHandler.log(t, "active searchrefresh failed");
+						StatusManager.log(t, "active searchrefresh failed");
 					}
 				}
 			});
@@ -165,7 +165,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						MylarStatusHandler.log(t, "active searchrefresh failed");
+						StatusManager.log(t, "active searchrefresh failed");
 					}
 				}
 			});

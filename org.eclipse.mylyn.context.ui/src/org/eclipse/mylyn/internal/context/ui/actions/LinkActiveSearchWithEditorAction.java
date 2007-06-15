@@ -19,9 +19,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
@@ -83,7 +83,7 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					}
 				}
 			} catch (Throwable t) {
-				MylarStatusHandler.log(t, "Could not update package explorer");
+				StatusManager.log(t, "Could not update package explorer");
 			}
 		}
 	}

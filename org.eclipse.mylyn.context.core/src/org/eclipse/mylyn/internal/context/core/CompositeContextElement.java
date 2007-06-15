@@ -20,7 +20,7 @@ import java.util.Set;
 import org.eclipse.mylyn.context.core.IDegreeOfInterest;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -106,7 +106,7 @@ public class CompositeContextElement implements IInteractionElement {
 		if (edges.size() == 0) {
 			return null;
 		} else if (edges.size() > 1) {
-			MylarStatusHandler.log("Multiple edges found in composite, not supported", this);
+			StatusManager.log("Multiple edges found in composite, not supported", this);
 		}
 		return edges.iterator().next();
 	}

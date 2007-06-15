@@ -24,9 +24,9 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
 import org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -137,7 +137,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 						typeHistoryManager = new TypeHistoryManager();
 						ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 					} catch (Throwable t) {
-						MylarStatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
+						StatusManager.log(t, "Could not install type history manager, incompatible Eclipse version.");
 					}					
 				
 					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
@@ -152,7 +152,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 					JavaCore.addElementChangedListener(javaElementChangeListener);
 				} catch (Throwable t) {
-					MylarStatusHandler.fail(t, "Mylar Java plug-in initialization failed", true);
+					StatusManager.fail(t, "Mylar Java plug-in initialization failed", true);
 				}
 			}
 		});
@@ -180,7 +180,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			// CVSUIPlugin.getPlugin().getChangeSetManager().remove(changeSetManager);
 			// TODO: uninstall editor tracker
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "Mylar Java stop terminated abnormally", false);
+			StatusManager.fail(e, "Mylar Java stop terminated abnormally", false);
 		}
 	}
 

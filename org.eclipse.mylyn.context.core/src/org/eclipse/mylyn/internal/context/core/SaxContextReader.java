@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -48,7 +48,7 @@ public class SaxContextReader implements IInteractionContextReader {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					MylarStatusHandler.fail(e, "Failed to close context input stream.", false);
+					StatusManager.fail(e, "Failed to close context input stream.", false);
 				}
 			}
 		}

@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -119,7 +119,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
 						// ignore this for now
-						MylarStatusHandler.fail(e, "invalid degree of separation", false);
+						StatusManager.fail(e, "invalid degree of separation", false);
 					}
 				}
 			};

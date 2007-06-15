@@ -33,9 +33,9 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
 import org.eclipse.mylyn.internal.java.ui.search.JUnitReferencesProvider;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * @author Mik Kersten
@@ -99,7 +99,7 @@ public class InteractionContextTestUtil {
 				}
 			}
 		} catch (Exception e) {
-			MylarStatusHandler.fail(e, "could not add all test types", false);
+			StatusManager.fail(e, "could not add all test types", false);
 		}
 		return testTypes;
 	}

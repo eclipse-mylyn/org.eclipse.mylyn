@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.search.internal.ui.text.FileSearchResult;
 import org.eclipse.search.ui.IQueryListener;
 import org.eclipse.search.ui.ISearchQuery;
@@ -78,7 +78,7 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 				}
 			});
 		} catch (CoreException e) {
-			MylarStatusHandler.log(e.getStatus());
+			StatusManager.log(e.getStatus());
 		}
 	}
 

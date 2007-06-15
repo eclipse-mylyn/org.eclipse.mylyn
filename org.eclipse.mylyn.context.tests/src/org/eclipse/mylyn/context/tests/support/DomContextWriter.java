@@ -29,8 +29,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.mylyn.context.core.IInteractionContextWriter;
-import org.eclipse.mylyn.core.MylarStatusHandler;
 import org.eclipse.mylyn.internal.context.core.InteractionContext;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.w3c.dom.Document;
@@ -58,7 +58,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 			dbf = DocumentBuilderFactory.newInstance();
 			doc = dbf.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
-			MylarStatusHandler.log(e, "could not create xml writer");
+			StatusManager.log(e, "could not create xml writer");
 		}
 	}
 
@@ -139,7 +139,7 @@ public class DomContextWriter implements IInteractionContextWriter {
 		try {
 			this.doc = dbf.newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
-			MylarStatusHandler.log(e, "could not clear document");
+			StatusManager.log(e, "could not clear document");
 		}
 
 	}

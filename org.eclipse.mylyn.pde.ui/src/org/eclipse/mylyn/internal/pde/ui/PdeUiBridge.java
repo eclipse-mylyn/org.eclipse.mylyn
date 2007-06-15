@@ -32,7 +32,7 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
-import org.eclipse.mylyn.core.MylarStatusHandler;
+import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
 import org.eclipse.pde.internal.ui.editor.FormOutlinePage;
@@ -89,7 +89,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				MylarStatusHandler.log("Unable to open editor for file: " + filename, this);
+				StatusManager.log("Unable to open editor for file: " + filename, this);
 				return;
 			}
 
@@ -203,7 +203,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 							}
 						}
 					} catch (Exception e) {
-						MylarStatusHandler.log(e, "failed to get tree viewers");
+						StatusManager.log(e, "failed to get tree viewers");
 						return null;
 					}
 				}
@@ -237,7 +237,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 					}
 				}
 			} catch (Exception e) {
-				MylarStatusHandler.fail(e, "could not get PDE outline", false);
+				StatusManager.fail(e, "could not get PDE outline", false);
 				return Collections.emptyList();
 			}
 
