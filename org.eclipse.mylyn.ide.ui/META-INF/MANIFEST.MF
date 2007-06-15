@@ -6,18 +6,18 @@ Bundle-Version: 2.0.0.v20070614-1800
 Bundle-Activator: org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin
 Bundle-Vendor: Eclipse.org
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.ui.navigator,
  org.eclipse.ui.ide,
+ org.eclipse.ui.forms,
+ org.eclipse.pde.runtime,
  org.eclipse.mylyn.context.core,
- org.eclipse.mylyn.context.ui,
  org.eclipse.mylyn.tasks.ui,
  org.eclipse.mylyn.resources.ui,
- org.eclipse.mylyn,
- org.eclipse.ui.forms,
- org.eclipse.core.resources,
- org.eclipse.pde.runtime
+ org.eclipse.mylyn.context.ui,
+ org.eclipse.mylyn
 Eclipse-AutoStart: true
 Export-Package: org.eclipse.mylyn.internal.ide.ui,
  org.eclipse.mylyn.internal.ide.ui.actions,
