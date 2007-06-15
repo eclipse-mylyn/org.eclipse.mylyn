@@ -476,6 +476,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 										TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
 												task.getHandleIdentifier()));
 								containers.addAll(task.getParentContainers());
+								containers.add(TasksUiPlugin.getTaskListManager().getTaskList().getArchiveContainer());
 								for (AbstractTaskContainer container : containers) {
 									refresh(container);
 								}
