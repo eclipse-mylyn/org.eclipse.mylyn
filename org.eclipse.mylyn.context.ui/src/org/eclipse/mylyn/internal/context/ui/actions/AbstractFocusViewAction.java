@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui.actions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -305,7 +306,12 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	 *         installed
 	 */
 	private Set<Class<?>> getPreservedFilterClasses() {
-		return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
+		try {
+			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
+		} catch (Exception e) {
+			MylarStatusHandler.log(e, "Could not determine preserved filters");
+			return Collections.emptySet();
+		}
 	}
 
 	protected boolean installInterestFilter(StructuredViewer viewer) {
