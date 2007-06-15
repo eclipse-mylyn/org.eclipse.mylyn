@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.mylyn.java_feature"
-      label="Mylyn PDE Bridge"
-      version="1.0.0"
+      id="org.eclipse.mylyn.pde_feature"
+      label="Mylyn Bridge: PDE"
+      version="2.0.0.v20070614-1800"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -18,11 +18,37 @@
       [Enter License Description here.]
    </license>
 
+   <url>
+      <update label="Mylyn for Eclipse 3.3" url="http://download.eclipse.org/tools/mylyn/update/e3.3"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.pde.ui"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.mylyn.context.core"/>
+      <import plugin="org.eclipse.mylyn.context.ui"/>
+      <import plugin="org.eclipse.mylyn.monitor.ui"/>
+      <import plugin="org.eclipse.mylyn.resources.ui"/>
+      <import plugin="org.eclipse.mylyn"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.mylyn.ide.ui"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.mylyn.monitor.core"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.mylyn.java.ui"/>
+   </requires>
+
    <plugin
          id="org.eclipse.mylyn.pde.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.0.0.v20070614-1800"
          unpack="false"/>
 
 </feature>
