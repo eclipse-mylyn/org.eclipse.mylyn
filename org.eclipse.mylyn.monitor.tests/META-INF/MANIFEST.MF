@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylar Monitor Tests Plug-in
+Bundle-Name: Mylyn Monitor Tests
 Bundle-SymbolicName: org.eclipse.mylyn.monitor.tests
 Bundle-Version: 0.0.0
 Bundle-Activator: org.eclipse.mylyn.monitor.tests.MonitorTestsPlugin
