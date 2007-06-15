@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.monitor.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -300,6 +301,15 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 
 	public ActivityContextManager getActivityContextManager() {
 		return activityContextManager;
+	}
+	
+	public boolean suppressConfigurationWizards() {
+		List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
+		if (commandLineArgs.contains("-showMylynWizards")) {
+			return false;
+		} else {
+			return commandLineArgs.contains("-pdelaunch");
+		}
 	}
 	
 	private void removeListenersFromWindow(IWorkbenchWindow window) {
