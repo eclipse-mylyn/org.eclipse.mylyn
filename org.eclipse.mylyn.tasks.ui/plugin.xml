@@ -64,7 +64,7 @@
   	</extension>
      	
     <extension point="org.eclipse.ui.newWizards">
-        <category name="Mylyn" id="org.eclipse.mylyn.ui.wizards"/>
+        <category name="Mylyn" id="org.eclipse.mylyn.ui.wizards.new"/>
     </extension>
 
     <extension
@@ -101,7 +101,7 @@
             name="Task"/> -->
       <wizard
             canFinishEarly="true"
-            category="org.eclipse.mylyn.wizards"
+            category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalCategoryWizard"
             hasPages="false"
             icon="icons/etool16/category-new.gif"
@@ -109,19 +109,19 @@
             name="Category">
       </wizard>
 	  <wizard
-            category="org.eclipse.mylyn.wizards"
+            category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard"
             icon="icons/etool16/task-new.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"
             name="Task"/>
       <wizard
-            category="org.eclipse.mylyn.wizards"
+            category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.wizards.NewQueryWizard"
             icon="icons/etool16/query-new.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.new.query"
             name="Query"/>
 	  <wizard
-            category="org.eclipse.mylyn.wizards"
+            category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.tasks.ui.planner.TaskActivityWizard"
             icon="icons/eview16/task-list.gif"
             id="org.eclipse.mylyn.tasks.ui.wizards.activity.report"
