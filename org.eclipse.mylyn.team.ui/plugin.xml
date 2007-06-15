@@ -7,7 +7,7 @@
     
     <!-- needed to update change sets -->
     <extension
-         name="Task-Focused UI Change Set Management"
+         name="Mylyn Change Set Management"
          point="org.eclipse.ui.startup">
     </extension>
 

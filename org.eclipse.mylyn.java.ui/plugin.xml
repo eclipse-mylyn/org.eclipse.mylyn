@@ -110,21 +110,21 @@
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaNoTypeProposalCategory"
-		name="Other Java Proposals (Task-Focused UI)">
+		name="Other Java Proposals (Mylyn)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-other.gif"/>
 	</extension>
 	<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="javaTypeProposalCategory"
-		name="Type Proposals (Task-Focused UI)">
+		name="Type Proposals (Mylyn)">
 		<proposalCategory
 			icon="icons/elcl16/proposals-type.gif"/>
 	</extension>
 		<extension
 		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
 		id="templateProposalCategory"
-		name="Template Proposals (Task-Focused UI)">
+		name="Template Proposals (Mylyn)">
 		<proposalCategory
 			icon="/icons/elcl16/templateprop_co.gif"/>
 	</extension>
@@ -333,7 +333,7 @@
   <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet"
-            label="Task-Focused UI for Java"
+            label="Mylyn Java"
             visible="false">
   		<action
           class="org.eclipse.mylyn.internal.java.ui.actions.ToggleActiveFoldingAction"
@@ -372,7 +372,7 @@
    <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.java.actionSet.browsing"
-            label="Task-Focused UI for Java Browsing"
+            label="Mylyn Java Browsing"
             visible="false"> 
 	    <action
            class="org.eclipse.mylyn.internal.java.ui.actions.FocusBrowsingPerspectiveAction"
@@ -416,7 +416,7 @@
 	<extension point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
-            category="org.eclipse.mylyn.wizards"
+            category="org.eclipse.mylyn.ui.wizards.new"
             class="org.eclipse.mylyn.internal.java.ui.wizards.RecommendedPreferencesWizard"
             hasPages="true"
             icon="icons/etool16/wizard-prefs.gif"

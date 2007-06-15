@@ -207,8 +207,8 @@
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Task-Focused UI"
-            description="Task-Focused UI"
+            label="Mylyn Focus"
+            description="Mylyn Focus"
             visible="true"
             id="org.eclipse.mylyn.context.ui.actionSet">
          <action
