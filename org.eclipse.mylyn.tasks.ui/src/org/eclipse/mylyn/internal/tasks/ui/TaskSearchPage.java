@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class TaskSearchPage extends DialogPage implements ISearchPage {
 	
-	public static final String ID = "org.eclipse.mylyn.tasks.ui.core.search.page";
+	public static final String ID = "org.eclipse.mylyn.tasks.ui.search.page";
 
 	private static final String PAGE_KEY = "page";
 
