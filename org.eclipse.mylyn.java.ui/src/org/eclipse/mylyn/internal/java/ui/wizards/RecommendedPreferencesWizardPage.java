@@ -42,21 +42,15 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 
 	private static final String AUTO_CLOSE = "Automatically manage open editors to match task context";
 
-//	private static final String WORKING_SET = "Add the \"active task context\" working set";
-
 	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist, requires Eclipse restart.";
 
 	private static final String CONTENT_ASSIST_WARNING = "Toggle via Preferences->Java->Editor->Content Assist->Advanced ";
 	
-	private static final String OPEN_TASK_LIST = "Open the " + TaskListView.LABEL_VIEW + " view";
-
 	private Button contentAssistButton;
 
 	private Button turnOnAutoFoldingButton;
 
 	private boolean autoFolding = true;
-
-//	private Button addMylarActiveWorkingSetButton;
 
 	// TODO: remove
 	private boolean createWorkingSet = false;
@@ -64,8 +58,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 	private Button closeEditorsOnDeactivationButton;
 
 	private boolean closeEditors = true;
-
-	private Button openTaskListButton;
 
 	private boolean openTaskList = true;
 
@@ -154,7 +146,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label = new Label(buttonComposite, SWT.NONE);
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-		label.setText("Toggle via Mylar preferences page ");
+		label.setText("Toggle via Mylyn preferences page ");
 		
 //		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
 //		gd = new GridData();
@@ -180,26 +172,6 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 //		label = new Label(buttonComposite, SWT.NONE);
 //		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 //		label.setText("Remove via Window->Working Sets ");
-		
-		openTaskListButton = new Button(buttonComposite, SWT.CHECK);
-		gd = new GridData();
-		openTaskListButton.setLayoutData(gd);
-		openTaskListButton.setSelection(true);
-		openTaskListButton.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				openTaskList = openTaskListButton.getSelection();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// don't care about this event
-			}
-		});
-
-		label = new Label(buttonComposite, SWT.NONE);
-		label.setText(OPEN_TASK_LIST);
-		gd = new GridData();
-		label.setLayoutData(gd);
 
 		Label spacer = new Label(buttonComposite, SWT.NONE);
 		spacer.setText(" ");
@@ -209,17 +181,17 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
 		hyperlink.setUnderlined(true);
 		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
-		hyperlink.setText("If this is your first time using Mylar please watch the short Getting Started video");
+		hyperlink.setText("If this is your first time using Mylyn please watch the short Getting Started video");
 
 		label = new Label(containerComposite, SWT.NONE);
-		label.setText("For a legend of the icons used by Mylar open: Help (menu) -> Mylar UI Legend");
+		label.setText("For a legend of the icons used by Mylyn open: Help (menu) -> Mylyn UI Legend");
 		gd = new GridData();
 		label.setLayoutData(gd);
 		
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {
-				TasksUiUtil.openUrl("http://eclipse.org/mylar/start.php", false);
+				TasksUiUtil.openUrl("http://eclipse.org/mylyn/start.php", false);
 			}
 
 			public void linkEntered(HyperlinkEvent e) {

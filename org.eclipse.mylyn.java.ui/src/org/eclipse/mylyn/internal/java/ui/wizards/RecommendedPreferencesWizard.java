@@ -46,8 +46,8 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
 	public void init() {
-		setDefaultPageImageDescriptor(ContextUiImages.MYLAR);
-		setWindowTitle("Mylar Recommended Preferences");
+		setDefaultPageImageDescriptor(ContextUiImages.MYLYN);
+		setWindowTitle("Recommended Mylyn Preferences");
 		super.setDefaultPageImageDescriptor(JavaUiBridgePlugin.imageDescriptorFromPlugin(JavaUiBridgePlugin.PLUGIN_ID,
 				"icons/wizban/banner-prefs.gif"));
 		preferencePage = new RecommendedPreferencesWizardPage("Automatic preference settings");

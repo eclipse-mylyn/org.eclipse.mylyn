@@ -93,20 +93,10 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 					}
 					
 					getPreferenceStore().addPropertyChangeListener(problemListener);
-
-//					MylarMonitorPlugin.getDefault().addWindowPostSelectionListener(packageExplorerManager);
-
+					
 					javaEditingMonitor = new JavaEditingMonitor();
 					MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
-
-					// TODO: race conditions prevents this from running?
-//					if (FocusPackageExplorerAction.getDefault() != null) {
-//						FocusPackageExplorerAction.getDefault().update();
-//					}
-//					if (FocusBrowsingPerspectiveAction.getDefault() != null) {
-//						FocusBrowsingPerspectiveAction.getDefault().update();
-//					}
 
 					if (!getPreferenceStore().contains(RecommendedPreferencesWizard.MYLAR_FIRST_RUN)) {
 						JavaUiUtil.installContentAssist(JavaPlugin.getDefault().getPreferenceStore(), true);

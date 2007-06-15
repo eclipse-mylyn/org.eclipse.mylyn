@@ -42,9 +42,9 @@ public class ContextUiImages {
 	
 	public static final ImageDescriptor CONTEXT_COPY = create(T_ELCL, "context-transfer.gif");
 	
-	public static final ImageDescriptor MYLAR = create(T_ELCL, "mylar.gif");
+	public static final ImageDescriptor MYLYN = create(T_ELCL, "mylar.gif");
 
-	public static final ImageDescriptor MYLAR_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
+	public static final ImageDescriptor MYLYN_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
 
 	public static final ImageDescriptor DECORATE_INTEREST = create(T_ELCL, "refresh.gif");
 
