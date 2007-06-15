@@ -22,10 +22,10 @@
           definitionId="org.eclipse.mylyn.doc.legend.show"
           icon="icons/etool16/icons-legend.gif"
           id="org.eclipse.mylyn.doc.legend.show.action"
-          label="Task-Focused UI Legend"
+          label="Mylyn UI Legend"
           menubarPath="help/helpStart"
           style="push"
-          tooltip="Task-Focused UI Legend"> 
+          tooltip="Mylyn UI Legend"> 
       	</action> 
     </actionSet>
     </extension>
