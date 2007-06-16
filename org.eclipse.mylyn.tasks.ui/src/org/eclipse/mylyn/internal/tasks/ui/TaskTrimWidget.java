@@ -306,7 +306,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 	}
 
 	public void indicateNoActiveTask() {
-		if (activeTaskLabel.isDisposed()) {
+		if (activeTaskLabel != null && activeTaskLabel.isDisposed()) {
 			return;
 		}
 
