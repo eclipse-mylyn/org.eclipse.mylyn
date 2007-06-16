@@ -7,17 +7,10 @@
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
 
-	<!--
-    <extension
-         point="org.eclipse.mylyn.context.core.bridges">
-   	  	<contextStore class="org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore"/>
-    </extension>
-	-->
-
 	<extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="toolbar:org.eclipse.ui.trim.status?after">
+            locationURI="toolbar:org.eclipse.ui.trim.command2?after">
          <toolbar
                id="org.eclipse.mylyn.tasks.ui.trim.container">
  			<command
@@ -320,6 +313,17 @@
           label="Restore Tasks from History..."
           menubarPath="tasks"
           style="push">
+    </action>
+    <action
+          class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction"
+          enablesFor="*"
+          icon="icons/etool16/query-new.gif"
+          id="org.eclipse.mylyn.tasks.ui.new.query"
+          label="New Query"
+          menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
+          style="push"
+          toolbarPath="new"
+          tooltip="New Query...">
     </action>
            		
   		<action
