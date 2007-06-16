@@ -252,21 +252,22 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		ToggleNoWorkingSetsAction() {
 			super("Deselect All", IAction.AS_CHECK_BOX);
 //			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
-			setChecked(areAllTaskWorkingSetsEnabled());
+//			setChecked(areAllTaskWorkingSetsEnabled());
 		}
 
 		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
-
-			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
-			Iterator<IWorkingSet> iter = newList.iterator();
-			while (iter.hasNext()) {
-				IWorkingSet workingSet = (IWorkingSet) iter.next();
-				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-					tempList.add(workingSet);
-				}
-			}
-			newList.removeAll(tempList);
+			throw new RuntimeException("not implemented");
+//			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
+//
+//			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
+//			Iterator<IWorkingSet> iter = newList.iterator();
+//			while (iter.hasNext()) {
+//				IWorkingSet workingSet = (IWorkingSet) iter.next();
+//				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+//					tempList.add(workingSet);
+//				}
+//			}
+//			newList.removeAll(tempList);
 
 //			if (isChecked()) {
 //				IWorkingSet[] allWorkingSets = getAllWorkingSets();
@@ -277,8 +278,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 //				}
 //			}
 
-			getWindow().getActivePage()
-					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+//			getWindow().getActivePage()
+//					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
 		}
 
 	}

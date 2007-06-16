@@ -56,7 +56,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public static final String LABEL_NO_SETS = "All";
 
-	public static final String LABEL_MULTIPLE_SETS = "<multiple sets>";
+	public static final String LABEL_MULTIPLE_SETS = "<multiple>";
 
 	private Hyperlink activeSetLabel;
 
