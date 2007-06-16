@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class ShowMylarLegendAction implements IWorkbenchWindowActionDelegate {
+public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate {
 
 		public void dispose() {
 		// ignore

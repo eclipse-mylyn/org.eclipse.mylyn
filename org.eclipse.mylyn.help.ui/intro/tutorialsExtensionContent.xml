@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <introContent>
-	<extensionContent id="org.eclipse.mylar" name="Mylar"
+	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
 		style="css/tutorials.css" path="tutorials/@">
-		<group label="Mylar" id="mylar" style-id="content-group">
+		<group label="Mylyn" id="mylyn" style-id="content-group">
 			<link 
 				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.query" 
-				label="Create a query" id="mylar-query"	style-id="content-link">
+				label="Create a query" id="mylyn-query"	style-id="content-link">
 				<text>Learn how to create a query from bugs.eclipse.org.</text>
 			</link>
 			<link
 				url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=org.eclipse.mylyn.cheatsheet.taskfocus"
-				label="Use Task-Focused UI" id="mylar-task" style-id="content-link">
+				label="Use Task-Focused UI" id="mylyn-task" style-id="content-link">
 				<text>Learn how to use Task-Focused UI.</text>
 			</link>
 		</group>

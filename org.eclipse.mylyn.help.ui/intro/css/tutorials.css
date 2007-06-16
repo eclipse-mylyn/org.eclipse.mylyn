@@ -1,15 +1,15 @@
-a#mylar-query img {
+a#mylyn-query img {
 	background-image: url(../../images/topiclabel/tu_query48.gif);
 }
 
-a#mylar-query:hover img {
+a#mylyn-query:hover img {
 	background-image: url(../../images/topiclabel/tu_query48_hov.gif);
 }
 
-a#mylar-task img {
+a#mylyn-task img {
 	background-image: url(../../images/topiclabel/tu_task48.gif);
 }
 
-a#mylar-task:hover img {
+a#mylyn-task:hover img {
 	background-image: url(../../images/topiclabel/tu_task48_hov.gif);
 }

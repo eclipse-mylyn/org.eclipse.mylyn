@@ -1,7 +1,7 @@
-a#mylar-noteworthy img {
-	background-image: url(../../images/topiclabel/wn_mylar48.gif);
+a#mylyn-noteworthy img {
+	background-image: url(../../images/topiclabel/wn_mylyn48.gif);
 }
 
-a#mylar-noteworthy:hover img {
-	background-image: url(../../images/topiclabel/wn_mylar48_hov.gif);
+a#mylyn-noteworthy:hover img {
+	background-image: url(../../images/topiclabel/wn_mylyn48_hov.gif);
 }

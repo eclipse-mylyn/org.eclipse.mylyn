@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <introContent>
-	<extensionContent id="org.eclipse.mylar" name="Mylar"
+	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
 		style="css/whatsnew.css" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
-			<link label="Mylar"
-				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.doc/doc/new.html"
-				id="mylar-noteworthy" style-id="content-link">
+			<link label="Mylyn"
+				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.help.ui/doc/new.html"
+				id="mylyn-noteworthy" style-id="content-link">
 				<text>
-					Find out the significant changes made to Mylar
+					Find out the significant changes made to Mylyn
 				</text>
 			</link>
 		</group>

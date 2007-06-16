@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <introContent>
-	<extensionContent id="org.eclipse.mylar" name="Mylar"
+	<extensionContent id="org.eclipse.mylyn" name="Mylyn"
 		style="css/overview.css" path="overview/@">
 		<group id="content-group" style-id="content-group">
-			<link label="Mylar"
-				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.doc/doc/overview.html"
-				id="mylar-overview" style-id="content-link">
-				<text>Learn more about Mylar task-focused ui</text>
+			<!--
+			<link label="Mylyn"
+				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.mylyn.help.ui/doc/overview.html"
+				id="mylyn-overview" style-id="content-link">
+				<text>Learn more about Mylyn's Task-Focused UI</text>
+			</link>
+			-->
+			<link label="Mylyn UI Legend"
+				url="http://org.eclipse.ui.intro/runAction?pluginId=org.eclipse.mylyn.help.ui&amp;class=org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction&amp;id=org.eclipse.mylyn.doc.legend.show.action"
+				id="mylyn-overview" style-id="content-link">
+				<text>Open the UI Legend, also available in the Help menu</text>
 			</link>
 		</group>
 	</extensionContent>

@@ -48,6 +48,8 @@ import org.eclipse.ui.themes.IThemeManager;
  */
 public class UiLegendDialog extends PopupDialog {
 
+	public static final String TITLE = "Mylyn UI Legend";
+
 	private FormToolkit toolkit;
 
 	private ScrolledForm form;
@@ -87,7 +89,7 @@ public class UiLegendDialog extends PopupDialog {
 	@Override
 	protected final Control createDialogArea(final Composite parent) {
 
-		getShell().setText("Mylyn UI Legend");
+		getShell().setText(TITLE);
 
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
@@ -97,7 +99,7 @@ public class UiLegendDialog extends PopupDialog {
 		Label image = null;
 
 		Section section = toolkit.createSection(form.getBody(), Section.DESCRIPTION);
-		section.setText("Mylar UI Legend                                                        ");
+		section.setText(TITLE + "                                                        ");
 		Composite sectionClient = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.verticalSpacing = 0;
