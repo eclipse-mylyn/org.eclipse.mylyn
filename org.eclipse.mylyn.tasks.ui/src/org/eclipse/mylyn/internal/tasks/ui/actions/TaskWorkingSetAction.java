@@ -101,8 +101,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		IWorkingSet[] workingSets = getAllWorkingSets();
 
 		if (doTaskWorkingSetsExist()) {
-			ActionContributionItem item = new ActionContributionItem(new ToggleAllWorkingSetsAction());
-			item.fill(dropDownMenu, -1);
+			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction());
+			itemAll.fill(dropDownMenu, -1);
+			ActionContributionItem itemNone = new ActionContributionItem(new ToggleNoWorkingSetsAction());
+			itemNone.fill(dropDownMenu, -1);
 
 			Separator separator = new Separator();
 			separator.fill(dropDownMenu, -1);
@@ -114,8 +116,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = (IWorkingSet) iter.next();
 				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-					item = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
-					item.fill(dropDownMenu, -1);
+					itemAll = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
+					itemNone.fill(dropDownMenu, -1);
 				}
 			}
 
@@ -212,8 +214,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	private class ToggleAllWorkingSetsAction extends Action {
 
 		ToggleAllWorkingSetsAction() {
-			super("All Task Working Sets", IAction.AS_CHECK_BOX);
-			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
+			super("Select All", IAction.AS_CHECK_BOX);
+//			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
 			setChecked(areAllTaskWorkingSetsEnabled());
 		}
 
@@ -245,6 +247,42 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	}
 
+	private class ToggleNoWorkingSetsAction extends Action {
+
+		ToggleNoWorkingSetsAction() {
+			super("Deselect All", IAction.AS_CHECK_BOX);
+//			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
+			setChecked(areAllTaskWorkingSetsEnabled());
+		}
+
+		public void runWithEvent(Event event) {
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
+
+			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
+			Iterator<IWorkingSet> iter = newList.iterator();
+			while (iter.hasNext()) {
+				IWorkingSet workingSet = (IWorkingSet) iter.next();
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+					tempList.add(workingSet);
+				}
+			}
+			newList.removeAll(tempList);
+
+//			if (isChecked()) {
+//				IWorkingSet[] allWorkingSets = getAllWorkingSets();
+//				for (IWorkingSet workingSet : allWorkingSets) {
+//					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+//						newList.add(workingSet);
+//					}
+//				}
+//			}
+
+			getWindow().getActivePage()
+					.setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
+		}
+
+	}
+	
 	private class ToggleWorkingSetAction extends Action {
 		private IWorkingSet set;
 
