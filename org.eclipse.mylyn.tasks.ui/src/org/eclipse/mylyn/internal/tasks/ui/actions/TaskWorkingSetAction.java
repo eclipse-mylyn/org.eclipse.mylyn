@@ -102,12 +102,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 		if (doTaskWorkingSetsExist()) {
 			ActionContributionItem itemAll = new ActionContributionItem(new ToggleAllWorkingSetsAction());
-			itemAll.fill(dropDownMenu, -1);
 			ActionContributionItem itemNone = new ActionContributionItem(new ToggleNoWorkingSetsAction());
-			itemNone.fill(dropDownMenu, -1);
-
-			Separator separator = new Separator();
-			separator.fill(dropDownMenu, -1);
 
 			List<IWorkingSet> sortedWorkingSets = Arrays.asList(workingSets);
 			Collections.sort(sortedWorkingSets, new WorkingSetComparator());
@@ -116,13 +111,18 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = (IWorkingSet) iter.next();
 				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
-					itemAll = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
-					itemAll.fill(dropDownMenu, -1);
+					ActionContributionItem itemSet = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
+					itemSet.fill(dropDownMenu, -1);
 				}
 			}
-
+			
+			Separator separator = new Separator();
+			separator.fill(dropDownMenu, -1);
+			itemAll.fill(dropDownMenu, -1);
+			itemNone.fill(dropDownMenu, -1);
 			separator = new Separator();
 			separator.fill(dropDownMenu, -1);
+			
 		}
 
 		ActionContributionItem editItem = new ActionContributionItem(new ManageWorkingSetsAction());
@@ -216,7 +216,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		ToggleAllWorkingSetsAction() {
 			super("Select All", IAction.AS_CHECK_BOX);
 //			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
-			setChecked(areAllTaskWorkingSetsEnabled());
+//			setChecked(areAllTaskWorkingSetsEnabled());
 		}
 
 		public void runWithEvent(Event event) {
@@ -252,7 +252,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		ToggleNoWorkingSetsAction() {
 			super("Deselect All", IAction.AS_CHECK_BOX);
 //			setImageDescriptor(TasksUiImages.TASK_WORKING_SET);
-//			setChecked(areAllTaskWorkingSetsEnabled());
+//			setChecked(!areAllTaskWorkingSetsEnabled());
 		}
 
 		public void runWithEvent(Event event) {

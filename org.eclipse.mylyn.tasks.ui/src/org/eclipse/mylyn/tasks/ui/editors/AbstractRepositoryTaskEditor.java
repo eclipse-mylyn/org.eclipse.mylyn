@@ -609,11 +609,13 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			};
 
-			activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
-			activateAction.setToolTipText("Activate");
-			activateAction.setEnabled(!repositoryTask.isActive());
-			parentEditor.getTopForm().getToolBarManager().add(activateAction);
-
+			if (repositoryTask != null) {
+				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+				activateAction.setToolTipText("Activate");
+				activateAction.setEnabled(!repositoryTask.isActive());
+				parentEditor.getTopForm().getToolBarManager().add(activateAction);
+			}
+			
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
 			// SynchronizeSelectedAction());

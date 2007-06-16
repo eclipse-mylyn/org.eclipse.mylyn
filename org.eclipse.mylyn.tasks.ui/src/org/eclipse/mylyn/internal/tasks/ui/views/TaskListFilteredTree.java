@@ -31,6 +31,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -40,6 +41,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
@@ -48,21 +51,21 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class TaskListFilteredTree extends AbstractFilteredTree {
 
-	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
-		super(parent, treeStyle, filter);
-	}
+	private static final String LABEL_ACTIVE_NONE = "... ";
 
-	public static final String LABEL_NO_ACTIVE = "... ";
+	private static final String LABEL_SETS_NONE = "All Tasks";
 
-	public static final String LABEL_NO_SETS = "All";
+	private static final String LABEL_SETS_EDIT = "Edit Task Working Sets...";
+	
+	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
 
-	public static final String LABEL_MULTIPLE_SETS = "<multiple>";
+	private Hyperlink workingSetLink;
 
-	private Hyperlink activeSetLabel;
-
-	private Hyperlink activeTaskLabel;
+	private Hyperlink activeTaskLink;
 
 	private WorkweekProgressBar taskProgressBar;
+	
+	private FormColors formColors;
 
 	private int totalTasks;
 
@@ -72,6 +75,18 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private int incompleteTime;
 
+	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
+		super(parent, treeStyle, filter);
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (formColors != null) {
+			formColors.dispose();
+		}
+	}
+	
 	@Override
 	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
 		// Use a single Composite for the Tree to being able to use the
@@ -179,11 +194,29 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createWorkingSetComposite(Composite container) {
+		formColors = new FormColors(parent.getDisplay());
+		
 		final Button workingSetButton = new Button(container, SWT.ARROW | SWT.RIGHT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
 
-		activeSetLabel = new Hyperlink(container, SWT.LEFT);
-		activeSetLabel.setText(LABEL_NO_SETS);
+		workingSetLink = new Hyperlink(container, SWT.LEFT);
+		workingSetLink.setText(LABEL_SETS_NONE);
+		workingSetLink.setUnderlined(false);
+		workingSetLink.setForeground(formColors.getColor(IFormColors.TITLE));
+		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
+
+			public void mouseEnter(MouseEvent e) {
+				workingSetLink.setUnderlined(true);
+			}
+
+			public void mouseExit(MouseEvent e) {
+				workingSetLink.setUnderlined(false);
+			}
+
+			public void mouseHover(MouseEvent e) {
+			}
+		});
+		
 		indicateActiveTaskWorkingSet();
 
 		final TaskWorkingSetAction action = new TaskWorkingSetAction();
@@ -196,7 +229,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-		activeSetLabel.addMouseListener(new MouseAdapter() {
+		workingSetLink.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				action.run();
 			}
@@ -206,7 +239,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 //		manager.add(action);
 //		manager.createControl(container);
 
-		return activeSetLabel;
+		return workingSetLink;
 	}
 
 	@Override
@@ -214,8 +247,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		final Button activeTaskButton = new Button(container, SWT.ARROW | SWT.RIGHT);
 		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
 
-		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
-		activeTaskLabel.setText(LABEL_NO_ACTIVE);
+		activeTaskLink = new Hyperlink(container, SWT.LEFT);
+		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
@@ -232,7 +265,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-		activeTaskLabel.addMouseListener(new MouseAdapter() {
+		activeTaskLink.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -252,7 +285,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 //		manager.add(action);
 //		manager.createControl(container);
 
-		return activeTaskLabel;
+		return activeTaskLink;
 	}
 
 	private Set<IWorkingSet> getActiveTaskWorkingSets() {
@@ -279,16 +312,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 
 		if (activeSets.size() == 0) {
-			activeSetLabel.setText(LABEL_NO_SETS);
-			activeSetLabel.setToolTipText(LABEL_NO_SETS);
+			workingSetLink.setText(LABEL_SETS_NONE);
+			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 		} else if (activeSets.size() > 1) {
-			activeSetLabel.setText(LABEL_MULTIPLE_SETS);
-			activeSetLabel.setToolTipText(LABEL_MULTIPLE_SETS);
+			workingSetLink.setText(LABEL_SETS_MULTIPLE);
+			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 		} else {
 			Object[] array = activeSets.toArray();
 			IWorkingSet theSet = (IWorkingSet) array[0];
-			activeSetLabel.setText(theSet.getLabel());
-			activeSetLabel.setToolTipText(theSet.getLabel());
+			workingSetLink.setText(theSet.getLabel());
+			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 		}
 		filterComposite.layout();
 	}
@@ -298,15 +331,30 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		String text = task.getSummary();
-		activeTaskLabel.setText(text);
-		activeTaskLabel.setUnderlined(true);
-		activeTaskLabel.setToolTipText(task.getSummary());
+		String text = task.getSummary() + " "; // hack for padding
+		activeTaskLink.setText(text);
+		activeTaskLink.setUnderlined(false);
+		activeTaskLink.setForeground(formColors.getColor(IFormColors.TITLE));
+		activeTaskLink.setToolTipText("Open: " + task.getSummary());
+		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
+
+			public void mouseEnter(MouseEvent e) {
+				activeTaskLink.setUnderlined(true);
+			}
+
+			public void mouseExit(MouseEvent e) {
+				activeTaskLink.setUnderlined(false);
+			}
+
+			public void mouseHover(MouseEvent e) {
+			}
+		});
+		
 		filterComposite.layout();
 	}
 
 	public String getActiveTaskLabelText() {
-		return activeTaskLabel.getText();
+		return activeTaskLink.getText();
 	}
 
 	public void indicateNoActiveTask() {
@@ -314,9 +362,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		activeTaskLabel.setText(LABEL_NO_ACTIVE);
-		activeTaskLabel.setUnderlined(false);
-		activeTaskLabel.setToolTipText("");
+		activeTaskLink.setText(LABEL_ACTIVE_NONE);
+		activeTaskLink.setToolTipText("");
 		filterComposite.layout();
 	}
 

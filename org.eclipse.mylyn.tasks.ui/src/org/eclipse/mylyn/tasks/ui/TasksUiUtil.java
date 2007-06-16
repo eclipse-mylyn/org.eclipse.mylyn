@@ -112,7 +112,7 @@ public class TasksUiUtil {
 				StatusManager.fail(e, "could not open task url", true);
 			}
 		} else {
-			IWebBrowser browser = null;
+			IWebBrowser browser = null; 
 			int flags = 0;
 			if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
 				flags = WorkbenchBrowserSupport.AS_EDITOR | WorkbenchBrowserSupport.LOCATION_BAR
