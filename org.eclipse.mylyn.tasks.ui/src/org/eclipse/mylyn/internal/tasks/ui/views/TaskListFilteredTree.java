@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -255,16 +256,20 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	private Set<IWorkingSet> getActiveTaskWorkingSets() {
-		Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.getWorkingSets()));
-		for (IWorkingSet workingSet : allSets) {
-			if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
-				allSets.remove(workingSet);
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.getWorkingSets()));
+			for (IWorkingSet workingSet : allSets) {
+				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
+					allSets.remove(workingSet);
+				}
 			}
+			return allSets;
+		} else {
+			return Collections.emptySet();
 		}
-		return allSets;
 	}
 
 	public void indicateActiveTaskWorkingSet() {
