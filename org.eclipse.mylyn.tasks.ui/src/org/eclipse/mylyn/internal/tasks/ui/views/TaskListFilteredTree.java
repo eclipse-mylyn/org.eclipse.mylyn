@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -31,9 +30,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.internal.win32.OS;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
@@ -50,9 +51,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		super(parent, treeStyle, filter);
 	}
 
-	public static final String LABEL_NO_ACTIVE = "<no active task>";
+	public static final String LABEL_NO_ACTIVE = "... ";
 
-	public static final String LABEL_NO_SETS = "<no sets>";
+	public static final String LABEL_NO_SETS = "All";
 
 	public static final String LABEL_MULTIPLE_SETS = "<multiple sets>";
 
@@ -177,36 +178,58 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createWorkingSetComposite(Composite container) {
+		final Button workingSetButton = new Button(container, SWT.ARROW | SWT.RIGHT);
+		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
+
 		activeSetLabel = new Hyperlink(container, SWT.LEFT);
 		activeSetLabel.setText(LABEL_NO_SETS);
 		indicateActiveTaskWorkingSet();
 
 		final TaskWorkingSetAction action = new TaskWorkingSetAction();
-//		action.setImageDescriptor(null);
-		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
-		action.setText("1ab");
-		
+//		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
+//		action.setText(null);
+
+		workingSetButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				action.getMenu(workingSetButton).setVisible(true);
+			}
+		});
+
 		activeSetLabel.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				action.run();
 			}
 		});
 
-		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-		manager.add(action);
-		manager.createControl(container);
+//		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
+//		manager.add(action);
+//		manager.createControl(container);
 
-		return null;
+		return activeSetLabel;
 	}
 
 	@Override
 	protected Composite createStatusComposite(Composite container) {
+		final Button activeTaskButton = new Button(container, SWT.ARROW | SWT.RIGHT);
+		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
+
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
+
+		final PreviousTaskDropDownAction action = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory());
+//		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
+//		action.setText(null);
+
+		activeTaskButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				action.getMenu(activeTaskButton).setVisible(true);
+			}
+		});
 
 		activeTaskLabel.addMouseListener(new MouseAdapter() {
 
@@ -224,14 +247,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		});
 
-		PreviousTaskDropDownAction action = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory());
-		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
-		action.setText(null);
-
-		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-		manager.add(action);
-		manager.createControl(container);
+//		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
+//		manager.add(action);
+//		manager.createControl(container);
 
 		return activeTaskLabel;
 	}
@@ -254,7 +272,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		if (filterComposite.isDisposed() || activeSets == null) {
 			return;
 		}
-		
+
 		if (activeSets.size() == 0) {
 			activeSetLabel.setText(LABEL_NO_SETS);
 			activeSetLabel.setToolTipText(LABEL_NO_SETS);

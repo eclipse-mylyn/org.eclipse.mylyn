@@ -314,17 +314,6 @@
           menubarPath="tasks"
           style="push">
     </action>
-    <action
-          class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction"
-          enablesFor="*"
-          icon="icons/etool16/query-new.gif"
-          id="org.eclipse.mylyn.tasks.ui.new.query"
-          label="New Query"
-          menubarPath="org.eclipse.mylyn.tasks.ui.menu.new/repository"
-          style="push"
-          toolbarPath="new"
-          tooltip="New Query...">
-    </action>
            		
   		<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction"

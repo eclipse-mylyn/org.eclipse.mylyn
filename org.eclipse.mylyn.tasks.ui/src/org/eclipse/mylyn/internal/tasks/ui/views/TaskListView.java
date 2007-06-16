@@ -1142,7 +1142,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
 		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(presentationDropDownSelectionAction);
-		manager.add(previousTaskAction);
+//		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}

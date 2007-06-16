@@ -153,7 +153,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		manager.add(navigateAction);
 		manager.createControl(composite);
 
-		createStatusComposite(composite);
+//		createStatusComposite(composite);
 
 		return composite;
 	}
@@ -165,7 +165,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
-		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
+//		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
 
 		activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
@@ -300,9 +300,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-		activeTaskLabel.setText(shortenText(activeTask.getSummary()));
-		activeTaskLabel.setUnderlined(true);
-		activeTaskLabel.setToolTipText(activeTask.getSummary());
+//		activeTaskLabel.setText(shortenText(activeTask.getSummary()));
+//		activeTaskLabel.setUnderlined(true);
+//		activeTaskLabel.setToolTipText(activeTask.getSummary());
 	}
 
 	public void indicateNoActiveTask() {
@@ -310,9 +310,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
-		activeTaskLabel.setUnderlined(false);
-		activeTaskLabel.setToolTipText("");
+//		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
+//		activeTaskLabel.setUnderlined(false);
+//		activeTaskLabel.setToolTipText("");
 	}
 
 	// From PerspectiveBarContributionItem
