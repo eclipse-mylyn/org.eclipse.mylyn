@@ -1726,6 +1726,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			if (getSite() != null && getSite().getPage() != null) {
 				filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 			}
+			
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					filteredTree.indicateActiveTaskWorkingSet();
+				}
+			});
 		}
 
 		try {

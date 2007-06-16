@@ -35,7 +35,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractMylarFilteredTree extends FilteredTree {
+public abstract class AbstractFilteredTree extends FilteredTree {
 
 	private static final int filterWidth = 70;
 
@@ -52,7 +52,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	/**
 	 * HACK: using reflection to gain access
 	 */
-	public AbstractMylarFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
+	public AbstractFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 		Field refreshField;
 		try {
@@ -86,7 +86,7 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		GridLayout gridLayout = new GridLayout(5, false);
+		GridLayout gridLayout = new GridLayout(7, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 2;
 		gridLayout.verticalSpacing = 0;
@@ -116,7 +116,8 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 				}
 			}
 		});
-
+		
+		createWorkingSetComposite(parent);
 		createStatusComposite(parent);
 		return parent;
 	}
@@ -148,6 +149,8 @@ public abstract class AbstractMylarFilteredTree extends FilteredTree {
 	
 	protected abstract Composite createProgressComposite(Composite container);
 
+	protected abstract Composite createWorkingSetComposite(Composite container);
+	
 	protected abstract Composite createStatusComposite(Composite container);
 
 	@Override

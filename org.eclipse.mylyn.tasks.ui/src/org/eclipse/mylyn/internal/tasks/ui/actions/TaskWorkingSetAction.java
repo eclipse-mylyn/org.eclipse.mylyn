@@ -57,7 +57,7 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
 public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	public static String ID_TASK_WORKING_SET = "org.eclipse.mylyn.tasks.ui.workingSet";
-	
+
 	public static String TASK_WORKING_SET_TEXT_LABEL = "Select Task Working Sets";
 
 	private Menu dropDownMenu = null;
@@ -98,7 +98,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	@SuppressWarnings("unchecked")
 	private void addActionsToMenu() {
-		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+		IWorkingSet[] workingSets = getAllWorkingSets();
 
 		if (doTaskWorkingSetsExist()) {
 			ActionContributionItem item = new ActionContributionItem(new ToggleAllWorkingSetsAction());
@@ -113,8 +113,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			Iterator<IWorkingSet> iter = sortedWorkingSets.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = (IWorkingSet) iter.next();
-				if (workingSet != null
-						&& workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 					item = new ActionContributionItem(new ToggleWorkingSetAction(workingSet));
 					item.fill(dropDownMenu, -1);
 				}
@@ -123,7 +122,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			separator = new Separator();
 			separator.fill(dropDownMenu, -1);
 		}
-		
+
 		ActionContributionItem editItem = new ActionContributionItem(new ManageWorkingSetsAction());
 		editItem.fill(dropDownMenu, -1);
 	}
@@ -132,10 +131,14 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	}
 
+	private IWorkingSet[] getAllWorkingSets() {
+		return PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+	}
+
 	private IWorkingSet[] getEnabledSets() {
 		return getWindow().getActivePage().getWorkingSets();
 	}
-	
+
 	private boolean isWorkingSetEnabled(IWorkingSet set) {
 		IWorkingSet[] enabledSets = getEnabledSets();
 		for (int i = 0; i < enabledSets.length; i++) {
@@ -150,11 +153,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		if (!isWorkingSetEnabled(set)) {
 			return false;
 		}
-		
+
 		IWorkingSet[] enabledSets = getEnabledSets();
 		for (int i = 0; i < enabledSets.length; i++) {
-			if (!enabledSets[i].equals(set)
-					&& enabledSets[i].getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+			if (!enabledSets[i].equals(set) && enabledSets[i].getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 				return false;
 			}
 		}
@@ -162,10 +164,9 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 	}
 
 	private boolean areAllTaskWorkingSetsEnabled() {
-		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+		IWorkingSet[] workingSets = getAllWorkingSets();
 		for (IWorkingSet workingSet : workingSets) {
-			if (workingSet != null
-					&& workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+			if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 				if (!isWorkingSetEnabled(workingSet)) {
 					return false;
 				}
@@ -173,9 +174,9 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		}
 		return true;
 	}
-	
+
 	private boolean doTaskWorkingSetsExist() {
-		IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+		IWorkingSet[] workingSets = getAllWorkingSets();
 		for (IWorkingSet workingSet : workingSets) {
 			if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 				return true;
@@ -217,25 +218,22 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		}
 
 		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getWindow().getActivePage()
-					.getWorkingSets()));
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 
 			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 			Iterator<IWorkingSet> iter = newList.iterator();
 			while (iter.hasNext()) {
 				IWorkingSet workingSet = (IWorkingSet) iter.next();
-				if (workingSet != null
-						&& workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+				if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 					tempList.add(workingSet);
 				}
 			}
 			newList.removeAll(tempList);
 
 			if (isChecked()) {
-				IWorkingSet[] allWorkingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+				IWorkingSet[] allWorkingSets = getAllWorkingSets();
 				for (IWorkingSet workingSet : allWorkingSets) {
-					if (workingSet != null
-							&& workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 						newList.add(workingSet);
 					}
 				}
@@ -281,21 +279,18 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 //		}
 
 		public void runWithEvent(Event event) {
-			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getWindow().getActivePage()
-					.getWorkingSets()));
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
 
 			boolean modified = (event.stateMask & KeyLookupFactory.getDefault()
 					.formalModifierLookup(IKeyLookup.M1_NAME)) != 0;
 
 			if (!modified) {
-				// When
-				
+				// Default behaviour is to act as a radio button.
 				Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 				Iterator<IWorkingSet> iter = newList.iterator();
 				while (iter.hasNext()) {
 					IWorkingSet workingSet = (IWorkingSet) iter.next();
-					if (workingSet != null
-							&& workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
+					if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
 						tempList.add(workingSet);
 					}
 				}
@@ -304,12 +299,14 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				if (isChecked()) {
 					newList.add(set);
 				} else {
+					// If multiples were previously selected, make this action active
 					if (!isOnlyTaskWorkingSetEnabled(set)) {
 						newList.add(set);
 					}
 				}
 
 			} else {
+				// If modifier key is pressed, de/selections are additive.
 				if (isChecked()) {
 					newList.add(set);
 				} else {
@@ -402,10 +399,23 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		}
 
 		protected void okPressed() {
+			Set<IWorkingSet> newList = new HashSet<IWorkingSet>(Arrays.asList(getEnabledSets()));
+			Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
+			for (IWorkingSet workingSet : newList) {
+				for (String id : taskWorkingSetIds) {
+					if (workingSet.getId().equalsIgnoreCase(id)) {
+						tempList.add(workingSet);
+					}
+				}
+			}
+			newList.removeAll(tempList);
+			
 			Object[] selection = viewer.getCheckedElements();
-			IWorkingSet[] workingSets = new IWorkingSet[selection.length];
-			System.arraycopy(selection, 0, workingSets, 0, selection.length);
-			window.getActivePage().setWorkingSets(workingSets);
+			IWorkingSet[] setsToEnable = new IWorkingSet[selection.length];
+			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);	
+			newList.addAll(new HashSet<IWorkingSet>(Arrays.asList(setsToEnable)));
+
+			window.getActivePage().setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
 			super.okPressed();
 		}
 

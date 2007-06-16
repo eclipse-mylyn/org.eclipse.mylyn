@@ -227,6 +227,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BANNER_IMPORT = create(T_WIZBAN, "banner-import.gif");
 
+	public static final ImageDescriptor BLANK_TINY = create(T_ELCL, "clearDot.gif");
+	
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
 	private static ImageDescriptor create(String prefix, String name) {

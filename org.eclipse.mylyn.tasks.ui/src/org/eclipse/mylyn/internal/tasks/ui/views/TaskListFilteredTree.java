@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +19,8 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -27,23 +31,32 @@ import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.internal.win32.OS;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
 /**
  * @author Mik Kersten
+ * @author Leo Dos Santos - Task Working Set UI
  */
-public class TaskListFilteredTree extends AbstractMylarFilteredTree {
+public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 	}
 
 	public static final String LABEL_NO_ACTIVE = "<no active task>";
+
+	public static final String LABEL_NO_SETS = "<no sets>";
+
+	public static final String LABEL_MULTIPLE_SETS = "<multiple sets>";
+
+	private Hyperlink activeSetLabel;
 
 	private Hyperlink activeTaskLabel;
 
@@ -163,12 +176,31 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 	}
 
 	@Override
-	protected Composite createStatusComposite(Composite container) {
+	protected Composite createWorkingSetComposite(Composite container) {
+		activeSetLabel = new Hyperlink(container, SWT.LEFT);
+		activeSetLabel.setText(LABEL_NO_SETS);
+		indicateActiveTaskWorkingSet();
+
+		final TaskWorkingSetAction action = new TaskWorkingSetAction();
+//		action.setImageDescriptor(null);
+		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
+		action.setText("1ab");
+		
+		activeSetLabel.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				action.run();
+			}
+		});
 
 		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-		manager.add(new TaskWorkingSetAction());
+		manager.add(action);
 		manager.createControl(container);
-		
+
+		return null;
+	}
+
+	@Override
+	protected Composite createStatusComposite(Composite container) {
 		activeTaskLabel = new Hyperlink(container, SWT.LEFT);
 		activeTaskLabel.setText(LABEL_NO_ACTIVE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
@@ -187,12 +219,55 @@ public class TaskListFilteredTree extends AbstractMylarFilteredTree {
 				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
 					TaskListView.getFromActivePerspective().goUpToRoot();
 				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
-						.getActiveTask()));
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 			}
 
 		});
+
+		PreviousTaskDropDownAction action = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory());
+		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
+		action.setText(null);
+
+		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
+		manager.add(action);
+		manager.createControl(container);
+
 		return activeTaskLabel;
+	}
+
+	private Set<IWorkingSet> getActiveTaskWorkingSets() {
+		Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
+				.getWorkingSets()));
+		for (IWorkingSet workingSet : allSets) {
+			if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
+				allSets.remove(workingSet);
+			}
+		}
+		return allSets;
+	}
+
+	public void indicateActiveTaskWorkingSet() {
+		Set<IWorkingSet> activeSets = getActiveTaskWorkingSets();
+		if (filterComposite.isDisposed() || activeSets == null) {
+			return;
+		}
+		
+		if (activeSets.size() == 0) {
+			activeSetLabel.setText(LABEL_NO_SETS);
+			activeSetLabel.setToolTipText(LABEL_NO_SETS);
+		} else if (activeSets.size() > 1) {
+			activeSetLabel.setText(LABEL_MULTIPLE_SETS);
+			activeSetLabel.setToolTipText(LABEL_MULTIPLE_SETS);
+		} else {
+			Object[] array = activeSets.toArray();
+			IWorkingSet theSet = (IWorkingSet) array[0];
+			activeSetLabel.setText(theSet.getLabel());
+			activeSetLabel.setToolTipText(theSet.getLabel());
+		}
+		filterComposite.layout();
 	}
 
 	public void indicateActiveTask(AbstractTask task) {
