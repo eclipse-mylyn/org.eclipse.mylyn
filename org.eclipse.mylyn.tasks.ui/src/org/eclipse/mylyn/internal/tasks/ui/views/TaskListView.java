@@ -12,6 +12,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -79,13 +81,14 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -145,6 +148,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -252,7 +256,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private SortyByDropDownAction sortByAction;
 
-	PreviousTaskDropDownAction previousTaskAction;
+	ActiveTaskHistoryDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
@@ -1339,8 +1343,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
-		previousTaskAction = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory());
+		previousTaskAction = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory(), false);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
 		presentationDropDownSelectionAction = new PresentationDropDownSelectionAction(this, presentations);
@@ -1365,7 +1369,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		previousTaskAction.setEnabled(enable);
 	}
 
-	public PreviousTaskDropDownAction getPreviousTaskAction() {
+	public ActiveTaskHistoryDropDownAction getPreviousTaskAction() {
 		return previousTaskAction;
 	}
 
@@ -1737,10 +1741,10 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		try {
 			getViewer().getControl().setRedraw(false);
 			getViewer().collapseAll();
+			getViewer().refresh();
 			if (isFocusedMode()) {
 				getViewer().expandAll();
 			}
-			getViewer().refresh();
 		} finally {
 			getViewer().getControl().setRedraw(true);
 		}
@@ -1768,4 +1772,21 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 	}
 
+	public static Set<IWorkingSet> getActiveWorkingSets() {
+		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
+			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage()
+					.getWorkingSets()));
+			for (IWorkingSet workingSet : allSets) {
+				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
+					allSets.remove(workingSet);
+				}
+			}
+			return allSets;
+		} else {
+			return Collections.emptySet();
+		}
+	}
+	
 }

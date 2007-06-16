@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
@@ -71,7 +71,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Hyperlink activeTaskLabel;
 
-	private PreviousTaskDropDownAction navigateAction;
+	private ActiveTaskHistoryDropDownAction navigateAction;
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
@@ -147,7 +147,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		GridData gridData = new GridData(SWT.NONE, SWT.CENTER, false, false);
 		composite.setLayoutData(gridData);
 
-		navigateAction = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory());
+		navigateAction = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
 
 		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
 		manager.add(navigateAction);

@@ -20,7 +20,7 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.PreviousTaskDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -253,9 +253,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-
-		final PreviousTaskDropDownAction action = new PreviousTaskDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory());
+		
+ 		final ActiveTaskHistoryDropDownAction action = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+				.getTaskActivationHistory(), true);
 //		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
 //		action.setText(null);
 
@@ -288,25 +288,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		return activeTaskLink;
 	}
 
-	private Set<IWorkingSet> getActiveTaskWorkingSets() {
-		if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null) {
-			Set<IWorkingSet> allSets = new HashSet<IWorkingSet>(Arrays.asList(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow()
-					.getActivePage()
-					.getWorkingSets()));
-			for (IWorkingSet workingSet : allSets) {
-				if (!workingSet.getId().equalsIgnoreCase(TaskWorkingSetAction.ID_TASK_WORKING_SET)) {
-					allSets.remove(workingSet);
-				}
-			}
-			return allSets;
-		} else {
-			return Collections.emptySet();
-		}
-	}
-
 	public void indicateActiveTaskWorkingSet() {
-		Set<IWorkingSet> activeSets = getActiveTaskWorkingSets();
+		Set<IWorkingSet> activeSets = TaskListView.getActiveWorkingSets();
 		if (filterComposite.isDisposed() || activeSets == null) {
 			return;
 		}

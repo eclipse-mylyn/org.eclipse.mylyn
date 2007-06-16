@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -180,7 +181,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
         
 		ArrayList<Object> containers = new ArrayList<Object>();
 		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>)TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
-			if (element instanceof AbstractTaskContainer) {
+			if (element instanceof AbstractTaskContainer && !(element instanceof TaskArchive)) {
 				containers.add(element);
 			}
 		}

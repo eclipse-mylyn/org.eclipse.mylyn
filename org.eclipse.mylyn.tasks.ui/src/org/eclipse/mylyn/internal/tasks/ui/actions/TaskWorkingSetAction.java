@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -53,6 +52,7 @@ import org.eclipse.ui.internal.dialogs.WorkingSetLabelProvider;
  * Derived from SelectWorkingSetsAction
  * 
  * @author Leo Dos Santos
+ * @author Mik Kersten
  */
 public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
@@ -165,7 +165,8 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		return true;
 	}
 
-	private boolean areAllTaskWorkingSetsEnabled() {
+	// TODO: delete if not used
+	protected boolean areAllTaskWorkingSetsEnabled() {
 		IWorkingSet[] workingSets = getAllWorkingSets();
 		for (IWorkingSet workingSet : workingSets) {
 			if (workingSet != null && workingSet.getId().equalsIgnoreCase(ID_TASK_WORKING_SET)) {
@@ -192,9 +193,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		String[] ids = new String[1];
 		ids[0] = ID_TASK_WORKING_SET;
 		ConfigureWindowWorkingSetsDialog dialog = new ConfigureWindowWorkingSetsDialog(getWindow(), ids);
-		if (dialog.open() == Window.OK) {
-
-		}
+		dialog.open();
 	}
 
 	public void run(IAction action) {
@@ -324,7 +323,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 					.formalModifierLookup(IKeyLookup.M1_NAME)) != 0;
 
 			if (!modified) {
-				// Default behaviour is to act as a radio button.
+				// Default behavior is to act as a radio button.
 				Set<IWorkingSet> tempList = new HashSet<IWorkingSet>();
 				Iterator<IWorkingSet> iter = newList.iterator();
 				while (iter.hasNext()) {

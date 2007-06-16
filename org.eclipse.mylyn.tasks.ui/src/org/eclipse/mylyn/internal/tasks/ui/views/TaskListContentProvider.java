@@ -13,9 +13,11 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,6 +29,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkingSet;
 
 /**
  * Provides custom content for the task list, e.g. guaranteed visibility of some elements, ability to suppress
@@ -59,13 +62,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public Object getParent(Object child) {
-//		if (child instanceof AbstractTask) {
-//			if (((ITask) child).getParent() != null) {
-//				return ((ITask) child).getParent();
-//			} else {
-//			return ((AbstractTask) child).getCategory();
-//			}
-//		}
+		// parents can not be computed since an element can have multiple
 		return null;
 	}
 
@@ -107,28 +104,39 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	protected List<AbstractTaskContainer> applyFilter(Set<AbstractTaskContainer> roots) {
-		String filterText = (this.view.getFilteredTree().getFilterControl()).getText();
+		String filterText = (view.getFilteredTree().getFilterControl()).getText();
 		if (containsNoFilterText(filterText)) {
 			List<AbstractTaskContainer> filteredRoots = new ArrayList<AbstractTaskContainer>();
 			for (AbstractTaskContainer element : roots) {
-//				if (element instanceof AbstractTask) {  // this case should not happen anymore
-//					if (!filter(null, element)) {
-//						filteredRoots.add(element);
-//					}
-//				} else 
+				// NOTE: tasks can no longer appear as root elements
 				if (element instanceof AbstractRepositoryQuery) {
 					if (selectQuery((AbstractRepositoryQuery) element)) {
 						filteredRoots.add(element);
 					}
 				} else if (element instanceof AbstractTaskCategory) {
-					if (selectContainer((AbstractTaskCategory)element)) {
+					if (selectContainer((AbstractTaskCategory) element)) {
 						filteredRoots.add(element);
 					}
 				}
 			}
 			return filteredRoots;
 		} else {
-			return new ArrayList<AbstractTaskContainer>(roots);
+			// only match working sets when filter is on
+			Set<IWorkingSet> workingSets = TaskListView.getActiveWorkingSets();
+			Set<AbstractTaskContainer> workingSetContainers = new HashSet<AbstractTaskContainer>();
+			if (workingSets.isEmpty()) {
+				return new ArrayList<AbstractTaskContainer>(roots);
+			} else {
+				for (IWorkingSet workingSet : workingSets) {
+					IAdaptable[] elements = workingSet.getElements();
+					for (IAdaptable adaptable : elements) {
+						if (adaptable instanceof AbstractTaskContainer && roots.contains(adaptable)) {
+							workingSetContainers.add((AbstractTaskContainer) adaptable);
+						}
+					}
+				}
+				return new ArrayList<AbstractTaskContainer>(workingSetContainers);
+			}
 		}
 	}
 

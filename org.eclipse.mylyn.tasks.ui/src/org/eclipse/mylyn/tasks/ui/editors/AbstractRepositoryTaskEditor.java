@@ -210,7 +210,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_BUTTON_SUBMIT = "Submit";
 
 	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
-	
+
 	private static final String LABEL_SAVE = "Save...";
 
 	private RepositoryTaskEditorInput editorInput;
@@ -287,7 +287,6 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	};
 
-
 	private final ITaskListChangeListener TASKLIST_CHANGE_LISTENER = new ITaskListChangeListener() {
 
 		public void containersChanged(Set<TaskContainerDelta> containers) {
@@ -295,7 +294,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (repositoryTask != null && repositoryTask.equals(taskContainerDelta.getContainer())) {
 					if (taskContainerDelta.getKind().equals(TaskContainerDelta.Kind.CONTENT)) {
-						taskToRefresh = (AbstractTask)taskContainerDelta.getContainer();
+						taskToRefresh = (AbstractTask) taskContainerDelta.getContainer();
 						break;
 					}
 				}
@@ -323,10 +322,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						}
 					}
 				});
-			}	
+			}
 		}
 	};
-	
 
 	private List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
 
@@ -383,7 +381,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private Action historyAction;
 
 	private Action openBrowserAction;
-	
+
 	/**
 	 * Call upon change to attribute value
 	 * 
@@ -586,17 +584,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				historyAction.setToolTipText(LABEL_HISTORY);
 				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
-			
-			openBrowserAction = new Action() {
-				@Override
-				public void run() {
-					TasksUiUtil.openUrl(repositoryTask.getTaskUrl(), false);
-				}
-			};
 
-			openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_SMALL);
-			openBrowserAction.setToolTipText("Open with Web Browser");
-			parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+			if (repositoryTask != null) {
+				openBrowserAction = new Action() {
+					@Override
+					public void run() {
+						TasksUiUtil.openUrl(repositoryTask.getTaskUrl(), false);
+					}
+				};
+
+				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_SMALL);
+				openBrowserAction.setToolTipText("Open with Web Browser");
+				parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+			}
 
 			activateAction = new Action() {
 				@Override
@@ -615,7 +615,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				activateAction.setEnabled(!repositoryTask.isActive());
 				parentEditor.getTopForm().getToolBarManager().add(activateAction);
 			}
-			
+
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
 			// SynchronizeSelectedAction());
@@ -1254,7 +1254,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			popupMenu.addMenuListener(new IMenuListener() {
 				public void menuAboutToShow(IMenuManager manager) {
 					popupMenu.removeAll();
-					
+
 					ISelection selection = attachmentsTableViewer.getSelection();
 					if (selection.isEmpty()) {
 						return;
@@ -1281,12 +1281,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						popupMenu.add(copyToClipAction);
 					}
 					popupMenu.add(new Separator("actions"));
-					
+
 					// TODO: use workbench mechanism for this?
 					ObjectActionContributorManager.getManager().contributeObjectActions(
 							AbstractRepositoryTaskEditor.this, popupMenu, attachmentsTableViewer);
 				}
- 			});
+			});
 		} else {
 			Label label = toolkit.createLabel(attachmentsComposite, "No attachments");
 			registerDropListener(label);
@@ -1299,7 +1299,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		/* Launch a NewAttachemntWizard */
 		Button addAttachmentButton = toolkit.createButton(attachmentControlsComposite, "Attach File...", SWT.PUSH);
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+				taskData.getId());
 		if (task == null) {
 			addAttachmentButton.setEnabled(false);
 		}
@@ -1915,7 +1916,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		toolkit.createLabel(buttonComposite, "    ");
 
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskData.getId());
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+				taskData.getId());
 		if (attachContextEnabled && task != null) {
 			addAttachContextButton(buttonComposite, task);
 		}
@@ -2550,9 +2552,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 											"Task could not be created. No additional information was provided by the connector."));
 						}
 					} else {
-						modifiedTask = (AbstractTask) TasksUiPlugin.getTaskListManager()
-								.getTaskList()
-								.getTask(repository.getUrl(), taskData.getId());
+						modifiedTask = (AbstractTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+								repository.getUrl(), taskData.getId());
 					}
 
 					// Synchronization accounting...
