@@ -68,8 +68,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
- * An editor used to view a bug report that exists on a server. It uses a
- * <code>BugReport</code> object to store the data.
+ * An editor used to view a bug report that exists on a server. It uses a <code>BugReport</code> object to store the
+ * data.
  * 
  * @author Mik Kersten (hardening of prototype)
  * @author Rob Elves
@@ -280,8 +280,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		if (values != null && values.length() > 0) {
 			for (String bugNumber : values.split(",")) {
 				final String bugId = bugNumber.trim();
-				Hyperlink hyperlink = getManagedForm().getToolkit().createHyperlink(hyperlinksComposite, bugId, SWT.NONE);
-				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), bugId);
+				Hyperlink hyperlink = getManagedForm().getToolkit().createHyperlink(hyperlinksComposite, bugId,
+						SWT.NONE);
+				final AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(),
+						bugId);
 				if (task != null) {
 					hyperlink.setToolTipText(task.getSummary());
 				}
@@ -303,8 +305,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	protected void addRoles(Composite parent) {
 		Section rolesSection = getManagedForm().getToolkit().createSection(parent, ExpandableComposite.SHORT_TITLE_BAR);
 		rolesSection.setText("Users in the roles selected below can always view this bug");
-		rolesSection
-				.setDescription("(The assignee can always see a bug, and this section does not take effect unless the bug is restricted to at least one group.)");
+		rolesSection.setDescription("(The assignee can always see a bug, and this section does not take effect unless the bug is restricted to at least one group.)");
 		GridLayout gl = new GridLayout();
 		GridData gd = new GridData(SWT.FILL, SWT.NONE, false, false);
 		gd.horizontalSpan = 4;
@@ -323,8 +324,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		rolesComposite.setLayoutData(attributesData);
 		rolesSection.setClient(rolesComposite);
 
-		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE
-				.getKeyString());
+		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString());
 		if (attribute == null) {
 			taskData.setAttributeValue(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString(), "0");
 			attribute = taskData.getAttribute(BugzillaReportElement.REPORTER_ACCESSIBLE.getKeyString());
@@ -416,8 +416,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		gd.horizontalSpan = 5;
 		timeComposite.setLayoutData(gd);
 
-		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME
-				.getKeyString());
+		RepositoryTaskAttribute attribute = this.taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString());
 		if (attribute != null && !attribute.isReadOnly()) {
 			createLabel(timeComposite, attribute);
 			estimateText = createTextField(timeComposite, attribute, SWT.FLAT);
@@ -427,12 +426,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		Label label = toolkit.createLabel(timeComposite, "Current Estimate:");
 		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-		Text currentEstimate = toolkit.createText(timeComposite,
+		Text currentEstimate = toolkit.createText(
+				timeComposite,
 				""
-						+ (Float.parseFloat(taskData
-								.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) + Float
-								.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME
-										.getKeyString()))));
+						+ (Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.ACTUAL_TIME.getKeyString())) + Float.parseFloat(taskData.getAttributeValue(BugzillaReportElement.REMAINING_TIME.getKeyString()))));
 		currentEstimate.setFont(TEXT_FONT);
 		currentEstimate.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		currentEstimate.setEditable(false);
@@ -448,13 +445,12 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 		// Add Time
 		taskData.setAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString(), "0");
-		final RepositoryTaskAttribute addTimeAttribute = this.taskData.getAttribute(BugzillaReportElement.WORK_TIME
-				.getKeyString());
+		final RepositoryTaskAttribute addTimeAttribute = this.taskData.getAttribute(BugzillaReportElement.WORK_TIME.getKeyString());
 		if (addTimeAttribute != null) {
 
 			createLabel(timeComposite, addTimeAttribute);
-			addTimeText = toolkit.createText(timeComposite, taskData.getAttributeValue(BugzillaReportElement.WORK_TIME
-					.getKeyString()), SWT.BORDER);
+			addTimeText = toolkit.createText(timeComposite,
+					taskData.getAttributeValue(BugzillaReportElement.WORK_TIME.getKeyString()), SWT.BORDER);
 			addTimeText.setFont(TEXT_FONT);
 			addTimeText.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 			addTimeText.addModifyListener(new ModifyListener() {
@@ -479,8 +475,8 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			layout.marginWidth = 1;
 			dateWithClear.setLayout(layout);
 
-			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER, taskData
-					.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
+			deadlinePicker = new DatePicker(dateWithClear, /* SWT.NONE */SWT.BORDER,
+					taskData.getAttributeValue(BugzillaReportElement.DEADLINE.getKeyString()));
 			deadlinePicker.setFont(TEXT_FONT);
 			deadlinePicker.setDatePattern("yyyy-MM-dd");
 			if (hasChanged(attribute)) {
@@ -618,14 +614,15 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 		votesText.setEditable(false);
 
-		Hyperlink showVotesHyperlink = getManagedForm().getToolkit().createHyperlink(votingComposite, "Show votes", SWT.NONE);
+		Hyperlink showVotesHyperlink = getManagedForm().getToolkit().createHyperlink(votingComposite, "Show votes",
+				SWT.NONE);
 		showVotesHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES
-							+ taskData.getId());
+//					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
+					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_SHOW_VOTES + taskData.getId(),
+							false);
 				}
 			}
 		});
@@ -636,8 +633,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
 					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
-					mylarTaskEditor.displayInBrowser(repository.getUrl() + IBugzillaConstants.URL_VOTE
-							+ taskData.getId());
+					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_VOTE + taskData.getId(), false);
 				}
 			}
 		});
@@ -707,9 +703,10 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		}
 
 		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(selectionProvider, new StructuredSelection(
-					new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(), taskData
-							.getRepositoryKind(), taskComment.getCreated(), taskComment, taskData.getSummary()))));
+			fireSelectionChanged(new SelectionChangedEvent(
+					selectionProvider,
+					new StructuredSelection(new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
+							taskData.getRepositoryKind(), taskComment.getCreated(), taskComment, taskData.getSummary()))));
 		}
 	}
 
@@ -718,7 +715,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	}
 
-	protected String getActivityUrl() {
+	protected String getHistoryUrl() {
 		if (repository != null && taskData != null) {
 			return repository.getUrl() + IBugzillaConstants.URL_BUG_ACTIVITY + taskData.getId();
 		} else {

@@ -71,6 +71,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.AttachFileAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
@@ -377,10 +378,12 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private SynchronizeEditorAction synchronizeEditorAction;
 
-	private Action submitAction;
+	private Action activateAction;
 
 	private Action historyAction;
 
+	private Action openBrowserAction;
+	
 	/**
 	 * Call upon change to attribute value
 	 * 
@@ -571,33 +574,45 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				parentEditor.getTopForm().getToolBarManager().add(synchronizeEditorAction);
 			}
 
-			if (getActivityUrl() != null) {
+			if (getHistoryUrl() != null) {
 				historyAction = new Action() {
-
 					@Override
 					public void run() {
-						parentEditor.displayInBrowser(getActivityUrl());
+						TasksUiUtil.openUrl(getHistoryUrl(), false);
 					}
-
 				};
 
 				historyAction.setImageDescriptor(TasksUiImages.TASK_REPOSITORY_HISTORY);
 				historyAction.setToolTipText(LABEL_HISTORY);
 				parentEditor.getTopForm().getToolBarManager().add(historyAction);
 			}
-
-			submitAction = new Action() {
-
+			
+			openBrowserAction = new Action() {
 				@Override
 				public void run() {
-					submitToRepository();
+					TasksUiUtil.openUrl(repositoryTask.getTaskUrl(), false);
+				}
+			};
+
+			openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_SMALL);
+			openBrowserAction.setToolTipText("Open with Web Browser");
+			parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
+
+			activateAction = new Action() {
+				@Override
+				public void run() {
+					if (!repositoryTask.isActive()) {
+						new TaskActivateAction().run(repositoryTask);
+					}
+//					submitToRepository();
 				}
 
 			};
 
-			submitAction.setImageDescriptor(TasksUiImages.REPOSITORY_SUBMIT);
-			submitAction.setToolTipText(LABEL_BUTTON_SUBMIT);
-			parentEditor.getTopForm().getToolBarManager().add(submitAction);
+			activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
+			activateAction.setToolTipText("Activate");
+			activateAction.setEnabled(!repositoryTask.isActive());
+			parentEditor.getTopForm().getToolBarManager().add(activateAction);
 
 			// Header drop down menu additions:
 			// form.getForm().getMenuManager().add(new
@@ -1918,7 +1933,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * 
 	 * @return url String form of url that points to task's past activity
 	 */
-	protected String getActivityUrl() {
+	protected String getHistoryUrl() {
 		return null;
 	}
 
@@ -2464,8 +2479,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				synchronizeEditorAction.setEnabled(!busy);
 			}
 
-			if (submitAction != null) {
-				submitAction.setEnabled(!busy);
+			if (activateAction != null) {
+				activateAction.setEnabled(!busy);
 			}
 
 			if (historyAction != null) {

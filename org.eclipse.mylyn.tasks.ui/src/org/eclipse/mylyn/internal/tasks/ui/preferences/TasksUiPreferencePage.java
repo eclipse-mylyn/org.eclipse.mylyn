@@ -71,13 +71,11 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private static final String BACKSLASH_MULTI = "\\\\";
 
-	private Button reportEditor;
-
-	private Button disableInternal;
+	private Button useRichEditor;
 
 	private Button activateOnOpen;
 
-	private Button reportInternal;
+	private Button useWebBrowser;
 
 	private Text synchScheduleTime = null;
 
@@ -151,14 +149,9 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				notificationEnabledButton.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR, reportEditor.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL, reportInternal.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL,
-				disableInternal.getSelection());
+		getPreferenceStore().setValue(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, activateOnOpen.getSelection());
 
-		// getPreferenceStore().setValue(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
-		// synchQueries.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
 		long miliseconds = 60000 * Long.parseLong(synchScheduleTime.getText());
@@ -179,10 +172,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		backupScheduleTimeText.setText(getPreferenceStore().getString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
-		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
+		useRichEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -221,12 +211,8 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				TasksUiPreferenceConstants.BACKUP_SCHEDULE));		
 		
 
-		reportEditor.setSelection(getPreferenceStore()
-				.getDefaultBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
-		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
-		reportInternal.setSelection(getPreferenceStore().getDefaultBoolean(
-				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
+		useRichEditor.setSelection(getPreferenceStore()
+				.getDefaultBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -294,44 +280,26 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private void createOpenWith(Composite parent) {
 		Group container = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		container.setLayout(new GridLayout(2, false));
+		container.setLayout(new GridLayout(3, false));
 		container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		container.setText("Open Repository Tasks with");
-		reportEditor = new Button(container, SWT.RADIO);
-		reportEditor.setText("Editor if available (Recommended)");
-		reportEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR));
-		reportInternal = new Button(container, SWT.RADIO);
-		reportInternal.setText("Internal browser");
-		reportInternal.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL));
-
-		disableInternal = new Button(container, SWT.CHECK);
-		disableInternal.setText("Disable internal browser");
-		disableInternal.setEnabled(!reportInternal.getSelection());
-		disableInternal.setSelection(getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL));
+		container.setText("Task Editing");
+		useRichEditor = new Button(container, SWT.RADIO);
+		useRichEditor.setText("Rich Editor (Recommended)");
+		useRichEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		useWebBrowser = new Button(container, SWT.RADIO);
+		useWebBrowser.setText("Web Browser");
+		useWebBrowser.setSelection(!getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 
 		activateOnOpen = new Button(container, SWT.CHECK);
-		activateOnOpen.setText("Active on double-click");
-		activateOnOpen.setEnabled(!reportInternal.getSelection());
+		activateOnOpen.setText("Activate on open");
+		activateOnOpen.setEnabled(!useWebBrowser.getSelection());
 		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
-
-		reportInternal.addListener(SWT.Selection, new Listener() {
-
-			public void handleEvent(Event event) {
-				if (reportInternal.getSelection()) {
-					disableInternal.setSelection(false);
-					disableInternal.setEnabled(false);
-				} else {
-					disableInternal.setEnabled(true);
-				}
-			}
-		});
 	}
 
 	private void createTaskDataControl(Composite parent) {
 		Group taskDataGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDataGroup.setText("Task Data");
+		taskDataGroup.setText("Task Data (Advanced)");
 		taskDataGroup.setLayout(new GridLayout(1, false));
 		taskDataGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 

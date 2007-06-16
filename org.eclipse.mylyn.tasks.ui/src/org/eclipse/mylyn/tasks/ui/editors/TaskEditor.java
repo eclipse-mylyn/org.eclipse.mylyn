@@ -58,13 +58,9 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 
 	public static final String ID_EDITOR = "org.eclipse.mylyn.tasks.ui.editors.task";
 
-	private static final String ISSUE_WEB_PAGE_LABEL = "Browser";
-
 	protected AbstractTask task;
 
 	private TaskPlanningEditor taskPlanningEditor;
-
-	private Browser webBrowser;
 
 	private TaskEditorInput taskEditorInput;
 
@@ -73,8 +69,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 	private Menu contextMenu;
 
 	private IEditorPart contentOutlineProvider = null;
-
-	private int browserPageIndex = -1;
 
 	public final Object FAMILY_SUBMIT = new Object();
 
@@ -115,38 +109,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 	@Override
 	public IEditorPart getActiveEditor() {
 		return super.getActiveEditor();
-	}
-
-	private int createBrowserPage(final String url) {
-		if (!TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL)) {
-			try {
-				webBrowser = new Browser(getContainer(), SWT.NONE);
-				int index = addPage(webBrowser);
-				setPageText(index, ISSUE_WEB_PAGE_LABEL);
-
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (!webBrowser.isDisposed()) {
-							webBrowser.setUrl(url);
-						}
-					}
-				});
-
-				boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL);
-
-				if (openWithBrowser) {
-					setActivePage(index);
-				}
-				return index;
-			} catch (SWTError e) {
-				StatusManager.fail(e, "Could not create Browser page: " + e.getMessage(), true);
-			} catch (RuntimeException e) {
-				StatusManager.fail(e, "could not create issue report page", false);
-			}
-		}
-		return 0;
 	}
 
 	@Override
@@ -279,32 +241,25 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 	// }
 
 	public void setFocusOfActivePage() {
-		if (this.getActivePage() > -1 && this.getActivePage() != browserPageIndex) {
+		if (this.getActivePage() > -1) {
 			IFormPage page = this.getPages()[this.getActivePage()];
 			if (page != null) {
 				page.setFocus();
 			}
-		} else if (this.getActivePage() == browserPageIndex && webBrowser != null) {
-			webBrowser.setFocus();
-		}
+		} 
+//		else if (this.getActivePage() == browserPageIndex && webBrowser != null) {
+//			webBrowser.setFocus();
+//		}
 	}
 
-	public Browser getWebBrowser() {
-		return webBrowser;
-	}
-
-	public void revealBrowser() {
-		setActivePage(browserPageIndex);
-	}
-
-	public void displayInBrowser(String url) {
-		if (webBrowser != null) {
-			webBrowser.setUrl(url);
-			revealBrowser();
-		} else {
-			TasksUiUtil.openUrl(url, false);
-		}
-	}
+//	public void displayInBrowser(String url) {
+//		if (webBrowser != null) {
+//			webBrowser.setUrl(url);
+//			revealBrowser();
+//		} else {
+//			TasksUiUtil.openUrl(url, false);
+//		}
+//	}
 
 	@Override
 	protected void pageChange(int newPageIndex) {
@@ -326,9 +281,9 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		}
 		if (taskPlanningEditor != null)
 			taskPlanningEditor.dispose();
-		if (webBrowser != null) {
-			webBrowser.dispose();
-		}
+//		if (webBrowser != null) {
+//			webBrowser.dispose();
+//		}
 
 		super.dispose();
 	}
@@ -401,14 +356,14 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 					}
 				}
 			}
-			String urlToOpen = getUrl();
-			if (urlToOpen != null && !urlToOpen.equals("")) {
-				browserPageIndex = createBrowserPage(urlToOpen);
-				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
-				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
-					selectedIndex = browserPageIndex;
-				}
-			}
+//			String urlToOpen = getUrl();
+//			if (urlToOpen != null && !urlToOpen.equals("")) {
+//				browserPageIndex = createBrowserPage(urlToOpen);
+//				setPageImage(browserPageIndex, TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
+//				if (selectedIndex == 0 && taskEditorInput != null && !taskEditorInput.isNewTask()) {
+//					selectedIndex = browserPageIndex;
+//				}
+//			}
 
 			if (selectedIndex != -1) {
 				setActivePage(selectedIndex);

@@ -620,22 +620,12 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TasksUiPreferenceConstants.FILTER_SUBTASKS, true);
 		store.setDefault(TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED, true);
 		store.setDefault(TasksUiPreferenceConstants.FILTER_PRIORITY, PriorityLevel.P5.toString());
-		store.setDefault(TasksUiPreferenceConstants.REPORTING_OPEN_EDITOR, true);
-		store.setDefault(TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL, false);
-		store.setDefault(TasksUiPreferenceConstants.REPORTING_DISABLE_INTERNAL, false);
+		store.setDefault(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, true);
 		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, false);
-		store.setDefault(TasksUiPreferenceConstants.REPORTING_OPEN_EXTERNAL, false);
-		// store.setDefault(TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP,
-		// false);
 
 		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED, true);
 		store.setDefault(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_MILISECONDS, "" + (20 * 60 * 1000));
 
-		// store.setDefault(TaskListPreferenceConstants.BACKUP_AUTOMATICALLY,
-		// true);
-		// store.setDefault(TaskListPreferenceConstants.BACKUP_FOLDER,
-		// ContextCorePlugin.getDefault().getDataDirectory()
-		// + DEFAULT_PATH_SEPARATOR + DEFAULT_BACKUP_FOLDER_NAME);
 		store.setDefault(TasksUiPreferenceConstants.BACKUP_SCHEDULE, 1);
 		store.setDefault(TasksUiPreferenceConstants.BACKUP_MAXFILES, 20);
 		store.setDefault(TasksUiPreferenceConstants.BACKUP_LAST, 0f);
@@ -644,8 +634,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		store.setDefault(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 		store.setValue(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE, false);
 
-		// store.setDefault(TaskListPreferenceConstants.PLANNING_STARTDAY, 2);
-		// store.setDefault(TaskListPreferenceConstants.PLANNING_ENDDAY, 6);
 		store.setDefault(TasksUiPreferenceConstants.PLANNING_STARTHOUR, 9);
 		store.setDefault(TasksUiPreferenceConstants.PLANNING_ENDHOUR, 18);
 	}

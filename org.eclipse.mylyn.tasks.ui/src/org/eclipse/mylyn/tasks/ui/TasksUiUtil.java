@@ -285,8 +285,8 @@ public class TasksUiUtil {
 	 */
 	public static void openEditor(final AbstractTask task, boolean asyncExec, final boolean newTask) {
 
-		final boolean openWithBrowser = TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				TasksUiPreferenceConstants.REPORTING_OPEN_INTERNAL);
+		final boolean openWithBrowser = !TasksUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				TasksUiPreferenceConstants.EDITOR_TASKS_RICH);
 
 		final String taskEditorId = getTaskEditorId(task);
 
