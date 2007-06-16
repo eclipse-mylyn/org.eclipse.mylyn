@@ -198,7 +198,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		
 		final Button workingSetButton = new Button(container, SWT.ARROW | SWT.RIGHT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
-
+		workingSetButton.setToolTipText("Toggle Task Working Set");
 		workingSetLink = new Hyperlink(container, SWT.LEFT);
 		workingSetLink.setText(LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
@@ -246,7 +246,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected Composite createStatusComposite(Composite container) {
 		final Button activeTaskButton = new Button(container, SWT.ARROW | SWT.RIGHT);
 		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
-
+		activeTaskButton.setToolTipText("Toggle Active Task");
+		
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
