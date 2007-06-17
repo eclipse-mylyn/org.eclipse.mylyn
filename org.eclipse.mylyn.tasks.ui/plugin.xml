@@ -781,12 +781,13 @@
    
 	<extension 
 		point="org.eclipse.ui.workingSets">
-		<workingSet 
-	        elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetElementAdapter"
-	        icon="icons/etool16/open-task.gif"
-	        id="org.eclipse.mylyn.tasks.ui.workingSet"
-	        name="Tasks"
-	        pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"/>
+		<workingSet
+        elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetElementAdapter"
+        icon="icons/etool16/open-task.gif"
+        id="org.eclipse.mylyn.tasks.ui.workingSet"
+        name="Tasks"
+        pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"
+        updaterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater"/>
 	</extension>
  <extension
        point="org.eclipse.core.runtime.adapters">

@@ -9,16 +9,24 @@
 package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -33,6 +41,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,7 +52,11 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.WorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * Adapted from org.eclipse.ui.internal.ide.dialogs.ResourceWorkingSetPage
@@ -53,41 +66,121 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
  */
 public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
-    private final static int SIZING_SELECTION_WIDGET_WIDTH = 50;
+	private static final String LABEL_TASKS = "Tasks";
 
-    private final static int SIZING_SELECTION_WIDGET_HEIGHT = 200;
+	private final static int SIZING_SELECTION_WIDGET_WIDTH = 50;
 
-    private Text text;
+	private final static int SIZING_SELECTION_WIDGET_HEIGHT = 200;
 
-    private CheckboxTreeViewer tree;
+	private Text text;
 
-    private IWorkingSet workingSet;
+	private CheckboxTreeViewer tree;
+
+	private IWorkingSet workingSet;
 
 	private boolean firstCheck = false;
 
+	class ElementCategory extends PlatformObject implements IWorkbenchAdapter {
+
+		private String label;
+
+		private List<IAdaptable> children;
+
+		public ElementCategory(String label, List<IAdaptable> children) {
+			this.label = label;
+			this.children = children;
+		}
+
+		public Object[] getChildren(Object o) {
+			return children.toArray();
+		}
+
+		public ImageDescriptor getImageDescriptor(Object object) {
+			return WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_OBJ_WORKING_SETS);
+		}
+
+		public String getLabel(Object o) {
+			return label;
+		}
+
+		public Object getParent(Object o) {
+			return null;
+		}
+
+	}
+
+	class AggregateLabelProvider implements ILabelProvider {
+		
+		private TaskElementLabelProvider taskProvider = new TaskElementLabelProvider();
+		
+		private WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
+		
+		public Image getImage(Object element) {
+			if (element instanceof AbstractTaskContainer) {
+				return taskProvider.getImage(element);
+			} else {
+				return workbenchProvider.getImage(element);
+			}
+		}
+
+		public String getText(Object element) {
+			if (element instanceof AbstractTaskContainer) {
+				return taskProvider.getText(element);
+			} else {
+				return workbenchProvider.getText(element);
+			}
+		}
+
+		public void addListener(ILabelProviderListener listener) {
+		}
+
+		public void dispose() {
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+		}		
+	}
+	
+	class CustomSorter extends ViewerSorter {
+	    public int compare(Viewer viewer, Object e1, Object e2) {
+	    	if (e1 instanceof ElementCategory && ((ElementCategory)e1).getLabel(e1).equals(LABEL_TASKS)) {
+	    		return -1;
+	    	} else if (e2 instanceof ElementCategory && ((ElementCategory)e1).getLabel(e1).equals(LABEL_TASKS)) {
+	    		return 1;
+	    	} else {
+	    		return super.compare(viewer, e1, e2);
+	    	}
+	    }
+	}
+	
 	public TaskWorkingSetPage() {
-        super("taskWorkingSetPage", //$NON-NLS-1$ 
-				"Task Working Set", null); // the icon
+		super("taskWorkingSetPage", //$NON-NLS-1$ 
+				"Task and Resource Working Set", null); // the icon
 		setDescription("Enter a working set name and select task categories/queries.");
 	}
 
 	@SuppressWarnings("unchecked")
 	public void finish() {
-        Object[] elements = tree.getCheckedElements();
-        Set<AbstractTaskContainer> validElements = new HashSet<AbstractTaskContainer>();
-        for (int i = 0; i < elements.length; i++) {
-        	if (elements[i] instanceof AbstractTaskContainer) {
-        		validElements.add((AbstractTaskContainer)elements[i]);
-        	}
+		Object[] elements = tree.getCheckedElements();
+		Set<IAdaptable> validElements = new HashSet<IAdaptable>();
+		for (int i = 0; i < elements.length; i++) {
+			if (elements[i] instanceof AbstractTaskContainer || elements[i] instanceof IProject) {
+				validElements.add((IAdaptable) elements[i]);
+			}
 		}
-        
-        if (workingSet == null) {
-            IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
-            workingSet = workingSetManager.createWorkingSet(getWorkingSetName(), (IAdaptable[])validElements.toArray(new IAdaptable[validElements.size()]));
-        } else {
-            workingSet.setName(getWorkingSetName());
-			workingSet.setElements((IAdaptable[])validElements.toArray(new IAdaptable[validElements.size()]));
-        }
+
+		if (workingSet == null) {
+			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
+			workingSet = workingSetManager.createWorkingSet(getWorkingSetName(),
+					validElements.toArray(new IAdaptable[validElements.size()]));
+		} else {
+			workingSet.setName(getWorkingSetName());
+			workingSet.setElements(validElements.toArray(new IAdaptable[validElements.size()]));
+		}
 	}
 
 	public IWorkingSet getSelection() {
@@ -96,73 +189,86 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	public void setSelection(IWorkingSet workingSet) {
 		this.workingSet = workingSet;
-        if (getShell() != null && text != null) {
-            firstCheck = true;
-            initializeCheckedState();
-            text.setText(workingSet.getName());
-        }
+		if (getShell() != null && text != null) {
+			firstCheck = true;
+			initializeCheckedState();
+			text.setText(workingSet.getName());
+		}
 	}
-	
-    private String getWorkingSetName() {
-        return text.getText();
-    }
+
+	private String getWorkingSetName() {
+		return text.getText();
+	}
 
 	public void createControl(Composite parent) {
-    	initializeDialogUnits(parent);
-    	
-        Composite composite = new Composite(parent, SWT.NULL);
-        
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-        layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-        layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-        setControl(composite);
+		initializeDialogUnits(parent);
 
-        // PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IIDEHelpContextIds.WORKING_SET_RESOURCE_PAGE);
-        Label label = new Label(composite, SWT.WRAP);
-        label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_message);
-        label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-                | GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.VERTICAL_ALIGN_CENTER));
+		Composite composite = new Composite(parent, SWT.NULL);
 
-        text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-        text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-                | GridData.HORIZONTAL_ALIGN_FILL));
-        text.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                validateInput();
-            }
-        });
-        text.setFocus();
-        // text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		setControl(composite);
 
-        label = new Label(composite, SWT.WRAP);
-        label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_label_tree);
-        label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-                | GridData.HORIZONTAL_ALIGN_FILL
-                | GridData.VERTICAL_ALIGN_CENTER));
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IIDEHelpContextIds.WORKING_SET_RESOURCE_PAGE);
+		Label label = new Label(composite, SWT.WRAP);
+		label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_message);
+		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_CENTER));
 
-        tree = new CheckboxTreeViewer(composite);
-        tree.setUseHashlookup(true);
+		text = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				validateInput();
+			}
+		});
+		text.setFocus();
+		// text.setBackground(FieldAssistColors.getRequiredFieldBackgroundColor(text));
 
-        final ITreeContentProvider treeContentProvider = new ITreeContentProvider() {
+		label = new Label(composite, SWT.WRAP);
+		label.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_label_tree);
+		label.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_CENTER));
 
-    		@SuppressWarnings("unchecked")
+		tree = new CheckboxTreeViewer(composite);
+		tree.setUseHashlookup(true);
+
+		final ITreeContentProvider treeContentProvider = new ITreeContentProvider() {
+
+			@SuppressWarnings("unchecked")
 			public Object[] getChildren(Object parentElement) {
-				if(parentElement instanceof List) {
-					List containers = (List) parentElement;
-					return containers.toArray(new Object[containers.size()]);
+				if (parentElement instanceof List) {
+					List<IAdaptable> taskContainers = new ArrayList<IAdaptable>();
+					for (Object container : (List) parentElement) {
+						if (container instanceof AbstractTaskContainer) {
+							taskContainers.add((AbstractTaskContainer) container);
+						}
+					}
+					List<IAdaptable> projects = new ArrayList<IAdaptable>();
+					for (Object container : (List) parentElement) {
+						if (container instanceof IProject) {
+							projects.add((IProject) container);
+						}
+					}
+
+					return new Object[] { new ElementCategory(LABEL_TASKS, taskContainers),
+							new ElementCategory("Resources", projects) };
+				} else if (parentElement instanceof ElementCategory) {
+					return ((ElementCategory) parentElement).getChildren(parentElement);
+				} else {
+					return new Object[0];
 				}
-				return new Object[0];
 			}
 
 			@SuppressWarnings("unchecked")
 			public boolean hasChildren(Object element) {
 				return getChildren(element).length > 0;
 			}
-			
+
 			public Object[] getElements(Object element) {
 				return getChildren(element);
 			}
@@ -170,7 +276,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			public Object getParent(Object element) {
 				return null;
 			}
-			
+
 			public void dispose() {
 			}
 
@@ -178,30 +284,40 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		};
 
-        tree.setContentProvider(treeContentProvider);
-        tree.setLabelProvider(new TaskElementLabelProvider());
-        tree.setSorter(new ViewerSorter());
-        
+		tree.setContentProvider(treeContentProvider);
+
+		tree.setLabelProvider(new DecoratingLabelProvider(new AggregateLabelProvider(), PlatformUI.getWorkbench()
+				.getDecoratorManager()
+				.getLabelDecorator()));
+
+//        tree.setLabelProvider(new TaskElementLabelProvider());
+		tree.setSorter(new CustomSorter());
+
 		ArrayList<Object> containers = new ArrayList<Object>();
-		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>)TasksUiPlugin.getTaskListManager().getTaskList().getRootElements()) {
+		for (AbstractTaskContainer element : (Set<AbstractTaskContainer>) TasksUiPlugin.getTaskListManager()
+				.getTaskList()
+				.getRootElements()) {
 			if (element instanceof AbstractTaskContainer && !(element instanceof TaskArchive)) {
 				containers.add(element);
 			}
 		}
-        tree.setInput(containers);
-        
-        // tree.setComparator(new ResourceComparator(ResourceComparator.NAME));
+		containers.addAll(Arrays.asList(ResourcesPlugin.getWorkspace().getRoot().getProjects()));
 
-        GridData data = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
-        data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
-        data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
-        tree.getControl().setLayoutData(data);
+		tree.setInput(containers);
+		tree.expandAll();
 
-        tree.addCheckStateListener(new ICheckStateListener() {
-            public void checkStateChanged(CheckStateChangedEvent event) {
-                handleCheckStateChange(event);
-            }
-        });
+		// tree.setComparator(new ResourceComparator(ResourceComparator.NAME));
+
+		GridData data = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
+		data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
+		data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
+		tree.getControl().setLayoutData(data);
+
+		tree.addCheckStateListener(new ICheckStateListener() {
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				handleCheckStateChange(event);
+			}
+		});
 
 //        tree.addTreeListener(new ITreeViewerListener() {
 //            public void treeCollapsed(TreeExpansionEvent event) {
@@ -229,7 +345,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		buttonComposite.setLayout(layout);
 		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		
+
 		Button selectAllButton = new Button(buttonComposite, SWT.PUSH);
 		selectAllButton.setText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_label);
 		selectAllButton.setToolTipText(IDEWorkbenchMessages.ResourceWorkingSetPage_selectAll_toolTip);
@@ -251,18 +367,18 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		});
 		setButtonLayoutData(deselectAllButton);
-		
+
 		initializeCheckedState();
-        if (workingSet != null) {
-            text.setText(workingSet.getName());
-        }
-        setPageComplete(false);
-        
-        Dialog.applyDialogFont(composite);
+		if (workingSet != null) {
+			text.setText(workingSet.getName());
+		}
+		setPageComplete(false);
+
+		Dialog.applyDialogFont(composite);
 	}
 
 	private void initializeCheckedState() {
-        BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 			public void run() {
 				Object[] items = null;
 				if (workingSet != null) {
@@ -271,7 +387,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						// see bug 191342
 						tree.setCheckedElements(new Object[] {});
 						for (Object item : items) {
-							if(item!=null) {
+							if (item != null) {
 								tree.setChecked(item, true);
 							}
 						}
@@ -282,51 +398,54 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	protected void handleCheckStateChange(final CheckStateChangedEvent event) {
-        BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-            public void run() {
-            	AbstractTaskContainer element = (AbstractTaskContainer) event.getElement();
-            	tree.setGrayed(element, false);
-
-                // boolean state = event.getChecked();
-                // if (element instanceof AbstractTaskContainer) {
-                //     setSubtreeChecked((AbstractTaskContainer) element, state, true);
-                // }
-                // updateParentState(element);
-                validateInput();
-            }
-        });
+		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+			public void run() {
+				IAdaptable element = (IAdaptable) event.getElement();
+				if (element instanceof AbstractTaskContainer || element instanceof IProject) {
+					tree.setGrayed(element, false);
+					// boolean state = event.getChecked();
+					// if (element instanceof AbstractTaskContainer) {
+					//     setSubtreeChecked((AbstractTaskContainer) element, state, true);
+					// }
+					// updateParentState(element);
+				} else if (element instanceof ElementCategory) {
+					for (Object child : ((ElementCategory)element).getChildren(null)) {
+						tree.setChecked(child, event.getChecked()	);
+					}
+				}
+				validateInput();
+			}
+		});
 	}
 
 	protected void validateInput() {
-        String errorMessage = null;
-        String infoMessage= null;
-        String newText = text.getText();
+		String errorMessage = null;
+		String infoMessage = null;
+		String newText = text.getText();
 
-        if (!newText.equals(newText.trim())) {
-            errorMessage = "The name must not have a leading or trailing whitespace."; 
-        } else if (firstCheck) {
-            firstCheck = false;
-            return;
-        }
-        if ("".equals(newText)) { //$NON-NLS-1$
-            errorMessage = "The name must not be empty.";
-        }
-        if (errorMessage == null
-                && (workingSet == null || !newText.equals(workingSet.getName()))) {
-            IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
-            for (int i = 0; i < workingSets.length; i++) {
-                if (newText.equals(workingSets[i].getName())) {
-                    errorMessage = "A working set with the same name already exists.";
-                }
-            }
-        }
-        if (infoMessage == null && tree.getCheckedElements().length == 0) {
-        	infoMessage = "No categories/queries selected.";
-        }
-        setMessage(infoMessage, INFORMATION);
-        setErrorMessage(errorMessage);
-        setPageComplete(errorMessage == null);
+		if (!newText.equals(newText.trim())) {
+			errorMessage = "The name must not have a leading or trailing whitespace.";
+		} else if (firstCheck) {
+			firstCheck = false;
+			return;
+		}
+		if ("".equals(newText)) { //$NON-NLS-1$
+			errorMessage = "The name must not be empty.";
+		}
+		if (errorMessage == null && (workingSet == null || !newText.equals(workingSet.getName()))) {
+			IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
+			for (int i = 0; i < workingSets.length; i++) {
+				if (newText.equals(workingSets[i].getName())) {
+					errorMessage = "A working set with the same name already exists.";
+				}
+			}
+		}
+		if (infoMessage == null && tree.getCheckedElements().length == 0) {
+			infoMessage = "No categories/queries selected.";
+		}
+		setMessage(infoMessage, INFORMATION);
+		setErrorMessage(errorMessage);
+		setPageComplete(errorMessage == null);
 	}
-	
-}
 
+}

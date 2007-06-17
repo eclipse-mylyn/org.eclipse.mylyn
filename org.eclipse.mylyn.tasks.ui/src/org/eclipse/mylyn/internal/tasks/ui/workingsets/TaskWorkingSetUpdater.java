@@ -34,8 +34,6 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);
 	}
 	
-	// IWorkingSetUpdater
-	
 	public void add(IWorkingSet workingSet) {
 		checkElementExistence(workingSet);
 		synchronized (workingSets) {
