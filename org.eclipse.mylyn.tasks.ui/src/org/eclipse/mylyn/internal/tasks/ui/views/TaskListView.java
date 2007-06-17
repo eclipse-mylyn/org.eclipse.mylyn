@@ -1220,7 +1220,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		if (drilledIntoCategory != null) {
 			manager.add(goUpAction);
 		}
-		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
 
 		if (element instanceof AbstractTask) {
@@ -1235,6 +1234,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
+		
+		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
 			manager.add(new Separator());
