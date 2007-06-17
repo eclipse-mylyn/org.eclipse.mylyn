@@ -73,12 +73,10 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	@SuppressWarnings("unchecked")
 	public void finish() {
-        // List<AbstractTaskContainer> elements = getCheckedElements((List<AbstractTaskContainer>) tree.getInput());
         Object[] elements = tree.getCheckedElements();
-        IAdaptable[] adaptables = new IAdaptable[elements.length];
         Set<AbstractTaskContainer> validElements = new HashSet<AbstractTaskContainer>();
-        for (int i = 0; i < adaptables.length; i++) {
-        	if (adaptables[i] instanceof AbstractTaskContainer) {
+        for (int i = 0; i < elements.length; i++) {
+        	if (elements[i] instanceof AbstractTaskContainer) {
         		validElements.add((AbstractTaskContainer)elements[i]);
         	}
 		}
