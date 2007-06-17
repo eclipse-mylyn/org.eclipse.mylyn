@@ -63,6 +63,11 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 		// ignore
 	}
 
+	@Override
+	public void run() {
+		run(this);
+	}
+	
 	public void run(IAction action) {
 		if (task != null) {
 			run(task);

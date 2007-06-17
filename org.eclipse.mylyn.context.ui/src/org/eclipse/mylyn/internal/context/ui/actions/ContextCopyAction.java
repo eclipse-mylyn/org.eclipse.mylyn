@@ -48,6 +48,11 @@ public class ContextCopyAction extends TaskContextAction {
 		// ignore
 	}
 
+	@Override
+	public void run() {
+		run(getSelectedTask(selection));
+	}
+	
 	public void run(IAction action) {
 		run(getSelectedTask(selection));
 	}

@@ -8,16 +8,11 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -28,7 +23,7 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  */
 public class ContextMenuContributor implements IDynamicSubMenuContributor {
 
-	private static final String LABEL = "Task Context";
+	private static final String LABEL = "Context";
 
 	public MenuManager getSubMenuManager(final List<AbstractTaskContainer> selectedElements) {
 		final MenuManager subMenuManager = new MenuManager(LABEL);
@@ -36,12 +31,22 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 		subMenuManager.setVisible(selectedElements.size() == 1 && selectedElements.get(0) instanceof AbstractTask);
 
 		AbstractTask task = (AbstractTask) selectedElements.get(0);
+		StructuredSelection selection = new StructuredSelection(task);
 		if (!task.isLocal()) {
-			subMenuManager.add(new ContextAttachAction());
-			subMenuManager.add(new ContextRetrieveAction());
+			ContextAttachAction attachAction = new ContextAttachAction();
+			attachAction.selectionChanged(attachAction, selection);
+			subMenuManager.add(attachAction);
+			
+			ContextRetrieveAction retrieveAction = new ContextRetrieveAction();
+			retrieveAction.selectionChanged(retrieveAction, selection);
+			subMenuManager.add(retrieveAction);
 		}
-		subMenuManager.add(new ContextCopyAction());
-		subMenuManager.add(new ContextClearAction());
+		ContextCopyAction copyAction = new ContextCopyAction();
+		copyAction.selectionChanged(copyAction, selection);
+		subMenuManager.add(copyAction);
+		ContextClearAction clearAction = new ContextClearAction();
+		clearAction.selectionChanged(clearAction, selection);
+		subMenuManager.add(clearAction);
 		return subMenuManager;
 	}
 

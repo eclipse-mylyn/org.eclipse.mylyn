@@ -109,7 +109,7 @@
    <extension point="org.eclipse.mylyn.tasks.ui.actions">    
       <dynamicPopupMenu
             class="org.eclipse.mylyn.internal.context.ui.actions.ContextMenuContributor"
-            menuPath="tasks"/>
+            menuPath="context"/>
    </extension>
     
    <extension

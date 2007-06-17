@@ -41,6 +41,11 @@ public class ContextClearAction extends TaskContextAction {
 
 	}
 
+	@Override
+	public void run() {
+		run(this);
+	}
+	
 	public void run(IAction action) {
 		AbstractTask task = TaskListView.getFromActivePerspective().getSelectedTask();
 		if (task instanceof AbstractTask) {

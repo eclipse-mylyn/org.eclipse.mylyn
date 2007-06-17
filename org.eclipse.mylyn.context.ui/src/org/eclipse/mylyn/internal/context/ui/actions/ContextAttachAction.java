@@ -59,6 +59,11 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		// ignore
 	}
 
+	@Override
+	public void run() {
+		run(this);
+	}
+	
 	public void run(IAction action) {
 		if (task == null) {
 			return;
