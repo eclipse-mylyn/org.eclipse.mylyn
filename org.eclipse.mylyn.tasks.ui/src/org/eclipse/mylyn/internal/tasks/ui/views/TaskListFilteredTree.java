@@ -74,6 +74,8 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private int incompleteTime;
 
+	private IWorkingSet currentWorkingSet;
+
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
 	}
@@ -227,7 +229,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		workingSetLink.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				action.run();
+				if (currentWorkingSet != null) {
+					action.run(currentWorkingSet);
+				} else {
+					action.run();
+				}
 			}
 		});
 
@@ -301,14 +307,17 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		if (activeSets.size() == 0) {
 			workingSetLink.setText(LABEL_SETS_NONE);
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			currentWorkingSet = null;
 		} else if (activeSets.size() > 1) {
 			workingSetLink.setText(LABEL_SETS_MULTIPLE);
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			currentWorkingSet = null;
 		} else {
 			Object[] array = activeSets.toArray();
-			IWorkingSet theSet = (IWorkingSet) array[0];
-			workingSetLink.setText(theSet.getLabel());
+			IWorkingSet workingSet = (IWorkingSet) array[0];
+			workingSetLink.setText(workingSet.getLabel());
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
+			currentWorkingSet = workingSet;
 		}
 		filterComposite.layout();
 	}

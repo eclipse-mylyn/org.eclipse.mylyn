@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -41,8 +43,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.internal.WorkingSetComparator;
 import org.eclipse.ui.internal.dialogs.AbstractWorkingSetDialog;
 import org.eclipse.ui.internal.dialogs.WorkingSetFilter;
@@ -115,14 +122,14 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 					itemSet.fill(dropDownMenu, -1);
 				}
 			}
-			
+
 			Separator separator = new Separator();
 			separator.fill(dropDownMenu, -1);
 			itemAll.fill(dropDownMenu, -1);
 			itemNone.fill(dropDownMenu, -1);
 			separator = new Separator();
 			separator.fill(dropDownMenu, -1);
-			
+
 		}
 
 		ActionContributionItem editItem = new ActionContributionItem(new ManageWorkingSetsAction());
@@ -198,6 +205,25 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 
 	public void run(IAction action) {
 		this.run();
+	}
+
+	public void run(IWorkingSet editWorkingSet) {
+		IWorkingSetManager manager = WorkbenchPlugin.getDefault().getWorkingSetManager();
+		IWorkingSetEditWizard wizard = manager.createWorkingSetEditWizard(editWorkingSet);
+		WizardDialog dialog = new WizardDialog(getWindow().getShell(), wizard);
+
+//		dialog.create();
+		dialog.open();
+//		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
+//				IWorkbenchHelpContextIds.WORKING_SET_EDIT_WIZARD);
+//		if (dialog.open() == Window.OK) {
+//			editWorkingSet = wizard.getSelection();
+//			availableWorkingSetsChanged();
+//			// make sure ok button is enabled when the selected working set
+//			// is edited. Fixes bug 33386.
+//			updateButtonAvailability();
+//		}
+//		editedWorkingSets.put(editWorkingSet, originalWorkingSet);
 	}
 
 	private class ManageWorkingSetsAction extends Action {
@@ -282,7 +308,7 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 		}
 
 	}
-	
+
 	private class ToggleWorkingSetAction extends Action {
 		private IWorkingSet set;
 
@@ -447,10 +473,10 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 				}
 			}
 			newList.removeAll(tempList);
-			
+
 			Object[] selection = viewer.getCheckedElements();
 			IWorkingSet[] setsToEnable = new IWorkingSet[selection.length];
-			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);	
+			System.arraycopy(selection, 0, setsToEnable, 0, selection.length);
 			newList.addAll(new HashSet<IWorkingSet>(Arrays.asList(setsToEnable)));
 
 			window.getActivePage().setWorkingSets((IWorkingSet[]) newList.toArray(new IWorkingSet[newList.size()]));
@@ -491,5 +517,4 @@ public class TaskWorkingSetAction extends Action implements IMenuCreator {
 			updateButtonAvailability();
 		}
 	}
-
 }
