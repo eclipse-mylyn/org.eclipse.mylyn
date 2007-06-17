@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskSelectionDialog;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -34,6 +35,15 @@ public class ContextCopyAction extends TaskContextAction {
 
 	private static final String OPEN_TASK_ACTION_DIALOG_SETTINGS = "open.task.action.dialog.settings";
 
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to";
+	
+	public ContextCopyAction() {
+		setText("Copy to...");
+		setToolTipText("Copy Task Context to...");
+		setId(ID_ACTION);
+		setImageDescriptor(TasksUiImages.CONTEXT_TRANSFER);
+	}	
+	
 	public void init(IViewPart view) {
 		// ignore
 	}

@@ -56,6 +56,7 @@
          </action>
       </objectContribution>
 
+	 <!--
 	 <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.context.ui.tasks.contribution"
@@ -78,6 +79,9 @@
         	tooltip="Copy Context to...">
   		</action>
 	 </objectContribution>
+	 -->
+	 
+	 <!--
      <objectContribution
            adaptable="false"
            id="org.eclipse.mylyn.ui.tasks.repository.hits..action.contribution"
@@ -99,6 +103,13 @@
               menubarPath="context">
         </action>
 	 </objectContribution>
+	 -->
+   </extension>
+    
+   <extension point="org.eclipse.mylyn.tasks.ui.actions">    
+      <dynamicPopupMenu
+            class="org.eclipse.mylyn.internal.context.ui.actions.ContextMenuContributor"
+            menuPath="tasks"/>
    </extension>
     
    <extension

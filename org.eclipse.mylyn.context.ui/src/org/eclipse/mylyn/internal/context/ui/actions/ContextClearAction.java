@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -27,6 +28,15 @@ public class ContextClearAction extends TaskContextAction {
 
 	public static final String ID = "org.eclipse.mylyn.ui.clear.context";
 
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.clear";
+	
+	public ContextClearAction() {
+		setText("Clear Context");
+		setToolTipText("Clear Context");
+		setId(ID_ACTION);
+		setImageDescriptor(TasksUiImages.CONTEXT_CLEAR);
+	}
+	
 	public void init(IViewPart view) {
 
 	}

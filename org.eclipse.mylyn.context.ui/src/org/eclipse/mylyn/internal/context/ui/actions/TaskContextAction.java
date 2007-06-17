@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -23,7 +24,7 @@ import org.eclipse.ui.IViewActionDelegate;
  * 
  * @author Mik Kersten
  */
-public abstract class TaskContextAction implements IViewActionDelegate {
+public abstract class TaskContextAction extends Action implements IViewActionDelegate {
 
 	protected ISelection selection;
 

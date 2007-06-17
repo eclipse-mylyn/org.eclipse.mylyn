@@ -11,12 +11,14 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextRetrieveWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -38,7 +40,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class ContextRetrieveAction implements IViewActionDelegate {
+public class ContextRetrieveAction extends Action implements IViewActionDelegate {
 
 	private AbstractTask task;
 
@@ -48,6 +50,15 @@ public class ContextRetrieveAction implements IViewActionDelegate {
 
 	private StructuredSelection selection;
 
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.retrieve";
+	
+	public ContextRetrieveAction() {
+		setText("Retrieve...");
+		setToolTipText("Retrieve Task Context");
+		setId(ID_ACTION);
+		setImageDescriptor(TasksUiImages.CONTEXT_RETRIEVE);
+	}
+	
 	public void init(IViewPart view) {
 		// ignore
 	}

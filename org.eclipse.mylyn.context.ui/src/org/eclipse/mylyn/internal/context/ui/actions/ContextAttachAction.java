@@ -11,6 +11,7 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -18,6 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextAttachWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -36,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Rob Elves
  * @author Steffen Pingel
  */
-public class ContextAttachAction implements IViewActionDelegate {
+public class ContextAttachAction extends Action implements IViewActionDelegate {
 
 	private AbstractTask task;
 
@@ -44,6 +46,15 @@ public class ContextAttachAction implements IViewActionDelegate {
 
 	private AbstractRepositoryConnector connector;
 
+	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.attach";
+	
+	public ContextAttachAction() {
+		setText("Attach...");
+		setToolTipText("Attach Task Context");
+		setId(ID_ACTION);
+		setImageDescriptor(TasksUiImages.CONTEXT_ATTACH);
+	}
+	
 	public void init(IViewPart view) {
 		// ignore
 	}
