@@ -779,22 +779,20 @@
       </hyperlinkDetector>
    </extension>
    
-	<extension
+	<extension 
 		point="org.eclipse.ui.workingSets">
-		<workingSet
-                 elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetElementAdapter"
-        icon="icons/etool16/open-task.gif"
-                 id="org.eclipse.mylyn.tasks.ui.workingSet"
-                 name="Tasks"
-                 pageClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetPage"
-                 updaterClass="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskWorkingSetUpdater">
-		</workingSet>
+		<workingSet 
+	        elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetElementAdapter"
+	        icon="icons/etool16/open-task.gif"
+	        id="org.eclipse.mylyn.tasks.ui.workingSet"
+	        name="Tasks"
+	        pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"/>
 	</extension>
  <extension
        point="org.eclipse.core.runtime.adapters">
     <factory
           adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
-          class="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskAdapterFactory">
+          class="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskAdapterFactory">
        <adapter
              type="org.eclipse.ui.IPersistableElement">
        </adapter>
@@ -803,7 +801,7 @@
  <extension
        point="org.eclipse.ui.elementFactories">
     <factory
-          class="org.eclipse.mylyn.internal.tasks.ui.workingset.TaskElementFactory"
+          class="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskElementFactory"
           id="org.eclipse.mylyn.tasks.ui.elementFactory">
     </factory>
 </extension>
