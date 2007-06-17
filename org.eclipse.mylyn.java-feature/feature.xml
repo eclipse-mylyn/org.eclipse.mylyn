@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.java_feature"
       label="Mylyn Bridge: Java"
-      version="2.0.0.v20070615-0900"
+      version="2.0.0.v20070616-2100"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -64,7 +64,7 @@
          id="org.eclipse.mylyn.java.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070615-0900"
+         version="2.0.0.v20070616-2100"
          unpack="false"/>
 
 </feature>
