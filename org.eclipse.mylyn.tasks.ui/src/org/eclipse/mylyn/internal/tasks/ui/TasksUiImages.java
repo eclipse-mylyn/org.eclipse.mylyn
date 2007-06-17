@@ -133,6 +133,10 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor TASK_REPOSITORY_NEW = create(T_TOOL, "task-repository-new.gif");
 
+	public static final ImageDescriptor TOOLBAR_ARROW_RIGHT = create(T_TOOL, "toolbar-arrow-right.gif");
+	
+	public static final ImageDescriptor TOOLBAR_ARROW_DOWN = create(T_TOOL, "toolbar-arrow-down.gif");
+	
 	public static final ImageDescriptor COMMENT = create(T_TOOL, "comment.gif");
 
 	public static final ImageDescriptor LINK_EDITOR = create(T_TOOL, "link-editor.gif");
@@ -147,6 +151,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor CONTEXT_TRANSFER = create(T_TOOL, "context-transfer.gif");
 
+	public static final ImageDescriptor CONTEXT_CLEAR = create(T_TOOL, "context-clear.gif");	
+	
 	public static final ImageDescriptor ATTACHMENT_PATCH = create(T_OBJ, "attachment-patch.gif");
 
 	public static final ImageDescriptor OVERLAY_INCOMMING = create(T_EVIEW, "overlay-incoming.gif");

@@ -10,15 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
@@ -41,9 +42,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
-import org.eclipse.ui.forms.FormColors;
-import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Mik Kersten
@@ -64,8 +65,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	private Hyperlink activeTaskLink;
 
 	private WorkweekProgressBar taskProgressBar;
-	
-	private FormColors formColors;
 
 	private int totalTasks;
 
@@ -77,14 +76,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
-	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (formColors != null) {
-			formColors.dispose();
-		}
 	}
 	
 	@Override
@@ -194,15 +185,30 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createWorkingSetComposite(Composite container) {
-		formColors = new FormColors(parent.getDisplay());
+		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
+		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+		workingSetButton.setToolTipText("Select Task Working Set");
 		
-		final Button workingSetButton = new Button(container, SWT.ARROW | SWT.RIGHT);
-		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
-		workingSetButton.setToolTipText("Toggle Task Working Set");
+		final TaskWorkingSetAction action = new TaskWorkingSetAction();
+		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				action.getMenu(workingSetButton).setVisible(true);
+			}
+
+			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_DOWN));
+			}
+
+			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+			}
+		});
+		
 		workingSetLink = new Hyperlink(container, SWT.LEFT);
 		workingSetLink.setText(LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(formColors.getColor(IFormColors.TITLE));
+		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
 
 			public void mouseEnter(MouseEvent e) {
@@ -219,16 +225,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		
 		indicateActiveTaskWorkingSet();
 
-		final TaskWorkingSetAction action = new TaskWorkingSetAction();
-//		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
-//		action.setText(null);
-
-		workingSetButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				action.getMenu(workingSetButton).setVisible(true);
-			}
-		});
-
 		workingSetLink.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				action.run();
@@ -244,10 +240,10 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createStatusComposite(Composite container) {
-		final Button activeTaskButton = new Button(container, SWT.ARROW | SWT.RIGHT);
-		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.BLANK_TINY));
-		activeTaskButton.setToolTipText("Toggle Active Task");
-		
+		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
+		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+		activeTaskButton.setToolTipText("Select Active Task");
+		 
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
@@ -257,12 +253,19 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		
  		final ActiveTaskHistoryDropDownAction action = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory(), true);
-//		action.setImageDescriptor(TasksUiImages.BLANK_TINY);
-//		action.setText(null);
 
-		activeTaskButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+		activeTaskButton.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 				action.getMenu(activeTaskButton).setVisible(true);
+			}
+
+			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_DOWN));
+			}
+
+			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
+				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
 
@@ -318,7 +321,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		String text = task.getSummary() + " "; // hack for padding
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
-		activeTaskLink.setForeground(formColors.getColor(IFormColors.TITLE));
+		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		activeTaskLink.setToolTipText("Open: " + task.getSummary());
 		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
 
