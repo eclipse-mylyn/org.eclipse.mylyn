@@ -50,7 +50,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor"/>
                </appInfo>
             </annotation>
          </attribute>

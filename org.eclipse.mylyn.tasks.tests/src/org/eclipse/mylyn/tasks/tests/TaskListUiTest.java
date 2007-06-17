@@ -28,8 +28,8 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.NewCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.web.tasks.WebTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.tests.connector.MockRepositoryQuery;
@@ -254,10 +254,10 @@ public class TaskListUiTest extends TestCase {
 		MoveToCategoryMenuContributor moveToMenuContrib = new MoveToCategoryMenuContributor();
 		List<AbstractTaskContainer> selectedElements = new Vector<AbstractTaskContainer>();
 		selectedElements.add(cat1task1);
-		int nrOfCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
-		int nrOfSeparators = 1;
+		int numCategoriesMinusArchiveContainer = manager.getTaskList().getCategories().size() - 1;
+		int numSeparators = 1; 
 		// adding a separator and the New Category... action
-		int expectedNrOfSubMenuEntries = nrOfCategoriesMinusArchiveContainer + nrOfSeparators + 1;
+		int expectedNrOfSubMenuEntries = numCategoriesMinusArchiveContainer + numSeparators + 1;
 		NewCategoryAction newCatActon = new NewCategoryAction();
 
 		// execute sytem under test
