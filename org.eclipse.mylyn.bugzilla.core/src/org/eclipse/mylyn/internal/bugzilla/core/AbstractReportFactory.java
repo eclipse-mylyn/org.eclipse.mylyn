@@ -58,24 +58,24 @@ public class AbstractReportFactory {
 
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
 
-		// Remove control characters other than \\n and \\r
-		InputStream iis = new InputStream() {
-			public int read() throws IOException {
-				int c;
-				while ((c = is.read()) != -1) {
-					if (!Character.isISOControl(c) || c == '\n' || c == '\r') {
-						return c;
-					}
-				}
-				return -1;
-			}
-		};
+		// filtered upon tasklist and offline taskdata externalization 
+//		InputStream iis = new InputStream() {
+//			public int read() throws IOException {
+//				int c;
+//				while ((c = is.read()) != -1) {
+//					if (!Character.isISOControl(c) || c == '\n' || c == '\r') {
+//						return c;
+//					}
+//				}
+//				return -1;
+//			}
+//		};
 
 		Reader in;
 		if (characterEncoding != null) {
-			in = new InputStreamReader(iis, characterEncoding);
+			in = new InputStreamReader(is, characterEncoding);
 		} else {
-			in = new InputStreamReader(iis);
+			in = new InputStreamReader(is);
 		}
 
 		if (in != null && clean) {

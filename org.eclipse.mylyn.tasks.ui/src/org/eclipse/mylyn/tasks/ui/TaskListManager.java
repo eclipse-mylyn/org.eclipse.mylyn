@@ -731,23 +731,23 @@ public class TaskListManager implements IPropertyChangeListener {
 			if (task instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) task;
 				if (repositoryTask.getRepositoryUrl().equals(oldRepositoryUrl)) {
-					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getHandleIdentifier());
-					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getHandleIdentifier());
-					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getHandleIdentifier());
-					taskDataManager.remove(repositoryTask.getHandleIdentifier());
+					RepositoryTaskData newTaskData = taskDataManager.getNewTaskData(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+					RepositoryTaskData oldTaskData = taskDataManager.getOldTaskData(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
+					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 					String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, repositoryTask.getTaskId());
 
 					if (newTaskData != null) {
 						newTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setNewTaskData(newHandle, newTaskData);
+						taskDataManager.setNewTaskData(newTaskData);
 					}
 					if (oldTaskData != null) {
 						oldTaskData.setRepositoryURL(newRepositoryUrl);
-						taskDataManager.setOldTaskData(newHandle, oldTaskData);
+						taskDataManager.setOldTaskData(oldTaskData);
 					}
 					if (!edits.isEmpty()) {
-						taskDataManager.saveEdits(newHandle, edits);
+						taskDataManager.saveEdits(newRepositoryUrl, repositoryTask.getTaskId(), edits);
 					}
 				}
 			}

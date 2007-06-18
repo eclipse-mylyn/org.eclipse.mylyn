@@ -69,7 +69,7 @@ public class TracTaskEditorFactory implements ITaskEditorFactory {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
 				tracTask.getRepositoryUrl());
 		try {
-			return new RepositoryTaskEditorInput(repository, tracTask.getHandleIdentifier(), tracTask.getTaskUrl(), tracTask.getTaskId());
+			return new RepositoryTaskEditorInput(repository, tracTask.getTaskId(), tracTask.getTaskUrl());
 		} catch (Exception e) {
 			StatusManager.fail(e, "Could not create Trac editor input", true);
 		}

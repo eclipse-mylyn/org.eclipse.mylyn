@@ -24,19 +24,11 @@ public class BugzillaTask extends AbstractTask {
 	private String severity;
 
 	private String product;
-	
+
 	public BugzillaTask(String repositoryUrl, String id, String label) {
 		super(repositoryUrl, id, label);
 		setTaskUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
-//		if (newTask) {
-//			setSyncState(RepositoryTaskSyncState.INCOMING);
-//		}
 	}
-
-//	public BugzillaTask(BugzillaQueryHit hit, boolean newTask) {
-//		this(hit.getRepositoryUrl(), hit.getTaskId(), hit.getSummary(), newTask);
-//		setPriority(hit.getPriority());
-//	}
 
 	@Override
 	public String getTaskKind() {

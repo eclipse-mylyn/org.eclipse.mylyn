@@ -20,8 +20,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 
 	public NewTaskEditorInput(TaskRepository repository, RepositoryTaskData taskData) {
-		// TODO: should not have taskData.getId() twice
-		super(repository, taskData.getId(), "", taskData.getId());
+		super(repository, taskData.getId(), "");
 		super.setOldTaskData(taskData);
 		super.setEditableTaskData(taskData);
 	}

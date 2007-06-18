@@ -45,7 +45,7 @@ public class RepositoryOperation implements Serializable {
 	private boolean hasOptions = false;
 
 	/** The name of the operation (text that we display) */
-	private String op_name;
+	private String operation_name;
 
 	/** The option that is selected */
 	private String op_sel;
@@ -69,7 +69,7 @@ public class RepositoryOperation implements Serializable {
 	 */
 	public RepositoryOperation(String knobName, String operationName) {
 		knob_name = knobName;
-		op_name = operationName;
+		operation_name = operationName;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class RepositoryOperation implements Serializable {
 	 * @return The display name
 	 */
 	public String getOperationName() {
-		return op_name;
+		return operation_name;
 	}
 
 	/**

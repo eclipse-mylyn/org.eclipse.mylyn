@@ -84,16 +84,16 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * create task and necessary subtasks (1 level nesting)
 	 */
-	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id,
-			IProgressMonitor monitor) throws CoreException {
+	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, IProgressMonitor monitor)
+			throws CoreException {
 		return createTaskFromExistingId(repository, id, true, monitor);
 	}
 
 	/**
 	 * Create new repository task, adding result to tasklist
 	 */
-	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id,
-			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
+	public AbstractTask createTaskFromExistingId(TaskRepository repository, String id, boolean retrieveSubTasks,
+			IProgressMonitor monitor) throws CoreException {
 		AbstractTask task = taskList.getTask(repository.getUrl(), id);
 		AbstractTask repositoryTask = null;
 		if (task instanceof AbstractTask) {
@@ -115,8 +115,7 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Creates a new task from the given task data. Does NOT add resulting task
-	 * to the tasklist
+	 * Creates a new task from the given task data. Does NOT add resulting task to the tasklist
 	 */
 	public AbstractTask createTaskFromTaskData(TaskRepository repository, RepositoryTaskData taskData,
 			boolean retrieveSubTasks, IProgressMonitor monitor) throws CoreException {
@@ -130,7 +129,7 @@ public abstract class AbstractRepositoryConnector {
 				repositoryTask = createTask(repository.getUrl(), taskData.getId(), taskData.getId() + ": "
 						+ taskData.getDescription());
 				updateTaskFromTaskData(repository, repositoryTask, taskData);
-				getTaskDataManager().setNewTaskData(repositoryTask.getHandleIdentifier(), taskData);
+				getTaskDataManager().setNewTaskData(taskData);
 
 				if (retrieveSubTasks) {
 					monitor.beginTask("Creating task", getTaskDataHandler().getSubTaskIds(taskData).size());
@@ -153,8 +152,7 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Utility method for construction of connector specific task object TODO:
-	 * Move to 'task' factory
+	 * Utility method for construction of connector specific task object TODO: Move to 'task' factory
 	 * 
 	 * @return instance of AbstractTask
 	 */
@@ -184,15 +182,12 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getRepositoryType();
 
 	/**
-	 * Updates the properties of <code>repositoryTask</code>. Invoked when on
-	 * task synchronization if {@link #getTaskDataHandler()} returns
-	 * <code>null</code> or
-	 * {@link ITaskDataHandler#getTaskData(TaskRepository, String)} returns
-	 * <code>null</code>.
+	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
+	 * {@link #getTaskDataHandler()} returns <code>null</code> or
+	 * {@link ITaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
 	 * 
 	 * <p>
-	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks
-	 * do not need to implement this method.
+	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks do not need to implement this method.
 	 * 
 	 * @param repository
 	 *            the repository
@@ -219,20 +214,21 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Implementors of this repositoryOperations must perform it locally without
-	 * going to the server since it is used for frequent repositoryOperations
-	 * such as decoration.
+	 * Implementors of this repositoryOperations must perform it locally without going to the server since it is used
+	 * for frequent repositoryOperations such as decoration.
 	 * 
 	 * @return an empty set if no contexts
 	 */
 	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractTask task) {
 		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
 
-		if (taskDataManager != null && taskDataManager.getNewTaskData(task.getHandleIdentifier()) != null) {
-			for (RepositoryAttachment attachment : taskDataManager.getNewTaskData(task.getHandleIdentifier())
-					.getAttachments()) {
-				if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-					contextAttachments.add(attachment);
+		if (taskDataManager != null) {
+			RepositoryTaskData newData = taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			if (newData != null) {
+				for (RepositoryAttachment attachment : newData.getAttachments()) {
+					if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+						contextAttachments.add(attachment);
+					}
 				}
 			}
 		}
@@ -259,15 +255,17 @@ public abstract class AbstractRepositoryConnector {
 	 * 
 	 * All errors should be thrown as <code>CoreException</code> for the framework to handle, since background
 	 * synchronizations fail silently when disconnected.
-	 * @param tasks TODO
+	 * 
+	 * @param tasks
+	 *            TODO
 	 * 
 	 * @return null if there was no tasks changed in the repository, otherwise collection of updated tasks (within
 	 *         <code>tasks</code> collection), so empty collection means that there are some other tasks changed
 	 * 
 	 * @throws CoreException
 	 */
-	public abstract boolean markStaleTasks(TaskRepository repository, 
-			Set<AbstractTask> tasks, IProgressMonitor monitor) throws CoreException;
+	public abstract boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
+			throws CoreException;
 
 	/**
 	 * Attaches the associated context to <code>task</code>.
@@ -309,13 +307,12 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Retrieves a context stored in <code>attachment</code> from
-	 * <code>task</code>.
+	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
 	 * 
 	 * @return false, if operation is not supported by repository
 	 */
-	public final boolean retrieveContext(TaskRepository repository, AbstractTask task,
-			RepositoryAttachment attachment, String destinationPath, IProgressMonitor monitor) throws CoreException {
+	public final boolean retrieveContext(TaskRepository repository, AbstractTask task, RepositoryAttachment attachment,
+			String destinationPath, IProgressMonitor monitor) throws CoreException {
 		IAttachmentHandler attachmentHandler = getAttachmentHandler();
 		if (attachmentHandler == null) {
 			return false;
@@ -376,8 +373,7 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Reset and update the repository attributes from the server (e.g.
-	 * products, components)
+	 * Reset and update the repository attributes from the server (e.g. products, components)
 	 * 
 	 * TODO: remove?
 	 */
@@ -392,10 +388,8 @@ public abstract class AbstractRepositoryConnector {
 	}
 
 	/**
-	 * Following synchronization, the timestamp needs to be recorded. This
-	 * provides a default implementation for determining the last
-	 * synchronization timestamp. Override to return actual timestamp from
-	 * repository.
+	 * Following synchronization, the timestamp needs to be recorded. This provides a default implementation for
+	 * determining the last synchronization timestamp. Override to return actual timestamp from repository.
 	 */
 	public String getSynchronizationTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
 		Date mostRecent = new Date(0);
@@ -421,7 +415,7 @@ public abstract class AbstractRepositoryConnector {
 
 	private RepositoryTaskData getTaskData(AbstractTask task) {
 		if (taskDataManager != null) {
-			return taskDataManager.getNewTaskData(task.getHandleIdentifier());
+			return taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		}
 		return null;
 	}
@@ -436,6 +430,5 @@ public abstract class AbstractRepositoryConnector {
 	public void setTaskDataManager(TaskDataManager taskDataManager) {
 		this.taskDataManager = taskDataManager;
 	}
-
 
 }

@@ -50,6 +50,8 @@ public class AllTasksTests {
 		suite.addTestSuite(TaskHistoryTest.class);
 		suite.addTestSuite(UrlConnectionUtilTest.class);
 		suite.addTestSuite(CommentQuoterTest.class);
+		suite.addTestSuite(OfflineStorageTest.class);
+		suite.addTestSuite(OfflineCachingStorageTest.class);
 		// $JUnit-END$
 		
 		// suite.addTestSuite(BackgroundSaveTest.class);

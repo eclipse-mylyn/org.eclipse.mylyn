@@ -142,7 +142,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		addAddress(task.getOwner(), addressSet);
 
 		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager() //
-				.getOldTaskData(task.getHandleIdentifier());
+				.getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
 		addAddresses(data, addressSet);
 	}
 

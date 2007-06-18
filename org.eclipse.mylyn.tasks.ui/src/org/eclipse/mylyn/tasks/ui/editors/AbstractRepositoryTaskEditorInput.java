@@ -31,7 +31,7 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 
 	final protected TaskRepository repository;
 
-	final private String handle;
+	final private String taskId;
 
 	private RepositoryTaskData editableTaskData;
 
@@ -39,8 +39,8 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	
 	private Set<RepositoryTaskAttribute> oldEdits; 
 
-	protected AbstractRepositoryTaskEditorInput(TaskRepository repository, String handle) {
-		this.handle = handle;
+	protected AbstractRepositoryTaskEditorInput(TaskRepository repository, String taskId) {
+		this.taskId = taskId;
 		this.repository = repository;
 		this.refreshInput();
 	}
@@ -115,8 +115,8 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	}
 
 	public void refreshInput() {
-		this.editableTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(handle);
-		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(handle);
-		this.oldEdits = TasksUiPlugin.getDefault().getTaskDataManager().getEdits(handle);
+		this.editableTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(repository.getUrl(), taskId);
+		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(repository.getUrl(), taskId);
+		this.oldEdits = TasksUiPlugin.getDefault().getTaskDataManager().getEdits(repository.getUrl(), taskId);
 	}
 }

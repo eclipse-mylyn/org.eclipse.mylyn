@@ -60,6 +60,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		TasksUiPlugin.getDefault().getTaskDataManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
 		TasksUiPlugin.getTaskListManager().getTaskList().reset();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());

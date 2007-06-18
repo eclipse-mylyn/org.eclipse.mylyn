@@ -332,10 +332,10 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 		List<RepositoryTaskAttribute> attributes = data.getAttributes();
 		for (RepositoryTaskAttribute attribute : attributes) {
-			if (TracAttributeFactory.isInternalAttribute(attribute.getID())) {
+			if (TracAttributeFactory.isInternalAttribute(attribute.getId())) {
 				// ignore
 			} else if (!attribute.isReadOnly()) {
-				ticket.putValue(attribute.getID(), attribute.getValue());
+				ticket.putValue(attribute.getId(), attribute.getValue());
 			}
 		}
 

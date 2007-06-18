@@ -80,8 +80,7 @@ public class TasksUiUtil {
 	public static final int FLAG_NO_RICH_EDITOR = 1 << 17;
 
 	/**
-	 * Resolves a rich editor for the task if available. Must be called from UI
-	 * thread.
+	 * Resolves a rich editor for the task if available. Must be called from UI thread.
 	 */
 	public static void openUrl(String url, boolean useRichEditorIfAvailable) {
 		try {
@@ -168,8 +167,7 @@ public class TasksUiUtil {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getConnectorForRepositoryTaskUrl(fullUrl);
 			if (connector != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin
-						.getRepositoryUi(connector.getRepositoryType());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
 				if (repositoryUrl != null && taskId != null) {
 					opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
 				} else {
@@ -197,8 +195,7 @@ public class TasksUiUtil {
 				task = (AbstractTask) element;
 			}
 
-			
-			if(task instanceof LocalTask) {			
+			if (task instanceof LocalTask) {
 				TasksUiUtil.openEditor(task, false);
 			} else if (task instanceof AbstractTask) {
 
@@ -219,7 +216,7 @@ public class TasksUiUtil {
 				if (connector != null) {
 
 					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
-							task.getHandleIdentifier());
+							task.getRepositoryUrl(), task.getTaskId());
 
 					if (taskData != null) {
 						TasksUiUtil.openEditor(task, true, false);
@@ -256,8 +253,7 @@ public class TasksUiUtil {
 		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) task;
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask
-					.getRepositoryKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
 				taskEditorId = customTaskEditorId;
@@ -466,8 +462,8 @@ public class TasksUiUtil {
 				selection = (IStructuredSelection) windowSelection;
 			}
 		}
-		
-		if(selection == null) {
+
+		if (selection == null) {
 			return null;
 		}
 
@@ -510,7 +506,8 @@ public class TasksUiUtil {
 
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
 				.getShell(), manager);
 		final boolean[] result = new boolean[] { false };
 		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {

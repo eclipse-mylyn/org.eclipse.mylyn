@@ -20,9 +20,8 @@ import java.util.StringTokenizer;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
- * This data structure is not to be subclassed but rather used directly to hold
- * repository task data (attribute key, value pairs along with valid options for
- * each attribute).
+ * This data structure is not to be subclassed but rather used directly to hold repository task data (attribute key,
+ * value pairs along with valid options for each attribute).
  * 
  * @author Mik Kersten
  * @author Rob Elves
@@ -31,13 +30,9 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	private static final long serialVersionUID = 2304501248225237699L;
 
-	private boolean hasLocalChanges = false;
-
 	private boolean isNew = false;
 
 	private String reportID;
-	
-	private String key;
 
 	private String repositoryURL;
 
@@ -55,16 +50,14 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 	/** The repositoryOperations that can be done on the report */
 	private List<RepositoryOperation> repositoryOperations = new ArrayList<RepositoryOperation>();
 
-	
 	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id) {
-		this(factory, repositoryKind, repositoryURL, id, AbstractTask.DEFAULT_TASK_KIND);		
+		this(factory, repositoryKind, repositoryURL, id, AbstractTask.DEFAULT_TASK_KIND);
 	}
-	
+
 	public RepositoryTaskData(AbstractAttributeFactory factory, String repositoryKind, String repositoryURL, String id,
 			String taskKind) {
 		super(factory);
 		this.reportID = id;
-		this.key = id;
 		this.repositoryKind = repositoryKind;
 		this.repositoryURL = repositoryURL;
 		this.taskKind = taskKind;
@@ -288,21 +281,15 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		return getId();
 	}
 	
+	public void setTaskKey(String key) {
+		setAttributeValue(RepositoryTaskAttribute.TASK_KEY, key);
+	}
+
 	/**
 	 * @return the server for this report
 	 */
 	public String getRepositoryUrl() {
 		return repositoryURL;
-	}
-
-	@Deprecated
-	public boolean hasLocalChanges() {
-		return hasLocalChanges;
-	}
-
-	@Deprecated
-	public void setHasLocalChanges(boolean b) {
-		hasLocalChanges = b;
 	}
 
 	@Override
@@ -342,17 +329,12 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 
 	public void setRepositoryURL(String repositoryURL) {
 		this.repositoryURL = repositoryURL;
+		for (RepositoryAttachment attachment : attachments) {
+			attachment.setRepositoryUrl(repositoryURL);
+		}
 	}
-	
+
 	public final String getHandleIdentifier() {
 		return RepositoryTaskHandleUtil.getHandle(getRepositoryUrl(), getId());
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 }

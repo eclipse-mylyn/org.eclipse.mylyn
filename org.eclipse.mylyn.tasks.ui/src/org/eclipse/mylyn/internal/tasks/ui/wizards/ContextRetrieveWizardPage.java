@@ -114,14 +114,14 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
 
-		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>(connector
-				.getContextAttachments(repository, task));
+		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>(
+				connector.getContextAttachments(repository, task));
 
 		Collections.sort(contextAttachments, new Comparator<RepositoryAttachment>() {
 
 			public int compare(RepositoryAttachment attachment1, RepositoryAttachment attachment2) {
 				RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
-						task.getHandleIdentifier());
+						task.getRepositoryUrl(), task.getTaskId());
 
 				AbstractAttributeFactory factory = null;
 
@@ -131,10 +131,10 @@ public class ContextRetrieveWizardPage extends WizardPage {
 					factory = data.getAttributeFactory();
 				}
 				if (factory != null) {
-					created1 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment1
-							.getDateCreated());
-					created2 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE, attachment2
-							.getDateCreated());
+					created1 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+							attachment1.getDateCreated());
+					created2 = factory.getDateForAttributeType(RepositoryTaskAttribute.ATTACHMENT_DATE,
+							attachment2.getDateCreated());
 				}
 
 				if (created1 != null && created2 != null) {

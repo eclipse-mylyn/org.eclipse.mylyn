@@ -350,7 +350,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 
 	@Override
 	protected boolean hasContentAssist(RepositoryTaskAttribute attribute) {
-		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getID());
+		return BugzillaReportElement.NEWCC.getKeyString().equals(attribute.getId());
 	}
 
 	@Override
@@ -634,7 +634,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (BugzillaTaskEditor.this.getEditor() instanceof TaskEditor) {
-					TaskEditor mylarTaskEditor = (TaskEditor) BugzillaTaskEditor.this.getEditor();
 					TasksUiUtil.openUrl(repository.getUrl() + IBugzillaConstants.URL_VOTE + taskData.getId(), false);
 				}
 			}

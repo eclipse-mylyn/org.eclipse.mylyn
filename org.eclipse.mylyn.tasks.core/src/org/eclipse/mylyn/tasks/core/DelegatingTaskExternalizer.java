@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -126,7 +127,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	public static final String KEY_SYNC_STATE = "offlineSyncState";
 
 	public static final String KEY_OWNER = "Owner";
-	
+
 	public static final String KEY_STALE = "Stale";
 
 	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
@@ -271,14 +272,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	protected String stripControlCharacters(String text) {
 		if (text == null)
 			return "";
-		StringBuilder builder = new StringBuilder(text.length());
-		for (int x = 0; x < text.length(); x++) {
-			char temp = text.charAt(x);
-			if (!Character.isISOControl(temp) || temp == '\n' || temp == '\r' || temp == '\t') {
-				builder.append(temp);
-			}
-		}
-		return builder.toString();
+		return ContextCorePlugin.cleanXmlString(text);
 	}
 
 	protected String formatExternDate(Date date) {

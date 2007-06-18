@@ -85,7 +85,7 @@ public class OpenRepositoryTaskJob extends Job {
 				downloadedTaskData = offlineHandler.getTaskData(repository, taskId, monitor);
 				if (downloadedTaskData != null) {
 					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), downloadedTaskData.getId());
-					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(handle, downloadedTaskData);
+					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(downloadedTaskData);
 				}
 				openEditor(repository, downloadedTaskData);
 			} else {
@@ -114,7 +114,7 @@ public class OpenRepositoryTaskJob extends Job {
 					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
 					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskData.getId());
-					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, handle, taskUrl, taskId);
+					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, taskId, taskUrl);
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

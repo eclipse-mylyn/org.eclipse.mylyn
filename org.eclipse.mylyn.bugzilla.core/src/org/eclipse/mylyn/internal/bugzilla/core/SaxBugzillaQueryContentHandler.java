@@ -37,9 +37,6 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 	/** The priority of the bug */
 	private String priority = AbstractTask.PriorityLevel.getDefault().toString();
 
-	/** The state of the bug */
-	private String state = "";
-
 	private StringBuffer characters;
 
 	private ITaskCollector collector;
@@ -116,7 +113,7 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 				//hit.setOwner(parsedText);
 				break;
 			case BUG_STATUS:
-				state = parsedText;
+				//	state = parsedText;
 				break;
 			// case RESOLUTION:
 			// resolution = parsedText;

@@ -143,20 +143,7 @@ class SynchronizeQueryJob extends Job {
 				}
 			}
 
-
 			taskList.notifyContainersUpdated(null);
-
-//			// HACK: force entire Task List to refresh in case containers need to
-//			// appear or disappear
-//			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-//				public void run() {
-//					TaskListView view = TaskListView.getFromActivePerspective();
-//					if (view != null) {
-//						// TODO: remove explicit refresh
-//						view.getViewer().refresh();
-//					}
-//				}				
-//			});
 
 			return Status.OK_STATUS;
 		} finally {

@@ -12,25 +12,12 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -45,106 +32,46 @@ import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
  */
 public class TaskDataManager {
 
-	private static final String OFFLINE_REPORTS = "offlineReports";
-
-	private static final int SAVE_INTERVAL = 60 * 1000;
-
-	private File primaryFile;
-
-	private File backupFile;
-
-	private OfflineDataStore dataStore;
-
-	private TaskDataSaverJob saverJob;
-
 	private TaskRepositoryManager taskRepositoryManager;
 
-	private Timer saveTimer;
+	private ITaskDataStorage storage;
 
-	private IPath primaryPath;
+	private int nextNewId = 1;
 
-	private IPath backupPath;
-
-	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, IPath path) {
-		this.primaryPath = path.append(OFFLINE_REPORTS);
-		this.backupPath = path.append(OFFLINE_REPORTS + ".bak");
+	public TaskDataManager(TaskRepositoryManager taskRepositoryManager, ITaskDataStorage storage) {
 		this.taskRepositoryManager = taskRepositoryManager;
-		this.primaryFile = primaryPath.toFile();
-		this.backupFile = backupPath.toFile();
-
-		if (primaryFile.exists()) {
-			try {
-				readOfflineData();
-			} catch (Throwable e) {
-				StatusManager.fail(e, "Error loading offline task data", false);
-				if (restoreFromBackup()) {
-					try {
-						readOfflineData();
-					} catch (Throwable e1) {
-						dataStore = new OfflineDataStore();
-					}
-				} else {
-					dataStore = new OfflineDataStore();
-				}
-			}
-		} else {
-			if (restoreFromBackup()) {
-				try {
-					readOfflineData();
-				} catch (Throwable e1) {
-					dataStore = new OfflineDataStore();
-				}
-			} else {
-				dataStore = new OfflineDataStore();
-			}
-		}
-
-		saveTimer = new Timer();
-		saveTimer.schedule(new RequestSaveTimerTask(), SAVE_INTERVAL, SAVE_INTERVAL);
-		saverJob = new TaskDataSaverJob();
-		saverJob.schedule();
-	}
-
-	private boolean restoreFromBackup() {
-		this.primaryFile = primaryPath.toFile();
-		this.backupFile = backupPath.toFile();
-
-		if (backupFile.exists()) {
-			if (primaryFile.exists()) {
-				if (!primaryFile.delete()) {
-					StatusManager.log("Unable to retire primary offline data", this);
-				}
-			}
-			this.primaryFile = primaryPath.toFile();
-			if (backupFile.renameTo(primaryFile)) {
-				this.primaryFile = primaryPath.toFile();
-				this.backupFile = backupPath.toFile();
-				return true;
-			} else {
-				StatusManager.log("Unable to restore from offline backup", this);
-			}
-		} 
-		return false;
+		this.storage = storage;
 	}
 
 	/**
-	 * Add a RepositoryTaskData to the offline reports file. Previously stored taskData is held and can be retrieved via
-	 * getOldTaskData()
+	 * Add a RepositoryTaskData to the offline reports file.
 	 */
-	public void setNewTaskData(String taskHandle, RepositoryTaskData newEntry) {
-		if (taskHandle == null || newEntry == null) {
+	public void setNewTaskData(RepositoryTaskData data) {
+		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
 			return;
 		}
-		dataStore.getNewDataMap().put(taskHandle, newEntry);
-		dataStateChanged();
+
+		TaskDataState state = retrieveState(data);
+		if (state != null) {
+			state.setNewTaskData(data);
+		} else {
+			state = new TaskDataState(data.getRepositoryUrl(), data.getId());
+			state.setNewTaskData(data);
+		}
+		saveState(state);
 	}
 
-	public void setOldTaskData(String taskHandle, RepositoryTaskData oldEntry) {
-		if (taskHandle == null || oldEntry == null) {
+	public void setOldTaskData(RepositoryTaskData data) {
+		if (data == null || data.getRepositoryUrl() == null || data.getId() == null) {
 			return;
 		}
-		dataStore.getOldDataMap().put(taskHandle, oldEntry);
-		dataStateChanged();
+		TaskDataState state = retrieveState(data);
+		if (state != null) {
+			state.setOldTaskData(data);
+		} else {
+			StatusManager.log("Attempt to save old data when no new data exists.", this);
+		}
+		saveState(state);
 	}
 
 	/**
@@ -152,25 +79,29 @@ public class TaskDataManager {
 	 * 
 	 * @return offline task data, null if no data found
 	 */
-	public RepositoryTaskData getNewTaskData(String handle) {
-		RepositoryTaskData data = dataStore.getNewDataMap().get(handle);
-		return data;
+	public RepositoryTaskData getNewTaskData(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
+			return null;
+		}
+		TaskDataState state = retrieveState(repositoryUrl, id);
+		if (state != null) {
+			return state.getNewTaskData();
+		}
+		return null;
 	}
 
 	/**
 	 * Returns the old copy if exists, null otherwise.
 	 */
-	public RepositoryTaskData getOldTaskData(String handle) {
-		return dataStore.getOldDataMap().get(handle);
-	}
-
-	public Map<String, RepositoryTaskData> getUnsubmitted() {
-		return Collections.unmodifiableMap(dataStore.getUnsubmittedTaskData());
-	}
-
-	public void removeUnsubmitted(String handle) {
-		dataStore.getUnsubmittedTaskData().remove(handle);
-		dataStateChanged();
+	public RepositoryTaskData getOldTaskData(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
+			return null;
+		}
+		TaskDataState state = retrieveState(repositoryUrl, id);
+		if (state != null) {
+			return state.getOldTaskData();
+		}
+		return null;
 	}
 
 	/**
@@ -178,116 +109,122 @@ public class TaskDataManager {
 	 *         Incremented each time this method is called.
 	 */
 	public synchronized String getNewRepositoryTaskId() {
-		dataStateChanged();
-		return "" + dataStore.getNextTaskId();
-	}
-
-	private Set<RepositoryTaskAttribute> getLocalChanges(String handle) {
-		Set<RepositoryTaskAttribute> localChanges;
-		localChanges = dataStore.getLocalEdits().get(handle);
-		if (localChanges != null) {
-			return Collections.unmodifiableSet(localChanges);
+		// TODO: generate based on values of unsubmitted offline report ids
+		nextNewId++;
+		if (nextNewId == Integer.MAX_VALUE) {
+			nextNewId = 1;
 		}
-		return Collections.emptySet();
+		return "" + nextNewId;
 	}
 
 	/**
+	 * 
 	 * @return editable copy of task data with any edits applied
 	 */
-	public RepositoryTaskData getEditableCopy(String handle) {
-		RepositoryTaskData data = getNewTaskData(handle);
+	public RepositoryTaskData getEditableCopy(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
+			return null;
+		}
+		TaskDataState state = retrieveState(repositoryUrl, id);
 		RepositoryTaskData clone = null;
-		if (data != null) {
-			try {
-				clone = (RepositoryTaskData) ObjectCloner.deepCopy(data);
-				updateAttributeFactory(clone);
-			} catch (Exception e) {
-				StatusManager.fail(e, "Error constructing modifiable task", false);
-				return null;
-			}
-			for (RepositoryTaskAttribute attribute : getLocalChanges(handle)) {
-				if (attribute == null)
-					continue;
-				RepositoryTaskAttribute existing = clone.getAttribute(attribute.getID());
-				if (existing != null) {
-					existing.clearValues();
-					List<String> options = existing.getOptions();
+		if (state != null) {
+			if (state.getNewTaskData() != null)
+				try {
+					clone = (RepositoryTaskData) ObjectCloner.deepCopy(state.getNewTaskData());
+					updateAttributeFactory(clone);
+				} catch (Exception e) {
+					StatusManager.fail(e, "Error constructing modifiable task", false);
+					return null;
+				}
+			if (clone != null) {
+				for (RepositoryTaskAttribute attribute : state.getEdits()) {
+					if (attribute == null)
+						continue;
+					RepositoryTaskAttribute existing = clone.getAttribute(attribute.getId());
+					if (existing != null) {
+						existing.clearValues();
+						List<String> options = existing.getOptions();
 
-					for (String value : attribute.getValues()) {
-						if (options.size() > 0) {
-							if (options.contains(value)) {
+						for (String value : attribute.getValues()) {
+							if (options.size() > 0) {
+								if (options.contains(value)) {
+									existing.addValue(value);
+								}
+							} else {
 								existing.addValue(value);
 							}
-						} else {
-							existing.addValue(value);
 						}
+
+					} else {
+						clone.addAttribute(attribute.getId(), attribute);
 					}
-
-				} else {
-					clone.addAttribute(attribute.getID(), attribute);
 				}
-
 			}
 		}
-
 		return clone;
 
 	}
 
-	public void saveEdits(String handle, Set<RepositoryTaskAttribute> attributes) {
-		Set<RepositoryTaskAttribute> edits = dataStore.getLocalEdits().get(handle);
-		if (edits == null) {
-			edits = new HashSet<RepositoryTaskAttribute>();
-			edits.addAll(attributes);
-			dataStore.getLocalEdits().put(handle, edits);
-		} else {
-			edits.removeAll(attributes);
-			edits.addAll(attributes);
+	public void saveEdits(String repositoryUrl, String id, Set<RepositoryTaskAttribute> changedAttributes) {
+		TaskDataState state = retrieveState(repositoryUrl, id);
+		if (state != null) {
+			Set<RepositoryTaskAttribute> edits = state.getEdits();
+			if (edits == null) {
+				// Copy here?
+				state.setEdits(changedAttributes);
+			} else {
+				edits.removeAll(changedAttributes);
+				edits.addAll(changedAttributes);
+			}
+			try {
+				storage.put(state);
+			} catch (Exception e) {
+				StatusManager.fail(e, "Error saving edits", false);
+			}
 		}
-		dataStateChanged();
+
 	}
 
-	public Set<RepositoryTaskAttribute> getEdits(String handle) {
-		Set<RepositoryTaskAttribute> changes = dataStore.getLocalEdits().get(handle);
-		if (changes == null) {
+	public Set<RepositoryTaskAttribute> getEdits(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
 			return Collections.emptySet();
-		} else {
-			return Collections.unmodifiableSet(changes);
 		}
-
+		TaskDataState state = retrieveState(repositoryUrl, id);
+		if (state != null) {
+			if (state.getEdits() != null) {
+				return Collections.unmodifiableSet(state.getEdits());
+			}
+		}
+		return Collections.emptySet();
 	}
 
-	public void discardEdits(String handle) {
-		dataStore.getLocalEdits().remove(handle);
-		dataStateChanged();
+	public void discardEdits(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
+			return;
+		}
+		TaskDataState state = retrieveState(repositoryUrl, id);
+		state.discardEdits();
+		try {
+			storage.put(state);
+		} catch (Exception e) {
+			StatusManager.fail(e, "Discard edits failed.", false);
+		}
+	}
+
+	public void remove(String repositoryUrl, String id) {
+		if (repositoryUrl == null || id == null) {
+			return;
+		}
+		storage.remove(repositoryUrl, id);
 	}
 
 	/**
-	 * Remove some bugs from the offline reports list
-	 * 
-	 * @param indicesToRemove
-	 *            An array of the indicies of the bugs to be removed
-	 */
-	public void remove(List<String> handlesToRemove) {
-		for (String handle : handlesToRemove) {
-			remove(handle);
-		}
-	}
-
-	public void remove(String handle) {
-		dataStore.getNewDataMap().remove(handle);
-		dataStore.getOldDataMap().remove(handle);
-		discardEdits(handle);
-	}
-
-	/**
-	 * Public for testing only force a reset of all data maps Does not signal data changed (doesn't request save)
+	 * DESTROY ALL OFFLINE TASK DATA Public for testing only Forces a reset of all data maps Does not signal data
+	 * changed (doesn't request save)
 	 */
 	public void clear() {
-		if (saverJob != null) {
-			saverJob.waitSaveCompleted();
-		}
-		dataStore = new OfflineDataStore();
+		nextNewId = 0;
+		storage.clear();
 	}
 
 	/**
@@ -305,183 +242,6 @@ public class TaskDataManager {
 		}
 	}
 
-	/**
-	 * Public for testing
-	 */
-	public void readOfflineData() throws IOException, ClassNotFoundException {
-		clear();
-		synchronized (primaryFile) {
-			ObjectInputStream in = null;
-			FileInputStream fileInputStream = null;
-			try {
-				fileInputStream = new FileInputStream(primaryFile);
-				in = new ObjectInputStream(fileInputStream);
-				dataStore = (OfflineDataStore) in.readObject();
-				for (RepositoryTaskData taskData : dataStore.getNewDataMap().values()) {
-					updateAttributeFactory(taskData);
-				}
-				for (RepositoryTaskData taskData : dataStore.getOldDataMap().values()) {
-					updateAttributeFactory(taskData);
-				}
-			} finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (IOException e) {
-						StatusManager.fail(e, "Could not close stream", false);
-					}
-				}
-				if (fileInputStream != null) {
-					try {
-						fileInputStream.close();
-					} catch (IOException e) {
-						StatusManager.fail(e, "Could not close stream", false);
-					}
-				}
-			}
-
-		}
-	}
-
-	private void dataStateChanged() {
-		if (saverJob != null) {
-			saverJob.requestSave();
-		}
-	}
-
-	/**
-	 * Force save of offline task data
-	 */
-	public void saveNow() {
-		saverJob.waitSaveCompleted();
-		writeFile();
-	}
-
-	private class RequestSaveTimerTask extends TimerTask {
-
-		@Override
-		public void run() {
-			if (!Platform.isRunning()) {
-				return;
-			} else {
-				saverJob.runRequested();
-			}
-		}
-	}
-
-	public boolean hasOutgoing(String handleIdentifier) {
-		return getLocalChanges(handleIdentifier).size() > 0;
-	}
-
-	private void writeFile() {
-		synchronized (primaryFile) {
-			if (Platform.isRunning()) {
-				ObjectOutputStream out = null;
-				FileOutputStream fileOuputStream = null;
-				try {
-					if (backupFile.exists()) {
-						if (!backupFile.delete()) {
-							StatusManager.log("Unable to retire old offline backup.", this);
-							return;
-						}
-					}
-
-					if (primaryFile.exists() && !primaryFile.renameTo(backupFile)) {
-						StatusManager.log("Unable to backup offline data.", this);
-						return;
-					}
-
-					fileOuputStream = new FileOutputStream(primaryPath.toFile());
-					out = new ObjectOutputStream(fileOuputStream);
-					out.writeObject(dataStore);
-				} catch (Exception e) {
-					StatusManager.fail(e, "Error occurred during save of offline task data.", false);
-					restoreFromBackup();
-				} finally {
-					if (out != null) {
-						try {
-							out.close();
-						} catch (IOException e) {
-							StatusManager.fail(e, "Could not close stream", false);
-						}
-					}
-					if (fileOuputStream != null) {
-						try {
-							fileOuputStream.close();
-						} catch (IOException e) {
-							StatusManager.fail(e, "Could not close stream", false);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private class TaskDataSaverJob extends Job {
-
-		// private final Queue<RepositoryTaskData> dataQueue = new
-		// LinkedList<RepositoryTaskData>();
-
-		private volatile boolean saveRequested = false;
-
-		private volatile boolean saveCompleted = true;
-
-		TaskDataSaverJob() {
-			super("Task Data Saver");
-			setPriority(Job.LONG);
-			setSystem(true);
-		}
-
-		protected IStatus run(IProgressMonitor monitor) {
-			while (true) {
-				if (saveRequested) {
-					saveRequested = false;
-					saveCompleted = false;
-					writeFile();
-				}
-
-				if (!saveRequested) {
-					synchronized (this) {
-						saveCompleted = true;
-						notifyAll();
-						try {
-							wait();
-						} catch (InterruptedException ex) {
-							// ignore
-						}
-					}
-				}
-			}
-		}
-
-		// void addDataToQueue(RepositoryTaskData data) {
-		// dataQueue.add(data);
-		// }
-
-		void requestSave() {
-			saveRequested = true;
-		}
-
-		void runRequested() {
-			synchronized (this) {
-				notifyAll();
-			}
-		}
-
-		void waitSaveCompleted() {
-			while (!saveCompleted) {
-				synchronized (this) {
-					try {
-						wait();
-					} catch (InterruptedException ex) {
-						// ignore
-					}
-				}
-			}
-		}
-	}
-
-	// HACK: until we get proper offline storage....
 	// Reference:
 	// http://www.javaworld.com/javaworld/javatips/jw-javatip76.html?page=2
 	static class ObjectCloner {
@@ -517,21 +277,52 @@ public class TaskDataManager {
 
 	}
 
+	public void start() {
+		try {
+			storage.start();
+		} catch (Exception e) {
+			StatusManager.fail(e, "Offline storage start failed", false);
+		}
+	}
+
 	public void stop() {
-		saveTimer.cancel();
-		saverJob.cancel();
-		saveNow();
-// saverJob.runRequested();
-// try {
-// saverJob.join();
-// System.err.println(">> join complete");
-// } catch (InterruptedException e) {
-// // ignore
-// }
-		// TODO: Save job getting axed during workbench shutdown resulting in
-		// corrupt task data file
-		// bug#186553
-		// saveNow();
+		try {
+			storage.stop();
+		} catch (Exception e) {
+			StatusManager.fail(e, "Offline storage stop failed", false);
+		}
+	}
+
+	public void saveNow() {
+		storage.flush();
+	}
+
+	private TaskDataState retrieveState(RepositoryTaskData data) {
+		return retrieveState(data.getRepositoryUrl(), data.getId());
+	}
+
+	private TaskDataState retrieveState(String repositoryUrl, String id) {
+		TaskDataState state = null;
+		try {
+			state = storage.get(repositoryUrl, id);
+			if (state != null) {
+				// TODO: Get rid of attribute factory on containers!!!
+				if (state.getNewTaskData() != null) {
+					updateAttributeFactory(state.getNewTaskData());
+				}
+				if (state.getOldTaskData() != null) {
+					updateAttributeFactory(state.getOldTaskData());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			StatusManager.fail(e, "Error saving offline data", false);
+		}
+		return state;
+	}
+
+	private void saveState(TaskDataState state) {
+		storage.put(state);
 	}
 
 }

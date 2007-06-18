@@ -72,7 +72,7 @@ public class SynchronizeChangedTasksJob extends Job {
 				}
 			}
 
-			if (!tasks.isEmpty()) {
+			if (tasks.isEmpty()) {
 				return Status.OK_STATUS;
 			}
 

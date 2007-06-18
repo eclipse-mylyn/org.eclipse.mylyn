@@ -27,7 +27,6 @@ import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
@@ -40,14 +39,16 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.ContextPreferenceContstants;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
-import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
+import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
@@ -95,11 +96,15 @@ import org.osgi.framework.BundleContext;
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
+	private static final String FOLDER_OFFLINE = "offline";
+
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.tasklist";
 
-	private static final String NAME_DATA_DIR = ".mylar";
+	private static final String DIRECTORY_METADATA = ".metadata";
+
+	private static final String NAME_DATA_DIR = ".mylyn";
 
 	private static final char DEFAULT_PATH_SEPARATOR = '/';
 
@@ -379,7 +384,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			taskRepositoryManager.readRepositories(getRepositoriesFilePath());
 
 			// instantiates taskDataManager
-			readOfflineReports();
+			startOfflineStorageManager();
 
 			loadTemplateRepositories();
 
@@ -582,7 +587,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public String getDefaultDataDirectory() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' + NAME_DATA_DIR;
+		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/' +DIRECTORY_METADATA+ '/'+ NAME_DATA_DIR;
 	}
 
 	public String getDataDirectory() {
@@ -764,27 +769,13 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return taskListBackupManager;
 	}
 
-	// TODO: clean-up
-	private void readOfflineReports() {
-		IPath offlineReportsPath = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
-
-// try {
-		taskDataManager = new TaskDataManager(taskRepositoryManager, offlineReportsPath);// ,
-		// true);
-// } catch (Throwable t) {
-// MylarStatusHandler.log("Recreating offline task cache due to format update.",
-// this);
-// boolean deleted = offlineReportsPath.toFile().delete();
-// if (!deleted) {
-// MylarStatusHandler.log(t, "could not delete offline repository tasks file");
-// }
-// try {
-// taskDataManager = new TaskDataManager(taskRepositoryManager,
-// offlineReportsPath, false);
-// } catch (Exception e1) {
-// MylarStatusHandler.log(e1, "could not reset offline repository tasks file");
-// }
-// }
+	private void startOfflineStorageManager() {
+		//IPath offlineReportsPath = Platform.getStateLocation(TasksUiPlugin.getDefault().getBundle());
+		File root = new File(this.getDataDirectory() + '/' + FOLDER_OFFLINE);
+		OfflineFileStorage storage = new OfflineFileStorage(root);
+		OfflineCachingStorage cachedStorage = new OfflineCachingStorage(storage);
+		taskDataManager = new TaskDataManager(taskRepositoryManager, cachedStorage);
+		taskDataManager.start();
 	}
 
 	public TaskDataManager getTaskDataManager() {
@@ -916,12 +907,10 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			AbstractTask repositoryTask) {
 
 		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-
 		RepositoryTaskData newTaskData = getDefault().getTaskDataManager().getNewTaskData(
-				repositoryTask.getHandleIdentifier());
-
+				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		RepositoryTaskData oldTaskData = getDefault().getTaskDataManager().getOldTaskData(
-				repositoryTask.getHandleIdentifier());
+				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 		if (newTaskData != null && oldTaskData != null) {
 
@@ -967,7 +956,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		boolean attributeChanged = false;
 
 		for (RepositoryTaskAttribute newAttribute : newTaskData.getAttributes()) {
-			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getID());
+			RepositoryTaskAttribute oldAttribute = oldTaskData.getAttribute(newAttribute.getId());
 			if (oldAttribute == null) {
 				attributeChanged = true;
 				break;

@@ -26,11 +26,11 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 
 	protected AbstractTask repositoryTask = null;
 
-	public RepositoryTaskEditorInput(TaskRepository repository, String handle, String taskUrl, String taskId) {
-		super(repository, handle);
+	public RepositoryTaskEditorInput(TaskRepository repository, String taskId, String taskUrl) {
+		super(repository, taskId);
 		this.taskId = taskId;
 		this.url = taskUrl;
-		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(handle);
+		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
 		if (task != null && task instanceof AbstractTask) {
 			this.repositoryTask = (AbstractTask) task;
 		}
@@ -95,8 +95,7 @@ public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput
 	}
 
 	/**
-	 * @return url for the repositoryTask/hit. Used by TaskEditor when opening
-	 *         browser
+	 * @return url for the repositoryTask/hit. Used by TaskEditor when opening browser
 	 */
 	public String getUrl() {
 		return url;

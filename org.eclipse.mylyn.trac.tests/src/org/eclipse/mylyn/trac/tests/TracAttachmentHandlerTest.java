@@ -99,7 +99,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
 		File file = File.createTempFile("attachment", null);
@@ -129,7 +129,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 		init(url, Version.XML_RPC);
 		TracTask task = (TracTask) connector.createTaskFromExistingId(repository, data.attachmentTicketId + "", new NullProgressMonitor());
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getHandleIdentifier());
+		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		
 		assertTrue(taskData.getAttachments().size() > 0);
 		InputStream in = attachmentHandler.getAttachmentAsStream(repository,taskData.getAttachments().get(0), new NullProgressMonitor());

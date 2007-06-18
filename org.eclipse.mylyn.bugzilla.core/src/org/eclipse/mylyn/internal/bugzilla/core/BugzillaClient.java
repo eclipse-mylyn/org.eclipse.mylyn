@@ -807,7 +807,7 @@ public class BugzillaClient {
 		Iterator<RepositoryTaskAttribute> itr = taskData.getAttributes().iterator();
 		while (itr.hasNext()) {
 			RepositoryTaskAttribute a = itr.next();
-			if (a != null && a.getID() != null && a.getID().compareTo("") != 0) {
+			if (a != null && a.getId() != null && a.getId().compareTo("") != 0) {
 				String value = null;
 				value = a.getValue();
 				if (value == null)
@@ -815,7 +815,7 @@ public class BugzillaClient {
 
 				cleanQAContact(a);
 
-				fields.put(a.getID(), new NameValuePair(a.getID(), value));
+				fields.put(a.getId(), new NameValuePair(a.getId(), value));
 			}
 		}
 
@@ -828,7 +828,7 @@ public class BugzillaClient {
 	}
 
 	private void cleanQAContact(RepositoryTaskAttribute a) {
-		if (a.getID().equals(BugzillaReportElement.QA_CONTACT.getKeyString())) {
+		if (a.getId().equals(BugzillaReportElement.QA_CONTACT.getKeyString())) {
 			if ("true".equals(configParameters.get(IBugzillaConstants.REPOSITORY_SETTING_SHORT_LOGIN))) {
 				if (a.getValue() != null && a.getValue().length() > 0) {
 					int atIndex = a.getValue().indexOf("@");
@@ -851,19 +851,19 @@ public class BugzillaClient {
 			RepositoryTaskAttribute a = it.next();
 			if (a == null) {
 				continue;
-			} else if (a.getID().equals(BugzillaReportElement.CC.getKeyString())
-					|| a.getID().equals(RepositoryTaskAttribute.REMOVE_CC)
-					|| a.getID().equals(BugzillaReportElement.REPORTER.getKeyString())
-					|| a.getID().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
-					|| a.getID().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
+			} else if (a.getId().equals(BugzillaReportElement.CC.getKeyString())
+					|| a.getId().equals(RepositoryTaskAttribute.REMOVE_CC)
+					|| a.getId().equals(BugzillaReportElement.REPORTER.getKeyString())
+					|| a.getId().equals(BugzillaReportElement.ASSIGNED_TO.getKeyString())
+					|| a.getId().equals(BugzillaReportElement.CREATION_TS.getKeyString())) {
 				continue;
-			} else if (a.getID() != null && a.getID().compareTo("") != 0) {
+			} else if (a.getId() != null && a.getId().compareTo("") != 0) {
 				cleanQAContact(a);
 				String value = a.getValue();
-				if (a.getID().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
+				if (a.getId().equals(BugzillaReportElement.DELTA_TS.getKeyString())) {
 					value = stripTimeZone(value);
 				}
-				fields.put(a.getID(), new NameValuePair(a.getID(), value != null ? value : ""));
+				fields.put(a.getId(), new NameValuePair(a.getId(), value != null ? value : ""));
 			}
 		}
 

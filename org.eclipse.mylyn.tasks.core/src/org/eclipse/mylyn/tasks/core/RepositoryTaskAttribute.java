@@ -111,8 +111,8 @@ public class RepositoryTaskAttribute implements Serializable {
 	/** Attribute pretty printing name */
 	private String name;
 
-	/** Name of the option used when updating the attribute on the server */
-	private String key;
+	/** ID of the option used when updating the attribute on the server */
+	private String id;
 
 	/** Option parameters */
 	private Map<String, String> optionParameters;
@@ -127,8 +127,8 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	private Map<String, String> metaData = new HashMap<String, String>();
 
-	public RepositoryTaskAttribute(String key, String name, boolean hidden) {
-		this.key = key;
+	public RepositoryTaskAttribute(String id, String name, boolean hidden) {
+		this.id = id;
 		this.name = name;
 		this.hidden = hidden;
 		this.options = new ArrayList<String>();
@@ -139,8 +139,8 @@ public class RepositoryTaskAttribute implements Serializable {
 		return name;
 	}
 
-	public String getID() {
-		return key;
+	public String getId() {
+		return id;
 	}
 
 	public boolean isReadOnly() {
@@ -241,14 +241,14 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getID() + ":" + values;
+		return getId() + ":" + values;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -261,10 +261,10 @@ public class RepositoryTaskAttribute implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		final RepositoryTaskAttribute other = (RepositoryTaskAttribute) obj;
-		if (key == null) {
-			if (other.key != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!key.equals(other.key))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

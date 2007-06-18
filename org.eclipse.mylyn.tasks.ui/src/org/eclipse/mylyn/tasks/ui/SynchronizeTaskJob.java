@@ -141,20 +141,6 @@ class SynchronizeTaskJob extends Job {
 				TaskFactory factory = new TaskFactory(repository, true, forced);
 				repositoryTask = factory.createTask(downloadedTaskData, new SubProgressMonitor(monitor, 1));
 
-//				TasksUiPlugin.getSynchronizationManager().saveIncoming(repositoryTask, downloadedTaskData, forced);
-//				connector.updateTaskFromTaskData(repository, repositoryTask, downloadedTaskData);
-//				repositoryTask.dropSubTasks();
-//				for (String subId : taskDataHandler.getSubTaskIds(downloadedTaskData)) {
-//					if (subId == null || subId.trim().equals("")) {
-//						continue;
-//					}
-//					AbstractTask subTask = factory.createTaskFromExistingId(repository, subId, false,
-//							new SubProgressMonitor(monitor, 1));
-//					if (subTask != null) {
-//						repositoryTask.addSubTask(subTask);
-//					}
-//				}
-
 				// HACK: Remove once connectors can get access to
 				// TaskDataManager and do this themselves
 				if ((oldDueDate == null && repositoryTask.getDueDate() != null)
