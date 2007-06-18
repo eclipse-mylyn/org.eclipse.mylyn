@@ -29,6 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
@@ -52,6 +53,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
@@ -66,7 +68,7 @@ import org.eclipse.ui.internal.ObjectActionContributorManager;
  */
 public class TaskListFilteredTree extends AbstractFilteredTree {
 
-	private static final String LABEL_ACTIVE_NONE = "... ";
+	private static final String LABEL_ACTIVE_NONE = "Activate...  ";
 
 	private static final String LABEL_SETS_NONE = "All Tasks";
 
@@ -283,6 +285,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
+		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
@@ -321,17 +324,23 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 1) {
-					if (TaskListFilteredTree.super.filterText.getText().length() > 0) {
-						TaskListFilteredTree.super.filterText.setText("");
-						TaskListFilteredTree.this.textChanged();
+					AbstractTask activeTask = (TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+					if (activeTask == null) {
+						ActivateTaskDialogAction activateAction = new ActivateTaskDialogAction();
+						activateAction.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+						activateAction.run(null);
+					} else {
+						if (TaskListFilteredTree.super.filterText.getText().length() > 0) {
+							TaskListFilteredTree.super.filterText.setText("");
+							TaskListFilteredTree.this.textChanged();
+						}
+						if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
+							TaskListView.getFromActivePerspective().goUpToRoot();
+						}
+						TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
 					}
-					if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
-						TaskListView.getFromActivePerspective().goUpToRoot();
-					}
-					TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 				}
 			}
-
 		});
 
 //		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
@@ -373,7 +382,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		String text = task.getSummary() + " "; // hack for padding
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
-		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		activeTaskLink.setToolTipText("Open: " + task.getSummary());
 		activeTaskLink.addMouseTrackListener(new MouseTrackListener() {
 
