@@ -774,7 +774,7 @@
 		point="org.eclipse.ui.workingSets">
 		<workingSet
         elementAdapterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetElementAdapter"
-        icon="icons/etool16/open-task.gif"
+        icon="icons/obj16/workingSet.gif"
         id="org.eclipse.mylyn.tasks.ui.workingSet"
         name="Tasks and Resources"
         pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"

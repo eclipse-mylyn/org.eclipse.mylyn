@@ -227,6 +227,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BANNER_REPOSITORY = create(T_WIZBAN, "banner-repository.gif");
 
+	public static final ImageDescriptor BANNER_WORKING_SET = create(T_WIZBAN, "workset_wiz.png");
+	
 	public static final ImageDescriptor BANNER_REPOSITORY_SETTINGS = create(T_WIZBAN, "banner-repository-settings.gif");
 
 	public static final ImageDescriptor BANNER_REPOSITORY_CONTEXT = create(T_WIZBAN, "banner-repository-context.gif");

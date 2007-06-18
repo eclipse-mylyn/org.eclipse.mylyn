@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -110,11 +111,11 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	class AggregateLabelProvider implements ILabelProvider {
-		
+
 		private TaskElementLabelProvider taskProvider = new TaskElementLabelProvider(false);
-		
+
 		private WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
-		
+
 		public Image getImage(Object element) {
 			if (element instanceof AbstractTaskContainer) {
 				return taskProvider.getImage(element);
@@ -142,25 +143,26 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		}
 
 		public void removeListener(ILabelProviderListener listener) {
-		}		
+		}
 	}
-	
+
 	class CustomSorter extends ViewerSorter {
-	    public int compare(Viewer viewer, Object e1, Object e2) {
-	    	if (e1 instanceof ElementCategory && ((ElementCategory)e1).getLabel(e1).equals(LABEL_TASKS)) {
-	    		return -1;
-	    	} else if (e2 instanceof ElementCategory && ((ElementCategory)e1).getLabel(e1).equals(LABEL_TASKS)) {
-	    		return 1;
-	    	} else {
-	    		return super.compare(viewer, e1, e2);
-	    	}
-	    }
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
+				return -1;
+			} else if (e2 instanceof ElementCategory && ((ElementCategory) e1).getLabel(e1).equals(LABEL_TASKS)) {
+				return 1;
+			} else {
+				return super.compare(viewer, e1, e2);
+			}
+		}
 	}
-	
+
 	public TaskWorkingSetPage() {
-		super("taskWorkingSetPage", //$NON-NLS-1$ 
-				"Task and Resource Working Set", null); // the icon
-		setDescription("Enter a working set name and select task categories/queries.");
+		super("taskWorkingSetPage", "Select Working Set Elements", null);
+		setDescription("" + "When this Working Set is selected views will be filtered just to show only\n"
+				+ "these elements if the Window Working Set is enabled in the view (default).");
+		setImageDescriptor(TasksUiImages.BANNER_WORKING_SET);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -409,8 +411,8 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					// }
 					// updateParentState(element);
 				} else if (element instanceof ElementCategory) {
-					for (Object child : ((ElementCategory)element).getChildren(null)) {
-						tree.setChecked(child, event.getChecked()	);
+					for (Object child : ((ElementCategory) element).getChildren(null)) {
+						tree.setChecked(child, event.getChecked());
 					}
 				}
 				validateInput();
