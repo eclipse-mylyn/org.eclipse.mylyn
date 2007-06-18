@@ -148,7 +148,7 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 			openInBrowserCheck.setSelection(openInBrowser);
 		}
 
-		final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+		final TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(true);
 		viewer.setLabelProvider(labelProvider);
 		viewer.setContentProvider(new ArrayContentProvider());
 

@@ -118,7 +118,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		matchingTasksLabel.setText("&Matching tasks:");
 		tasksViewer = new TableViewer(area, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tasksViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, 200).create());
-		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(), PlatformUI
+		tasksViewer.setLabelProvider(new DecoratingLabelProvider(new TaskElementLabelProvider(true), PlatformUI
 				.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		tasksViewer.setContentProvider(new ArrayContentProvider());
 		tasksViewer.addFilter(new ViewerFilter() {

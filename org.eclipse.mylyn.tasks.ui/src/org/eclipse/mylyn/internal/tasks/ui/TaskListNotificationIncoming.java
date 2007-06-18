@@ -29,7 +29,7 @@ public class TaskListNotificationIncoming implements ITaskListNotification {
 	
 	private String description = null;
 
-	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
+	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	private Date date;

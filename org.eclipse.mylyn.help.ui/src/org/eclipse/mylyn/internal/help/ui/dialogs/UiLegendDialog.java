@@ -54,7 +54,7 @@ public class UiLegendDialog extends PopupDialog {
 
 	private ScrolledForm form;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	private IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
 

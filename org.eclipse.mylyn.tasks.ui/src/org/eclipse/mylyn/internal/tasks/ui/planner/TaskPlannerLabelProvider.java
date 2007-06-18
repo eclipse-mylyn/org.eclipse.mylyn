@@ -28,7 +28,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskPlannerLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider, IColorProvider {
 
-	private TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider();
+	public TaskPlannerLabelProvider() {
+		super(true);
+	}
+
+	private TaskElementLabelProvider taskListLabelProvider = new TaskElementLabelProvider(true);
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {

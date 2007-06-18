@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -50,6 +52,11 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 					if (element instanceof AbstractTaskContainer && element.getHandleIdentifier().equals(handle)) {
 						list.add(adaptable);
 					}
+				}
+			} else if (adaptable instanceof IProject) {
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(((IProject)adaptable).getName());
+				if (project != null && project.exists()) {
+					list.add(project);
 				}
 			}
 		}

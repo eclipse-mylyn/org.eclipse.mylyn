@@ -25,6 +25,10 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TaskPlanLabelProvider extends TaskElementLabelProvider implements ITableLabelProvider {
 
+	public TaskPlanLabelProvider() {
+		super(true);
+	}
+
 	// {".", "Description", "Priority", "Estimated Time", "Reminder Date"};
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {

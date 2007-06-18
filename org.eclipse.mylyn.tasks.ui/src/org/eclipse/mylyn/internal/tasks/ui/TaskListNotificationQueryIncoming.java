@@ -27,7 +27,7 @@ public class TaskListNotificationQueryIncoming implements ITaskListNotification 
 
 	private final AbstractTask hit;
 
-	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(),
+	private DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new TaskElementLabelProvider(true),
 			PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator());
 
 	private Date date;

@@ -834,7 +834,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		final IThemeManager themeManager = getSite().getWorkbenchWindow().getWorkbench().getThemeManager();
 		Color categoryBackground = themeManager.getCurrentTheme().getColorRegistry().get(
 				TaskListColorsAndFonts.THEME_COLOR_TASKLIST_CATEGORY);
-		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(),
+		taskListTableLabelProvider = new TaskTableLabelProvider(new TaskElementLabelProvider(true),
 				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator(), categoryBackground);
 		getViewer().setLabelProvider(taskListTableLabelProvider);
 

@@ -58,7 +58,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 
 	private AbstractTask task;
 
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	private RepositoryAttachment selectedContextAttachment = null;
 

@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.workingsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.ui.IWorkingSet;
@@ -18,6 +19,7 @@ import org.eclipse.ui.IWorkingSetElementAdapter;
 
 /**
  * @author Eugene Kuleshov
+ * @author Mik Kersten
  */
 public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 
@@ -36,6 +38,8 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 		for (IAdaptable adaptable : elements) {
 			if (adaptable instanceof AbstractTaskContainer) {
 				containers.add(adaptable);
+			} else if (adaptable instanceof IProject) {
+				containers.add(adaptable);
 			}
 		}
 		return (IAdaptable[]) containers.toArray(new IAdaptable[containers.size()]);
@@ -44,5 +48,4 @@ public class TaskWorkingSetElementAdapter implements IWorkingSetElementAdapter {
 	public void dispose() {
 		// ignore
 	}
-
 }

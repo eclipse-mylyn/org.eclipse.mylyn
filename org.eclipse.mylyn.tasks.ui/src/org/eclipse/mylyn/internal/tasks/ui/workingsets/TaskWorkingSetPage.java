@@ -111,7 +111,7 @@ public class TaskWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 	class AggregateLabelProvider implements ILabelProvider {
 		
-		private TaskElementLabelProvider taskProvider = new TaskElementLabelProvider();
+		private TaskElementLabelProvider taskProvider = new TaskElementLabelProvider(false);
 		
 		private WorkbenchLabelProvider workbenchProvider = new WorkbenchLabelProvider();
 		

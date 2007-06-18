@@ -71,7 +71,7 @@ public class TaskActivityWizardPage extends WizardPage {
 
 	private Table filtersTable;
 	
-	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider();
+	private TaskElementLabelProvider labelProvider = new TaskElementLabelProvider(false);
 
 	public TaskActivityWizardPage() {
 		super(TITLE);
