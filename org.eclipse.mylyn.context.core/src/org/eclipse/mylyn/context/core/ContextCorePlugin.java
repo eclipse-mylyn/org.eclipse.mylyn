@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.context.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +42,7 @@ public class ContextCorePlugin extends Plugin {
 	private Map<String, AbstractContextStructureBridge> bridges = new HashMap<String, AbstractContextStructureBridge>();
 
 	private Map<String, List<String>> childContentTypeMap = new HashMap<String, List<String>>();
-	
+
 	private AbstractContextStructureBridge defaultBridge = null;
 
 	private static ContextCorePlugin INSTANCE;
@@ -105,7 +104,7 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public boolean isDocument(String handle) {
-			 return false;
+			return false;
 //			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
@@ -169,9 +168,9 @@ public class ContextCorePlugin extends Plugin {
 		}
 		providers.add(provider);
 	}
-	
+
 	/**
-	 * @return	all relation providers
+	 * @return all relation providers
 	 */
 	public Set<AbstractRelationProvider> getRelationProviders() {
 		Set<AbstractRelationProvider> allProviders = new HashSet<AbstractRelationProvider>();
@@ -184,7 +183,7 @@ public class ContextCorePlugin extends Plugin {
 	public Set<AbstractRelationProvider> getRelationProviders(String contentType) {
 		return relationProviders.get(contentType);
 	}
-	
+
 	public static ContextCorePlugin getDefault() {
 		return INSTANCE;
 	}
@@ -269,8 +268,7 @@ public class ContextCorePlugin extends Plugin {
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry
-						.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
@@ -309,9 +307,9 @@ public class ContextCorePlugin extends Plugin {
 		private static final String ELEMENT_STRUCTURE_BRIDGE = "structureBridge";
 
 		private static final String ELEMENT_RELATION_PROVIDER = "relationProvider";
-		
+
 		private static final String ATTR_CLASS = "class";
-		
+
 		private static final String ATTR_CONTENT_TYPE = "contentType";
 
 		private static final String ATTR_PARENT_CONTENT_TYPE = "parentContentType";
@@ -321,15 +319,15 @@ public class ContextCorePlugin extends Plugin {
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry
-						.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(BridgesExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
 					for (int j = 0; j < elements.length; j++) {
 						if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_STRUCTURE_BRIDGE) == 0) {
 							readBridge(elements[j]);
-						} else if (elements[j].getName().compareTo(BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
+						} else if (elements[j].getName().compareTo(
+								BridgesExtensionPointReader.ELEMENT_RELATION_PROVIDER) == 0) {
 							readRelationProvider(elements[j]);
 						}
 					}
@@ -350,8 +348,7 @@ public class ContextCorePlugin extends Plugin {
 
 				AbstractContextStructureBridge bridge = (AbstractContextStructureBridge) object;
 				if (element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE) != null) {
-					String parentContentType = element
-							.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
+					String parentContentType = element.getAttribute(BridgesExtensionPointReader.ATTR_PARENT_CONTENT_TYPE);
 					if (parentContentType instanceof String) {
 						bridge.setParentContentType(parentContentType);
 					}
@@ -361,12 +358,12 @@ public class ContextCorePlugin extends Plugin {
 				StatusManager.log(e, "Could not load bridge extension");
 			}
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		private static void readRelationProvider(IConfigurationElement element) {
 			try {
 				String contentType = element.getAttribute(BridgesExtensionPointReader.ATTR_CONTENT_TYPE);
-				AbstractRelationProvider relationProvider = (AbstractRelationProvider)element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
+				AbstractRelationProvider relationProvider = (AbstractRelationProvider) element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
 				if (contentType != null) {
 					ContextCorePlugin.getDefault().addRelationProvider(contentType, relationProvider);
 				}
@@ -427,5 +424,26 @@ public class ContextCorePlugin extends Plugin {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	/**
+	 * TODO: Move to utility class
+	 * @param text
+	 * @return string with all non valid characters removed, if text is null return null
+	 */
+	public static String cleanXmlString(String text) {
+		if (text == null)
+			return null;
+		StringBuilder builder = new StringBuilder(text.length());
+		for (int x = 0; x < text.length(); x++) {
+			char ch = text.charAt(x);
+			// http://www.w3.org/TR/REC-xml/#charsets
+			// Valid unicode characters for xml 1.0
+			if ((0x0A == ch || 0x0D == ch || 0x09 == ch) || (ch >= 0x20 && ch <= 0xD7FF)
+					|| (ch >= 0xE000 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0x10FFFF)) {
+				builder.append(ch);
+			}
+		}
+		return builder.toString();
 	}
 }
