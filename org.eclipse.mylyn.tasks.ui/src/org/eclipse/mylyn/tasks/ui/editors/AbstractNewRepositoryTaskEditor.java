@@ -82,17 +82,7 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 
 	private static final String LABEL_CREATE = "Create New";
 
-	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
-
-	private static final String LABEL_SELECT_DETECTOR = "Select duplicate detector:";
-
 	private static final String ERROR_CREATING_BUG_REPORT = "Error creating bug report";
-
-	protected Button searchForDuplicates;
-
-	protected CCombo duplicateDetectorChooser;
-
-	protected Label duplicateDetectorLabel;
 
 	protected DatePicker scheduledForDate;
 
@@ -419,49 +409,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	@Override
 	protected void addActionButtons(Composite buttonComposite) {
 		FormToolkit toolkit = new FormToolkit(buttonComposite.getDisplay());
-
-		List<AbstractDuplicateDetector> allCollectors = getDuplicateSearchCollectorsList();
-		if (allCollectors != null) {
-			duplicateDetectorLabel = new Label(buttonComposite, SWT.LEFT);
-			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
-
-			duplicateDetectorChooser = new CCombo(buttonComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
-
-			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
-			duplicateDetectorChooser.setFont(TEXT_FONT);
-
-			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
-
-				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
-					return c1.getName().compareToIgnoreCase(c2.getName());
-				}
-
-			});
-
-			for (AbstractDuplicateDetector detector : allCollectors) {
-				duplicateDetectorChooser.add(detector.getName());
-			}
-
-			duplicateDetectorChooser.select(0);
-			duplicateDetectorChooser.setEnabled(true);
-			duplicateDetectorChooser.setData(allCollectors);
-		}
-
-		if (allCollectors != null && allCollectors.size() > 0) {
-
-			searchForDuplicates = toolkit.createButton(buttonComposite, LABEL_SEARCH_DUPS, SWT.NONE);
-			GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-			searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
-			searchForDuplicates.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					searchForDuplicates();
-				}
-			});
-		}
-
-		Label spacer = new Label(buttonComposite, SWT.NULL);
-		spacer.setText("");
-
 		submitButton = toolkit.createButton(buttonComposite, LABEL_CREATE, SWT.NONE);
 		GridData submitButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		submitButton.setLayoutData(submitButtonData);
@@ -506,22 +453,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return true;
 	}
 
-	public boolean searchForDuplicates() {
-
-		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
-
-		// called so that the description text is set on taskData before we
-		// search for duplicates
-		this.saveTaskOffline(new NullProgressMonitor());
-
-		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
-		if (collector != null) {
-			NewSearchUI.runQueryInBackground(collector);
-			return true;
-		}
-
-		return false;
-	}
 
 	@Override
 	protected void createPeopleLayout(Composite composite) {
@@ -559,11 +490,6 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 		return newTask;
 	}
 
-	protected abstract SearchHitCollector getDuplicateSearchCollector(String name);
-
-	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
-	}
 
 	@Override
 	public void doSave(IProgressMonitor monitor) {

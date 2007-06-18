@@ -33,12 +33,14 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -357,7 +359,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		try {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
-			StatusManager.log(e, "Unrecognized operatoin: " + repositoryOperation.getKnobName());
+			StatusManager.log(e, "Unrecognized operation: " + repositoryOperation.getKnobName());
 			operation = null;
 		}
 
@@ -721,5 +723,30 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	/**
+	 * This method is duplicated in NewBugzillaTaskEditor for now.
+	 */
+	public SearchHitCollector getDuplicateSearchCollector(String name) {
+		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
+		java.util.List<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+
+		for (AbstractDuplicateDetector detector : allDetectors) {
+			if (detector.getName().equals(duplicateDetectorName)) {
+				return detector.getSearchHitCollector(repository, taskData);
+			}
+		}
+		// didn't find it
+		return null;
+	}
+
+	@Override
+	/**
+	 * This method is duplicated in NewBugzillaTaskEditor for now.
+	 */
+	protected java.util.List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
 	}
 }

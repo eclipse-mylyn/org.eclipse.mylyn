@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -92,9 +93,12 @@ import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.StyledText;
@@ -188,6 +192,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
 
 	private static final String LABEL_TEXT_EDITOR = "Text Editor";
+	
+	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
 
@@ -212,6 +218,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_COPY_TO_CLIPBOARD = "Copy to Clipboard";
 
 	private static final String LABEL_SAVE = "Save...";
+
+	private static final String LABEL_SEARCH_DUPS = "Search for Duplicates";
+
+	private static final String LABEL_SELECT_DETECTOR = "Select duplicate detector:";
 
 	private RepositoryTaskEditorInput editorInput;
 
@@ -249,9 +259,16 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 	private boolean attachContextEnabled = true;
 
+	protected Button searchForDuplicates;
+
+	protected CCombo duplicateDetectorChooser;
+
+	protected Label duplicateDetectorLabel;
+
 	protected enum SECTION_NAME {
 		ATTRIBTUES_SECTION("Attributes"), ATTACHMENTS_SECTION("Attachments"), DESCRIPTION_SECTION("Description"), COMMENTS_SECTION(
-				"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People");
+				"Comments"), NEWCOMMENT_SECTION("New Comment"), ACTIONS_SECTION("Actions"), PEOPLE_SECTION("People"), RELATEDBUGS_SECTION(
+				"Related Tasks");
 
 		private String prettyName;
 
@@ -674,6 +691,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		createAttributeLayout(attribComp);
 		createCustomAttributeLayout(attribComp);
 
+		createRelatedBugsSection(editorComposite);
+
 		if (showAttachments) {
 			createAttachmentLayout(editorComposite);
 		}
@@ -943,6 +962,89 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 
 		toolkit.paintBordersFor(attributesComposite);
+	}
+
+	/**
+	 * Adds a related bugs section to the bug editor
+	 */
+	protected void createRelatedBugsSection(Composite composite) {
+		Section relatedBugsSection = createSection(editorComposite, getSectionLabel(SECTION_NAME.RELATEDBUGS_SECTION));
+		Composite relatedBugsComposite = toolkit.createComposite(relatedBugsSection);
+		relatedBugsComposite.setLayout(new GridLayout(4, false));
+		relatedBugsComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		relatedBugsSection.setClient(relatedBugsComposite);
+		relatedBugsSection.setExpanded(repositoryTask == null);
+
+		List<AbstractDuplicateDetector> allCollectors = getDuplicateSearchCollectorsList();
+		if (allCollectors != null) {
+			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
+			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
+
+			duplicateDetectorChooser = new CCombo(relatedBugsComposite, SWT.FLAT | SWT.READ_ONLY | SWT.BORDER);
+
+			duplicateDetectorChooser.setLayoutData(GridDataFactory.swtDefaults().hint(150, SWT.DEFAULT).create());
+			duplicateDetectorChooser.setFont(TEXT_FONT);
+
+			Collections.sort(allCollectors, new Comparator<AbstractDuplicateDetector>() {
+
+				public int compare(AbstractDuplicateDetector c1, AbstractDuplicateDetector c2) {
+					return c1.getName().compareToIgnoreCase(c2.getName());
+				}
+
+			});
+
+			for (AbstractDuplicateDetector detector : allCollectors) {
+				duplicateDetectorChooser.add(detector.getName());
+			}
+
+			duplicateDetectorChooser.select(0);
+			duplicateDetectorChooser.setEnabled(true);
+			duplicateDetectorChooser.setData(allCollectors);
+
+			if (allCollectors.size() > 0) {
+
+				searchForDuplicates = toolkit.createButton(relatedBugsComposite, LABEL_SEARCH_DUPS, SWT.NONE);
+				GridData searchDuplicatesButtonData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+				searchForDuplicates.setLayoutData(searchDuplicatesButtonData);
+				searchForDuplicates.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						searchForDuplicates();
+					}
+				});
+			}
+		}
+		else {
+			Label label = new Label(relatedBugsComposite, SWT.LEFT);
+			label.setText(LABEL_NO_DETECTOR);
+			
+		}
+
+	}
+
+	protected SearchHitCollector getDuplicateSearchCollector(String name) {
+		return null;
+	}
+
+	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+		//	return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
+		return null;
+	}
+
+	public boolean searchForDuplicates() {
+
+		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
+
+		// called so that the description text is set on taskData before we
+		// search for duplicates
+		this.saveTaskOffline(new NullProgressMonitor());
+
+		SearchHitCollector collector = getDuplicateSearchCollector(duplicateDetectorName);
+		if (collector != null) {
+			NewSearchUI.runQueryInBackground(collector);
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

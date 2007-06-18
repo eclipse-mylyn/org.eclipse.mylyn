@@ -100,6 +100,9 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	}
 
 	@Override
+	/**
+	 * This method is duplicated in BugzillaTaskEditor for now.
+	 */
 	public SearchHitCollector getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
 		List<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
@@ -113,6 +116,10 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 		return null;
 	}
 
+	@Override
+	/**
+	 * This method is duplicated in BugzillaTaskEditor for now.
+	 */
 	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
 	}
