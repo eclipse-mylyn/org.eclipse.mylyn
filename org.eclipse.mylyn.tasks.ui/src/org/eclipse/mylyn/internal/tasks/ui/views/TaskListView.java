@@ -181,7 +181,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
-	private static final String ID_SEPARATOR_TASKS = "tasks";
+	public static final String ID_SEPARATOR_TASKS = "tasks";
 
 	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
 

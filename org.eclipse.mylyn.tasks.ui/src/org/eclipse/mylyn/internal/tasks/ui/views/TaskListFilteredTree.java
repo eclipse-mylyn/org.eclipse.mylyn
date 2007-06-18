@@ -10,41 +10,55 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.internal.ObjectActionContributorManager;
 
 /**
  * @author Mik Kersten
@@ -57,7 +71,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	private static final String LABEL_SETS_NONE = "All Tasks";
 
 	private static final String LABEL_SETS_EDIT = "Edit Task Working Sets...";
-	
+
 	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
 
 	private Hyperlink workingSetLink;
@@ -76,10 +90,27 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private IWorkingSet currentWorkingSet;
 
+	private MenuManager activeTaskMenuManager = null;
+
+	private Menu activeTaskMenu = null;
+
+	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
+
 	public TaskListFilteredTree(Composite parent, int treeStyle, PatternFilter filter) {
 		super(parent, treeStyle, filter);
+		hookContextMenu();
 	}
-	
+
+	private void hookContextMenu() {
+		activeTaskMenuManager = new MenuManager("#PopupMenu");
+		activeTaskMenuManager.setRemoveAllWhenShown(true);
+		activeTaskMenuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager, TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
+			}
+		});
+	}
+
 	@Override
 	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
 		// Use a single Composite for the Tree to being able to use the
@@ -186,11 +217,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	@Override
-	protected Composite createWorkingSetComposite(Composite container) {
+	protected Composite createActiveWorkingSetComposite(Composite container) {
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText("Select Task Working Set");
-		
+
 		final TaskWorkingSetAction action = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -206,7 +237,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 			}
 		});
-		
+
 		workingSetLink = new Hyperlink(container, SWT.LEFT);
 		workingSetLink.setText(LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
@@ -224,7 +255,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void mouseHover(MouseEvent e) {
 			}
 		});
-		
+
 		indicateActiveTaskWorkingSet();
 
 		workingSetLink.addMouseListener(new MouseAdapter() {
@@ -245,20 +276,20 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	}
 
 	@Override
-	protected Composite createStatusComposite(Composite container) {
+	protected Composite createActiveTaskComposite(final Composite container) {
 		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
 		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 		activeTaskButton.setToolTipText("Select Active Task");
-		 
+
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-		
- 		final ActiveTaskHistoryDropDownAction action = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
-				.getTaskActivationHistory(), true);
+
+		final ActiveTaskHistoryDropDownAction action = new ActiveTaskHistoryDropDownAction(
+				TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), true);
 
 		activeTaskButton.addHyperlinkListener(new IHyperlinkListener() {
 
@@ -272,6 +303,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			public void linkExited(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 				activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+			}
+		});
+
+		activeTaskLink.addMenuDetectListener(new MenuDetectListener() {
+			public void menuDetected(MenuDetectEvent e) {
+				if (activeTaskMenu != null) {
+					activeTaskMenu.dispose();
+				}
+				activeTaskMenu = activeTaskMenuManager.createContextMenu(container);
+				activeTaskMenu.setVisible(true);
 			}
 		});
 
@@ -345,7 +386,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void mouseHover(MouseEvent e) {
 			}
 		});
-		
+
 		filterComposite.layout();
 	}
 
@@ -368,6 +409,74 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		if (filterText != null) {
 			filterText.setText(string);
 			selectAll();
+		}
+	}
+
+	private void fillContextMenu(IMenuManager manager, final AbstractTask activeTask) {
+		if (activeTask != null) {
+			IStructuredSelection selection = new StructuredSelection(activeTask);
+			copyTaskDetailsAction.selectionChanged(selection);
+
+			manager.add(new OpenTaskListElementAction(null) {
+				public void run() {
+					TasksUiUtil.refreshAndOpenTaskListElement(activeTask);
+				}
+			});
+
+			if (activeTask.isActive()) {
+				manager.add(new TaskDeactivateAction() {
+					public void run() {
+						super.run(activeTask);
+					}
+				});
+			} else {
+				manager.add(new TaskActivateAction() {
+					public void run() {
+						TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(activeTask);
+						super.run(activeTask);
+					}
+				});
+			}
+
+			manager.add(new Separator());
+
+			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
+				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
+						menuPath)) {
+					if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
+						List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+						selectedElements.add(activeTask);
+						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+						if (subMenuManager != null) {
+							manager.add(subMenuManager);
+						}
+					}
+				}
+			}
+
+			manager.add(new Separator());
+			manager.add(copyTaskDetailsAction);
+			manager.add(new Separator());
+
+			ObjectActionContributorManager.getManager().contributeObjectActions(null, manager,
+					new ISelectionProvider() {
+
+						public void addSelectionChangedListener(ISelectionChangedListener listener) {
+							// ignore
+						}
+
+						public ISelection getSelection() {
+							return new StructuredSelection(activeTask);
+						}
+
+						public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+							// ignore
+						}
+
+						public void setSelection(ISelection selection) {
+							// ignore
+						}
+					});
 		}
 	}
 }

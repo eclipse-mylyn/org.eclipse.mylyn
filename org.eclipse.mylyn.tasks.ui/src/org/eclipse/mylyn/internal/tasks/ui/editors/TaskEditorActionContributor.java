@@ -80,7 +80,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 	private CopyTaskDetailsAction copyTaskDetailsAction = new CopyTaskDetailsAction(false);
 
 	private AttachFileAction attachFileAction = new AttachFileAction();
-	
+
 	private SynchronizeEditorAction synchronizeEditorAction = new SynchronizeEditorAction();
 
 	private GlobalAction cutAction;
@@ -110,8 +110,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		pasteAction.setToolTipText(WorkbenchMessages.Workbench_pasteToolTip);
 		pasteAction.setImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		pasteAction.setHoverImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		pasteAction.setDisabledImageDescriptor(WorkbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
+		pasteAction.setDisabledImageDescriptor(WorkbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		pasteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 
 		copyAction = new GlobalAction(ActionFactory.COPY.getId());
@@ -170,9 +169,9 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 
 		if (editor.getTaskEditorInput() == null && !(editor.getEditorInput() instanceof NewTaskEditorInput)) {
 			final MenuManager subMenuManager = new MenuManager("Add to " + TaskListView.LABEL_VIEW);
-			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(TasksUiPlugin
-					.getTaskListManager().getTaskList().getCategories());
-			
+			List<AbstractTaskCategory> categories = new ArrayList<AbstractTaskCategory>(
+					TasksUiPlugin.getTaskListManager().getTaskList().getCategories());
+
 			// This is added to solve Bug 180252
 			Collections.sort(categories);
 			for (final AbstractTaskCategory category : categories) {
@@ -189,7 +188,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 					subMenuManager.add(action);
 				}
 			}
-			
+
 			copyTaskDetailsAction.selectionChanged(new StructuredSelection(editor.getSelection()));
 			manager.add(subMenuManager);
 			return;
@@ -238,11 +237,13 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 			for (String menuPath : TasksUiPlugin.getDefault().getDynamicMenuMap().keySet()) {
 				for (IDynamicSubMenuContributor contributor : TasksUiPlugin.getDefault().getDynamicMenuMap().get(
 						menuPath)) {
-					List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
-					selectedElements.add(task);
-					MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
-					if (subMenuManager != null) {
-						manager.add(subMenuManager);
+					if (TaskListView.ID_SEPARATOR_TASKS.equals(menuPath)) {
+						List<AbstractTaskContainer> selectedElements = new ArrayList<AbstractTaskContainer>();
+						selectedElements.add(task);
+						MenuManager subMenuManager = contributor.getSubMenuManager(selectedElements);
+						if (subMenuManager != null) {
+							manager.add(subMenuManager);
+						}
 					}
 				}
 			}

@@ -372,6 +372,7 @@ public class TaskList {
 	// return false;
 	// }
 
+	@Deprecated
 	public List<AbstractTask> getActiveTasks() {
 		return activeTasks;
 	}

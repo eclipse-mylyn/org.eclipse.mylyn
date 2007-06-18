@@ -118,8 +118,8 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			}
 		});
 		
-		createWorkingSetComposite(parent);
-		createStatusComposite(parent);
+		createActiveWorkingSetComposite(parent);
+		createActiveTaskComposite(parent);
 		return parent;
 	}
 
@@ -150,9 +150,9 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 	
 	protected abstract Composite createProgressComposite(Composite container);
 
-	protected abstract Composite createWorkingSetComposite(Composite container);
+	protected abstract Composite createActiveWorkingSetComposite(Composite container);
 	
-	protected abstract Composite createStatusComposite(Composite container);
+	protected abstract Composite createActiveTaskComposite(Composite container);
 
 	@Override
 	protected void textChanged() {
