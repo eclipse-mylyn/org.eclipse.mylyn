@@ -36,7 +36,7 @@ public class TaskActivationHistory {
 	 * history at startup. (This is not the maximum size of the history, which
 	 * is currently unbounded)
 	 */
-	private static final int NUM_SAVED_HISTORY_ITEMS_TO_LOAD = 10;
+	private static final int NUM_SAVED_HISTORY_ITEMS_TO_LOAD = 12;
 
 	private boolean persistentHistoryLoaded = false;
 
@@ -143,109 +143,5 @@ public class TaskActivationHistory {
 			StatusManager.fail(e, "could not clear history", false);
 		}
 	}
-
-	// /**
-	// * Get a list of the preceding tasks in the history. navigatedToTask(Task)
-	// * should be called to notify the history if the user navigates to an
-	// * arbitrary previous task from this list
-	// *
-	// * @author Wesley Coelho
-	// */
-	// public List<ITask> getPreviousTasks() {
-	// try {
-	//
-	// if (!hasPrevious()) {
-	// return new ArrayList<ITask>();
-	// }
-	//
-	// if (history.get(currentIndex).isActive()) {
-	// return history.subList(0, currentIndex);
-	// } else {
-	// return history.subList(0, currentIndex + 1);
-	// }
-	// } catch (RuntimeException e) {
-	// MylarStatusHandler.fail(e, "could not get previous tasks from history",
-	// false);
-	// return new ArrayList<ITask>();
-	// }
-	// }
-
-	// /**
-	// * Get a list of the next tasks in the history. navigatedToTask(Task)
-	// should
-	// * be called to notify the history if the user navigates to an arbitrary
-	// * next task from this list
-	// *
-	// * @author Wesley Coelho
-	// */
-	// public List<ITask> getNextTasks() {
-	// try {
-	// return history.subList(currentIndex + 1, history.size());
-	// } catch (RuntimeException e) {
-	// MylarStatusHandler.fail(e, "could not get next tasks from history",
-	// false);
-	// return new ArrayList<ITask>();
-	// }
-	// }
-
-	// /**
-	// * Use this method to notify the task history that the user has navigated
-	// to
-	// * an arbitrary task in the history without using getNextTask() or
-	// * getPreviousTask()
-	// *
-	// * @author Wesley Coelho
-	// */
-	// public void navigatedToTask(ITask task) {
-	// for (int i = 0; i < history.size(); i++) {
-	// if (history.get(i).getHandleIdentifier() != null
-	// &&
-	// history.get(i).getHandleIdentifier().equals(task.getHandleIdentifier()))
-	// {
-	// currentIndex = i;
-	// break;
-	// }
-	// }
-	// }
-
-	// public ITask getNextTask() {
-	// try {
-	// if (hasNext()) {
-	// return history.get(++currentIndex);
-	// } else {
-	// return null;
-	// }
-	// } catch (RuntimeException e) {
-	// MylarStatusHandler.fail(e, "could not get next task", false);
-	// return null;
-	// }
-	// }
-
-	// public boolean hasNext() {
-	// try {
-	// return currentIndex < history.size() - 1;
-	// } catch (RuntimeException e) {
-	// MylarStatusHandler.fail(e, "could not get next task", false);
-	// return false;
-	// }
-	// }
-
-	// /**
-	// * Returns true if the specified task appears in the activity history
-	// * between the starting index and the end of the history list.
-	// *
-	// * @author Wesley Coelho
-	// */
-	// protected boolean isDuplicate(ITask task, int startingIndex) {
-	// for (int i = startingIndex; i <
-	// ContextCorePlugin.getContextManager().getActivityHistoryMetaContext().getInteractionHistory()
-	// .size(); i++) {
-	// ITask currTask = getHistoryTaskAt(i);
-	// if (currTask != null &&
-	// currTask.getHandleIdentifier().equals(task.getHandleIdentifier())) {
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
+	
 }

@@ -11,7 +11,6 @@
 package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,13 +18,19 @@ import java.util.Set;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 
@@ -34,22 +39,35 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Leo Dos Santos
  */
-public class ActiveTaskHistoryDropDownAction extends TaskNavigateDropDownAction {
+public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownAction implements  IWorkbenchWindowPulldownDelegate, ITaskActivityListener {
 
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.navigate.previous";
 
 	private boolean scopeToWorkingSet = false;
 
-	public ActiveTaskHistoryDropDownAction(TaskActivationHistory history, boolean scopeToWorkingSet) {
+	private static final String LABEL = "Activate Previous Task";
+	
+	public ActivateTaskHistoryDropDownAction() {
+		this(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+	}
+	
+	public ActivateTaskHistoryDropDownAction(TaskActivationHistory history, boolean scopeToWorkingSet) {
 		super(history);
-		setText("Previous Task");
-		setToolTipText("Previous Task");
+		setText(LABEL);
+		setToolTipText(LABEL);
 		setId(ID);
 		setEnabled(true);
 		setImageDescriptor(TasksUiImages.NAVIGATE_PREVIOUS);
 		this.scopeToWorkingSet = scopeToWorkingSet;
+		TasksUiPlugin.getTaskListManager().addActivityListener(this);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		TasksUiPlugin.getTaskListManager().addActivityListener(this);
+	}
+	
 	@Override
 	protected void addActionsToMenu() {
 		List<AbstractTask> tasks = new ArrayList<AbstractTask>(taskHistory.getPreviousTasks());
@@ -154,7 +172,32 @@ public class ActiveTaskHistoryDropDownAction extends TaskNavigateDropDownAction 
 		public void run() {
 			dialogAction.run(null);
 		}
+	}
 
+	public void taskActivated(AbstractTask task) {
+		// TODO: update label
+	}
+
+	public void taskDeactivated(AbstractTask task) {
+		// TODO: update label
+	}
+	
+	public void init(IWorkbenchWindow window) {
+	}
+
+	public void run(IAction action) {
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+	}
+
+	public void activityChanged(ScheduledTaskContainer week) {
+	}
+
+	public void calendarChanged() {
+	}
+	
+	public void taskListRead() {
 	}
 
 }

@@ -7,26 +7,6 @@
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
 
-	<extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.trim.command2?after">
-         <toolbar
-               id="org.eclipse.mylyn.tasks.ui.trim.container">
- 			<command
-                  commandId="org.eclipse.mylyn.tasks.ui.trim.command"
-                  id="org.eclipse.mylyn.tasks.ui.trim"
-                  label="."
-                  style="push">
-            </command>
-            <control
-                  class="org.eclipse.mylyn.internal.tasks.ui.TaskTrimWidget"
-                  id="org.eclipse.mylyn.tasks.ui.trim.control">
-            </control>
-         </toolbar>
-      </menuContribution>
-    </extension>
-	
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -605,6 +585,17 @@
             id="org.eclipse.mylyn.tasks.ui.navigation"
             label="Mylyn Task Navigation"
             visible="true">
+  		<action
+	          allowLabelUpdate="true"
+	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction"
+	          icon="icons/etool16/navigate-previous.gif"
+	          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
+	          label="Activate Previous Task"
+	          pulldown="true"
+	          style="pulldown"
+	          toolbarPath="org.eclipse.ui.workbench.navigate/Tasks"
+	          tooltip="Activate Previous Task">
+      	</action> 
 		<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.DeactivateAllTasksAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks"

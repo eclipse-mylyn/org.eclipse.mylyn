@@ -29,7 +29,7 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
@@ -288,7 +288,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			indicateActiveTask(activeTask);
 		}
 
-		final ActiveTaskHistoryDropDownAction action = new ActiveTaskHistoryDropDownAction(
+		final ActivateTaskHistoryDropDownAction action = new ActivateTaskHistoryDropDownAction(
 				TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), true);
 
 		activeTaskButton.addHyperlinkListener(new IHyperlinkListener() {
@@ -320,14 +320,16 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (TaskListFilteredTree.super.filterText.getText().length() > 0) {
-					TaskListFilteredTree.super.filterText.setText("");
-					TaskListFilteredTree.this.textChanged();
+				if (e.button == 1) {
+					if (TaskListFilteredTree.super.filterText.getText().length() > 0) {
+						TaskListFilteredTree.super.filterText.setText("");
+						TaskListFilteredTree.this.textChanged();
+					}
+					if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
+						TaskListView.getFromActivePerspective().goUpToRoot();
+					}
+					TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 				}
-				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
-					TaskListView.getFromActivePerspective().goUpToRoot();
-				}
-				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask()));
 			}
 
 		});

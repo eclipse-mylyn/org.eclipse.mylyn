@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.List;
-
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 
 
@@ -21,18 +19,17 @@ import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
  * @author Rob Elves
  */
 public interface ITaskActivityListener {
-
+ 
 	public abstract void taskActivated(AbstractTask task);
-
-	@Deprecated
-	public abstract void tasksActivated(List<AbstractTask> tasks);
 
 	public abstract void taskDeactivated(AbstractTask task);
 
-	public abstract void activityChanged(ScheduledTaskContainer week);
-	
 	public abstract void taskListRead();
-	
+
+	@Deprecated
+	public abstract void activityChanged(ScheduledTaskContainer week);
+
+	@Deprecated
 	public abstract void calendarChanged();
 
 }

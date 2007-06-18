@@ -65,6 +65,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CollapseAllAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DeleteAction;
@@ -81,7 +82,6 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTasksUiPreferencesAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.PresentationDropDownSelectionAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RemoveFromCategoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.RenameAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeAutomaticallyAction;
@@ -256,7 +256,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private SortyByDropDownAction sortByAction;
 
-	ActiveTaskHistoryDropDownAction previousTaskAction;
+	ActivateTaskHistoryDropDownAction previousTaskAction;
 
 	private PresentationDropDownSelectionAction presentationDropDownSelectionAction;
 
@@ -1144,7 +1144,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(new Separator(ID_SEPARATOR_NEW));
-		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
+//		manager.add(new Separator(ID_SEPARATOR_NAVIGATION));
 		manager.add(presentationDropDownSelectionAction);
 //		manager.add(previousTaskAction);
 		manager.add(new Separator(ID_SEPARATOR_CONTEXT));
@@ -1344,7 +1344,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		filterArchiveCategory = new FilterArchiveContainerAction(this);
 		sortByAction = new SortyByDropDownAction(this);
 		filterOnPriorityAction = new PriorityDropDownAction(this);
-		previousTaskAction = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
+		previousTaskAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager()
 				.getTaskActivationHistory(), false);
 		linkWithEditorAction = new LinkWithEditorAction(this);
 		ITaskListPresentation[] presentations = { catagorizedPresentation, scheduledPresentation };
@@ -1370,7 +1370,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		previousTaskAction.setEnabled(enable);
 	}
 
-	public ActiveTaskHistoryDropDownAction getPreviousTaskAction() {
+	public ActivateTaskHistoryDropDownAction getPreviousTaskAction() {
 		return previousTaskAction;
 	}
 

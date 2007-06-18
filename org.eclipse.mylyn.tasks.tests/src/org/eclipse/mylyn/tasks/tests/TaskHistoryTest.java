@@ -16,7 +16,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskNavigateDropDownAction.TaskNavigateAction;
@@ -169,7 +169,7 @@ public class TaskHistoryTest extends TestCase {
 		assertTrue(prevHistoryList.get(prevHistoryList.size() - 4) == task1);
 
 		// Get a task from the list and activate it
-		ActiveTaskHistoryDropDownAction prevAction = new ActiveTaskHistoryDropDownAction(history, false);
+		ActivateTaskHistoryDropDownAction prevAction = new ActivateTaskHistoryDropDownAction(history, false);
 		TaskNavigateAction navigateAction = prevAction.new TaskNavigateAction(task2);
 		navigateAction.run();
 		assertTrue(task2.isActive());

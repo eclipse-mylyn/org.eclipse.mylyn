@@ -22,22 +22,23 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.CopyTaskDetailsAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskListElementAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.OpenWithBrowserAction;
-import org.eclipse.mylyn.internal.tasks.ui.actions.ActiveTaskHistoryDropDownAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
-import org.eclipse.mylyn.internal.tasks.ui.views.TaskListFilteredTree;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
-import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -71,7 +72,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Hyperlink activeTaskLabel;
 
-	private ActiveTaskHistoryDropDownAction navigateAction;
+	private ActivateTaskHistoryDropDownAction navigateAction;
 
 	private OpenWithBrowserAction openWithBrowserAction = new OpenWithBrowserAction();
 
@@ -147,13 +148,13 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		GridData gridData = new GridData(SWT.NONE, SWT.CENTER, false, false);
 		composite.setLayoutData(gridData);
 
-		navigateAction = new ActiveTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
+		navigateAction = new ActivateTaskHistoryDropDownAction(TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), false);
 
 		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
 		manager.add(navigateAction);
 		manager.createControl(composite);
 
-//		createStatusComposite(composite);
+		createStatusComposite(composite);
 
 		return composite;
 	}
@@ -165,7 +166,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
-//		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
+		activeTaskLabel.setText("<no task active>");
 
 		activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
@@ -191,21 +192,21 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			}
 		});
 
-//		activeTaskLabel.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseDown(MouseEvent e) {
-//				// if (TaskListFilteredTree.super.filterText.getText().length()
-//				// > 0) {
-//				// TaskListFilteredTree.super.filterText.setText("");
-//				// TaskListFilteredTree.this.textChanged();
-//				// }
-//				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
-//					TaskListView.getFromActivePerspective().goUpToRoot();
-//				}
-//				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
-//						.getActiveTask()));
-//			}
-//		});
+		activeTaskLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// if (TaskListFilteredTree.super.filterText.getText().length()
+				// > 0) {
+				// TaskListFilteredTree.super.filterText.setText("");
+				// TaskListFilteredTree.this.textChanged();
+				// }
+				if (TaskListView.getFromActivePerspective().getDrilledIntoCategory() != null) {
+					TaskListView.getFromActivePerspective().goUpToRoot();
+				}
+				TasksUiUtil.refreshAndOpenTaskListElement((TasksUiPlugin.getTaskListManager().getTaskList()
+						.getActiveTask()));
+			}
+		});
 
 		return activeTaskLabel;
 	}
@@ -300,9 +301,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-//		activeTaskLabel.setText(shortenText(activeTask.getSummary()));
-//		activeTaskLabel.setUnderlined(true);
-//		activeTaskLabel.setToolTipText(activeTask.getSummary());
+		activeTaskLabel.setText(shortenText(activeTask.getSummary()));
+		activeTaskLabel.setUnderlined(true);
+		activeTaskLabel.setToolTipText(activeTask.getSummary());
 	}
 
 	public void indicateNoActiveTask() {
@@ -310,9 +311,9 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-//		activeTaskLabel.setText(TaskListFilteredTree.LABEL_NO_ACTIVE);
-//		activeTaskLabel.setUnderlined(false);
-//		activeTaskLabel.setToolTipText("");
+		activeTaskLabel.setText("<no active task>");
+		activeTaskLabel.setUnderlined(false);
+		activeTaskLabel.setToolTipText("");
 	}
 
 	// From PerspectiveBarContributionItem
