@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Tree;
  * it's handle from the corresponding structure bridge.
  * 
  * @author Mik Kersten
+ * @author Christian Dupuis (bug 193003)
  */
 public class InterestFilter extends ViewerFilter {
 
@@ -51,11 +52,9 @@ public class InterestFilter extends ViewerFilter {
 			}
 			if (isTemporarilyUnfiltered(parent)) {
 				return true;
-			} else if (temporarilyUnfiltered instanceof Tree) {
-				// HACK: should also work for trees without project as root
-				if (object instanceof IProjectNature || object instanceof IProject) {
-					return true;
-				}
+			} else if (temporarilyUnfiltered instanceof Tree 
+					&& isRootElement(object)) {
+				return true;
 			}
 
 			IInteractionElement element = null;
@@ -95,6 +94,10 @@ public class InterestFilter extends ViewerFilter {
 			StatusManager.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
 		}
 		return false;
+	}
+
+	protected boolean isRootElement(Object object) {
+		return object instanceof IProjectNature || object instanceof IProject;
 	}
 
 	protected boolean isInteresting(IInteractionElement element) {
