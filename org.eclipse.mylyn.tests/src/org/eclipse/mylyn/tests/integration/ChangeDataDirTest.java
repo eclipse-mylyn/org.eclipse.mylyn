@@ -87,7 +87,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	public void testDefaultDataDirectoryMove() {
 		String workspaceRelativeDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
-				+ ".mylar";
+				+ ".metadata"+'/'+".mylyn";
 		assertEquals(defaultDir, workspaceRelativeDir);
 
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
