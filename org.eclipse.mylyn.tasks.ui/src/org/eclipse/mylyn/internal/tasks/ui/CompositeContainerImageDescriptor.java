@@ -27,12 +27,16 @@ public class CompositeContainerImageDescriptor extends CompositeImageDescriptor 
 	
 	protected Point size;
 	
-	public CompositeContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay) {
+	public CompositeContainerImageDescriptor(ImageDescriptor icon, ImageDescriptor overlay, boolean wide) {
 		this.base = getImageData(icon);
 		if (overlay != null) {
 			this.overlay = getImageData(overlay);
 		}
-		this.size = new Point(CompositeTaskImageDescriptor.WIDTH, base.height);
+		int width = CompositeTaskImageDescriptor.WIDTH_ICON;
+		if (wide) {
+			width += CompositeTaskImageDescriptor.OFFSET_DECORATION;
+		}
+		this.size = new Point(width, base.height);
 	}
 	
 	@Override

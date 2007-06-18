@@ -27,29 +27,30 @@ public class CompositeTaskImageDescriptor extends CompositeImageDescriptor {
 	
 	protected Point size;
 
-	public static final int WIDTH_DECORATION = 6;
+	public static final int OFFSET_DECORATION = 6;
 	
-	private static final int WIDTH_ICON = 16;
+	static final int WIDTH_ICON = 16;
 		
-	static int WIDTH;
+	private int offset = 0;
 	
-	static {
-		WIDTH = WIDTH_DECORATION + WIDTH_ICON;
-	}
-	
-	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind) {
+	public CompositeTaskImageDescriptor(ImageDescriptor icon, ImageDescriptor overlayKind, boolean wide) {
 		this.base = getImageData(icon);
 		if (overlayKind != null) {
 			this.kind = getImageData(overlayKind);
 		}
-		this.size = new Point(WIDTH, base.height);
+		int width = WIDTH_ICON;
+		if (wide) {
+			width += OFFSET_DECORATION;
+			offset = OFFSET_DECORATION;
+		}
+		this.size = new Point(width, base.height);
 	}
 	
 	@Override
 	protected void drawCompositeImage(int width, int height) {
-		drawImage(base, WIDTH_DECORATION, 1);
+		drawImage(base, offset, 1);
 		if (kind != null) {
-			drawImage(kind, WIDTH_DECORATION+5, 6);
+			drawImage(kind, offset+5, 6);
 		}
 	}
 

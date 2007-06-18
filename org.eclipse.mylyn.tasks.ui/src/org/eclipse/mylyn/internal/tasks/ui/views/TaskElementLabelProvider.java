@@ -48,7 +48,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 
 	private static final Pattern pattern = Pattern.compile("\\d*: .*");
 
-	private boolean compositeImages = false;
+	private boolean wideImages = false;
 
 	private class CompositeImageDescriptor {
 
@@ -62,27 +62,23 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 //		super();
 //	}
 
-	public TaskElementLabelProvider(boolean compositeImages) {
+	public TaskElementLabelProvider(boolean wideImages) {
 		super();
-		this.compositeImages = compositeImages;
+		this.wideImages = wideImages;
 	}
 
 	@Override
 	public Image getImage(Object element) {
 		CompositeImageDescriptor compositeDescriptor = getImageDescriptor(element);
-		if (!compositeImages) {
-			return TasksUiImages.getImage(compositeDescriptor.icon);
-		} else {
-			if (element instanceof AbstractTask) {
-				if (compositeDescriptor.overlayKind == null) {
-					compositeDescriptor.overlayKind = TasksUiImages.OVERLAY_BLANK;
-				}
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind);
-			} else if (element instanceof AbstractTaskContainer) {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, TasksUiImages.OVERLAY_BLANK);
-			} else {
-				return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null);
+		if (element instanceof AbstractTask) {
+			if (compositeDescriptor.overlayKind == null) {
+				compositeDescriptor.overlayKind = TasksUiImages.OVERLAY_BLANK;
 			}
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, compositeDescriptor.overlayKind, wideImages);
+		} else if (element instanceof AbstractTaskContainer) {
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, TasksUiImages.OVERLAY_BLANK, wideImages);
+		} else {
+			return TasksUiImages.getCompositeTaskImage(compositeDescriptor.icon, null, wideImages);
 		}
 	}
 
