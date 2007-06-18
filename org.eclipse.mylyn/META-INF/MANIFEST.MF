@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mylyn
 Bundle-SymbolicName: org.eclipse.mylyn
-Bundle-Version: 2.0.0.v20070616-2100
+Bundle-Version: 2.0.0.v20070618-0700
 Bundle-Vendor: Eclipse.org
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
