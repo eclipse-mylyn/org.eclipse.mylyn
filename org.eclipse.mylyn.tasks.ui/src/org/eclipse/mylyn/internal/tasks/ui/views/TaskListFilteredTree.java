@@ -70,8 +70,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private static final String LABEL_ACTIVE_NONE = "Activate...  ";
 
-	private static final String LABEL_SETS_NONE = "All Tasks";
-
 	private static final String LABEL_SETS_EDIT = "Edit Task Working Sets...";
 
 	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
@@ -171,10 +169,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 			public void taskListRead() {
 			}
-
-			public void tasksActivated(List<AbstractTask> tasks) {
-			}
-
 		});
 		return progressComposite;
 	}
@@ -222,13 +216,13 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 	protected Composite createActiveWorkingSetComposite(Composite container) {
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
-		workingSetButton.setToolTipText("Select Task Working Set");
+		workingSetButton.setToolTipText("Select Working Set");
 
-		final TaskWorkingSetAction action = new TaskWorkingSetAction();
+		final TaskWorkingSetAction workingSetAction = new TaskWorkingSetAction();
 		workingSetButton.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
-				action.getMenu(workingSetButton).setVisible(true);
+				workingSetAction.getMenu(workingSetButton).setVisible(true);
 			}
 
 			public void linkEntered(org.eclipse.ui.forms.events.HyperlinkEvent e) {
@@ -241,7 +235,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		});
 
 		workingSetLink = new Hyperlink(container, SWT.LEFT);
-		workingSetLink.setText(LABEL_SETS_NONE);
+		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
 		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
 		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
@@ -263,9 +257,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		workingSetLink.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				if (currentWorkingSet != null) {
-					action.run(currentWorkingSet);
+					workingSetAction.run(currentWorkingSet);
 				} else {
-					action.run();
+					workingSetAction.run();
 				}
 			}
 		});
@@ -357,7 +351,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		}
 
 		if (activeSets.size() == 0) {
-			workingSetLink.setText(LABEL_SETS_NONE);
+			workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 			workingSetLink.setToolTipText(LABEL_SETS_EDIT);
 			currentWorkingSet = null;
 		} else if (activeSets.size() > 1) {
