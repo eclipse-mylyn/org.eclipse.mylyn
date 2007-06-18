@@ -7,24 +7,31 @@
    </intro>
    <item title="Open the Task List view" dialog="true" skip="false">
       <description>
-         If the Task List view is not opened, select in the main menu  <b>Window</b> &gt; <b>Show View</b> &gt; <b>Other...</b> &gt; <b>Mylar</b> &gt; <b>Task List</b> or click on the &quot;Click to Perform&quot; link below.
+         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
-      <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.TaskListView)" confirm="true">
+      <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.tasks)" confirm="true">
       </command>
+   </item>
+   <item title="Setup Task Repository" dialog="true" skip="true">
+      <description>
+         In this step you can learn how to setup your Bugzilla account, but you can skip it.
+<br/><br/>
+If the Task Repositories view isn&apos;t opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylyn &gt; Task Repositry</b>.
+<br/><br/>
+In the Task Repositories  view you can see <b>Eclipse.org</b>. Right click on it and selet <b>Properties</b>.<br/>
+Check out the <b>Anonymous Access</b> checkbox.<br/>
+Enter your&apos;s user id for the <b>User ID</b> and password for the <b>Password</b>. <br/>
+Click on the <b>Validate Settings</b> button to check your given parameters.<br/>
+If you haven&apos;t got any account you can register one, if you click on the <b>Create new accout</b> link.<br/>
+Click on the <b>Finish</b> button to save the values and close the dialog.
+      </description>
    </item>
    <item title="Create a new Query" dialog="true" skip="false">
       <description>
          In the Task List view, click on the right mouse button then select <b>New &gt; Query</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
-      <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylyn.tasks.ui.wizard.new.query)" confirm="true">
+      <command serialization="org.eclipse.ui.newWizard(newWizardId=org.eclipse.mylyn.tasks.ui.wizards.new.query)" confirm="true">
       </command>
-   </item>
-   <item title="Add Task Repository" dialog="true" skip="true">
-      <description>
-         If <b>Eclipse.org</b> is on your repository list, you can <b>skip</b> this step.
-<br/><br/>
-Click on the <b>Add Repository Task</b> button in the Query dialog. Select Bugzilla on the list then click on the Next button. Enter <b>https://bugs.eclipse.org/bugs</b> for the server&apos;s address, <b>Eclipse.org</b> for the label then click on the <b>Finish</b> button.
-      </description>
    </item>
    <item title="Setup the query" dialog="true" skip="false">
       <description>
