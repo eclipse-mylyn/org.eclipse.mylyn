@@ -98,23 +98,19 @@ class SynchronizeQueryJob extends Job {
 				boolean hasChangedOrNew = connector.markStaleTasks(repository, allTasks,
 						new SubProgressMonitor(monitor, 20));
 				if (!hasChangedOrNew && !forced) {
-					for (AbstractRepositoryQuery repositoryQuery : queries) {
-						repositoryQuery.setStatus(null);
-						repositoryQuery.setCurrentlySynchronizing(false);
-						taskList.notifyContainersUpdated(queries);
-					}
+					updateQueryStatus(null);
 					return Status.OK_STATUS;
 				}
 			} catch (CoreException e) {
-				// there is no good way of informing the user at this point, just log the error
-				StatusManager.log(e.getStatus());
+				// synchronization is unlikely to succeed, inform user and exit
+				updateQueryStatus(e.getStatus());
+				return Status.OK_STATUS;
 			}
 
 			// synchronize queries
 			int n = 0;
 			for (AbstractRepositoryQuery repositoryQuery : queries) {
 				repositoryQuery.setStatus(null);
-				taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
 
 				monitor.setTaskName("Synchronizing " + ++n + "/" + queries.size() + ": " + repositoryQuery.getSummary());
 				synchronizeQuery(repositoryQuery, new SubProgressMonitor(monitor, 10));
@@ -165,6 +161,22 @@ class SynchronizeQueryJob extends Job {
 			return Status.OK_STATUS;
 		} finally {
 			monitor.done();
+		}
+	}
+
+	private void updateQueryStatus(final IStatus status) {
+		for (AbstractRepositoryQuery repositoryQuery : queries) {
+			repositoryQuery.setStatus(status);
+			repositoryQuery.setCurrentlySynchronizing(false);
+		}
+		taskList.notifyContainersUpdated(queries);
+		
+		if (status != null && isForced()) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					StatusManager.displayStatus("Query Synchronization Failed", status);
+				}
+			});
 		}
 	}
 
