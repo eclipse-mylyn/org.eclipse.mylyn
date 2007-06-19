@@ -31,7 +31,7 @@ import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
-import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -265,11 +265,11 @@ public class TasksUiExtensionReader {
 	private static void readEditorFactory(IConfigurationElement element) {
 		try {
 			Object editor = element.createExecutableExtension(ATTR_CLASS);
-			if (editor instanceof ITaskEditorFactory) {
-				TasksUiPlugin.getDefault().addContextEditor((ITaskEditorFactory) editor);
+			if (editor instanceof AbstractTaskEditorFactory) {
+				TasksUiPlugin.getDefault().addContextEditor((AbstractTaskEditorFactory) editor);
 			} else {
 				StatusManager.log("Could not load editor: " + editor.getClass().getCanonicalName()
-						+ " must implement " + ITaskEditorFactory.class.getCanonicalName(), null);
+						+ " must implement " + AbstractTaskEditorFactory.class.getCanonicalName(), null);
 			}
 		} catch (CoreException e) {
 			StatusManager.log(e, "Could not load tasklist listener extension");

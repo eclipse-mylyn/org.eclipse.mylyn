@@ -975,7 +975,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		relatedBugsSection.setClient(relatedBugsComposite);
 		relatedBugsSection.setExpanded(repositoryTask == null);
 
-		List<AbstractDuplicateDetector> allCollectors = getDuplicateSearchCollectorsList();
+		List<AbstractDuplicateDetector> allCollectors = new ArrayList<AbstractDuplicateDetector>();
+		if (getDuplicateSearchCollectorsList() != null) {
+			allCollectors.addAll(getDuplicateSearchCollectorsList());
+		}
 		if (allCollectors != null) {
 			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
 			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
@@ -1025,8 +1028,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return null;
 	}
 
-	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
-		//	return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
+	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		return null;
 	}
 

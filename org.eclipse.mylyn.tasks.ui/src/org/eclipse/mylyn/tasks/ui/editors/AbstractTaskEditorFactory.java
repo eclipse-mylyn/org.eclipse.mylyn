@@ -18,17 +18,28 @@ import org.eclipse.ui.IEditorPart;
 /**
  * @author Mik Kersten
  */
-public interface ITaskEditorFactory {
+public abstract class AbstractTaskEditorFactory {
 
-	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
+	public abstract IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput);
 
-	public IEditorInput createEditorInput(AbstractTask task);
+	public abstract IEditorInput createEditorInput(AbstractTask task);
 	
-	public boolean providesOutline();
-
-	public String getTitle();
-
-	public boolean canCreateEditorFor(AbstractTask task);
+	public abstract String getTitle();
 	
-	public boolean canCreateEditorFor(IEditorInput input);
+	public abstract boolean canCreateEditorFor(AbstractTask task);
+	
+	public abstract boolean canCreateEditorFor(IEditorInput input);
+	
+	public boolean providesOutline() {
+		return false;
+	}
+	
+	/**
+	 * @return	A higher integer for high priority, low integer for low priority.  Higher 
+	 * priority editors will be placed earlier in the tab list.
+	 */
+	public int getPriority() {
+		return 1;
+	}
+
 }

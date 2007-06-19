@@ -77,7 +77,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -130,9 +130,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private TaskDataManager taskDataManager;
 
-	private List<ITaskEditorFactory> taskEditors = new ArrayList<ITaskEditorFactory>();
+	private Set<AbstractTaskEditorFactory> taskEditorFactories = new HashSet<AbstractTaskEditorFactory>();
 
-	private ArrayList<IHyperlinkDetector> hyperlinkDetectors = new ArrayList<IHyperlinkDetector>();
+	private Set<IHyperlinkDetector> hyperlinkDetectors = new HashSet<IHyperlinkDetector>();
 
 	private TreeSet<AbstractTaskRepositoryLinkProvider> repositoryLinkProviders = new TreeSet<AbstractTaskRepositoryLinkProvider>(
 			new OrderComparator());
@@ -149,7 +149,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
-	private List<AbstractDuplicateDetector> duplicateDetectors = new ArrayList<AbstractDuplicateDetector>();
+	private Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
 
 	private boolean eclipse_3_3_workbench = false;
 
@@ -707,21 +707,14 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		this.highlighter = highlighter;
 	}
 
-	public List<ITaskEditorFactory> getTaskEditorFactories() {
-		return taskEditors;
+	public Set<AbstractTaskEditorFactory> getTaskEditorFactories() {
+		return taskEditorFactories;
 	}
 
-	public void addContextEditor(ITaskEditorFactory contextEditor) {
+	public void addContextEditor(AbstractTaskEditorFactory contextEditor) {
 		if (contextEditor != null)
-			this.taskEditors.add(contextEditor);
+			this.taskEditorFactories.add(contextEditor);
 	}
-
-	// /**
-	// * Public for testing.
-	// */
-	// public TaskListSaveManager getTaskListSaveManager() {
-	// return taskListSaveManager;
-	// }
 
 	public boolean isShellActive() {
 		return TasksUiPlugin.shellActive;
@@ -809,7 +802,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
-	public List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+	public Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		return duplicateDetectors;
 	}
 

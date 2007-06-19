@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuListener;
@@ -116,8 +119,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		editorDirtyStateChanged();
 	}
 
-	// see PDEFormEditor
-	/* package */@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	IFormPage[] getPages() {
 		ArrayList formPages = new ArrayList();
 		for (int i = 0; i < pages.size(); i++) {
@@ -150,22 +152,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 	}
 
 	/**
-	 * HACK: perform real check
-	 */
-	private String getUrl() {
-		String url = null;
-		if (getEditorInput() instanceof RepositoryTaskEditorInput) {
-			url = ((RepositoryTaskEditorInput) getEditorInput()).getUrl();
-			if (url == null) {
-				url = task.getTaskUrl();
-			}
-		} else if (task != null && task.getTaskUrl().length() > 9) {
-			url = task.getTaskUrl();
-		}
-		return url;
-	}
-
-	/**
 	 * Saves the multi-page editor's document as another file. Also updates the text for page 0's tab, and updates this
 	 * multi-page editor's input to correspond to the nested editor's.
 	 * 
@@ -186,12 +172,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		super.init(site, input);
 		setSite(site);
 	}
-
-//	public void notifyTaskChanged() {
-//		if (task != null) {
-//			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
-//		}
-//	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
@@ -220,20 +200,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		return;
 	}
 
-	// @Override
-	// public void setFocus() {
-	// if (this.getActivePage() > -1 && this.getActivePage() !=
-	// browserPageIndex) {
-	// IFormPage page = this.getPages()[this.getActivePage()];
-	// if (page != null) {
-	// page.setFocus();
-	// }
-	// } else if(this.getActivePage() == browserPageIndex && webBrowser != null)
-	// {
-	// webBrowser.setFocus();
-	// }
-	// }
-
 	public void setFocusOfActivePage() {
 		if (this.getActivePage() > -1) {
 			IFormPage page = this.getPages()[this.getActivePage()];
@@ -241,28 +207,10 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 				page.setFocus();
 			}
 		} 
-//		else if (this.getActivePage() == browserPageIndex && webBrowser != null) {
-//			webBrowser.setFocus();
-//		}
 	}
-
-//	public void displayInBrowser(String url) {
-//		if (webBrowser != null) {
-//			webBrowser.setUrl(url);
-//			revealBrowser();
-//		} else {
-//			TasksUiUtil.openUrl(url, false);
-//		}
-//	}
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		// for (ITaskEditorFactory factory :
-		// TasksUiPlugin.getDefault().getTaskEditorFactories()) {
-		// for (IEditorPart editor : editors) {
-		// factory.notifyEditorActivationChange(editor);
-		// }
-		// }
 		super.pageChange(newPageIndex);
 	}
 
@@ -273,12 +221,10 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		for (IEditorPart part : editors) {
 			part.dispose();
 		}
-		if (taskPlanningEditor != null)
+		if (taskPlanningEditor != null) {
 			taskPlanningEditor.dispose();
-//		if (webBrowser != null) {
-//			webBrowser.dispose();
-//		}
-
+		}
+		
 		super.dispose();
 	}
 
@@ -313,7 +259,15 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			}
 
 			int selectedIndex = index;
-			for (ITaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
+			
+			List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(TasksUiPlugin.getDefault().getTaskEditorFactories());
+			Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
+
+				public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
+					return o1.getPriority() - o2.getPriority();
+				}
+			});
+			for (AbstractTaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
 				if (factory.canCreateEditorFor(task) || factory.canCreateEditorFor(getEditorInput())) {
 					try {
 						IEditorPart editor = factory.createEditor(this, getEditorInput());
@@ -326,7 +280,6 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 								setPageImage(index, TasksUiImages.getImage(input.getImageDescriptor()));
 							}
 							if (editor instanceof AbstractRepositoryTaskEditor) {
-
 								((AbstractRepositoryTaskEditor) editor).setParentEditor(this);
 
 								if (getEditorInput() instanceof RepositoryTaskEditorInput) {
