@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.ide_feature"
       label="Mylyn Bridge: IDE"
-      version="2.0.0.v20070618-0700"
+      version="2.0.0.v20070619-1000"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -278,28 +278,28 @@ litigation.
          id="org.eclipse.mylyn.ide.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070618-0700"
+         version="2.0.0.v20070619-1000"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.web.tasks"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070618-0700"
+         version="2.0.0.v20070619-1000"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070618-0700"
+         version="2.0.0.v20070619-1000"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.team.cvs"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070618-0700"
+         version="2.0.0.v20070619-1000"
          unpack="false"/>
 
 </feature>
