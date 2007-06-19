@@ -141,6 +141,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
@@ -698,16 +699,22 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		categoryGradientEnd.dispose();
 	}
 
-	/**
-	 * TODO: should be updated when view mode switches to fast and vice-versa
-	 */
+	private void updateDescription() {
+		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
+		if (activeTasks.size() > 0) {
+			updateDescription(activeTasks.get(0));
+		} else {
+			updateDescription(null);
+		}
+	}
+	
 	private void updateDescription(AbstractTask task) {
 		if (getSite() == null || getSite().getPage() == null)
 			return;
 
 		IViewReference reference = getSite().getPage().findViewReference(ID);
 		boolean shouldSetDescription = false;
-		if (reference != null && reference.isFastView()) {
+		if (reference != null && reference.isFastView() && !getSite().getPage().isPartVisible(this)) {
 			shouldSetDescription = true;
 		}
 
@@ -954,7 +961,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		hookOpenAction();
 		contributeToActionBars();
 
-		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler(getViewer().getControl().getShell());
+		TaskListToolTipHandler taskListToolTipHandler = new TaskListToolTipHandler();
 		taskListToolTipHandler.activateHoverHelp(getViewer().getControl());
 
 		// Set to empty string to disable native tooltips (windows only?)
@@ -968,10 +975,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		expandToActiveTasks();
 		restoreState();
 
-		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
-		if (activeTasks.size() > 0) {
-			updateDescription(activeTasks.get(0));
-		}
+		updateDescription();
+		
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
 	}
@@ -1052,7 +1057,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		public void partActivated(IWorkbenchPart part) {
-			jumpToEditor(part);
+			if (part == TaskListView.this) {
+				updateDescription();
+			} else {
+				jumpToEditor(part);
+			}
 		}
 
 		public void partBroughtToTop(IWorkbenchPart part) {
@@ -1062,6 +1071,12 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		}
 
 		public void partDeactivated(IWorkbenchPart part) {
+			if (part == TaskListView.this) {
+				IViewReference reference = getSite().getPage().findViewReference(ID);
+				if (reference != null && reference.isFastView()) {
+					updateDescription();
+				}
+			}
 		}
 
 		public void partOpened(IWorkbenchPart part) {

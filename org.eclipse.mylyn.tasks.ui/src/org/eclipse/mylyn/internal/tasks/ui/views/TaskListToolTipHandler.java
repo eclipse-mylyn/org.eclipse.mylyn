@@ -14,12 +14,12 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.views;
 
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotification;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -58,149 +58,15 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  * @author Eric Booth
  * @author Leo Dos Santos - multi-monitor support
+ * @author Steffen Pingel
  */
 public class TaskListToolTipHandler {
 
-	private static final String SEPARATOR = "\n\n";
-
-	private static final String UNITS_HOURS = " hours";
-
-	private static final String NO_MINUTES = "0 minutes";
-
 	private Shell tipShell;
-
-	private Label tipLabelImage;
-
-	private Label tipLabelText;
-
-	private Label scheduledTipLabelImage;
-
-	private Label scheduledTipLabelText;
-
-	private Label incommingTipLabelImage;
-
-	private Label incommingTipLabelText;
-
-	private WorkweekProgressBar taskProgressBar;
 
 	private Widget tipWidget;
 
-	protected Point tipPosition;
-
-	protected Point widgetPosition;
-
-	public TaskListToolTipHandler(Shell parentShell) {
-		if (parentShell != null) {
-			tipShell = createTipShell(parentShell, null, true, true);
-		}
-	}
-
-	private Shell createTipShell(Shell parent, Widget widget, boolean showScheduled, boolean showIncomming) {
-		Shell tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 2;
-		gridLayout.marginHeight = 2;
-		tipShell.setLayout(gridLayout);
-		tipShell.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-		tipLabelImage = new Label(tipShell, SWT.NONE);
-		tipLabelImage.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelImage.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-		GridData imageGridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
-		tipLabelImage.setLayoutData(imageGridData);
-
-		tipLabelText = new Label(tipShell, SWT.NONE);
-		tipLabelText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		tipLabelText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-		GridData textGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		tipLabelText.setLayoutData(textGridData);
-
-		if (showScheduled) {
-
-			scheduledTipLabelImage = new Label(tipShell, SWT.NONE);
-			scheduledTipLabelImage.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			scheduledTipLabelImage.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-			imageGridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
-			scheduledTipLabelImage.setLayoutData(imageGridData);
-
-			scheduledTipLabelText = new Label(tipShell, SWT.NONE);
-			scheduledTipLabelText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			scheduledTipLabelText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-			textGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-			scheduledTipLabelText.setLayoutData(textGridData);
-		}
-
-		if (showIncomming) {
-			incommingTipLabelImage = new Label(tipShell, SWT.NONE);
-			incommingTipLabelImage.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			incommingTipLabelImage.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-			imageGridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
-			incommingTipLabelImage.setLayoutData(imageGridData);
-
-			incommingTipLabelText = new Label(tipShell, SWT.NONE);
-			incommingTipLabelText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			incommingTipLabelText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-
-			textGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-			incommingTipLabelText.setLayoutData(textGridData);
-		}
-
-		AbstractTaskContainer element = getTaskListElement(widget);
-		if (element instanceof AbstractTaskContainer) {
-			Composite progressComposite = new Composite(tipShell, SWT.NONE);
-			GridLayout progressLayout = new GridLayout(1, false);
-			progressLayout.marginWidth = 2;
-			progressLayout.marginHeight = 0;
-			progressLayout.marginBottom = 2;
-			progressLayout.horizontalSpacing = 0;
-			progressLayout.verticalSpacing = 0;
-			progressComposite.setLayout(progressLayout);
-			progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
-
-			taskProgressBar = new WorkweekProgressBar(progressComposite);
-			taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		}
-
-		return tipShell;
-	}
-
-	private String updateContainerProgressBar(WorkweekProgressBar taskProgressBar, Object object) {
-		if (taskProgressBar != null && !taskProgressBar.isDisposed() && object instanceof AbstractTaskContainer) {
-			String text = "";
-			AbstractTaskContainer container = (AbstractTaskContainer) object;
-						
-			int total = container.getChildren().size();
-			int completed = 0;
-			for (AbstractTask task : container.getChildren()) {
-				if (task.isCompleted()) {
-					completed++;
-				}
-			}
-			String suffix = "";
-			if (container instanceof AbstractRepositoryQuery) {
-				AbstractRepositoryQuery query = ((AbstractRepositoryQuery) container);
-				total = 0;
-				completed = 0;
-				total += query.getChildren().size();
-				for (AbstractTask hit : query.getChildren()) {
-					if (hit.isCompleted()) {
-						completed++;
-					}
-				}
-				// suffix = " (query max: " + query.getMaxHits() + ")";
-			}
-			taskProgressBar.reset(completed, total);
-			text += "Completed " + completed + " of " + total + suffix;
-			return text;
-		} else {
-			return "";
-		}
+	public TaskListToolTipHandler() {
 	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
@@ -217,125 +83,104 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	protected String getBasicToolTextTip(Object object) {
-		AbstractTaskContainer element = getTaskListElement(object);
-		String tooltip = "";
-		String priority = "";
+	private String getTitleText(AbstractTaskContainer element) {
+		if (element instanceof ScheduledTaskContainer) {
+			Calendar start = ((ScheduledTaskContainer) element).getStart();
+			return DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime());
+		} else {
+			return element.getSummary();
+		}
+	}
 
+	private String getDetailsText(AbstractTaskContainer element) {
 		if (element instanceof ScheduledTaskContainer) {
 			ScheduledTaskContainer container = (ScheduledTaskContainer) element;
-			tooltip += "Estimate: " + container.getTotalEstimated() + UNITS_HOURS;
-			String elapsedTimeString = NO_MINUTES;
-			try {
-				elapsedTimeString = DateUtil.getFormattedDurationShort(container.getTotalElapsed());
-				if (elapsedTimeString.equals("")) {
-					elapsedTimeString = NO_MINUTES;
-				}
-			} catch (RuntimeException e) {
-				// ignore
-			}
-			tooltip += "   Elapsed: " + elapsedTimeString + "\n";
-			return tooltip;
-		}
-
-		if (element instanceof AbstractRepositoryQuery) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Estimate: ");
+			sb.append(container.getTotalEstimated());
+			sb.append(" hours");
+			sb.append("\n");
+			sb.append("Elapsed: ");
+			sb.append(DateUtil.getFormattedDurationShort(container.getTotalElapsed()));
+			sb.append("\n");
+			return sb.toString();
+		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-
-			try {
-				tooltip += new URL(query.getRepositoryUrl()).getHost();
-			} catch (Exception e) {
-				// ignore
-			}
-
+			StringBuilder sb = new StringBuilder();
+			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
 			String syncStamp = query.getLastRefreshTimeStamp();
 			if (syncStamp != null) {
-				tooltip += " (synched: " + syncStamp + ")\n";
+				sb.append("Synchronizatied: " + syncStamp + "\n");
 			}
-			if (query.getStatus() != null) {
-				tooltip += "\n" + "Last Error: " + query.getStatus().getMessage();
-				if (query.getStatus() instanceof RepositoryStatus && ((RepositoryStatus) query.getStatus()).isHtmlMessage()) {
-					tooltip += " Please synchronize manually for full error message.";
-				}
-				tooltip += "\n";
-			}
-			return tooltip;
-		}
-
-		if (element instanceof AbstractTask) {
-
-			AbstractTask repositoryTask = (AbstractTask) element;
-
-			tooltip += (element).getSummary();
-			if (repositoryTask != null) {
-
-				String taskKindLabel = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind())
-						.getTaskKindLabel(repositoryTask);
-
-				tooltip += "\n" + taskKindLabel + ", " + repositoryTask.getPriority();
-
-				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-						repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
-				if (repository != null) {
-					tooltip += "  [" + repository.getRepositoryLabel() + "]";
-				}
-
-				if (repositoryTask.getStatus() != null) {
-					tooltip += SEPARATOR + "Last Error: " + repositoryTask.getStatus().getMessage();
-				}
-			}
-			return tooltip;
-		} else if (element != null) {
-			tooltip += (element).getSummary();
-			return tooltip + priority;
-		} else if (object instanceof Control) {
-			return (String) ((Control) object).getData("TIP_TEXT");
+			return sb.toString();
+		} else if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
+			StringBuilder sb = new StringBuilder();			
+			sb.append(TasksUiPlugin.getRepositoryUi(task.getRepositoryKind()).getTaskKindLabel(task));
+			sb.append(" ");
+			sb.append(task.getTaskKey());
+			sb.append(", ");
+			sb.append(task.getPriority());
+			sb.append("  [");
+			sb.append(getRepositoryLabel(task.getRepositoryKind(), task.getRepositoryUrl()));
+			sb.append("]");
+			sb.append("\n");
+			return sb.toString();
 		}
 		return null;
 	}
 
-	private String getActivityText(AbstractTaskContainer element) {
-
-		if (element != null && element instanceof AbstractTask) {
-			try {
-				String result = "";
-				Date date = ((AbstractTask) element).getScheduledForDate();
-				if (date != null) {
-					result += "Scheduled for: " + DateFormat.getDateInstance(DateFormat.LONG).format(date) + " ("
-							+ DateFormat.getTimeInstance(DateFormat.SHORT).format(date) + ")\n";
-				}
-
-				long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime((AbstractTask) element);
-				String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
-				if (!elapsedTimeString.equals("")) {
-					result += "Elapsed: " + elapsedTimeString + "\n";
-				}
-				return result;
-			} catch (Exception e) {
-				// ignore
+	private String getRepositoryLabel(String repositoryKind, String repositoryUrl) {
+		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
+		if (repository != null) {
+			String label = repository.getRepositoryLabel();
+			if (label.indexOf("//") != -1) {
+				return label.substring((repository.getUrl().indexOf("//") + 2));
 			}
+			return label + "";
+		}
+		return "";
+	}
+
+	private String getActivityText(AbstractTaskContainer element) {
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
+
+			StringBuilder sb = new StringBuilder();
+			Date date = task.getScheduledForDate();
+			if (date != null) {
+				sb.append("Scheduled for: ");
+				sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(date));
+				sb.append(" (");
+				sb.append(DateFormat.getTimeInstance(DateFormat.SHORT).format(date));
+				sb.append(")\n");
+			}
+
+			long elapsed = TasksUiPlugin.getTaskListManager().getElapsedTime(task);
+			String elapsedTimeString = DateUtil.getFormattedDurationShort(elapsed);
+			sb.append("Elapsed: ");
+			sb.append(elapsedTimeString);
+			sb.append("\n");
+
+			return sb.toString();
 		}
 		return null;
 	}
 
 	private String getIncommingText(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask) {
-
-			AbstractTask repositoryTask = (AbstractTask) element;
-
-			if (repositoryTask != null && repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+			AbstractTask task = (AbstractTask) element;
+			if (task.getSyncState() == RepositoryTaskSyncState.INCOMING) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						repositoryTask);
+						task);
 				if (connector != null) {
-					ITaskListNotification notification = TasksUiPlugin.getIncommingNotification(connector,
-							repositoryTask);
+					ITaskListNotification notification = TasksUiPlugin.getIncommingNotification(connector, task);
 					if (notification != null) {
-						String descriptionText = null;
 						if (notification.getDescription() != null) {
-							descriptionText = notification.getDescription();
-						}
-
-						if (descriptionText != null && !descriptionText.equals("")) {
-							return descriptionText;
+							String descriptionText = notification.getDescription();
+							if (descriptionText != null && descriptionText.length() > 0) {
+								return descriptionText;
+							}
 						}
 					}
 				}
@@ -344,11 +189,48 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	protected Image getImage(Object object) {
-		AbstractTaskContainer element = getTaskListElement(object);
-		if (object instanceof Control) {
-			return (Image) ((Control) object).getData("TIP_IMAGE");
+	private String getStatusText(AbstractTaskContainer element) {
+		IStatus status = null;
+		if (element instanceof AbstractTask) {
+			AbstractTask task = (AbstractTask) element;
+			status = task.getStatus();
 		} else if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			status = query.getStatus();
+		}
+		
+		if (status != null) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("Last Error: ");
+			sb.append(status.getMessage());
+			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
+				sb.append(" Please synchronize manually for full error message.");
+			}
+			return sb.toString();
+		} 
+		
+		return null;
+	}
+
+	private ProgressData getProgressData(AbstractTaskContainer element) {
+		if (element instanceof AbstractTask && element.getChildren().isEmpty()) {
+			return null;
+		}
+
+		int total = element.getChildren().size();
+		int completed = 0;
+		for (AbstractTask task : element.getChildren()) {
+			if (task.isCompleted()) {
+				completed++;
+			}
+		}
+
+		String text = "Completed " + completed + " of " + total;
+		return new ProgressData(completed, total, text);
+	}
+
+	private Image getImage(AbstractTaskContainer element) {
+		if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
@@ -357,7 +239,6 @@ public class TaskListToolTipHandler {
 			}
 		} else if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-
 			if (repositoryTask != null) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						repositoryTask.getRepositoryKind());
@@ -369,75 +250,51 @@ public class TaskListToolTipHandler {
 		return null;
 	}
 
-	protected Object getToolTipHelp(Object object) {
-		if (object instanceof Control) {
-			return ((Control) object).getData("TIP_HELPTEXT");
-		}
-		return null;
-	}
-
 	/**
 	 * Enables customized hover help for a specified control
 	 * 
 	 * @control the control on which to enable hoverhelp
 	 */
 	public void activateHoverHelp(final Control control) {
-
+		// hide tooltip if any window is deactivated 
 		PlatformUI.getWorkbench().addWindowListener(new IWindowListener() {
 
 			public void windowActivated(IWorkbenchWindow window) {
-				// ignore
-
 			}
 
 			public void windowClosed(IWorkbenchWindow window) {
-				// ignore
-
 			}
 
 			public void windowDeactivated(IWorkbenchWindow window) {
 				hideTooltip();
-
 			}
 
 			public void windowOpened(IWorkbenchWindow window) {
-				// ignore
-
 			}
 		});
 
-		/*
-		 * Get out of the way if we attempt to activate the control underneath
-		 * the tooltip
-		 */
+		// hide tooltip if control underneath is activated 
 		control.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
 				hideTooltip();
+				tipWidget = null;
 			}
 		});
-		/*
-		 * Trap hover events to pop-up tooltip
-		 */
+
+		// trap hover events to pop-up tooltip
 		control.addMouseTrackListener(new MouseTrackAdapter() {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				// TODO: can these conditions be simplified? see bug 131776
-				if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
-						&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
-					tipShell.setVisible(false);
-				}
+				hideTooltip();
 				tipWidget = null;
 			}
 
 			@Override
 			public void mouseHover(MouseEvent event) {
-				if (tipShell.isDisposed()) {
-					return;
-				}
-				widgetPosition = new Point(event.x, event.y);
+				Point widgetPosition = new Point(event.x, event.y);
 				Widget widget = event.widget;
 				if (widget instanceof ToolBar) {
 					ToolBar w = (ToolBar) widget;
@@ -451,63 +308,22 @@ public class TaskListToolTipHandler {
 					Tree w = (Tree) widget;
 					widget = w.getItem(widgetPosition);
 				}
-				if (widget == null && !tipShell.isDisposed()) {
-					tipShell.setVisible(false);
+				
+				if (widget == null) {
+					hideTooltip();
 					tipWidget = null;
 					return;
 				}
-				if (widget == tipWidget)
+				
+				if (widget == tipWidget) {
+					// already displaying tooltip
 					return;
+				}
+
 				tipWidget = widget;
-				tipPosition = control.toDisplay(widgetPosition);
-				String baseText = getBasicToolTextTip(widget);
-				String scheduledText = getActivityText(getTaskListElement(widget));
-				String incommingText = getIncommingText(getTaskListElement(widget));
-
-				Image repositoryImage = getImage(widget);
-				Image activityImage = TasksUiImages.getImage(TasksUiImages.CALENDAR); // TODO
-																						// Fixme
-				Image incommingImage = TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING);
-
-				if (baseText == null) { // HACK: don't check length
-					return;
-				}
-
-				if (!tipShell.isDisposed() && tipShell.getShell() != null
-						&& PlatformUI.getWorkbench().getDisplay().getActiveShell() != null) {
-					tipShell.close();
-					tipShell = createTipShell(PlatformUI.getWorkbench().getDisplay().getActiveShell(), widget,
-							scheduledText != null, incommingText != null);
-				}
-				
-				AbstractTaskContainer element = getTaskListElement(widget);
-				String progressText = updateContainerProgressBar(taskProgressBar, element);
-
-				String dateText = "";
-				if (element instanceof ScheduledTaskContainer) {
-					Calendar start = ((ScheduledTaskContainer)element).getStart();
-					dateText += DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()) + "\n"; 
-				}
-				
-				tipLabelText.setText(dateText + baseText + progressText);
-				tipLabelImage.setImage(repositoryImage); // accepts null
-
-				if (scheduledText != null) {
-					scheduledTipLabelText.setText(scheduledText);
-					scheduledTipLabelImage.setImage(activityImage); // accepts
-																	// null
-				}
-
-				if (incommingText != null) {
-					incommingTipLabelText.setText(incommingText);
-					incommingTipLabelImage.setImage(incommingImage); // accepts
-																		// null
-				}
-
-				tipShell.pack();
-				setHoverLocation(tipShell, tipPosition);
-				tipShell.setVisible(true);
+				showTooltip(control.toDisplay(widgetPosition));
 			}
+
 		});
 	}
 
@@ -539,7 +355,7 @@ public class TaskListToolTipHandler {
 			shellBounds.x = displayBounds.x + displayBounds.width - shellBounds.width;
 		else
 			shellBounds.x = position.x;
-		
+
 		if ((position.y + 10 + shellBounds.height) > (displayBounds.y + displayBounds.height))
 			shellBounds.y = displayBounds.y + displayBounds.height - shellBounds.height;
 		else
@@ -549,7 +365,127 @@ public class TaskListToolTipHandler {
 	}
 
 	private void hideTooltip() {
-		if (tipShell != null && !tipShell.isDisposed() && tipShell.isVisible())
-			tipShell.setVisible(false);
+		// TODO: can these conditions be simplified? see bug 131776
+		if (tipShell != null && !tipShell.isDisposed() && tipShell.getDisplay() != null
+				&& !tipShell.getDisplay().isDisposed() && tipShell.isVisible()) {
+//			tipShell.setVisible(false);
+			tipShell.close();
+			tipShell = null;
+		}
 	}
+
+	private void showTooltip(Point location) {
+		hideTooltip();
+
+		AbstractTaskContainer element = getTaskListElement(tipWidget);
+		String detailsText = getDetailsText(element);
+		if (detailsText == null) {
+			return;
+		}
+
+		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		if (parent == null) {
+			return;
+		}
+		
+		tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		gridLayout.marginWidth = 2;
+		gridLayout.marginHeight = 2;
+		tipShell.setLayout(gridLayout);
+		tipShell.setBackground(tipShell.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+
+		addIconAndLabel(tipShell, getImage(element), getTitleText(element));
+
+		addIconAndLabel(tipShell, null, detailsText);
+
+		String statusText = getStatusText(element);
+		if (statusText != null) {
+			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
+		}
+
+		String activityText = getActivityText(element);
+		if (activityText != null) {
+			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.CALENDAR), activityText);
+		}
+
+		String incommingText = getIncommingText(element);
+		if (incommingText != null) {
+			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.OVERLAY_INCOMMING), incommingText);
+		}
+
+		ProgressData progress = getProgressData(element);
+		if (progress != null) {
+			addLabel(tipShell, progress.text);
+
+			Composite progressComposite = new Composite(tipShell, SWT.NONE);
+			GridLayout progressLayout = new GridLayout(1, false);
+			progressLayout.marginWidth = 2;
+			progressLayout.marginHeight = 0;
+			progressLayout.marginBottom = 2;
+			progressLayout.horizontalSpacing = 0;
+			progressLayout.verticalSpacing = 0;
+			progressComposite.setLayout(progressLayout);
+			progressComposite.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 4, 1));
+
+			WorkweekProgressBar taskProgressBar = new WorkweekProgressBar(progressComposite);
+			taskProgressBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			taskProgressBar.reset(progress.completed, progress.total);
+		}
+
+		tipShell.pack();
+		setHoverLocation(tipShell, location);
+		tipShell.setVisible(true);
+	}
+
+	private void addLabel(Shell parent, String text) {
+		Label textLabel = new Label(parent, SWT.NONE);
+		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		gd.horizontalSpan = 2;
+		textLabel.setLayoutData(gd);
+		textLabel.setText(removeTrailingNewline(text));
+	}
+
+	private String removeTrailingNewline(String text) {
+		if (text.endsWith("\n")) {
+			return text.substring(0, text.length() - 1);
+		}
+		return text;
+	}
+
+	private void addIconAndLabel(Composite parent, Image image, String text) {
+		Label imageLabel = new Label(parent, SWT.NONE);
+		imageLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		imageLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
+		imageLabel.setLayoutData(gd);
+		imageLabel.setImage(image);
+
+		Label textLabel = new Label(parent, SWT.NONE);
+		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		textLabel.setLayoutData(gd);
+		textLabel.setText(removeTrailingNewline(text));
+	}
+
+	private static class ProgressData {
+
+		int completed;
+
+		int total;
+
+		String text;
+
+		public ProgressData(int completed, int total, String text) {
+			this.completed = completed;
+			this.total = total;
+			this.text = text;
+		}
+
+	}
+
 }
