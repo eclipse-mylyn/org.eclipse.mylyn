@@ -45,7 +45,8 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 	public Image getColumnImage(Object element, int columnIndex) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
-			if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
+			if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+				|| AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);

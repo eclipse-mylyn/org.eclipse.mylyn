@@ -41,9 +41,11 @@ public abstract class AbstractRepositoryConnector {
 
 	public static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
 
-	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylar/context/zip";
+	public static final String MYLAR_CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
 
-	public final static String MYLAR_CONTEXT_FILENAME = "mylar-context.zip";
+	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylyn/context/zip";
+	
+	public final static String MYLAR_CONTEXT_FILENAME = "mylyn-context.zip";
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
@@ -227,6 +229,8 @@ public abstract class AbstractRepositoryConnector {
 			if (newData != null) {
 				for (RepositoryAttachment attachment : newData.getAttachments()) {
 					if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
+						contextAttachments.add(attachment);
+					} else if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION_LEGACY)) {
 						contextAttachments.add(attachment);
 					}
 				}
