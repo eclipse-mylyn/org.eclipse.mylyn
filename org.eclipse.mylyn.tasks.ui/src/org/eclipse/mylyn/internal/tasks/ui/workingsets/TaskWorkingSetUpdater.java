@@ -17,8 +17,10 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IWorkingSet;
@@ -31,11 +33,11 @@ import org.eclipse.ui.IWorkingSetUpdater;
 public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChangeListener {
 
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
-	
+
 	public TaskWorkingSetUpdater() {
 		TasksUiPlugin.getTaskListManager().getTaskList().addChangeListener(this);
 	}
-	
+
 	public void add(IWorkingSet workingSet) {
 		checkElementExistence(workingSet);
 		synchronized (workingSets) {
@@ -54,7 +56,9 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 					}
 				}
 			} else if (adaptable instanceof IProject) {
-				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(((IProject)adaptable).getName());
+				IProject project = ResourcesPlugin.getWorkspace()
+						.getRoot()
+						.getProject(((IProject) adaptable).getName());
 				if (project != null && project.exists()) {
 					list.add(project);
 				}
@@ -64,13 +68,13 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 	}
 
 	public boolean contains(IWorkingSet workingSet) {
-		synchronized(workingSets) {
+		synchronized (workingSets) {
 			return workingSets.contains(workingSet);
 		}
 	}
 
 	public boolean remove(IWorkingSet workingSet) {
-		synchronized(workingSets) {
+		synchronized (workingSets) {
 			return workingSets.remove(workingSet);
 		}
 	}
@@ -79,29 +83,37 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(this);
 	}
 
-	public void containersChanged(Set<TaskContainerDelta> containers) {
-		for (TaskContainerDelta taskContainerDelta : containers) {
+	public void containersChanged(Set<TaskContainerDelta> delta) {
+		for (TaskContainerDelta taskContainerDelta : delta) {
+			synchronized (workingSets) {
 				switch (taskContainerDelta.getKind()) {
 				case REMOVED:
-					synchronized (workingSets) {
-						for (IWorkingSet workingSet : workingSets) {
-							// TODO could filter by working set id
-							Set<IAdaptable> remove = new HashSet<IAdaptable>(); 
-							for (IAdaptable adaptable : workingSet.getElements()) {
-								if (adaptable instanceof AbstractTaskContainer
-										&& ((AbstractTaskContainer) adaptable).getHandleIdentifier().equals(
-												taskContainerDelta.getContainer().getHandleIdentifier())) {
-									remove.add(adaptable);
-								}
-							}
-							if(!remove.isEmpty()) {
-								ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(Arrays.asList(workingSet.getElements()));
-								elements.removeAll(remove);
-								workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
-							}
+					for (IWorkingSet workingSet : workingSets) {
+						Set<IAdaptable> toRemove = new HashSet<IAdaptable>();
+						if (taskContainerDelta.getContainer() instanceof TaskCategory
+								|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
+							toRemove.add(taskContainerDelta.getContainer());
+						}
+						if (!toRemove.isEmpty()) {
+							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
+									Arrays.asList(workingSet.getElements()));
+							elements.removeAll(toRemove);
+							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
 					}
 					break;
+				case ADDED:
+					for (IWorkingSet workingSet : workingSets) {
+						if (taskContainerDelta.getContainer() instanceof TaskCategory
+								|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
+							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
+									Arrays.asList(workingSet.getElements()));
+							elements.add(taskContainerDelta.getContainer());
+							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
+						}
+					}
+					break;
+				}
 			}
 		}
 	}

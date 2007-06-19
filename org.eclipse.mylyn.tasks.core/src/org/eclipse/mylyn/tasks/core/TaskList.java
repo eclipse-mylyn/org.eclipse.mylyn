@@ -287,7 +287,7 @@ public class TaskList {
 
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(defaultCategory, TaskContainerDelta.Kind.CHANGED));
-		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.CHANGED));
+		delta.add(new TaskContainerDelta(category, TaskContainerDelta.Kind.REMOVED));
 
 		for (ITaskListChangeListener listener : changeListeners) {
 			listener.containersChanged(delta);
