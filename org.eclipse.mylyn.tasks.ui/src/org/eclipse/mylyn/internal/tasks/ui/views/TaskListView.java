@@ -1520,6 +1520,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				drilledIntoCategory = (AbstractTaskContainer) element;
 				drillDownAdapter.goInto();
 				IActionBars bars = getViewSite().getActionBars();
+				bars.getToolBarManager().remove(goUpAction.getId());
 				bars.getToolBarManager().add(goUpAction);
 				bars.updateActionBars();
 				updateDrillDownActions();
