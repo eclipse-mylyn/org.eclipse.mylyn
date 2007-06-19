@@ -21,8 +21,8 @@ import org.eclipse.jdt.internal.ui.filters.ImportDeclarationFilter;
 import org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.mylyn.internal.java.ui.actions.FocusPackageExplorerAction;
 
 /**

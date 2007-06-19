@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.context.ui.actions.AbstractFocusViewAction;
 import org.eclipse.ui.IViewPart;
 
 /**
