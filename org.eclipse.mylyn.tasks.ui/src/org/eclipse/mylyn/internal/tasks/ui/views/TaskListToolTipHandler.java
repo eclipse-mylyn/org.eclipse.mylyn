@@ -187,8 +187,8 @@ public class TaskListToolTipHandler {
 				AbstractRepositoryQuery query = ((AbstractRepositoryQuery) container);
 				total = 0;
 				completed = 0;
-				total += query.getHits().size();
-				for (AbstractTask hit : query.getHits()) {
+				total += query.getChildren().size();
+				for (AbstractTask hit : query.getChildren()) {
 					if (hit.isCompleted()) {
 						completed++;
 					}

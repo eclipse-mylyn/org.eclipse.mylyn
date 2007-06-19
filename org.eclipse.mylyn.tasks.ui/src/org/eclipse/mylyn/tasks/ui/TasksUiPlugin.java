@@ -306,7 +306,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(query.getRepositoryKind());
 				if (!connectorUi.hasCustomNotificationHandling()) {
-					for (AbstractTask hit : query.getHits()) {
+					for (AbstractTask hit : query.getChildren()) {
 						if (hit.isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
 							hit.setNotified(true);

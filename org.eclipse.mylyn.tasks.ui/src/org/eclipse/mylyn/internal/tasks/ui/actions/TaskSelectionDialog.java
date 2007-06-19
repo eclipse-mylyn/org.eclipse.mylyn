@@ -159,10 +159,6 @@ public class TaskSelectionDialog extends SelectionStatusDialog {
 		allTasks.addAll(taskList.getAllTasks());
 		for (AbstractRepositoryQuery query : taskList.getQueries()) {
 			allTasks.addAll(query.getChildren());
-			// TODO: should not need to do this
-			for (AbstractTask hit : query.getHits()) {
-					allTasks.add(hit);
-			}
 		}
 
 		// Compute the task navigation history (in recent-to-older order)

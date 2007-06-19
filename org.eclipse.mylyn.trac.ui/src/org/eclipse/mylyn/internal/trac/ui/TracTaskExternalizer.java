@@ -102,7 +102,7 @@ public class TracTaskExternalizer extends DelegatingTaskExternalizer {
 		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		node.setAttribute(KEY_QUERY, query.getUrl());
 
-		for (AbstractTask hit : query.getHits()) {
+		for (AbstractTask hit : query.getChildren()) {
 			try {
 				Element element = null;
 				if (element == null) {

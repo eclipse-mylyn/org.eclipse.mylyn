@@ -31,7 +31,7 @@ public abstract class AbstractTaskAction extends Action {
 				performActionOnTask(repositoryTask);
 			} else if (element instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery repositoryQuery = (AbstractRepositoryQuery) element;
-				for (AbstractTask queryHit : repositoryQuery.getHits()) {
+				for (AbstractTask queryHit : repositoryQuery.getChildren()) {
 					performActionOnTask(queryHit);
 				}
 			} else if (element instanceof AbstractTaskContainer) {

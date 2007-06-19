@@ -685,13 +685,13 @@ public class TaskListManagerTest extends TestCase {
 		taskList.addTask(hit2, query1);
 		taskList.addTask(hit3, query1);
 
-		assertEquals(3, query1.getHits().size());
+		assertEquals(3, query1.getChildren().size());
 
 		taskList.addTask(hit1twin, query2);
 		taskList.addTask(hit2twin, query2);
 		taskList.addTask(hit3twin, query2);
 
-		assertEquals(3, query2.getHits().size());
+		assertEquals(3, query2.getChildren().size());
 
 		Set<AbstractRepositoryQuery> queriesReturned = taskList.getQueriesForHandle(RepositoryTaskHandleUtil.getHandle(
 				MockRepositoryConnector.REPOSITORY_URL, "1"));
@@ -745,22 +745,22 @@ public class TaskListManagerTest extends TestCase {
 		taskList.addTask(hit2twin, query1);
 		taskList.addTask(hit3twin, query1);
 
-		assertEquals(3, query1.getHits().size());
+		assertEquals(3, query1.getChildren().size());
 		query1.clear();
-		assertEquals(0, query1.getHits().size());
+		assertEquals(0, query1.getChildren().size());
 		taskList.addTask(hit1, query1);
 		taskList.addTask(hit2, query1);
-		assertEquals(2, query1.getHits().size());
+		assertEquals(2, query1.getChildren().size());
 		hit1.setNotified(true);
 
 		taskList.addTask(hit1twin, query1);
 		taskList.addTask(hit2twin, query1);
 		taskList.addTask(hit3twin, query1);
-		assertEquals(3, query1.getHits().size());
-		assertTrue(query1.getHits().contains(hit1twin));
-		assertTrue(query1.getHits().contains(hit2twin));
-		assertTrue(query1.getHits().contains(hit3twin));
-		for (AbstractTask hit : query1.getHits()) {
+		assertEquals(3, query1.getChildren().size());
+		assertTrue(query1.getChildren().contains(hit1twin));
+		assertTrue(query1.getChildren().contains(hit2twin));
+		assertTrue(query1.getChildren().contains(hit3twin));
+		for (AbstractTask hit : query1.getChildren()) {
 			if (hit.equals(hit1twin)) {
 				assertTrue(hit.isNotified());
 			} else {

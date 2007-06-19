@@ -60,14 +60,14 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, false);
 
-		assertEquals(1, bugQuery.getHits().size());
-		AbstractTask hit = (AbstractTask) bugQuery.getHits().toArray()[0];
+		assertEquals(1, bugQuery.getChildren().size());
+		AbstractTask hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
 		TasksUiPlugin.getDefault().getTaskDataManager().remove(hit.getRepositoryUrl(), hit.getTaskId());
 
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, bugQuery, null, true);
-		assertEquals(1, bugQuery.getHits().size());
-		hit = (AbstractTask) bugQuery.getHits().toArray()[0];
+		assertEquals(1, bugQuery.getChildren().size());
+		hit = (AbstractTask) bugQuery.getChildren().toArray()[0];
 		assertTrue(TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(hit.getRepositoryUrl(), hit.getTaskId()) != null);
 
 	}
@@ -250,8 +250,8 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 
 		assertEquals(2, taskList.getQueries().size());
 		assertEquals(1, taskList.getAllTasks().size());
-		for (AbstractTask hit : query1.getHits()) {
-			for (AbstractTask hit2 : query2.getHits()) {
+		for (AbstractTask hit : query1.getChildren()) {
+			for (AbstractTask hit2 : query2.getChildren()) {
 				assertTrue(hit.getClass().equals(hit2.getClass()));
 			}
 		}

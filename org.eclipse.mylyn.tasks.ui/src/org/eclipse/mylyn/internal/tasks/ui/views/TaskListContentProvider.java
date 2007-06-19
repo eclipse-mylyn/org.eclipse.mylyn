@@ -149,7 +149,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 
 	// TODO: should only know about containers, not queries
 	private boolean selectQuery(AbstractRepositoryQuery query) {
-		Set<AbstractTask> hits = query.getHits();
+		Set<AbstractTask> hits = query.getChildren();
 		if (hits.size() == 0) {
 			return true;
 		}
@@ -233,7 +233,7 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 				}
 				return children;
 			} else if (parent instanceof AbstractRepositoryQuery) {
-				for (AbstractTaskContainer element : ((AbstractRepositoryQuery) parent).getHits()) {
+				for (AbstractTaskContainer element : ((AbstractRepositoryQuery) parent).getChildren()) {
 					if (!filter(parent, element)) {
 						children.add(element);
 					}

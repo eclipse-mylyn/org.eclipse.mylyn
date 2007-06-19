@@ -37,22 +37,12 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 		super(description);
 	}
 
-	public synchronized Set<AbstractTask> getHits() {
-		Set<AbstractTask> repositoryTasks = new HashSet<AbstractTask>();
-		for (AbstractTask task : super.getChildren()) {
-			if (task instanceof AbstractTask) {
-				repositoryTasks.add((AbstractTask) task);
-			}
-		}
-		return repositoryTasks;
-	}
-
-	public synchronized String getPriority() {
+	public String getPriority() {
 		if (super.isEmpty()) {
 			return PriorityLevel.P1.toString();
 		}
 		String highestPriority = PriorityLevel.P5.toString();
-		for (AbstractTask hit : getHits()) {
+		for (AbstractTask hit : getChildren()) {
 			if (highestPriority.compareTo(hit.getPriority()) > 0) {
 				highestPriority = hit.getPriority();
 			}
