@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,7 +24,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPO
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -34,7 +35,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaTaskDataHandler implements ITaskDataHandler {
+public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 
 	private static final String OPERATION_INPUT_ASSIGNED_TO = "assigned_to";
 
@@ -69,7 +70,6 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 	public RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException {
 		try {
-
 			BugzillaClient client = connector.getClientManager().getClient(repository);
 			int bugId = Integer.parseInt(taskId);
 			RepositoryTaskData taskData;
@@ -96,6 +96,46 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 				return taskData;
 			}
 			return null;
+
+		} catch (IOException e) {
+			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
+					RepositoryStatus.ERROR_IO, repository.getUrl(), e));
+		}
+	}
+
+	public Set<RepositoryTaskData> getTaskData(TaskRepository repository, Set<String> taskIds, IProgressMonitor monitor)
+			throws CoreException {
+		try {
+			Set<RepositoryTaskData> result = new HashSet<RepositoryTaskData>();
+			BugzillaClient client = connector.getClientManager().getClient(repository);
+			try {
+				Map<String, RepositoryTaskData> dataReturned = client.getTaskData(taskIds);
+				for (RepositoryTaskData repositoryTaskData : dataReturned.values()) {
+					result.add(repositoryTaskData);
+				}
+			} catch (CoreException e) {
+				// TODO: Move retry handling into client
+				if (e.getStatus().getCode() == RepositoryStatus.ERROR_REPOSITORY_LOGIN) {
+					Map<String, RepositoryTaskData> dataReturned = client.getTaskData(taskIds);
+					for (RepositoryTaskData repositoryTaskData : dataReturned.values()) {
+						result.add(repositoryTaskData);
+					}
+				} else {
+					throw e;
+				}
+			}
+			for (RepositoryTaskData repositoryTaskData : result) {
+				try {
+					configureTaskData(repository, repositoryTaskData);
+				} catch (CoreException ce) {
+					// retry since data retrieved may be corrupt
+					//taskData = client.getTaskData(bugId);
+					//if (taskData != null) {
+					configureTaskData(repository, repositoryTaskData);
+					//	}
+				}
+			}
+			return result;
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(IStatus.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -239,7 +279,7 @@ public class BugzillaTaskDataHandler implements ITaskDataHandler {
 		return false;
 	}
 
-	// TODO: Move to ITaskDataHandler
+	// TODO: Move to AbstractTaskDataHandler
 	public Set<String> getSubTaskIds(RepositoryTaskData taskData) {
 		Set<String> result = new HashSet<String>();
 		RepositoryTaskAttribute attribute = taskData.getAttribute(BugzillaReportElement.DEPENDSON.getKeyString());

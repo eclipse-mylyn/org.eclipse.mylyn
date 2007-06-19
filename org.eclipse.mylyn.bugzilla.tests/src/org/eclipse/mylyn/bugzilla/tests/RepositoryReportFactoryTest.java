@@ -23,7 +23,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -42,7 +42,7 @@ public class RepositoryReportFactoryTest extends TestCase {
 	BugzillaRepositoryConnector connector;
 
 	private RepositoryTaskData init(String taskId) throws CoreException {
-		ITaskDataHandler handler = connector.getTaskDataHandler();
+		AbstractTaskDataHandler handler = connector.getTaskDataHandler();
 		RepositoryTaskData taskData = handler.getTaskData(repository, taskId, new NullProgressMonitor());
 		return taskData;
 	}

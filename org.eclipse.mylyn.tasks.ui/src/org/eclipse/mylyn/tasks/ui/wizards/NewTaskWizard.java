@@ -20,7 +20,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -61,7 +61,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				taskRepository.getKind());
 
-		final ITaskDataHandler taskDataHandler = (ITaskDataHandler) connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataHandler = (AbstractTaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
 			StatusManager.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
 					TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));

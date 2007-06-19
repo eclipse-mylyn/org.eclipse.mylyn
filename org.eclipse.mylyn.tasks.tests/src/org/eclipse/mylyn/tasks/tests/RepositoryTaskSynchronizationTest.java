@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -332,7 +332,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 
 	}
 
-	private class TestOfflineTaskHandler implements ITaskDataHandler {
+	private class TestOfflineTaskHandler extends AbstractTaskDataHandler {
 
 		public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind, String taskKind) {
 			// ignore
@@ -390,7 +390,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 	private class TestRepositoryConnector extends MockRepositoryConnector {
 
 		@Override
-		public ITaskDataHandler getTaskDataHandler() {
+		public AbstractTaskDataHandler getTaskDataHandler() {
 			return handler;
 		}
 

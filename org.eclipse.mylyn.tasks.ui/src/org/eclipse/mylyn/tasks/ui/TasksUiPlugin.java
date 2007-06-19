@@ -68,7 +68,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
@@ -913,7 +913,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 
 			if (connector != null) {
-				ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+				AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 				if (offlineHandler != null && newTaskData.getLastModified() != null) {
 					Date modified = newTaskData.getAttributeFactory().getDateForAttributeType(
 							RepositoryTaskAttribute.DATE_MODIFIED, newTaskData.getLastModified());

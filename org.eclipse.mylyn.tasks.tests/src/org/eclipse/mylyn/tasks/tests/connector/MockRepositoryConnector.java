@@ -23,7 +23,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -62,9 +62,9 @@ public class MockRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public ITaskDataHandler getTaskDataHandler() {
+	public AbstractTaskDataHandler getTaskDataHandler() {
 		// ignore
-		return new ITaskDataHandler() {
+		return new AbstractTaskDataHandler() {
 
 			public AbstractAttributeFactory getAttributeFactory(String repositoryUrl, String repositoryKind,
 					String taskKind) {

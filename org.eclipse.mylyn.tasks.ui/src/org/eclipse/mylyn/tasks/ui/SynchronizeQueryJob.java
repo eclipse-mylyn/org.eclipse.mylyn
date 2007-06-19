@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -170,7 +171,7 @@ class SynchronizeQueryJob extends Job {
 	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor) {
 		setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 
-		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
+		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository, true, false));
 
 		final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 		if (resultingStatus.getSeverity() == IStatus.CANCEL) {

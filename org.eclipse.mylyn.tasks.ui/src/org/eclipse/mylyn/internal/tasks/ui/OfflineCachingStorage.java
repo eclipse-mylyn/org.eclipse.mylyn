@@ -8,11 +8,9 @@
 
 package org.eclipse.mylyn.internal.tasks.ui;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -195,17 +193,12 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 
 	private void persistToStorage() {
 		synchronized (writeCache) {
-
 			for (Map<String, TaskDataState> idMap : writeCache.values()) {
-				Set<TaskDataState> toRemove = new HashSet<TaskDataState>();
 				for (Iterator<TaskDataState> it = idMap.values().iterator(); it.hasNext();) {
 					TaskDataState state = it.next();
 					storage.put(state);
-					toRemove.add(state);
 				}
-				for (TaskDataState removedState : toRemove) {
-					idMap.remove(removedState);
-				}
+				idMap.clear();
 			}
 		}
 	}
@@ -299,7 +292,7 @@ public class OfflineCachingStorage implements ITaskDataStorage {
 				if (state != null) {
 					Map<String, TaskDataState> tasksMap = readCache.get(state.getUrl());
 					if (tasksMap != null) {
-						tasksMap.remove(state.getUrl());
+						tasksMap.remove(state.getId());
 					}
 				}
 			}

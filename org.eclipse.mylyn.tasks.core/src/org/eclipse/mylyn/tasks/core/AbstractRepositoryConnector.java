@@ -67,7 +67,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * @return null if not supported
 	 */
-	public abstract ITaskDataHandler getTaskDataHandler();
+	public abstract AbstractTaskDataHandler getTaskDataHandler();
 
 	public abstract String getRepositoryUrlFromTaskUrl(String taskFullUrl);
 
@@ -186,7 +186,7 @@ public abstract class AbstractRepositoryConnector {
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
 	 * {@link #getTaskDataHandler()} returns <code>null</code> or
-	 * {@link ITaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
+	 * {@link AbstractTaskDataHandler#getTaskData(TaskRepository, String)} returns <code>null</code>.
 	 * 
 	 * <p>
 	 * Connectors that provide {@link RepositoryTaskData} objects for all tasks do not need to implement this method.

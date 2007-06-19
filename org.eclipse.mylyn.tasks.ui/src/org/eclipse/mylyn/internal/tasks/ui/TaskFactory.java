@@ -6,19 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * Interim factory
@@ -35,9 +37,7 @@ public class TaskFactory implements ITaskFactory {
 
 	private final TaskList taskList;
 
-	//private TaskDataManager dataManager;
-
-	private final ITaskDataHandler dataHandler;
+	private final AbstractTaskDataHandler dataHandler;
 
 	private final boolean updateTasklist;
 
@@ -54,10 +54,11 @@ public class TaskFactory implements ITaskFactory {
 		dataHandler = connector.getTaskDataHandler();
 	}
 
+	@Deprecated
 	public TaskFactory(TaskRepository repository) {
 		this(repository, true, false);
 	}
-	
+
 	/**
 	 * @param updateTasklist -
 	 *            synchronize task with the provided taskData
@@ -68,7 +69,7 @@ public class TaskFactory implements ITaskFactory {
 	public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
-			repositoryTask = connector.createTaskFromTaskData(repository, taskData, true, monitor);
+			repositoryTask = connector.createTaskFromTaskData(repository, taskData, updateTasklist, monitor);
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
@@ -100,7 +101,7 @@ public class TaskFactory implements ITaskFactory {
 	}
 
 	// TODO: Move all task construction code here
-	
+
 //	/**
 //	 * Create new repository task, adding result to tasklist
 //	 */
