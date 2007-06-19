@@ -83,7 +83,7 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -759,7 +759,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 		String openedDateString = "";
 		String modifiedDateString = "";
-		final ITaskDataHandler taskDataManager = connector.getTaskDataHandler();
+		final AbstractTaskDataHandler taskDataManager = connector.getTaskDataHandler();
 		if (taskDataManager != null) {
 			Date created = taskData.getAttributeFactory().getDateForAttributeType(
 					RepositoryTaskAttribute.DATE_CREATION, taskData.getCreated());
@@ -1220,7 +1220,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			attachmentsTableViewer.setUseHashlookup(true);
 			attachmentsTableViewer.setColumnProperties(attachmentsColumns);
 
-			final ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+			final AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				attachmentsTableViewer.setSorter(new ViewerSorter() {
 					public int compare(Viewer viewer, Object e1, Object e2) {
@@ -1897,7 +1897,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		// AbstractRepositoryConnector connector = (AbstractRepositoryConnector)
 		// TasksUiPlugin.getRepositoryManager()
 		// .getRepositoryConnector(taskData.getRepositoryKind());
-		// ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+		// AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 		// if (offlineHandler != null) {
 		//
 		// Date lastSyncDate =

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
@@ -77,7 +77,7 @@ public class OpenRepositoryTaskJob extends Job {
 				repositoryKind);
 		try {
 			
-			ITaskDataHandler offlineHandler = connector.getTaskDataHandler();
+			AbstractTaskDataHandler offlineHandler = connector.getTaskDataHandler();
 			if (offlineHandler != null) {
 				// the following code was copied from SynchronizeTaskJob
 				RepositoryTaskData downloadedTaskData = null;
