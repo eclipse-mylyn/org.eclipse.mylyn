@@ -302,40 +302,41 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);
+		changedTasks.addAll(collector.getTaskHits());
 
-		for (AbstractTask taskHit : collector.getTaskHits()) {
-			// String handle =
-			// AbstractTask.getHandle(repository.getUrl(),
-			// hit.getId());
-			if (taskHit != null && taskHit instanceof AbstractTask) {
-				AbstractTask repositoryTask = (AbstractTask) taskHit;
-				// Hack to avoid re-syncing last task from previous
-				// synchronization
-				// This can be removed once we are getting a query timestamp
-				// from the repository rather than
-				// using the last modified stamp of the last task modified in
-				// the return hits.
-				// (or the changeddate field in the hit rdf becomes consistent,
-				// currently it doesn't return a proper modified date string)
-				// if (repositoryTask.getTaskData() != null
-				// &&
-				// repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp()))
-				// {
-				// // String taskId =
-				// //
-				// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
-				// RepositoryTaskData taskData =
-				// getTaskDataHandler().getTaskData(repository,
-				// repositoryTask.getTaskId());
-				// if (taskData != null &&
-				// taskData.getLastModified().equals(repository.getSyncTimeStamp()))
-				// {
-				// continue;
-				// }
-				// }
-				changedTasks.add(repositoryTask);
-			}
-		}
+//		for (AbstractTask taskHit : collector.getTaskHits()) {
+//			// String handle =
+//			// AbstractTask.getHandle(repository.getUrl(),
+//			// hit.getId());
+//			if (taskHit != null && taskHit instanceof AbstractTask) {
+//				AbstractTask repositoryTask = (AbstractTask) taskHit;
+//				// Hack to avoid re-syncing last task from previous
+//				// synchronization
+//				// This can be removed once we are getting a query timestamp
+//				// from the repository rather than
+//				// using the last modified stamp of the last task modified in
+//				// the return hits.
+//				// (or the changeddate field in the hit rdf becomes consistent,
+//				// currently it doesn't return a proper modified date string)
+//				// if (repositoryTask.getTaskData() != null
+//				// &&
+//				// repositoryTask.getTaskData().getLastModified().equals(repository.getSyncTimeStamp()))
+//				// {
+//				// // String taskId =
+//				// //
+//				// RepositoryTaskHandleUtil.getTaskId(repositoryTask.getHandleIdentifier());
+//				// RepositoryTaskData taskData =
+//				// getTaskDataHandler().getTaskData(repository,
+//				// repositoryTask.getTaskId());
+//				// if (taskData != null &&
+//				// taskData.getLastModified().equals(repository.getSyncTimeStamp()))
+//				// {
+//				// continue;
+//				// }
+//				// }
+//				changedTasks.add(repositoryTask);
+//			}
+//		}
 	}
 
 	@Override

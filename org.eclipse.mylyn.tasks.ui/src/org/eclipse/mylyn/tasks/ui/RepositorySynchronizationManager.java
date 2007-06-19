@@ -305,6 +305,11 @@ public class RepositorySynchronizationManager {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
+		
+		// for repositories that don't support task data or if no task data is available
+		if (read && taskData == null) {
+			repositoryTask.setLastSyncDateStamp(LocalTask.SYNC_DATE_NOW);
+		}
 	}
 
 	public void discardOutgoing(AbstractTask repositoryTask) {
