@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -39,10 +40,10 @@ public class ContextCorePlugin extends Plugin {
 
 	public static final String CONTENT_TYPE_RESOURCE = "resource";
 
-	private Map<String, AbstractContextStructureBridge> bridges = new HashMap<String, AbstractContextStructureBridge>();
+	private Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
-	private Map<String, List<String>> childContentTypeMap = new HashMap<String, List<String>>();
-
+	private Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
+	
 	private AbstractContextStructureBridge defaultBridge = null;
 
 	private static ContextCorePlugin INSTANCE;
@@ -228,7 +229,10 @@ public class ContextCorePlugin extends Plugin {
 		return (defaultBridge != null && defaultBridge.acceptsObject(object)) ? defaultBridge : DEFAULT_BRIDGE;
 	}
 
-	private void internalAddBridge(AbstractContextStructureBridge bridge) {
+	/**
+	 * Recommended bridge registration is via extension point, but bridges can also be added at runtime.
+	 */
+	public void addBridge(AbstractContextStructureBridge bridge) {
 		if (bridge.getContentType().equals(CONTENT_TYPE_RESOURCE)) {
 			defaultBridge = bridge;
 		} else {
@@ -353,7 +357,7 @@ public class ContextCorePlugin extends Plugin {
 						bridge.setParentContentType(parentContentType);
 					}
 				}
-				ContextCorePlugin.getDefault().internalAddBridge(bridge);
+				ContextCorePlugin.getDefault().addBridge(bridge);
 			} catch (CoreException e) {
 				StatusManager.log(e, "Could not load bridge extension");
 			}
