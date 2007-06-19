@@ -86,7 +86,7 @@ public class TasksUiUtil {
 		try {
 			if (useRichEditorIfAvailable) {
 				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(url);
-				if (task != null) {
+				if (task != null && !(task instanceof LocalTask)) {
 					refreshAndOpenTaskListElement(task);
 				} else {
 					openUrl(url, 0);

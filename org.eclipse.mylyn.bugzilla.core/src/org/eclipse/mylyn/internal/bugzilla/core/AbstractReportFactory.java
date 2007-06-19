@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.security.GeneralSecurityException;
 
+import org.eclipse.mylyn.web.core.XmlUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -58,24 +59,23 @@ public class AbstractReportFactory {
 
 		final BufferedInputStream is = new BufferedInputStream(inStream, 1024);
 
-		// filtered upon tasklist and offline taskdata externalization 
-//		InputStream iis = new InputStream() {
-//			public int read() throws IOException {
-//				int c;
-//				while ((c = is.read()) != -1) {
-//					if (!Character.isISOControl(c) || c == '\n' || c == '\r') {
-//						return c;
-//					}
-//				}
-//				return -1;
-//			}
-//		};
+		InputStream iis = new InputStream() {
+			public int read() throws IOException {
+				int c;
+				while ((c = is.read()) != -1) {
+					if (XmlUtil.isValid((char) c)) {
+						return c;
+					}
+				}
+				return -1;
+			}
+		};
 
 		Reader in;
 		if (characterEncoding != null) {
-			in = new InputStreamReader(is, characterEncoding);
+			in = new InputStreamReader(iis, characterEncoding);
 		} else {
-			in = new InputStreamReader(is);
+			in = new InputStreamReader(iis);
 		}
 
 		if (in != null && clean) {

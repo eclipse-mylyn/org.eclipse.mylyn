@@ -30,7 +30,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
@@ -40,6 +39,7 @@ import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
+import org.eclipse.mylyn.web.core.XmlUtil;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
 
@@ -607,7 +607,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	}
 
 	private String getText(String text) {
-		String result = ContextCorePlugin.cleanXmlString(text);
+		String result = XmlUtil.cleanXmlString(text);
 		if (result == null) {
 			result = "";
 		}

@@ -37,7 +37,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	private RepositoryTaskData currentTaskData;
 
 	private String currentUser;
-	
+
 	private Set<String> addressSet = null;
 
 	public PersonProposalProvider(AbstractTask repositoryTask, RepositoryTaskData taskData) {
@@ -61,10 +61,10 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private Set<String> getAddressSet() {
-		if(addressSet!=null) {
+		if (addressSet != null) {
 			return addressSet;
 		}
-		
+
 		addressSet = new TreeSet<String>(new Comparator<String>() {
 			public int compare(String s1, String s2) {
 				if (currentUser != null) {
@@ -80,7 +80,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			}
 		});
 
-		if(currentTask!=null) {
+		if (currentTask != null) {
 			addAddress(currentTask.getOwner(), addressSet);
 		}
 		addAddresses(currentTaskData, addressSet);
@@ -134,16 +134,10 @@ public class PersonProposalProvider implements IContentProposalProvider {
 	}
 
 	private void addAddresses(AbstractTask task, Set<String> addressSet) {
-		// TODO: Owner, Creator, and CC should be stored on
+		// TODO: Creator, and CC should be stored on
 		// AbstractTask
-		// RepositoryTaskData data =
-		// TasksUiPlugin.getDefault().getTaskData(task);
 
 		addAddress(task.getOwner(), addressSet);
-
-		RepositoryTaskData data = TasksUiPlugin.getDefault().getTaskDataManager() //
-				.getOldTaskData(task.getRepositoryUrl(), task.getTaskId());
-		addAddresses(data, addressSet);
 	}
 
 	private void addAddresses(RepositoryTaskData data, Set<String> addressSet) {
@@ -167,5 +161,5 @@ public class PersonProposalProvider implements IContentProposalProvider {
 			addressSet.add(address.trim());
 		}
 	}
-	
+
 }
