@@ -193,7 +193,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	private static final String LABEL_DEFAULT_EDITOR = "Default Editor";
 
 	private static final String LABEL_TEXT_EDITOR = "Text Editor";
-	
+
 	private static final String LABEL_NO_DETECTOR = "No duplicate detector available.";
 
 	protected static final String CONTEXT_MENU_ID = "#MylarRepositoryEditor";
@@ -894,7 +894,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				List<String> values = attribute.getOptions();
 				if (values != null) {
 					for (String val : values) {
-						attributeCombo.add(val);
+						if (val != null) {
+							attributeCombo.add(val);
+						}
 					}
 				}
 
@@ -1020,11 +1022,10 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				});
 			}
-		}
-		else {
+		} else {
 			Label label = new Label(relatedBugsComposite, SWT.LEFT);
 			label.setText(LABEL_NO_DETECTOR);
-			
+
 		}
 
 	}
