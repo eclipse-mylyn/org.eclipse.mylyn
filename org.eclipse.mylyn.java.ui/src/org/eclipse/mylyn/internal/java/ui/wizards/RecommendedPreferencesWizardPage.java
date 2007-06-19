@@ -144,7 +144,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 
 		Hyperlink hyperlink = new Hyperlink(containerComposite, SWT.NULL);
 		hyperlink.setUnderlined(true);
-		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
+		hyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		hyperlink.setText("If this is your first time using Mylyn please watch the Getting Started video");
 
 		label = new Label(containerComposite, SWT.NONE);
