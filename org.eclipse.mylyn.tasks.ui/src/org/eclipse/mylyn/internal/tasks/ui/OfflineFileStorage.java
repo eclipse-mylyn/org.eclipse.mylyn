@@ -379,10 +379,10 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	}
 
 	private void addTaskData(IMemento parent, RepositoryTaskData newTaskData) {
-		parent.putString(ATTRIBUTE_ID, getText(newTaskData.getId()));
-		parent.putString(ATTRIBUTE_TASK_KIND, getText(newTaskData.getTaskKind()));
-		parent.putString(ATTRIBUTE_REPOSITORY_URL, getText(newTaskData.getRepositoryUrl()));
-		parent.putString(ATTRIBUTE_REPOSITORY_KIND, getText(newTaskData.getRepositoryKind()));
+		parent.putString(ATTRIBUTE_ID, getCleanText(newTaskData.getId()));
+		parent.putString(ATTRIBUTE_TASK_KIND, getCleanText(newTaskData.getTaskKind()));
+		parent.putString(ATTRIBUTE_REPOSITORY_URL, getCleanText(newTaskData.getRepositoryUrl()));
+		parent.putString(ATTRIBUTE_REPOSITORY_KIND, getCleanText(newTaskData.getRepositoryKind()));
 
 		IMemento attributes = parent.createChild(ELEMENT_ATTRIBUTES);
 		addAttributes(attributes, newTaskData.getAttributes());
@@ -406,10 +406,10 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			IMemento memento = parent.createChild(ELEMENT_ATTACHMENT);
 			memento.putString(ATTRIBUTE_IS_PATCH, String.valueOf(attachment.isPatch()));
 			memento.putString(ATTRIBUTE_IS_OBSOLETE, String.valueOf(attachment.isObsolete()));
-			memento.putString(ATTRIBUTE_CREATOR, getText(attachment.getCreator()));
-			memento.putString(ATTRIBUTE_ID, getText(attachment.getTaskId()));
-			memento.putString(ATTRIBUTE_REPOSITORY_KIND, getText(attachment.getRepositoryKind()));
-			memento.putString(ATTRIBUTE_REPOSITORY_URL, getText(attachment.getRepositoryUrl()));
+			memento.putString(ATTRIBUTE_CREATOR, getCleanText(attachment.getCreator()));
+			memento.putString(ATTRIBUTE_ID, getCleanText(attachment.getTaskId()));
+			memento.putString(ATTRIBUTE_REPOSITORY_KIND, getCleanText(attachment.getRepositoryKind()));
+			memento.putString(ATTRIBUTE_REPOSITORY_URL, getCleanText(attachment.getRepositoryUrl()));
 			IMemento attributes = memento.createChild(ELEMENT_ATTRIBUTES);
 			addAttributes(attributes, attachment.getAttributes());
 		}
@@ -461,7 +461,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			IMemento comment = parent.createChild(ELEMENT_COMMENT);
 			comment.putInteger(ATTRIBUTE_NUMBER, taskComment.getNumber());
 			comment.putString(ATTRIBUTE_HAS_ATTACHMENT, String.valueOf(taskComment.hasAttachment()));
-			comment.putString(ATTRIBUTE_ATTACHMENT_ID, getText(taskComment.getAttachmentId()));
+			comment.putString(ATTRIBUTE_ATTACHMENT_ID, getCleanText(taskComment.getAttachmentId()));
 			IMemento attributes = comment.createChild(ELEMENT_ATTRIBUTES);
 			addAttributes(attributes, taskComment.getAttributes());
 		}
@@ -504,23 +504,23 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	public void addOperations(IMemento parent, List<RepositoryOperation> operations) {
 		for (RepositoryOperation operation : operations) {
 			IMemento operationMemento = parent.createChild(ELEMENT_OPERATION);
-			operationMemento.putString(ATTRIBUTE_KNOB_NAME, getText(operation.getKnobName()));
-			operationMemento.putString(ATTRIBUTE_OPERATION_NAME, getText(operation.getOperationName()));
+			operationMemento.putString(ATTRIBUTE_KNOB_NAME, getCleanText(operation.getKnobName()));
+			operationMemento.putString(ATTRIBUTE_OPERATION_NAME, getCleanText(operation.getOperationName()));
 			operationMemento.putString(ATTRIBUTE_IS_CHECKED, String.valueOf(operation.isChecked()));
 			if (operation.isInput()) {
-				operationMemento.putString(ATTRIBUTE_INPUT_NAME, getText(operation.getInputName()));
-				operationMemento.putString(ATTRIBUTE_INPUT_VALUE, getText(operation.getInputValue()));
+				operationMemento.putString(ATTRIBUTE_INPUT_NAME, getCleanText(operation.getInputName()));
+				operationMemento.putString(ATTRIBUTE_INPUT_VALUE, getCleanText(operation.getInputValue()));
 			}
 			if (operation.hasOptions()) {
-				operationMemento.putString(ATTRIBUTE_OPTION_NAME, getText(operation.getOptionName()));
-				operationMemento.putString(ATTRIBUTE_OPTION_SELECTION, getText(operation.getOptionSelection()));
+				operationMemento.putString(ATTRIBUTE_OPTION_NAME, getCleanText(operation.getOptionName()));
+				operationMemento.putString(ATTRIBUTE_OPTION_SELECTION, getCleanText(operation.getOptionSelection()));
 
 				if (operation.getOptionNames() != null && operation.getOptionNames().size() > 0) {
 					IMemento optionNames = operationMemento.createChild(ELEMENT_OPTION_NAMES);
 					for (String name : operation.getOptionNames()) {
 						IMemento nameMemento = optionNames.createChild(ELEMENT_NAME);
-						nameMemento.putTextData(getText(name));
-						nameMemento.putString(ATTRIBUTE_VALUE, getText(operation.getOptionValue(name)));
+						nameMemento.putTextData(getCleanText(name));
+						nameMemento.putString(ATTRIBUTE_VALUE, getCleanText(operation.getOptionValue(name)));
 					}
 				}
 			}
@@ -580,23 +580,23 @@ public class OfflineFileStorage implements ITaskDataStorage {
 	public void addAttributes(IMemento parent, List<RepositoryTaskAttribute> attributes) {
 		for (RepositoryTaskAttribute attribute : attributes) {
 			IMemento attribMemento = parent.createChild(ELEMENT_ATTRIBUTE);
-			attribMemento.putString(ATTRIBUTE_ID, getText(attribute.getId()));
-			attribMemento.putString(ATTRIBUTE_NAME, getText(attribute.getName()));
+			attribMemento.putString(ATTRIBUTE_ID, getCleanText(attribute.getId()));
+			attribMemento.putString(ATTRIBUTE_NAME, getCleanText(attribute.getName()));
 			attribMemento.putString(ATTRIBUTE_HIDDEN, String.valueOf(attribute.isHidden()));
 			attribMemento.putString(ATTRIBUTE_READONLY, String.valueOf(attribute.isReadOnly()));
 
 			IMemento values = attribMemento.createChild(ELEMENT_VALUES);
 			for (String value : attribute.getValues()) {
-				values.createChild(ELEMENT_VALUE).putTextData(getText(value));
+				values.createChild(ELEMENT_VALUE).putTextData(getCleanText(value));
 			}
 
 			IMemento options = attribMemento.createChild(ELEMENT_OPTIONS);
 			for (String optionValue : attribute.getOptions()) {
 				IMemento option = options.createChild(ELEMENT_OPTION);
-				option.putTextData(getText(optionValue));
+				option.putTextData(getCleanText(optionValue));
 				String parameter = attribute.getOptionParameter(optionValue);
 				if (parameter != null) {
-					option.putString(ATTRIBUTE_PARAMETER, getText(parameter));
+					option.putString(ATTRIBUTE_PARAMETER, getCleanText(parameter));
 				}
 			}
 			IMemento metaData = attribMemento.createChild(ELEMENT_META_DATA);
@@ -604,14 +604,16 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			if (metadata != null && metadata.size() > 0) {
 				for (String key : metadata.keySet()) {
 					IMemento meta = metaData.createChild(ELEMENT_META);
-					meta.putString(ATTRIBUTE_KEY, getText(key));
-					meta.putTextData(getText(metadata.get(key)));
+					meta.putString(ATTRIBUTE_KEY, getCleanText(key));
+					meta.putTextData(getCleanText(metadata.get(key)));
 				}
 			}
 		}
 	}
 
-	private String getText(String text) {
+	private String getCleanText(String text) {
+		if (text == null)
+			return "";
 		String result = XmlUtil.cleanXmlString(text);
 		if (result == null) {
 			result = "";
@@ -637,21 +639,23 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				IMemento values = attrMemento.getChild(ELEMENT_VALUES);
 				if (values != null) {
 					for (IMemento valueMemento : values.getChildren(ELEMENT_VALUE)) {
-						attribute.addValue(valueMemento.getTextData());
+						attribute.addValue(getCleanText(valueMemento.getTextData()));
 					}
 				}
 
 				IMemento options = attrMemento.getChild(ELEMENT_OPTIONS);
 				if (options != null) {
 					for (IMemento optionMemento : options.getChildren(ELEMENT_OPTION)) {
-						attribute.addOption(optionMemento.getTextData(), optionMemento.getString(ATTRIBUTE_PARAMETER));
+						attribute.addOption(getCleanText(optionMemento.getTextData()),
+								optionMemento.getString(ATTRIBUTE_PARAMETER));
 					}
 				}
 
 				IMemento metaData = attrMemento.getChild(ELEMENT_META_DATA);
 				if (metaData != null) {
 					for (IMemento optionMemento : metaData.getChildren(ELEMENT_META)) {
-						attribute.putMetaDataValue(optionMemento.getString(ATTRIBUTE_KEY), optionMemento.getTextData());
+						attribute.putMetaDataValue(optionMemento.getString(ATTRIBUTE_KEY),
+								getCleanText(optionMemento.getTextData()));
 					}
 				}
 			}
