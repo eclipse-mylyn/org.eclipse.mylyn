@@ -120,7 +120,7 @@ public class RepositoryViewerConfig extends SourceViewerConfiguration {
 	static class RepositoryTextScanner extends RuleBasedScanner {
 
 		public RepositoryTextScanner() {
-			IToken bugToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_HYPERLINK));
+			IToken bugToken = new Token(new TextAttribute(TaskListColorsAndFonts.COLOR_HYPERLINK_TEXT));
 			IRule[] rules = new IRule[15];
 			rules[0] = (new SingleLineRule("http://", " ", bugToken));
 			rules[1] = (new SingleLineRule("https://", " ", bugToken));

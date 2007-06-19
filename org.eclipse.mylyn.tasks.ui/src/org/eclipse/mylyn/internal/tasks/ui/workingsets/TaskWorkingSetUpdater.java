@@ -85,27 +85,20 @@ public class TaskWorkingSetUpdater implements IWorkingSetUpdater, ITaskListChang
 
 	public void containersChanged(Set<TaskContainerDelta> delta) {
 		for (TaskContainerDelta taskContainerDelta : delta) {
-			synchronized (workingSets) {
-				switch (taskContainerDelta.getKind()) {
-				case REMOVED:
-					for (IWorkingSet workingSet : workingSets) {
-						Set<IAdaptable> toRemove = new HashSet<IAdaptable>();
-						if (taskContainerDelta.getContainer() instanceof TaskCategory
-								|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
-							toRemove.add(taskContainerDelta.getContainer());
-						}
-						if (!toRemove.isEmpty()) {
+			if (taskContainerDelta.getContainer() instanceof TaskCategory
+					|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
+				synchronized (workingSets) {
+					switch (taskContainerDelta.getKind()) {
+					case REMOVED:
+						for (IWorkingSet workingSet : workingSets) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
-							elements.removeAll(toRemove);
+							elements.remove(taskContainerDelta.getContainer());
 							workingSet.setElements(elements.toArray(new IAdaptable[elements.size()]));
 						}
-					}
-					break;
-				case ADDED:
-					for (IWorkingSet workingSet : workingSets) {
-						if (taskContainerDelta.getContainer() instanceof TaskCategory
-								|| taskContainerDelta.getContainer() instanceof AbstractRepositoryQuery) {
+						break;
+					case ADDED:
+						for (IWorkingSet workingSet : workingSets) {
 							ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(
 									Arrays.asList(workingSet.getElements()));
 							elements.add(taskContainerDelta.getContainer());

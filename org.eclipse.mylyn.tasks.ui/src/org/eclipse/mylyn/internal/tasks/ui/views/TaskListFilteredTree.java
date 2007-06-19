@@ -236,7 +236,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 		workingSetLink = new Hyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
+		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
 
 			public void mouseEnter(MouseEvent e) {
@@ -278,7 +278,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
-		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK);
+		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);

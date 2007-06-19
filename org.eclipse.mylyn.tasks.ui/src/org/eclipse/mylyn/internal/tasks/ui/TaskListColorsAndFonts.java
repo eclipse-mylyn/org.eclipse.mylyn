@@ -48,8 +48,10 @@ public class TaskListColorsAndFonts {
 
 	public static final Color COLOR_LABEL_CAUTION = new Color(Display.getDefault(), 200, 10, 30);
 
-	public static final Color COLOR_HYPERLINK = new Color(Display.getDefault(), 50, 74, 163);
+	public static final Color COLOR_HYPERLINK_WIDGET = new Color(Display.getDefault(), 50, 74, 163);
 
+	public static final Color COLOR_HYPERLINK_TEXT = new Color(Display.getDefault(), 0, 0, 255);	
+	
 	public static final Color COLOR_SPELLING_ERROR = new Color(Display.getDefault(), 255, 0, 0);
 
 	public static final Font BOLD = JFaceResources.getFontRegistry().getBold(JFaceResources.DEFAULT_FONT);
@@ -92,7 +94,7 @@ public class TaskListColorsAndFonts {
 		BACKGROUND_ARCHIVE.dispose();
 		COLOR_LABEL_CAUTION.dispose();
 		COLOR_TASK_ACTIVE.dispose();
-		COLOR_HYPERLINK.dispose();
+		COLOR_HYPERLINK_WIDGET.dispose();
 		COLOR_SPELLING_ERROR.dispose();
 	}
 
