@@ -73,6 +73,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.CopyAttachmentToClipboardJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
@@ -610,7 +611,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					}
 				};
 
-				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_SMALL);
+				openBrowserAction.setImageDescriptor(TasksUiImages.BROWSER_OPEN_TASK);
 				openBrowserAction.setToolTipText("Open with Web Browser");
 				parentEditor.getTopForm().getToolBarManager().add(openBrowserAction);
 			}
@@ -619,7 +620,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				@Override
 				public void run() {
 					if (!repositoryTask.isActive()) {
+						setChecked(true);
 						new TaskActivateAction().run(repositoryTask);
+					} else {
+						setChecked(false);
+						new TaskDeactivateAction().run(repositoryTask);
 					}
 //					submitToRepository();
 				}
@@ -629,7 +634,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (repositoryTask != null) {
 				activateAction.setImageDescriptor(TasksUiImages.TASK_ACTIVE_CENTERED);
 				activateAction.setToolTipText("Activate");
-				activateAction.setEnabled(!repositoryTask.isActive());
+				activateAction.setChecked(repositoryTask.isActive());
 				parentEditor.getTopForm().getToolBarManager().add(activateAction);
 			}
 

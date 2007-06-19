@@ -113,6 +113,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor BROWSER_SMALL = create(T_OBJ, "browser-small.gif");
 
+	public static final ImageDescriptor BROWSER_OPEN_TASK = create(T_TOOL, "open-browser.gif");
+	
 	public static final ImageDescriptor OVERLAY_SYNCHRONIZING = create(T_EVIEW, "overlay-synchronizing.gif");
 
 	public static final ImageDescriptor OVERLAY_HAS_DUE = create(T_EVIEW, "overlay-has-due.gif");
