@@ -70,8 +70,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private Button useRichEditor;
 
-	private Button activateOnOpen;
-
 	private Button useWebBrowser;
 
 	private Text synchScheduleTime = null;
@@ -147,7 +145,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.BACKUP_SCHEDULE, backupScheduleTimeText.getText());
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.EDITOR_TASKS_RICH, useRichEditor.getSelection());
-		getPreferenceStore().setValue(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED, activateOnOpen.getSelection());
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.REPOSITORY_SYNCH_SCHEDULE_ENABLED,
 				enableBackgroundSynch.getSelection());
@@ -170,7 +167,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		backupFolderText.setText(TasksUiPlugin.getDefault().getBackupFolderPath());
 
 		useRichEditor.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
 		enableBackgroundSynch.setSelection(getPreferenceStore().getBoolean(
@@ -287,11 +283,6 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		useWebBrowser = new Button(container, SWT.RADIO);
 		useWebBrowser.setText("Web Browser");
 		useWebBrowser.setSelection(!getPreferenceStore().getBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
-
-		activateOnOpen = new Button(container, SWT.CHECK);
-		activateOnOpen.setText("Activate on open");
-		activateOnOpen.setEnabled(!useWebBrowser.getSelection());
-		activateOnOpen.setSelection(getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_WHEN_OPENED));
 	}
 
 	private void createTaskDataControl(Composite parent) {
