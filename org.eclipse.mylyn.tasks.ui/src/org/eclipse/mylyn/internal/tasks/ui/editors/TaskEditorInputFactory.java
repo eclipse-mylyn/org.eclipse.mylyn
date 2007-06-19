@@ -23,7 +23,7 @@ import org.eclipse.ui.IMemento;
  */
 public class TaskEditorInputFactory implements IElementFactory {
 
-	private static final String TAG_TASK_HANDLE = "taskHandle";
+	public static final String TAG_TASK_HANDLE = "taskHandle";
 
 	public static final String ID_FACTORY = "org.eclipse.mylyn.tasks.ui.elementFactories.task.editor";
 
