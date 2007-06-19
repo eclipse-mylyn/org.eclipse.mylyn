@@ -579,23 +579,12 @@
       <status class="org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler"/>
    </extension>
    
-      <extension
+   <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.eclipse.mylyn.tasks.ui.navigation"
             label="Mylyn Task Navigation"
             visible="true">
-  		<action
-	          allowLabelUpdate="true"
-	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction"
-	          icon="icons/etool16/navigate-previous.gif"
-	          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
-	          label="Activate Previous Task"
-	          pulldown="true"
-	          style="pulldown"
-	          toolbarPath="org.eclipse.ui.workbench.navigate/Tasks"
-	          tooltip="Activate Previous Task">
-      	</action> 
 		<action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.DeactivateAllTasksAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.deactivateAllTasks"
@@ -612,15 +601,6 @@
         	label="&amp;Activate Task..."
         	menubarPath="navigate/open.ext3"
         	style="push"/>
-		<action
-               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
-               definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
-               icon="icons/etool16/open-repository-task.gif"
-               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
-               label="Open &amp;Repository Task..."
-               menubarPath="navigate/open.ext3"
-               style="push"
-               tooltip="Open Repository Task"/>
         <action
                class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenTaskAction"
                definitionId="org.eclipse.mylyn.tasks.ui.command.openTask"
@@ -631,19 +611,38 @@
                style="push"
                toolbarPath="org.eclipse.search.searchActionSet/Search"
                tooltip="Open Task"/>
-     
-        <action
-              class="org.eclipse.mylyn.internal.tasks.ui.actions.ReportBugAction"
-              icon="icons/etool16/bug-report.gif"
-              id="org.eclipse.mylyn.tasks.ui.bug.report"
-              label="Report Bug or Enhancement"
-              menubarPath="help/helpStart"
-              style="push"
-              tooltip="Report Bug or Feature Request"> 
-      	</action>
-     
       </actionSet>
    </extension>
+   
+      <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.eclipse.mylyn.tasks.ui.navigation.additions"
+            label="Mylyn Task Navigation Extras"
+            visible="false">
+  		<action
+	          allowLabelUpdate="true"
+	          class="org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction"
+	          icon="icons/etool16/navigate-previous.gif"
+	          id="org.eclipse.mylyn.java.ui.editor.folding.auto"
+	          label="Activate Previous Task"
+	          pulldown="true"
+	          style="pulldown"
+	          toolbarPath="org.eclipse.ui.workbench.navigate/Tasks"
+	          tooltip="Activate Previous Task">
+      	</action>       
+      	<action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
+               definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
+               icon="icons/etool16/open-repository-task.gif"
+               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
+               label="Open &amp;Repository Task..."
+               menubarPath="navigate/open.ext3"
+               style="push"
+               tooltip="Open Repository Task"/>     
+      </actionSet>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -810,10 +809,10 @@
             userManaged="false"/>
             
       <connectorUi
-            brandingIcon="icons/etool16/bug-report.gif"
+            brandingIcon="icons/etool16/person.gif"
             class="org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryUi"
             name="Local Repository Ui"
-            overlayIcon="icons/eview16/overlay-due.gif"/>
+            overlayIcon="icons/ovr16/overlay-local.gif"/>
              
 		<externalizer 
             class="org.eclipse.mylyn.internal.tasks.core.LocalTaskExternalizer"

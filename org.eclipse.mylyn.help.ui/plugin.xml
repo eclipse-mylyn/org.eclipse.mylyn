@@ -15,7 +15,7 @@
     <extension point="org.eclipse.ui.actionSets">
 	<actionSet
             id="org.eclipse.mylyn.doc.actionSet"
-            label="Mylyn Documentation"
+            label="Mylyn Help"
             visible="true"> 
   		<action
           class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
@@ -27,6 +27,15 @@
           style="push"
           tooltip="Mylyn UI Legend"> 
       	</action> 
+        <action
+              class="org.eclipse.mylyn.internal.tasks.ui.actions.ReportBugAction"
+              icon="icons/etool16/report-bug.gif"
+              id="org.eclipse.mylyn.tasks.ui.bug.report"
+              label="Report Bug or Enhancement"
+              menubarPath="help/helpStart"
+              style="push"
+              tooltip="Report Bug or Enhancement"> 
+      	</action>
     </actionSet>
     </extension>
   
