@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
-import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.ITaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -84,7 +83,6 @@ public class OpenRepositoryTaskJob extends Job {
 				RepositoryTaskData downloadedTaskData = null;
 				downloadedTaskData = offlineHandler.getTaskData(repository, taskId, monitor);
 				if (downloadedTaskData != null) {
-					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), downloadedTaskData.getId());
 					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(downloadedTaskData);
 				}
 				openEditor(repository, downloadedTaskData);
@@ -113,7 +111,6 @@ public class OpenRepositoryTaskJob extends Job {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
-					String handle = RepositoryTaskHandleUtil.getHandle(repository.getUrl(), taskData.getId());
 					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, taskId, taskUrl);
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}

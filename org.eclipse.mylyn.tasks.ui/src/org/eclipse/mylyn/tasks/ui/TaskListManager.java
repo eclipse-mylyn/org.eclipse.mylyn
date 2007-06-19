@@ -736,8 +736,6 @@ public class TaskListManager implements IPropertyChangeListener {
 					Set<RepositoryTaskAttribute> edits = taskDataManager.getEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 					taskDataManager.remove(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
-					String newHandle = RepositoryTaskHandleUtil.getHandle(newRepositoryUrl, repositoryTask.getTaskId());
-
 					if (newTaskData != null) {
 						newTaskData.setRepositoryURL(newRepositoryUrl);
 						taskDataManager.setNewTaskData(newTaskData);

@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
