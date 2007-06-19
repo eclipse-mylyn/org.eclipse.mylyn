@@ -428,26 +428,4 @@ public class ContextCorePlugin extends Plugin {
 			return Collections.emptyList();
 		}
 	}
-
-	/**
-	 * TODO: Move to utility class
-	 * 
-	 * @param text
-	 * @return string with all non valid characters removed, if text is null return null
-	 */
-	public static String cleanXmlString(String text) {
-		if (text == null)
-			return null;
-		StringBuilder builder = new StringBuilder(text.length());
-		for (int x = 0; x < text.length(); x++) {
-			char ch = text.charAt(x);
-			// http://www.w3.org/TR/REC-xml/#charsets
-			// Valid unicode characters for xml 1.0
-			if ((0x0A == ch || 0x0D == ch || 0x09 == ch) || (ch >= 0x20 && ch <= 0xD7FF)
-					|| (ch >= 0xE000 && ch <= 0xFFFD) || (ch >= 0x10000 && ch <= 0x10FFFF)) {
-				builder.append(ch);
-			}
-		}
-		return builder.toString();
-	}
 }
