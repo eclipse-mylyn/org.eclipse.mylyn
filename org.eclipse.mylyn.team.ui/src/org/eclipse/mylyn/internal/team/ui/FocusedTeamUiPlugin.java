@@ -71,7 +71,7 @@ public class FocusedTeamUiPlugin extends AbstractUIPlugin implements IStartup {
 						}
 					}
 				} catch (Exception e) {
-					StatusManager.fail(e, "Mylar Team start failed", false);
+					StatusManager.fail(e, "Mylyn Team start failed", false);
 				}
 			}
 		});
