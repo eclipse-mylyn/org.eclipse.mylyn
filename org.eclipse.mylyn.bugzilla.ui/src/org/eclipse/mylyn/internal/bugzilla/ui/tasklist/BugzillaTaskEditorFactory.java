@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.ITaskEditorFactory;
+import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorFactory;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -30,7 +30,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class BugzillaTaskEditorFactory implements ITaskEditorFactory {
+public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 
 	private static final String TITLE = "Bugzilla";
 

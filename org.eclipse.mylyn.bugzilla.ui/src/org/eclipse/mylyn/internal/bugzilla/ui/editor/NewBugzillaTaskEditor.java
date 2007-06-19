@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.bugzilla.ui.editor;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -105,7 +105,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	 */
 	public SearchHitCollector getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		List<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
@@ -120,7 +120,7 @@ public class NewBugzillaTaskEditor extends AbstractNewRepositoryTaskEditor {
 	/**
 	 * This method is duplicated in BugzillaTaskEditor for now.
 	 */
-	protected List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
 	}
 

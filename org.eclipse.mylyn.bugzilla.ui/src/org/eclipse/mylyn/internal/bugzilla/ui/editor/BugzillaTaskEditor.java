@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -730,7 +731,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	 */
 	public SearchHitCollector getDuplicateSearchCollector(String name) {
 		String duplicateDetectorName = name.equals("default") ? "Stack Trace" : name;
-		java.util.List<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
+		Set<AbstractDuplicateDetector> allDetectors = getDuplicateSearchCollectorsList();
 
 		for (AbstractDuplicateDetector detector : allDetectors) {
 			if (detector.getName().equals(duplicateDetectorName)) {
@@ -745,7 +746,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 	/**
 	 * This method is duplicated in NewBugzillaTaskEditor for now.
 	 */
-	protected java.util.List<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
+	protected Set<AbstractDuplicateDetector> getDuplicateSearchCollectorsList() {
 		return TasksUiPlugin.getDefault().getDuplicateSearchCollectorsList();
 	}
 }
