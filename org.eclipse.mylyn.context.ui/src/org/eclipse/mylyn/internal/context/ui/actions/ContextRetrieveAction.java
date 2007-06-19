@@ -118,7 +118,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			this.selection = structuredSelection;
 			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
 				RepositoryAttachment attachment = (RepositoryAttachment) structuredSelection.getFirstElement();
-				if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())) {
+				if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+					|| AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
