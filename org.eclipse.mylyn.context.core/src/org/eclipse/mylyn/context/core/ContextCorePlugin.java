@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -43,7 +44,7 @@ public class ContextCorePlugin extends Plugin {
 	private Map<String, AbstractContextStructureBridge> bridges = new ConcurrentHashMap<String, AbstractContextStructureBridge>();
 
 	private Map<String, List<String>> childContentTypeMap = new ConcurrentHashMap<String, List<String>>();
-	
+
 	private AbstractContextStructureBridge defaultBridge = null;
 
 	private static ContextCorePlugin INSTANCE;
@@ -200,9 +201,11 @@ public class ContextCorePlugin extends Plugin {
 
 	public AbstractContextStructureBridge getStructureBridge(String contentType) {
 		BridgesExtensionPointReader.initExtensions();
-		AbstractContextStructureBridge bridge = bridges.get(contentType);
-		if (bridge != null) {
-			return bridge;
+		if (contentType != null) {
+			AbstractContextStructureBridge bridge = bridges.get(contentType);
+			if (bridge != null) {
+				return bridge;
+			}
 		}
 		return (defaultBridge == null) ? DEFAULT_BRIDGE : defaultBridge;
 	}
@@ -230,9 +233,10 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Recommended bridge registration is via extension point, but bridges can also be added at runtime.
+	 * Recommended bridge registration is via extension point, but bridges can also be added at runtime. Note that only
+	 * one bridge per content type is supported. Overriding content types is not supported.
 	 */
-	public void addBridge(AbstractContextStructureBridge bridge) {
+	public synchronized void addStructureBridge(AbstractContextStructureBridge bridge) {
 		if (bridge.getContentType().equals(CONTENT_TYPE_RESOURCE)) {
 			defaultBridge = bridge;
 		} else {
@@ -241,8 +245,10 @@ public class ContextCorePlugin extends Plugin {
 		if (bridge.getParentContentType() != null) {
 			List<String> childContentTypes = childContentTypeMap.get(bridge.getParentContentType());
 			if (childContentTypes == null) {
-				childContentTypes = new ArrayList<String>();
-			}
+				// CopyOnWriteArrayList handles concurrent access to the content types
+				childContentTypes = new CopyOnWriteArrayList<String>();
+			} 	
+			
 			childContentTypes.add(bridge.getContentType());
 			childContentTypeMap.put(bridge.getParentContentType(), childContentTypes);
 		}
@@ -254,13 +260,6 @@ public class ContextCorePlugin extends Plugin {
 
 	public static void setContextStore(AbstractContextStore contextStore) {
 		ContextCorePlugin.contextStore = contextStore;
-	}
-
-	/**
-	 * TODO: remove
-	 */
-	public void setDefaultBridge(AbstractContextStructureBridge defaultBridge) {
-		this.defaultBridge = defaultBridge;
 	}
 
 	static class ContextStoreExtensionReader {
@@ -357,7 +356,7 @@ public class ContextCorePlugin extends Plugin {
 						bridge.setParentContentType(parentContentType);
 					}
 				}
-				ContextCorePlugin.getDefault().addBridge(bridge);
+				ContextCorePlugin.getDefault().addStructureBridge(bridge);
 			} catch (CoreException e) {
 				StatusManager.log(e, "Could not load bridge extension");
 			}
@@ -432,6 +431,7 @@ public class ContextCorePlugin extends Plugin {
 
 	/**
 	 * TODO: Move to utility class
+	 * 
 	 * @param text
 	 * @return string with all non valid characters removed, if text is null return null
 	 */
