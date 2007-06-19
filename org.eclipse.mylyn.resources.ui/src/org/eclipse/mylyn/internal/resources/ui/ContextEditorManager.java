@@ -35,7 +35,9 @@ import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
+import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -112,13 +114,15 @@ public class ContextEditorManager implements IInteractionContextListener {
 		if (!PlatformUI.getWorkbench().isClosing()
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			closeAllButActiveTaskEditor(context.getHandleIdentifier());
+			
 			XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
 					.saveState(memento);
 
 			AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 			if (task != null) {
-				// TODO: avoid storing with preferneces due to bloat?
+				// TODO: avoid storing with preferences due to bloat?
 				StringWriter writer = new StringWriter();
 				try {
 					memento.save(writer);
@@ -139,8 +143,10 @@ public class ContextEditorManager implements IInteractionContextListener {
 		if (context == null) {
 			return;
 		}
+		closeAllButActiveTaskEditor(context.getHandleIdentifier());
 		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
+		
 		if (task != null) {
 			// TODO: avoid storing with preferneces due to bloat?
 			StringWriter writer = new StringWriter();
@@ -212,6 +218,45 @@ public class ContextEditorManager implements IInteractionContextListener {
 		}
 	}
 
+	public void closeAllButActiveTaskEditor(String taskHandle) {
+		try {
+			if (PlatformUI.getWorkbench().isClosing()) {
+				return;
+			}
+			for (IWorkbenchWindow window : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+				IWorkbenchPage page = window.getActivePage();
+				if (page != null) {
+					IEditorReference[] references = page.getEditorReferences();
+					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
+					for (int i = 0; i < references.length; i++) {
+						if (canClose(references[i])) {
+							
+							IEditorPart part = references[i].getEditor(false);
+							if (part instanceof TaskEditor) {
+								try {
+									IEditorInput input = references[i].getEditorInput();
+									if (input instanceof TaskEditorInput) {
+										AbstractTask task = ((TaskEditorInput)input).getTask();
+										if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
+											// do not close
+										} else {
+											toClose.add(references[i]);
+										}
+									}
+								} catch (PartInitException e) {
+									// ignore
+								}
+							}
+						}
+					}
+					page.closeEditors(toClose.toArray(new IEditorReference[toClose.size()]), true);
+				}
+			}
+		} catch (Throwable t) {
+			StatusManager.fail(t, "Could not auto close editor.", false);
+		}
+	}
+	
 	public void closeAllEditors() {
 		try {
 			if (PlatformUI.getWorkbench().isClosing()) {
@@ -242,7 +287,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 		}
 		return true;
 	}
-
+	
 	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {
 		IEditorPart part = editorReference.getEditor(false);
 		if (part instanceof TaskEditor) {
@@ -257,26 +302,6 @@ public class ContextEditorManager implements IInteractionContextListener {
 		}
 		return false;
 	}
-
-// private boolean isActiveTaskEditor(IEditorReference editorReference) {
-// ITask activeTask =
-// TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
-// try {
-// IEditorInput input = editorReference.getEditorInput();
-// if (input instanceof TaskEditorInput) {
-// TaskEditorInput taskEditorInput = (TaskEditorInput) input;
-// if (activeTask != null && taskEditorInput.getTask() != null
-// &&
-// taskEditorInput.getTask().getHandleIdentifier().equals(activeTask.getHandleIdentifier()))
-// {
-// return true;
-// }
-// }
-// } catch (PartInitException e) {
-// // ignore
-// }
-// return false;
-// }
 
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
