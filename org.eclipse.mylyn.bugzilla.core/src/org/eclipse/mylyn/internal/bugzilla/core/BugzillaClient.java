@@ -400,6 +400,7 @@ public class BugzillaClient {
 	public RepositoryTaskData getTaskData(int id) throws IOException, CoreException {
 		GetMethod method = null;
 		try {
+			
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			RepositoryTaskData taskData = null;
 			if (method.getResponseHeader("Content-Type") != null) {

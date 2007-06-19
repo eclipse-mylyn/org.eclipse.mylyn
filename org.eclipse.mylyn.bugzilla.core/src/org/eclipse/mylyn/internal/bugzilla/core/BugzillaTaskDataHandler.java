@@ -103,8 +103,8 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 	}
 
-	public Set<RepositoryTaskData> getTaskData(TaskRepository repository, Set<String> taskIds, IProgressMonitor monitor)
-			throws CoreException {
+	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds,
+			IProgressMonitor monitor) throws CoreException {
 		try {
 			Set<RepositoryTaskData> result = new HashSet<RepositoryTaskData>();
 			BugzillaClient client = connector.getClientManager().getClient(repository);
@@ -294,6 +294,11 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		}
 		return result;
 
+	}
+
+	@Override
+	public boolean getMultiTaskData() {
+		return true;
 	}
 
 }

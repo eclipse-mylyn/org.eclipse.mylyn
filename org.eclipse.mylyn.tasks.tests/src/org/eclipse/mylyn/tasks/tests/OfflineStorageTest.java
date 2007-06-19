@@ -32,7 +32,7 @@ import org.eclipse.ui.XMLMemento;
  * @author Rob Elves
  */
 public class OfflineStorageTest extends TestCase {
-	
+
 	File dataDir;
 
 	OfflineFileStorage storage;
@@ -64,7 +64,7 @@ public class OfflineStorageTest extends TestCase {
 		TaskDataState state = new TaskDataState(MockRepositoryConnector.REPOSITORY_URL, "1");
 
 		RepositoryTaskData newData = new RepositoryTaskData(new MockAttributeFactory(),
-				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
+				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1", "kind");
 
 		newData.setAttributeValue("attributeKey1", "attValue!");
 		newData.setDescription("description");
@@ -74,7 +74,7 @@ public class OfflineStorageTest extends TestCase {
 		newData.setTaskKey("task key");
 
 		RepositoryTaskData oldData = new RepositoryTaskData(new MockAttributeFactory(),
-				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
+				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1", "kind");
 
 		Set<RepositoryTaskAttribute> edits = new HashSet<RepositoryTaskAttribute>();
 
@@ -92,6 +92,7 @@ public class OfflineStorageTest extends TestCase {
 		assertEquals("description", newTaskData.getDescription());
 		assertEquals("new comment", newTaskData.getNewComment());
 		assertEquals("task key", newTaskData.getTaskKey());
+		assertEquals("kind", newTaskData.getTaskKind());
 	}
 
 	public void testRemove() throws Exception {

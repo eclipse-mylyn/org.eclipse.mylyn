@@ -325,12 +325,13 @@ public class OfflineFileStorage implements ITaskDataStorage {
 		String kind = newData.getString(ATTRIBUTE_REPOSITORY_KIND);
 		String id = newData.getString(ATTRIBUTE_ID);
 		String url = newData.getString(ATTRIBUTE_REPOSITORY_URL);
+		String taskKind = newData.getString(ATTRIBUTE_TASK_KIND);
 
 		if (kind == null || url == null || id == null) {
 			return null;
 		}
 
-		RepositoryTaskData data = new RepositoryTaskData(temporaryFactory, kind, url, id);
+		RepositoryTaskData data = new RepositoryTaskData(temporaryFactory, kind, url, id, taskKind);
 		IMemento attMemento = newData.getChild(ELEMENT_ATTRIBUTES);
 		if (attMemento != null) {
 			List<RepositoryTaskAttribute> attributes = readAttributes(attMemento);
@@ -505,18 +506,22 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			IMemento operationMemento = parent.createChild(ELEMENT_OPERATION);
 			operationMemento.putString(ATTRIBUTE_KNOB_NAME, getText(operation.getKnobName()));
 			operationMemento.putString(ATTRIBUTE_OPERATION_NAME, getText(operation.getOperationName()));
-			operationMemento.putString(ATTRIBUTE_OPTION_NAME, getText(operation.getOptionName()));
-			operationMemento.putString(ATTRIBUTE_OPTION_SELECTION, getText(operation.getOptionSelection()));
 			operationMemento.putString(ATTRIBUTE_IS_CHECKED, String.valueOf(operation.isChecked()));
-			operationMemento.putString(ATTRIBUTE_INPUT_NAME, getText(operation.getInputName()));
-			operationMemento.putString(ATTRIBUTE_INPUT_VALUE, getText(operation.getInputValue()));
+			if (operation.isInput()) {
+				operationMemento.putString(ATTRIBUTE_INPUT_NAME, getText(operation.getInputName()));
+				operationMemento.putString(ATTRIBUTE_INPUT_VALUE, getText(operation.getInputValue()));
+			}
+			if (operation.hasOptions()) {
+				operationMemento.putString(ATTRIBUTE_OPTION_NAME, getText(operation.getOptionName()));
+				operationMemento.putString(ATTRIBUTE_OPTION_SELECTION, getText(operation.getOptionSelection()));
 
-			if (operation.getOptionNames() != null && operation.getOptionNames().size() > 0) {
-				IMemento optionNames = operationMemento.createChild(ELEMENT_OPTION_NAMES);
-				for (String name : operation.getOptionNames()) {
-					IMemento nameMemento = optionNames.createChild(ELEMENT_NAME);
-					nameMemento.putTextData(getText(name));
-					nameMemento.putString(ATTRIBUTE_VALUE, getText(operation.getOptionValue(name)));
+				if (operation.getOptionNames() != null && operation.getOptionNames().size() > 0) {
+					IMemento optionNames = operationMemento.createChild(ELEMENT_OPTION_NAMES);
+					for (String name : operation.getOptionNames()) {
+						IMemento nameMemento = optionNames.createChild(ELEMENT_NAME);
+						nameMemento.putTextData(getText(name));
+						nameMemento.putString(ATTRIBUTE_VALUE, getText(operation.getOptionValue(name)));
+					}
 				}
 			}
 		}
