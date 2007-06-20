@@ -33,7 +33,7 @@ import org.eclipse.core.net.proxy.IProxyService;
  */
 public class WebClientUtil {
 
-	public static final String USER_AGENT = "Eclipse Mylar (HttpClient 3.0.1)";
+	public static final String USER_AGENT = "Eclipse Mylyn (HttpClient/3.0.1)";
 
 	public static final int CONNNECT_TIMEOUT = 30000;
 
