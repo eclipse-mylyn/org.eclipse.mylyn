@@ -49,7 +49,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 		this.view = view;
 	}
 
-	protected abstract boolean isIncrement();
+	protected abstract boolean isRemove();
 
 	public void run(IAction action) {
 		if (!ContextCorePlugin.getContextManager().isContextActive()) {
@@ -58,7 +58,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 			return;
 		}
 
-		boolean increment = isIncrement();
+		boolean increment = isRemove();
 		ISelection currentSelection = null;
 		if (action instanceof ObjectPluginAction) {
 			ObjectPluginAction objectAction = (ObjectPluginAction) action;
@@ -70,7 +70,6 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 				// ignore
 			}
 		}
-
 		if (currentSelection instanceof StructuredSelection) {
 			StructuredSelection selection = (StructuredSelection) currentSelection;
 			for (Object object : selection.toList()) {
@@ -83,7 +82,7 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 					node = ContextCorePlugin.getContextManager().getElement(handle);
 				}
 				if (node != null) {
-					if (!isIncrement()) {
+					if (!increment) {
 						try {
 							// NOTE: need to set the selection null so the
 							// automatic reselection does not induce interest

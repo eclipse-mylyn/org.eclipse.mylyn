@@ -367,7 +367,7 @@ public class ContextEditorFormPage extends FormPage {
 	}
 
 	private void makeContextMenuActions() {
-		removeFromContextAction = new RemoveFromContextAction(commonViewer, interestFilter);
+//		removeFromContextAction = new RemoveFromContextAction(commonViewer, interestFilter);
 		commonViewer.addSelectionChangedListener(removeFromContextAction);
 	}
 

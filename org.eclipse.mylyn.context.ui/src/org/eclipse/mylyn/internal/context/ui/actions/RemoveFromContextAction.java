@@ -58,7 +58,9 @@ public class RemoveFromContextAction extends BaseSelectionListenerAction {
 		for (IInteractionElement element : toRemove) {
 			ContextCorePlugin.getContextManager().delete(element);
 		}
-		commonViewer.refresh();
+		if (commonViewer != null) {
+			commonViewer.refresh();
+		}
  	}
 
 	private void collectChildren(Set<IInteractionElement> toRemove, Object object) {

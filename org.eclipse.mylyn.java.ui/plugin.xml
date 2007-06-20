@@ -313,6 +313,9 @@
            <objectClass
                  name="org.eclipse.jdt.core.IField">
            </objectClass>
+           <objectClass
+                 name="org.eclipse.jdt.core.IType">
+           </objectClass>
         </or>
      </visibility>
 	 </objectContribution>
@@ -342,7 +345,7 @@
           definitionId="org.eclipse.mylyn.java.ui.editor.folding.auto"
           icon="icons/elcl16/interest-folding.gif"
           id="org.eclipse.mylyn.java.ui.editor.folding.auto"
-          label="Automatically Fold Uninteresting Elements"
+          label="Focus Editor on Active Task"
           style="toggle"
           toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
           tooltip="Automatically Fold Uninteresting Elements">

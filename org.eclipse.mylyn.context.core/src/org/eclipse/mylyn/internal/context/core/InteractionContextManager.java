@@ -842,10 +842,12 @@ public class InteractionContextManager {
 				}
 			}
 		}
-		if (changeValue != 0) {
+		if (changeValue > 0) {
 			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, element
 					.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
 			processInteractionEvent(interactionEvent);
+		} else if (changeValue < 0) {
+			delete(element);
 		}
 		return true;
 	}

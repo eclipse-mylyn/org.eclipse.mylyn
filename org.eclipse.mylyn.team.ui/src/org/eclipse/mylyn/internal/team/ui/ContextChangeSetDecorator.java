@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.team.ui;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
-import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 
 /**
@@ -24,7 +23,7 @@ public class ContextChangeSetDecorator implements ILightweightLabelDecorator {
 
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof ContextChangeSet) {
-			decoration.addOverlay(ContextUiImages.MYLYN_OVERLAY, IDecoration.BOTTOM_RIGHT);
+//			decoration.addOverlay(ContextUiImages.MYLYN_OVERLAY, IDecoration.BOTTOM_RIGHT);
 			ContextChangeSet changeSet = (ContextChangeSet) element;
 			if (changeSet.getTask().isActive()) {
 				decoration.setFont(TaskListColorsAndFonts.BOLD);
