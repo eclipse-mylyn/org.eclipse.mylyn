@@ -17,16 +17,6 @@
             id="org.eclipse.mylyn.doc.actionSet"
             label="Mylyn Help"
             visible="true"> 
-  		<action
-          class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
-          definitionId="org.eclipse.mylyn.doc.legend.show"
-          icon="icons/etool16/icons-legend.gif"
-          id="org.eclipse.mylyn.doc.legend.show.action"
-          label="Mylyn UI Legend"
-          menubarPath="help/helpStart"
-          style="push"
-          tooltip="Mylyn UI Legend"> 
-      	</action> 
         <action
               class="org.eclipse.mylyn.internal.tasks.ui.actions.ReportBugAction"
               icon="icons/etool16/report-bug.gif"
@@ -34,8 +24,15 @@
               label="Report Bug or Enhancement"
               menubarPath="help/helpStart"
               style="push"
-              tooltip="Report Bug or Enhancement"> 
-      	</action>
+              tooltip="Report Bug or Enhancement"/> 
+		<action
+               class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
+               definitionId="org.eclipse.mylyn.doc.legend.show"
+               icon="icons/etool16/icons-legend.gif"
+               id="org.eclipse.mylyn.doc.legend.show.action"
+               label="Mylyn UI Legend"
+               style="push"
+               tooltip="Mylyn UI Legend"/>
     </actionSet>
     </extension>
   
@@ -100,6 +97,22 @@
             Learn how to activate tasks and use the Task-Focused UI
          </description>
       </cheatsheet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="org.eclipse.mylyn.tasks.ui.views.tasks.help.contribution"
+            targetID="org.eclipse.mylyn.tasks.ui.views.tasks">
+         <action
+               class="org.eclipse.mylyn.internal.help.ui.actions.ShowMylynLegendAction"
+               icon="icons/etool16/icons-legend.gif"
+               id="org.eclipse.mylyn.doc.legend.show.action"
+               label="Show UI Legend"
+               menubarPath="additions"
+               style="push"
+               tooltip="Show UI Legend">
+         </action>
+      </viewContribution>
    </extension> 
   
 </plugin>

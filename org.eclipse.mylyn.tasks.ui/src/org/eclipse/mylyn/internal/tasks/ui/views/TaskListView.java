@@ -1151,7 +1151,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			}
 		});
 
-		manager.add(new Separator());
+//		manager.add(new Separator());
 		manager.add(linkWithEditorAction);
 		manager.add(new Separator());
 		manager.add(openPreferencesAction);

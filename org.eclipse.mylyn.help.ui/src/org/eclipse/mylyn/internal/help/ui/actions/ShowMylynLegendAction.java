@@ -15,6 +15,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.internal.help.ui.dialogs.UiLegendDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -22,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @author Mik Kersten
  */
-public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate {
+public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
 		public void dispose() {
 		// ignore
@@ -40,5 +42,10 @@ public class ShowMylynLegendAction implements IWorkbenchWindowActionDelegate {
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		// ignore
+	}
+
+	public void init(IViewPart view) {
+		// ignore
+		
 	}
 }
