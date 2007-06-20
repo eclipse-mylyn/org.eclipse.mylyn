@@ -265,10 +265,10 @@ public class TracXmlRpcTest extends TestCase {
 
 	public void testGetTicketUmlaute() throws XmlRpcException, IOException {
 		Map<String, Object> attributes = new Hashtable<String, Object>();
-		int id = createTicket("summary���", "���", attributes);
+		int id = createTicket("summarya\u0308O\u030b", "\u00d8", attributes);
 
-		attributes.put("summary", "summary���");
-		attributes.put("description", "���");
+		attributes.put("summary", "summarya\u0308O\u030b");
+		attributes.put("description", "\u00d8");
 
 		Object[] ticket = (Object[]) call("ticket.get", id);
 		assertTicketHasAttributes(attributes, id, ticket);
