@@ -37,7 +37,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
  */
 public abstract class AbstractFilteredTree extends FilteredTree {
 
-	private static final int filterWidth = 70;
+	private static final int filterWidth = 69;
 
 	public static final String LABEL_FIND = " Find:";
 
@@ -86,7 +86,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	@Override
 	protected Composite createFilterControls(Composite parent) {
-		GridLayout gridLayout = new GridLayout(7, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 2;
 		gridLayout.verticalSpacing = 0;
@@ -104,7 +104,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			filterToolBar.getControl().setVisible(false);
 		}
 
-		GridData gd = new GridData(SWT.FILL, SWT.DEFAULT, true, false);
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd.minimumWidth = filterWidth;
 		filterText.setLayoutData(gd);
 		filterText.addKeyListener(new KeyAdapter() {
@@ -117,8 +117,18 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			}
 		});
 		
-		createActiveWorkingSetComposite(parent);
-		createActiveTaskComposite(parent);
+		Composite superComposite = new Composite(parent, SWT.NONE);
+		GridLayout superLayout = new GridLayout(4, false);
+		GridData superLayoutData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
+		superComposite.setLayout(superLayout);
+		superComposite.setLayoutData(superLayoutData);
+		
+		Composite workingSetComposite = createActiveWorkingSetComposite(superComposite);
+		workingSetComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
+		Composite activeTaskComposite = createActiveTaskComposite(superComposite);
+		activeTaskComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
 		return parent;
 	}
 
