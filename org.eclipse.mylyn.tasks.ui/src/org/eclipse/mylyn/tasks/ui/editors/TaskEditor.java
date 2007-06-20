@@ -206,7 +206,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			if (page != null) {
 				page.setFocus();
 			}
-		} 
+		}
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		if (taskPlanningEditor != null) {
 			taskPlanningEditor.dispose();
 		}
-		
+
 		super.dispose();
 	}
 
@@ -259,8 +259,9 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			}
 
 			int selectedIndex = index;
-			
-			List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(TasksUiPlugin.getDefault().getTaskEditorFactories());
+
+			List<AbstractTaskEditorFactory> factories = new ArrayList<AbstractTaskEditorFactory>(
+					TasksUiPlugin.getDefault().getTaskEditorFactories());
 			Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
 
 				public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
@@ -459,8 +460,10 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		}
 
 		if (idLabel != null) {
-			getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
-		} else {
+			if (getHeaderForm().getForm() != null) {
+				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+			}
+		} else if (getHeaderForm().getForm() != null) {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
 	}
@@ -476,8 +479,10 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 		String idLabel = repositoryTask.getTaskKey();
 
 		if (idLabel != null) {
-			getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
-		} else {
+			if (getHeaderForm().getForm() != null) {
+				getHeaderForm().getForm().setText(kindLabel + " " + idLabel);
+			}
+		} else if (getHeaderForm().getForm() != null) {
 			getHeaderForm().getForm().setText(kindLabel);
 		}
 	}
