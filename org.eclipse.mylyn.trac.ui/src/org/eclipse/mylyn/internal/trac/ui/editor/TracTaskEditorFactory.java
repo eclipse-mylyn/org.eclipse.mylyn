@@ -7,7 +7,8 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
@@ -26,31 +27,26 @@ import org.eclipse.ui.IEditorPart;
  */
 public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 
+	private static final String TITLE = "Browser";
+	
 	public boolean canCreateEditorFor(AbstractTask task) {
-		if (task instanceof TracTask) {
-			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					TracCorePlugin.REPOSITORY_KIND, ((TracTask) task).getRepositoryUrl());
-			return TracRepositoryConnector.hasRichEditor(repository);
-		}
-		return task instanceof TracTask;
+		return (task instanceof TracTask);
 	}
 
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput existingInput = (RepositoryTaskEditorInput) input;
-			return existingInput.getTaskData() != null
-					&& TracCorePlugin.REPOSITORY_KIND.equals(existingInput.getRepository().getKind());
+			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) input;
+			return taskInput.getTaskData() != null
+					&& TracCorePlugin.REPOSITORY_KIND.equals(taskInput.getRepository().getKind());
+		} else if (input instanceof TaskEditorInput) {
+			TaskEditorInput taskInput = (TaskEditorInput) input;
+			return taskInput.getTask() instanceof TracTask;
 		} 
-//		else if (input instanceof NewTaskEditorInput) {
-//			NewTaskEditorInput newInput = (NewTaskEditorInput) input;
-//			return newInput.getTaskData() != null
-//					&& TracCorePlugin.REPOSITORY_KIND.equals(newInput.getRepository().getKind());
-//		}
+ 
 		return false;
 	}
 
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
-
 		if (editorInput instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) editorInput;
 			if (taskInput.getTaskData().isNew()) {
@@ -59,7 +55,14 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 				return new TracTaskEditor(parentEditor);
 			}
 		} else if (editorInput instanceof TaskEditorInput) {
-			return new TracTaskEditor(parentEditor);
+			TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
+					((TaskEditorInput)editorInput).getTask().getRepositoryUrl());
+			if (TracRepositoryConnector.hasRichEditor(repository)) {
+				// the editor is actually initialized with a RepositoryTaskEditorInput, see bug 193430
+				return new TracTaskEditor(parentEditor);
+			} else {
+				return new BrowserFormPage(parentEditor, TITLE);
+			}
 		}
 		return null;
 	}
@@ -68,12 +71,16 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		TracTask tracTask = (TracTask) task;
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
 				tracTask.getRepositoryUrl());
-		try {
+		if (TracRepositoryConnector.hasRichEditor(repository)) {
 			return new RepositoryTaskEditorInput(repository, tracTask.getTaskId(), tracTask.getTaskUrl());
-		} catch (Exception e) {
-			StatusManager.fail(e, "Could not create Trac editor input", true);
+		} else {
+			return new TaskEditorInput(task, false) {
+				@Override
+				public ImageDescriptor getImageDescriptor() {
+					return TasksUiImages.BROWSER_SMALL;
+				}
+			};
 		}
-		return null;
 	}
 
 	public String getTitle() {
