@@ -51,8 +51,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
 		final List<AbstractTask> hits = new ArrayList<AbstractTask>();
-		QueryHitCollector collector = new QueryHitCollector(TasksUiPlugin.getTaskListManager().getTaskList(),
-				new ITaskFactory() {
+		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
 					public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 						// ignore
