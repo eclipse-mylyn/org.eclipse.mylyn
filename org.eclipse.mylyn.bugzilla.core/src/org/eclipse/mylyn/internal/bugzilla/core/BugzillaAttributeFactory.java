@@ -48,7 +48,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 			return BugzillaReportElement.NEWCC.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.COMMENT_DATE)) {
 			return BugzillaReportElement.BUG_WHEN.getKeyString();
-		} else if (key.equals(RepositoryTaskAttribute.USER_OWNER)) {
+		} else if (key.equals(RepositoryTaskAttribute.COMMENT_AUTHOR)) { // was USER_OWNER
 			return BugzillaReportElement.WHO.getKeyString();
 		} else if (key.equals(RepositoryTaskAttribute.USER_CC)) {
 			return BugzillaReportElement.CC.getKeyString();

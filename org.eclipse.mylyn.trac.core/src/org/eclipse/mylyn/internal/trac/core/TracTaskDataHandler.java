@@ -132,7 +132,7 @@ public class TracTaskDataHandler extends AbstractTaskDataHandler {
 				}
 
 				TaskComment taskComment = new TaskComment(factory, data.getComments().size() + 1);
-				taskComment.setAttributeValue(RepositoryTaskAttribute.USER_OWNER, comments[i].getAuthor());
+				taskComment.setAttributeValue(RepositoryTaskAttribute.COMMENT_AUTHOR, comments[i].getAuthor());
 				taskComment
 						.setAttributeValue(RepositoryTaskAttribute.COMMENT_DATE, comments[i].getCreated().toString());
 				taskComment.setAttributeValue(RepositoryTaskAttribute.COMMENT_TEXT, comments[i].getNewValue());

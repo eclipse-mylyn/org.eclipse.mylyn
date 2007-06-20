@@ -58,7 +58,7 @@ public class TaskComment extends AttributeContainer implements Serializable {
 	 * @return The comments author
 	 */
 	public String getAuthor() {
-		return getAttributeValue(RepositoryTaskAttribute.USER_OWNER);
+		return getAttributeValue(RepositoryTaskAttribute.COMMENT_AUTHOR);
 	}
 
 	/**
