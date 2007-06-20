@@ -210,6 +210,59 @@ public abstract class AbstractRepositoryConnector {
 	public abstract void updateTaskFromTaskData(TaskRepository repository, AbstractTask repositoryTask,
 			RepositoryTaskData taskData);
 
+	/**
+	 * Updates <code>existingTask</code> with latest information from <code>queryHit</code>.
+	 * 
+	 * @return true, if properties of <code>existingTask</code> were changed
+	 * @since 2.0
+	 */
+	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask,
+			AbstractTask queryHit) {
+		boolean changed = false;
+		if (existingTask.isCompleted() != queryHit.isCompleted()) {
+			existingTask.setCompleted(queryHit.isCompleted());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(existingTask.getSummary(), queryHit.getSummary())) {
+			existingTask.setSummary(queryHit.getSummary());
+			changed = true;
+		}
+//		if (hasTaskPropertyChanged(existingTask.getCompletionDate(), queryHit.getCompletionDate())) {
+//			existingTask.setCompletionDate(queryHit.getCompletionDate());
+//			changed = true;
+//		}
+//		if (hasTaskPropertyChanged(existingTask.getCreationDate(), newTask.getCreationDate())) {
+//			existingTask.setCreationDate(newTask.getCreationDate());
+//			changed = true;
+//		}
+		if (hasTaskPropertyChanged(existingTask.getDueDate(), queryHit.getDueDate())) {
+			existingTask.setDueDate(queryHit.getDueDate());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(existingTask.getOwner(), queryHit.getOwner())) {
+			existingTask.setOwner(queryHit.getOwner());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(existingTask.getPriority(), queryHit.getPriority())) {
+			existingTask.setPriority(queryHit.getPriority());
+			changed = true;
+		}
+		if (hasTaskPropertyChanged(existingTask.getTaskUrl(), queryHit.getTaskUrl())) {
+			existingTask.setTaskUrl(queryHit.getTaskUrl());
+			changed = true;
+		}
+		
+		return changed;
+	}
+	
+	protected final boolean hasTaskPropertyChanged(Object existingProperty, Object newProperty) {
+		// the query hit does not have this property
+		if (newProperty == null) {
+			return false;
+		}
+		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
+	}
+	
 	public String[] repositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };

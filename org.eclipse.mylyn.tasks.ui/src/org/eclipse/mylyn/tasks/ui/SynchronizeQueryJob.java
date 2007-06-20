@@ -33,6 +33,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -108,7 +109,7 @@ class SynchronizeQueryJob extends Job {
 				return Status.OK_STATUS;
 			}
 
-			// synchronize queries
+			// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
 			int n = 0;
 			for (AbstractRepositoryQuery repositoryQuery : queries) {
 				repositoryQuery.setStatus(null);
@@ -121,7 +122,7 @@ class SynchronizeQueryJob extends Job {
 			}
 
 			// for background synchronizations all changed tasks are synchronized including the ones that are not part of a query
-			if (forced) {
+			if (!forced) {
 				for (AbstractTask task : allTasks) {
 					if (task.isStale()) {
 						tasksToBeSynchronized.add(task);
@@ -171,7 +172,7 @@ class SynchronizeQueryJob extends Job {
 	private void synchronizeQuery(AbstractRepositoryQuery repositoryQuery, IProgressMonitor monitor) {
 		setProperty(IProgressConstants.ICON_PROPERTY, TasksUiImages.REPOSITORY_SYNCHRONIZE);
 
-		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository, true, false));
+		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository, true, false));
 
 		final IStatus resultingStatus = connector.performQuery(repositoryQuery, repository, monitor, collector);
 		if (resultingStatus.getSeverity() == IStatus.CANCEL) {
@@ -184,10 +185,25 @@ class SynchronizeQueryJob extends Job {
 			repositoryQuery.clear();
 
 			for (AbstractTask hit : collector.getTaskHits()) {
-				taskList.addTask(hit, repositoryQuery);
-				if (synchronizeChangedTasks && hit.isStale()) {
-					tasksToBeSynchronized.add(hit);
-					hit.setCurrentlySynchronizing(true);
+				AbstractTask task = taskList.getTask(hit.getHandleIdentifier());
+				if (task != null) {
+					// update the existing task from the query hit
+					boolean changed = connector.updateTaskFromQueryHit(repository, task, hit);
+					if (changed && !task.isStale() && task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+						// set incoming marker for web tasks 
+						task.setSyncState(RepositoryTaskSyncState.INCOMING);
+					}
+				} else {
+					// new tasks are marked stale by default
+					task = hit;
+					task.setStale(true);
+					task.setSyncState(RepositoryTaskSyncState.INCOMING);
+				}
+				
+				taskList.addTask(task, repositoryQuery);
+				if (synchronizeChangedTasks && task.isStale()) {
+					tasksToBeSynchronized.add(task);
+					task.setCurrentlySynchronizing(true);
 				}
 			}
 

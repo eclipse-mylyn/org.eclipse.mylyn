@@ -78,11 +78,11 @@ public class ScheduledTaskListSynchJob extends Job {
 					scheduleDelay = -1;
 					throw new OperationCanceledException();
 				}
-				
+
 				if (repository.isOffline()) {
 					continue;
 				}
-				
+
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repository.getKind());
 				if (connector == null) {
@@ -92,7 +92,7 @@ public class ScheduledTaskListSynchJob extends Job {
 
 				// Occasionally update repository attributes
 				if (count >= UPDATE_ATTRIBUTES_FREQUENCY) {
-					Job updateJob = new Job("Updating attributes for "+repository.getUrl()) {
+					Job updateJob = new Job("Updating attributes for " + repository.getUrl()) {
 
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
@@ -113,9 +113,8 @@ public class ScheduledTaskListSynchJob extends Job {
 
 				RepositorySynchronizationManager synchronizationManager = TasksUiPlugin.getSynchronizationManager();
 				Set<AbstractRepositoryQuery> queries = taskList.getRepositoryQueries(repository.getUrl());
-				synchronizationManager.synchronize(connector, repository, queries, null,
-						Job.DECORATE, 0, false);
-				
+				synchronizationManager.synchronize(connector, repository, queries, null, Job.DECORATE, 0, false);
+
 				monitor.worked(1);
 			}
 		} finally {

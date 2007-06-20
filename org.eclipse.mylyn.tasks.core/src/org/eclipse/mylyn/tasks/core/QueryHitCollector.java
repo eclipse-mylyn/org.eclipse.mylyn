@@ -32,12 +32,9 @@ public class QueryHitCollector implements ITaskCollector {
 
 	private final Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
-	private final TaskList taskList;
-
 	private final ITaskFactory taskFactory;
 
-	public QueryHitCollector(TaskList tasklist, ITaskFactory taskFactory) {
-		this.taskList = tasklist;
+	public QueryHitCollector(ITaskFactory taskFactory) {
 		this.taskFactory = taskFactory;
 	}
 
@@ -46,17 +43,7 @@ public class QueryHitCollector implements ITaskCollector {
 			throw new IllegalArgumentException();
 		}
 		
-		AbstractTask existingTask = taskList.getTask(task.getHandleIdentifier());
-		if (existingTask == null) {
-			task.setStale(true);
-			task.setSyncState(RepositoryTaskSyncState.INCOMING);
-		} else {
-			// preserve meta attributes of existing task
-			task.setLastSyncDateStamp(existingTask.getLastSyncDateStamp());
-			task.setStale(existingTask.isStale());
-		}
-		
-		taskResults.add((AbstractTask) task);
+		taskResults.add(task);
 	}
 
 	public void accept(RepositoryTaskData taskData) throws CoreException {

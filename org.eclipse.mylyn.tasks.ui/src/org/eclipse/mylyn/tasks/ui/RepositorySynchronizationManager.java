@@ -111,7 +111,7 @@ public class RepositorySynchronizationManager {
 			// TasksUiPlugin.getTaskListManager().getTaskList().notifyContainerUpdated(repositoryQuery);
 		}
 		taskList.notifyContainersUpdated(repositoryQueries);
-		
+
 		final SynchronizeQueryJob job = new SynchronizeQueryJob(connector, repository, repositoryQueries, taskList);
 		job.setSynchronizeChangedTasks(true);
 		job.setForced(userForcedSync);
@@ -140,19 +140,10 @@ public class RepositorySynchronizationManager {
 	 * to this method update TaskRepository.syncTime.
 	 */
 	public final void synchronizeChanged(final AbstractRepositoryConnector connector, final TaskRepository repository) {
-		final SynchronizeChangedTasksJob synchronizeChangedTasksJob = new SynchronizeChangedTasksJob(connector,
-				repository);
-		synchronizeChangedTasksJob.setSystem(true);
-		synchronizeChangedTasksJob.setRule(new RepositoryMutexRule(repository));
-		if (!forceSyncExecForTesting) {
-			synchronizeChangedTasksJob.schedule();
-		} else {
-			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-				public void run() {
-					synchronizeChangedTasksJob.run(new NullProgressMonitor());
-				}
-			});
-		}
+		// Method left here for completeness. Currently unused since ScheduledTaskListSynchJob calls SynchronizeQueriesJob
+		// which synchronizes all changed if unforced (background). 
+		Set<AbstractRepositoryQuery> emptySet = Collections.emptySet();
+		synchronize(connector, repository, emptySet, null, Job.LONG, 0, false);
 	}
 
 	/**
@@ -226,8 +217,7 @@ public class RepositorySynchronizationManager {
 					repositoryTask.setNotified(false);
 				}
 				if (hasIncoming || previousTaskData == null || forceSync) {
-					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(
-							newTaskData);
+					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(newTaskData);
 				}
 				break;
 			}
@@ -305,7 +295,7 @@ public class RepositorySynchronizationManager {
 			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 		}
-		
+
 		// for repositories that don't support task data or if no task data is available
 		if (read && taskData == null) {
 			repositoryTask.setLastSyncDateStamp(LocalTask.SYNC_DATE_NOW);

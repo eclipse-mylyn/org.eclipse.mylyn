@@ -116,7 +116,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
 		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		QueryHitCollector collector = new QueryHitCollector(taskList, new TaskFactory(repository));
+		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
 
 		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector);
 

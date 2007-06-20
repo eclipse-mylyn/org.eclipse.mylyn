@@ -22,7 +22,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 public class DummySearchHitProvider extends QueryHitCollector {
 
 	public DummySearchHitProvider(TaskList tasklist) {
-		super(tasklist, new ITaskFactory() {
+		super(new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
 				return null;

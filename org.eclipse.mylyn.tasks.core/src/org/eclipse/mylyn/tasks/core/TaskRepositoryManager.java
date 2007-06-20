@@ -128,7 +128,7 @@ public class TaskRepositoryManager {
 		}
 		return sb.toString();
 	}
-	
+
 	public TaskRepository getRepository(String kind, String urlString) {
 		urlString = stripSlashes(urlString);
 		if (repositoryMap.containsKey(kind)) {
@@ -162,8 +162,8 @@ public class TaskRepositoryManager {
 	public AbstractRepositoryConnector getConnectorForRepositoryTaskUrl(String url) {
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
 			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
-				for(TaskRepository repository : getRepositories(connector.getRepositoryType())) {
-					if(url.startsWith(repository.getUrl())) {
+				for (TaskRepository repository : getRepositories(connector.getRepositoryType())) {
+					if (url.startsWith(repository.getUrl())) {
 						return connector;
 					}
 				}
@@ -229,7 +229,7 @@ public class TaskRepositoryManager {
 
 		repositoryMap.clear();
 		orphanedRepositories.clear();
-		
+
 		loadRepositories(repositoriesFilePath);
 
 		for (ITaskRepositoryListener listener : listeners) {
@@ -298,8 +298,9 @@ public class TaskRepositoryManager {
 
 	// Migration 2.0M1 - 2.0M2
 	private boolean migrateAnonymousRepository(TaskRepository repository) {
-		if (repository.getProperty(TaskRepository.ANONYMOUS_LOGIN) == null) {			
-			if ((repository.getUserName() == null || repository.getPassword() == null) || ("".equals(repository.getUserName()) && "".equals(repository.getPassword()))) {
+		if (repository.getProperty(TaskRepository.ANONYMOUS_LOGIN) == null) {
+			if ((repository.getUserName() == null || repository.getPassword() == null)
+					|| ("".equals(repository.getUserName()) && "".equals(repository.getPassword()))) {
 				repository.setAnonymous(true);
 			} else {
 				repository.setAnonymous(false);

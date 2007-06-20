@@ -32,9 +32,9 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
-import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -222,6 +222,32 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
+	public boolean updateTaskFromQueryHit(TaskRepository repository, AbstractTask existingTask,
+			AbstractTask newTask) {
+		// these properties are not provided by Bugzilla queries
+		newTask.setCompleted(existingTask.isCompleted());
+//		newTask.setCompletionDate(existingTask.getCompletionDate());
+		
+		boolean changed = super.updateTaskFromQueryHit(repository, existingTask, newTask);
+		
+		if (existingTask instanceof BugzillaTask && newTask instanceof BugzillaTask) {
+			BugzillaTask existingBugzillaTask = (BugzillaTask) existingTask;
+			BugzillaTask newBugzillaTask = (BugzillaTask) newTask;
+			
+			if (hasTaskPropertyChanged(existingBugzillaTask.getSeverity(), newBugzillaTask.getSeverity())) {
+				existingBugzillaTask.setSeverity(newBugzillaTask.getSeverity());
+				changed = true;
+			}
+			if (hasTaskPropertyChanged(existingBugzillaTask.getProduct(), newBugzillaTask.getProduct())) {
+				existingBugzillaTask.setProduct(newBugzillaTask.getProduct());
+				changed = true;
+			}
+		}
+		
+		return changed;
+	}
+
+	@Override
 	public boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
 			throws CoreException {
 		try {
@@ -291,7 +317,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 
 	private void queryForChanged(final TaskRepository repository, Set<AbstractTask> changedTasks, String urlQueryString)
 			throws UnsupportedEncodingException, CoreException {
-		QueryHitCollector collector = new QueryHitCollector(taskList, new ITaskFactory() {
+		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
 			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) {
 				// do not construct actual task objects here as query shouldn't result in new tasks
