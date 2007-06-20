@@ -14,10 +14,6 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -29,7 +25,6 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextAttachAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextCopyAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylyn.internal.context.ui.actions.RemoveFromContextAction;
 import org.eclipse.mylyn.internal.context.ui.views.ContextNodeOpenListener;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
@@ -47,9 +42,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -75,8 +68,6 @@ public class ContextEditorFormPage extends FormPage {
 
 	private CommonViewer commonViewer;
 
-	private RemoveFromContextAction removeFromContextAction;
-
 	private ScalableInterestFilter interestFilter = new ScalableInterestFilter();
 
 	private Scale doiScale;
@@ -99,9 +90,9 @@ public class ContextEditorFormPage extends FormPage {
 		public void contextDeactivated(IInteractionContext context) {
 			refresh();
 		}
-		
+
 		public void contextCleared(IInteractionContext context) {
-			refresh();	
+			refresh();
 		}
 
 		public void elementDeleted(IInteractionElement element) {
@@ -211,7 +202,7 @@ public class ContextEditorFormPage extends FormPage {
 		if (!task.equals(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask())) {
 			doiScale.setEnabled(false);
 		}
-		
+
 		Label attachImage = toolkit.createLabel(sectionClient, "");
 		attachImage.setImage(TasksUiImages.getImage(ContextUiImages.CONTEXT_ATTACH));
 		attachImage.setEnabled(task instanceof AbstractTask);
@@ -320,9 +311,9 @@ public class ContextEditorFormPage extends FormPage {
 
 		commonViewer = createCommonViewer(aParent);
 		commonViewer.addFilter(interestFilter);
-		
-		commonViewer.addOpenListener(new ContextNodeOpenListener(commonViewer)); 
-		
+
+		commonViewer.addOpenListener(new ContextNodeOpenListener(commonViewer));
+
 		try {
 			commonViewer.getControl().setRedraw(false);
 
@@ -332,8 +323,8 @@ public class ContextEditorFormPage extends FormPage {
 			getSite().setSelectionProvider(commonViewer);
 			// ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(commonViewer,
 			// this);
-			makeContextMenuActions();
-			hookContextMenu();
+			// makeContextMenuActions();
+			// hookContextMenu();
 			commonViewer.expandAll();
 		} finally {
 			commonViewer.getControl().setRedraw(true);
@@ -366,28 +357,28 @@ public class ContextEditorFormPage extends FormPage {
 		return viewer;
 	}
 
-	private void makeContextMenuActions() {
+//	private void makeContextMenuActions() {
 //		removeFromContextAction = new RemoveFromContextAction(commonViewer, interestFilter);
-		commonViewer.addSelectionChangedListener(removeFromContextAction);
-	}
+//		commonViewer.addSelectionChangedListener(removeFromContextAction);
+//	}
 
-	private void hookContextMenu() {
-		MenuManager menuManager = new MenuManager("#PopupMenu");
-		menuManager.setRemoveAllWhenShown(true);
-		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
-		commonViewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuManager, commonViewer);
-	}
+//	private void hookContextMenu() {
+//		MenuManager menuManager = new MenuManager("#PopupMenu");
+//		menuManager.setRemoveAllWhenShown(true);
+//		menuManager.addMenuListener(new IMenuListener() {
+//			public void menuAboutToShow(IMenuManager manager) {
+//				fillContextMenu(manager);
+//			}
+//		});
+//		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
+//		commonViewer.getControl().setMenu(menu);
+//		getSite().registerContextMenu(menuManager, commonViewer);
+//	}
 
-	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(removeFromContextAction);
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
+//	protected void fillContextMenu(IMenuManager manager) {
+//		manager.add(removeFromContextAction);
+//		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//	}
 
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
