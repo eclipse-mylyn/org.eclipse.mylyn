@@ -34,6 +34,8 @@ import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -206,9 +208,9 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			if (toolkit.getColors() != null) {
 				toolkit.dispose();
 			}
-		} 
+		}
 	}
-	
+
 	public void createControl(Composite parent) {
 		compositeContainer = new Composite(parent, SWT.NULL);
 		FillLayout layout = new FillLayout();
@@ -219,11 +221,17 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		serverUrlCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				isValidUrl(serverUrlCombo.getText());
-				updateHyperlinks();
-				
 				if (getWizard() != null) {
 					getWizard().getContainer().updateButtons();
 				}
+			}
+		});
+
+		serverUrlCombo.addFocusListener(new FocusAdapter() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				updateHyperlinks();
 			}
 		});
 
@@ -275,7 +283,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 		}
 
-		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED, compositeContainer);
+		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED,
+				compositeContainer);
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
 				compositeContainer);
 		// TODO: put this back if we can't get the info from all connectors
@@ -299,7 +308,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// timeZonesCombo.select(timeZonesCombo.indexOf(TimeZone.getDefault().getID()));
 		// }
 		// }
-
 
 		advancedExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
 				| Section.TITLE_BAR);
@@ -393,8 +401,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		if (needsHttpAuth()) {
-			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT | Section.TWISTIE
-					| Section.TITLE_BAR);
+			httpAuthExpComposite = toolkit.createExpandableComposite(compositeContainer, Section.COMPACT
+					| Section.TWISTIE | Section.TITLE_BAR);
 			httpAuthExpComposite.clientVerticalSpacing = 0;
 			gridData_2 = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gridData_2.horizontalIndent = -5;
@@ -462,69 +470,6 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			httpAuthExpComposite.setExpanded(httpAuthButton.getSelection());
 		}
 
-		if (needsProxy()) {
-			addProxySection();
-		}
-
-		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
-		GridLayout managementLayout = new GridLayout(4, false);
-		managementLayout.marginHeight = 0;
-		managementLayout.marginWidth = 0;
-		managementLayout.horizontalSpacing = 10;
-		managementComposite.setLayout(managementLayout);
-		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
-		
-		if (needsValidation()) {
-			validateServerButton = new Button(managementComposite, SWT.PUSH);
-			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
-			validateServerButton.setText("Validate Settings");
-			validateServerButton.addSelectionListener(new SelectionAdapter() {
-
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					validateSettings();
-				}
-			});
-		}
-
-		createAccountHyperlink = toolkit.createHyperlink(managementComposite, "Create new account", SWT.NONE);
-		createAccountHyperlink.setBackground(managementComposite.getBackground());
-		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				TaskRepository repository = getRepository();
-				if (repository == null && getServerUrl()!=null && getServerUrl().length()>0) {
-					repository = createTaskRepository();
-				}
-				if (repository != null) {
-					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
-							.getAccountCreationUrl(repository);
-					if (accountCreationUrl != null) {
-						TasksUiUtil.openUrl(accountCreationUrl, false);
-					}
-				}
-			}
-		});
-
-		manageAccountHyperlink = toolkit.createHyperlink(managementComposite, "Change account settings", SWT.NONE);
-		manageAccountHyperlink.setBackground(managementComposite.getBackground());
-		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				TaskRepository repository = getRepository();
-				if (repository == null && getServerUrl()!=null && getServerUrl().length()>0) {
-					repository = createTaskRepository();
-				}
-				if(repository!=null) {
-					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
-							.getAccountManagementUrl(repository);
-					if(accountManagementUrl!=null) {
-						TasksUiUtil.openUrl(accountManagementUrl, false);
-					}
-				}
-			}
-		});
-
 		if (repository != null) {
 			originalUrl = repository.getUrl();
 			oldUsername = repository.getUserName();
@@ -571,6 +516,71 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			oldHttpAuthPassword = "";
 			oldHttpAuthUserId = "";
 		}
+
+		if (needsProxy()) {
+			addProxySection();
+		}
+
+		Composite managementComposite = new Composite(compositeContainer, SWT.NULL);
+		GridLayout managementLayout = new GridLayout(4, false);
+		managementLayout.marginHeight = 0;
+		managementLayout.marginWidth = 0;
+		managementLayout.horizontalSpacing = 10;
+		managementComposite.setLayout(managementLayout);
+		managementComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 2, 1));
+
+		if (needsValidation()) {
+			validateServerButton = new Button(managementComposite, SWT.PUSH);
+			GridDataFactory.swtDefaults().span(2, SWT.DEFAULT).grab(false, false).applyTo(validateServerButton);
+			validateServerButton.setText("Validate Settings");
+			validateServerButton.addSelectionListener(new SelectionAdapter() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					validateSettings();
+				}
+			});
+		}
+
+		createAccountHyperlink = toolkit.createHyperlink(managementComposite, "Create new account", SWT.NONE);
+		createAccountHyperlink.setBackground(managementComposite.getBackground());
+		createAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+//				TaskRepository repository = getRepository();
+				TaskRepository repository = createTaskRepository();
+//				if (repository == null && getServerUrl() != null && getServerUrl().length() > 0) {
+//					repository = createTaskRepository();
+//				}
+				if (repository != null) {
+					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+							.getAccountCreationUrl(repository);
+					if (accountCreationUrl != null) {
+						TasksUiUtil.openUrl(accountCreationUrl, false);
+					}
+				}
+			}
+		});
+
+		manageAccountHyperlink = toolkit.createHyperlink(managementComposite, "Change account settings", SWT.NONE);
+		manageAccountHyperlink.setBackground(managementComposite.getBackground());
+		manageAccountHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
+			public void linkActivated(HyperlinkEvent e) {
+				TaskRepository repository = getRepository();
+				if (repository == null && getServerUrl() != null && getServerUrl().length() > 0) {
+					repository = createTaskRepository();
+				}
+				if (repository != null) {
+					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+							.getAccountManagementUrl(repository);
+					if (accountManagementUrl != null) {
+						TasksUiUtil.openUrl(accountManagementUrl, false);
+					}
+				}
+			}
+		});
+
 		// bug 131656: must set echo char after setting value on Mac
 		((RepositoryStringFieldEditor) repositoryPasswordEditor).getTextControl().setEchoChar('*');
 
@@ -582,7 +592,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		updateHyperlinks();
-		
+
 		setControl(compositeContainer);
 	}
 
@@ -835,8 +845,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	protected abstract boolean isValidUrl(String name);
 
 	void updateHyperlinks() {
-		if (getServerUrl()!=null && getServerUrl().length()>0) {
-			TaskRepository repository = createTaskRepository(); 
+		if (getServerUrl() != null && getServerUrl().length() > 0) {
+			TaskRepository repository = createTaskRepository();
 			String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
 					.getAccountCreationUrl(repository);
 			createAccountHyperlink.setEnabled(accountCreationUrl != null);
@@ -853,7 +863,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			manageAccountHyperlink.setVisible(false);
 		}
 	}
-	
+
 	public String getRepositoryLabel() {
 		return repositoryLabelEditor.getStringValue();
 	}
