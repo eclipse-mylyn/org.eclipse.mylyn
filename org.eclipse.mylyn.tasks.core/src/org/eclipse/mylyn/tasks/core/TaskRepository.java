@@ -74,6 +74,8 @@ public class TaskRepository {
 	public static final String PROXY_USERNAME = "org.eclipse.mylyn.tasklist.repositories.proxy.username";
 
 	public static final String PROXY_PASSWORD = "org.eclipse.mylyn.tasklist.repositories.proxy.password";
+	
+	public static final String OFFLINE = "org.eclipse.mylyn.tasklist.repositories.offline";
 
 	// HACK: Lock used to work around race condition in
 	// Platform.add/get/flushAuthorizationInfo()
@@ -461,4 +463,13 @@ public class TaskRepository {
 	public void setBugRepository(boolean isBugRepository) {
 		this.isBugRepository = isBugRepository;
 	}
+	
+	public void setOffline(boolean offline) {
+		properties.put(OFFLINE, String.valueOf(offline));
+	}
+
+	public boolean isOffline() {
+		return getProperty(OFFLINE) != null && "true".equals(getProperty(OFFLINE));
+	}
+
 }

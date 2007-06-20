@@ -78,6 +78,11 @@ public class ScheduledTaskListSynchJob extends Job {
 					scheduleDelay = -1;
 					throw new OperationCanceledException();
 				}
+				
+				if (repository.isOffline()) {
+					continue;
+				}
+				
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repository.getKind());
 				if (connector == null) {

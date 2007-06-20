@@ -55,6 +55,8 @@ public class TaskRepositoriesView extends ViewPart {
 	private BaseSelectionListenerAction repositoryPropertiesAction;
 
 	private BaseSelectionListenerAction resetConfigurationAction;
+	
+	private RepositoryOfflineAction offlineAction;
 
 	private final ITaskRepositoryListener REPOSITORY_LISTENER = new ITaskRepositoryListener() {
 
@@ -142,6 +144,8 @@ public class TaskRepositoriesView extends ViewPart {
 			}
 		});
 
+		TasksUiPlugin.getRepositoryManager().addListener(new TaskRepositoryListener());
+		
 		makeActions();
 		hookContextMenu();
 		contributeToActionBars();
@@ -157,6 +161,9 @@ public class TaskRepositoriesView extends ViewPart {
 		
 		resetConfigurationAction = new ResetRepositoryConfigurationAction();
 		viewer.addSelectionChangedListener(resetConfigurationAction);
+		
+		offlineAction = new RepositoryOfflineAction();
+		viewer.addSelectionChangedListener(offlineAction);
 	}
 
 	private void hookContextMenu() {
@@ -187,6 +194,8 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(new Separator());
 		manager.add(deleteRepositoryAction);
 		manager.add(resetConfigurationAction);
+		manager.add(new Separator());
+		manager.add(offlineAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
 		manager.add(repositoryPropertiesAction);
@@ -214,5 +223,27 @@ public class TaskRepositoriesView extends ViewPart {
 		return viewer;
 	}
 
+	public class TaskRepositoryListener implements ITaskRepositoryListener {
+
+		public void repositoriesRead() {
+		}
+
+		public void repositoryAdded(TaskRepository repository) {
+		}
+
+		public void repositoryRemoved(TaskRepository repository) {
+		}
+
+		public void repositorySettingsChanged(TaskRepository repository) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					if (!getViewer().getControl().isDisposed()) {
+						getViewer().refresh(true);
+					}
+				}
+			});			
+		}
+
+	}
 	
 }

@@ -111,6 +111,8 @@ public class TasksUiImages {
 
 	public static final ImageDescriptor OVERLAY_WEB = create(T_TOOL, "overlay-web.gif");
 
+	public static final ImageDescriptor OVERLAY_OFFLINE = create(T_EVIEW, "overlay-offline.gif");
+
 	public static final ImageDescriptor BROWSER_SMALL = create(T_OBJ, "browser-small.gif");
 
 	public static final ImageDescriptor BROWSER_OPEN_TASK = create(T_TOOL, "open-browser.gif");

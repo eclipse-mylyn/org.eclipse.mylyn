@@ -44,7 +44,11 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
 			}
 		} else if (object instanceof TaskRepository) {
-			return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
+			if (((TaskRepository)object).isOffline()) {
+				return TasksUiImages.getImageWithOverlay(TasksUiImages.REPOSITORY, TasksUiImages.OVERLAY_OFFLINE, true, false);
+			} else {
+				return TasksUiImages.getImage(TasksUiImages.REPOSITORY);
+			}
 		}
 		return null;
 	}
