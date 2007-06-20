@@ -14,6 +14,9 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -42,6 +45,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -324,7 +328,7 @@ public class ContextEditorFormPage extends FormPage {
 			// ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(commonViewer,
 			// this);
 			// makeContextMenuActions();
-			// hookContextMenu();
+			hookContextMenu();
 			commonViewer.expandAll();
 		} finally {
 			commonViewer.getControl().setRedraw(true);
@@ -362,18 +366,18 @@ public class ContextEditorFormPage extends FormPage {
 //		commonViewer.addSelectionChangedListener(removeFromContextAction);
 //	}
 
-//	private void hookContextMenu() {
-//		MenuManager menuManager = new MenuManager("#PopupMenu");
-//		menuManager.setRemoveAllWhenShown(true);
+	private void hookContextMenu() {
+		MenuManager menuManager = new MenuManager("#PopupMenu");
+		menuManager.setRemoveAllWhenShown(true);
 //		menuManager.addMenuListener(new IMenuListener() {
 //			public void menuAboutToShow(IMenuManager manager) {
 //				fillContextMenu(manager);
 //			}
 //		});
-//		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
-//		commonViewer.getControl().setMenu(menu);
-//		getSite().registerContextMenu(menuManager, commonViewer);
-//	}
+		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
+		commonViewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(menuManager, commonViewer);
+	}
 
 //	protected void fillContextMenu(IMenuManager manager) {
 //		manager.add(removeFromContextAction);
