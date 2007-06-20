@@ -218,10 +218,11 @@
    <extension
        	 point="org.eclipse.ui.actionSets">
    	  <actionSet
-            label="Mylyn Focus"
+            label="Mylyn Task Context"
             description="Mylyn Focus"
             visible="true"
             id="org.eclipse.mylyn.context.ui.actionSet">
+         <!--
          <action
                class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
                definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
@@ -238,7 +239,7 @@
                label="Mark as Landmark"
                menubarPath="navigate/open.ext2">
          </action>
-	
+		 -->
 	     <action
                definitionId="org.eclipse.mylyn.context.ui.commands.open.context.dialog"
                label="Quick Context View"

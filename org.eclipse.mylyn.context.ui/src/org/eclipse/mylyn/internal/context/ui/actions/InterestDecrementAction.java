@@ -11,13 +11,16 @@
 
 package org.eclipse.mylyn.internal.context.ui.actions;
 
+import org.eclipse.mylyn.context.ui.InterestFilter;
+import org.eclipse.ui.navigator.CommonViewer;
+
 /**
  * @author Mik Kersten
  */
-public class InterestDecrementAction extends AbstractInterestManipulationAction {
+public class InterestDecrementAction extends RemoveFromContextAction {
 
-	@Override
-	protected boolean isIncrement() {
-		return false;
+	public InterestDecrementAction(CommonViewer commonViewer, InterestFilter interestFilter) {
+		super(commonViewer, interestFilter);
 	}
+
 }

@@ -288,21 +288,23 @@
            objectClass="org.eclipse.jdt.core.IMember">
      	<action
             class="org.eclipse.mylyn.internal.context.ui.actions.InterestDecrementAction"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylyn.java.ui.actions.interest.decrement"
-            label="Remove from Focus"
+            label="Remove from Context"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
         </action>
-	    <action  
-  		  	label="Mark as Landmark" 
-	  		tooltip="Mark the selected element as a landmark"
-	  		menubarPath="additions" 
-	  		id="org.eclipse.mylyn.ui.actions.InterestIncrementAction" 
-	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
-	  		icon="icons/elcl16/interest-increase.gif"
-	  		enablesFor="*"/>
+	    <action
+           class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
+           definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
+           enablesFor="*"
+           icon="icons/elcl16/interest-increase.gif"
+           id="org.eclipse.mylyn.ui.actions.InterestIncrementAction"
+           label="Mark as Landmark"
+           menubarPath="additions"
+           tooltip="Mark the selected element as a landmark"/>
      <visibility>
         <or>
            <objectClass
@@ -323,7 +325,7 @@
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylyn.java.ui.actions.interest.decrement.container"
-            label="Remove from Focus"
+            label="Remove from Context"
             menubarPath="additions"
             tooltip="Mark selected element as uninteresting">
       </action>
