@@ -297,7 +297,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 	}
 
 	@Override
-	public boolean getMultiTaskData() {
+	public boolean canGetMultiTaskData() {
 		return true;
 	}
 

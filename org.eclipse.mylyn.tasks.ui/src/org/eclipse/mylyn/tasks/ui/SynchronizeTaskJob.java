@@ -91,7 +91,7 @@ class SynchronizeTaskJob extends Job {
 					break;
 				}
 
-				if (taskDataHandler != null && taskDataHandler.getMultiTaskData()) {
+				if (taskDataHandler != null && taskDataHandler.canGetMultiTaskData()) {
 					// Multi synch supported...
 					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 							repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());

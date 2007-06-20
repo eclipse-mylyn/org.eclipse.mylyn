@@ -74,7 +74,7 @@ public abstract class AbstractTaskDataHandler {
 	 * @return true if connector support downloading multiple task data in single request, false otherwise.
 	 * If true, override and implement getMultiTaskData 
 	 */
-	public boolean getMultiTaskData() {
+	public boolean canGetMultiTaskData() {
 		return false;
 	}
 
