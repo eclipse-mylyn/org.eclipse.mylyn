@@ -366,7 +366,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			return;
 		}
 
-		String text = task.getSummary() + " "; // hack for padding
+		String text = task.getSummary(); 
 		activeTaskLink.setText(text);
 		activeTaskLink.setUnderlined(false);
 		activeTaskLink.setToolTipText("Open: " + task.getSummary());

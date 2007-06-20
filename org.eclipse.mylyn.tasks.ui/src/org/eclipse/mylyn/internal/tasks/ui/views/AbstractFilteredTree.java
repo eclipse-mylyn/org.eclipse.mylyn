@@ -124,7 +124,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		superComposite.setLayoutData(superLayoutData);
 		
 		Composite workingSetComposite = createActiveWorkingSetComposite(superComposite);
-		workingSetComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		workingSetComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
 		
 		Composite activeTaskComposite = createActiveTaskComposite(superComposite);
 		activeTaskComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
