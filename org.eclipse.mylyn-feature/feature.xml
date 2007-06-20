@@ -6,12 +6,12 @@
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
-   <description url="http://eclipse.org/mylar">
-      Mylar Task List, personal task management facilities, and task repository integration support.
+   <description url="http://eclipse.org/mylyn">
+      Provides the Task List for task and time management.
    </description>
 
    <copyright>
-      Copyright (c) 2004 - 2006 Mylar project committers and others.
+      Copyright (c) 2004 - 2007 Mylyn project committers and others.
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
