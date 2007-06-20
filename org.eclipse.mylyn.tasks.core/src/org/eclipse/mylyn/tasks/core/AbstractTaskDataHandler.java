@@ -11,7 +11,6 @@
 
 package org.eclipse.mylyn.tasks.core;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,20 +24,21 @@ public abstract class AbstractTaskDataHandler {
 
 	/**
 	 * Download copy of task data from repository
+	 * 
 	 * @throws CoreException
 	 */
 	public abstract RepositoryTaskData getTaskData(TaskRepository repository, String taskId, IProgressMonitor monitor)
 			throws CoreException;
 
 	/**
-	 * Download task data for each id provided 
+	 * Download task data for each id provided
 	 * 
 	 * Override getMultiTaskData() to return true and implement this method if connector supports download of multiple
 	 * task data in one request.
 	 */
-	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds, IProgressMonitor monitor)
-			throws CoreException {
-		return Collections.emptySet();
+	public Set<RepositoryTaskData> getMultiTaskData(TaskRepository repository, Set<String> taskIds,
+			IProgressMonitor monitor) throws CoreException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -71,8 +71,8 @@ public abstract class AbstractTaskDataHandler {
 	public abstract Set<String> getSubTaskIds(RepositoryTaskData taskData);
 
 	/**
-	 * @return true if connector support downloading multiple task data in single request, false otherwise.
-	 * If true, override and implement getMultiTaskData 
+	 * @return true if connector support downloading multiple task data in single request, false otherwise. If true,
+	 *         override and implement getMultiTaskData
 	 */
 	public boolean canGetMultiTaskData() {
 		return false;
