@@ -49,8 +49,9 @@
             enablesFor="*"
             icon="icons/elcl16/interest-decrease.gif"
             id="org.eclipse.mylyn.resources.ui.actions.InterestDecrementAction"
-            label="Remove from Focus"
+            label="Remove from Context"
             menubarPath="additions"
+            definitionId="org.eclipse.mylyn.context.ui.commands.interest.decrement"
             tooltip="Mark selected element as uninteresting">
       </action>
 	    <action  
@@ -58,6 +59,7 @@
 	  		tooltip="Make selected element a landmark"
 	  		menubarPath="additions" 
 	  		id="org.eclipse.mylyn.resources.ui.actions.InterestIncrementAction" 
+	  		definitionId="org.eclipse.mylyn.context.ui.commands.interest.increment"
 	  		class="org.eclipse.mylyn.internal.context.ui.actions.InterestIncrementAction"
 	  		icon="icons/elcl16/interest-increase.gif"
 	  		enablesFor="*"/>
