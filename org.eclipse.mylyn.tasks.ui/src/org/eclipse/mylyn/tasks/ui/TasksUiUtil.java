@@ -519,7 +519,7 @@ public class TasksUiUtil {
 		});
 	}
 
-	public static void closeEditorInActivePage(AbstractTask task) {
+	public static void closeEditorInActivePage(AbstractTask task, boolean save) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			return;
@@ -531,7 +531,7 @@ public class TasksUiUtil {
 		IEditorInput input = new TaskEditorInput(task, false);
 		IEditorPart editor = page.findEditor(input);
 		if (editor != null) {
-			page.closeEditor(editor, false);
+			page.closeEditor(editor, save);
 		}
 	}
 }

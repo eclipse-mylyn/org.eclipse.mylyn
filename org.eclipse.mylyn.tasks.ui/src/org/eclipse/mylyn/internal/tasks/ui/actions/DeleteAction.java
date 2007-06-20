@@ -77,7 +77,7 @@ public class DeleteAction extends Action {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
 				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-				TasksUiUtil.closeEditorInActivePage(task);
+				TasksUiUtil.closeEditorInActivePage(task, true);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				// boolean deleteConfirmed =
 				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
@@ -97,7 +97,7 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (AbstractTask task : cat.getChildren()) {
 					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-					TasksUiUtil.closeEditorInActivePage(task);
+					TasksUiUtil.closeEditorInActivePage(task, true);
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else {

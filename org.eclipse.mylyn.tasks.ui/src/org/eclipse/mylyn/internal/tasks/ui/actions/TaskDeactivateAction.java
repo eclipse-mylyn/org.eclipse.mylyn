@@ -36,8 +36,6 @@ public class TaskDeactivateAction extends Action {
 		try {
 			if (task != null) {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
-//				TaskListView.getFromActivePerspective().refreshAndFocus();
-				TasksUiUtil.closeEditorInActivePage(task);
 			}
 		} catch (Exception e) {
 			StatusManager.log(e, " Closing task editor on task deactivation failed");

@@ -128,7 +128,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 		
 		Composite activeTaskComposite = createActiveTaskComposite(superComposite);
 		activeTaskComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
-		
+		parent.layout();
 		return parent;
 	}
 

@@ -213,6 +213,11 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createActiveWorkingSetComposite(Composite container) {
+		workingSetLink = new Hyperlink(container, SWT.LEFT);
+		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
+		workingSetLink.setUnderlined(false);
+		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		
 		final ImageHyperlink workingSetButton = new ImageHyperlink(container, SWT.FLAT);
 		workingSetButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
 		workingSetButton.setToolTipText("Select Working Set");
@@ -233,10 +238,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-		workingSetLink = new Hyperlink(container, SWT.LEFT);
-		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
-		workingSetLink.setUnderlined(false);
-		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		workingSetLink.addMouseTrackListener(new MouseTrackListener() {
 
 			public void mouseEnter(MouseEvent e) {
@@ -263,27 +264,24 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			}
 		});
 
-//		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-//		manager.add(action);
-//		manager.createControl(container);
-
 		return workingSetLink;
 	}
 
 	@Override
 	protected Composite createActiveTaskComposite(final Composite container) {
-		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
-		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
-		activeTaskButton.setToolTipText("Select Active Task");
-
 		activeTaskLink = new Hyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		
+		final ImageHyperlink activeTaskButton = new ImageHyperlink(container, SWT.LEFT);// SWT.ARROW | SWT.RIGHT);
+		activeTaskButton.setImage(TasksUiImages.getImage(TasksUiImages.TOOLBAR_ARROW_RIGHT));
+		activeTaskButton.setToolTipText("Select Active Task");
+		
 		AbstractTask activeTask = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 		if (activeTask != null) {
 			indicateActiveTask(activeTask);
 		}
-
+		
 		final ActivateTaskHistoryDropDownAction action = new ActivateTaskHistoryDropDownAction(
 				TasksUiPlugin.getTaskListManager().getTaskActivationHistory(), true);
 
@@ -335,10 +333,6 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 				}
 			}
 		});
-
-//		ToolBarManager manager = new ToolBarManager(SWT.FLAT);
-//		manager.add(action);
-//		manager.createControl(container);
 
 		return activeTaskLink;
 	}
