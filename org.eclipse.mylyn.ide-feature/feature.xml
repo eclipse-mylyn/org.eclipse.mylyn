@@ -6,8 +6,8 @@
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
-   <description url="http://eclipse.org/mylar">
-      Mylar Focused UI for reducing information overload when working with tasks. Filters and decorates views and editors to focus on the task context.
+   <description url="http://eclipse.org/mylyn">
+      Mylyn Task-Focused UI extensions for the Eclipse IDE.  Provides focusing of common IDE views and editors.
    </description>
 
    <copyright>
