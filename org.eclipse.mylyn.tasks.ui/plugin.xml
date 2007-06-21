@@ -815,7 +815,7 @@
             overlayIcon="icons/ovr16/overlay-local.gif"/>
              
 		<externalizer 
-            class="org.eclipse.mylyn.internal.tasks.core.LocalTaskExternalizer"
+            class="org.eclipse.mylyn.internal.tasks.core.LocalTaskListFactory"
             id="org.eclipse.mylyn.tasks.local.externalizer"/>
    </extension> 
 </plugin>

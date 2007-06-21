@@ -52,7 +52,7 @@ public class MockRepositoryTask extends AbstractTask {
 
 	@Override
 	public String toString() {
-		return super.getHandleIdentifier();
+		return "Mock Task: " + super.getHandleIdentifier();
 	}
 
 	@Override

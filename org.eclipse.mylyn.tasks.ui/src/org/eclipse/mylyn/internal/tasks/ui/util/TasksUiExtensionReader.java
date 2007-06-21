@@ -25,7 +25,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.ui.AbstractDuplicateDetector;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -122,7 +122,7 @@ public class TasksUiExtensionReader {
 	private static boolean coreExtensionsRead = false;
 
 	public static void initStartupExtensions(TaskListWriter delegatingExternalizer) {
-		List<ITaskListExternalizer> externalizers = new ArrayList<ITaskListExternalizer>();
+		List<AbstractTaskListFactory> externalizers = new ArrayList<AbstractTaskListFactory>();
 		if (!coreExtensionsRead) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -395,16 +395,16 @@ public class TasksUiExtensionReader {
 		}
 	}
 
-	private static void readExternalizer(IConfigurationElement element, List<ITaskListExternalizer> externalizers) {
+	private static void readExternalizer(IConfigurationElement element, List<AbstractTaskListFactory> externalizers) {
 		try {
 			Object externalizerObject = element.createExecutableExtension(ATTR_CLASS);
-			if (externalizerObject instanceof ITaskListExternalizer) {
-				ITaskListExternalizer externalizer = (ITaskListExternalizer) externalizerObject;
+			if (externalizerObject instanceof AbstractTaskListFactory) {
+				AbstractTaskListFactory externalizer = (AbstractTaskListFactory) externalizerObject;
 				externalizers.add(externalizer);
 			} else {
 				StatusManager.log("Could not load externalizer: "
 						+ externalizerObject.getClass().getCanonicalName() + " must implement "
-						+ ITaskListExternalizer.class.getCanonicalName(), null);
+						+ AbstractTaskListFactory.class.getCanonicalName(), null);
 			}
 
 			// Object taskHandler =

@@ -88,7 +88,6 @@ public class BackgroundSaveTimer implements IActivityTimerListener {
 //
 // @Override
 // protected IStatus run(IProgressMonitor monitor) {
-// System.err.println(">>> requesting background save");
 // listener.saveRequested();
 // return Status.OK_STATUS;
 // }

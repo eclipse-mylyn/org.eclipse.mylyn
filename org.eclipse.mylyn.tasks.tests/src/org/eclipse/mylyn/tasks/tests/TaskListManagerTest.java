@@ -111,13 +111,19 @@ public class TaskListManagerTest extends TestCase {
 		MockRepositoryTask task = new MockRepositoryTask("1");
 		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		manager.getTaskList().deleteTask(task);
+		assertEquals(0, manager.getTaskList().getAllTasks().size());
+		manager.getTaskList().moveToContainer(task, manager.getTaskList().getDefaultCategory());
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+		
+		
 		manager.saveTaskList();
 
 		manager.resetTaskList();
 		manager.readExistingOrCreateNewList();
 		assertEquals(1, manager.getTaskList().getAllTasks().size());
 
-		manager.getTaskList().deleteTask(task);
+		manager.getTaskList().deleteTask(task);		
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
@@ -460,6 +466,17 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, taskList.getDefaultCategory().getChildren().size());
 	}
 
+	public void testCreate() {
+		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
+		manager.getTaskList().addTask(repositoryTask, manager.getTaskList().getDefaultCategory());
+		assertEquals(1, manager.getTaskList().getDefaultCategory().getChildren().size());
+		manager.saveTaskList();
+
+		manager.resetTaskList();
+		manager.readExistingOrCreateNewList();
+		assertEquals(1, manager.getTaskList().getAllTasks().size());
+	}	
+	
 	public void testCreateAndMove() {
 		MockRepositoryTask repositoryTask = new MockRepositoryTask("1");
 		repositoryTask.setKind("kind");
@@ -499,10 +516,8 @@ public class TaskListManagerTest extends TestCase {
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
-		// manager.getTaskList().clear();
-		// manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
-
+		
 		// read once
 		Set<AbstractTaskCategory> readCats = manager.getTaskList().getTaskContainers();
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
@@ -510,12 +525,10 @@ public class TaskListManagerTest extends TestCase {
 		AbstractTaskContainer readCat1 = iterator.next();
 		assertEquals(cat1, readCat1);
 		assertEquals(1, readCat1.getChildren().size());
-
+		
 		manager.saveTaskList();
 		assertNotNull(manager.getTaskList());
 		manager.resetTaskList();
-		// manager.getTaskList().clear();
-		// manager.setTaskList(new TaskList());
 		manager.readExistingOrCreateNewList();
 
 		// read again
@@ -523,9 +536,10 @@ public class TaskListManagerTest extends TestCase {
 		assertTrue(manager.getTaskList().getCategories().contains(cat1));
 
 		iterator = readCats.iterator();
-		readCat1 = iterator.next();
-		assertEquals(cat1, readCat1);
-		assertEquals(1, readCat1.getChildren().size());
+		AbstractTaskContainer reReadCat1 = iterator.next();
+		assertEquals(cat1, reReadCat1);
+		
+		assertEquals(1, reReadCat1.getChildren().size());
 	}
 
 	public void testSubTaskExternalization() {

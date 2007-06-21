@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.ui.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +20,17 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
-import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
+import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
+import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
+import org.eclipse.mylyn.tasks.core.TaskCategory;
+import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
+import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.web.core.XmlUtil;
@@ -47,96 +54,85 @@ import org.w3c.dom.NodeList;
  * @author Ken Sueda (XML serialization support)
  * @author Steffen Pingel
  */
-public class DelegatingTaskExternalizer implements ITaskListExternalizer {
+final class DelegatingTaskExternalizer {
 
-	private static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
+	static final String DEFAULT_PRIORITY = PriorityLevel.P3.toString();
 
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z";
+	static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.S z";
 
-	public static final String KEY_QUERY = "Query";
+	static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
 
-	public static final String KEY_QUERY_HIT = "QueryHit";
+	static final String KEY_NAME = "Name";
+	
+	static final String KEY_LABEL = "Label";
 
-	// public static final String KEY_QUERY_MAX_HITS = "MaxHits";
+	static final String KEY_HANDLE = "Handle";
+	
+	static final String KEY_REPOSITORY_URL = "RepositoryUrl";
 
-	public static final String KEY_QUERY_STRING = "QueryString";
+	static final String KEY_CATEGORY = "Category";
 
-	public static final String KEY_NOTIFIED_INCOMING = "NotifiedIncoming";
+	static final String VAL_ROOT = "Root";
 
-	public static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
+	static final String KEY_SUBTASK = "SubTask";
 
-	public static final String KEY_LABEL = "Label";
+	static final String KEY_KIND = "Kind";
 
-	public static final String KEY_HANDLE = "Handle";
+	static final String KEY_TASK_CATEGORY = "Task" + KEY_CATEGORY;
 
-	public static final String KEY_REPOSITORY_URL = "RepositoryUrl";
+	static final String KEY_LINK = "Link";
 
-	public static final String KEY_CATEGORY = "Category";
+	static final String KEY_PLAN = "Plan";
 
-	public static final String VAL_ROOT = "Root";
+	static final String KEY_TIME_ESTIMATED = "Estimated";
 
-	public static final String KEY_TASK = "Task";
+	static final String KEY_ISSUEURL = "IssueURL";
 
-	public static final String KEY_SUBTASK = "SubTask";
+	static final String KEY_NOTES = "Notes";
 
-	public static final String KEY_KIND = "Kind";
+	static final String KEY_ACTIVE = "Active";
 
-	public static final String KEY_TASK_CATEGORY = "Task" + KEY_CATEGORY;
+	static final String KEY_COMPLETE = "Complete";
 
-	public static final String KEY_LINK = "Link";
+	static final String KEY_PRIORITY = "Priority";
 
-	public static final String KEY_PLAN = "Plan";
+	static final String KEY_PATH = "Path";
 
-	public static final String KEY_TIME_ESTIMATED = "Estimated";
+	static final String VAL_FALSE = "false";
 
-	public static final String KEY_ISSUEURL = "IssueURL";
+	static final String VAL_TRUE = "true";
 
-	public static final String KEY_NOTES = "Notes";
+	static final String KEY_DATE_END = "EndDate";
+	
+	static final String KEY_QUERY_HIT = "QueryHit";
 
-	public static final String KEY_ACTIVE = "Active";
+	static final String KEY_DATE_CREATION = "CreationDate";
 
-	public static final String KEY_COMPLETE = "Complete";
+	static final String KEY_DATE_REMINDER = "ReminderDate";
 
-	public static final String KEY_PRIORITY = "Priority";
+	static final String KEY_DATE_DUE = "DueDate";
 
-	public static final String KEY_PATH = "Path";
-
-	public static final String VAL_FALSE = "false";
-
-	public static final String VAL_TRUE = "true";
-
-	public static final String KEY_NAME = "Name";
-
-	public static final String KEY_DATE_END = "EndDate";
-
-	public static final String KEY_DATE_CREATION = "CreationDate";
-
-	public static final String KEY_DATE_REMINDER = "ReminderDate";
-
-	public static final String KEY_DATE_DUE = "DueDate";
-
-	public static final String KEY_REMINDED = "Reminded";
+	static final String KEY_REMINDED = "Reminded";
 
 	/**
 	 * This element holds the date stamp recorded upon last transition to a synchronized state.
 	 */
-	public static final String KEY_LAST_MOD_DATE = "LastModified";
+	static final String KEY_LAST_MOD_DATE = "LastModified";
 
-	public static final String KEY_DIRTY = "Dirty";
+	static final String KEY_DIRTY = "Dirty";
 
-	public static final String KEY_SYNC_STATE = "offlineSyncState";
+	static final String KEY_SYNC_STATE = "offlineSyncState";
 
-	public static final String KEY_OWNER = "Owner";
+	static final String KEY_OWNER = "Owner";
 
-	public static final String KEY_STALE = "Stale";
+	static final String KEY_STALE = "Stale";
+	
+	static final String KEY_LAST_REFRESH = "LastRefreshTimeStamp";
 
-	private List<ITaskListExternalizer> delegateExternalizers = new ArrayList<ITaskListExternalizer>();
+	private List<AbstractTaskListFactory> factories = new ArrayList<AbstractTaskListFactory>();
 
-	/**
-	 * Set these on the TaskListWriter instead
-	 */
-	public void setDelegateExternalizers(List<ITaskListExternalizer> externalizers) {
-		this.delegateExternalizers = externalizers;
+	public void setFactories(List<AbstractTaskListFactory> externalizers) {
+		this.factories = externalizers;
 	}
 
 	public Element createCategoryElement(AbstractTaskContainer category, Document doc, Element parent) {
@@ -146,23 +142,44 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			return parent;
 		} else {
 			Element node = doc.createElement(getCategoryTagName());
-			node.setAttribute(KEY_NAME, category.getSummary());
+			node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, category.getSummary());
 			parent.appendChild(node);
 			return node;
 		}
 	}
 
-	/**
-	 * Override to create specific elements
-	 */
-	public boolean canCreateElementFor(AbstractTask task) {
-		return false;
-	}
+//	/**
+//	 * Override to create specific elements
+//	 */
+//	public boolean canCreateElementFor(AbstractTask task) {
+//		return false;
+//	}
 
 	public Element createTaskElement(AbstractTask task, Document doc, Element parent) {
-		Element node = doc.createElement(getTaskTagName());
+		AbstractTaskListFactory factory = null;
+		for (AbstractTaskListFactory currentFactory : factories) {
+			if (currentFactory.canCreate(task)) {
+				factory = currentFactory;
+				break;
+			}
+		}
+		
+		String taskTagName;
+		if (factory != null) {
+			taskTagName = factory.getTaskElementName();
+		} else {
+			StatusManager.log("No externalizer for task: " + task, this);
+			return null;
+//			taskTagName = getTaskTagName();
+		}
+		Element node = doc.createElement(taskTagName);		
+		if (factory != null) {
+			factory.setAdditionalAttributes(task, node);
+		}
+		
 		node.setAttribute(KEY_LABEL, stripControlCharacters(task.getSummary()));
 		node.setAttribute(KEY_HANDLE, task.getHandleIdentifier());
+		node.setAttribute(KEY_REPOSITORY_URL, task.getRepositoryUrl());
 
 		AbstractTaskContainer container = null;
 
@@ -234,11 +251,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			if (abstractTask.getOwner() != null) {
 				node.setAttribute(KEY_OWNER, abstractTask.getOwner());
 			}
-			// if (abstractTask.isDirty()) {
-			// node.setAttribute(KEY_DIRTY, VAL_TRUE);
-			// } else {
-			// node.setAttribute(KEY_DIRTY, VAL_FALSE);
-			// }
 		}
 
 		for (AbstractTask t : task.getChildren()) {
@@ -269,13 +281,13 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		parent.appendChild(node);
 	}
 
-	protected String stripControlCharacters(String text) {
+	private String stripControlCharacters(String text) {
 		if (text == null)
 			return "";
 		return XmlUtil.cleanXmlString(text);
 	}
 
-	protected String formatExternDate(Date date) {
+	private String formatExternDate(Date date) {
 		if (date == null)
 			return "";
 		String f = DATE_FORMAT;
@@ -283,17 +295,17 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return format.format(date);
 	}
 
-	public boolean canReadCategory(Node node) {
-		return node.getNodeName().equals(getCategoryTagName());
-	}
+//	public boolean canReadCategory(Node node) {
+//		return node.getNodeName().equals(getCategoryTagName());
+//	}
 
 	public void readCategory(Node node, TaskList taskList) throws TaskExternalizationException {
 		boolean hasCaughtException = false;
 		Element element = (Element) node;
 
 		AbstractTaskCategory category;
-		if (element.hasAttribute(KEY_NAME)) {
-			category = new TaskCategory(element.getAttribute(KEY_NAME));
+		if (element.hasAttribute(DelegatingTaskExternalizer.KEY_NAME)) {
+			category = new TaskCategory(element.getAttribute(DelegatingTaskExternalizer.KEY_NAME));
 			taskList.internalAddCategory((TaskCategory) category);
 		} else {
 			// LEGACY: registry categories did not have names
@@ -306,18 +318,6 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			try {
 				// LEGACY: categories used to contain tasks?
 				category.addChild(readTask(child, taskList, category, null));
-				// boolean read = false;
-				// for (ITaskListExternalizer externalizer :
-				// delegateExternalizers) {
-				// // LEGACY: categories used to contain tasks
-				// if (externalizer.canReadTask(child)) {
-				// externalizer.createTask(child, taskList, category, null);
-				// read = true;
-				// }
-				// }
-				// if (!read && canReadTask(child)) {
-				// category.add(createTask(child, taskList, category, null));
-				// }
 			} catch (Throwable t) {
 				hasCaughtException = true;
 			}
@@ -336,7 +336,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		String taskId = null;
 		String repositoryUrl = null;
 		String summary = "";
-		boolean alreadyRead = false;
+//		boolean alreadyRead = false;
 
 		Element element = (Element) node;
 		if (element.hasAttribute(KEY_HANDLE)) {
@@ -350,17 +350,17 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			summary = element.getAttribute(KEY_LABEL);
 		}
 
-		for (ITaskListExternalizer externalizer : delegateExternalizers) {
-			if (!alreadyRead && externalizer.canReadTask(node)) {
-				task = externalizer.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
-				alreadyRead = true;
+		for (AbstractTaskListFactory externalizer : factories) {
+			if (node.getNodeName().equals(externalizer.getTaskElementName())) {
+				task = externalizer.createTask(repositoryUrl, taskId, summary, element);
+				break;
 			}
 		}
 
-		if (!alreadyRead && this.canReadTask(node)) {
-			task = this.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
-			alreadyRead = true;
-		}
+//		if (!alreadyRead && this.canReadTask(node)) {
+//			task = this.createTask(repositoryUrl, taskId, summary, element, taskList, category, parent);
+//			alreadyRead = true;
+//		}
 		if (task != null) {
 			readTaskInfo(task, taskList, element, parent, category);
 		}
@@ -368,24 +368,24 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return task;
 	}
 
-	public boolean canReadTask(Node node) {
-		return node.getNodeName().equals(getTaskTagName());
-	}
+//	public boolean canReadTask(Node node) {
+//		return node.getNodeName().equals(getTaskTagName());
+//	}
 
-	/**
-	 * Override for connector-specific implementation
-	 */
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element,
-			TaskList taskList, AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
-		String handle;
-		if (element.hasAttribute(KEY_HANDLE)) {
-			handle = element.getAttribute(KEY_HANDLE);
-		} else {
-			throw new TaskExternalizationException("Handle not stored for task");
-		}
-		AbstractTask task = new LocalTask(handle, summary);
-		return task;
-	}
+//	/**
+//	 * Override for connector-specific implementation
+//	 */
+//	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element,
+//			TaskList taskList, AbstractTaskContainer category, AbstractTask parent) throws TaskExternalizationException {
+//		String handle;
+//		if (element.hasAttribute(KEY_HANDLE)) {
+//			handle = element.getAttribute(KEY_HANDLE);
+//		} else {
+//			throw new TaskExternalizationException("Handle not stored for task");
+//		}
+//		AbstractTask task = new LocalTask(handle, summary);
+//		return task;
+//	}
 
 	private void readTaskInfo(AbstractTask task, TaskList taskList, Element element, AbstractTask parent,
 			AbstractTaskCategory legacyCategory) throws TaskExternalizationException {
@@ -494,8 +494,8 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			AbstractTask abstractTask = (AbstractTask) task;
 			abstractTask.setCurrentlySynchronizing(false);
 
-			if (element.hasAttribute(KEY_REPOSITORY_URL)) {
-				abstractTask.setRepositoryUrl(element.getAttribute(KEY_REPOSITORY_URL));
+			if (element.hasAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
+				abstractTask.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
 			}
 
 			if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
@@ -567,7 +567,7 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 	// }
 	// }
 
-	protected Date getDateFromString(String dateString) {
+	private Date getDateFromString(String dateString) {
 		Date date = null;
 		if ("".equals(dateString))
 			return null;
@@ -581,36 +581,52 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return date;
 	}
 
-	public String getCategoryTagName() {
+	private String getCategoryTagName() {
 		return KEY_TASK_CATEGORY;
 	}
 
-	public String getTaskTagName() {
-		return KEY_TASK;
-	}
+//	public String getTaskTagName() {
+//		return AbstractTaskListElementFactory.KEY_TASK;
+//	}
 
-	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
-		return false;
-	}
+//	public boolean canCreateElementFor(AbstractRepositoryQuery query) {
+//		return false;
+//	}
 
 	public Element createQueryElement(AbstractRepositoryQuery query, Document doc, Element parent) {
-		String queryTagName = getQueryTagNameForElement(query);
+		AbstractTaskListFactory factory = null;
+		String queryTagName = null;
+		for (AbstractTaskListFactory currentFactory : factories) {
+			if (currentFactory.canCreate(query)) {
+				factory = currentFactory;
+				if (factory != null) {
+					queryTagName = factory.getQueryElementName(query);
+					break;
+				}
+			}
+		}
+		if (factory == null || queryTagName == null) {		
+			StatusManager.log("No externalizer for query: " + query, this);
+			return null;
+//			queryTagName = getQueryTagNameForElement(query);
+		}
+		
+//		String queryTagName = getQueryTagNameForElement(query);
+		
 		Element node = doc.createElement(queryTagName);
-		node.setAttribute(KEY_NAME, query.getSummary());
-		// node.setAttribute(KEY_QUERY_MAX_HITS, query.getMaxHits() + "");
-		node.setAttribute(KEY_QUERY_STRING, query.getUrl());
-		node.setAttribute(KEY_REPOSITORY_URL, query.getRepositoryUrl());
+		
+		if (factory != null) {
+			factory.setAdditionalAttributes(query, node);
+		}
+		
+		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, query.getSummary());
+		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
+		node.setAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());
 		if (query.getLastRefreshTimeStamp() != null) {
-			node.setAttribute(KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());
+			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());
 		}
 		for (AbstractTask hit : query.getChildren()) {
 			try {
-// Element element = null;
-// for (ITaskListExternalizer externalizer : delegateExternalizers) {
-// if (externalizer.canCreateElementFor(hit))
-// element = externalizer.createQueryHitElement(hit, doc, node);
-// }
-// if (element == null)
 				createQueryHitElement(hit, doc, node);
 			} catch (Exception e) {
 				StatusManager.log(e, e.getMessage());
@@ -620,36 +636,33 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 		return node;
 	}
 
-	public boolean canReadQuery(Node node) {
-		return false;
-	}
+//	public boolean canReadQuery(Node node) {
+//		return false;
+//	}
 
-	/**
-	 * This happens on startup, so connectors should not perform any network operations when reading queries.
-	 */
-	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
-		// doesn't know how to read any queries
-		return null;
-	}
+//	public AbstractRepositoryQuery readQuery(Node node, TaskList tlist) throws TaskExternalizationException {
+//		// doesn't know how to read any queries
+//		return null;
+//	}
 
-	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
-		return KEY_QUERY;
-	}
+//	public String getQueryTagNameForElement(AbstractRepositoryQuery query) {
+//		return AbstractTaskListElementFactory.KEY_QUERY;
+//	}
 
-	private String getQueryHitTagName() {
-		return KEY_QUERY_HIT;
-	}
+//	private String getQueryHitTagName() {
+//		return AbstractTaskListElementFactory.KEY_QUERY_HIT;
+//	}
 
 	public Element createQueryHitElement(AbstractTask queryHit, Document doc, Element parent) {
-		Element node = doc.createElement(getQueryHitTagName());
+		Element node = doc.createElement(KEY_QUERY_HIT);
 		node.setAttribute(KEY_HANDLE, queryHit.getHandleIdentifier());
 		parent.appendChild(node);
 		return node;
-	}
+	} 
 
-	public boolean canReadQueryHit(Node node) {
-		return false;
-	}
+//	public boolean canReadQueryHit(Node node) {
+//		return false;
+//	}
 
 	public final void readQueryHit(Element element, TaskList taskList, AbstractRepositoryQuery query)
 			throws TaskExternalizationException {
@@ -660,13 +673,12 @@ public class DelegatingTaskExternalizer implements ITaskListExternalizer {
 			if (hit != null) {
 				taskList.addTask(hit, query);
 			}
-
 		} else {
 			throw new TaskExternalizationException("Handle not stored for repository task");
 		}
 	}
 
-	public List<ITaskListExternalizer> getDelegateExternalizers() {
-		return delegateExternalizers;
+	public List<AbstractTaskListFactory> getDelegateExternalizers() {
+		return factories;
 	}
 }

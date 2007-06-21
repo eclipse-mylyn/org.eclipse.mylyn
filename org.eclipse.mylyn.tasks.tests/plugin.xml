@@ -14,7 +14,7 @@
             type="mock"/>
       
       <externalizer 
-            class="org.eclipse.mylyn.tasks.tests.connector.MockRepositoryExternalizer"
+            class="org.eclipse.mylyn.tasks.tests.connector.MockTaskListFactory"
             id="org.eclipse.mylyn.tasks.tests.externalizer"/>
    </extension>  
    

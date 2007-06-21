@@ -22,10 +22,10 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
-import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer;
+import org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskListExternalizer;
+import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -122,10 +122,10 @@ public class TaskListStandaloneTest extends TestCase {
 
 	// Task retention when connector missing upon startup
 	public void testOrphanedTasks() {
-		List<ITaskListExternalizer> originalExternalizers = manager.getTaskListWriter().getExternalizers();
-		List<ITaskListExternalizer> externalizers;
-		externalizers = new ArrayList<ITaskListExternalizer>();
-		externalizers.add(new BugzillaTaskExternalizer());
+		List<AbstractTaskListFactory> originalExternalizers = manager.getTaskListWriter().getExternalizers();
+		List<AbstractTaskListFactory> externalizers;
+		externalizers = new ArrayList<AbstractTaskListFactory>();
+		externalizers.add(new BugzillaTaskListFactory());
 		// make some tasks
 		// save them
 		BugzillaTask task = new BugzillaTask("http://bugs", "1", "1");
@@ -150,7 +150,7 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.saveTaskList();
 
 		// re-enable connector
-		externalizers.add(new BugzillaTaskExternalizer());
+		externalizers.add(new BugzillaTaskListFactory());
 		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
 
 		// re-load tasklist
@@ -164,10 +164,10 @@ public class TaskListStandaloneTest extends TestCase {
 
 	// Query retention when connector missing/fails to load
 	public void testOrphanedQueries() {
-		List<ITaskListExternalizer> originalExternalizers = manager.getTaskListWriter().getExternalizers();
-		List<ITaskListExternalizer> externalizers;
-		externalizers = new ArrayList<ITaskListExternalizer>();
-		externalizers.add(new BugzillaTaskExternalizer());
+		List<AbstractTaskListFactory> originalExternalizers = manager.getTaskListWriter().getExternalizers();
+		List<AbstractTaskListFactory> externalizers;
+		externalizers = new ArrayList<AbstractTaskListFactory>();
+		externalizers.add(new BugzillaTaskListFactory());
 		// make a query
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(IBugzillaConstants.TEST_BUGZILLA_222_URL,
 				"http://queryurl", "summary");
@@ -193,7 +193,7 @@ public class TaskListStandaloneTest extends TestCase {
 		manager.saveTaskList();
 
 		// re-enable connector
-		externalizers.add(new BugzillaTaskExternalizer());
+		externalizers.add(new BugzillaTaskListFactory());
 		manager.getTaskListWriter().setDelegateExternalizers(externalizers);
 
 		// re-load tasklist

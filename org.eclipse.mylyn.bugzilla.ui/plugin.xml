@@ -20,7 +20,7 @@
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
               
 		<externalizer 
-            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskExternalizer"
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory"
             id="org.eclipse.mylyn.bugzilla.tasklist.externalizer"/>
    </extension> 
   

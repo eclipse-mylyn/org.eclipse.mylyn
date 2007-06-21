@@ -24,5 +24,5 @@ public abstract class AbstractTaskListFilter {
 
 	public boolean shouldAlwaysShow(Object parent, AbstractTask task, boolean exposeSubTasks) {
 		return task.isActive();
-	}
+	} 
 }
