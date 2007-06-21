@@ -814,8 +814,8 @@
             name="Local Repository Ui"
             overlayIcon="icons/ovr16/overlay-local.gif"/>
              
-		<externalizer 
+      <taskListFactory
             class="org.eclipse.mylyn.internal.tasks.core.LocalTaskListFactory"
-            id="org.eclipse.mylyn.tasks.local.externalizer"/>
+            id="org.eclipse.mylyn.tasks.ui.local.factory"/>
    </extension> 
 </plugin>

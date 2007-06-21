@@ -19,9 +19,9 @@
             name="Bugzilla Repository Ui"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
               
-		<externalizer 
+	  <taskListFactory 
             class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaTaskListFactory"
-            id="org.eclipse.mylyn.bugzilla.tasklist.externalizer"/>
+            id="org.eclipse.mylyn.bugzilla.tasklist.factory"/>
    </extension> 
   
    <extension

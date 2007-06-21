@@ -13,9 +13,9 @@
             name="Mock Repository Client"
             type="mock"/>
       
-      <externalizer 
+      <taskListFactory 
             class="org.eclipse.mylyn.tasks.tests.connector.MockTaskListFactory"
-            id="org.eclipse.mylyn.tasks.tests.externalizer"/>
+            id="org.eclipse.mylyn.tasks.tests.factory"/>
    </extension>  
    
 </plugin>

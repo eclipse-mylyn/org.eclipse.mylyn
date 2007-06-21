@@ -15,9 +15,9 @@
             class="org.eclipse.mylyn.internal.trac.ui.TracRepositoryUi"
             id="Trac Repository UI"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
-      <externalizer
+      <taskListFactory
             class="org.eclipse.mylyn.internal.trac.ui.TracTaskListFactory"
-            id="org.eclipse.mylyn.trac.tasklist.externalizer"
+            id="org.eclipse.mylyn.trac.tasklist.taskListFactory"
             name="Trac Externalizer"/>
    </extension>
    <extension
