@@ -43,7 +43,7 @@ public class TaskListNotificationPopup extends PopupDialog {
 
 	private static final int NUM_NOTIFICATIONS_TO_DISPLAY = 3;
 
-	private static final String MYLAR_NOTIFICATION_LABEL = "Mylar Notification";
+	private static final String MYLAR_NOTIFICATION_LABEL = "Mylyn Notification";
 
 	private Form form;
 
