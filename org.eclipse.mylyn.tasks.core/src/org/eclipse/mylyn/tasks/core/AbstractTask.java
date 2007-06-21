@@ -27,7 +27,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 public abstract class AbstractTask extends AbstractTaskContainer {
 	
 	public static final String DEFAULT_TASK_KIND = "task";
-
+	
 	private String repositoryUrl;
 
 	private String kind = DEFAULT_TASK_KIND;
@@ -87,9 +87,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private int estimatedTimeHours = 1;
 		
-
-
-
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
 	
@@ -171,9 +168,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public final String getHandleIdentifier() {
-		// Note: when removing this consider implications to repository url refactoring
-		// which only sets the repository url (so if we simply return handle here it will
-		// be incorrect after a refactoring). 
 		return RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 	}
 
