@@ -89,7 +89,20 @@ public class TasksUiUtil {
 				if (task != null && !(task instanceof LocalTask)) {
 					refreshAndOpenTaskListElement(task);
 				} else {
-					openUrl(url, 0);
+					boolean opened = false;
+					AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getConnectorForRepositoryTaskUrl(
+							url);
+					if (connector != null) {
+						String repositoryUrl = connector.getRepositoryUrlFromTaskUrl(url);
+						String id = connector.getTaskIdFromTaskUrl(url);
+						TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
+						
+						opened = openRepositoryTask(repository, id);
+					}
+					if(!opened){
+						openUrl(url, 0);
+					}
+
 				}
 			} else {
 				openUrl(url, FLAG_NO_RICH_EDITOR);
@@ -101,7 +114,7 @@ public class TasksUiUtil {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "URL not found", "URL Could not be opened");
 		}
 	}
-
+	 
 	private static void openUrl(String url, int customFlags) throws PartInitException, MalformedURLException {
 		if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
 			try {
