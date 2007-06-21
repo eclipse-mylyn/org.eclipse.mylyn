@@ -60,6 +60,6 @@ public abstract class AbstractTaskListFactory {
 	}
 
 	public void setAdditionalAttributes(AbstractTask task, Element element) {
-		// no default additional attributes
+		// ignore
 	}
 }
