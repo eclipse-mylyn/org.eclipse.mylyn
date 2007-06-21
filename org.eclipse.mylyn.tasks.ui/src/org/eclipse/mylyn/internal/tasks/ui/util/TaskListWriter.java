@@ -324,10 +324,13 @@ public class TaskListWriter {
 									// TODO: move this stuff into externalizer
 									String repositoryUrl =childElement.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL);
 									String queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY_STRING);
-									if (queryString == null) { // fallback for legacy
+									if (queryString.length() == 0) { // fallback for legacy
 										queryString = childElement.getAttribute(AbstractTaskListFactory.KEY_QUERY);
 									}
 									String label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_NAME);
+									if (label.length() == 0) { // fallback for legacy
+										label = childElement.getAttribute(DelegatingTaskExternalizer.KEY_LABEL);
+									}
 																		
 									AbstractRepositoryQuery query = externalizer.createQuery(repositoryUrl, queryString, label, childElement);
 									if (query != null) {
