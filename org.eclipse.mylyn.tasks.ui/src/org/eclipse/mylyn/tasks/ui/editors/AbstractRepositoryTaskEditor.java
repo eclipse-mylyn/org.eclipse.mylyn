@@ -1529,7 +1529,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					taskData.setDescription(newValue);
 				}
 			});
-			textHash.put(taskData.getDescription(), styledText);
+			controlBySelectableObject.put(taskData.getDescription(), styledText);
 		} else {
 			String text = taskData.getDescription();
 			descriptionTextViewer = addTextViewer(repository, sectionComposite, text, SWT.MULTI | SWT.WRAP);
@@ -1537,7 +1537,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			GridDataFactory.fillDefaults().hint(DESCRIPTION_WIDTH, SWT.DEFAULT).applyTo(
 					descriptionTextViewer.getControl());
 
-			textHash.put(text, styledText);
+			controlBySelectableObject.put(text, styledText);
 		}
 
 		if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.DESCRIPTION))) {
@@ -1555,7 +1555,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		toolkit.paintBordersFor(sectionComposite);
 	}
 
-	private ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
+	protected ImageHyperlink createReplyHyperlink(final int commentNum, Composite composite, final String commentBody) {
 		final ImageHyperlink replyLink = new ImageHyperlink(composite, SWT.NULL);
 		toolkit.adapt(replyLink, true, true);
 		replyLink.setImage(TasksUiImages.getImage(TasksUiImages.REPLY));
@@ -1845,7 +1845,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			// code for outline
 			commentStyleText.add(styledText);
-			textHash.put(taskComment, styledText);
+			controlBySelectableObject.put(taskComment, styledText);
 
 			// if (supportsCommentDelete()) {
 			// Button deleteButton = toolkit.createButton(ecComposite, null,
@@ -2168,7 +2168,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * CODE TO SCROLL TO A COMMENT OR OTHER PIECE OF TEXT
 	 *----------------------------------------------------------*/
 
-	private HashMap<Object, StyledText> textHash = new HashMap<Object, StyledText>();
+	private HashMap<Object, Control> controlBySelectableObject = new HashMap<Object, Control>();
 
 	private List<StyledText> commentStyleText = new ArrayList<StyledText>();
 
@@ -2215,23 +2215,25 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	 * @param highlight
 	 *            Whether or not the object should be highlighted.
 	 */
-	private void select(Object o, boolean highlight) {
-		if (textHash.containsKey(o)) {
-			StyledText t = textHash.get(o);
-			if (t != null) {
-				Composite comp = t.getParent();
-				while (comp != null) {
-					if (comp instanceof ExpandableComposite) {
-						ExpandableComposite ex = (ExpandableComposite) comp;
-						ex.setExpanded(true);
-					}
-					comp = comp.getParent();
+	public boolean select(Object o, boolean highlight) {
+		Control control = controlBySelectableObject.get(o);
+		if (control != null) {
+			// expand all parents of control
+			Composite comp = control.getParent();
+			while (comp != null) {
+				if (comp instanceof ExpandableComposite) {
+					ExpandableComposite ex = (ExpandableComposite) comp;
+					ex.setExpanded(true);
 				}
-				focusOn(t, highlight);
+				comp = comp.getParent();
 			}
+			focusOn(control, highlight);
 		} else if (o instanceof RepositoryTaskData) {
 			focusOn(null, highlight);
+		} else {
+			return false;
 		}
+		return true;
 	}
 
 	private void selectNewComment() {
@@ -2754,7 +2756,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				setGlobalBusy(true);
 				changedAttributes.clear();
 				commentStyleText.clear();
-				textHash.clear();
+				controlBySelectableObject.clear();
 				editorInput.refreshInput();
 
 				// Note: Marking read must run synchronously
@@ -2982,4 +2984,19 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public Color getColorIncoming() {
 		return colorIncoming;
 	}
+	
+	/**
+	 * @see #select(Object, boolean)
+	 */
+	public void addSelectableControl(Object item, Control control) {
+		controlBySelectableObject.put(item, control);
+	}
+	
+	/**
+	 * @see #addSelectableControl(Object, Control)
+	 */
+	public void removeSelectableControl(Object item) {
+		controlBySelectableObject.remove(item);
+	}
+
 }

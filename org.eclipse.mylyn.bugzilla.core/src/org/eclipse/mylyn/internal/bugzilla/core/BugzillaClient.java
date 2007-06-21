@@ -689,7 +689,7 @@ public class BugzillaClient {
 			return postMethod;
 		} else {
 			postMethod.releaseConnection();
-			StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
+			//StatusManager.log("Post failed: " + HttpStatus.getStatusText(status), this);
 			throw new IOException("Communication error occurred during upload. \n\n" + HttpStatus.getStatusText(status));
 		}
 
