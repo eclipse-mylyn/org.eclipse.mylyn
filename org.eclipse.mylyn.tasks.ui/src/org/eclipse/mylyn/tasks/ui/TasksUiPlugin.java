@@ -49,6 +49,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITaskListNotificationProvider;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
+import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
@@ -214,12 +215,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			ContextCorePlugin.getContextManager().activateContext(task.getHandleIdentifier());
 		}
 
-		public void tasksActivated(List<AbstractTask> tasks) {
-			for (AbstractTask task : tasks) {
-				taskActivated(task);
-			}
-		}
-
 		public void taskDeactivated(final AbstractTask task) {
 			ContextCorePlugin.getContextManager().deactivateContext(task.getHandleIdentifier());
 		}
@@ -357,13 +352,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		// NOTE: Startup order is very sensitive
+		// NOTE: startup order is very sensitive
 		try {
-			// TODO: move this back to the extension point, bug 167784
-			WorkspaceAwareContextStore contextStore = new WorkspaceAwareContextStore();
-			contextStore.init();
-			ContextCorePlugin.setContextStore(contextStore);
-
+			StatusManager.addStatusHandler(new RepositoryAwareStatusHandler());
 			WebClientUtil.initCommonsLoggingSettings();
 			initializeDefaultPreferences(getPreferenceStore());
 			taskListWriter = new TaskListWriter();

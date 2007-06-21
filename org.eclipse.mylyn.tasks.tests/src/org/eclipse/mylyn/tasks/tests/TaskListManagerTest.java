@@ -626,7 +626,6 @@ public class TaskListManagerTest extends TestCase {
 		Set<AbstractTask> readList = manager.getTaskList().getDefaultCategory().getChildren();
 		for (AbstractTask task : readList) {
 			if (task.equals(task1)) {
-				//System.err.println(">>> " + task.getChildren());
 				assertEquals(task1.getSummary(), task.getSummary());
 				assertEquals(1, task.getChildren().size());
 			}

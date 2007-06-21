@@ -95,7 +95,6 @@ public class SaxBugzillaQueryContentHandler extends DefaultHandler {
 			case ID:
 				id = parsedText;
 				if (numCollected < maxHits || maxHits == IBugzillaConstants.RETURN_ALL_HITS) {
-					//System.err.println(">>> "+id);
 					bugIds.add(id);
 					numCollected++;
 				}
