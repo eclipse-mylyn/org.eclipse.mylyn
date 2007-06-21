@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 /**
  * @author Mik Kersten
  */
-@Deprecated
 public class StatusManager {
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
