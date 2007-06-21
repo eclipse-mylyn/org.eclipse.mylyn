@@ -313,9 +313,6 @@
            <objectClass
                  name="org.eclipse.jdt.core.IField">
            </objectClass>
-           <objectClass
-                 name="org.eclipse.jdt.core.IType">
-           </objectClass>
         </or>
      </visibility>
 	 </objectContribution>
