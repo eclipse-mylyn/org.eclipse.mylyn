@@ -46,6 +46,7 @@ public class RepositoryOfflineAction extends Action implements ISelectionChanged
 	public void run() {
 		repository.setOffline(isChecked());
 		TasksUiPlugin.getRepositoryManager().notifyRepositorySettingsChagned(repository);
+		TasksUiPlugin.getRepositoryManager().saveRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

@@ -137,7 +137,7 @@ class SynchronizeTaskJob extends Job {
 					return Status.CANCEL_STATUS;
 				} catch (final CoreException e) {
 					for (AbstractTask task : tasksToSynch) {
-						task.setStatus(e.getStatus());
+						updateStatus(repository, task, e.getStatus());
 					}
 					if (forced) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -158,37 +158,36 @@ class SynchronizeTaskJob extends Job {
 		return Status.OK_STATUS;
 	}
 
-	private void synchronizeTask(IProgressMonitor monitor, AbstractTask repositoryTask) {
-		monitor.subTask(repositoryTask.getSummary());
+	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
+		monitor.subTask(task.getSummary());
 
-		repositoryTask.setStatus(null);
+		task.setStatus(null);
 
+		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+				task.getRepositoryKind(), task.getRepositoryUrl());
 		try {
-
-			final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-					repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
 			if (repository == null) {
 				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
 						"Associated repository could not be found. Ensure proper repository configuration of "
-								+ repositoryTask.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
+								+ task.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 								+ ".", null));
 			}
 
-			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
+			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 			if (taskDataHandler != null) {
-				String taskId = repositoryTask.getTaskId();
+				String taskId = task.getTaskId();
 				RepositoryTaskData downloadedTaskData = taskDataHandler.getTaskData(repository, taskId, monitor);
 
 				if (downloadedTaskData != null) {
-					updateTask(monitor, repository, repositoryTask, downloadedTaskData);
+					updateTask(monitor, repository, task, downloadedTaskData);
 				} else {
-					updateFromRepository(repository, repositoryTask, monitor);
+					updateFromRepository(repository, task, monitor);
 				}
 			} else {
-				updateFromRepository(repository, repositoryTask, monitor);
+				updateFromRepository(repository, task, monitor);
 			}
 		} catch (final CoreException e) {
-			repositoryTask.setStatus(e.getStatus());
+			updateStatus(repository, task, e.getStatus());
 			if (forced) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -199,6 +198,17 @@ class SynchronizeTaskJob extends Job {
 		}
 
 		monitor.worked(1);
+	}
+
+	/**
+	 * Does not report synchronization failures if repository is offline.
+	 */
+	private void updateStatus(TaskRepository repository, AbstractTask task, IStatus status) {
+		if (!forced && repository != null && repository.isOffline()) {
+			task.setCurrentlySynchronizing(false);
+		} else {
+			task.setStatus(status);
+		}
 	}
 
 	private void synchronizeTasks(IProgressMonitor monitor, TaskRepository repository, Set<AbstractTask> tasks)
@@ -222,7 +232,7 @@ class SynchronizeTaskJob extends Job {
 						try {
 							updateTask(new SubProgressMonitor(monitor, 1), repository, task, taskData);
 						} catch (final CoreException e) {
-							task.setStatus(e.getStatus());
+							updateStatus(repository, task, e.getStatus());
 							if (forced) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 									public void run() {

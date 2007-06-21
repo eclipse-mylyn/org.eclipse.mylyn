@@ -38,14 +38,14 @@ public class RepositoryTaskAttribute implements Serializable {
 
 	public static final String USER_CC = "task.common.user.cc";
 
+	public static final String USER_REPORTER = "task.common.user.reporter";
+
 	public static final String COMMENT_NEW = "task.common.comment.new";
 
 	public static final String COMMENT_TEXT = "task.common.comment.text";
 
 	public static final String COMMENT_DATE = "task.common.comment.date";
 
-	// THIS IS NOT BEING USED BUT RATHER "USER_OWNER" for comments
-	// TODO: use this taskId instead
 	public static final String COMMENT_AUTHOR = "task.common.comment.author";
 
 	public static final String DESCRIPTION = "task.common.description";
@@ -71,8 +71,6 @@ public class RepositoryTaskAttribute implements Serializable {
 	public static final String PRIORITY = "task.common.priority";
 
 	public static final String DATE_MODIFIED = "task.common.date.modified";
-
-	public static final String USER_REPORTER = "task.common.user.reporter";
 
 	public static final String SUMMARY = "task.common.summary";
 
