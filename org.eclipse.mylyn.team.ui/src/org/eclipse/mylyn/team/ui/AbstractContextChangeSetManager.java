@@ -60,11 +60,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		public void taskActivated(AbstractTask task) {
 			// ignore
 		}
-
-		public void tasksActivated(List<AbstractTask> tasks) {
-			// ignore
-		}
-
+		
 		public void taskDeactivated(AbstractTask task) {
 			// ignore
 		}

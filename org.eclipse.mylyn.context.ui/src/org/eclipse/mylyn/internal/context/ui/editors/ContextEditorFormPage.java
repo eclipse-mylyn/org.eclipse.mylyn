@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;

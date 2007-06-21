@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.context.core;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,9 +52,9 @@ public class ContextCorePlugin extends Plugin {
 
 	private static AbstractContextStore contextStore;
 
-	private boolean extensionsLoaded = false;
-
 	private Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
+
+	private boolean contextStoreRead = false;
 
 	private static final AbstractContextStructureBridge DEFAULT_BRIDGE = new AbstractContextStructureBridge() {
 
@@ -67,24 +66,20 @@ public class ContextCorePlugin extends Plugin {
 		@Override
 		public String getHandleIdentifier(Object object) {
 			return null;
-//			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
 		@Override
 		public Object getObjectForHandle(String handle) {
-//			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
 		@Override
 		public String getParentHandle(String handle) {
-//			MylarStatusHandler.log("null bridge for handle: " + handle, this);
 			return null;
 		}
 
 		@Override
 		public String getName(Object object) {
-//			MylarStatusHandler.log("null bridge for object: " + object.getClass(), this);
 			return "";
 		}
 
@@ -96,7 +91,6 @@ public class ContextCorePlugin extends Plugin {
 		@Override
 		public boolean acceptsObject(Object object) {
 			return false;
-//			throw new RuntimeException("null bridge for object: " + object.getClass());
 		}
 
 		@Override
@@ -107,7 +101,6 @@ public class ContextCorePlugin extends Plugin {
 		@Override
 		public boolean isDocument(String handle) {
 			return false;
-//			throw new RuntimeException("null adapter for handle: " + handle);
 		}
 
 		@Override
@@ -117,7 +110,6 @@ public class ContextCorePlugin extends Plugin {
 
 		@Override
 		public String getHandleForOffsetInObject(Object resource, int offset) {
-//			MylarStatusHandler.log("null bridge for marker: " + resource.getClass(), this);
 			return null;
 		}
 
@@ -135,7 +127,6 @@ public class ContextCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		contextManager = new InteractionContextManager();
-		lazyLoadExtensions();
 	}
 
 	@Override
@@ -151,17 +142,6 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
-	private void lazyLoadExtensions() {
-		if (!extensionsLoaded) {
-			ContextStoreExtensionReader.initExtensions();
-			HandlersExtensionPointReader.initExtensions();
-			for (AbstractRelationProvider provider : getRelationProviders()) {
-				getContextManager().addListener(provider);
-			}
-			extensionsLoaded = true;
-		}
-	}
-
 	private void addRelationProvider(String contentType, AbstractRelationProvider provider) {
 		Set<AbstractRelationProvider> providers = relationProviders.get(contentType);
 		if (providers == null) {
@@ -169,6 +149,8 @@ public class ContextCorePlugin extends Plugin {
 			relationProviders.put(contentType, providers);
 		}
 		providers.add(provider);
+		// TODO: need facility for removing
+		getContextManager().addListener(provider);
 	}
 
 	/**
@@ -254,13 +236,22 @@ public class ContextCorePlugin extends Plugin {
 		}
 	}
 
-	public AbstractContextStore getContextStore() {
+	public synchronized AbstractContextStore getContextStore() {
+		if (!contextStoreRead) {
+			contextStoreRead = true;
+			ContextStoreExtensionReader.initExtensions();
+			if (contextStore != null) {
+				contextStore.init();
+			} else {
+				StatusManager.log("No context store specified", this);
+			}
+		}
 		return contextStore;
 	}
 
-	public static void setContextStore(AbstractContextStore contextStore) {
-		ContextCorePlugin.contextStore = contextStore;
-	}
+//	public void setContextStore(AbstractContextStore contextStore) {
+//		ContextCorePlugin.contextStore = contextStore;
+//	}
 
 	static class ContextStoreExtensionReader {
 
@@ -287,19 +278,19 @@ public class ContextCorePlugin extends Plugin {
 
 		private static void readStore(IConfigurationElement element) {
 			// Currently disabled
-//			try {
-//				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ELEMENT_CLASS);
-//
-//				if (!(object instanceof AbstractContextStore)) {
-//					MylarStatusHandler.log("Could not load bridge: " + object.getClass().getCanonicalName()
-//							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
-//					return;
-//				} else {
-//					contextStore = (AbstractContextStore) object;
-//				}
-//			} catch (CoreException e) {
-//				MylarStatusHandler.log(e, "Could not load bridge extension");
-//			}
+			try {
+				Object object = element.createExecutableExtension(BridgesExtensionPointReader.ATTR_CLASS);
+
+				if (!(object instanceof AbstractContextStore)) {
+					StatusManager.log("Could not load bridge: " + object.getClass().getCanonicalName()
+							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
+					return;
+				} else {
+					contextStore = (AbstractContextStore) object;
+				}
+			} catch (CoreException e) {
+				StatusManager.log(e, "Could not load bridge extension");
+			}
 		}
 	}
 

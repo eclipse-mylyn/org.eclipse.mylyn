@@ -14,7 +14,7 @@ package org.eclipse.mylyn.internal.team.ui.preferences;
 
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.fieldassist.IControlCreator;
+import org.eclipse.jface.fieldassist.*;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.fieldassist.ContentAssistField;
+import org.eclipse.ui.fieldassist.*;
 
 /**
  * @author Mik Kersten

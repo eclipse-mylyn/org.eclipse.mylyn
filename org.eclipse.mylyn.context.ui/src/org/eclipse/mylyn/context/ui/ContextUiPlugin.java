@@ -237,12 +237,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			// ignore
 
 		}
-
-		public void tasksActivated(List<AbstractTask> tasks) {
-			// ignore
-
-		}
-
 	};
 
 	public ContextUiPlugin() {
