@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.TaskListHyperlink;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskDialogAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.ActivateTaskHistoryDropDownAction;
@@ -57,7 +58,6 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 
@@ -73,9 +73,9 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	private static final String LABEL_SETS_MULTIPLE = "<multiple>";
 
-	private Hyperlink workingSetLink;
+	private TaskListHyperlink workingSetLink;
 
-	private Hyperlink activeTaskLink;
+	private TaskListHyperlink activeTaskLink;
 
 	private WorkweekProgressBar taskProgressBar;
 
@@ -213,7 +213,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createActiveWorkingSetComposite(Composite container) {
-		workingSetLink = new Hyperlink(container, SWT.LEFT);
+		workingSetLink = new TaskListHyperlink(container, SWT.LEFT);
 		workingSetLink.setText(TaskWorkingSetAction.LABEL_SETS_NONE);
 		workingSetLink.setUnderlined(false);
 		workingSetLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
@@ -269,7 +269,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 
 	@Override
 	protected Composite createActiveTaskComposite(final Composite container) {
-		activeTaskLink = new Hyperlink(container, SWT.LEFT);
+		activeTaskLink = new TaskListHyperlink(container, SWT.LEFT);
 		activeTaskLink.setText(LABEL_ACTIVE_NONE);
 		activeTaskLink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
 		

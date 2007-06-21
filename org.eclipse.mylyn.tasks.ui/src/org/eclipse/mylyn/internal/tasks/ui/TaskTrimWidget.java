@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 
@@ -70,7 +69,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 	private Menu menu = null;
 
-	private Hyperlink activeTaskLabel;
+	private TaskListHyperlink activeTaskLabel;
 
 	private ActivateTaskHistoryDropDownAction navigateAction;
 
@@ -164,7 +163,7 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		p = gc.textExtent("WWWWWWWWWWWWWWW");
 		gc.dispose();
 
-		activeTaskLabel = new Hyperlink(container, SWT.RIGHT);
+		activeTaskLabel = new TaskListHyperlink(container, SWT.RIGHT);
 		activeTaskLabel.setLayoutData(new GridData(p.x, SWT.DEFAULT));
 		activeTaskLabel.setText("<no task active>");
 
@@ -301,7 +300,8 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 			return;
 		}
 
-		activeTaskLabel.setText(shortenText(activeTask.getSummary()));
+		//activeTaskLabel.setText(shortenText(activeTask.getSummary()));
+		activeTaskLabel.setText(activeTask.getSummary());
 		activeTaskLabel.setUnderlined(true);
 		activeTaskLabel.setToolTipText(activeTask.getSummary());
 	}
@@ -316,28 +316,28 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		activeTaskLabel.setToolTipText("");
 	}
 
-	// From PerspectiveBarContributionItem
-	private String shortenText(String taskLabel) {
-		if (taskLabel == null || composite == null || composite.isDisposed()) {
-			return null;
-		}
-
-		String returnText = taskLabel;
-		GC gc = new GC(composite);
-		int maxWidth = p.x;
-
-		if (gc.textExtent(taskLabel).x > maxWidth) {
-			for (int i = taskLabel.length(); i > 0; i--) {
-				String test = taskLabel.substring(0, i);
-				test = test + "...";
-				if (gc.textExtent(test).x < maxWidth) {
-					returnText = test;
-					break;
-				}
-			}
-		}
-
-		gc.dispose();
-		return returnText;
-	}
+//	// From PerspectiveBarContributionItem
+//	private String shortenText(String taskLabel) {
+//		if (taskLabel == null || composite == null || composite.isDisposed()) {
+//			return null;
+//		}
+//
+//		String returnText = taskLabel;
+//		GC gc = new GC(composite);
+//		int maxWidth = p.x;
+//
+//		if (gc.textExtent(taskLabel).x > maxWidth) {
+//			for (int i = taskLabel.length(); i > 0; i--) {
+//				String test = taskLabel.substring(0, i);
+//				test = test + "...";
+//				if (gc.textExtent(test).x < maxWidth) {
+//					returnText = test;
+//					break;
+//				}
+//			}
+//		}
+//
+//		gc.dispose();
+//		return returnText;
+//	}
 }
