@@ -107,18 +107,24 @@ public class TaskListToolTipHandler {
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
-			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
 			String syncStamp = query.getLastRefreshTimeStamp();
 			if (syncStamp != null) {
-				sb.append("Synchronizatied: " + syncStamp + "\n");
+				sb.append("Synchronized: " + syncStamp);
 			}
+			sb.append("  [");
+			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
+			sb.append("]");
+			sb.append("\n");
 			return sb.toString();
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			StringBuilder sb = new StringBuilder();			
 			sb.append(TasksUiPlugin.getRepositoryUi(task.getRepositoryKind()).getTaskKindLabel(task));
-			sb.append(" ");
-			sb.append(task.getTaskKey());
+			String key = task.getTaskKey();
+			if (key != null) {
+				sb.append(" ");
+				sb.append(key);
+			}
 			sb.append(", ");
 			sb.append(task.getPriority());
 			sb.append("  [");
@@ -201,7 +207,6 @@ public class TaskListToolTipHandler {
 		
 		if (status != null) {
 			StringBuilder sb = new StringBuilder();
-			sb.append("Last Error: ");
 			sb.append(status.getMessage());
 			if (status instanceof RepositoryStatus && ((RepositoryStatus) status).isHtmlMessage()) {
 				sb.append(" Please synchronize manually for full error message.");
