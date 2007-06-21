@@ -37,6 +37,8 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 
 	@Override
 	public void init() {
+		System.err.println(">>> store initialized");
+		
 		// Migrate .mylar data folder to .metadata/mylyn
 		// if user was still using default location
 		String oldDefaultDataPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'

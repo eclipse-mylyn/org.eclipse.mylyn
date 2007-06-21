@@ -99,10 +99,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 
 		public void taskListRead() {
 		}
-
-		public void tasksActivated(List<AbstractTask> tasks) {
-		}
-
 	};
 
 	public TaskTrimWidget() {

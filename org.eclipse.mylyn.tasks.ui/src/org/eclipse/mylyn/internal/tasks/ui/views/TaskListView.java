@@ -141,7 +141,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
@@ -183,8 +182,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	private static final String ID_SEPARATOR_CONTEXT = "context";
 
 	public static final String ID_SEPARATOR_TASKS = "tasks";
-
-	private static final String ID_SEPARATOR_NAVIGATION = "navigation";
 
 	private static final String ID_SEPARATOR_FILTERS = "filters";
 
@@ -417,12 +414,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						filteredTree.indicateActiveTask(task);
 					}
 				});
-			}
-		}
-
-		public void tasksActivated(List<AbstractTask> tasks) {
-			if (tasks.size() == 1) {
-				taskActivated(tasks.get(0));
 			}
 		}
 

@@ -7,14 +7,13 @@
     <extension-point id="projectLinkProviders" name="Linking Provider from Project to the Task Repository" schema="schema/projectLinkProviders.exsd"/>
     <extension-point id="duplicateDetectors" name="duplicateDetectors" schema="schema/duplicateDetectors.exsd"/>
 
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            id="org.eclipse.mylyn.tasks.ui.trim.command"
-            name="Task Trim Command">
-      </command>
-   </extension>
-
+    <extension
+          point="org.eclipse.mylyn.context.core.bridges">
+       <contextStore
+             class="org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore">
+       </contextStore>
+    </extension> 
+    
 	<extension point="org.eclipse.ui.views">
       <category name="Mylyn" id="org.eclipse.mylyn.ui"/>
       <view
@@ -575,11 +574,6 @@
     </extension>
    
    <extension
-         point="org.eclipse.mylyn.context.core.handlers">
-      <status class="org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler"/>
-   </extension>
-   
-   <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.eclipse.mylyn.tasks.ui.navigation"
@@ -817,5 +811,5 @@
       <taskListFactory
             class="org.eclipse.mylyn.internal.tasks.core.LocalTaskListFactory"
             id="org.eclipse.mylyn.tasks.ui.local.factory"/>
-   </extension> 
+   </extension>
 </plugin>
