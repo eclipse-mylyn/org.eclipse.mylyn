@@ -81,7 +81,7 @@ public class TasksUiExtensionReader {
 
 	public static final String ELMNT_REPOSITORY_UI = "connectorUi";
 
-	public static final String ELMNT_EXTERNALIZER = "externalizer";
+	public static final String ELMNT_EXTERNALIZER = "taskListFactory";
 
 	public static final String ATTR_BRANDING_ICON = "brandingIcon";
 
