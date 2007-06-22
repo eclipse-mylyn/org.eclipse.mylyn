@@ -47,7 +47,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String ID = "org.eclipse.mylyn.tasks.ui.preferences";
-	
+
 	private static final int OVERWRITE = 0;
 
 	private static final int LOAD_EXISTING = 1;
@@ -83,7 +83,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	private Button backupNow = null;
 
 	private Button notificationEnabledButton = null;
-	
+
 	private Text backupScheduleTimeText;
 
 	private Text backupFolderText;
@@ -104,13 +104,13 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
-		
+
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
 			String message = "See <a>''{0}''</a> for configuring Task List colors.";
-				new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", 
-						message, (IWorkbenchPreferenceContainer) getContainer(), null);
+			new PreferenceLinkArea(container, SWT.NONE, "org.eclipse.ui.preferencePages.ColorsAndFonts", message,
+					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
-		
+
 		createTaskRefreshScheduleGroup(container);
 		createSchedulingGroup(container);
 		createOpenWith(container);
@@ -123,7 +123,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public boolean performOk() {
 		String taskDirectory = taskDirectoryText.getText();
@@ -154,7 +154,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_STARTHOUR, hourDayStart.getSelection());
 		getPreferenceStore().setValue(TasksUiPreferenceConstants.PLANNING_ENDHOUR, hourDayEnd.getSelection());
-		backupNow.setEnabled(true);		
+		backupNow.setEnabled(true);
 		return true;
 	}
 
@@ -182,30 +182,25 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
-		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();				
+		String taskDirectory = TasksUiPlugin.getDefault().getDefaultDataDirectory();
 		if (!taskDirectory.equals(TasksUiPlugin.getDefault().getDataDirectory())) {
 			checkForExistingTasklist(taskDirectory);
 			if (taskDataDirectoryAction != CANCEL) {
-				taskDirectoryText.setText(taskDirectory);				
-				backupFolderText.setText(taskDirectory + FORWARDSLASH
-						+ ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
+				taskDirectoryText.setText(taskDirectory);
+				backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 				backupNow.setEnabled(false);
 			}
 		} else {
-			taskDirectoryText.setText(taskDirectory);				
-			backupFolderText.setText(taskDirectory + FORWARDSLASH
-					+ ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
+			taskDirectoryText.setText(taskDirectory);
+			backupFolderText.setText(taskDirectory + FORWARDSLASH + ITasksUiConstants.DEFAULT_BACKUP_FOLDER_NAME);
 			backupNow.setEnabled(true);
 		}
 
 		notificationEnabledButton.setSelection(getPreferenceStore().getDefaultBoolean(
 				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(
-				TasksUiPreferenceConstants.BACKUP_SCHEDULE));		
-		
+		backupScheduleTimeText.setText(getPreferenceStore().getDefaultString(TasksUiPreferenceConstants.BACKUP_SCHEDULE));
 
-		useRichEditor.setSelection(getPreferenceStore()
-				.getDefaultBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
+		useRichEditor.setSelection(getPreferenceStore().getDefaultBoolean(TasksUiPreferenceConstants.EDITOR_TASKS_RICH));
 
 		// synchQueries.setSelection(getPreferenceStore().getDefaultBoolean(
 		// TaskListPreferenceConstants.REPOSITORY_SYNCH_ON_STARTUP));
@@ -227,7 +222,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		group.setText("Synchronization");
 		GridLayout gridLayout = new GridLayout(1, false);
 		group.setLayout(gridLayout);
-		
+
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Composite enableSynch = new Composite(group, SWT.NULL);
 		gridLayout = new GridLayout(4, false);
@@ -263,7 +258,7 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 		notificationEnabledButton.setText("Display notifications for overdue tasks and incoming changes");
 		notificationEnabledButton.setSelection(getPreferenceStore().getBoolean(
 				TasksUiPreferenceConstants.NOTIFICATIONS_ENABLED));
-		
+
 		// synchQueries = new Button(group, SWT.CHECK);
 		// synchQueries.setText("Synchronize on startup");
 		// synchQueries.setSelection(getPreferenceStore().getBoolean(
@@ -456,53 +451,39 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	public void updateRefreshGroupEnablements() {
+		String errorMessage = null;
+
 		try {
 			long number = Integer.parseInt(backupScheduleTimeText.getText());
 			if (number <= 0) {
-				this.setErrorMessage("Archive schedule time must be > 0");
-				this.setValid(false);
+				errorMessage = "Backup schedule time must be > 0";
 			} else if (backupFolderText.getText() == "") {
-				this.setErrorMessage("Archive destination folder must be specified");
-				this.setValid(false);
-			} else {
-				this.setErrorMessage(null);
-				this.setValid(true);
+				errorMessage = "Backup destination folder must be specified";
 			}
 		} catch (NumberFormatException e) {
-			this.setErrorMessage("Archive schedule time must be valid integer");
-			this.setValid(false);
+			errorMessage = "Backup schedule time must be valid integer";
 		}
 
 		if (enableBackgroundSynch.getSelection()) {
 			try {
 				long number = Long.parseLong(synchScheduleTime.getText());
 				if (number <= 0) {
-					this.setErrorMessage("Refresh schedule time must be > 0");
-					this.setValid(false);
-				} else {
-					this.setErrorMessage(null);
-					this.setValid(true);
+					errorMessage = "Synchronize schedule time must be > 0";
 				}
 			} catch (NumberFormatException e) {
-				this.setErrorMessage("Refresh schedule time must be valid integer");
-				this.setValid(false);
+				errorMessage = "Synchronize schedule time must be valid integer";
 			}
-		} else {
-			this.setValid(true);
-			this.setErrorMessage(null);
 		}
 
-		if (getErrorMessage() == null) {
-			if (hourDayEnd.getSelection() <= hourDayStart.getSelection()) {
-				setErrorMessage("Planning: Work day start must be before end.");
-				this.setValid(false);
-			} else {
-				setErrorMessage(null);
-				this.setValid(true);
-			}
+		if (hourDayEnd.getSelection() <= hourDayStart.getSelection()) {
+			errorMessage = "Planning: Work day start must be before end.";
 		}
+
+		setErrorMessage(errorMessage);
+		setValid(errorMessage == null);
 
 		synchScheduleTime.setEnabled(enableBackgroundSynch.getSelection());
+
 	}
 
 	private String getMinutesString() {
@@ -518,18 +499,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 			for (String filename : newDataFolder.list()) {
 				if (filename.equals(ITasksUiConstants.DEFAULT_TASK_LIST_FILE)) {
 
-					MessageDialog dialogConfirm = new MessageDialog(
-							null,
-							"Tasklist found at destination",
-							null,
+					MessageDialog dialogConfirm = new MessageDialog(null, "Tasklist found at destination", null,
 							"Overwrite existing task data with current data or load from new destination?",
-							MessageDialog.WARNING, new String[] { "Overwrite", "Load",
-									IDialogConstants.CANCEL_LABEL }, CANCEL);
+							MessageDialog.WARNING, new String[] { "Overwrite", "Load", IDialogConstants.CANCEL_LABEL },
+							CANCEL);
 					taskDataDirectoryAction = dialogConfirm.open();
 					break;
 				}
 			}
-			if(taskDataDirectoryAction == -1) {
+			if (taskDataDirectoryAction == -1) {
 				taskDataDirectoryAction = OVERWRITE;
 			}
 		}
