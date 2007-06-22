@@ -1771,8 +1771,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			expandableComposite.setTitleBarForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 
-			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
-					+ formatDate(taskComment.getCreated()));
+//			expandableComposite.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
+//					+ formatDate(taskComment.getCreated()));
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 				public void expansionStateChanged(ExpansionEvent e) {
@@ -1783,6 +1783,20 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final Composite toolbarComp = toolkit.createComposite(expandableComposite);
 			toolbarComp.setLayout(new RowLayout());
 			toolbarComp.setBackground(null);
+
+			ImageHyperlink formHyperlink = toolkit.createImageHyperlink(toolbarComp, SWT.NONE);
+			formHyperlink.setBackground(null);
+			formHyperlink.setFont(expandableComposite.getFont());
+			formHyperlink.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+			if (taskComment.getAuthor().equalsIgnoreCase(repository.getUserName())) {
+				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_ME_NARROW));
+			} else {
+				formHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.PERSON_NARROW));
+			}
+
+			formHyperlink.setText(taskComment.getNumber() + ": " + taskComment.getAuthorName() + ", "
+					+ formatDate(taskComment.getCreated()));
+			formHyperlink.setUnderlined(false);
 
 			if (supportsCommentDelete()) {
 				final ImageHyperlink deleteComment = new ImageHyperlink(toolbarComp, SWT.NULL);
@@ -1803,17 +1817,43 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
 			}
 
-			createReplyHyperlink(taskComment.getNumber(), toolbarComp, taskComment.getText());
+			final ImageHyperlink replyLink = createReplyHyperlink(taskComment.getNumber(), toolbarComp,
+					taskComment.getText());
 
 			expandableComposite.addExpansionListener(new ExpansionAdapter() {
 
 				@Override
 				public void expansionStateChanged(ExpansionEvent e) {
-					toolbarComp.setVisible(expandableComposite.isExpanded());
+					replyLink.setVisible(expandableComposite.isExpanded());
+					//toolbarComp.setVisible(expandableComposite.isExpanded());
 				}
 			});
 
-			toolbarComp.setVisible(expandableComposite.isExpanded());
+			replyLink.setVisible(expandableComposite.isExpanded());
+			//toolbarComp.setVisible(expandableComposite.isExpanded());
+
+			formHyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+
+				@Override
+				public void linkActivated(HyperlinkEvent e) {
+					expandableComposite.setExpanded(!expandableComposite.isExpanded());
+					replyLink.setVisible(expandableComposite.isExpanded());
+					form.reflow(true);
+				}
+
+				@Override
+				public void linkEntered(HyperlinkEvent e) {
+					replyLink.setUnderlined(true);
+					super.linkEntered(e);
+				}
+
+				@Override
+				public void linkExited(HyperlinkEvent e) {
+					replyLink.setUnderlined(false);
+					super.linkExited(e);
+				}
+			});
+
 			expandableComposite.setTextClient(toolbarComp);
 
 			// HACK: This is necessary
@@ -2984,14 +3024,14 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	public Color getColorIncoming() {
 		return colorIncoming;
 	}
-	
+
 	/**
 	 * @see #select(Object, boolean)
 	 */
 	public void addSelectableControl(Object item, Control control) {
 		controlBySelectableObject.put(item, control);
 	}
-	
+
 	/**
 	 * @see #addSelectableControl(Object, Control)
 	 */
