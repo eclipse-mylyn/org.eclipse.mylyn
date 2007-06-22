@@ -85,8 +85,21 @@ public class TaskListToolTipHandler {
 
 	private String getTitleText(AbstractTaskContainer element) {
 		if (element instanceof ScheduledTaskContainer) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(element.getSummary());
 			Calendar start = ((ScheduledTaskContainer) element).getStart();
-			return DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime());
+			sb.append("  [");
+			sb.append(DateFormat.getDateInstance(DateFormat.LONG).format(start.getTime()));
+			sb.append("]");
+			return sb.toString();
+		} else if (element instanceof AbstractRepositoryQuery) {
+			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
+			StringBuilder sb = new StringBuilder();
+			sb.append(element.getSummary());
+			sb.append("  [");
+			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
+			sb.append("]");
+			return sb.toString();
 		} else {
 			return element.getSummary();
 		}
@@ -111,10 +124,6 @@ public class TaskListToolTipHandler {
 			if (syncStamp != null) {
 				sb.append("Synchronized: " + syncStamp);
 			}
-			sb.append("  [");
-			sb.append(getRepositoryLabel(query.getRepositoryKind(), query.getRepositoryUrl()));
-			sb.append("]");
-			sb.append("\n");
 			return sb.toString();
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
@@ -218,7 +227,7 @@ public class TaskListToolTipHandler {
 	}
 
 	private ProgressData getProgressData(AbstractTaskContainer element) {
-		if (element instanceof AbstractTask && element.getChildren().isEmpty()) {
+		if (element instanceof AbstractTask) {
 			return null;
 		}
 
@@ -251,6 +260,8 @@ public class TaskListToolTipHandler {
 					return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
 				}
 			}
+		} else if (element instanceof ScheduledTaskContainer) {
+			return TasksUiImages.getImage(TasksUiImages.CALENDAR);
 		}
 		return null;
 	}
@@ -448,6 +459,7 @@ public class TaskListToolTipHandler {
 		Label textLabel = new Label(parent, SWT.NONE);
 		textLabel.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		textLabel.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		textLabel.setAlignment(SWT.CENTER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 		gd.horizontalSpan = 2;
 		textLabel.setLayoutData(gd);
