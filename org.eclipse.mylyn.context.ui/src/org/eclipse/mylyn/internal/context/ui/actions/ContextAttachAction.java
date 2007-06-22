@@ -22,9 +22,9 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextAttachWizard;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -73,7 +73,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 	}
 
 	public void run(AbstractTask task) {
-		if (task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+		if (task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 					ITasksUiConstants.TITLE_DIALOG, "Task must be synchronized before attaching context");
 			return;
@@ -97,10 +97,10 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 		AbstractTask selectedTask = TaskListView.getSelectedTask(selection);
 		if (selectedTask instanceof AbstractTask) {
 			task = (AbstractTask) selectedTask;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
-			IAttachmentHandler handler = connector.getAttachmentHandler();
+			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
+			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			action
 					.setEnabled(handler != null
 							&& handler.canUploadAttachment(repository, task)

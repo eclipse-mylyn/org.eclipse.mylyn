@@ -21,9 +21,9 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.ContextRetrieveWizard;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.ContextUiUtil;
@@ -118,8 +118,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			this.selection = structuredSelection;
 			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
 				RepositoryAttachment attachment = (RepositoryAttachment) structuredSelection.getFirstElement();
-				if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-					|| AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
+				if (AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+					|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
@@ -127,12 +127,13 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			}
 		} else if (selectedTask instanceof AbstractTask) {
 			task = (AbstractTask) selectedTask;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 					task.getRepositoryUrl());
-			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getRepositoryKind());
-			IAttachmentHandler handler = connector.getAttachmentHandler();
+			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
+			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
-					&& connector.hasRepositoryContext(repository, task));
+					&& connector.getAttachmentHandler() != null
+					&& connector.getAttachmentHandler().hasRepositoryContext(repository, task));
 		} else {
 			task = null;
 			action.setEnabled(false);

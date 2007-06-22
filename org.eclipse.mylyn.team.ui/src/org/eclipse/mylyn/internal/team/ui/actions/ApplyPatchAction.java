@@ -20,8 +20,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -63,7 +63,7 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 								attachment.getRepositoryKind(), attachment.getRepositoryUrl());
 						AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 								.getRepositoryConnector(attachment.getRepositoryKind());
-						IAttachmentHandler handler = connector.getAttachmentHandler();
+						AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 						return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
 					}
 

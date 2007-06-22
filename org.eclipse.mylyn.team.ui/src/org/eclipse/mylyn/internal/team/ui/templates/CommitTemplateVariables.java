@@ -61,7 +61,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(AbstractTask task) {
 			if (task instanceof AbstractTask) {
-				return ((AbstractTask) task).getRepositoryKind();
+				return ((AbstractTask) task).getConnectorKind();
 			}
 			return null;
 		}

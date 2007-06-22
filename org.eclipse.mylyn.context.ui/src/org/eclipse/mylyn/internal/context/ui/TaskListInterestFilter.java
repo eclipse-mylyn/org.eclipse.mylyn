@@ -138,14 +138,14 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (task instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) task;
 
-			if(repositoryTask.getLastSyncDateStamp() == null){
+			if(repositoryTask.getLastReadTimeStamp() == null){
 				return true;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
+			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
 					&& !(parent instanceof ScheduledTaskContainer)) {
 				return true;
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				return true;
 			}
 		}

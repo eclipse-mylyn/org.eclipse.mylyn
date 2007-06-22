@@ -152,7 +152,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			REPOSITORIES: 
 			for (AbstractRepositoryConnector c : connectors) {
 				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
-						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getRepositoryType());
+						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getConnectorKind());
 				for (TaskRepository r : repositories) {
 					String[] ids = c.getTaskIdsFromComment(r, comment);
 					if (ids != null && ids.length > 0) {
@@ -174,7 +174,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 		}
 
 		if (taskFullUrl == null && repositoryUrl != null && taskId != null && connector != null) {
-			taskFullUrl = connector.getTaskWebUrl(repositoryUrl, taskId);
+			taskFullUrl = connector.getTaskUrl(repositoryUrl, taskId);
 		}
 
 		if (task == null) {

@@ -216,7 +216,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryUrl());
 
-				if (connector != null && connector.hasRepositoryContext(repository, repositoryTask)) {
+				if (connector != null && connector.getAttachmentHandler() != null && connector.getAttachmentHandler().hasRepositoryContext(repository, repositoryTask)) {
 					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 							.getShell(), ITasksUiConstants.TITLE_DIALOG,
 							"No local task context exists.  Retrieve from repository?");
