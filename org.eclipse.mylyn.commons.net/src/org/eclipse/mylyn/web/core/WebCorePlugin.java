@@ -17,8 +17,11 @@ import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
+ * Provides an entry point for the proxy service and potentially other web facilities
+ * 
  * @author Mik Kersten
  * @author Michael Valenta
+ * @since	2.0
  */
 public class WebCorePlugin extends Plugin {
 
@@ -55,8 +58,8 @@ public class WebCorePlugin extends Plugin {
 	 * 
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
-	public IProxyService getProxyService() {
-		return (IProxyService) tracker.getService();
+	public static IProxyService getProxyService() {
+		return (IProxyService)INSTANCE.tracker.getService();
 	}
 
 }

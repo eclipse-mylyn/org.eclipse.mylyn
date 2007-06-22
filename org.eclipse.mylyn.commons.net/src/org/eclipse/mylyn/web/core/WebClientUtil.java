@@ -50,10 +50,7 @@ public class WebClientUtil {
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "off");
 	}
 
-	/**
-	 * public for testing
-	 */
-	public static boolean repositoryUsesHttps(String repositoryUrl) {
+	static boolean isRepositoryHttps(String repositoryUrl) {
 		return repositoryUrl.matches("https.*");
 	}
 
@@ -61,7 +58,7 @@ public class WebClientUtil {
 		int colonSlashSlash = repositoryUrl.indexOf("://");
 		int colonPort = repositoryUrl.indexOf(':', colonSlashSlash + 1);
 		if (colonPort < 0)
-			return repositoryUsesHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
+			return isRepositoryHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
 
 		int requestPath = repositoryUrl.indexOf('/', colonPort + 1);
 
@@ -74,7 +71,7 @@ public class WebClientUtil {
 		String port = repositoryUrl.substring(colonPort + 1, end);
 
 		if (port.length() == 0) {
-			return repositoryUsesHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
+			return isRepositoryHttps(repositoryUrl) ? HTTPS_PORT : HTTP_PORT;
 		}
 
 		return Integer.parseInt(port);
@@ -160,7 +157,7 @@ public class WebClientUtil {
 			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
 		}
 
-		if (WebClientUtil.repositoryUsesHttps(repositoryUrl)) {
+		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
 			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
 					.getInstance(), WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),

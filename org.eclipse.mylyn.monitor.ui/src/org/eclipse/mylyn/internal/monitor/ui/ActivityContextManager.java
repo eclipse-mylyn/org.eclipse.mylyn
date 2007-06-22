@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui;
+package org.eclipse.mylyn.internal.monitor.ui;
 
 import java.util.Date;
 import java.util.Set;
@@ -23,10 +23,16 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
+import org.eclipse.mylyn.monitor.ui.IUserAttentionListener;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
 /**
+ * Manages the meta task-activity context.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since	2.0
  */
 public class ActivityContextManager {
 
@@ -154,42 +160,4 @@ public class ActivityContextManager {
 			}
 		}
 	}
-
-	// class CheckActivityJob extends TimerTask {
-	//
-	// @Override
-	// public void run() {
-	// if (!Platform.isRunning()) {
-	// return;
-	// } else {
-	// if (!MylarMonitorUiPlugin.getDefault().getWorkbench().isClosing()) {
-	//
-	// long localLastEventTime = getLastEventTime();
-	// long localStartTime = getStartTime();
-	// long currentTime = System.currentTimeMillis();
-	// if ((currentTime - localLastEventTime) >= timeout) {
-	// if (wasTimedOut == false) {
-	// fireInactive();
-	// // timed out
-	// wasTimedOut = true;
-	// }
-	// // timer.schedule(this, SHORT_TICK);
-	// // return;
-	// } else {
-	// if (wasTimedOut) {
-	// wasTimedOut = false;
-	// // back...
-	// setStartTime(localLastEventTime);// currentTime);
-	// } else {
-	// fireActive(localStartTime, currentTime);
-	// setStartTime(currentTime);
-	// }
-	// // timer.schedule(this, TICK);
-	// }
-	//
-	// }
-	// }
-	// }
-	// }
-
 }

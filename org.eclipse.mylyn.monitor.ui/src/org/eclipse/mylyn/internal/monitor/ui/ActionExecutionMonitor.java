@@ -9,24 +9,20 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui.workbench;
+package org.eclipse.mylyn.internal.monitor.ui;
 
-import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
-import org.eclipse.mylyn.monitor.ui.AbstractCommandMonitor;
+import org.eclipse.mylyn.monitor.ui.IActionExecutionListener;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 
 /**
  * @author Mik Kersten
  */
-public class KeybindingCommandMonitor extends AbstractCommandMonitor {
+public class ActionExecutionMonitor implements IActionExecutionListener {
 
-	public static final String COMMAND_INVOKED = "keybinding";
-
-	@Override
-	protected void handleCommandExecution(String commandId, ExecutionEvent event) {
-		InteractionEvent interactionEvent = InteractionEvent.makeCommand(commandId, COMMAND_INVOKED);
+	public void actionObserved(IAction action) {
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(action.getId(), "");
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
-
 }

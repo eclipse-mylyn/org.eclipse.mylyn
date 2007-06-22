@@ -9,13 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui.workbench;
+package org.eclipse.mylyn.monitor.ui;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
+ * Tracks interaction with workbench editors.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractEditorTracker extends AbstractPartTracker {
 

@@ -9,15 +9,17 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui.workbench;
+package org.eclipse.mylyn.monitor.ui;
 
-import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
+ * Monitors interaction with workbench parts.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractPartTracker implements IPartListener {
 

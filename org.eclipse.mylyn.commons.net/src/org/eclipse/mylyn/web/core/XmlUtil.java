@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.web.core;
 
 /**
+ * Utility for handling HTML strings and characters.
+ * 
  * @author Rob Elves
+ * @since	2.0
  */
 public class XmlUtil {
 

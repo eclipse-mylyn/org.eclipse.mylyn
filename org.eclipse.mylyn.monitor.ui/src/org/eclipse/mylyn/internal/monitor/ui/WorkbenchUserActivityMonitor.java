@@ -9,8 +9,10 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui;
+package org.eclipse.mylyn.internal.monitor.ui;
 
+import org.eclipse.mylyn.monitor.ui.AbstractUserActivityMonitor;
+import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;

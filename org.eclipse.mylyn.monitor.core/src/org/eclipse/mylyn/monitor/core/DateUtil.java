@@ -20,7 +20,10 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 
 /**
+ * Used for formatting dates.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class DateUtil {
 

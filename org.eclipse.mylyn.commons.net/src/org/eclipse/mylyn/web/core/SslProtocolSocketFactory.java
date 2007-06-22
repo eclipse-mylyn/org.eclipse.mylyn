@@ -30,9 +30,12 @@ import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 
 /**
+ * Provides support for managing SSL connections.
+ * 
  * @author Nathan Hapke
  * @author Rob Elves
  * @author Steffen Pingel
+ * @since	2.0
  */
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 

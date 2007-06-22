@@ -20,9 +20,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 /**
- * Self-registering on construction.
+ * Self-registering on construction.  Monitors the execution of commands within the workbench.
  * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractCommandMonitor implements IExecutionListener {
 

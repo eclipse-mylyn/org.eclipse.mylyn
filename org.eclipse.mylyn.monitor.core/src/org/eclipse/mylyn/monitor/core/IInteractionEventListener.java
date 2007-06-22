@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.monitor.core;
 
 /**
+ * Notified of interaction events and the logging lifecycle.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IInteractionEventListener {
 

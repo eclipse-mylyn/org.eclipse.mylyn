@@ -17,8 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Used for timing user interaction and periods of inactivity.
+ * 
  * @author Mik Kersten
  * @author Shawn Minto
+ * @since	2.0
  */
 public class ActivityTimerThread extends Thread implements Runnable {
 

@@ -21,6 +21,8 @@ import javax.swing.text.html.HTML.Tag;
 
 /**
  * Class representing an HTML (3.2) tag and its attributes.
+ * 
+ * @author Shawn Minto
  */
 public class HtmlTag {
 	/** tag's name */

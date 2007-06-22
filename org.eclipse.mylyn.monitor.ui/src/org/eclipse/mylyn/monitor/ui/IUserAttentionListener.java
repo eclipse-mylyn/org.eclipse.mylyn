@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.monitor.ui;
 
 /**
+ * Notified of user activity and inactivity events.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IUserAttentionListener {
 

@@ -15,11 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Immutable
- * 
- * TODO: make custom serialized form
+ * Immutable.  Encapsulates interaction between the user and structured elements.
  * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class InteractionEvent {
 

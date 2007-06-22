@@ -20,13 +20,13 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.mylyn.internal.monitor.ui.BrowserMonitor;
+import org.eclipse.mylyn.internal.monitor.ui.KeybindingCommandMonitor;
+import org.eclipse.mylyn.internal.monitor.ui.PerspectiveChangeMonitor;
 import org.eclipse.mylyn.internal.monitor.usage.InteractionEventLogger;
 import org.eclipse.mylyn.internal.monitor.usage.UiUsageMonitorPlugin;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 import org.eclipse.mylyn.monitor.ui.IMylarMonitorLifecycleListener;
-import org.eclipse.mylyn.monitor.ui.workbench.BrowserMonitor;
-import org.eclipse.mylyn.monitor.ui.workbench.KeybindingCommandMonitor;
-import org.eclipse.mylyn.monitor.ui.workbench.PerspectiveChangeMonitor;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.PlatformUI;

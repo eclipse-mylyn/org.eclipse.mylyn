@@ -18,9 +18,12 @@ import java.io.IOException;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
+ * Used for logging interaction events.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
-public class AbstractMonitorLog {
+public abstract class AbstractMonitorLog {
 
 	protected File outputFile;
 

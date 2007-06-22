@@ -19,6 +19,12 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
+/**
+ * Parses HTML into tokens.
+ * 
+ * @author Shawn Minto
+ * @since	2.0
+ */
 public class HtmlStreamTokenizer {
 
 	/** parser state */

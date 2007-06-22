@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.monitor.ui;
+package org.eclipse.mylyn.internal.monitor.ui;
 
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
@@ -17,9 +17,11 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 
 /**
+ * Translates interaction with the shell/window to interaction events.
+ * 
  * @author Mik Kersten
  */
-class ShellLifecycleListener implements ShellListener {
+public class ShellLifecycleListener implements ShellListener {
 
 	private final InteractionContextManager manager;
 

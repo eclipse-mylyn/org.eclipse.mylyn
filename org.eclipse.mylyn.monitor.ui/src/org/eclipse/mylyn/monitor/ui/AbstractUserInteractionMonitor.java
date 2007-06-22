@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * context model.
  * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractUserInteractionMonitor implements ISelectionListener {
 
