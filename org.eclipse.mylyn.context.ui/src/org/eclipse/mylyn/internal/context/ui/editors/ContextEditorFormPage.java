@@ -14,7 +14,10 @@ package org.eclipse.mylyn.internal.context.ui.editors;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -45,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -367,20 +371,20 @@ public class ContextEditorFormPage extends FormPage {
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager("#PopupMenu");
 		menuManager.setRemoveAllWhenShown(true);
-//		menuManager.addMenuListener(new IMenuListener() {
-//			public void menuAboutToShow(IMenuManager manager) {
-//				fillContextMenu(manager);
-//			}
-//		});
+		menuManager.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager manager) {
+				fillContextMenu(manager);
+			}
+		});
 		Menu menu = menuManager.createContextMenu(commonViewer.getControl());
 		commonViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuManager, commonViewer);
 	}
 
-//	protected void fillContextMenu(IMenuManager manager) {
-//		manager.add(removeFromContextAction);
-//		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-//	}
+	protected void fillContextMenu(IMenuManager manager) {
+		//manager.add(removeFromContextAction);
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
 
 	public ISelection getSelection() {
 		if (getSite() != null && getSite().getSelectionProvider() != null) {
