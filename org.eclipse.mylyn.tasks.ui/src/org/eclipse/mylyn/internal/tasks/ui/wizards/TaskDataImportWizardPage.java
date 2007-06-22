@@ -11,12 +11,11 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
@@ -236,8 +235,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 			for (File file : backupFileArray) {
 				TableItem item = new TableItem(backupFilesTable, SWT.NONE);
 				item.setData(file.getAbsolutePath());
-				Date fileModified = new Date(file.lastModified());
-				item.setText(new String[] { DateUtil.formatDate(fileModified, DateUtil.PATTERN_RFC1123) });
+				item.setText(DateFormat.getDateTimeInstance().format(file.lastModified()));
 			}
 		}
 
