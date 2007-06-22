@@ -336,7 +336,7 @@ public class TaskListWriter {
 									if (query != null) {
 										wasRead = true;
 										if (childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH) != null && !childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH).equals("")) {
-											query.setLastRefreshTimeStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
+											query.setLastSynchronizedStamp(childElement.getAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH));
 										}
 										taskList.internalAddQuery(query);
 									}

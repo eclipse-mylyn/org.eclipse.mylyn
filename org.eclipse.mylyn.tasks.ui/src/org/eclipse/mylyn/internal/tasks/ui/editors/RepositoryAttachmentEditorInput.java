@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -83,7 +83,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 		public InputStream getContents() throws CoreException {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					repository.getKind());
-			IAttachmentHandler handler = connector.getAttachmentHandler();
+			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
 		}
 

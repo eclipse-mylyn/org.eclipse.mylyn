@@ -94,10 +94,10 @@ class SynchronizeTaskJob extends Job {
 				if (taskDataHandler != null && taskDataHandler.canGetMultiTaskData()) {
 					// Multi synch supported...
 					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-							repositoryTask.getRepositoryKind(), repositoryTask.getRepositoryUrl());
+							repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 
 					if (repository == null) {
-						repositoryTask.setStatus(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+						repositoryTask.setSynchronizationStatus(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
 								"Associated repository could not be found. Ensure proper repository configuration of "
 										+ repositoryTask.getRepositoryUrl() + " in "
 										+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", null));
@@ -109,9 +109,9 @@ class SynchronizeTaskJob extends Job {
 						tasks = new HashSet<AbstractTask>();
 						repToTasks.put(repository, tasks);
 					}
-					repositoryTask.setStatus(null);
+					repositoryTask.setSynchronizationStatus(null);
 					tasks.add(repositoryTask);
-					repositoryTask.setCurrentlySynchronizing(true);
+					repositoryTask.setSynchronizing(true);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 				} else {
 					// Single synch supported...
@@ -122,7 +122,7 @@ class SynchronizeTaskJob extends Job {
 			if (monitor.isCanceled()) {
 
 				for (final AbstractTask repositoryTask : repositoryTasks) {
-					repositoryTask.setCurrentlySynchronizing(false);
+					repositoryTask.setSynchronizing(false);
 					TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 				}
 
@@ -161,10 +161,10 @@ class SynchronizeTaskJob extends Job {
 	private void synchronizeTask(IProgressMonitor monitor, AbstractTask task) {
 		monitor.subTask(task.getSummary());
 
-		task.setStatus(null);
+		task.setSynchronizationStatus(null);
 
 		final TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
-				task.getRepositoryKind(), task.getRepositoryUrl());
+				task.getConnectorKind(), task.getRepositoryUrl());
 		try {
 			if (repository == null) {
 				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
@@ -205,9 +205,9 @@ class SynchronizeTaskJob extends Job {
 	 */
 	private void updateStatus(TaskRepository repository, AbstractTask task, IStatus status) {
 		if (!forced && repository != null && repository.isOffline()) {
-			task.setCurrentlySynchronizing(false);
+			task.setSynchronizing(false);
 		} else {
-			task.setStatus(status);
+			task.setSynchronizationStatus(status);
 		}
 	}
 
@@ -256,9 +256,9 @@ class SynchronizeTaskJob extends Job {
 			throws CoreException {
 		connector.updateTaskFromRepository(repository, task, new SubProgressMonitor(monitor, 1));
 		task.setStale(false);
-		task.setCurrentlySynchronizing(false);
-		if (task.getSyncState() == RepositoryTaskSyncState.INCOMING
-				|| task.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+		task.setSynchronizing(false);
+		if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+				|| task.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, true);
 		} else {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
@@ -287,10 +287,10 @@ class SynchronizeTaskJob extends Job {
 			TasksUiPlugin.getTaskListManager().setDueDate(repositoryTask, repositoryTask.getDueDate());
 		}
 
-		repositoryTask.setCurrentlySynchronizing(false);
+		repositoryTask.setSynchronizing(false);
 		repositoryTask.setStale(false);
-		if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
-				|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+		if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+				|| repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, true);
 		} else {
 			TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);

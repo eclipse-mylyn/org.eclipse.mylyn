@@ -37,7 +37,7 @@ public class TaskRepositoryLabelProvider implements ILabelProvider {
 	public Image getImage(Object object) {
 		if (object instanceof AbstractRepositoryConnector) {
 			AbstractRepositoryConnector repositoryConnector = (AbstractRepositoryConnector) object;
-			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getRepositoryType());
+			Image image = TasksUiPlugin.getDefault().getBrandingIcon(repositoryConnector.getConnectorKind());
 			if (image != null) {
 				return image;
 			} else {

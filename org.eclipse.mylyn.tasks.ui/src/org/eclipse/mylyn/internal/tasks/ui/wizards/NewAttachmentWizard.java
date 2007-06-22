@@ -32,9 +32,9 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -122,7 +122,7 @@ public class NewAttachmentWizard extends Wizard {
 		// upload the attachment
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				repository.getKind());
-		final IAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
+		final AbstractAttachmentHandler attachmentHandler = connector.getAttachmentHandler();
 		if (attachmentHandler == null) {
 			return false;
 		}
@@ -137,7 +137,7 @@ public class NewAttachmentWizard extends Wizard {
 					}
 					monitor.beginTask("Attaching file...", 2);
 					task.setSubmitting(true);
-					task.setSyncState(RepositoryTaskSyncState.OUTGOING);					
+					task.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);					
 
 					if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
 						String contents = inputPage.getClipboardContents();
@@ -159,8 +159,8 @@ public class NewAttachmentWizard extends Wizard {
 						throw new OperationCanceledException();
 					}
 
-					if (attachContext) {
-						connector.attachContext(repository, task, "", new SubProgressMonitor(monitor, 1));
+					if (attachContext && connector.getAttachmentHandler() != null) {
+						connector.getAttachmentHandler().attachContext(repository, task, "", new SubProgressMonitor(monitor, 1));
 					}
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
@@ -194,7 +194,7 @@ public class NewAttachmentWizard extends Wizard {
 
 		} catch (InvocationTargetException e1) {
 			task.setSubmitting(false);
-			task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 			if (e1.getCause() != null && e1.getCause() instanceof CoreException) {
 				handleSubmitError((CoreException) e1.getCause());
 
@@ -204,7 +204,7 @@ public class NewAttachmentWizard extends Wizard {
 			return false;
 		} catch (InterruptedException e1) {
 			task.setSubmitting(false);
-			task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+			task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 		}
 
 		return true;

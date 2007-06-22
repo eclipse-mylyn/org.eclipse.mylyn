@@ -85,13 +85,13 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		assertNotNull(tasksReturned);
 		assertEquals(1, tasksReturned.size());
 		for (AbstractTask task : tasksReturned) {
-			assertTrue(task.hasBeenReminded());
+			assertTrue(task.isReminded());
 		}
 	}
 
 	public void testRepositoryTaskExternalization() {
 		BugzillaTask repositoryTask = new BugzillaTask("repo", "1", "label");
-		repositoryTask.setKind("kind");
+		repositoryTask.setTaskKind("kind");
 		manager.getTaskList().moveToContainer(repositoryTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 		manager.saveTaskList();
 
@@ -116,8 +116,8 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		// query.setLastRefresh(oldDate);
 		assertEquals("repositoryUrl", query.getRepositoryUrl());
 		assertEquals("queryUrl", query.getUrl());
-		assertEquals("<never>", query.getLastRefreshTimeStamp());
-		query.setLastRefreshTimeStamp("today");
+		assertEquals("<never>", query.getLastSynchronizedTimeStamp());
+		query.setLastSynchronizedStamp("today");
 		// assertEquals(time, query.getLastSynchronized().getTime());
 		manager.getTaskList().addQuery(query);
 		manager.saveTaskList();
@@ -129,7 +129,7 @@ public class BugzillaTaskListManagerTest extends TestCase {
 		AbstractRepositoryQuery readQuery = manager.getTaskList().getQueries().iterator().next();
 		assertEquals(query.getUrl(), readQuery.getUrl());
 		assertEquals(query.getRepositoryUrl(), readQuery.getRepositoryUrl());
-		assertEquals("today", query.getLastRefreshTimeStamp());
+		assertEquals("today", query.getLastSynchronizedTimeStamp());
 		assertEquals("repositoryUrl", readQuery.getRepositoryUrl());
 		// assertEquals(time, readQuery.getLastSynchronized().getTime());
 	}

@@ -219,7 +219,7 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(KEY_DATE_CREATION, formatExternDate(task.getCreationDate()));
 		node.setAttribute(KEY_DATE_DUE, formatExternDate(task.getDueDate()));
 		node.setAttribute(KEY_DATE_REMINDER, formatExternDate(task.getScheduledForDate()));
-		if (task.hasBeenReminded()) {
+		if (task.isReminded()) {
 			node.setAttribute(KEY_REMINDED, VAL_TRUE);
 		} else {
 			node.setAttribute(KEY_REMINDED, VAL_FALSE);
@@ -232,8 +232,8 @@ final class DelegatingTaskExternalizer {
 
 		if (task instanceof AbstractTask) {
 			AbstractTask abstractTask = (AbstractTask) task;
-			if (abstractTask.getLastSyncDateStamp() != null) {
-				node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastSyncDateStamp());
+			if (abstractTask.getLastReadTimeStamp() != null) {
+				node.setAttribute(KEY_LAST_MOD_DATE, abstractTask.getLastReadTimeStamp());
 			}
 
 			if (abstractTask.isNotified()) {
@@ -242,8 +242,8 @@ final class DelegatingTaskExternalizer {
 				node.setAttribute(KEY_NOTIFIED_INCOMING, VAL_FALSE);
 			}
 
-			if (abstractTask.getSyncState() != null) {
-				node.setAttribute(KEY_SYNC_STATE, abstractTask.getSyncState().toString());
+			if (abstractTask.getSynchronizationState() != null) {
+				node.setAttribute(KEY_SYNC_STATE, abstractTask.getSynchronizationState().toString());
 			} else {
 				node.setAttribute(KEY_SYNC_STATE, RepositoryTaskSyncState.SYNCHRONIZED.toString());
 			}
@@ -422,7 +422,7 @@ final class DelegatingTaskExternalizer {
 		}
 
 		if (element.hasAttribute(KEY_KIND)) {
-			task.setKind(element.getAttribute(KEY_KIND));
+			task.setTaskKind(element.getAttribute(KEY_KIND));
 		}
 
 		if (element.getAttribute(KEY_ACTIVE).compareTo(VAL_TRUE) == 0) {
@@ -492,14 +492,14 @@ final class DelegatingTaskExternalizer {
 
 		if (task instanceof AbstractTask) {
 			AbstractTask abstractTask = (AbstractTask) task;
-			abstractTask.setCurrentlySynchronizing(false);
+			abstractTask.setSynchronizing(false);
 
 			if (element.hasAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL)) {
 				abstractTask.setRepositoryUrl(element.getAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL));
 			}
 
 			if (element.hasAttribute(KEY_LAST_MOD_DATE) && !element.getAttribute(KEY_LAST_MOD_DATE).equals("")) {
-				abstractTask.setLastSyncDateStamp(element.getAttribute(KEY_LAST_MOD_DATE));
+				abstractTask.setLastReadTimeStamp(element.getAttribute(KEY_LAST_MOD_DATE));
 			}
 
 			if (element.hasAttribute(KEY_OWNER)) {
@@ -515,13 +515,13 @@ final class DelegatingTaskExternalizer {
 			if (element.hasAttribute(KEY_SYNC_STATE)) {
 				String syncState = element.getAttribute(KEY_SYNC_STATE);
 				if (syncState.compareTo(RepositoryTaskSyncState.SYNCHRONIZED.toString()) == 0) {
-					abstractTask.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
+					abstractTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 				} else if (syncState.compareTo(RepositoryTaskSyncState.INCOMING.toString()) == 0) {
-					abstractTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+					abstractTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 				} else if (syncState.compareTo(RepositoryTaskSyncState.OUTGOING.toString()) == 0) {
-					abstractTask.setSyncState(RepositoryTaskSyncState.OUTGOING);
+					abstractTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
 				} else if (syncState.compareTo(RepositoryTaskSyncState.CONFLICT.toString()) == 0) {
-					abstractTask.setSyncState(RepositoryTaskSyncState.CONFLICT);
+					abstractTask.setSynchronizationState(RepositoryTaskSyncState.CONFLICT);
 				}
 			}
 		}
@@ -622,8 +622,8 @@ final class DelegatingTaskExternalizer {
 		node.setAttribute(DelegatingTaskExternalizer.KEY_NAME, query.getSummary());
 		node.setAttribute(AbstractTaskListFactory.KEY_QUERY_STRING, query.getUrl());
 		node.setAttribute(DelegatingTaskExternalizer.KEY_REPOSITORY_URL, query.getRepositoryUrl());
-		if (query.getLastRefreshTimeStamp() != null) {
-			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastRefreshTimeStamp());
+		if (query.getLastSynchronizedTimeStamp() != null) {
+			node.setAttribute(DelegatingTaskExternalizer.KEY_LAST_REFRESH, query.getLastSynchronizedTimeStamp());
 		}
 		for (AbstractTask hit : query.getChildren()) {
 			try {

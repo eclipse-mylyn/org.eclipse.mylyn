@@ -391,14 +391,14 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			if (task instanceof LocalTask) {
 				getHeaderForm().getForm().setText("Task: " + task.getSummary());
 			} else {
-				setFormHeaderImage(((AbstractTask) task).getRepositoryKind());
+				setFormHeaderImage(((AbstractTask) task).getConnectorKind());
 				setFormHeaderLabel((AbstractTask) task);
 				return;
 			}
 		} else if (input instanceof RepositoryTaskEditorInput) {
 			AbstractTask task = ((RepositoryTaskEditorInput) input).getRepositoryTask();
 			if (task != null && task instanceof AbstractTask) {
-				setFormHeaderImage(((AbstractTask) task).getRepositoryKind());
+				setFormHeaderImage(((AbstractTask) task).getConnectorKind());
 				setFormHeaderLabel((AbstractTask) task);
 				return;
 			} else {
@@ -470,7 +470,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 
 	private void setFormHeaderLabel(AbstractTask repositoryTask) {
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getConnectorKind());
 		String kindLabel = "";
 		if (connectorUi != null) {
 			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);

@@ -112,12 +112,12 @@ class SynchronizeQueryJob extends Job {
 			// synchronize queries, tasks changed within query are added to set of tasks to be synchronized
 			int n = 0;
 			for (AbstractRepositoryQuery repositoryQuery : queries) {
-				repositoryQuery.setStatus(null);
+				repositoryQuery.setSynchronizationStatus(null);
 
 				monitor.setTaskName("Synchronizing " + ++n + "/" + queries.size() + ": " + repositoryQuery.getSummary());
 				synchronizeQuery(repositoryQuery, new SubProgressMonitor(monitor, 10));
 
-				repositoryQuery.setCurrentlySynchronizing(false);
+				repositoryQuery.setSynchronizing(false);
 				taskList.notifyContainersUpdated(Collections.singleton(repositoryQuery));
 			}
 
@@ -126,7 +126,7 @@ class SynchronizeQueryJob extends Job {
 				for (AbstractTask task : allTasks) {
 					if (task.isStale()) {
 						tasksToBeSynchronized.add(task);
-						task.setCurrentlySynchronizing(true);
+						task.setSynchronizing(true);
 					}
 				}
 			}
@@ -155,8 +155,8 @@ class SynchronizeQueryJob extends Job {
 
 	private void updateQueryStatus(final IStatus status) {
 		for (AbstractRepositoryQuery repositoryQuery : queries) {
-			repositoryQuery.setStatus(status);
-			repositoryQuery.setCurrentlySynchronizing(false);
+			repositoryQuery.setSynchronizationStatus(status);
+			repositoryQuery.setSynchronizing(false);
 		}
 		taskList.notifyContainersUpdated(queries);
 		
@@ -189,27 +189,27 @@ class SynchronizeQueryJob extends Job {
 				if (task != null) {
 					// update the existing task from the query hit
 					boolean changed = connector.updateTaskFromQueryHit(repository, task, hit);
-					if (changed && !task.isStale() && task.getSyncState() == RepositoryTaskSyncState.SYNCHRONIZED) {
+					if (changed && !task.isStale() && task.getSynchronizationState() == RepositoryTaskSyncState.SYNCHRONIZED) {
 						// set incoming marker for web tasks 
-						task.setSyncState(RepositoryTaskSyncState.INCOMING);
+						task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 					}
 				} else {
 					// new tasks are marked stale by default
 					task = hit;
 					task.setStale(true);
-					task.setSyncState(RepositoryTaskSyncState.INCOMING);
+					task.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 				}
 				
 				taskList.addTask(task, repositoryQuery);
 				if (synchronizeChangedTasks && task.isStale()) {
 					tasksToBeSynchronized.add(task);
-					task.setCurrentlySynchronizing(true);
+					task.setSynchronizing(true);
 				}
 			}
 
-			repositoryQuery.setLastRefreshTimeStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
+			repositoryQuery.setLastSynchronizedStamp(DateUtil.getFormattedDate(new Date(), "MMM d, H:mm:ss"));
 		} else {
-			repositoryQuery.setStatus(resultingStatus);
+			repositoryQuery.setSynchronizationStatus(resultingStatus);
 			if (isForced()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {

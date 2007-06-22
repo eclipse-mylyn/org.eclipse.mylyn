@@ -264,7 +264,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			Collection<AbstractTask> allTasks = TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks();
 			Set<ITaskListNotification> reminders = new HashSet<ITaskListNotification>();
 			for (AbstractTask task : allTasks) {
-				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.hasBeenReminded()
+				if (!task.isCompleted() && task.getScheduledForDate() != null && !task.isReminded()
 						&& task.getScheduledForDate().compareTo(currentDate) < 0) {
 					reminders.add(new TaskListNotificationReminder(task));
 					task.setReminded(true);
@@ -287,7 +287,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
-						if ((repositoryTask.getLastSyncDateStamp() == null || repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING)
+						if ((repositoryTask.getLastReadTimeStamp() == null || repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING)
 								&& repositoryTask.isNotified() == false) {
 							TaskListNotificationIncoming notification = getIncommingNotification(connector,
 									repositoryTask);
@@ -500,9 +500,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				if (template.addAutomatically) {
 					try {
 						TaskRepository taskRepository = taskRepositoryManager.getRepository(
-								connector.getRepositoryType(), template.repositoryUrl);
+								connector.getConnectorKind(), template.repositoryUrl);
 						if (taskRepository == null) {
-							taskRepository = new TaskRepository(connector.getRepositoryType(), template.repositoryUrl,
+							taskRepository = new TaskRepository(connector.getConnectorKind(), template.repositoryUrl,
 									template.version);
 							taskRepository.setRepositoryLabel(template.label);
 							taskRepository.setAnonymous(true);

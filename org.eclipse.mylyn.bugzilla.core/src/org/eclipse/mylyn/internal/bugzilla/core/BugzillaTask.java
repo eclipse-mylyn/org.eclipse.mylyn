@@ -41,7 +41,7 @@ public class BugzillaTask extends AbstractTask {
 	}
 
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 

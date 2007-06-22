@@ -32,20 +32,14 @@ import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
 /**
- * Operations on a task repository
+ * Encapsulates common operations that can be performed on a task repository.  Extend to
+ * connect with a Java API or WS API for accessing the repository.
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since	2.0
  */
 public abstract class AbstractRepositoryConnector {
-
-	public static final String MESSAGE_ATTACHMENTS_NOT_SUPPORTED = "Attachments not supported by connector: ";
-
-	public static final String MYLAR_CONTEXT_DESCRIPTION_LEGACY = "mylar/context/zip";
-
-	public static final String MYLAR_CONTEXT_DESCRIPTION = "mylyn/context/zip";
-	
-	public final static String MYLAR_CONTEXT_FILENAME = "mylyn-context.zip";
 
 	protected Set<RepositoryTemplate> templates = new LinkedHashSet<RepositoryTemplate>();
 
@@ -58,11 +52,22 @@ public abstract class AbstractRepositoryConnector {
 	public void init(TaskList taskList) {
 		this.taskList = taskList;
 	}
+	
+	/**
+	 * Set upon construction
+	 */
+	public void setTaskDataManager(TaskDataManager taskDataManager) {
+		this.taskDataManager = taskDataManager;
+		AbstractAttachmentHandler handler = getAttachmentHandler();
+		if (handler != null) {
+			handler.setTaskDataManager(taskDataManager);
+		}
+	}
 
 	/**
 	 * @return null if not supported
 	 */
-	public abstract IAttachmentHandler getAttachmentHandler();
+	public abstract AbstractAttachmentHandler getAttachmentHandler();
 
 	/**
 	 * @return null if not supported
@@ -73,7 +78,7 @@ public abstract class AbstractRepositoryConnector {
 
 	public abstract String getTaskIdFromTaskUrl(String taskFullUrl);
 
-	public abstract String getTaskWebUrl(String repositoryUrl, String taskId);
+	public abstract String getTaskUrl(String repositoryUrl, String taskId);
 
 	public String[] getTaskIdsFromComment(TaskRepository repository, String comment) {
 		return null;
@@ -179,9 +184,9 @@ public abstract class AbstractRepositoryConnector {
 	public abstract String getLabel();
 
 	/**
-	 * @return the unique type of the repository, e.g. "bugzilla"
+	 * @return the unique kind of the repository, e.g. "bugzilla"
 	 */
-	public abstract String getRepositoryType();
+	public abstract String getConnectorKind();
 
 	/**
 	 * Updates the properties of <code>repositoryTask</code>. Invoked when on task synchronization if
@@ -227,14 +232,6 @@ public abstract class AbstractRepositoryConnector {
 			existingTask.setSummary(queryHit.getSummary());
 			changed = true;
 		}
-//		if (hasTaskPropertyChanged(existingTask.getCompletionDate(), queryHit.getCompletionDate())) {
-//			existingTask.setCompletionDate(queryHit.getCompletionDate());
-//			changed = true;
-//		}
-//		if (hasTaskPropertyChanged(existingTask.getCreationDate(), newTask.getCreationDate())) {
-//			existingTask.setCreationDate(newTask.getCreationDate());
-//			changed = true;
-//		}
 		if (hasTaskPropertyChanged(existingTask.getDueDate(), queryHit.getDueDate())) {
 			existingTask.setDueDate(queryHit.getDueDate());
 			changed = true;
@@ -263,43 +260,9 @@ public abstract class AbstractRepositoryConnector {
 		return (existingProperty == null) ? true : !existingProperty.equals(newProperty);
 	}
 	
-	public String[] repositoryPropertyNames() {
+	public String[] getPepositoryPropertyNames() {
 		return new String[] { IRepositoryConstants.PROPERTY_VERSION, IRepositoryConstants.PROPERTY_TIMEZONE,
 				IRepositoryConstants.PROPERTY_ENCODING };
-	}
-
-	/**
-	 * Implementors of this repositoryOperations must perform it locally without going to the server since it is used
-	 * for frequent repositoryOperations such as decoration.
-	 * 
-	 * @return an empty set if no contexts
-	 */
-	public final Set<RepositoryAttachment> getContextAttachments(TaskRepository repository, AbstractTask task) {
-		Set<RepositoryAttachment> contextAttachments = new HashSet<RepositoryAttachment>();
-
-		if (taskDataManager != null) {
-			RepositoryTaskData newData = taskDataManager.getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
-			if (newData != null) {
-				for (RepositoryAttachment attachment : newData.getAttachments()) {
-					if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION)) {
-						contextAttachments.add(attachment);
-					} else if (attachment.getDescription().equals(MYLAR_CONTEXT_DESCRIPTION_LEGACY)) {
-						contextAttachments.add(attachment);
-					}
-				}
-			}
-		}
-		return contextAttachments;
-	}
-
-	// TODO: move
-	public final boolean hasRepositoryContext(TaskRepository repository, AbstractTask task) {
-		if (repository == null || task == null) {
-			return false;
-		} else {
-			Set<RepositoryAttachment> remoteContextAttachments = getContextAttachments(repository, task);
-			return (remoteContextAttachments != null && remoteContextAttachments.size() > 0);
-		}
 	}
 
 	/**
@@ -324,85 +287,6 @@ public abstract class AbstractRepositoryConnector {
 	public abstract boolean markStaleTasks(TaskRepository repository, Set<AbstractTask> tasks, IProgressMonitor monitor)
 			throws CoreException;
 
-	/**
-	 * Attaches the associated context to <code>task</code>.
-	 * 
-	 * @return false, if operation is not supported by repository
-	 */
-	public final boolean attachContext(TaskRepository repository, AbstractTask task, String longComment,
-			IProgressMonitor monitor) throws CoreException {
-		ContextCorePlugin.getContextManager().saveContext(task.getHandleIdentifier());
-		final File sourceContextFile = ContextCorePlugin.getContextManager().getFileForContext(
-				task.getHandleIdentifier());
-
-		RepositoryTaskSyncState previousState = task.getSyncState();
-
-		if (sourceContextFile != null && sourceContextFile.exists()) {
-			IAttachmentHandler handler = getAttachmentHandler();
-			if (handler == null) {
-				return false;
-			}
-
-			try {
-				task.setSubmitting(true);
-				task.setSyncState(RepositoryTaskSyncState.OUTGOING);
-				FileAttachment attachment = new FileAttachment(sourceContextFile);
-				attachment.setDescription(MYLAR_CONTEXT_DESCRIPTION);
-				attachment.setFilename(MYLAR_CONTEXT_FILENAME);
-				handler.uploadAttachment(repository, task, attachment, longComment, monitor);
-			} catch (CoreException e) {
-				// TODO: Calling method should be responsible for returning
-				// state of task. Wizard will have different behaviour than
-				// editor.
-				task.setSyncState(previousState);
-				throw e;
-			} catch (OperationCanceledException e) {
-				return true;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Retrieves a context stored in <code>attachment</code> from <code>task</code>.
-	 * 
-	 * @return false, if operation is not supported by repository
-	 */
-	public final boolean retrieveContext(TaskRepository repository, AbstractTask task, RepositoryAttachment attachment,
-			String destinationPath, IProgressMonitor monitor) throws CoreException {
-		IAttachmentHandler attachmentHandler = getAttachmentHandler();
-		if (attachmentHandler == null) {
-			return false;
-		}
-
-		File destinationContextFile = ContextCorePlugin.getContextManager().getFileForContext(
-				task.getHandleIdentifier());
-
-		// TODO: add functionality for not overwriting previous context
-		if (destinationContextFile.exists()) {
-			if (!destinationContextFile.delete()) {
-				return false;
-			}
-		}
-		FileOutputStream out;
-		try {
-			out = new FileOutputStream(destinationContextFile);
-			try {
-				attachmentHandler.downloadAttachment(repository, attachment, out, monitor);
-			} finally {
-				try {
-					out.close();
-				} catch (IOException e) {
-					StatusManager.fail(e, "Could not close context file", false);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			throw new CoreException(new RepositoryStatus(IStatus.ERROR, "org.eclipse.mylyn.tasks.core",
-					RepositoryStatus.ERROR_INTERNAL, "Could not create context file", e));
-		}
-		return true;
-	}
-
 	public void addTemplate(RepositoryTemplate template) {
 		this.templates.add(template);
 	}
@@ -425,6 +309,10 @@ public abstract class AbstractRepositoryConnector {
 		return null;
 	}
 
+	/**
+	 * Used for referring to the task in the UI.
+	 * @return
+	 */
 	public String getTaskIdPrefix() {
 		return "task";
 	}
@@ -479,13 +367,6 @@ public abstract class AbstractRepositoryConnector {
 
 	private TaskDataManager getTaskDataManager() {
 		return taskDataManager;
-	}
-
-	/**
-	 * Set upon construction
-	 */
-	public void setTaskDataManager(TaskDataManager taskDataManager) {
-		this.taskDataManager = taskDataManager;
 	}
 
 }

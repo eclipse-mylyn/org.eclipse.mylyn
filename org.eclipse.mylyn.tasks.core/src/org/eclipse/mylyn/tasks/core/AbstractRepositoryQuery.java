@@ -14,17 +14,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
+ * Extend to provide a repository query that can be used in the Task List.
+ * 
  * @author Mik Kersten
  * @author Eugene Kuleshov
  * @author Rob Elves
+ * @since	2.0
  */
 public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 
 	protected String repositoryUrl;
 
-	protected String lastRefreshTimeStamp = "<never>";
+	protected String lastSynchronizedStamp = "<never>";
 
-	private boolean currentlySynchronizing = false;
+	private boolean synchronizing = false;
 
 	protected IStatus status = null;
 
@@ -61,26 +64,26 @@ public abstract class AbstractRepositoryQuery extends AbstractTaskContainer {
 	}
 
 	public boolean isSynchronizing() {
-		return currentlySynchronizing;
+		return synchronizing;
 	}
 
-	public void setCurrentlySynchronizing(boolean currentlySynchronizing) {
-		this.currentlySynchronizing = currentlySynchronizing;
+	public void setSynchronizing(boolean synchronizing) {
+		this.synchronizing = synchronizing;
 	}
 
-	public String getLastRefreshTimeStamp() {
-		return lastRefreshTimeStamp;
+	public String getLastSynchronizedTimeStamp() {
+		return lastSynchronizedStamp;
 	}
 
-	public void setLastRefreshTimeStamp(String lastRefreshTimeStamp) {
-		this.lastRefreshTimeStamp = lastRefreshTimeStamp;
+	public void setLastSynchronizedStamp(String lastRefreshTimeStamp) {
+		this.lastSynchronizedStamp = lastRefreshTimeStamp;
 	}
 
-	public IStatus getStatus() {
+	public IStatus getSynchronizationStatus() {
 		return status;
 	}
 
-	public void setStatus(IStatus status) {
+	public void setSynchronizationStatus(IStatus status) {
 		this.status = status;
 	}
 

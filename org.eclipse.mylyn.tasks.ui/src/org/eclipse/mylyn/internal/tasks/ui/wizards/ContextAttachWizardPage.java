@@ -68,7 +68,7 @@ public class ContextAttachWizardPage extends WizardPage {
 
 		setControl(composite);
 		
-		if(task.getSyncState() != RepositoryTaskSyncState.SYNCHRONIZED) {
+		if(task.getSynchronizationState() != RepositoryTaskSyncState.SYNCHRONIZED) {
 			setErrorMessage("Task must be synchronized before attaching context");
 			complete = false;
 			getWizard().getContainer().updateButtons();

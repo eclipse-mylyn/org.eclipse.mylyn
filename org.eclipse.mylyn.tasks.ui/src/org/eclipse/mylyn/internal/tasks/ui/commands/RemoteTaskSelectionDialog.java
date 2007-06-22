@@ -95,7 +95,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
 			Set<TaskRepository> connectorRepositories = repositoryManager
-					.getRepositories(connector.getRepositoryType());
+					.getRepositories(connector.getConnectorKind());
 			for (TaskRepository repository : connectorRepositories) {
 				if (TaskRepositoryFilter.CAN_CREATE_TASK_FROM_KEY.accept(repository, connector)) {
 					repositories.add(repository);
@@ -279,7 +279,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			return getRepository(task.getRepositoryUrl(), task.getRepositoryKind());
+			return getRepository(task.getRepositoryUrl(), task.getConnectorKind());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
@@ -292,7 +292,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
 				if (task instanceof AbstractTask) {
 					AbstractTask rtask = (AbstractTask) task;
-					return getRepository(rtask.getRepositoryUrl(), rtask.getRepositoryKind());
+					return getRepository(rtask.getRepositoryUrl(), rtask.getConnectorKind());
 				}
 			}
 		}

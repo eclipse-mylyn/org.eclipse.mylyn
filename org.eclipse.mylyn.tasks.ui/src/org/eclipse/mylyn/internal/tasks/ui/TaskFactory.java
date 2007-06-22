@@ -70,7 +70,7 @@ public class TaskFactory implements ITaskFactory {
 		AbstractTask repositoryTask = taskList.getTask(taskData.getRepositoryUrl(), taskData.getId());
 		if (repositoryTask == null) {
 			repositoryTask = connector.createTaskFromTaskData(repository, taskData, updateTasklist, monitor);
-			repositoryTask.setSyncState(RepositoryTaskSyncState.INCOMING);
+			repositoryTask.setSynchronizationState(RepositoryTaskSyncState.INCOMING);
 			if (updateTasklist) {
 				taskList.addTask(repositoryTask);
 				synchManager.saveIncoming(repositoryTask, taskData, forced);

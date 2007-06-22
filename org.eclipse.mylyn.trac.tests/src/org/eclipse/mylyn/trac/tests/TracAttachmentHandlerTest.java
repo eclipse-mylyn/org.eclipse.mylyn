@@ -29,9 +29,9 @@ import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryConnector;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.FileAttachment;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -50,7 +50,7 @@ public class TracAttachmentHandlerTest extends TestCase {
 
 	private TracRepositoryConnector connector;
 
-	private IAttachmentHandler attachmentHandler;
+	private AbstractAttachmentHandler attachmentHandler;
 
 	private TestData data;
 

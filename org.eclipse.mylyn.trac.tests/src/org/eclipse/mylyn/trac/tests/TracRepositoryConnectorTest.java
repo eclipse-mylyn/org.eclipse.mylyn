@@ -97,7 +97,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		AbstractRepositoryConnector abstractConnector = manager.getRepositoryConnector(kind);
-		assertEquals(abstractConnector.getRepositoryType(), kind);
+		assertEquals(abstractConnector.getConnectorKind(), kind);
 
 		connector = (TracRepositoryConnector) abstractConnector;
 		TasksUiPlugin.getSynchronizationManager().setForceSyncExec(true);
@@ -314,7 +314,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.createNewFile();
 		sourceContextFile.deleteOnExit();
 
-		assertTrue(connector.attachContext(repository, task, "", new NullProgressMonitor()));
+		assertTrue(connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor()));
 		
 		TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
 		// TODO attachment may have been overridden therefore size may not have changed
@@ -333,7 +333,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		sourceContextFile.deleteOnExit();
 
 		try {
-			connector.attachContext(repository, task, "", new NullProgressMonitor());
+			connector.getAttachmentHandler().attachContext(repository, task, "", new NullProgressMonitor());
 			fail("expected CoreException"); // operation should not be supported
 		} catch (CoreException e) {
 		}

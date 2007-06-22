@@ -33,7 +33,7 @@ public class MockRepositoryTask extends AbstractTask {
 	}
 	
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return "mock";
 	}
 

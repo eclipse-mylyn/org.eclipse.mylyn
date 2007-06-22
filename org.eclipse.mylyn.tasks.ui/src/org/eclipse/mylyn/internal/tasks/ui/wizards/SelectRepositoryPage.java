@@ -96,7 +96,7 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector connector : repositoryManager.getRepositoryConnectors()) {
-			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getRepositoryType());
+			Set<TaskRepository> connectorRepositories = repositoryManager.getRepositories(connector.getConnectorKind());
 			for (TaskRepository repository : connectorRepositories) {
 				if (taskRepositoryFilter.accept(repository, connector)) {
 					repositories.add(repository);

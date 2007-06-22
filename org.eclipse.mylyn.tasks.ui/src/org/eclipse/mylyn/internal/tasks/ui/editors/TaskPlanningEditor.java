@@ -630,7 +630,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
-			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractTask) task).getRepositoryKind());
+			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractTask) task).getConnectorKind());
 			if (connector != null && connector.handlesDueDates((AbstractTask) task)) {
 				dueDatePicker.setEnabled(false);
 				clearDueDate.setEnabled(false);
@@ -742,7 +742,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		TaskRepository repository = null;
 		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
 			AbstractTask repositoryTask = (AbstractTask) task;
-			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getRepositoryKind(),
+			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryTask.getConnectorKind(),
 					repositoryTask.getRepositoryUrl());
 		}
 

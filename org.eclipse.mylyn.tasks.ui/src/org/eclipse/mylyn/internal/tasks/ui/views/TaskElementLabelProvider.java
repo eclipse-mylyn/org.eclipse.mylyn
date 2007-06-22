@@ -97,7 +97,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			AbstractRepositoryConnectorUi connectorUi = null;
 			if (element instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getRepositoryKind());
+				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getConnectorKind());
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
@@ -129,29 +129,29 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			repositoryTask = (AbstractTask) element;
 		}
 		if (repositoryTask != null) {
-			if (repositoryTask.getLastSyncDateStamp() == null) {
+			if (repositoryTask.getLastReadTimeStamp() == null) {
 				if (synchViewStyle) {
 					return TasksUiImages.OVERLAY_SYNCH_INCOMMING_NEW;
 				} else {
 					return TasksUiImages.OVERLAY_INCOMMING_NEW;
 				}
 			}
-			if (repositoryTask.getSyncState() == RepositoryTaskSyncState.OUTGOING) {
+			if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				if (synchViewStyle) {
 					imageDescriptor = TasksUiImages.OVERLAY_SYNCH_OUTGOING;
 				} else {
 					imageDescriptor = TasksUiImages.OVERLAY_OUTGOING;
 				}
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 				if (synchViewStyle) {
 					imageDescriptor = TasksUiImages.OVERLAY_SYNCH_INCOMMING;
 				} else {
 					imageDescriptor = TasksUiImages.OVERLAY_INCOMMING;
 				}
-			} else if (repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				imageDescriptor = TasksUiImages.OVERLAY_CONFLICT;
 			}
-			if (imageDescriptor == null && repositoryTask.getStatus() != null) {
+			if (imageDescriptor == null && repositoryTask.getSynchronizationStatus() != null) {
 				return TasksUiImages.OVERLAY_WARNING;
 			} else if (imageDescriptor != null) {
 				return imageDescriptor;
@@ -160,7 +160,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			AbstractTaskContainer container = (AbstractTaskContainer) element;
 			if (container instanceof AbstractRepositoryQuery) {
 				AbstractRepositoryQuery query = (AbstractRepositoryQuery) container;
-				if (query.getStatus() != null) {
+				if (query.getSynchronizationStatus() != null) {
 					return TasksUiImages.OVERLAY_WARNING;
 				}
 			}
@@ -173,7 +173,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		AbstractRepositoryConnectorUi connectorUi;
 		if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getRepositoryKind());
+			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getConnectorKind());
 			if (connectorUi != null) {
 				return connectorUi.getTaskPriorityOverlay(repositoryTask);
 			}

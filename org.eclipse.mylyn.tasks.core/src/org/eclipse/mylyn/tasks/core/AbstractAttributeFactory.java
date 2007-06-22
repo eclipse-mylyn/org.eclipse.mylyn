@@ -16,24 +16,27 @@ import java.util.Date;
 
 
 /**
+ * Extend to provide mapping between repository task attribute IDs and native repository IDs.
+ * 
  * @author Rob Elves
+ * @since	2.0
  */
 public abstract class AbstractAttributeFactory implements Serializable {
 
 	public RepositoryTaskAttribute createAttribute(String key) {
 		String mapped = mapCommonAttributeKey(key);
-		RepositoryTaskAttribute attribute = new RepositoryTaskAttribute(mapped, getName(mapped), getIsHidden(mapped));
+		RepositoryTaskAttribute attribute = new RepositoryTaskAttribute(mapped, getName(mapped), isHidden(mapped));
 		attribute.setReadOnly(isReadOnly(mapped));
 		return attribute;
 	}
 	
 	public abstract String mapCommonAttributeKey(String key);
 	
-	public abstract boolean getIsHidden(String key);
-
 	public abstract String getName(String key);
 		
 	public abstract boolean isReadOnly(String key);
+
+	public abstract boolean isHidden(String key);
 	
 	/**
 	 * @return null if date cannot be parsed

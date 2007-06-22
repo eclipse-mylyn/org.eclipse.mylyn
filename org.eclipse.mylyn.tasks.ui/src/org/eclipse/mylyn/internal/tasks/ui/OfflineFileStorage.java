@@ -158,7 +158,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 		}
 
 		@Override
-		public boolean getIsHidden(String key) {
+		public boolean isHidden(String key) {
 			return false;
 		}
 

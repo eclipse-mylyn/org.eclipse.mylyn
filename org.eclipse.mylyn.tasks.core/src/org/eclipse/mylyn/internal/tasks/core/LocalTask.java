@@ -30,7 +30,7 @@ public class LocalTask extends AbstractTask {
 	}
 	
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return LocalRepositoryConnector.REPOSITORY_KIND;
 	}
 
@@ -38,7 +38,7 @@ public class LocalTask extends AbstractTask {
 		return true;
 	}
 	
-	public String getLastSyncDateStamp() {
+	public String getLastReadTimeStamp() {
 		return SYNC_DATE_NOW;
 	}
 	

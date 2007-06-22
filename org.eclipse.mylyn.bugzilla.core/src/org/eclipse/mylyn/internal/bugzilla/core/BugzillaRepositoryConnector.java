@@ -29,11 +29,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.ITaskFactory;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
@@ -83,7 +83,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IAttachmentHandler getAttachmentHandler() {
+	public AbstractAttachmentHandler getAttachmentHandler() {
 		return attachmentHandler;
 	}
 
@@ -93,7 +93,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
@@ -184,7 +184,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			bugzillaTask.setPriority(priority);
 
 			// Task Web Url
-			String url = getTaskWebUrl(repository.getUrl(), taskData.getId());
+			String url = getTaskUrl(repository.getUrl(), taskData.getId());
 			if (url != null) {
 				bugzillaTask.setTaskUrl(url);
 			}
@@ -422,7 +422,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+	public String getTaskUrl(String repositoryUrl, String taskId) {
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 		} catch (Exception ex) {

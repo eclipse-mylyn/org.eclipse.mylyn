@@ -105,7 +105,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 	private TaskRepository guessRepository(String text) {
 		TaskRepositoryManager manager = TasksUiPlugin.getRepositoryManager();
 		for (AbstractRepositoryConnector c : manager.getRepositoryConnectors()) {
-			for (TaskRepository repository : manager.getRepositories(c.getRepositoryType())) {
+			for (TaskRepository repository : manager.getRepositories(c.getConnectorKind())) {
 				String[] ids = c.getTaskIdsFromComment(repository, text);
 				if (ids != null && ids.length > 0 && ids[0].length() > 0) {
 					return repository;

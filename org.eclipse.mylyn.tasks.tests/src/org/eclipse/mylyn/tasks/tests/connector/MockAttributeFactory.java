@@ -22,7 +22,7 @@ public class MockAttributeFactory extends AbstractAttributeFactory {
 	private static final long serialVersionUID = 7713746838934802731L;
 
 	@Override
-	public boolean getIsHidden(String key) {
+	public boolean isHidden(String key) {
 		// ignore
 		return false;
 	}

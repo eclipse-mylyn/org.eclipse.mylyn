@@ -191,7 +191,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	public boolean openRepositoryTask(String repositoryUrl, String id) {
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
 		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
-		String taskUrl = connector.getTaskWebUrl(repositoryUrl, id);
+		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
 		if (taskUrl == null) {
 			return false;
 		}

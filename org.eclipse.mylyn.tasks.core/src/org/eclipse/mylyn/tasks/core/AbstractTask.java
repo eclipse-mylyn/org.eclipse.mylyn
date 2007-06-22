@@ -21,60 +21,63 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 
 /**
+ * Encapsulates tasks that reside on a repository or local computer and participate in synchronization with the source
+ * that contains their data.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public abstract class AbstractTask extends AbstractTaskContainer {
-	
+
 	public static final String DEFAULT_TASK_KIND = "task";
-	
+
 	private String repositoryUrl;
 
-	private String kind = DEFAULT_TASK_KIND;
-	
+	private String taskKind = DEFAULT_TASK_KIND;
+
 	private String taskId;
-	
+
 	private String owner;
-	
+
 	private boolean active = false;
-	
+
 	private String summary;
 
 	private String priority = PriorityLevel.getDefault().toString();
 
 	private boolean completed;
-	
+
 	private boolean isNotifiedIncoming = false;
-	
-	private boolean hasReminded = false;
+
+	private boolean reminded = false;
 
 	private String taskUrl = "";
 
 	private Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
-	
-	
-	// ************ Synch ****************
-	
-	/** The last time this task's bug report was in a synchronized (read?) state. */
-	private String lastSynchronizedDateStamp;
 
-	private boolean currentlySynchronizing;
+	// ************ Synch ****************
+
+	/** The last time this task's bug report was in a synchronized (read?) state. */
+	private String lastReadTimeStamp;
+
+	private boolean synchronizing;
 
 	private boolean submitting;
-	
-	private RepositoryTaskSyncState syncState = RepositoryTaskSyncState.SYNCHRONIZED;
+
+	private RepositoryTaskSyncState synchronizationState = RepositoryTaskSyncState.SYNCHRONIZED;
 
 	// transient
-	private IStatus errorStatus = null;
+	private IStatus synchronizationStatus = null;
 
 	private boolean stale = false;
-	
+
 	public enum RepositoryTaskSyncState {
 		OUTGOING, SYNCHRONIZED, INCOMING, CONFLICT
 	}
-	
+
 	// ************ Planning ****************
-	
+
 	private Date completionDate = null;
 
 	private Date creationDate = null;
@@ -82,14 +85,14 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	private Date scheduledForDate = null;
 
 	private Date dueDate = null;
-	
+
 	private String notes = "";
 
 	private int estimatedTimeHours = 1;
-		
+
 	public enum PriorityLevel {
 		P1, P2, P3, P4, P5;
-	
+
 		@Override
 		public String toString() {
 			switch (this) {
@@ -107,7 +110,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 				return "P3";
 			}
 		}
-	
+
 		public String getDescription() {
 			switch (this) {
 			case P1:
@@ -124,7 +127,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 				return "";
 			}
 		}
-	
+
 		public static PriorityLevel fromString(String string) {
 			if (string.equals("P1"))
 				return P1;
@@ -138,7 +141,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 				return P5;
 			return getDefault();
 		}
-	
+
 		public static PriorityLevel fromDescription(String string) {
 			if (string == null)
 				return null;
@@ -154,12 +157,12 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 				return P5;
 			return getDefault();
 		}
-	
+
 		public static PriorityLevel getDefault() {
 			return P3;
 		}
 	}
-	
+
 	public AbstractTask(String repositoryUrl, String taskId, String summary) {
 		super(RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId));
 		this.repositoryUrl = repositoryUrl;
@@ -172,35 +175,35 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * True for tasks that can be modified without a round-trip to a server.  For example,
-	 * such a task can be marked completed via the Task List.
+	 * True for tasks that can be modified without a round-trip to a server. For example, such a task can be marked
+	 * completed via the Task List.
 	 */
 	public abstract boolean isLocal();
-	
-	public abstract String getRepositoryKind();
 
-	public String getLastSyncDateStamp() {
-		return lastSynchronizedDateStamp;
+	public abstract String getConnectorKind();
+
+	public String getLastReadTimeStamp() {
+		return lastReadTimeStamp;
 	}
 
-	public void setLastSyncDateStamp(String lastSyncDateStamp) {
-		this.lastSynchronizedDateStamp = lastSyncDateStamp;
+	public void setLastReadTimeStamp(String lastReadTimeStamp) {
+		this.lastReadTimeStamp = lastReadTimeStamp;
 	}
 
-	public void setSyncState(RepositoryTaskSyncState syncState) {
-		this.syncState = syncState;
+	public void setSynchronizationState(RepositoryTaskSyncState syncState) {
+		this.synchronizationState = syncState;
 	}
 
-	public RepositoryTaskSyncState getSyncState() {
-		return syncState;
+	public RepositoryTaskSyncState getSynchronizationState() {
+		return synchronizationState;
 	}
 
 	public boolean isSynchronizing() {
-		return currentlySynchronizing;
+		return synchronizing;
 	}
 
-	public void setCurrentlySynchronizing(boolean currentlySychronizing) {
-		this.currentlySynchronizing = currentlySychronizing;
+	public void setSynchronizing(boolean sychronizing) {
+		this.synchronizing = sychronizing;
 	}
 
 	public boolean isNotified() {
@@ -219,12 +222,12 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.owner = owner;
 	}
 
-	public IStatus getStatus() {
-		return errorStatus;
+	public IStatus getSynchronizationStatus() {
+		return synchronizationStatus;
 	}
 
-	public void setStatus(IStatus status) {
-		this.errorStatus = status;
+	public void setSynchronizationStatus(IStatus status) {
+		this.synchronizationStatus = status;
 	}
 
 	public final String getTaskId() {
@@ -240,15 +243,13 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	/**
-	 * User identifiable key for the task to be used in UI facilities such as
-	 * label displays and hyperlinked references. Can return the same as the ID
-	 * (e.g. in the case of Bugzilla). Can return null if no such label exists.
+	 * User identifiable key for the task to be used in UI facilities such as label displays and hyperlinked references.
+	 * Can return the same as the ID (e.g. in the case of Bugzilla). Can return null if no such label exists.
 	 */
 	public String getTaskKey() {
 		return taskId;
 	}
 
-	
 	public boolean isSubmitting() {
 		return submitting;
 	}
@@ -276,7 +277,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractTask && obj != null) {
-			return this.getHandleIdentifier().compareTo(((AbstractTask)obj).getHandleIdentifier()) == 0;
+			return this.getHandleIdentifier().compareTo(((AbstractTask) obj).getHandleIdentifier()) == 0;
 		} else {
 			return false;
 		}
@@ -350,7 +351,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	public void removeParentContainer(AbstractTaskContainer container) {
 		containers.remove(container);
 	}
-	
+
 	public Set<AbstractTaskContainer> getParentContainers() {
 		return containers;
 	}
@@ -371,12 +372,12 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		return scheduledForDate;
 	}
 
-	public boolean hasBeenReminded() {
-		return hasReminded;
+	public boolean isReminded() {
+		return reminded;
 	}
 
 	public void setReminded(boolean reminded) {
-		this.hasReminded = reminded;
+		this.reminded = reminded;
 	}
 
 	public Date getCreationDate() {
@@ -424,15 +425,15 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public String getTaskKind() {
-		return kind;
+		return taskKind;
 	}
 
-	public void setKind(String kind) {
-		this.kind = kind;
+	public void setTaskKind(String kind) {
+		this.taskKind = kind;
 	}
 
 	public int compareTo(AbstractTaskContainer taskListElement) {
-		return summary.compareTo(((AbstractTask)taskListElement).summary);
+		return summary.compareTo(((AbstractTask) taskListElement).summary);
 	}
 
 	public Date getDueDate() {
@@ -446,9 +447,9 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	public boolean isStale() {
 		return stale;
 	}
-	
+
 	public void setStale(boolean stale) {
 		this.stale = stale;
 	}
-	
+
 }

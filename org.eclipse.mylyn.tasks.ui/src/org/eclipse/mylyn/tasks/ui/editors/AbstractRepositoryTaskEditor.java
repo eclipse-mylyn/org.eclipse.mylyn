@@ -320,8 +320,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (taskToRefresh != null) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (repositoryTask.getSyncState() == RepositoryTaskSyncState.INCOMING
-								|| repositoryTask.getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+						if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+								|| repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 							// MessageDialog.openInformation(AbstractTaskEditor.this.getSite().getShell(),
 							// "Changed - " + repositoryTask.getSummary(),
 							// "Editor will Test with new incoming
@@ -1428,7 +1428,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					return;
 				}
 				if (AbstractRepositoryTaskEditor.this.isDirty
-						|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+						|| ((AbstractTask) task).getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
 					MessageDialog.openInformation(attachmentsComposite.getShell(),
 							"Task not synchronized or dirty editor",
 							"Commit edits or synchronize task before adding attachments.");
@@ -1459,7 +1459,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						return;
 					}
 					if (AbstractRepositoryTaskEditor.this.isDirty
-							|| ((AbstractTask) task).getSyncState().equals(RepositoryTaskSyncState.OUTGOING)) {
+							|| ((AbstractTask) task).getSynchronizationState().equals(RepositoryTaskSyncState.OUTGOING)) {
 						MessageDialog.openInformation(attachmentsComposite.getShell(),
 								"Task not synchronized or dirty editor",
 								"Commit edits or synchronize task before deleting attachments.");
@@ -1758,7 +1758,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			final ExpandableComposite expandableComposite = toolkit.createExpandableComposite(addCommentsComposite,
 					ExpandableComposite.TREE_NODE | ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT);
 
-			if ((repositoryTask != null && repositoryTask.getLastSyncDateStamp() == null)
+			if ((repositoryTask != null && repositoryTask.getLastReadTimeStamp() == null)
 					|| editorInput.getOldTaskData() == null) {
 				// hit or lost task data, expose all comments
 				expandableComposite.setExpanded(true);
@@ -2713,8 +2713,8 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					// Synchronization accounting...
 					if (modifiedTask != null) {
 						// Attach context if required
-						if (attachContext) {
-							connector.attachContext(repository, modifiedTask, "", new SubProgressMonitor(monitor, 1));
+						if (attachContext && connector.getAttachmentHandler() != null) {
+							connector.getAttachmentHandler().attachContext(repository, modifiedTask, "", new SubProgressMonitor(monitor, 1));
 						}
 
 						modifiedTask.setSubmitting(true);
@@ -2748,7 +2748,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								TasksUiUtil.openRepositoryTask(repository.getUrl(), taskData.getId(),
-										connector.getTaskWebUrl(taskData.getRepositoryUrl(), taskData.getId()));
+										connector.getTaskUrl(taskData.getRepositoryUrl(), taskData.getId()));
 							}
 						});
 					}

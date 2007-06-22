@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -45,8 +45,8 @@ public class AttachmentTableLabelProvider extends DecoratingLabelProvider implem
 	public Image getColumnImage(Object element, int columnIndex) {
 		RepositoryAttachment attachment = (RepositoryAttachment) element;
 		if (columnIndex == 0) {
-			if (AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-				|| AbstractRepositoryConnector.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
+			if (AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
+				|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 				return TasksUiImages.getImage(TasksUiImages.CONTEXT_TRANSFER);
 			} else if (attachment.isPatch()) {
 				return TasksUiImages.getImage(TasksUiImages.ATTACHMENT_PATCH);

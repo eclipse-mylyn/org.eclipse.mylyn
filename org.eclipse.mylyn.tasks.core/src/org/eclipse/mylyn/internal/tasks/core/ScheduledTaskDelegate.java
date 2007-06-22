@@ -150,8 +150,8 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task.getTaskUrl();
 	}
 
-	public boolean hasBeenReminded() {
-		return task.hasBeenReminded();
+	public boolean isReminded() {
+		return task.isReminded();
 	}
 
 	public boolean hasValidUrl() {
@@ -204,8 +204,8 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	// task.setHandleIdentifier(taskId);
 	// }
 
-	public void setKind(String kind) {
-		task.setKind(kind);
+	public void setTaskKind(String kind) {
+		task.setTaskKind(kind);
 	}
 
 	public void setNotes(String notes) {
@@ -250,7 +250,7 @@ public class ScheduledTaskDelegate extends AbstractTask {
 	}
 
 	@Override
-	public String getRepositoryKind() {
-		return task.getRepositoryKind();
+	public String getConnectorKind() {
+		return task.getConnectorKind();
 	}
 }

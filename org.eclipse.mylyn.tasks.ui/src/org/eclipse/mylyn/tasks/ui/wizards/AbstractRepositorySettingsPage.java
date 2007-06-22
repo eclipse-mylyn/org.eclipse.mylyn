@@ -590,7 +590,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 //					repository = createTaskRepository();
 //				}
 				if (repository != null) {
-					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
 							.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
 						TasksUiUtil.openUrl(accountCreationUrl, false);
@@ -609,7 +609,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					repository = createTaskRepository();
 				}
 				if (repository != null) {
-					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
 							.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
 						TasksUiUtil.openUrl(accountManagementUrl, false);
@@ -887,12 +887,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	void updateHyperlinks() {
 		if (getServerUrl() != null && getServerUrl().length() > 0) {
 			TaskRepository repository = createTaskRepository();
-			String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+			String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
 					.getAccountCreationUrl(repository);
 			createAccountHyperlink.setEnabled(accountCreationUrl != null);
 			createAccountHyperlink.setVisible(accountCreationUrl != null);
 
-			String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType())
+			String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
 					.getAccountManagementUrl(repository);
 			manageAccountHyperlink.setEnabled(accountManagementUrl != null);
 			manageAccountHyperlink.setVisible(accountManagementUrl != null);
@@ -1105,7 +1105,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		// getVersion(),
 		// getCharacterEncoding(), getTimeZoneId());
 
-		TaskRepository repository = new TaskRepository(connector.getRepositoryType(), getServerUrl(), getVersion(),
+		TaskRepository repository = new TaskRepository(connector.getConnectorKind(), getServerUrl(), getVersion(),
 				getCharacterEncoding(), "");
 		repository.setRepositoryLabel(getRepositoryLabel());
 		repository.setAuthenticationCredentials(getUserName(), getPassword());

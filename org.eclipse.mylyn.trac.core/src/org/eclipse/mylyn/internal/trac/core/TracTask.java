@@ -140,7 +140,7 @@ public class TracTask extends AbstractTask {
 	}
 
 	@Override
-	public String getRepositoryKind() {
+	public String getConnectorKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
 

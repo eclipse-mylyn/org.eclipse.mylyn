@@ -33,7 +33,7 @@ public class ContextAttachWizard extends Wizard {
 	private ContextAttachWizardPage wizardPage;
 
 	public ContextAttachWizard(AbstractTask task) {
-		repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+		repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		this.task = task;
 		setWindowTitle(ContextRetrieveWizard.TITLE);

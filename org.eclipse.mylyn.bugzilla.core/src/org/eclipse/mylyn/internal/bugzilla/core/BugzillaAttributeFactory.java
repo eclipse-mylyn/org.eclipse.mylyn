@@ -96,7 +96,7 @@ public class BugzillaAttributeFactory extends AbstractAttributeFactory {
 	}
 	
 	@Override
-	public boolean getIsHidden(String key) {
+	public boolean isHidden(String key) {
 		try {
 			return BugzillaReportElement.valueOf(key.trim().toUpperCase(Locale.ENGLISH)).isHidden();
 		} catch (IllegalArgumentException e) {

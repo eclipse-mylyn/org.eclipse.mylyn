@@ -123,7 +123,7 @@ public class TracAttributeFactory extends AbstractAttributeFactory {
 	}
 
 	@Override
-	public boolean getIsHidden(String key) {
+	public boolean isHidden(String key) {
 		if (isInternalAttribute(key)) {
 			return true;
 		}

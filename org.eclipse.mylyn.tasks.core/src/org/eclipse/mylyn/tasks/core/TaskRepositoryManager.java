@@ -66,13 +66,13 @@ public class TaskRepositoryManager {
 	}
 
 	public AbstractRepositoryConnector getRepositoryConnector(AbstractTask task) {
-		return getRepositoryConnector(task.getRepositoryKind());
+		return getRepositoryConnector(task.getConnectorKind());
 	}
 
 	public void addRepositoryConnector(AbstractRepositoryConnector repositoryConnector) {
 		if (!repositoryConnectors.values().contains(repositoryConnector)) {
 			repositoryConnector.init(taskList);
-			repositoryConnectors.put(repositoryConnector.getRepositoryType(), repositoryConnector);
+			repositoryConnectors.put(repositoryConnector.getConnectorKind(), repositoryConnector);
 		}
 	}
 
@@ -162,7 +162,7 @@ public class TaskRepositoryManager {
 	public AbstractRepositoryConnector getConnectorForRepositoryTaskUrl(String url) {
 		for (AbstractRepositoryConnector connector : getRepositoryConnectors()) {
 			if (connector.getRepositoryUrlFromTaskUrl(url) != null) {
-				for (TaskRepository repository : getRepositories(connector.getRepositoryType())) {
+				for (TaskRepository repository : getRepositories(connector.getConnectorKind())) {
 					if (url.startsWith(repository.getUrl())) {
 						return connector;
 					}
@@ -183,8 +183,8 @@ public class TaskRepositoryManager {
 	public List<TaskRepository> getAllRepositories() {
 		List<TaskRepository> repositories = new ArrayList<TaskRepository>();
 		for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-			if (repositoryMap.containsKey(repositoryConnector.getRepositoryType())) {
-				repositories.addAll(repositoryMap.get(repositoryConnector.getRepositoryType()));
+			if (repositoryMap.containsKey(repositoryConnector.getConnectorKind())) {
+				repositories.addAll(repositoryMap.get(repositoryConnector.getConnectorKind()));
 			}
 		}
 		return repositories;
@@ -251,7 +251,7 @@ public class TaskRepositoryManager {
 
 			// Will only load repositories for which a connector exists
 			for (AbstractRepositoryConnector repositoryConnector : repositoryConnectors.values()) {
-				repositoryMap.put(repositoryConnector.getRepositoryType(), new HashSet<TaskRepository>());
+				repositoryMap.put(repositoryConnector.getConnectorKind(), new HashSet<TaskRepository>());
 			}
 			if (repositoriesFile.exists()) {
 				Set<TaskRepository> repositories = externalizer.readRepositoriesFromXML(repositoriesFile);

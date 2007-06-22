@@ -37,7 +37,7 @@ public class ContextRetrieveWizard extends Wizard {
 	private ContextRetrieveWizardPage wizardPage;
 
 	public ContextRetrieveWizard(AbstractTask task) {
-		repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getRepositoryKind(),
+		repository = TasksUiPlugin.getRepositoryManager().getRepository(task.getConnectorKind(),
 				task.getRepositoryUrl());
 		this.task = task;
 		setWindowTitle(TITLE);

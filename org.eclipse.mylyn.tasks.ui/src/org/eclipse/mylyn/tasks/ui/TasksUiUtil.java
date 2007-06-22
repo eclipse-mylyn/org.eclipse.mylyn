@@ -182,7 +182,7 @@ public class TasksUiUtil {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getConnectorForRepositoryTaskUrl(fullUrl);
 			if (connector != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getRepositoryType());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind());
 				if (repositoryUrl != null && taskId != null) {
 					opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
 				} else {
@@ -215,7 +215,7 @@ public class TasksUiUtil {
 			} else if (task instanceof AbstractTask) {
 
 				final AbstractTask repositoryTask = (AbstractTask) task;
-				String repositoryKind = repositoryTask.getRepositoryKind();
+				String repositoryKind = repositoryTask.getConnectorKind();
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 						.getRepositoryConnector(repositoryKind);
 
@@ -268,7 +268,7 @@ public class TasksUiUtil {
 		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) task;
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getRepositoryKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getConnectorKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
 				taskEditorId = customTaskEditorId;
@@ -337,7 +337,7 @@ public class TasksUiUtil {
 									// Synchronization must happen after marked
 									// read.
 									AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-											.getRepositoryConnector(repositoryTask.getRepositoryKind());
+											.getRepositoryConnector(repositoryTask.getConnectorKind());
 									if (connector != null) {
 										TasksUiPlugin.getSynchronizationManager().synchronize(connector,
 												repositoryTask, false, null);
@@ -377,8 +377,8 @@ public class TasksUiUtil {
 	 */
 	private static boolean refreshIfOpen(AbstractTask task, IEditorInput editorInput) {
 		if (task instanceof AbstractTask) {
-			if (((AbstractTask) task).getSyncState() == RepositoryTaskSyncState.INCOMING
-					|| ((AbstractTask) task).getSyncState() == RepositoryTaskSyncState.CONFLICT) {
+			if (((AbstractTask) task).getSynchronizationState() == RepositoryTaskSyncState.INCOMING
+					|| ((AbstractTask) task).getSynchronizationState() == RepositoryTaskSyncState.CONFLICT) {
 				for (TaskEditor editor : getActiveRepositoryTaskEditors()) {
 					if (editor.getEditorInput().equals(editorInput)) {
 						editor.refreshEditorContents();
@@ -492,7 +492,7 @@ public class TasksUiUtil {
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			return TasksUiPlugin.getRepositoryManager()
-					.getRepository(task.getRepositoryKind(), task.getRepositoryUrl());
+					.getRepository(task.getConnectorKind(), task.getRepositoryUrl());
 		} else if (element instanceof IResource) {
 			IResource resource = (IResource) element;
 			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
@@ -505,7 +505,7 @@ public class TasksUiUtil {
 				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
 				if (task instanceof AbstractTask) {
 					AbstractTask rtask = (AbstractTask) task;
-					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getRepositoryKind(),
+					return TasksUiPlugin.getRepositoryManager().getRepository(rtask.getConnectorKind(),
 							rtask.getRepositoryUrl());
 				}
 			}

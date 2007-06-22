@@ -19,6 +19,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -48,7 +49,12 @@ public class ContextUiUtil {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						result[0] = connector.retrieveContext(repository, task, attachment, directory, monitor);
+						if (connector.getAttachmentHandler() != null) {
+							result[0] = connector.getAttachmentHandler().retrieveContext(repository, task, attachment,
+									directory, monitor);
+						} else {
+							result[0] = false;
+						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}
@@ -58,16 +64,15 @@ public class ContextUiUtil {
 
 			if (!result[0]) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG,
-						AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED + connector.getLabel());
+						ITasksUiConstants.TITLE_DIALOG, AbstractAttachmentHandler.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
+								+ connector.getLabel());
 			} else {
 				TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(task, false);
 				TasksUiPlugin.getTaskListManager().activateTask(task);
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause())
-						.getStatus());
+				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusManager.fail(e, "Unexpected error while attaching context", true);
 			}
@@ -88,7 +93,12 @@ public class ContextUiUtil {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						result[0] = connector.attachContext(repository, task, comment, monitor);
+						if (connector.getAttachmentHandler() != null) {
+							result[0] = connector.getAttachmentHandler().attachContext(repository, task, comment,
+									monitor);
+						} else {
+							result[0] = false;
+						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}
@@ -98,12 +108,15 @@ public class ContextUiUtil {
 
 			if (!result[0]) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, AbstractRepositoryConnector.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
+						ITasksUiConstants.TITLE_DIALOG, AbstractAttachmentHandler.MESSAGE_ATTACHMENTS_NOT_SUPPORTED
 								+ connector.getLabel());
 			} else {
-				task.setSyncState(RepositoryTaskSyncState.SYNCHRONIZED);
-				IWorkbenchSite site = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.getActivePart().getSite();
+				task.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
+				IWorkbenchSite site = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.getActivePart()
+						.getSite();
 				if (site instanceof IViewSite) {
 					IStatusLineManager statusLineManager = ((IViewSite) site).getActionBars().getStatusLineManager();
 					statusLineManager.setMessage(TasksUiImages.getImage(TasksUiImages.TASKLIST),
@@ -113,8 +126,7 @@ public class ContextUiUtil {
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause())
-						.getStatus());
+				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
 				StatusManager.fail(e, "Unexpected error while attaching context", true);
 			}

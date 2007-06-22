@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -50,7 +50,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 				attachment.getRepositoryUrl());
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				attachment.getRepositoryKind());
-		IAttachmentHandler handler = connector.getAttachmentHandler();
+		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
 			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
 					"The repository does not support attachments.");

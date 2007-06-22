@@ -120,7 +120,7 @@ public class TaskListToolTipHandler {
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			StringBuilder sb = new StringBuilder();
-			String syncStamp = query.getLastRefreshTimeStamp();
+			String syncStamp = query.getLastSynchronizedTimeStamp();
 			if (syncStamp != null) {
 				sb.append("Synchronized: " + syncStamp);
 			}
@@ -128,7 +128,7 @@ public class TaskListToolTipHandler {
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			StringBuilder sb = new StringBuilder();			
-			sb.append(TasksUiPlugin.getRepositoryUi(task.getRepositoryKind()).getTaskKindLabel(task));
+			sb.append(TasksUiPlugin.getRepositoryUi(task.getConnectorKind()).getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
 				sb.append(" ");
@@ -137,7 +137,7 @@ public class TaskListToolTipHandler {
 			sb.append(", ");
 			sb.append(task.getPriority());
 			sb.append("  [");
-			sb.append(getRepositoryLabel(task.getRepositoryKind(), task.getRepositoryUrl()));
+			sb.append(getRepositoryLabel(task.getConnectorKind(), task.getRepositoryUrl()));
 			sb.append("]");
 			sb.append("\n");
 			return sb.toString();
@@ -185,7 +185,7 @@ public class TaskListToolTipHandler {
 	private String getIncommingText(AbstractTaskContainer element) {
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			if (task.getSyncState() == RepositoryTaskSyncState.INCOMING) {
+			if (task.getSynchronizationState() == RepositoryTaskSyncState.INCOMING) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 						task);
 				if (connector != null) {
@@ -208,10 +208,10 @@ public class TaskListToolTipHandler {
 		IStatus status = null;
 		if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			status = task.getStatus();
+			status = task.getSynchronizationStatus();
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			status = query.getStatus();
+			status = query.getSynchronizationStatus();
 		}
 		
 		if (status != null) {
@@ -249,15 +249,15 @@ public class TaskListToolTipHandler {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 					query.getRepositoryKind());
 			if (connector != null) {
-				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
+				return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 			}
 		} else if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
 			if (repositoryTask != null) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						repositoryTask.getRepositoryKind());
+						repositoryTask.getConnectorKind());
 				if (connector != null) {
-					return TasksUiPlugin.getDefault().getBrandingIcon(connector.getRepositoryType());
+					return TasksUiPlugin.getDefault().getBrandingIcon(connector.getConnectorKind());
 				}
 			}
 		} else if (element instanceof ScheduledTaskContainer) {

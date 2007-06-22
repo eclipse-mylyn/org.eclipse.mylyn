@@ -102,7 +102,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 
 		AbstractRepositoryConnector abstractRepositoryClient = manager.getRepositoryConnector(DEFAULT_KIND);
 
-		assertEquals(abstractRepositoryClient.getRepositoryType(), DEFAULT_KIND);
+		assertEquals(abstractRepositoryClient.getConnectorKind(), DEFAULT_KIND);
 
 		connector = (BugzillaRepositoryConnector) abstractRepositoryClient;
 		
@@ -136,7 +136,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	protected void synchAndAssertState(Set<AbstractTask> tasks, RepositoryTaskSyncState state) {
 		for (AbstractTask task : tasks) {
 			TasksUiPlugin.getSynchronizationManager().synchronize(connector, task, true, null);
-			assertEquals(task.getSyncState(), state);
+			assertEquals(task.getSynchronizationState(), state);
 		}
 	}
 

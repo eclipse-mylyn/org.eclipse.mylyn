@@ -27,12 +27,12 @@ import org.eclipse.mylyn.internal.trac.core.TracTask.Kind;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket;
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -72,7 +72,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
 
@@ -94,12 +94,12 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+	public String getTaskUrl(String repositoryUrl, String taskId) {
 		return repositoryUrl + ITracClient.TICKET_URL + taskId;
 	}
 
 	@Override
-	public IAttachmentHandler getAttachmentHandler() {
+	public AbstractAttachmentHandler getAttachmentHandler() {
 		return attachmentHandler;
 	}
 
@@ -234,7 +234,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY
 					.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));
-			repositoryTask.setKind((kind != null) ? kind.toString() : null);
+			repositoryTask.setTaskKind((kind != null) ? kind.toString() : null);
 			// TODO: Completion Date
 		}
 	}
@@ -270,7 +270,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 		task.setPriority(TracTask.getMylarPriority(ticket.getValue(Key.PRIORITY)));
 		if (ticket.getValue(Key.TYPE) != null) {
 			Kind kind = TracTask.Kind.fromType(ticket.getValue(Key.TYPE));
-			task.setKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
+			task.setTaskKind((kind != null) ? kind.toString() : ticket.getValue(Key.TYPE));
 		}
 		if (ticket.getCreated() != null) {
 			task.setCreationDate(ticket.getCreated());

@@ -117,15 +117,15 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 		List<AbstractTaskContainer> legendItems = new ArrayList<AbstractTaskContainer>();
 		
 		TracTask defect = new TracTask("", Kind.DEFECT.name(), Kind.DEFECT.toString());
-		defect.setKind(Kind.DEFECT.toString());		
+		defect.setTaskKind(Kind.DEFECT.toString());		
 		legendItems.add(defect);
 
 		TracTask enhancement = new TracTask("", Kind.ENHANCEMENT.name(), Kind.ENHANCEMENT.toString());
-		enhancement.setKind(Kind.ENHANCEMENT.toString());		
+		enhancement.setTaskKind(Kind.ENHANCEMENT.toString());		
 		legendItems.add(enhancement);
 
 		TracTask task = new TracTask("", Kind.TASK.name(), Kind.TASK.toString());
-		task.setKind(Kind.TASK.toString());		
+		task.setTaskKind(Kind.TASK.toString());		
 		legendItems.add(task);
 		
 		return legendItems;

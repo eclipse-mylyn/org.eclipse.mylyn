@@ -17,12 +17,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.IAttachmentHandler;
-import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.ITaskCollector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
@@ -57,7 +57,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public IAttachmentHandler getAttachmentHandler() {
+	public AbstractAttachmentHandler getAttachmentHandler() {
 		// TODO: Implement local attachments
 		return null;
 	}
@@ -74,7 +74,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return REPOSITORY_KIND;
 	}
 
@@ -97,7 +97,7 @@ public class LocalRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public String getTaskWebUrl(String repositoryUrl, String taskId) {
+	public String getTaskUrl(String repositoryUrl, String taskId) {
 		// ignore
 		return null;
 	}

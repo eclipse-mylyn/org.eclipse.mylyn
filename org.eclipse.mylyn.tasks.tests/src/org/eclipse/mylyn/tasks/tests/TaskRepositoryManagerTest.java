@@ -85,7 +85,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 	public void testConnectorAddition() {
 		AbstractRepositoryConnector connector = new MockRepositoryConnector();
 		manager.addRepositoryConnector(connector);
-		assertNotNull(manager.getRepositoryConnector(connector.getRepositoryType()));
+		assertNotNull(manager.getRepositoryConnector(connector.getConnectorKind()));
 	}
 
 	public void testRepositoryPersistance() throws MalformedURLException {

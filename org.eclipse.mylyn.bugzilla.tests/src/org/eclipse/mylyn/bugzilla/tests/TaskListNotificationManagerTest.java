@@ -62,13 +62,13 @@ public class TaskListNotificationManagerTest extends TestCase {
 
 		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-0");
 		assertNotNull(task0);
-		assertTrue(task0.hasBeenReminded());
+		assertTrue(task0.isReminded());
 		task1 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-1");
 		assertNotNull(task1);
-		assertTrue(task1.hasBeenReminded());
+		assertTrue(task1.isReminded());
 		task2 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-2");
 		assertNotNull(task2);
-		assertTrue(task2.hasBeenReminded());
+		assertTrue(task2.isReminded());
 
 	}
 
@@ -78,7 +78,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getRepositoryManager().addRepository(repository,
 				TasksUiPlugin.getDefault().getRepositoriesFilePath());
 		AbstractTask task = new BugzillaTask("https://bugs.eclipse.org/bugs", "142891", "label");
-		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSyncState());
+		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
