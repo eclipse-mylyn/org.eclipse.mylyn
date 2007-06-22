@@ -61,6 +61,9 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 		return getChildren(parent);
 	}
 
+	/**
+	 * returns first parent found
+	 */
 	public Object getParent(Object child) {
 		// Return first parent found, first search within queries then categories.
 		if (child instanceof AbstractTask) {

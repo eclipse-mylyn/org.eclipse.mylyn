@@ -73,7 +73,7 @@ public class TaskList {
 		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 	}
 
-	public void addTask(AbstractTask task) {
+	public void addTask(AbstractTask task) throws IllegalArgumentException {
 		addTask(task, archiveContainer);
 	}
 
@@ -102,9 +102,9 @@ public class TaskList {
 	 * @param container
 	 *            task container, query or parent task
 	 */
-	public void addTask(AbstractTask task, AbstractTaskContainer parentContainer) {
+	public void addTask(AbstractTask task, AbstractTaskContainer parentContainer) throws IllegalArgumentException {
 		if (task == null) {
-			return;
+			throw new IllegalArgumentException("Task cannot be null");
 		}
 
 		AbstractTask newTask = tasks.get(task.getHandleIdentifier());
@@ -198,7 +198,11 @@ public class TaskList {
 		}
 	}
 
-	public void addCategory(TaskCategory category) {
+	public void addCategory(TaskCategory category) throws IllegalArgumentException {
+		if (category == null) {
+			throw new IllegalArgumentException("Category cannot be null");
+		}
+
 		categories.put(category.getHandleIdentifier(), category);
 
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
@@ -247,7 +251,10 @@ public class TaskList {
 		}
 	}
 
-	public void addQuery(AbstractRepositoryQuery query) {
+	public void addQuery(AbstractRepositoryQuery query) throws IllegalArgumentException {
+		if (query == null) {
+			throw new IllegalArgumentException("Query cannot be null");
+		}
 		queries.put(query.getHandleIdentifier(), query);
 		Set<TaskContainerDelta> delta = new HashSet<TaskContainerDelta>();
 		delta.add(new TaskContainerDelta(query, TaskContainerDelta.Kind.ADDED));
@@ -606,7 +613,8 @@ public class TaskList {
 
 	/**
 	 * @param task
-	 * @param content	true if the content for the task (e.g. repository task data) has changed
+	 * @param content
+	 *            true if the content for the task (e.g. repository task data) has changed
 	 */
 	public void notifyTaskChanged(AbstractTask task, boolean content) {
 		for (ITaskListChangeListener listener : new ArrayList<ITaskListChangeListener>(changeListeners)) {
@@ -617,7 +625,7 @@ public class TaskList {
 					kind = TaskContainerDelta.Kind.CONTENT;
 				} else {
 					kind = TaskContainerDelta.Kind.CHANGED;
-				}				
+				}
 				delta.add(new TaskContainerDelta(task, kind));
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
