@@ -110,8 +110,7 @@ class CustomTaskListDecorationDrawer implements Listener {
 			offsetY += 2;
 		}
 		if (element instanceof AbstractTaskContainer && !(element instanceof AbstractTask)) {
-			if (!Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element)
-					&& hasIncoming((AbstractTaskContainer) element)) {
+			if (!hideDecorationOnContainer(element) && hasIncoming((AbstractTaskContainer) element)) {
 				int additionalSquish = 0;
 				if (platformSpecificSquish > 0 && taskListView.synchronizationOverlaid) {
 					additionalSquish = platformSpecificSquish + 3;
@@ -133,6 +132,11 @@ class CustomTaskListDecorationDrawer implements Listener {
 		if (image != null) {
 			event.gc.drawImage(image, offsetX, event.y + offsetY);
 		}
+	}
+
+	private boolean hideDecorationOnContainer(AbstractTaskContainer element) {
+		return taskListView.isFocusedMode() &&
+			Arrays.asList(this.taskListView.getViewer().getExpandedElements()).contains(element);
 	}
 
 	private boolean hasIncoming(AbstractTaskContainer container) {
