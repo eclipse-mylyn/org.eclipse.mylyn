@@ -41,8 +41,9 @@ public class QueryHitCollector implements ITaskCollector {
 		if (task == null) {
 			throw new IllegalArgumentException();
 		}
-		
-		taskResults.add(task);
+		if (taskResults.size() < MAX_HITS) {
+			taskResults.add(task);
+		}
 	}
 
 	public void accept(RepositoryTaskData taskData) throws CoreException {
@@ -51,7 +52,9 @@ public class QueryHitCollector implements ITaskCollector {
 		}
 
 		AbstractTask task = taskFactory.createTask(taskData, new NullProgressMonitor());
-		taskResults.add(task);
+		if (taskResults.size() < MAX_HITS) {
+			taskResults.add(task);
+		}
 	}
 
 	public Set<AbstractTask> getTaskHits() {

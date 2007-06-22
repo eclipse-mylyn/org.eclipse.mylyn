@@ -52,7 +52,7 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 
 	private AbstractAttributeFactory attributeFactory;
 
-	private int retrieved = 0;
+	//private int retrieved = 1;
 
 	public SaxMultiBugReportContentHandler(AbstractAttributeFactory factory, Map<String, RepositoryTaskData> taskDataMap) {
 		this.attributeFactory = factory;
@@ -67,9 +67,9 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 		return errorMessage;
 	}
 
-	public RepositoryTaskData getReport() {
-		return repositoryTaskData;
-	}
+//	public RepositoryTaskData getReport() {
+//		return repositoryTaskData;
+//	}
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
@@ -250,7 +250,6 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 				attachment.setRepositoryUrl(repositoryTaskData.getRepositoryUrl());
 				attachment.setTaskId(repositoryTaskData.getId());
 			}
-			retrieved++;
 			break;
 
 		case BLOCKED:
@@ -300,9 +299,4 @@ public class SaxMultiBugReportContentHandler extends DefaultHandler {
 			}
 		}
 	}
-
-	public int getNumRetrieved() {
-		return retrieved;
-	}
-
 }

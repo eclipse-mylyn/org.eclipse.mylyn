@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.mylyn.internal.bugzilla.core.history.BugzillaTaskHistoryParser;
 import org.eclipse.mylyn.internal.bugzilla.core.history.TaskHistory;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITaskAttachment;
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
@@ -310,8 +309,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString()
-							+ "."));
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -357,8 +355,8 @@ public class BugzillaClient {
 						"HTTP authentication failed."));
 			}
 			if (hasAuthenticationCredentials()) {
-				BufferedReader responseReader = new BufferedReader(new InputStreamReader(postMethod
-						.getResponseBodyAsStream(), characterEncoding));
+				BufferedReader responseReader = new BufferedReader(new InputStreamReader(
+						postMethod.getResponseBodyAsStream(), characterEncoding));
 
 				HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(responseReader, null);
 				for (Token token = tokenizer.nextToken(); token.getType() != Token.EOF; token = tokenizer.nextToken()) {
@@ -383,8 +381,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString()
-							+ "."));
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 
 		} catch (IOException e) {
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
@@ -400,7 +397,7 @@ public class BugzillaClient {
 	public RepositoryTaskData getTaskData(int id) throws IOException, CoreException {
 		GetMethod method = null;
 		try {
-			
+
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_SHOW_BUG_XML + id);
 			RepositoryTaskData taskData = null;
 			if (method.getResponseHeader("Content-Type") != null) {
@@ -411,8 +408,8 @@ public class BugzillaClient {
 								BugzillaCorePlugin.REPOSITORY_KIND, repositoryUrl.toString(), "" + id,
 								IBugzillaConstants.BUGZILLA_TASK_KIND);
 						setupExistingBugAttributes(repositoryUrl.toString(), taskData);
-						RepositoryReportFactory reportFactory = new RepositoryReportFactory(method
-								.getResponseBodyAsStream(), characterEncoding);
+						RepositoryReportFactory reportFactory = new RepositoryReportFactory(
+								method.getResponseBodyAsStream(), characterEncoding);
 						reportFactory.populateReport(taskData);
 
 						return taskData;
@@ -438,9 +435,8 @@ public class BugzillaClient {
 	// }
 	// }
 
-	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector
-			collector)
-	throws IOException, CoreException {
+	public boolean getSearchHits(AbstractRepositoryQuery query, ITaskCollector collector) throws IOException,
+			CoreException {
 		GetMethod method = null;
 		try {
 			String queryUrl = query.getUrl();
@@ -454,14 +450,11 @@ public class BugzillaClient {
 			if (method.getResponseHeader("Content-Type") != null) {
 				Header responseTypeHeader = method.getResponseHeader("Content-Type");
 				for (String type : VALID_CONFIG_CONTENT_TYPES) {
-					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type))
-					{
-						RepositoryQueryResultsFactory queryFactory = new
-						RepositoryQueryResultsFactory(method
-								.getResponseBodyAsStream(), characterEncoding);
-						queryFactory.performQuery(repositoryUrl.toString(), collector,
-								QueryHitCollector.MAX_HITS);
-						return !queryFactory.getHits().isEmpty();
+					if (responseTypeHeader.getValue().toLowerCase(Locale.ENGLISH).contains(type)) {
+						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
+								method.getResponseBodyAsStream(), characterEncoding);
+						queryFactory.performQuery(repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
+						return !collector.getTaskHits().isEmpty();
 					}
 				}
 			}
@@ -573,8 +566,8 @@ public class BugzillaClient {
 		GetMethod method = null;
 		try {
 			method = getConnect(repositoryUrl + IBugzillaConstants.URL_GET_CONFIG_RDF);
-			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(method
-					.getResponseBodyAsStream(), characterEncoding);
+			RepositoryConfigurationFactory configFactory = new RepositoryConfigurationFactory(
+					method.getResponseBodyAsStream(), characterEncoding);
 			RepositoryConfiguration configuration = configFactory.getConfiguration();
 			if (configuration != null) {
 				configuration.setRepositoryUrl(repositoryUrl.toString());
@@ -637,8 +630,8 @@ public class BugzillaClient {
 			// httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECT_TIMEOUT);
 			int status = httpClient.executeMethod(postMethod);
 			if (status == HttpStatus.SC_OK) {
-				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(), postMethod
-						.getResponseCharSet());
+				InputStreamReader reader = new InputStreamReader(postMethod.getResponseBodyAsStream(),
+						postMethod.getResponseCharSet());
 				BufferedReader bufferedReader = new BufferedReader(reader);
 
 				parseHtmlError(bufferedReader);
@@ -659,8 +652,7 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * calling method must release the connection on the returned PostMethod
-	 * once finished. TODO: refactor
+	 * calling method must release the connection on the returned PostMethod once finished. TODO: refactor
 	 * 
 	 * @throws CoreException
 	 */
@@ -726,8 +718,8 @@ public class BugzillaClient {
 			if (method == null) {
 				throw new IOException("Could not post form, client returned null method.");
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(), method
-					.getRequestCharSet()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream(),
+					method.getRequestCharSet()));
 			in.mark(10);
 			HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
 
@@ -790,8 +782,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString()
-							+ "."));
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			if (method != null) {
 				method.releaseConnection();
@@ -869,8 +860,8 @@ public class BugzillaClient {
 		}
 
 		// when posting the bug id is encoded in a hidden field named 'id'
-		fields.put(KEY_ID, new NameValuePair(KEY_ID, model.getAttributeValue(BugzillaReportElement.BUG_ID
-				.getKeyString())));
+		fields.put(KEY_ID, new NameValuePair(KEY_ID,
+				model.getAttributeValue(BugzillaReportElement.BUG_ID.getKeyString())));
 
 		// add the operation to the bug post
 		RepositoryOperation o = model.getSelectedOperation();
@@ -930,8 +921,7 @@ public class BugzillaClient {
 	}
 
 	/**
-	 * Utility method for determining what potential error has occurred from a
-	 * bugzilla html reponse page
+	 * Utility method for determining what potential error has occurred from a bugzilla html reponse page
 	 */
 	public void parseHtmlError(BufferedReader in) throws IOException, CoreException {
 		HtmlStreamTokenizer tokenizer = new HtmlStreamTokenizer(in, null);
@@ -992,8 +982,7 @@ public class BugzillaClient {
 		} catch (ParseException e) {
 			authenticated = false;
 			throw new CoreException(new BugzillaStatus(Status.ERROR, BugzillaCorePlugin.PLUGIN_ID,
-					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString()
-							+ "."));
+					RepositoryStatus.ERROR_INTERNAL, "Unable to parse response from " + repositoryUrl.toString() + "."));
 		} finally {
 			in.close();
 		}

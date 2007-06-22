@@ -14,8 +14,6 @@ package org.eclipse.mylyn.internal.bugzilla.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.mylyn.tasks.core.ITaskCollector;
 
@@ -24,33 +22,17 @@ import org.eclipse.mylyn.tasks.core.ITaskCollector;
  */
 public class RepositoryQueryResultsFactory extends AbstractReportFactory {
 
-	Set<String> hits = new HashSet<String>();
-	
 	public RepositoryQueryResultsFactory(InputStream inStream, String encoding) {
 		super(inStream, encoding);
 	}
 
-//	/**
-//	 * expects rdf returned from repository (ctype=rdf in url)
-//	 * 
-//	 * @throws GeneralSecurityException
-//	 */
-//	public void performQuery(String repositoryUrl, int maxHits) throws IOException {
-//
-//		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, hits, maxHits);
-//		collectResults(contentHandler, false);
-//	}
-	
-	/** expects rdf returned from repository (ctype=rdf in url) 
-	 * @throws GeneralSecurityException */
-	public void performQuery(String repositoryUrl, ITaskCollector collector,  int maxHits) throws IOException {
-		
-		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl,
-				collector, hits, maxHits);		
+	/**
+	 * expects rdf returned from repository (ctype=rdf in url)
+	 * 
+	 * @throws GeneralSecurityException
+	 */
+	public void performQuery(String repositoryUrl, ITaskCollector collector, int maxHits) throws IOException {
+		SaxBugzillaQueryContentHandler contentHandler = new SaxBugzillaQueryContentHandler(repositoryUrl, collector);
 		collectResults(contentHandler, false);
-	}
-	
-	public Set<String> getHits() {
-		return hits;
 	}
 }

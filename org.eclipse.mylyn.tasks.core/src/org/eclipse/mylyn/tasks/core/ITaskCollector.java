@@ -11,12 +11,18 @@
 
 package org.eclipse.mylyn.tasks.core;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * @author Rob Elves
+ */
 public interface ITaskCollector {
 
 	void accept(AbstractTask task);
 
 	void accept(RepositoryTaskData taskData) throws CoreException;
 
+	public Set<AbstractTask> getTaskHits();
 }
