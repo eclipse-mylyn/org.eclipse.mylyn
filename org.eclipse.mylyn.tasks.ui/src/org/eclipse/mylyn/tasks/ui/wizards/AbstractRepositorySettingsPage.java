@@ -275,18 +275,55 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					setAnonymous(anonymousButton.getSelection());
+					isPageComplete();
 				}
 			});
-
-			if (repository != null) {
-				anonymousButton.setSelection(repository.isAnonymous());
-			}
 		}
 
 		repositoryUserNameEditor = new StringFieldEditor("", LABEL_USER, StringFieldEditor.UNLIMITED,
-				compositeContainer);
+				compositeContainer) {
+
+			@Override
+			protected boolean doCheckState() {
+				return true;
+			}
+
+			@Override
+			protected void valueChanged() {
+				super.valueChanged();
+				isPageComplete();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		};
+
 		repositoryPasswordEditor = new RepositoryStringFieldEditor("", LABEL_PASSWORD, StringFieldEditor.UNLIMITED,
-				compositeContainer);
+				compositeContainer) {
+
+			@Override
+			protected boolean doCheckState() {
+				return true;
+			}
+
+			@Override
+			protected void valueChanged() {
+				super.valueChanged();
+				isPageComplete();
+				if (getWizard() != null) {
+					getWizard().getContainer().updateButtons();
+				}
+			}
+		};
+
+		if (needsAnonymousLogin()) {
+			if (repository != null) {
+				setAnonymous(repository.isAnonymous());
+			} else {
+				setAnonymous(true);
+			}
+		}
+
 		// TODO: put this back if we can't get the info from all connectors
 		// if (needsTimeZone()) {
 		// Label timeZoneLabel = new Label(container, SWT.NONE);
@@ -779,7 +816,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 
 		repositoryUserNameEditor.setEnabled(!selected, compositeContainer);
-		(repositoryPasswordEditor).setEnabled(!selected, compositeContainer);
+		repositoryPasswordEditor.setEnabled(!selected, compositeContainer);
+		if (getWizard() != null) {
+			getWizard().getContainer().updateButtons();
+		}
 	}
 
 	public void setHttpAuth(boolean selected) {
@@ -976,14 +1016,32 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		boolean isComplete = false;
-
+		String errorMessage = null;
 		String url = getServerUrl();
-		isComplete = isUniqueUrl(url) && isValidUrl(url);
-		return isComplete;
+		errorMessage = isUniqueUrl(url);
+		if (errorMessage == null && !isValidUrl(url)) {
+			errorMessage = "Enter a valid server url";
+		}
+		if (errorMessage == null) {
+			errorMessage = credentialsComplete();
+		}
+
+		setErrorMessage(errorMessage);
+		return errorMessage == null;
 	}
 
-	protected boolean isUniqueUrl(String urlString) {
+	private String credentialsComplete() {
+		if ((needsAnonymousLogin() && !anonymousButton.getSelection())
+				&& (repositoryUserNameEditor.getStringValue().trim().equals("") || repositoryPasswordEditor.getStringValue()
+						.trim()
+						.equals(""))) {
+			return "Repository user name and password must not be blank";
+		}
+		return null;
+
+	}
+
+	protected String isUniqueUrl(String urlString) {
 		if (!urlString.equals(originalUrl)) {
 			if (repositoryUrls == null) {
 				List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
@@ -994,12 +1052,10 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			}
 
 			if (repositoryUrls.contains(urlString)) {
-				setErrorMessage("Repository already exists.");
-				return false;
+				return "Repository already exists.";
 			}
 		}
-		setErrorMessage(null);
-		return true;
+		return null;
 	}
 
 	public void setRepository(TaskRepository repository) {
