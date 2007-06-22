@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.mylyn.pde_feature"
       label="Mylyn Bridge: PDE"
-      version="2.0.0.v20070619-1930"
+      version="2.0.0.v20070621-1800"
       provider-name="Eclipse.org"
       plugin="org.eclipse.mylyn">
 
@@ -244,14 +244,14 @@ litigation.
          id="org.eclipse.mylyn.pde.ui"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070619-1930"
+         version="2.0.0.v20070621-1800"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.mylyn.ide.ant"
          download-size="0"
          install-size="0"
-         version="2.0.0.v20070619-1930"
+         version="2.0.0.v20070621-1800"
          unpack="false"/>
 
 </feature>
