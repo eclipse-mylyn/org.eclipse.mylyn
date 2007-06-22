@@ -33,7 +33,7 @@ public class RepositoryConnectorsTest extends TestCase {
 	}
 
 	public void testRepositoryConnector() {
-		assertNotNull(connector.getRepositoryType());
+		assertNotNull(connector.getConnectorKind());
 		// add bulk connector tests here...
 	}
 

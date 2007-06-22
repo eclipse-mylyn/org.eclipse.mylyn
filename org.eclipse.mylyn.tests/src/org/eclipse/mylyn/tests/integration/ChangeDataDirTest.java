@@ -113,11 +113,11 @@ public class ChangeDataDirTest extends TestCase {
 //		String handle = AbstractTask.getHandle("server", 1);
 		BugzillaTask bugzillaTask = new BugzillaTask("server", "1", "bug1");
 		String refreshDate = (new Date()).toString();
-		bugzillaTask.setLastSyncDateStamp(refreshDate);
+		bugzillaTask.setLastReadTimeStamp(refreshDate);
 		addBugzillaTask(bugzillaTask);
 		BugzillaTask readTaskBeforeMove = (BugzillaTask) manager.getTaskList().getTask("server", "1");
 		assertNotNull(readTaskBeforeMove);
-		assertEquals(refreshDate, readTaskBeforeMove.getLastSyncDateStamp());
+		assertEquals(refreshDate, readTaskBeforeMove.getLastReadTimeStamp());
 
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
@@ -125,7 +125,7 @@ public class ChangeDataDirTest extends TestCase {
 		BugzillaTask readTaskAfterMove = (BugzillaTask) manager.getTaskList().getTask("server", "1");
 		assertNotNull(readTaskAfterMove);
 		assertEquals("bug1", readTaskAfterMove.getSummary());
-		assertEquals(refreshDate, readTaskAfterMove.getLastSyncDateStamp());
+		assertEquals(refreshDate, readTaskAfterMove.getLastReadTimeStamp());
 	}
 
 	private void addBugzillaTask(BugzillaTask newTask) {
