@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
@@ -38,6 +39,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -94,9 +100,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 
 	private int taskDataDirectoryAction = -1;
 
+	private FormToolkit toolkit;
+
+	private ExpandableComposite taskDataComposite;
+
 	public TasksUiPreferencePage() {
 		super();
 		setPreferenceStore(TasksUiPlugin.getDefault().getPreferenceStore());
+		toolkit = new FormToolkit(Display.getCurrent());
+
 	}
 
 	@Override
@@ -281,8 +293,23 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	private void createTaskDataControl(Composite parent) {
-		Group taskDataGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-		taskDataGroup.setText("Task Data (Advanced)");
+
+		taskDataComposite = toolkit.createExpandableComposite(parent, Section.COMPACT | Section.TWISTIE
+				| Section.TITLE_BAR);
+		taskDataComposite.setFont(parent.getFont());
+		taskDataComposite.setBackground(parent.getBackground());
+		taskDataComposite.setText("Task Data (Advanced)");
+		taskDataComposite.setLayout(new GridLayout(1, false));
+		taskDataComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		taskDataComposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
+			public void expansionStateChanged(ExpansionEvent e) {
+				getControl().getShell().pack();
+			}
+		});
+		Group taskDataGroup = new Group(taskDataComposite, SWT.SHADOW_ETCHED_IN);
+		taskDataComposite.setClient(taskDataGroup);
+//		taskDataGroup.setText("Task Data (Advanced)");
 		taskDataGroup.setLayout(new GridLayout(1, false));
 		taskDataGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -511,5 +538,15 @@ public class TasksUiPreferencePage extends PreferencePage implements IWorkbenchP
 				taskDataDirectoryAction = OVERWRITE;
 			}
 		}
+	}
+
+	@Override
+	public void dispose() {
+		if (toolkit != null) {
+			if (toolkit.getColors() != null) {
+				toolkit.dispose();
+			}
+		}
+		super.dispose();
 	}
 }
