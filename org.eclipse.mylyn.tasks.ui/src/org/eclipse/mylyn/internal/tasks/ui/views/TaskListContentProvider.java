@@ -62,7 +62,24 @@ public class TaskListContentProvider implements IStructuredContentProvider, ITre
 	}
 
 	public Object getParent(Object child) {
-		// parents can not be computed since an element can have multiple
+		// Return first parent found, first search within queries then categories.
+		if (child instanceof AbstractTask) {
+			Set<AbstractRepositoryQuery> queries = TasksUiPlugin.getTaskListManager()
+					.getTaskList()
+					.getQueriesForHandle(((AbstractTask) child).getHandleIdentifier());
+			if (queries.size() > 0) {
+				return queries.toArray()[0];
+			}
+
+			AbstractTaskContainer container = TasksUiPlugin.getTaskListManager().getTaskList().getContainerForHandle(
+					((AbstractTask) child).getHandleIdentifier());
+
+			if (container != null) {
+				return container;
+			}
+
+		}
+		// no parent found
 		return null;
 	}
 
