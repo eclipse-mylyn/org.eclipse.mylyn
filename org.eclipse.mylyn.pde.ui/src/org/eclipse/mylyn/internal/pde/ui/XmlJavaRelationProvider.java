@@ -228,7 +228,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 											XmlNodeHelper xnode = new XmlNodeHelper(f.getFullPath().toString(), second);
 											nodeMap.put(m, xnode);
 											Object o = bridge.getObjectForHandle(handle);
-											String name = bridge.getName(o);
+											String name = bridge.getLabel(o);
 											if (o != null) {
 												nodes.put(handle, name);
 											}

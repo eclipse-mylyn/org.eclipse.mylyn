@@ -185,7 +185,7 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getName(Object object) {
+	public String getLabel(Object object) {
 		if (object instanceof IJavaElement) {
 			return ((IJavaElement) object).getElementName();
 		} else {

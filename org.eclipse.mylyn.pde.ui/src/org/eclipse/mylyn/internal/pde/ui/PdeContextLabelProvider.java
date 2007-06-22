@@ -40,7 +40,7 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getText(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
-		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
+		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
@@ -56,6 +56,6 @@ public class PdeContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getTextForObject(Object object) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(PdeStructureBridge.CONTENT_TYPE);
-		return bridge.getName(object);
+		return bridge.getLabel(object);
 	}
 }

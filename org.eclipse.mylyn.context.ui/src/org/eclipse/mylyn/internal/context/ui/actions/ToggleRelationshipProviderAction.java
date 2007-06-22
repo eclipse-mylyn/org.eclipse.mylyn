@@ -22,6 +22,7 @@ import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.IDegreeOfSeparation;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.views.ActiveSearchView;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -66,8 +67,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 
 	@Override
 	public void run() {
-		ContextUiPlugin.getDefault()
-				.updateDegreesOfSeparation(providers, degreeOfSeparation);
+		ActiveSearchView.getFromActivePerspective().updateDegreesOfSeparation(providers, degreeOfSeparation);
 	}
 
 	public void dispose() {
@@ -115,7 +115,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 				public void run() {
 					try {
 						degreeOfSeparation = Integer.parseInt(getId());
-						ContextUiPlugin.getDefault().updateDegreesOfSeparation(providers,
+						ActiveSearchView.getFromActivePerspective().updateDegreesOfSeparation(providers,
 								degreeOfSeparation);
 					} catch (NumberFormatException e) {
 						// ignore this for now

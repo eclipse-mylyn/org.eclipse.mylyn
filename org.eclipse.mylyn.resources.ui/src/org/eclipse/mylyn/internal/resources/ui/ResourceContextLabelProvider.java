@@ -47,7 +47,7 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getTextForObject(Object object) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
-		return bridge.getName(object);
+		return bridge.getLabel(object);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	public String getText(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
 				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
-		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
+		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override

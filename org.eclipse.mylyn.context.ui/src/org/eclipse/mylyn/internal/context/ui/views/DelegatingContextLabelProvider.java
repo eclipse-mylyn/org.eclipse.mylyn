@@ -20,6 +20,7 @@ import org.eclipse.mylyn.context.core.IInteractionObject;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -57,23 +58,24 @@ public class DelegatingContextLabelProvider implements ILabelProvider {
 		if (object instanceof IInteractionObject) {
 			IInteractionObject element = (IInteractionObject) object;
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(element.getContentType());
-			if (ContextUiPlugin.getDefault().isDecorateInterestMode()) { // TODO:
-																		// move
-				return provider.getText(element) + " [" + element.getInterest().getValue() + "]";
-			} else {
-				return provider.getText(element);
-			}
+
+//			ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.DECORATE_INTEREST_LEVEL);
+//			if (ContextUiPlugin.getDefault().isDecorateInterestMode()) { 
+//				return provider.getText(element) + " [" + element.getInterest().getValue() + "]";
+//			} else {
+			return provider.getText(element);
+//			}
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			ILabelProvider provider = ContextUiPlugin.getDefault().getContextLabelProvider(bridge.getContentType());
 			if (provider != null) {
-				if (ContextUiPlugin.getDefault().isDecorateInterestMode()) {
-					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
-							bridge.getHandleIdentifier(object));
-					return provider.getText(object) + " [" + element.getInterest().getValue() + "]";
-				} else {
-					return provider.getText(object);
-				}
+//				if (ContextUiPlugin.getDefault().isDecorateInterestMode()) {
+//					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+//							bridge.getHandleIdentifier(object));
+//					return provider.getText(object) + " [" + element.getInterest().getValue() + "]";
+//				} else {
+				return provider.getText(object);
+//				}
 			}
 		}
 		return "? " + object;

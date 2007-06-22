@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.mylyn.internal.java.ui.editor.ActiveFoldingListener;
-import org.eclipse.mylyn.monitor.ui.workbench.AbstractEditorTracker;
+import org.eclipse.mylyn.monitor.ui.AbstractEditorTracker;
 import org.eclipse.ui.IEditorPart;
 
 /**

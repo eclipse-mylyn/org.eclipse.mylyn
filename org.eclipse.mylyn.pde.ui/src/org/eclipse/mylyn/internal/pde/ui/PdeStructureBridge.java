@@ -222,7 +222,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getName(Object object) {
+	public String getLabel(Object object) {
 		if (object instanceof PluginObjectNode) {
 			PluginObjectNode node = (PluginObjectNode) object;
 			String name = node.getXMLAttributeValue("name");

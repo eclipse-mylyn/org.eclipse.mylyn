@@ -76,7 +76,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(f.getName());
 							String handle = xnode.getHandle();
 							Object o = bridge.getObjectForHandle(handle);
-							String name = bridge.getName(o);
+							String name = bridge.getLabel(o);
 							if (o != null) {
 								nodes.put(handle, name);
 								results.add(node);

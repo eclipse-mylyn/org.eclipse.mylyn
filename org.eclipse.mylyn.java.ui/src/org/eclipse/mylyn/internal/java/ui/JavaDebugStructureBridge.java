@@ -127,7 +127,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getName(Object object) {
+	public String getLabel(Object object) {
 		return "" + object;
 	}
 

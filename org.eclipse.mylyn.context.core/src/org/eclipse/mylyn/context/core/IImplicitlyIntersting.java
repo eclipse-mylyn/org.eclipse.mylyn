@@ -15,6 +15,7 @@ package org.eclipse.mylyn.context.core;
  * Tag interface to indicate elements that should not be filtered as uninteresting.
  * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IImplicitlyIntersting {
 

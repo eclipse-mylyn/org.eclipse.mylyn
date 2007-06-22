@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+  * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
+import org.eclipse.ui.navigator.INavigatorSaveablesService;
 
 /**
  * @author Shawn Minto
@@ -31,12 +32,27 @@ import org.eclipse.ui.IWorkingSetUpdater;
  */
 public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
 
+	private static TaskContextWorkingSetManager INSTANCE = new TaskContextWorkingSetManager();
+	
+	private List<TaskContextWorkingSetManager> workingSetUpdaters = null;
+	
+	public void addWorkingSetManager(TaskContextWorkingSetManager updater) {
+		if (workingSetUpdaters == null) {
+			workingSetUpdaters = new ArrayList<TaskContextWorkingSetManager>();
+		}
+		workingSetUpdaters.add(updater);
+		ContextCorePlugin.getContextManager().addListener(updater);
+	}
+
+	public TaskContextWorkingSetManager getWorkingSetUpdater() {
+		if (workingSetUpdaters == null)
+			return null;
+		else
+			return workingSetUpdaters.get(0);
+	}
+	
 	/** Should only ever have 1 working set */
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
-
-	public TaskContextWorkingSetManager() {
-		ContextUiPlugin.getDefault().addWorkingSetManager(this);
-	}
 
 	public void add(IWorkingSet workingSet) {
 		workingSets.add(workingSet);
@@ -126,5 +142,9 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 
 	public IWorkingSet getWorkingSet() {
 		return workingSets.get(0);
+	}
+
+	public static TaskContextWorkingSetManager getDefault() {
+		return INSTANCE;
 	}
 }

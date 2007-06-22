@@ -12,6 +12,7 @@
 package org.eclipse.mylyn.internal.context.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -71,6 +72,18 @@ public class ActiveSearchView extends ViewPart {
 
 	private DelegatingContextLabelProvider labelProvider = new DelegatingContextLabelProvider();
 
+	public void refreshRelatedElements() {
+		try {
+			for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
+				List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
+				providerList.add(provider);
+				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
+			}
+		} catch (Throwable t) {
+			StatusManager.fail(t, "Could not refresn related elements", false);
+		}
+	}
+	
 	/**
 	 * For testing.
 	 */
@@ -83,7 +96,7 @@ public class ActiveSearchView extends ViewPart {
 		}
 
 		public void contextActivated(IInteractionContext taskscape) {
-			ContextUiPlugin.getDefault().refreshRelatedElements();
+			refreshRelatedElements();
 			refresh(null, true);
 		}
 
@@ -130,9 +143,26 @@ public class ActiveSearchView extends ViewPart {
 		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			provider.setEnabled(true);
 		}
-		ContextUiPlugin.getDefault().refreshRelatedElements();
+		refreshRelatedElements();
 	}
 
+	public void updateDegreesOfSeparation(Collection<AbstractRelationProvider> providers, int degreeOfSeparation) {
+		for (AbstractRelationProvider provider : providers) {
+			updateDegreeOfSeparation(provider, degreeOfSeparation);
+		}
+	}
+
+	public void updateDegreeOfSeparation(AbstractRelationProvider provider, int degreeOfSeparation) {
+		ContextCorePlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
+		provider.setDegreeOfSeparation(degreeOfSeparation);
+		for (IInteractionElement element : ContextCorePlugin.getContextManager().getActiveContext().getInteresting()) {
+			if (element.getInterest().isLandmark()) {
+				provider.landmarkAdded(element);
+			}
+		}
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();

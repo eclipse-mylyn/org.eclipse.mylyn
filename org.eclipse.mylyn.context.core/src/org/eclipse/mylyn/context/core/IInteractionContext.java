@@ -16,7 +16,11 @@ import java.util.List;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
+ * A model of task context weighted by interaction based on frequency and recency of access,
+ * as determined by the degree-of-interest weighting mechanism.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IInteractionContext {
 

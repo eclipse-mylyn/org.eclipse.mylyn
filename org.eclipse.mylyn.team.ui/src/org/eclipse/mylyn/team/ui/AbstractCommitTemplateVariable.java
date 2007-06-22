@@ -15,6 +15,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 /**
  * @author Eike Stepper
  * @author Mik Kersten
+ * @since	1.0
  */
 public abstract class AbstractCommitTemplateVariable {
 	

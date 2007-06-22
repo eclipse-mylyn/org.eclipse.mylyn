@@ -40,13 +40,16 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
+ * Main entry point for the Resource Structure Bridge.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources";
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources.ui";
 	
-	private static ResourcesUiBridgePlugin plugin;
+	private static ResourcesUiBridgePlugin INSTANCE;
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
 	
@@ -68,7 +71,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	
 	public ResourcesUiBridgePlugin() {
 		super();
-		plugin = this;
+		INSTANCE = this;
 		resourceInteractionMonitor = new ResourceInteractionMonitor();
 	}
 
@@ -88,25 +91,6 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 				IResourceChangeEvent.POST_CHANGE);
 		
 		interestEditorTracker.install(PlatformUI.getWorkbench());
-
-//		final IWorkbench workbench = PlatformUI.getWorkbench();
-//		workbench.getDisplay().asyncExec(new Runnable() {
-//			public void run() {
-//				try {
-//					initPreferenceDefaults();
-//					ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
-//							IResourceChangeEvent.POST_CHANGE);
-//					
-//					MylarMonitorPlugin.getDefault().getSelectionMonitors().add(resourceInteractionMonitor);
-//					ContextCorePlugin.getContextManager().addListener(editorManager);
-//
-//					interestEditorTracker.install(workbench);
-//					
-//				} catch (Exception e) {
-//					MylarStatusHandler.fail(e, "Mylar Resources stop failed", true);
-//				}
-//			}
-//		});
 	}
 
 	/**
@@ -116,7 +100,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		try {
 			super.stop(context);
-			plugin = null;
+			INSTANCE = null;
 			resourceBundle = null;
 			
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
@@ -164,8 +148,8 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		return ignored;
 	}
 
-	public ResourceInterestUpdater getInterestUpdater() {
-		return interestUpdater;
+	public static ResourceInterestUpdater getInterestUpdater() {
+		return INSTANCE.interestUpdater;
 	}
 	
 	public IResource getResourceForElement(IInteractionElement element, boolean findContainingResource) {
@@ -197,25 +181,12 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		resourceChangeMonitor.setEnabled(enabled);
 	}
 	
-	public ContextEditorManager getEditorManager() {
-		return editorManager;
+	public static ContextEditorManager getEditorManager() {
+		return INSTANCE.editorManager;
 	}
 	
 	public static ResourcesUiBridgePlugin getDefault() {
-		return plugin;
-	}
-
-	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = ResourcesUiBridgePlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
+		return INSTANCE;
 	}
 
 	public ResourceBundle getResourceBundle() {
@@ -227,16 +198,4 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		}
 		return resourceBundle;
 	}
-
-	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.xml", path);
-	} 
 }

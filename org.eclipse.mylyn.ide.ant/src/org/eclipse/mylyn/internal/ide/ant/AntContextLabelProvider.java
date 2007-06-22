@@ -40,7 +40,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getText(IInteractionElement node) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
-		return bridge.getName(bridge.getObjectForHandle(node.getHandleIdentifier()));
+		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 	@Override
 	protected String getTextForObject(Object object) {
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
-		return bridge.getName(object);
+		return bridge.getLabel(object);
 	}
 
 }

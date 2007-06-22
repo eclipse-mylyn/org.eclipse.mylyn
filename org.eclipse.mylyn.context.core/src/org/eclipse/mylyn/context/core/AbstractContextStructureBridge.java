@@ -14,7 +14,10 @@ package org.eclipse.mylyn.context.core;
 import java.util.List;
 
 /**
+ * Maps between domain elements (e.g. Java) and interaction context model elements.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractContextStructureBridge {
 
@@ -51,7 +54,7 @@ public abstract class AbstractContextStructureBridge {
 	 * @return The name or a null String(""). Can't be null since the views
 	 *         displaying the context can't handle null names
 	 */
-	public abstract String getName(Object object);
+	public abstract String getLabel(Object object);
 
 	public abstract boolean canBeLandmark(String handle);
 

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.mylar.context.core">
+<schema targetNamespace="org.eclipse.mylyn.context.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.mylar.context.core" id="bridges" name="bridges"/>
+         <meta.schema plugin="org.eclipse.mylyn.context.core" id="bridges" name="bridges"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]

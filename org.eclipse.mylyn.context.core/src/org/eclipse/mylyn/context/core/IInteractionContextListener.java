@@ -15,7 +15,10 @@ import java.util.List;
 
 
 /**
+ * Notified of changes to the context model activity.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IInteractionContextListener {
 

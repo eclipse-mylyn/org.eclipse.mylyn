@@ -22,7 +22,10 @@ import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
+ * Manages changes sets along with task context and activation.
+ * 
  * @author Mik Kersten
+ * @since	1.0
  */
 public abstract class AbstractContextChangeSetManager implements IInteractionContextListener {
 

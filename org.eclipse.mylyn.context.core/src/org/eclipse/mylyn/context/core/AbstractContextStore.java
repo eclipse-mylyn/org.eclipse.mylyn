@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: generalize and coupling to java.io.File
+ * File-based store used for writing Mylyn-specific date such as the task list and task contexts
+ * (e.g. workspace/.metadata/.mylyn folder).
  * 
  * @author Mik Kersten
+ * * @since	2.0
  */
 public abstract class AbstractContextStore {
 
@@ -47,5 +49,4 @@ public abstract class AbstractContextStore {
 	public void removeListener(IContextStoreListener listener) {
 		listeners.remove(listener);
 	}
-
 }

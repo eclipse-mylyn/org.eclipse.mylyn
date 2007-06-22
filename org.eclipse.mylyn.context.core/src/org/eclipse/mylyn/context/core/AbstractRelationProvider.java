@@ -20,7 +20,13 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
 
 /**
+ * Used for Active Search.
+ * 
+ * NOTE: this facility is not exposed by default in Mylyn 2.0 and likely to change
+ * for 3.0.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractRelationProvider implements IInteractionContextListener {
 

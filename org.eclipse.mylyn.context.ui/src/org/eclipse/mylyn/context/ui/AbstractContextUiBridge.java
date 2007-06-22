@@ -20,13 +20,15 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
+ * Extend to bridge between a tool's UI and the generic facilities invoked
+ * by the Context UI.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractContextUiBridge {
 
 	public abstract void open(IInteractionElement element);
-
-//	public abstract void restoreEditor(IMylarElement document);
 
 	public abstract void close(IInteractionElement element);
 

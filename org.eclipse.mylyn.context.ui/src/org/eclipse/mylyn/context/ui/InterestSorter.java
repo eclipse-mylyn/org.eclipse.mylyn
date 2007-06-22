@@ -19,7 +19,10 @@ import org.eclipse.mylyn.context.core.InterestComparator;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 
 /**
+ * Sorts view elements by degree-of-interest.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class InterestSorter extends ViewerSorter {
 

@@ -56,7 +56,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	@Override
-	public String getName(Object object) {
+	public String getLabel(Object object) {
 		if (object instanceof AbstractTask) {
 			return ((AbstractTask)object).getSummary();
 		} else {

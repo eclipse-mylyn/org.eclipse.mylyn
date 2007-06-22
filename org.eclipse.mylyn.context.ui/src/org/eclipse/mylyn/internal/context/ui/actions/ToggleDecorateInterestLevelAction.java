@@ -14,6 +14,7 @@ package org.eclipse.mylyn.internal.context.ui.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
+import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 
 /**
  * @author Mik Kersten
@@ -40,7 +41,7 @@ public class ToggleDecorateInterestLevelAction extends Action {
 		setChecked(on);
 		if (store)
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
-		ContextUiPlugin.getDefault().setDecorateInterestMode(on);
+		ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, true);
 //		ContextCorePlugin.getContextManager().notifyActivePresentationSettingsChange(IMylarContextListener.UpdateKind.UPDATE);
 	}
 }

@@ -14,7 +14,10 @@ package org.eclipse.mylyn.context.core;
 import java.util.Comparator;
 
 /**
+ * Ranks elements by their degree-of-interest.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class InterestComparator<T> implements Comparator<T> {
 
@@ -33,5 +36,4 @@ public class InterestComparator<T> implements Comparator<T> {
 		}
 		return 0;
 	}
-
 }

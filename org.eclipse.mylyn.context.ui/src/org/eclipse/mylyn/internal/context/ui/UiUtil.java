@@ -49,9 +49,10 @@ public class UiUtil {
 			Highlighter highlighter = ContextUiPlugin.getDefault().getHighlighterForContextId(contextId);
 			if (highlighter == null) {
 				return null;
-			} else if (ContextUiPlugin.getDefault().isIntersectionMode()) {
+			} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.INTERSECTION_MODE)) {
 				if (isMultiple) {
-					return ContextUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
+					return null;
+//					return ContextUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();
 				} else {
 					return null;
 				}

@@ -47,6 +47,7 @@ import org.eclipse.ui.PlatformUI;
  * structured view (e.g. to provide interest-based filtering).
  * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
 		ISelectionListener {
@@ -55,6 +56,8 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter.";
 
+	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
+	
 	protected String globalPrefId;
 
 	protected IAction initAction = null;
@@ -73,8 +76,6 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 
 	private boolean wasLinkingEnabled = false;
 	
-	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
-
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
@@ -108,6 +109,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		}
 	};
 	
+	/**
+	 * TODO: not thread safe.
+	 */
 	public static AbstractFocusViewAction getActionForPart(IViewPart part) {
 		return partMap.get(part);
 	}

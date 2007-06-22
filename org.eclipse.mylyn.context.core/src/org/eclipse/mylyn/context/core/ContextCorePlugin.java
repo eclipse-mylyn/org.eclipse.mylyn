@@ -32,7 +32,10 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.osgi.framework.BundleContext;
 
 /**
+ * Main entry point for the Context Core API.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class ContextCorePlugin extends Plugin {
 
@@ -48,9 +51,9 @@ public class ContextCorePlugin extends Plugin {
 
 	private static ContextCorePlugin INSTANCE;
 
-	private static InteractionContextManager contextManager;
+	private InteractionContextManager contextManager;
 
-	private static AbstractContextStore contextStore;
+	private AbstractContextStore contextStore;
 
 	private Map<String, Set<AbstractRelationProvider>> relationProviders = new HashMap<String, Set<AbstractRelationProvider>>();
 
@@ -79,7 +82,7 @@ public class ContextCorePlugin extends Plugin {
 		}
 
 		@Override
-		public String getName(Object object) {
+		public String getLabel(Object object) {
 			return "";
 		}
 
@@ -173,7 +176,7 @@ public class ContextCorePlugin extends Plugin {
 	}
 
 	public static InteractionContextManager getContextManager() {
-		return contextManager;
+		return INSTANCE.contextManager;
 	}
 
 	public Map<String, AbstractContextStructureBridge> getStructureBridges() {
@@ -286,7 +289,7 @@ public class ContextCorePlugin extends Plugin {
 							+ " must implement " + AbstractContextStructureBridge.class.getCanonicalName(), null);
 					return;
 				} else {
-					contextStore = (AbstractContextStore) object;
+					INSTANCE.contextStore = (AbstractContextStore) object;
 				}
 			} catch (CoreException e) {
 				StatusManager.log(e, "Could not load bridge extension");

@@ -196,10 +196,10 @@ public class AntStructureBridge extends AbstractContextStructureBridge {
 	}
 
 	/**
-	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getName(java.lang.Object)
+	 * @see org.eclipse.mylyn.context.core.AbstractContextStructureBridge#getLabel(java.lang.Object)
 	 */
 	@Override
-	public String getName(Object object) {
+	public String getLabel(Object object) {
 		if (object instanceof AntElementNode) {
 			AntElementNode n = (AntElementNode) object;
 			String name = n.getIFile().getName() + ": " + n.getName();

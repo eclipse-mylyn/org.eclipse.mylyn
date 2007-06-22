@@ -30,12 +30,13 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.swt.widgets.Tree;
 
 /**
- * This is a generic interest filter that can be applied to any
+ * A generic degree-of-interest viewer filter that can be applied to any
  * StructuredViewer. It figures out whether an object is interesting by getting
  * it's handle from the corresponding structure bridge.
  * 
  * @author Mik Kersten
  * @author Christian Dupuis (bug 193003)
+ * @since	2.0
  */
 public class InterestFilter extends ViewerFilter {
 

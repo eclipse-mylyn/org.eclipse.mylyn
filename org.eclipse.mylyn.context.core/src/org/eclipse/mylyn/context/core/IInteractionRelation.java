@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.context.core;
 
 /**
+ * Virtual proxy for a relation between two elements in the context model.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IInteractionRelation extends IInteractionObject {
 

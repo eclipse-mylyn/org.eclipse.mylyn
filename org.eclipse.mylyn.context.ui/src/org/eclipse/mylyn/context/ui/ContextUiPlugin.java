@@ -73,11 +73,12 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
+ * Main entry point for the Context UI.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public class ContextUiPlugin extends AbstractUIPlugin {
-
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.ui";
 
 	private Map<String, AbstractContextUiBridge> bridges = new HashMap<String, AbstractContextUiBridge>();
 
@@ -100,9 +101,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
-
-	private List<TaskContextWorkingSetManager> workingSetUpdaters = null;
-
+	
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
 	private Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
@@ -360,7 +359,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void setHighlighterMapping(String id, String name) {
 		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		getPreferenceStore().putValue(prefId, name);
-	}
+	} 
 
 	/**
 	 * Returns the shared instance.
@@ -400,14 +399,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
-	}
-
-	public boolean isDecorateInterestMode() {
-		return decorateInterestMode;
-	}
-
-	public void setDecorateInterestMode(boolean decorateInterestLevel) {
-		this.decorateInterestMode = decorateInterestLevel;
 	}
 
 	public List<AbstractContextUiBridge> getUiBridges() {
@@ -466,22 +457,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
 		this.contextLabelProviders.put(extension, provider);
 	}
-
-	public void updateGammaSetting(ColorMap.GammaSetting setting) {
-		if (colorMap.getGammaSetting() != setting) {
-			highlighters.updateHighlighterWithGamma(colorMap.getGammaSetting(), setting);
-			colorMap.setGammaSetting(setting);
-		}
-	}
-
-	public ColorMap getColorMap() {
-		return colorMap;
-	}
-
-	public Highlighter getDefaultHighlighter() {
-		return HighlighterList.DEFAULT_HIGHLIGHTER;
-	}
-
+	
 	/**
 	 * @return null if not found
 	 */
@@ -512,28 +488,12 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		return highlighters.getHighlighters();
 	}
 
-	public Highlighter getIntersectionHighlighter() {
-		return intersectionHighlighter;
-	}
-
-	public void setColorMap(ColorMap colorMap) {
-		this.colorMap = colorMap;
-	}
-
 	public void setIntersectionHighlighter(Highlighter intersectionHighlighter) {
 		this.intersectionHighlighter = intersectionHighlighter;
 	}
 
-	public boolean isIntersectionMode() {
-		return getPreferenceStore().getBoolean(ContextUiPrefContstants.INTERSECTION_MODE);
-	}
-
-	public void setIntersectionMode(boolean isIntersectionMode) {
-		getPreferenceStore().setValue(ContextUiPrefContstants.INTERSECTION_MODE, isIntersectionMode);
-	}
-
-	public FocusedViewerManager getViewerManager() {
-		return viewerManager;
+	public static FocusedViewerManager getViewerManager() {
+		return INSTANCE.viewerManager;
 	}
 
 	static class UiExtensionPointReader {
@@ -678,21 +638,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public void addWorkingSetManager(TaskContextWorkingSetManager updater) {
-		if (workingSetUpdaters == null) {
-			workingSetUpdaters = new ArrayList<TaskContextWorkingSetManager>();
-		}
-		workingSetUpdaters.add(updater);
-		ContextCorePlugin.getContextManager().addListener(updater);
-	}
-
-	public TaskContextWorkingSetManager getWorkingSetUpdater() {
-		if (workingSetUpdaters == null)
-			return null;
-		else
-			return workingSetUpdaters.get(0);
-	}
-
 	private void setActiveSearchIcon(AbstractContextUiBridge bridge, ImageDescriptor descriptor) {
 		activeSearchIcons.put(bridge, descriptor);
 	}
@@ -709,35 +654,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public String getActiveSearchLabel(AbstractContextUiBridge bridge) {
 		UiExtensionPointReader.initExtensions();
 		return activeSearchLabels.get(bridge);
-	}
-
-	public void updateDegreesOfSeparation(Collection<AbstractRelationProvider> providers, int degreeOfSeparation) {
-		for (AbstractRelationProvider provider : providers) {
-			updateDegreeOfSeparation(provider, degreeOfSeparation);
-		}
-	}
-
-	public void updateDegreeOfSeparation(AbstractRelationProvider provider, int degreeOfSeparation) {
-		ContextCorePlugin.getContextManager().resetLandmarkRelationshipsOfKind(provider.getId());
-		ContextUiPlugin.getDefault().getPreferenceStore().setValue(provider.getGenericId(), degreeOfSeparation);
-		provider.setDegreeOfSeparation(degreeOfSeparation);
-		for (IInteractionElement element : ContextCorePlugin.getContextManager().getActiveContext().getInteresting()) {
-			if (element.getInterest().isLandmark()) {
-				provider.landmarkAdded(element);
-			}
-		}
-	}
-
-	public void refreshRelatedElements() {
-		try {
-			for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
-				List<AbstractRelationProvider> providerList = new ArrayList<AbstractRelationProvider>();
-				providerList.add(provider);
-				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
-			}
-		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not refresn related elements", false);
-		}
 	}
 
 	public void addPreservedFilterClass(String viewId, ViewerFilter filter) {
@@ -776,7 +692,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public ContextPerspectiveManager getPerspectiveManager() {
-		return perspectiveManager;
+	public static ContextPerspectiveManager getPerspectiveManager() {
+		return INSTANCE.perspectiveManager;
 	}
 }

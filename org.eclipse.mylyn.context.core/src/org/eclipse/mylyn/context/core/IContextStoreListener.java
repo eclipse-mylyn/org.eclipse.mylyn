@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.context.core;
 
 /**
+ * Notified of events where {@link AbstractContextStore} is moved.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */
 public interface IContextStoreListener {
 

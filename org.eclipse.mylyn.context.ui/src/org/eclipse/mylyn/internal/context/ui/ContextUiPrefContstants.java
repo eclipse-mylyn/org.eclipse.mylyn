@@ -47,6 +47,8 @@ public class ContextUiPrefContstants {
 
 	public static final String INTERSECTION_MODE = "org.eclipse.mylyn.ui.interest.intersection";
 
+	public static final String DECORATE_INTEREST_LEVEL = "org.eclipse.mylyn.context.ui.interest.decoration";
+	
 	public static final Font ITALIC = JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT);
 
 	public static final String TASK_HIGHLIGHTER_PREFIX = "org.eclipse.mylyn.ui.interest.highlighters.task.";
