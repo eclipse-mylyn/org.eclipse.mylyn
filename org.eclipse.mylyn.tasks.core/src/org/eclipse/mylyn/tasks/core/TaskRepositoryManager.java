@@ -377,7 +377,7 @@ public class TaskRepositoryManager {
 		// }
 	}
 
-	public void notifyRepositorySettingsChagned(TaskRepository repository) {
+	public void notifyRepositorySettingsChanged(TaskRepository repository) {
 		for (ITaskRepositoryListener listener : listeners) {
 			listener.repositorySettingsChanged(repository);
 		}
