@@ -27,7 +27,7 @@ import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.pde.internal.core.text.build.BuildEntry;
 import org.eclipse.pde.internal.core.text.plugin.PluginNode;
 import org.eclipse.pde.internal.core.text.plugin.PluginObjectNode;
@@ -192,7 +192,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusManager.log(e, "pde handle failed");
+				StatusHandler.log(e, "pde handle failed");
 			}
 		} else if (object instanceof PluginNode) {
 			PluginNode node = (PluginNode) object;
@@ -209,7 +209,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 						.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
-				StatusManager.log(e, "pde handle failed");
+				StatusHandler.log(e, "pde handle failed");
 			}
 
 		} else if (object instanceof File) {
@@ -298,7 +298,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 				return null;
 			} catch (Throwable t) {
-				StatusManager.log(t, "Could not find element for: " + marker);
+				StatusHandler.log(t, "Could not find element for: " + marker);
 				return null;
 			}
 		} else if (resource instanceof IFile) {
@@ -313,7 +313,7 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 					return handle;
 				}
 			} catch (Exception e) {
-				StatusManager.log(e, "Unable to get handle for offset in object");
+				StatusHandler.log(e, "Unable to get handle for offset in object");
 			}
 		}
 		return null;

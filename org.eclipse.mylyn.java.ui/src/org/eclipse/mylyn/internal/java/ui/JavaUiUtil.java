@@ -30,7 +30,7 @@ import org.eclipse.jdt.ui.JavaElementImageDescriptor;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -123,7 +123,7 @@ public class JavaUiUtil {
 				ExceptionHandler.handle(ex, "error", "could not find java element"); //$NON-NLS-2$ //$NON-NLS-1$
 			return null;
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not find element for: " + marker, false);
+			StatusHandler.fail(t, "Could not find element for: " + marker, false);
 			return null;
 		}
 	}

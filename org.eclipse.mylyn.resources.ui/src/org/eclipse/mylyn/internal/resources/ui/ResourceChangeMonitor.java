@@ -23,8 +23,8 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
@@ -70,7 +70,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
 			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
 		} catch (CoreException e) {
-			StatusManager.log(e, "could not accept marker visitor");
+			StatusHandler.log(e, "could not accept marker visitor");
 		}
 	}
 

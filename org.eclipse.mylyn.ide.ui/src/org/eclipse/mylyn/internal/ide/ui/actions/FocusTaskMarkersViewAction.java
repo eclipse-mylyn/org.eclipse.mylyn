@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.views.markers.internal.TableView;
 import org.eclipse.ui.views.markers.internal.TaskView;
@@ -43,7 +43,7 @@ public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 					updateMarkerViewLabelProvider(cachedViewer);
 				} 
 			} catch (Exception e) {
-				StatusManager.log(e, "couldn't get task view list viewer");
+				StatusHandler.log(e, "couldn't get task view list viewer");
 			}
 		}
 		if (cachedViewer != null)

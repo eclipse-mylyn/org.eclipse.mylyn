@@ -24,7 +24,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -140,7 +140,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 							collector.remove(restoredSet);
 							collector.add(contextChangeSet);
 						} catch (Exception e) {
-							StatusManager.fail(e, "could not restore change set", false);
+							StatusHandler.fail(e, "could not restore change set", false);
 						}
 					}
 				}
@@ -189,7 +189,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				}
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "could not update change set", false);
+			StatusHandler.fail(e, "could not update change set", false);
 		}
 	}
 
@@ -241,7 +241,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 					}
 				}
 			} catch (Exception e) {
-				StatusManager.fail(e, "could not manipulate change set resources", false);
+				StatusHandler.fail(e, "could not manipulate change set resources", false);
 			}
 		}
 	}

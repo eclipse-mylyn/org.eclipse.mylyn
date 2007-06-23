@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * TODO: parametrize relevance levels (requires JDT changes, bug 119063)
@@ -105,7 +105,7 @@ public class FocusedJavaProposalProcessor {
 				return proposals;
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Failed to project interest onto propsals", false);
+			StatusHandler.fail(t, "Failed to project interest onto propsals", false);
 			return proposals;
 		}
 	}

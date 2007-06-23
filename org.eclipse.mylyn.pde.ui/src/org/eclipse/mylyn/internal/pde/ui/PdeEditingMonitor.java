@@ -22,7 +22,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.ide.xml.XmlNodeHelper;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.core.plugin.IPluginObject;
@@ -116,7 +116,7 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 						super.handleElementSelection(part, xnode, contributeToContext);
 					}
 				} catch (Exception e) {
-					StatusManager.log(e, "couldn't resolve selection");
+					StatusHandler.log(e, "couldn't resolve selection");
 				}
 			}
 		}

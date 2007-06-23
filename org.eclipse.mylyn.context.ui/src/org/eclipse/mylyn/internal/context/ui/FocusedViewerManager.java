@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -146,7 +146,7 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 				refreshViewer(nodesToRefresh, updateLabels, viewer);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "could not refresh viewer", false);
+			StatusHandler.fail(t, "could not refresh viewer", false);
 		}
 	}
 

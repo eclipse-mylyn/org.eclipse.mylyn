@@ -20,7 +20,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
@@ -51,7 +51,7 @@ public class ResourceInteractionMonitor extends AbstractUserInteractionMonitor {
 						}
 					}
 				} catch (Throwable t) {
-					StatusManager.log(t, "failed to resolve resource edit");
+					StatusHandler.log(t, "failed to resolve resource edit");
 				}
 			}
 		}

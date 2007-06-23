@@ -50,7 +50,7 @@ import org.eclipse.mylyn.internal.context.core.DegreeOfSeparation;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchListener;
 import org.eclipse.mylyn.internal.context.core.IActiveSearchOperation;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search2.internal.ui.InternalSearchUI;
@@ -94,7 +94,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		if (node == null)
 			return;
 		if (node.getContentType() == null) {
-			StatusManager.log("null content type for: " + node, this);
+			StatusHandler.log("null content type for: " + node, this);
 			return;
 		}
 		if (!node.getContentType().equals(JavaStructureBridge.CONTENT_TYPE))
@@ -199,7 +199,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusManager.log("null content type for: " + interesting.getHandleIdentifier(), this);
+				StatusHandler.log("null content type for: " + interesting.getHandleIdentifier(), this);
 				return false;
 			} else {
 				return interesting.getContentType().equals(JavaStructureBridge.CONTENT_TYPE)
@@ -340,9 +340,9 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 				}
 				return runStatus;
 			} catch (ConcurrentModificationException cme) {
-				StatusManager.log(cme, "java search failed");
+				StatusHandler.log(cme, "java search failed");
 			} catch (Throwable t) {
-				StatusManager.log(t, "java search failed");
+				StatusHandler.log(t, "java search failed");
 			}
 
 			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.PLUGIN_ID, IStatus.OK,

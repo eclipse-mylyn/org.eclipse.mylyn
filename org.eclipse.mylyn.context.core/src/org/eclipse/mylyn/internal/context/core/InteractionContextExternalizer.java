@@ -24,7 +24,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.mylyn.context.core.IInteractionContextReader;
 import org.eclipse.mylyn.context.core.IInteractionContextWriter;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
@@ -86,7 +86,7 @@ public class InteractionContextExternalizer {
 			outputStream.flush();
 			outputStream.close();
 		} catch (IOException e) {
-			StatusManager.fail(e, "Could not write: " + file.getAbsolutePath(), true);
+			StatusHandler.fail(e, "Could not write: " + file.getAbsolutePath(), true);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class InteractionContextExternalizer {
 				return reader.readContext(handleIdentifier, file);
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "Could not read: " + file.getAbsolutePath(), true);
+			StatusHandler.fail(e, "Could not read: " + file.getAbsolutePath(), true);
 		}
 		return null;
 	}

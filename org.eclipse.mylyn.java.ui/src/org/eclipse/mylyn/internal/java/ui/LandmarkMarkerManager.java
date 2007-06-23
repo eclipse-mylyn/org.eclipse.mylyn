@@ -33,7 +33,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
@@ -70,7 +70,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 				landmarkAdded(node);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not update landmark markers", false);
+			StatusHandler.fail(t, "Could not update landmark markers", false);
 		}
 	}
 
@@ -105,9 +105,9 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 						resource.getWorkspace().run(runnable, null);
 					}
 				} catch (JavaModelException e) {
-					StatusManager.fail(e, "couldn't update marker", false);
+					StatusHandler.fail(e, "couldn't update marker", false);
 				} catch (CoreException e) {
-					StatusManager.fail(e, "couldn't update marker", false);
+					StatusHandler.fail(e, "couldn't update marker", false);
 				}
 			}
 		}
@@ -138,7 +138,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 											marker.delete();
 									}
 								} catch (NullPointerException e) {
-									StatusManager.log(e, "could not update markers");
+									StatusHandler.log(e, "could not update markers");
 								}
 							}
 						}
@@ -148,7 +148,7 @@ public class LandmarkMarkerManager implements IInteractionContextListener {
 					// ignore the Java Model errors
 // MylarStatusHandler.fail(e, "couldn't update landmark marker", false);
 				} catch (CoreException e) {
-					StatusManager.fail(e, "couldn't update landmark marker", false);
+					StatusHandler.fail(e, "couldn't update landmark marker", false);
 				}
 			}
 		}

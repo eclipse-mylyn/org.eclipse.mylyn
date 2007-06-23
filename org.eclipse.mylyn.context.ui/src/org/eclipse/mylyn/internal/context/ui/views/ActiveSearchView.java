@@ -42,7 +42,7 @@ import org.eclipse.mylyn.internal.context.ui.DoiOrderSorter;
 import org.eclipse.mylyn.internal.context.ui.actions.LinkActiveSearchWithEditorAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ShowQualifiedNamesAction;
 import org.eclipse.mylyn.internal.context.ui.actions.ToggleRelationshipProviderAction;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -80,7 +80,7 @@ public class ActiveSearchView extends ViewPart {
 				updateDegreesOfSeparation(providerList, provider.getCurrentDegreeOfSeparation());
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not refresn related elements", false);
+			StatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
 	
@@ -185,7 +185,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusManager.log(t, "active searchrefresh failed");
+						StatusHandler.log(t, "active searchrefresh failed");
 					}
 				}
 			});
@@ -195,7 +195,7 @@ public class ActiveSearchView extends ViewPart {
 					try {
 						internalRefresh(node, updateLabels);
 					} catch (Throwable t) {
-						StatusManager.log(t, "active searchrefresh failed");
+						StatusHandler.log(t, "active searchrefresh failed");
 					}
 				}
 			});

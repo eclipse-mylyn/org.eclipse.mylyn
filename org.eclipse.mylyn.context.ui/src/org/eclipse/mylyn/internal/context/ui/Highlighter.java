@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -119,7 +119,7 @@ public class Highlighter {
 
 			highlightColor = new Color(Display.getDefault(), redStep, greenStep, blueStep);
 		} catch (Throwable t) {
-			StatusManager.log(t, "highlighter init failed");
+			StatusHandler.log(t, "highlighter init failed");
 		}
 	}
 
@@ -152,7 +152,7 @@ public class Highlighter {
 				green += greenStep;
 			}
 		} catch (Throwable t) {
-			StatusManager.log(t, "gradients failed");
+			StatusHandler.log(t, "gradients failed");
 		}
 	}
 

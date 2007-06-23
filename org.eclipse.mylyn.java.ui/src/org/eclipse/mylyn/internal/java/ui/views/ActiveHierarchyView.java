@@ -48,7 +48,7 @@ import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDelegatingDragAdapt
 import org.eclipse.mylyn.internal.context.ui.views.ActiveViewDropAdapter;
 import org.eclipse.mylyn.internal.java.ui.JavaContextLabelProvider;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -202,7 +202,7 @@ public class ActiveHierarchyView extends ViewPart {
 				});
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not update viewer", false);
+			StatusHandler.fail(t, "Could not update viewer", false);
 		}
 	}
 
@@ -230,7 +230,7 @@ public class ActiveHierarchyView extends ViewPart {
 				viewer.getControl().setRedraw(true);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not update viewer", false);
+			StatusHandler.fail(t, "Could not update viewer", false);
 		}
 	}
 
@@ -255,7 +255,7 @@ public class ActiveHierarchyView extends ViewPart {
 							IEditorPart part = JavaUI.openInEditor(element);
 							JavaUI.revealInEditor(part, element);
 						} catch (Throwable t) {
-							StatusManager.log(t, "Could not open type");
+							StatusHandler.log(t, "Could not open type");
 						}
 					}
 				}
@@ -267,7 +267,7 @@ public class ActiveHierarchyView extends ViewPart {
 			initDrag();
 			getSite().setSelectionProvider(getViewer());
 		} catch (Throwable t) {
-			StatusManager.log(t, "create failed");
+			StatusHandler.log(t, "create failed");
 		}
 	}
 

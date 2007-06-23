@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
 import org.eclipse.ui.IEditorPart;
@@ -64,7 +64,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 			action.setChecked(on);
 			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not enable editor management", true);
+			StatusHandler.fail(t, "Could not enable editor management", true);
 		}
 	} 
 

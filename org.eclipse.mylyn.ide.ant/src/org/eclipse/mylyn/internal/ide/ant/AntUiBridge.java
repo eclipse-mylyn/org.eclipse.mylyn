@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.AbstractContextUiBridge;
 import org.eclipse.mylyn.internal.ide.ui.IdeUiBridgePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -74,7 +74,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 
 			// if the editor is null, we had a problem and should return
 			if (editor == null) {
-				StatusManager.log("Unable to open editor for file: " + filename, this);
+				StatusHandler.log("Unable to open editor for file: " + filename, this);
 				return;
 			}
 
@@ -100,7 +100,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 			// }
 
 		} catch (Exception e) {
-			StatusManager.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
+			StatusHandler.fail(e, "ERROR OPENING XML EDITOR\n" + e.getMessage(), false);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class AntUiBridge extends AbstractContextUiBridge {
 				method.setAccessible(true);
 				viewers.add((TreeViewer) method.invoke(outline, new Object[] {}));
 			} catch (Exception e) {
-				StatusManager.log(e, "couldn't get outline");
+				StatusHandler.log(e, "couldn't get outline");
 			}
 		}
 		return viewers;

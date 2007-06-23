@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.mylyn.context.ui.AbstractFocusViewAction;
 import org.eclipse.mylyn.context.ui.InterestFilter;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -103,7 +103,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 							}
 						}
 					} catch (Exception e) {
-						StatusManager.log(e, "couldn't get " + id + " view tree viewer");
+						StatusHandler.log(e, "couldn't get " + id + " view tree viewer");
 						return null;
 					}
 				} else {
@@ -112,7 +112,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 			}
 		} catch (Exception e) {
-			StatusManager.log(e, "couldn't get " + id + " view tree viewer");
+			StatusHandler.log(e, "couldn't get " + id + " view tree viewer");
 		}
 		return null;
 	}

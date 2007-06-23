@@ -34,7 +34,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.java.ui.JavaStructureBridge;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * @author Mik Kersten
@@ -73,11 +73,11 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
 				updater = (IJavaFoldingStructureProviderExtension) adapter;
 			} else {
-				StatusManager.log("Could not install active folding on provider: " + adapter + ", must extend "
+				StatusHandler.log("Could not install active folding on provider: " + adapter + ", must extend "
 						+ IJavaFoldingStructureProviderExtension.class.getName(), this);
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "could not install auto folding, reflection denied", false);
+			StatusHandler.fail(e, "could not install auto folding, reflection denied", false);
 		}
 		updateFolding();
 	}
@@ -120,7 +120,7 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 					updater.expandElements(toExpand.toArray(new IJavaElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusManager.fail(e, "couldn't update folding", false);
+				StatusHandler.fail(e, "couldn't update folding", false);
 			}
 		}
 	}

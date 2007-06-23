@@ -47,11 +47,11 @@ import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylyn.internal.context.ui.Highlighter;
 import org.eclipse.mylyn.internal.context.ui.HighlighterList;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.PlanningPerspectiveFactory;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -233,7 +233,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		} catch (Throwable t) {
-			StatusManager.log(t, "plug-in intialization failed");
+			StatusHandler.log(t, "plug-in intialization failed");
 		}
 	}
 
@@ -271,7 +271,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					StatusManager.fail(e, "Context UI initialization failed", true);
+					StatusHandler.fail(e, "Context UI initialization failed", true);
 				}
 			}
 		});
@@ -309,7 +309,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			colorMap.dispose();
 			highlighters.dispose();
 		} catch (Exception e) {
-			StatusManager.fail(e, "Mylar UI stop failed", false);
+			StatusHandler.fail(e, "Mylar UI stop failed", false);
 		}
 	}
 
@@ -538,11 +538,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					ContextUiPlugin.getDefault().internalAddContextLabelProvider((String) contentType,
 							(ILabelProvider) provider);
 				} else {
-					StatusManager.log("Could not load label provider: " + provider.getClass().getCanonicalName()
+					StatusHandler.log("Could not load label provider: " + provider.getClass().getCanonicalName()
 							+ " must implement " + ILabelProvider.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
-				StatusManager.log(e, "Could not load label provider extension");
+				StatusHandler.log(e, "Could not load label provider extension");
 			}
 		}
 
@@ -586,11 +586,11 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 					}
 
 				} else {
-					StatusManager.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
+					StatusHandler.log("Could not load bridge: " + bridge.getClass().getCanonicalName()
 							+ " must implement " + AbstractContextUiBridge.class.getCanonicalName(), thisReader);
 				}
 			} catch (CoreException e) {
-				StatusManager.log(e, "Could not load bridge extension");
+				StatusHandler.log(e, "Could not load bridge extension");
 			}
 		}
 	}

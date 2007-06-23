@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.team.ui.FocusedTeamUiPlugin;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.team.ui.AbstractCommitTemplateVariable;
 
@@ -75,7 +75,7 @@ public class CommitTemplateManager {
 				return matcher.group(1);
 			}
 		} catch (Exception ex) {
-			StatusManager.log(ex, "Problem while parsing task id from comment");
+			StatusHandler.log(ex, "Problem while parsing task id from comment");
 		}
 
 		return null;
@@ -204,7 +204,7 @@ public class CommitTemplateManager {
 				return handler.getValue(task);
 			}
 		} catch (Exception ex) {
-			StatusManager.log(ex, "Problem while dispatching to template handler for: " + keyword);
+			StatusHandler.log(ex, "Problem while dispatching to template handler for: " + keyword);
 		}
 
 		return null;
@@ -232,7 +232,7 @@ public class CommitTemplateManager {
 							final String msg = MessageFormat.format(
 									"Error while processing template handler contribution {0} from plugin {1}.",
 									element.getAttribute(ATTR_CLASS), element.getContributor().getName());
-							StatusManager.log(ex, msg);
+							StatusHandler.log(ex, msg);
 						}
 					}
 				}

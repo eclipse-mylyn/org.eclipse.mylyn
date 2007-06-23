@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Class to help get the handle for an xml file
@@ -152,7 +152,7 @@ public class XmlNodeHelper {
 				contents += s;
 			}
 		} catch (IOException e) {
-			StatusManager.log(e, "couldn't get contents");
+			StatusHandler.log(e, "couldn't get contents");
 		}
 		return contents;
 	}

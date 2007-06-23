@@ -17,7 +17,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
@@ -62,7 +62,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 					delete(element);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "delta update failed", false);
+			StatusHandler.fail(t, "delta update failed", false);
 		}
 	}
 

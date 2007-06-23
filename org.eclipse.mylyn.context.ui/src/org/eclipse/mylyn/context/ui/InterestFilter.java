@@ -26,7 +26,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IImplicitlyIntersting;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Tree;
 
 /**
@@ -92,7 +92,7 @@ public class InterestFilter extends ViewerFilter {
 				return isInteresting(element);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
+			StatusHandler.fail(t, "interest filter failed on viewer: " + viewer.getClass(), false);
 		}
 		return false;
 	}

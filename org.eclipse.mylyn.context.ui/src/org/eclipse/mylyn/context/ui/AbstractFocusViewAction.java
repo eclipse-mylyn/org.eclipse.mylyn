@@ -28,7 +28,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.context.ui.ContextUiImages;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IActionDelegate2;
@@ -93,7 +93,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 							try {
 								viewer.addFilter(filter);
 							} catch (Throwable t) {
-								StatusManager.fail(t, "Failed to restore filter: " + filter, false);
+								StatusHandler.fail(t, "Failed to restore filter: " + filter, false);
 							}
 						}
 					}
@@ -213,7 +213,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				updateLinking(on);
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
+			StatusHandler.fail(t, "Could not install viewer manager on: " + globalPrefId, false);
 		} finally {
 			if (!wasPaused) {
 				ContextCorePlugin.getContextManager().setContextCapturePaused(false);
@@ -311,14 +311,14 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			return ContextUiPlugin.getDefault().getPreservedFilterClasses(viewPart.getSite().getId());
 		} catch (Exception e) {
-			StatusManager.log(e, "Could not determine preserved filters");
+			StatusHandler.log(e, "Could not determine preserved filters");
 			return Collections.emptySet();
 		}
 	}
 
 	protected boolean installInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
-			StatusManager.log("The viewer to install InterestFilter is null", this);
+			StatusHandler.log("The viewer to install InterestFilter is null", this);
 			return false;
 		} else if (viewer.getControl().isDisposed() && manageViewer) {
 			// TODO: do this with part listener, not lazily?
@@ -336,7 +336,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 						try {
 							viewer.removeFilter(filter);
 						} catch (Throwable t) {
-							StatusManager.fail(t, "Failed to remove filter: " + filter, false);
+							StatusHandler.fail(t, "Failed to remove filter: " + filter, false);
 						}
 					}
 				}
@@ -349,14 +349,14 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return true;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			StatusManager.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
+			StatusHandler.fail(t, "Could not install viewer filter on: " + globalPrefId, false);
 		}
 		return false;
 	}
 
 	protected void uninstallInterestFilter(StructuredViewer viewer) {
 		if (viewer == null) {
-			StatusManager.log("Could not uninstall interest filter", this);
+			StatusHandler.log("Could not uninstall interest filter", this);
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
@@ -373,7 +373,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 						try {
 							viewer.addFilter(filter);
 						} catch (Throwable t) {
-							StatusManager.fail(t, "Failed to remove filter: " + filter, false);
+							StatusHandler.fail(t, "Failed to remove filter: " + filter, false);
 						}
 					}
 				}
