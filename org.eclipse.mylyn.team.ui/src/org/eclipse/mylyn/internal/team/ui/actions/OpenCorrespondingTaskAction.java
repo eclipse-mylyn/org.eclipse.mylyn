@@ -133,7 +133,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			connector = repositoryManager.getConnectorForRepositoryTaskUrl(taskFullUrl);
 		}
 		if (connector == null && repository != null) {
-			connector = repositoryManager.getRepositoryConnector(repository.getKind());
+			connector = repositoryManager.getRepositoryConnector(repository.getConnectorKind());
 		}
 
 		if (repositoryUrl == null && connector != null) {
@@ -279,7 +279,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
-						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
 						if (connectorUi != null) {
 							connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 							return Status.OK_STATUS;
