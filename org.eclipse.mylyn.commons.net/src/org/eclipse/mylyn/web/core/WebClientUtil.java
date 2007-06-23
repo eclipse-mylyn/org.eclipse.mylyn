@@ -204,7 +204,7 @@ public class WebClientUtil {
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		IProxyService service = WebCorePlugin.getDefault().getProxyService();
+		IProxyService service = WebCorePlugin.getProxyService();
 		if (service != null && service.isProxiesEnabled()) {
 			IProxyData data = service.getProxyData(IProxyData.HTTP_PROXY_TYPE);
 			if (data.getHost() != null) {
