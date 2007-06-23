@@ -17,9 +17,9 @@ import junit.framework.TestSuite;
 import org.eclipse.mylyn.bugzilla.tests.AllBugzillaTests;
 import org.eclipse.mylyn.context.tests.AllContextTests;
 import org.eclipse.mylyn.ide.tests.AllIdeTests;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.java.tests.AllJavaTests;
 import org.eclipse.mylyn.jira.tests.AllJiraTests;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.tests.AllMonitorTests;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 import org.eclipse.mylyn.resources.tests.AllResourcesTests;
@@ -37,7 +37,7 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests");
 
-		StatusManager.addStatusHandler(new TestingStatusNotifier());
+		StatusHandler.addStatusHandler(new TestingStatusNotifier());
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 
 		// TODO: the order of these tests might still matter, but shouldn't
