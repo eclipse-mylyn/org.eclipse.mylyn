@@ -58,7 +58,7 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 		return task;
 	}
 
-	public String getTaskFullUrl() {
+	public String getTaskUrl() {
 		return taskFullUrl;
 	}
 

@@ -142,7 +142,7 @@ public class CommitTemplateVariables {
 		@Override
 		public String getValue(AbstractTask task) {
 			if (task instanceof AbstractTask) {
-				List<String> list = getTaskData(task).getCC();
+				List<String> list = getTaskData(task).getCc();
 				return implode(list, ", ");
 			}
 
@@ -241,7 +241,7 @@ public class CommitTemplateVariables {
 	public static class TaskURL extends AbstractCommitTemplateVariable {
 		@Override
 		public String getValue(AbstractTask task) {
-			return task.getTaskUrl();
+			return task.getUrl();
 		}
 	}
 	

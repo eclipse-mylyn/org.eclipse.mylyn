@@ -114,7 +114,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 
 		String repositoryUrl = info.getRepositoryUrl();
 		String taskId = info.getTaskId();
-		String taskFullUrl = info.getTaskFullUrl();
+		String taskFullUrl = info.getTaskUrl();
 		String comment = info.getComment();
 
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
@@ -189,7 +189,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 				// search by fullUrl
 				for (AbstractTask currTask : TasksUiPlugin.getTaskListManager().getTaskList().getAllTasks()) {
 					if (currTask instanceof AbstractTask) {
-						String currUrl = ((AbstractTask) currTask).getTaskUrl();
+						String currUrl = ((AbstractTask) currTask).getUrl();
 						if (taskFullUrl.equals(currUrl)) {
 							return new LinkedTaskInfo(currTask, null);
 						}
@@ -286,7 +286,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 						}
 					}
 				}
-				final String taskFullUrl = info.getTaskFullUrl();
+				final String taskFullUrl = info.getTaskUrl();
 				if (taskFullUrl != null) {
 					TasksUiUtil.openUrl(taskFullUrl, false);
 					return Status.OK_STATUS;
