@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui.editors;
+package org.eclipse.mylyn.tasks.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,8 +38,10 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.OverviewRuler;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTextViewer;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryViewerConfig;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
@@ -62,6 +64,10 @@ import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.themes.IThemeManager;
 
 /**
+ * Used by the task editor.  Not recommended to extend.
+ * 
+ * NOTE: likely to change for 3.0.
+ * 
  * @author Rob Elves
  * @ref: PDEFormPage.class ref:
  * @ref: http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg19676.html
@@ -84,9 +90,7 @@ public class TaskFormPage extends FormPage {
 		super(editor, id, title);
 	}
 
-	/* GLOBAL ACTIONS (CUT/COPY/PASTE/ etc) */
-
-	public boolean canDoAction(String actionId) {
+	public boolean canPerformAction(String actionId) {
 		Control focusControl = getFocusControl();
 		if (focusControl instanceof StyledText) {
 			StyledText text = (StyledText) focusControl;

@@ -82,7 +82,6 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInp
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskFormPage;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;

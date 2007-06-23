@@ -27,7 +27,7 @@ import org.eclipse.jface.text.reconciler.IReconcilerExtension;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.mylyn.internal.tasks.ui.editors.TaskFormPage.ErrorAnnotation;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage.ErrorAnnotation;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector;
 import org.eclipse.ui.texteditor.spelling.SpellingContext;

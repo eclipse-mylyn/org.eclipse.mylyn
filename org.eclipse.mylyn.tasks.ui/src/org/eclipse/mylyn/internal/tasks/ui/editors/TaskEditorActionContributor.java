@@ -48,6 +48,7 @@ import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.NewTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
+import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -388,7 +389,7 @@ public class TaskEditorActionContributor extends MultiPageEditorActionBarContrib
 		public void selectionChanged(ISelection selection) {
 			if (getEditor().getActivePageInstance() instanceof TaskFormPage) {
 				TaskFormPage editor = (TaskFormPage) getEditor().getActivePageInstance();
-				setEnabled(editor.canDoAction(actionId));
+				setEnabled(editor.canPerformAction(actionId));
 			}
 		}
 	}

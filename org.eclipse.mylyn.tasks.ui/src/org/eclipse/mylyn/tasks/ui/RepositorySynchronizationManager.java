@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.tasks.ui;
+package org.eclipse.mylyn.tasks.ui;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,16 +27,17 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Encapsulates synchronization policy TODO: move into core?
+ * Encapsulates synchronization policy.
+ * 
+ * NOTE: likely to change for 3.0
  * 
  * @author Mik Kersten
  * @author Rob Elves
  */
-public class RepositorySynchronizationManager {
+public final class RepositorySynchronizationManager {
 
 	private final MutexRule taskRule = new MutexRule();
 

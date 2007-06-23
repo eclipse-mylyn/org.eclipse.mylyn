@@ -48,7 +48,6 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
-import org.eclipse.mylyn.internal.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
