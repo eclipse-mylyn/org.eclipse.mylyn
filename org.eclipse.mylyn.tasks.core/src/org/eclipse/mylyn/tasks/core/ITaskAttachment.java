@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Encapsualtes resources that can be attached to a task.
+ * 
  * @author Steffen Pingel
+ * @since 2.0
  */
 public interface ITaskAttachment {
 	

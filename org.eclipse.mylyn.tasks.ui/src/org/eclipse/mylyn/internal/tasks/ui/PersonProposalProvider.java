@@ -144,7 +144,7 @@ public class PersonProposalProvider implements IContentProposalProvider {
 		if (data != null) {
 			// addressSet.add(data.getAssignedTo());  // owner
 			addAddress(data.getReporter(), addressSet); // ??
-			for (String address : data.getCC()) {
+			for (String address : data.getCc()) {
 				addAddress(address, addressSet);
 			}
 			for (TaskComment comment : currentTaskData.getComments()) {

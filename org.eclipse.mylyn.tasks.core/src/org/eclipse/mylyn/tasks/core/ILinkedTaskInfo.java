@@ -12,15 +12,16 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
- * Task information linked to artifacts from version control integration 
+ * Task information linking tasks to resources.
  * 
  * @author Eugene Kuleshov
+ * @since 2.0
  */
 public interface ILinkedTaskInfo {
 
 	public abstract String getTaskId();
 
-	public abstract String getTaskFullUrl();
+	public abstract String getTaskUrl();
 
 	public abstract String getRepositoryUrl();
 	

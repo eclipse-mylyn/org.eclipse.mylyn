@@ -230,7 +230,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 			repositoryTask.setSummary(taskData.getSummary());
 			repositoryTask.setOwner(taskData.getAttributeValue(RepositoryTaskAttribute.USER_ASSIGNED));
 			repositoryTask.setCompleted(TracTask.isCompleted(taskData.getStatus()));
-			repositoryTask.setTaskUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
+			repositoryTask.setUrl(repository.getUrl() + ITracClient.TICKET_URL + taskData.getId());
 			repositoryTask.setPriority(TracTask.getMylarPriority(taskData.getAttributeValue(Attribute.PRIORITY
 					.getTracKey())));
 			Kind kind = TracTask.Kind.fromType(taskData.getAttributeValue(Attribute.TYPE.getTracKey()));

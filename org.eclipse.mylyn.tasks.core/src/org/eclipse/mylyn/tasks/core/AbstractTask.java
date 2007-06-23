@@ -52,8 +52,6 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 
 	private boolean reminded = false;
 
-	private String taskUrl = "";
-
 	private Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>();
 
 	// ************ Synch ****************
@@ -308,18 +306,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-
-	/**
-	 * TODO: consider removing
-	 */
-	public void setTaskUrl(String url) {
-		this.taskUrl = url;
-	}
-
-	public String getTaskUrl() {
-		return taskUrl;
-	}
-
+	
 	public String getNotes() {
 		// TODO: removed check for null once xml updated.
 		if (notes == null) {
@@ -412,7 +399,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	}
 
 	public boolean hasValidUrl() {
-		String taskUrl = getTaskUrl();
+		String taskUrl = getUrl();
 		if (taskUrl != null && !taskUrl.equals("") && !taskUrl.equals("http://") && !taskUrl.equals("https://")) {
 			try {
 				new URL(taskUrl);

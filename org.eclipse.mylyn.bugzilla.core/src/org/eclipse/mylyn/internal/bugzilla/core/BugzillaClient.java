@@ -454,7 +454,7 @@ public class BugzillaClient {
 						RepositoryQueryResultsFactory queryFactory = new RepositoryQueryResultsFactory(
 								method.getResponseBodyAsStream(), characterEncoding);
 						queryFactory.performQuery(repositoryUrl.toString(), collector, QueryHitCollector.MAX_HITS);
-						return !collector.getTaskHits().isEmpty();
+						return !collector.getTasks().isEmpty();
 					}
 				}
 			}

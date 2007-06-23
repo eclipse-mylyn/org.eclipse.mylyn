@@ -18,10 +18,11 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
- * Manipulate containers via TaskListManager
+ * Top-level Task List element that can contain other Task List elements.
  * 
  * @author Mik Kersten
- */ 
+ * @since 2.0
+ */
 public abstract class AbstractTaskContainer extends PlatformObject implements Comparable<AbstractTaskContainer> {
 
 	private String handle = "";
@@ -29,8 +30,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	private Set<AbstractTask> children = new CopyOnWriteArraySet<AbstractTask>();
 
 	/**
-	 * Optional URL corresponding to the web resource associated with this
-	 * container.
+	 * Optional URL corresponding to the web resource associated with this container.
 	 */
 	protected String url = null;
 
@@ -38,7 +38,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		assert handle != null;
 		this.handle = handleAndDescription;
 	}
-	
+
 	/**
 	 * Use {@link TaskList} methods instead.
 	 */
@@ -61,7 +61,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	public void clear() {
 		children.clear();
 	}
-	
+
 	public Set<AbstractTask> getChildren() {
 		return Collections.unmodifiableSet(children);
 	}
@@ -79,19 +79,12 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		return handle;
 	}
 
-	/**
-	 * @since 2.0
-	 */
 	public boolean isEmpty() {
 		return children.isEmpty();
 	}
 
 	public String getHandleIdentifier() {
 		return handle;
-	}
-
-	public void setDescription(String description) {
-		this.handle = description;
 	}
 
 	public void setHandleIdentifier(String handle) {
@@ -108,7 +101,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	}
 
 	/**
-	 * @return	can be null
+	 * @return can be null
 	 */
 	public String getUrl() {
 		return url;
@@ -130,7 +123,7 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	public String toString() {
 		return "container: " + handle;
 	}
-	
+
 	public String getPriority() {
 		String highestPriority = PriorityLevel.P5.toString();
 		Set<AbstractTask> tasks = getChildren();
@@ -144,10 +137,9 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 		}
 		return highestPriority;
 	}
-	
+
 	/**
-	 * The handle for most containers is their summary. Override to specify a
-	 * different natural ordering.
+	 * The handle for most containers is their summary. Override to specify a different natural ordering.
 	 */
 	public int compareTo(AbstractTaskContainer taskListElement) {
 		return getHandleIdentifier().compareTo(((AbstractTaskContainer) taskListElement).getHandleIdentifier());

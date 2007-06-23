@@ -20,7 +20,10 @@ import java.util.List;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
+ * Encapsulates attributes for task data.
+ * 
  * @author Rob Elves
+ * @since 2.0
  */
 public class AttributeContainer implements Serializable {
 

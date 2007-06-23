@@ -146,8 +146,8 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		return task.getScheduledForDate();
 	}
 
-	public String getTaskUrl() {
-		return task.getTaskUrl();
+	public String getUrl() {
+		return task.getUrl();
 	}
 
 	public boolean isReminded() {
@@ -224,8 +224,8 @@ public class ScheduledTaskDelegate extends AbstractTask {
 		task.setScheduledForDate(date);
 	}
 
-	public void setTaskUrl(String url) {
-		task.setTaskUrl(url);
+	public void setUrl(String url) {
+		task.setUrl(url);
 	}
 
 	public int compareTo(AbstractTaskContainer taskListElement) {

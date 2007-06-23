@@ -12,7 +12,10 @@
 package org.eclipse.mylyn.tasks.core;
 
 /**
+ * A container that stores tasks from any repository.
+ * 
  * @author Mik Kersten
+ * @since	2.0
  */ 
 public abstract class AbstractTaskCategory extends AbstractTaskContainer {
 

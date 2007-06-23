@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ScheduledTaskListSynchJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
@@ -39,7 +40,6 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
@@ -215,12 +215,12 @@ public class TaskListManagerTest extends TestCase {
 
 	public void testMigrateTaskHandlesWithExplicitSet() {
 		AbstractTask task = new MockRepositoryTask("http://a", "123");
-		task.setTaskUrl("http://a/task/123");
+		task.setUrl("http://a/task/123");
 		manager.getTaskList().addTask(task);
 		manager.refactorRepositoryUrl("http://a", "http://b");
 		assertNull(manager.getTaskList().getTask("http://a-123"));
 		assertNotNull(manager.getTaskList().getTask("http://b-123"));
-		assertEquals("http://b/task/123", task.getTaskUrl());
+		assertEquals("http://b/task/123", task.getUrl());
 	}
 
 	public void testIsActiveToday() {

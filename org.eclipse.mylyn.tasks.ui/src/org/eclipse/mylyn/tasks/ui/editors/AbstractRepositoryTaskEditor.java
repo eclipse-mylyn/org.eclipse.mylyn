@@ -607,7 +607,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				openBrowserAction = new Action() {
 					@Override
 					public void run() {
-						TasksUiUtil.openUrl(repositoryTask.getTaskUrl(), false);
+						TasksUiUtil.openUrl(repositoryTask.getUrl(), false);
 					}
 				};
 
@@ -1664,7 +1664,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 			if (hasChanged(taskData.getAttribute(RepositoryTaskAttribute.USER_CC))) {
 				ccList.setBackground(colorIncoming);
 			}
-			java.util.List<String> ccs = taskData.getCC();
+			java.util.List<String> ccs = taskData.getCc();
 			if (ccs != null) {
 				for (Iterator<String> it = ccs.iterator(); it.hasNext();) {
 					String cc = it.next();

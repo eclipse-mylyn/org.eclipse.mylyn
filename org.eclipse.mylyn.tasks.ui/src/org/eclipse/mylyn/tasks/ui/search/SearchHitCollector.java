@@ -220,7 +220,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 		return MessageFormat.format(MATCHES, messageFormatArgs);
 	}
 
-	public Set<AbstractTask> getTaskHits() {
+	public Set<AbstractTask> getTasks() {
 		return taskResults;
 	}
 

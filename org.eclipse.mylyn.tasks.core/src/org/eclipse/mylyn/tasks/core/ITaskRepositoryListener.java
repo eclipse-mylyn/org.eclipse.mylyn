@@ -13,7 +13,10 @@ package org.eclipse.mylyn.tasks.core;
 
 
 /**
+ * Notified of change to task repositories.
+ * 
  * @author Mik Kersten
+ * @since 2.0
  */
 public interface ITaskRepositoryListener {
 

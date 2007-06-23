@@ -15,8 +15,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Specifies attributes for a task repository.
+ * 
  * @author Eugene Kuleshov
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class RepositoryTemplate {
 

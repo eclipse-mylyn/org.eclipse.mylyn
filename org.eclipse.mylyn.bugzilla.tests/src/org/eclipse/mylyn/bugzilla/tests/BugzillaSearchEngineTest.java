@@ -123,7 +123,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		// results.addAll(connector.performQuery(repositoryQuery, new
 		// NullProgressMonitor(), new MultiStatus(TasksUiPlugin.PLUGIN_ID,
 		// IStatus.OK, "Query result", null)));
-		return collector.getTaskHits();
+		return collector.getTasks();
 	}
 
 }

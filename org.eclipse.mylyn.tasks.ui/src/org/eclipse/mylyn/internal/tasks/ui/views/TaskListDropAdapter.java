@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
@@ -35,7 +36,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -233,7 +233,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			if (newTask == null) {
 				return false;
 			}
-			newTask.setTaskUrl(url);
+			newTask.setUrl(url);
 
 			// NOTE: setting boolean param as false so that we go directly to
 			// the

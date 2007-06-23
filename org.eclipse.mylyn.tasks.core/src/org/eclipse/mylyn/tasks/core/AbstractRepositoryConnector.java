@@ -244,8 +244,8 @@ public abstract class AbstractRepositoryConnector {
 			existingTask.setPriority(queryHit.getPriority());
 			changed = true;
 		}
-		if (hasTaskPropertyChanged(existingTask.getTaskUrl(), queryHit.getTaskUrl())) {
-			existingTask.setTaskUrl(queryHit.getTaskUrl());
+		if (hasTaskPropertyChanged(existingTask.getUrl(), queryHit.getUrl())) {
+			existingTask.setUrl(queryHit.getUrl());
 			changed = true;
 		}
 		

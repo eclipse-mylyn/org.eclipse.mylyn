@@ -34,19 +34,19 @@ public class TaskTest extends TestCase {
 
 	public void testUrl() {
 		AbstractTask task = new LocalTask("handle", "label");
-		task.setTaskUrl("http://eclipse.org/mylar/doc.php");
+		task.setUrl("http://eclipse.org/mylar/doc.php");
 		assertTrue(task.hasValidUrl());
 
-		task.setTaskUrl("http://");
+		task.setUrl("http://");
 		assertFalse(task.hasValidUrl());
 
-		task.setTaskUrl("https://");
+		task.setUrl("https://");
 		assertFalse(task.hasValidUrl());
 
-		task.setTaskUrl("");
+		task.setUrl("");
 		assertFalse(task.hasValidUrl());
 
-		task.setTaskUrl(null);
+		task.setUrl(null);
 		assertFalse(task.hasValidUrl());
 	}
 	

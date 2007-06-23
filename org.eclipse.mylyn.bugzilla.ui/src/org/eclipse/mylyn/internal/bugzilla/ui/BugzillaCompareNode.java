@@ -211,7 +211,7 @@ public class BugzillaCompareNode implements IStreamContentAccessor, IStructureCo
 		topNode.addChild(new BugzillaCompareNode("New Comment", bug.getNewComment(), defaultImage));
 
 		BugzillaCompareNode ccList = new BugzillaCompareNode("CC List", null, defaultImage);
-		for (Iterator<String> iter = bug.getCC().iterator(); iter.hasNext();) {
+		for (Iterator<String> iter = bug.getCc().iterator(); iter.hasNext();) {
 			String cc = iter.next();
 			ccList.addChild(new BugzillaCompareNode("CC", cc, defaultImage));
 		}

@@ -29,8 +29,8 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
+import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -119,7 +119,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		collector.run(new NullProgressMonitor());
 		assertEquals(2, result.getElements().length);
 
-		for (AbstractTask hit : collector.getTaskHits()) {
+		for (AbstractTask hit : collector.getTasks()) {
 			assertTrue(hit.getSummary().contains("search-match-test"));
 		}
 
@@ -143,7 +143,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 		// assertEquals("2007-04-18 14:21:40",
 		// task.getCompletionDate().toString());
 		assertFalse(task.isCompleted());
-		assertEquals("http://mylyn.eclipse.org/bugs222/show_bug.cgi?id=3", task.getTaskUrl());
+		assertEquals("http://mylyn.eclipse.org/bugs222/show_bug.cgi?id=3", task.getUrl());
 	}
 
 	public void testUpdateWithSubTasks() throws Exception {

@@ -142,7 +142,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		assertNotNull(task);
 		assertEquals(TracTask.class, task.getClass());
 		assertTrue(task.getSummary().contains("summary1"));
-		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getTaskUrl());
+		assertEquals(repository.getUrl() + ITracClient.TICKET_URL + id, task.getUrl());
 
 		try {
 			task = connector.createTaskFromExistingId(repository, "does not exist", new NullProgressMonitor());
@@ -236,11 +236,11 @@ public class TracRepositoryConnectorTest extends TestCase {
 		ticket.putBuiltinValue(Key.TYPE, "mytype");
 
 		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, ""+123, "desc");
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getTaskUrl());
+		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("desc", task.getSummary());
 		
 		connector.updateTaskFromTicket(task, ticket, false);
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getTaskUrl());
+		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "123", task.getUrl());
 		assertEquals("123", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());
@@ -256,7 +256,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		TracTask task = new TracTask(TracTestConstants.TEST_TRAC_010_URL, ""+456, "desc");
 
 		connector.updateTaskFromTicket(task, ticket, false);
-		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getTaskUrl());
+		assertEquals(TracTestConstants.TEST_TRAC_010_URL + ITracClient.TICKET_URL + "456", task.getUrl());
 		assertEquals("456", task.getTaskKey());
 		assertEquals("mysummary", task.getSummary());
 		assertEquals("P3", task.getPriority());

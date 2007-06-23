@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class representing a report attribute
+ * Encapsulates common task attributes.
  * 
  * @author Rob Elves
- * 
+ * @since 2.0
  */
 public class RepositoryTaskAttribute implements Serializable {
 

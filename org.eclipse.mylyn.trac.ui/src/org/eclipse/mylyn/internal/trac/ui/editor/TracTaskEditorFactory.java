@@ -72,7 +72,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(TracCorePlugin.REPOSITORY_KIND,
 				tracTask.getRepositoryUrl());
 		if (TracRepositoryConnector.hasRichEditor(repository)) {
-			return new RepositoryTaskEditorInput(repository, tracTask.getTaskId(), tracTask.getTaskUrl());
+			return new RepositoryTaskEditorInput(repository, tracTask.getTaskId(), tracTask.getUrl());
 		} else {
 			return new TaskEditorInput(task, false) {
 				@Override

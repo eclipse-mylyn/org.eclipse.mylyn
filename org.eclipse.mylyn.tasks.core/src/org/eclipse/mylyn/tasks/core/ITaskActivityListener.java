@@ -13,10 +13,12 @@ package org.eclipse.mylyn.tasks.core;
 
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 
-
 /**
+ * Notified of task activity changes.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public interface ITaskActivityListener {
  

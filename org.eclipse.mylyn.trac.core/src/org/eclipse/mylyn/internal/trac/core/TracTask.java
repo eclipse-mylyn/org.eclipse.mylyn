@@ -136,7 +136,7 @@ public class TracTask extends AbstractTask {
 
 	public TracTask(String repositoryUrl, String id, String label) {
 		super(repositoryUrl, id, label);
-		setTaskUrl(repositoryUrl + ITracClient.TICKET_URL + id);
+		setUrl(repositoryUrl + ITracClient.TICKET_URL + id);
 	}
 
 	@Override

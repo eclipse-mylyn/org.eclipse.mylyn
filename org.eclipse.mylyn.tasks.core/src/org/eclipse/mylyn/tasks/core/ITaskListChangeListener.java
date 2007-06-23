@@ -18,6 +18,7 @@ import java.util.Set;
  * Listener for task list modifications and task content modifications.
  * 
  * @author Mik Kersten
+ * @since 2.0
  */
 public interface ITaskListChangeListener {
 

@@ -16,13 +16,16 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 
 /**
+ * Abstraction used for collecting tasks, e.g. when performing queries on the repository.
+ * 
  * @author Rob Elves
+ * @since 2.0
  */
 public interface ITaskCollector {
 
-	void accept(AbstractTask task);
+	public void accept(AbstractTask task);
 
-	void accept(RepositoryTaskData taskData) throws CoreException;
+	public void accept(RepositoryTaskData taskData) throws CoreException;
 
-	public Set<AbstractTask> getTaskHits();
+	public Set<AbstractTask> getTasks();
 }

@@ -22,13 +22,13 @@ import java.util.Locale;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
@@ -210,8 +210,8 @@ final class DelegatingTaskExternalizer {
 			node.setAttribute(KEY_ACTIVE, VAL_FALSE);
 		}
 
-		if (task.getTaskUrl() != null) {
-			node.setAttribute(KEY_ISSUEURL, task.getTaskUrl());
+		if (task.getUrl() != null) {
+			node.setAttribute(KEY_ISSUEURL, task.getUrl());
 		}
 		node.setAttribute(KEY_NOTES, stripControlCharacters(task.getNotes()));
 		node.setAttribute(KEY_TIME_ESTIMATED, "" + task.getEstimateTimeHours());
@@ -432,9 +432,9 @@ final class DelegatingTaskExternalizer {
 			task.setActive(false);
 		}
 		if (element.hasAttribute(KEY_ISSUEURL)) {
-			task.setTaskUrl(element.getAttribute(KEY_ISSUEURL));
+			task.setUrl(element.getAttribute(KEY_ISSUEURL));
 		} else {
-			task.setTaskUrl("");
+			task.setUrl("");
 		}
 		if (element.hasAttribute(KEY_NOTES)) {
 			task.setNotes(element.getAttribute(KEY_NOTES));

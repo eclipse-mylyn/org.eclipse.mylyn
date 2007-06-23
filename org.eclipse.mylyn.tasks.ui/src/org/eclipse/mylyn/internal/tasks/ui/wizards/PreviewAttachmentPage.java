@@ -18,7 +18,7 @@ import java.util.HashMap;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.tasks.core.LocalAttachment;
+import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;

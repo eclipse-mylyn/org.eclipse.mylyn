@@ -1493,7 +1493,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 			try {
 				originalQuery.setUrl(getQueryURL(repository, getQueryParameters()));
 				// originalQuery.setMaxHits(Integer.parseInt(getMaxHits()));
-				originalQuery.setDescription(getQueryTitle());
+				originalQuery.setHandleIdentifier(getQueryTitle());
 			} catch (UnsupportedEncodingException e) {
 				return null;
 			}

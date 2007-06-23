@@ -55,7 +55,7 @@ public class OpenSearchResultAction extends Action {
 			// go through each of the selected items and show it in an editor
 			for (Iterator<AbstractTask> it = selection.iterator(); it.hasNext();) {
 				AbstractTask repositoryHit = it.next();
-				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getTaskUrl());
+				TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit.getUrl());
 				// try {
 				// int taskId = Integer.parseInt(repositoryHit.getId());
 				// String bugUrl =

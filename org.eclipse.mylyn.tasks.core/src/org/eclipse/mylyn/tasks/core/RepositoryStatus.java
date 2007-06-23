@@ -16,8 +16,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 
 /**
+ * Utility for working and capturing status specific to repository connections.
+ * 
  * @author Rob Elves
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class RepositoryStatus extends Status {
 

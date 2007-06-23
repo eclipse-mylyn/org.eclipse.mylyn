@@ -43,7 +43,7 @@ public class BrowserFormPage extends FormPage {
 			form.getBody().setLayout(new FillLayout());
 			browser = new Browser(form.getBody(), SWT.NONE);
 			managedForm.getForm().setContent(browser);
-			browser.setUrl(task.getTaskUrl());
+			browser.setUrl(task.getUrl());
 		} catch (SWTError e) {
 			StatusManager.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {

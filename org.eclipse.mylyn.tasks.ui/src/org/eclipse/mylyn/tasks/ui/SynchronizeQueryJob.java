@@ -178,13 +178,13 @@ class SynchronizeQueryJob extends Job {
 		if (resultingStatus.getSeverity() == IStatus.CANCEL) {
 			// do nothing
 		} else if (resultingStatus.isOK()) {
-			if (collector.getTaskHits().size() >= QueryHitCollector.MAX_HITS) {
+			if (collector.getTasks().size() >= QueryHitCollector.MAX_HITS) {
 				StatusManager.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 			}
 
 			repositoryQuery.clear();
 
-			for (AbstractTask hit : collector.getTaskHits()) {
+			for (AbstractTask hit : collector.getTasks()) {
 				AbstractTask task = taskList.getTask(hit.getHandleIdentifier());
 				if (task != null) {
 					// update the existing task from the query hit

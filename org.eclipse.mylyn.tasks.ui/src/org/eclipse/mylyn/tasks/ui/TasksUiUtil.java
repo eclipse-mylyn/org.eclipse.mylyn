@@ -40,6 +40,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
@@ -50,7 +51,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
-import org.eclipse.mylyn.tasks.core.TaskCategory;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -311,7 +311,7 @@ public class TasksUiUtil {
 					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window != null) {
 						if (openWithBrowser) {
-							openUrl(task.getTaskUrl(), false);
+							openUrl(task.getUrl(), false);
 						} else {
 							IWorkbenchPage page = window.getActivePage();
 							wasOpen = refreshIfOpen(task, editorInput);
@@ -358,7 +358,7 @@ public class TasksUiUtil {
 			IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
 				if (openWithBrowser) {
-					openUrl(task.getTaskUrl(), false);
+					openUrl(task.getUrl(), false);
 				} else {
 					IWorkbenchPage page = window.getActivePage();
 					openEditor(editorInput, taskEditorId, page);

@@ -14,8 +14,11 @@ package org.eclipse.mylyn.tasks.core;
 import java.io.Serializable;
 
 /**
+ * Encapsulates a file or other resource attached to a task.
+ * 
  * @author Rob Elves
  * @author Mik Kersten
+ * @since 2.0
  */
 public class RepositoryAttachment extends AttributeContainer implements Serializable {
 

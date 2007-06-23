@@ -27,7 +27,7 @@ public class BugzillaTask extends AbstractTask {
 
 	public BugzillaTask(String repositoryUrl, String id, String label) {
 		super(repositoryUrl, id, label);
-		setTaskUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
+		setUrl(BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, id));
 	}
 
 	@Override

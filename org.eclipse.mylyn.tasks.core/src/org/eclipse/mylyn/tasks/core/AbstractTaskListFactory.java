@@ -17,13 +17,14 @@ import java.util.Set;
 import org.w3c.dom.Element;
 
 /**
- * When overriding these methods be sure not to perform network access since the Task List is read and written
- * frequently.
+ * Responsible for storing and creating task list elements.
+ * 
+ * When overriding these methods be sure not to perform network access since the Task List is
+ * read and written frequently.
  * 
  * @author Mik Kersten
  * @author Ken Sueda
- * 
- * TODO: consider merging tasks and categories
+ * @since 2.0
  */
 public abstract class AbstractTaskListFactory {
 

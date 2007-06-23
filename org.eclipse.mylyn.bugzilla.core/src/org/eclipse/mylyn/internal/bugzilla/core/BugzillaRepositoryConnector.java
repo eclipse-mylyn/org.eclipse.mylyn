@@ -186,7 +186,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			// Task Web Url
 			String url = getTaskUrl(repository.getUrl(), taskData.getId());
 			if (url != null) {
-				bugzillaTask.setTaskUrl(url);
+				bugzillaTask.setUrl(url);
 			}
 
 			// Bugzilla Specific Attributes
@@ -328,7 +328,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repository.getUrl(), urlQueryString, "");
 
 		performQuery(query, repository, new NullProgressMonitor(), collector);
-		changedTasks.addAll(collector.getTaskHits());
+		changedTasks.addAll(collector.getTasks());
 
 //		for (AbstractTask taskHit : collector.getTaskHits()) {
 //			// String handle =

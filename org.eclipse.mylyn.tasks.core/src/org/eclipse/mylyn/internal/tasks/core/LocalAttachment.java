@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,10 +18,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.eclipse.mylyn.tasks.core.ITaskAttachment;
+import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
+
 /**
  * A class representing a local attachment.
  * 
  * @author Jeff Pound
+ * @since 2.0
  */
 public class LocalAttachment implements Serializable, ITaskAttachment {
 

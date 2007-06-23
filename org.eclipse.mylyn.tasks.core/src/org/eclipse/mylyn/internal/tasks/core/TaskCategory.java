@@ -11,7 +11,9 @@
 /*
  * Created on Dec 26, 2004
  */
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
+
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 
 
 /**

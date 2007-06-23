@@ -17,11 +17,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
- * Collects QueryHits resulting from repository search
+ * Collects QueryHits resulting from repository search.
  * 
  * @author Shawn Minto
  * @author Rob Elves (generalized from bugzilla)
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class QueryHitCollector implements ITaskCollector {
 
@@ -57,7 +58,7 @@ public class QueryHitCollector implements ITaskCollector {
 		}
 	}
 
-	public Set<AbstractTask> getTaskHits() {
+	public Set<AbstractTask> getTasks() {
 		return taskResults;
 	}
 

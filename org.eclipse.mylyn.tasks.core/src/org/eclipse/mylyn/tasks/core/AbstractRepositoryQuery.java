@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
- * Extend to provide a repository query that can be used in the Task List.
+ * A container that stores tasks from a specific repository.
  * 
  * @author Mik Kersten
  * @author Eugene Kuleshov

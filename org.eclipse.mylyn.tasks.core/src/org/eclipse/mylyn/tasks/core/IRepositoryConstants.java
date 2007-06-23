@@ -10,6 +10,7 @@ package org.eclipse.mylyn.tasks.core;
 
 /**
  * @author Mik Kersten
+ * @since 2.0
  */
 public interface IRepositoryConstants {
 

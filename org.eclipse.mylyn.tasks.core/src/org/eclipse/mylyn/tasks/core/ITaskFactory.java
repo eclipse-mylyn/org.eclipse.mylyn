@@ -13,7 +13,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 
 /**
+ * Used for creating tasks from repository task data.
+ * 
  * @author Rob Elves
+ * @since 2.0
  */
 public interface ITaskFactory {
 

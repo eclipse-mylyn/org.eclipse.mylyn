@@ -26,6 +26,7 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
+import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 
 /**
@@ -178,9 +179,9 @@ public class TaskList {
 					repositoryTask.setRepositoryUrl(newRepositoryUrl);
 					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
 
-					String taskUrl = repositoryTask.getTaskUrl();
+					String taskUrl = repositoryTask.getUrl();
 					if (taskUrl.startsWith(oldRepositoryUrl)) {
-						repositoryTask.setTaskUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
+						repositoryTask.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
 					}
 				}
 			}
@@ -235,12 +236,14 @@ public class TaskList {
 			return;
 		} else if (!(container instanceof TaskArchive) && !(container instanceof UnfiledCategory)) {
 			if (queries.remove(container.getHandleIdentifier()) != null) {
-				container.setDescription(newDescription);
-				if (container instanceof AbstractRepositoryQuery) {
+				if (container instanceof AbstractTaskCategory) {
+					((AbstractTaskCategory)container).setHandleIdentifier(newDescription);
+				} else if (container instanceof AbstractRepositoryQuery) {
+					((AbstractRepositoryQuery)container).setHandleIdentifier(newDescription);
 					this.addQuery((AbstractRepositoryQuery) container);
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
-				container.setDescription(newDescription);
+				((TaskCategory)container).setHandleIdentifier(newDescription);
 				this.addCategory((TaskCategory) container);
 			}
 		}
@@ -494,7 +497,7 @@ public class TaskList {
 	public AbstractTask getRepositoryTask(String taskUrl) {
 		for (AbstractTask currTask : tasks.values()) {
 			if (currTask instanceof AbstractTask) {
-				String currUrl = ((AbstractTask) currTask).getTaskUrl();
+				String currUrl = ((AbstractTask) currTask).getUrl();
 				if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
 					return (AbstractTask) currTask;
 				}

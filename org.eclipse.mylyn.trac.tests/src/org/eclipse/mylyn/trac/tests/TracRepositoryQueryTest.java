@@ -53,7 +53,7 @@ public class TracRepositoryQueryTest extends TestCase {
 		
 		assertEquals(newUrl, query.getRepositoryUrl());
 		assertEquals(newUrl + ITracClient.QUERY_URL + search.toUrl(), query.getUrl());
-		assertEquals(newUrl + ITracClient.TICKET_URL + 123, task.getTaskUrl());
+		assertEquals(newUrl + ITracClient.TICKET_URL + 123, task.getUrl());
 	}
 	
 	public void testGetFilterList() {

@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Proxy for a file attachment.
+ * 
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class FileAttachment implements ITaskAttachment {
 

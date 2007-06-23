@@ -81,10 +81,10 @@ public class RepositorySearchQueryTest extends TestCase {
 				.getTaskList(), repository, query, new TaskFactory(repository, false, false));
 				
 		collector.run(new NullProgressMonitor());
-		for (AbstractTask task : collector.getTaskHits()) {
+		for (AbstractTask task : collector.getTasks()) {
 			assertEquals(TracTestConstants.TEST_TRAC_096_URL, task.getRepositoryUrl());		
 		}
-		assertEquals(data.tickets.size(), collector.getTaskHits().size());
+		assertEquals(data.tickets.size(), collector.getTasks().size());
 	}
 
 }

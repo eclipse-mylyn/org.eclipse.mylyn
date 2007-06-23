@@ -213,7 +213,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 		AbstractTask repositoryHit = (AbstractTask) match.getElement();
 
 		TasksUiUtil.openRepositoryTask(repositoryHit.getRepositoryUrl(), repositoryHit.getTaskId(), repositoryHit
-				.getTaskUrl());
+				.getUrl());
 	}
 
 	@Override

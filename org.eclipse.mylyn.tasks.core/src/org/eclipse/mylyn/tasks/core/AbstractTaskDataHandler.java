@@ -17,8 +17,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * Responsible for retrieving and posting task data to a repository.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public abstract class AbstractTaskDataHandler {
 

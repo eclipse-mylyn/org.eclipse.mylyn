@@ -21,7 +21,10 @@ import java.util.Map;
  * A representation of an operation that can be done to the bug when it is
  * submitted
  * 
+ * NOTE: likely to change for 3.0
+ * 
  * @author Shawn Minto
+ * @since 2.0
  */
 public class RepositoryOperation implements Serializable {
 	/**
@@ -214,5 +217,4 @@ public class RepositoryOperation implements Serializable {
 	public void setInputValue(String inputValue) {
 		this.inputValue = inputValue;
 	}
-
 }

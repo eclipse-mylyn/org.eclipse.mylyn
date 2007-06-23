@@ -25,6 +25,7 @@ import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
  * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public final class RepositoryTaskData extends AttributeContainer implements Serializable {
 
@@ -204,11 +205,11 @@ public final class RepositoryTaskData extends AttributeContainer implements Seri
 		repositoryOperations.add(o);
 	}
 
-	public List<String> getCC() {
+	public List<String> getCc() {
 		return getAttributeValues(RepositoryTaskAttribute.USER_CC);
 	}
 
-	public void removeCC(String email) {
+	public void removeCc(String email) {
 		removeAttributeValue(RepositoryTaskAttribute.USER_CC, email);
 	}
 

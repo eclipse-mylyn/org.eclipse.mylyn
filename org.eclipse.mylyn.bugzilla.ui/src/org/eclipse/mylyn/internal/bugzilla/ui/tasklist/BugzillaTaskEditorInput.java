@@ -34,7 +34,7 @@ public class BugzillaTaskEditorInput extends RepositoryTaskEditorInput {
 	private BugzillaTask bugTask;
 
 	public BugzillaTaskEditorInput(TaskRepository repository, BugzillaTask bugzillaTask, boolean offline) {
-		super(repository, bugzillaTask.getTaskId(), bugzillaTask.getTaskUrl());
+		super(repository, bugzillaTask.getTaskId(), bugzillaTask.getUrl());
 		this.bugTask = bugzillaTask;
 		updateOptions(getTaskData());
 		updateOptions(getOldTaskData());
