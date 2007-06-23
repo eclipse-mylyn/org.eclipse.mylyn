@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 /**
  * Used for logging interaction events.
@@ -48,7 +47,7 @@ public abstract class AbstractMonitorLog {
 				outputFile.createNewFile();
 			outputStream = new FileOutputStream(outputFile, true);
 		} catch (Exception e) {
-			StatusManager.fail(e, "could not resolve log to file: " + outputFile.getAbsolutePath(), true);
+			StatusHandler.fail(e, "could not resolve log to file: " + outputFile.getAbsolutePath(), true);
 		}
 	}
 
@@ -60,7 +59,7 @@ public abstract class AbstractMonitorLog {
 			}
 			started = false;
 		} catch (IOException e) {
-			StatusManager.fail(e, "could not close interaction event stream", false);
+			StatusHandler.fail(e, "could not close interaction event stream", false);
 		}
 	}
 
@@ -78,7 +77,7 @@ public abstract class AbstractMonitorLog {
 			}
 			this.outputFile = newFile;
 		} catch (Exception e) {
-			StatusManager.fail(e, "Could not set logger output file", true);
+			StatusHandler.fail(e, "Could not set logger output file", true);
 		}
 		startMonitoring();
 		return newFile;

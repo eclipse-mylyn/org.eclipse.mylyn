@@ -15,7 +15,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
@@ -35,7 +35,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 			commandService.addExecutionListener(this);
 		} catch (NullPointerException npe) {
-			StatusManager.log("Monitors can not be instantiated until the workbench is active: ", this);
+			StatusHandler.log("Monitors can not be instantiated until the workbench is active: ", this);
 		}
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractCommandMonitor implements IExecutionListener {
 			ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 			commandService.removeExecutionListener(this);
 		} catch (NullPointerException npe) {
-			StatusManager.log(npe, "Could not dispose monitor.");
+			StatusHandler.log(npe, "Could not dispose monitor.");
 		}
 	}
 

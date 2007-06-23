@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.monitor.core.util;
+package org.eclipse.mylyn.monitor.core;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,11 +19,14 @@ import org.eclipse.core.internal.runtime.PlatformActivator;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
 
 /**
+ * NOTE: very likely to be removed for 3.0 due to the new workbench StatusManager API
+ * 
  * @author Mik Kersten
  */
-public class StatusManager {
+public class StatusHandler {
 
 	private static final String ID_PLUGIN = "org.eclipse.mylyn";
 

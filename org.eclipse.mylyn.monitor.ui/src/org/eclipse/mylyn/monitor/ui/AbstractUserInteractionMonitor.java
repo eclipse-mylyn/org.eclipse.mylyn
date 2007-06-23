@@ -14,8 +14,8 @@ package org.eclipse.mylyn.monitor.ui;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.core.InteractionEvent.Kind;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -38,7 +38,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		try {
 			MonitorUiPlugin.getDefault().addWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
-			StatusManager.log("Monitors can not be instantiated until the workbench is active", this);
+			StatusHandler.log("Monitors can not be instantiated until the workbench is active", this);
 		}
 	}
 
@@ -46,7 +46,7 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		try {
 			MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 		} catch (NullPointerException npe) {
-			StatusManager.log(npe, "Could not dispose monitor.");
+			StatusHandler.log(npe, "Could not dispose monitor.");
 		}
 	}
 

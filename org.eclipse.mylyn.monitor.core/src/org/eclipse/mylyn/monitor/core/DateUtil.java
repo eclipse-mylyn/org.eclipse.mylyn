@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 
 
 /**
@@ -165,7 +164,7 @@ public class DateUtil {
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {
-			StatusManager.log("Mylar: Specified time zone not available, using "+timeZone.getDisplayName()+". Check repository settings.",
+			StatusHandler.log("Mylar: Specified time zone not available, using "+timeZone.getDisplayName()+". Check repository settings.",
 					DateUtil.class);
 		}
 		return timeZone;
