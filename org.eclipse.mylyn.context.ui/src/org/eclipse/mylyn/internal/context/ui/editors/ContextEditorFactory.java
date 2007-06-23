@@ -57,7 +57,7 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 	}
 
 	@Override
-	public int getPriority() {
+	public int getTabOrderPriority() {
 		return 0;
 	}
 	

@@ -279,7 +279,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
-						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
+						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 						if (connectorUi != null) {
 							connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 							return Status.OK_STATUS;
