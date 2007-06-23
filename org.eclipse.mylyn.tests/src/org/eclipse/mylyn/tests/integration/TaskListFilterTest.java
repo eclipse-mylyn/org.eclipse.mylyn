@@ -32,21 +32,21 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 public class TaskListFilterTest extends TestCase {
 
 	private TaskListView view;
-	
+
 	private TaskListManager manager = TasksUiPlugin.getTaskListManager();
-	
+
 	private Set<AbstractTaskListFilter> previousFilters;
-	
+
 	private AbstractTask taskCompleted;
-	
+
 	private AbstractTask taskIncomplete;
-	
+
 	private AbstractTask taskOverdue;
-	
+
 	private AbstractTask taskDueToday;
-	
+
 	private AbstractTask taskCompletedToday;
-	  
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -54,32 +54,32 @@ public class TaskListFilterTest extends TestCase {
 		assertNotNull(view);
 		previousFilters = view.getFilters();
 		view.clearFilters(true);
-		
+
 		manager.getTaskList().reset();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
-		
-		taskCompleted = new LocalTask("completed-1", "completed");
+
+		taskCompleted = new LocalTask("1", "completed");
 		taskCompleted.setCompleted(true);
 		taskCompleted.setCompletionDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskCompleted, manager.getTaskList().getDefaultCategory());
-		
-		taskIncomplete = new LocalTask("incomplete-2", "t-incomplete");
+
+		taskIncomplete = new LocalTask("2", "t-incomplete");
 		manager.getTaskList().addTask(taskIncomplete, manager.getTaskList().getDefaultCategory());
-		
-		taskOverdue = new LocalTask("overdue-3", "t-overdue");
+
+		taskOverdue = new LocalTask("3", "t-overdue");
 		taskOverdue.setScheduledForDate(manager.setSecheduledIn(Calendar.getInstance(), -1).getTime());
 		manager.getTaskList().addTask(taskOverdue, manager.getTaskList().getDefaultCategory());
-		
-		taskDueToday = new LocalTask("today-4", "t-today");
+
+		taskDueToday = new LocalTask("4", "t-today");
 		taskDueToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
 		manager.getTaskList().addTask(taskDueToday, manager.getTaskList().getDefaultCategory());
-		
-		taskCompletedToday = new LocalTask("donetoday-5", "t-donetoday");
+
+		taskCompletedToday = new LocalTask("5", "t-donetoday");
 		taskCompletedToday.setScheduledForDate(manager.setScheduledEndOfDay(Calendar.getInstance()).getTime());
 		taskCompletedToday.setCompleted(true);
 		manager.getTaskList().addTask(taskCompletedToday, manager.getTaskList().getDefaultCategory());
 	}
- 
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
@@ -101,7 +101,7 @@ public class TaskListFilterTest extends TestCase {
 		assertTrue(items.contains(taskCompletedToday));
 		view.removeFilter(interestFilter);
 	}
-	
+
 	public void testNoFilters() {
 		assertEquals("should have archive and working set filter: " + view.getFilters(), 2, view.getFilters().size());
 		view.getViewer().refresh();
