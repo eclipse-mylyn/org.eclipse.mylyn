@@ -32,7 +32,7 @@ public class TaskDataManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		offlineTaskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		offlineTaskDataManager = TasksUiPlugin.getTaskDataManager();
 		offlineTaskDataManager.clear();
 		offlineTaskDataManager.saveNow();
 	}

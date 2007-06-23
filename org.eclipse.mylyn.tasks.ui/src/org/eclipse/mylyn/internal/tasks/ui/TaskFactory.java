@@ -49,7 +49,7 @@ public class TaskFactory implements ITaskFactory {
 		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getSynchronizationManager();
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
-		//dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		//dataManager = TasksUiPlugin.getTaskDataManager();
 		dataHandler = connector.getTaskDataHandler();
 	}
 

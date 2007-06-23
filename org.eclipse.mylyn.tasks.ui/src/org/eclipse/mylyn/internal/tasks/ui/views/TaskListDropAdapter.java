@@ -201,7 +201,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 //						if (newTask instanceof AbstractTask) {
 //							// TODO: encapsulate in abstract connector
 //							AbstractTask repositoryTask = (AbstractTask) newTask;
-//							TasksUiPlugin.getDefault().getTaskDataManager().push(
+//							TasksUiPlugin.getTaskDataManager().push(
 //									RepositoryTaskHandleUtil.getHandle(repository.getUrl(), id),
 //									repositoryTask.getTaskData());
 //						}

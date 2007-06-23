@@ -196,6 +196,7 @@ public class TracRepositoryConnectorTest extends TestCase {
 		performQuery(TracTestConstants.TEST_TRAC_096_URL, Version.TRAC_0_9);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void performQuery(String url, Version version) {
 		init(url, version);
 

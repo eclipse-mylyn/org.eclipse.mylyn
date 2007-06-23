@@ -60,7 +60,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		TasksUiPlugin.getDefault().getTaskDataManager().clear();
+		TasksUiPlugin.getTaskDataManager().clear();
 		manager = TasksUiPlugin.getRepositoryManager();
 		TasksUiPlugin.getTaskListManager().getTaskList().reset();
 		manager.clearRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
@@ -89,6 +89,7 @@ public abstract class AbstractBugzillaTest extends TestCase {
 		init(IBugzillaConstants.TEST_BUGZILLA_218_URL);
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void init(String url) {
 		repository = new TaskRepository(DEFAULT_KIND, url);
 		Credentials credentials = TestUtil.readCredentials();

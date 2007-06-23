@@ -88,7 +88,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// Test unforced
 		AbstractTask task = primeTaskAndRepository(RepositoryTaskSyncState.INCOMING,
 				RepositoryTaskSyncState.INCOMING);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 				task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSynchronizationState());
@@ -108,7 +108,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// olddata)
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSynchronizationState());
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
-		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(DATE_STAMP_3, taskData.getLastModified());
 
 		// Should keep INCOMING state state since new data has same date samp
@@ -116,7 +116,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, taskData3, false);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSynchronizationState());
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
-		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(DATE_STAMP_3, taskData.getLastModified());
 	}
 
@@ -188,7 +188,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, newData, false);
 		assertEquals(RepositoryTaskSyncState.INCOMING, task.getSynchronizationState());
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(DATE_STAMP_2, taskData.getLastModified());
 		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
 	}
@@ -211,7 +211,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
 
 		taskData.setNewComment("new comment");
 
@@ -228,13 +228,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, newData, true);
 		assertEquals(RepositoryTaskSyncState.CONFLICT, task.getSynchronizationState());
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 				task.getRepositoryUrl(), task.getTaskId());
 
 		assertEquals(DATE_STAMP_2, taskData.getLastModified());
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, newData, true);
 		assertEquals(RepositoryTaskSyncState.CONFLICT, task.getSynchronizationState());
-		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals(DATE_STAMP_2, taskData.getLastModified());
 	}
 
@@ -256,13 +256,13 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		// Forced
 		AbstractTask task = primeTaskAndRepository(RepositoryTaskSyncState.OUTGOING,
 				RepositoryTaskSyncState.INCOMING);
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 
 		assertEquals(DATE_STAMP_1, task.getLastReadTimeStamp());
 		assertEquals(RepositoryTaskSyncState.OUTGOING, task.getSynchronizationState());
 		TasksUiPlugin.getSynchronizationManager().saveIncoming(task, newData, true);
 		assertEquals(RepositoryTaskSyncState.CONFLICT, task.getSynchronizationState());
-		taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 
 		assertEquals(DATE_STAMP_2, taskData.getLastModified());
 		// assertEquals(DATE_STAMP_2, task.getLastModifiedDateStamp());
@@ -313,21 +313,21 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 				RepositoryTaskSyncState.SYNCHRONIZED);
 		RepositoryTaskData taskData1 = new RepositoryTaskData(new MockAttributeFactory(),
 				MockRepositoryConnector.REPOSITORY_KIND, MockRepositoryConnector.REPOSITORY_URL, "1");
-		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(taskData1);
-		taskData1 = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
+		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData1);
+		taskData1 = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
 
 		taskData1.setNewComment("Testing");
 		Set<RepositoryTaskAttribute> edits = new HashSet<RepositoryTaskAttribute>();
 		edits.add(taskData1.getAttribute(RepositoryTaskAttribute.COMMENT_NEW));
-		TasksUiPlugin.getDefault().getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), edits);
+		TasksUiPlugin.getTaskDataManager().saveEdits(task.getRepositoryUrl(), task.getTaskId(), edits);
 
-		RepositoryTaskData editedData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData editedData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals("Testing", editedData.getNewComment());
 
 		TasksUiPlugin.getSynchronizationManager().discardOutgoing(task);
 
 		assertTrue(task.getSynchronizationState().equals(RepositoryTaskSyncState.SYNCHRONIZED));
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(task.getRepositoryUrl(), task.getTaskId());
 		assertEquals("", taskData.getNewComment());
 
 	}
@@ -421,7 +421,7 @@ public class RepositoryTaskSynchronizationTest extends TestCase {
 		taskData.setAttributeValue(RepositoryTaskAttribute.DATE_MODIFIED, DATE_STAMP_1);
 		task.setLastReadTimeStamp(DATE_STAMP_1);
 		task.setSynchronizationState(localState);
-		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(taskData);
+		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData);
 		newData = new RepositoryTaskData(new MockAttributeFactory(), connector.getConnectorKind(), MockRepositoryConnector.REPOSITORY_URL, MOCCK_ID);
 
 		switch (remoteState) {

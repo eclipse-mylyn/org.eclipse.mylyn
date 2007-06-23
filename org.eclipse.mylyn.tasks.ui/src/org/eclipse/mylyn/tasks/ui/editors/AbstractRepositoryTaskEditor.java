@@ -343,7 +343,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							// updateContents();
 							// TasksUiPlugin.getSynchronizationManager().setTaskRead(repositoryTask,
 							// true);
-							// TasksUiPlugin.getDefault().getTaskDataManager().clearIncoming(
+							// TasksUiPlugin.getTaskDataManager().clearIncoming(
 							// repositoryTask.getHandleIdentifier());
 						} else {
 							refreshEditor();

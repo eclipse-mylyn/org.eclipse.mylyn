@@ -57,7 +57,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task1);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task2);
 
-		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 
 		task0 = TasksUiPlugin.getTaskListManager().getTaskList().getTask("local-0");
@@ -81,7 +81,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		assertEquals( RepositoryTaskSyncState.SYNCHRONIZED, task.getSynchronizationState());
 		assertFalse(task.isNotified());
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
-		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		assertTrue(notificationManager.getNotifications().contains(new TaskListNotificationIncoming(task)));
 		task = (AbstractTask) TasksUiPlugin.getTaskListManager().getTaskList().getTask(
@@ -98,7 +98,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
 		
-		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		assertFalse(hit.isNotified());
 		notificationManager.collectNotifications();
 		for (ITaskListNotification notification : notificationManager.getNotifications()) {
@@ -117,7 +117,7 @@ public class TaskListNotificationManagerTest extends TestCase {
 				"summary");
 		TasksUiPlugin.getTaskListManager().getTaskList().addQuery(query);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(hit, query);
-		TaskListNotificationManager notificationManager = TasksUiPlugin.getDefault().getTaskListNotificationManager();
+		TaskListNotificationManager notificationManager = TasksUiPlugin.getTaskListNotificationManager();
 		notificationManager.collectNotifications();
 		for (ITaskListNotification notification : notificationManager.getNotifications()) {
 			notification.getLabel().equals(hit.getSummary());

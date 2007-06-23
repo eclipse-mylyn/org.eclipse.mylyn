@@ -370,28 +370,15 @@ public class TaskList {
 		}
 	}
 
-	// private boolean deleteTaskHelper(Set<ITask> tasks, ITask toDelete) {
-	// for (ITask task : tasks) {
-	// if (task.getHandleIdentifier().equals(toDelete.getHandleIdentifier())) {
-	// tasks.remove(task);
-	// return true;
-	// } else {
-	// if (deleteTaskHelper(task.getChildren(), toDelete))
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
-
-	@Deprecated
+	/**
+	 * For normal user operation getActiveTask() should be used instead.
+	 */
 	public List<AbstractTask> getActiveTasks() {
 		return activeTasks;
 	}
 
 	/**
-	 * HACK: returns first
-	 * 
-	 * @return
+	 * @return	First in set of all active tasks.  Normal user operations only supports a single active task.
 	 */
 	public AbstractTask getActiveTask() {
 		if (activeTasks.size() > 0) {

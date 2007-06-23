@@ -155,7 +155,7 @@ public class RepositorySynchronizationManager {
 	 */
 	public synchronized void saveOutgoing(AbstractTask repositoryTask, Set<RepositoryTaskAttribute> modifiedAttributes) {
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.OUTGOING);
-		TasksUiPlugin.getDefault().getTaskDataManager().saveEdits(repositoryTask.getRepositoryUrl(),
+		TasksUiPlugin.getTaskDataManager().saveEdits(repositoryTask.getRepositoryUrl(),
 				repositoryTask.getTaskId(), Collections.unmodifiableSet(modifiedAttributes));
 		TasksUiPlugin.getTaskListManager().getTaskList().notifyTaskChanged(repositoryTask, false);
 	}
@@ -176,22 +176,22 @@ public class RepositorySynchronizationManager {
 			return false;
 		}
 
-		RepositoryTaskData previousTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+		RepositoryTaskData previousTaskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 		if (repositoryTask.isSubmitting()) {
 			status = RepositoryTaskSyncState.SYNCHRONIZED;
 			repositoryTask.setSubmitting(false);
-			TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+			TaskDataManager dataManager = TasksUiPlugin.getTaskDataManager();
 			dataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
-			TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(newTaskData);
+			TasksUiPlugin.getTaskDataManager().setNewTaskData(newTaskData);
 			/**
 			 * If we set both so we don't see our own changes
 			 * 
 			 * @see RepositorySynchronizationManager.setTaskRead(AbstractTask, boolean)
 			 */
-			// TasksUiPlugin.getDefault().getTaskDataManager().setOldTaskData(repositoryTask.getHandleIdentifier(),
+			// TasksUiPlugin.getTaskDataManager().setOldTaskData(repositoryTask.getHandleIdentifier(),
 			// newTaskData);
 		} else {
 
@@ -200,7 +200,7 @@ public class RepositorySynchronizationManager {
 				if (checkHasIncoming(repositoryTask, newTaskData)) {
 					status = RepositoryTaskSyncState.CONFLICT;
 				}
-				TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(newTaskData);
+				TasksUiPlugin.getTaskDataManager().setNewTaskData(newTaskData);
 				break;
 
 			case CONFLICT:
@@ -209,7 +209,7 @@ public class RepositorySynchronizationManager {
 				// only most recent incoming will be displayed if two
 				// sequential incoming's /conflicts happen
 
-				TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(newTaskData);
+				TasksUiPlugin.getTaskDataManager().setNewTaskData(newTaskData);
 				break;
 			case SYNCHRONIZED:
 				boolean hasIncoming = checkHasIncoming(repositoryTask, newTaskData);
@@ -218,7 +218,7 @@ public class RepositorySynchronizationManager {
 					repositoryTask.setNotified(false);
 				}
 				if (hasIncoming || previousTaskData == null || forceSync) {
-					TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(newTaskData);
+					TasksUiPlugin.getTaskDataManager().setNewTaskData(newTaskData);
 				}
 				break;
 			}
@@ -228,7 +228,7 @@ public class RepositorySynchronizationManager {
 	}
 
 	public void saveOffline(AbstractTask task, RepositoryTaskData taskData) {
-		TasksUiPlugin.getDefault().getTaskDataManager().setNewTaskData(taskData);
+		TasksUiPlugin.getTaskDataManager().setNewTaskData(taskData);
 	}
 
 	/** public for testing purposes */
@@ -257,8 +257,8 @@ public class RepositorySynchronizationManager {
 	 *            true to mark as read, false to mark as unread
 	 */
 	public void setTaskRead(AbstractTask repositoryTask, boolean read) {
-		TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
-		RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+		TaskDataManager dataManager = TasksUiPlugin.getTaskDataManager();
+		RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 		if (read && repositoryTask.getSynchronizationState().equals(RepositoryTaskSyncState.INCOMING)) {
@@ -304,7 +304,7 @@ public class RepositorySynchronizationManager {
 	}
 
 	public void discardOutgoing(AbstractTask repositoryTask) {
-		TaskDataManager dataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		TaskDataManager dataManager = TasksUiPlugin.getTaskDataManager();
 		dataManager.discardEdits(repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 		repositoryTask.setSynchronizationState(RepositoryTaskSyncState.SYNCHRONIZED);
 
@@ -352,16 +352,4 @@ public class RepositorySynchronizationManager {
 			return repository;
 		}
 	}
-
-	// public void mergeIncoming(AbstractTask task) {
-	// RepositoryTaskData newOutgoing =
-	// TasksUiPlugin.getDefault().getTaskDataManager().merge(
-	// task.getHandleIdentifier());
-	// if (newOutgoing != null) {
-	// this.saveOutgoingChanges(task, newOutgoing);
-	// task.setTaskData(newOutgoing);
-	// }
-	//
-	// TasksUiPlugin.getTaskListManager().getTaskList().notifyRepositoryInfoChanged(task);
-	// }
 }

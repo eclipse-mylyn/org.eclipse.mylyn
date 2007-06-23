@@ -23,7 +23,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.QueryHitCollector;
-import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -104,6 +103,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 		assertEquals(NUM_EXPECTED_HITS, hits.size());
 	}
 
+	@SuppressWarnings("deprecation")
 	private Set<AbstractTask> runQuery(String repositoryURL, String SearchString) throws Exception {
 		TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 				BugzillaCorePlugin.REPOSITORY_KIND, repositoryURL);
@@ -115,7 +115,7 @@ public class BugzillaSearchEngineTest extends TestCase {
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
 				BugzillaCorePlugin.REPOSITORY_KIND);
-		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
+//		TaskList taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		QueryHitCollector collector = new QueryHitCollector(new TaskFactory(repository));
 
 		connector.performQuery(repositoryQuery, repository, new NullProgressMonitor(), collector);

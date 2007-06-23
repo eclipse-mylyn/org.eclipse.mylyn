@@ -194,15 +194,12 @@ public class TaskRepositoryManager {
 	}
 
 	public TaskRepository getRepositoryForActiveTask(String repositoryKind, TaskList taskList) {
-		List<AbstractTask> activeTasks = taskList.getActiveTasks();
-		if (activeTasks.size() == 1) {
-			AbstractTask activeTask = activeTasks.get(0);
-			if (activeTask instanceof AbstractTask) {
-				String repositoryUrl = ((AbstractTask) activeTask).getRepositoryUrl();
-				for (TaskRepository repository : getRepositories(repositoryKind)) {
-					if (repository.getUrl().equals(repositoryUrl)) {
-						return repository;
-					}
+		AbstractTask activeTask = taskList.getActiveTask();
+		if (activeTask instanceof AbstractTask) {
+			String repositoryUrl = ((AbstractTask) activeTask).getRepositoryUrl();
+			for (TaskRepository repository : getRepositories(repositoryKind)) {
+				if (repository.getUrl().equals(repositoryUrl)) {
+					return repository;
 				}
 			}
 		}

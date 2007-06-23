@@ -50,7 +50,6 @@ public class AddExistingTaskJob extends Job {
 		this(repository, taskId, null);
 	}
 
-	@Deprecated // Use TaskCategory instead
 	public AddExistingTaskJob(TaskRepository repository, String taskId, AbstractTaskCategory taskContainer) {
 		super(MessageFormat.format("Adding task: \"{0}\"...", taskId));
 		this.repository = repository;
@@ -68,7 +67,7 @@ public class AddExistingTaskJob extends Job {
 //			if (newTask instanceof AbstractTask) {
 //				// TODO: encapsulate in abstract connector
 //				AbstractTask repositoryTask = (AbstractTask) newTask;
-//				TasksUiPlugin.getDefault().getTaskDataManager().push(newTask.getHandleIdentifier(),
+//				TasksUiPlugin.getTaskDataManager().push(newTask.getHandleIdentifier(),
 //						repositoryTask.getTaskData());
 //			}
 

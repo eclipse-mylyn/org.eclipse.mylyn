@@ -230,7 +230,7 @@ public class TasksUiUtil {
 
 				if (connector != null) {
 
-					RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(
+					RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(
 							task.getRepositoryUrl(), task.getTaskId());
 
 					if (taskData != null) {

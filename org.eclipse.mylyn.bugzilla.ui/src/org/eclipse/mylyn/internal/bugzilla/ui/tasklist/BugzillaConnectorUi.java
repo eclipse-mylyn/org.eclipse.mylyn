@@ -206,7 +206,7 @@ public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 		if(task instanceof BugzillaTask){
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here
-			RepositoryTaskData taskData = TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+			RepositoryTaskData taskData = TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 			if(taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 				return true;
 		}

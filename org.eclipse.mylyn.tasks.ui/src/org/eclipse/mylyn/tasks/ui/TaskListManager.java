@@ -730,7 +730,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	private void refactorOfflineHandles(String oldRepositoryUrl, String newRepositoryUrl) {
-		TaskDataManager taskDataManager = TasksUiPlugin.getDefault().getTaskDataManager();
+		TaskDataManager taskDataManager = TasksUiPlugin.getTaskDataManager();
 		for (AbstractTask task : taskList.getAllTasks()) {
 			if (task instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) task;
@@ -754,13 +754,13 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		}
-		TasksUiPlugin.getDefault().getTaskDataManager().saveNow();
+		TasksUiPlugin.getTaskDataManager().saveNow();
 	}
 
 	public boolean readExistingOrCreateNewList() {
 		try {
 			if (taskListFile.exists()) {
-				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getDefault().getTaskDataManager());
+				taskListWriter.readTaskList(taskList, taskListFile, TasksUiPlugin.getTaskDataManager());
 			} else {
 				resetTaskList();
 			}
@@ -841,8 +841,6 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public void deactivateAllTasks() {
-		// Make a copy to avoid modification on list being traversed; can result
-		// in a ConcurrentModificationException
 		List<AbstractTask> activeTasks = taskList.getActiveTasks();
 		for (AbstractTask task : activeTasks) {
 			deactivateTask(task);

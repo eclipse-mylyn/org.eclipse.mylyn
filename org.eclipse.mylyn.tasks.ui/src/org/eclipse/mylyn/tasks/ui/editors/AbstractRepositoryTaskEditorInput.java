@@ -120,8 +120,8 @@ public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput 
 	}
 
 	public void refreshInput() {
-		this.editableTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getEditableCopy(repository.getUrl(), taskId);
-		this.oldTaskData = TasksUiPlugin.getDefault().getTaskDataManager().getOldTaskData(repository.getUrl(), taskId);
-		this.oldEdits = TasksUiPlugin.getDefault().getTaskDataManager().getEdits(repository.getUrl(), taskId);
+		this.editableTaskData = TasksUiPlugin.getTaskDataManager().getEditableCopy(repository.getUrl(), taskId);
+		this.oldTaskData = TasksUiPlugin.getTaskDataManager().getOldTaskData(repository.getUrl(), taskId);
+		this.oldEdits = TasksUiPlugin.getTaskDataManager().getEdits(repository.getUrl(), taskId);
 	}
 }

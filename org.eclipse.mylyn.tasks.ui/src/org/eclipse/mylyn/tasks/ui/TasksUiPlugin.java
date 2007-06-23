@@ -27,7 +27,6 @@ import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.jface.dialogs.Dialog;
@@ -59,7 +58,6 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationQueryIncoming;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationReminder;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListSynchronizationScheduler;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
-import org.eclipse.mylyn.internal.tasks.ui.WorkspaceAwareContextStore;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListSaveManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.util.TasksUiExtensionReader;
@@ -69,8 +67,8 @@ import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
+import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
@@ -84,11 +82,8 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -833,9 +828,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			AbstractTask repositoryTask) {
 
 		TaskListNotificationIncoming notification = new TaskListNotificationIncoming(repositoryTask);
-		RepositoryTaskData newTaskData = getDefault().getTaskDataManager().getNewTaskData(
+		RepositoryTaskData newTaskData = getTaskDataManager().getNewTaskData(
 				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
-		RepositoryTaskData oldTaskData = getDefault().getTaskDataManager().getOldTaskData(
+		RepositoryTaskData oldTaskData = getTaskDataManager().getOldTaskData(
 				repositoryTask.getRepositoryUrl(), repositoryTask.getTaskId());
 
 		if (newTaskData != null && oldTaskData != null) {

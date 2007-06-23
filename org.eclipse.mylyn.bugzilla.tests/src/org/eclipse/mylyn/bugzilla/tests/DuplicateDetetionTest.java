@@ -45,8 +45,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 		model.setDescription(stackTrace);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -63,8 +62,7 @@ public class DuplicateDetetionTest extends TestCase {
 
 	public void testNoStackTrace() throws Exception {
 		String fakeStackTrace = "this is not really a stacktrace";
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 		model.setDescription(fakeStackTrace);
 		model.setNew(true);
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -84,8 +82,7 @@ public class DuplicateDetetionTest extends TestCase {
 		String stackTrace = "java.lang.NullPointerException\nat jeff.testing.stack.trace.functionality(jeff.java:481)";
 		String extraText = "\nExtra text that isnt' part of the stack trace java:";
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(extraText + "\n" + stackTrace + "\n");
 		model.setNew(true);
@@ -114,8 +111,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"(JarURLConnection.java:124)\n" +
 		"at org.eclipse.jdt.internal.core.JavaElement\n.getURLContents(JavaElement.java:734)";
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -143,8 +139,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"     at sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:124)\n" +
 		"     at org.eclipse.jdt.internal.core.JavaElement.getURLContents(JavaElement.java:734)";
 
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -168,8 +163,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at gnu.java.lang.MainThread.call_main() (/usr/lib/libgcj.so.6.0.0)\n" +
 		"	   at gnu.java.lang.MainThread.run() (/usr/lib/libgcj.so.6.0.0)";
 		
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -192,8 +186,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at testcase.main (testcase.java)\n" +
 		"	at java.lang.reflect.Method.Invoke (Method.java)";
 		
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -218,8 +211,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	at java/util/Properties.load(Properties.java:192)\n" +
 		"	at java/util/logging/LogManager.readConfiguration(L:555)";
 	    
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);
@@ -243,8 +235,7 @@ public class DuplicateDetetionTest extends TestCase {
 		"	   at java.lang.VirtualMachine.invokeMain (VirtualMachine.java)\n" +
 		"	   at java.lang.VirtualMachine.main (VirtualMachine.java:108)";
 		
-		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getDefault()
-				.getTaskDataManager().getNewRepositoryTaskId());
+		RepositoryTaskData model = new RepositoryTaskData(new BugzillaAttributeFactory(), BugzillaCorePlugin.REPOSITORY_KIND, repository.getUrl(), TasksUiPlugin.getTaskDataManager().getNewRepositoryTaskId());
 
 		model.setDescription(stackTrace);
 		model.setNew(true);

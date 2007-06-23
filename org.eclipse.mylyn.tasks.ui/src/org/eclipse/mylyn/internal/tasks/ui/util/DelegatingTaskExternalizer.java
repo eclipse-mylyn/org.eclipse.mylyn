@@ -559,7 +559,7 @@ final class DelegatingTaskExternalizer {
 	// taskDataManager.getRepositoryTaskData(task.getHandleIdentifier());
 	// // RepositoryTaskData data =
 	// //
-	// TasksUiPlugin.getDefault().getTaskDataManager().getTaskData(task.getHandleIdentifier());
+	// TasksUiPlugin.getTaskDataManager().getTaskData(task.getHandleIdentifier());
 	// task.setTaskData(data);
 	//		
 	// if (data != null && data.hasLocalChanges()) {

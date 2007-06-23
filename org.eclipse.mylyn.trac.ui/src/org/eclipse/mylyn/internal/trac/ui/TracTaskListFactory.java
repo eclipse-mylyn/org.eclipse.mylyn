@@ -14,7 +14,6 @@ package org.eclipse.mylyn.internal.trac.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
