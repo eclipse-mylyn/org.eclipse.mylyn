@@ -181,7 +181,7 @@ public class TaskList {
 					tasks.put(repositoryTask.getHandleIdentifier(), repositoryTask);
 
 					String taskUrl = repositoryTask.getUrl();
-					if (taskUrl.startsWith(oldRepositoryUrl)) {
+					if (taskUrl != null && taskUrl.startsWith(oldRepositoryUrl)) {
 						repositoryTask.setUrl(newRepositoryUrl + taskUrl.substring(oldRepositoryUrl.length()));
 					}
 				}
@@ -238,13 +238,13 @@ public class TaskList {
 		} else if (!(container instanceof TaskArchive) && !(container instanceof UnfiledCategory)) {
 			if (queries.remove(container.getHandleIdentifier()) != null) {
 				if (container instanceof AbstractTaskCategory) {
-					((AbstractTaskCategory)container).setHandleIdentifier(newDescription);
+					((AbstractTaskCategory) container).setHandleIdentifier(newDescription);
 				} else if (container instanceof AbstractRepositoryQuery) {
-					((AbstractRepositoryQuery)container).setHandleIdentifier(newDescription);
+					((AbstractRepositoryQuery) container).setHandleIdentifier(newDescription);
 					this.addQuery((AbstractRepositoryQuery) container);
 				}
 			} else if (container instanceof TaskCategory && categories.remove(container.getHandleIdentifier()) != null) {
-				((TaskCategory)container).setHandleIdentifier(newDescription);
+				((TaskCategory) container).setHandleIdentifier(newDescription);
 				this.addCategory((TaskCategory) container);
 			}
 		}

@@ -412,7 +412,7 @@ public class TaskListManagerTest extends TestCase {
 	}
 
 	public void testDeleteRootTask() {
-		AbstractTask task = new LocalTask("task-1", "label");
+		AbstractTask task = new LocalTask("1", "label");
 		manager.getTaskList().addTask(task);
 		manager.getTaskList().internalAddRootTask(task);
 		manager.getTaskList().deleteTask(task);
@@ -427,7 +427,7 @@ public class TaskListManagerTest extends TestCase {
 		assertEquals(0, manager.getTaskList().getArchiveContainer().getChildren().size());
 		assertEquals(2, manager.getTaskList().getCategories().size());
 
-		AbstractTask task = new LocalTask("task-1", "label");
+		AbstractTask task = new LocalTask("1", "label");
 		TaskCategory category = new TaskCategory("handleAndDescription");
 		manager.getTaskList().addTask(task);
 		assertEquals(1, manager.getTaskList().getArchiveContainer().getChildren().size());

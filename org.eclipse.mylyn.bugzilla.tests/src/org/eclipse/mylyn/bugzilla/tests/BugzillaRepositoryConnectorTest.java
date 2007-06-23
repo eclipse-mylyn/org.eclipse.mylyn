@@ -75,7 +75,7 @@ public class BugzillaRepositoryConnectorTest extends AbstractBugzillaTest {
 	public void testCreateTaskFromExistingId() throws Exception {
 		init222();
 		try {
-			connector.createTaskFromExistingId(repository, "-123", new NullProgressMonitor());
+			connector.createTaskFromExistingId(repository, "9999", new NullProgressMonitor());
 			fail();
 		} catch (CoreException ce) {
 

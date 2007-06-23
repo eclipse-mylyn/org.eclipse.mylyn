@@ -166,6 +166,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 		this.repositoryUrl = repositoryUrl;
 		this.taskId = taskId;
 		this.summary = summary;
+		this.url = "";
 	}
 
 	public final String getHandleIdentifier() {
@@ -306,7 +307,7 @@ public abstract class AbstractTask extends AbstractTaskContainer {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-	
+
 	public String getNotes() {
 		// TODO: removed check for null once xml updated.
 		if (notes == null) {

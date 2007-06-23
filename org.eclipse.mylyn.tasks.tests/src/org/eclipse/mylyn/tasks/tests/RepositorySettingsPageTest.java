@@ -75,11 +75,12 @@ public class RepositorySettingsPageTest extends TestCase {
 
 		assertNotNull(page.getAnonymousButton());
 
-		assertFalse(page.getAnonymousButton().getSelection());
-		assertTrue(page.getUserNameEditor().getTextControl(page.getParent()).isEnabled());
-		assertTrue(page.getPasswordEditor().getTextControl(page.getParent()).isEnabled());
+		assertTrue(page.getAnonymousButton().getSelection());
+		assertFalse(page.getUserNameEditor().getTextControl(page.getParent()).isEnabled());
+		assertFalse(page.getPasswordEditor().getTextControl(page.getParent()).isEnabled());
 		assertEquals("", page.getUserName());
 		assertEquals("", page.getPassword());
+		page.getAnonymousButton().setSelection(false);
 	}
 
 	public void testNeedsAnonyoumousLogin() {
