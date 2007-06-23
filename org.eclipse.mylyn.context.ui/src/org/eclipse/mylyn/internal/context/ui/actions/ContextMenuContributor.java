@@ -14,9 +14,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.tasks.ui.IDynamicSubMenuContributor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
-import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
-import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
  * @author Mik Kersten
@@ -72,16 +70,15 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 		return text;
 	}
 
-	/**
-	 * @param selectedElements
-	 * @param category
-	 */
-	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
-		for (AbstractTaskContainer element : selectedElements) {
-			if (element instanceof AbstractTask) {
-				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element, category);
-			}
-		}
-	}
-
+//	/**
+//	 * @param selectedElements
+//	 * @param category
+//	 */
+//	private void moveToCategory(final List<AbstractTaskContainer> selectedElements, AbstractTaskCategory category) {
+//		for (AbstractTaskContainer element : selectedElements) {
+//			if (element instanceof AbstractTask) {
+//				TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer((AbstractTask) element, category);
+//			}
+//		}
+//	}
 }

@@ -146,7 +146,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		partMap.remove(getPartForAction());
 		if (viewPart != null && !PlatformUI.getWorkbench().isClosing()) {
 			for (StructuredViewer viewer : getViewers()) {
-				ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+				ContextUiPlugin.getViewerManager().removeManagedViewer(viewer, viewPart);
 			}
 		}
 		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
@@ -204,7 +204,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			List<StructuredViewer> viewers = getViewers();
 			for (StructuredViewer viewer : viewers) {
 				if (viewPart != null && !viewer.getControl().isDisposed() && manageViewer) {
-					ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
+					ContextUiPlugin.getViewerManager().addManagedViewer(viewer, viewPart);
 				}
 				updateInterestFilter(on, viewer);
 			}
@@ -290,9 +290,9 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		if (viewer != null) {
 			if (on) {
 				installInterestFilter(viewer);
-				ContextUiPlugin.getDefault().getViewerManager().addFilteredViewer(viewer);
+				ContextUiPlugin.getViewerManager().addFilteredViewer(viewer);
 			} else {
-				ContextUiPlugin.getDefault().getViewerManager().removeFilteredViewer(viewer);
+				ContextUiPlugin.getViewerManager().removeFilteredViewer(viewer);
 				uninstallInterestFilter(viewer);
 			}
 		}
@@ -360,7 +360,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			return;
 		} else if (viewer.getControl().isDisposed()) {
 			// TODO: do this with part listener, not lazily?
-			ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(viewer, viewPart);
+			ContextUiPlugin.getViewerManager().removeManagedViewer(viewer, viewPart);
 			return;
 		}
 

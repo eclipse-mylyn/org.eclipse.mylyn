@@ -12,7 +12,6 @@
 package org.eclipse.mylyn.context.ui;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +34,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.context.core.AbstractRelationProvider;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.context.core.IInteractionRelation;
@@ -48,7 +46,6 @@ import org.eclipse.mylyn.internal.context.ui.ContextUiPrefContstants;
 import org.eclipse.mylyn.internal.context.ui.FocusedViewerManager;
 import org.eclipse.mylyn.internal.context.ui.Highlighter;
 import org.eclipse.mylyn.internal.context.ui.HighlighterList;
-import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetManager;
 import org.eclipse.mylyn.internal.context.ui.actions.ContextRetrieveAction;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
@@ -88,11 +85,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 	private ResourceBundle resourceBundle;
 
-	private boolean decorateInterestMode = false;
-
 	private HighlighterList highlighters = null;
-
-	private Highlighter intersectionHighlighter;
 
 	private ColorMap colorMap = new ColorMap();
 
@@ -199,14 +192,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		public void activityChanged(ScheduledTaskContainer week) {
 			// ignore
-
 		}
-
-		public void calendarChanged() {
-			// ignore
-
-		}
-
+		
 		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext && task instanceof AbstractTask) {
@@ -486,10 +473,6 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 			this.initializeHighlighters();
 		}
 		return highlighters.getHighlighters();
-	}
-
-	public void setIntersectionHighlighter(Highlighter intersectionHighlighter) {
-		this.intersectionHighlighter = intersectionHighlighter;
 	}
 
 	public static FocusedViewerManager getViewerManager() {

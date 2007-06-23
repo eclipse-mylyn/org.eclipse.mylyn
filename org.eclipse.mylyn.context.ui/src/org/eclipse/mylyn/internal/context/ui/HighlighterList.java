@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -69,7 +68,7 @@ public class HighlighterList {
 		Highlighter intersectionHighlighter = new Highlighter("intersection",
 				ColorMap.HIGLIGHTER_RED_INTERSECTION, false);
 		intersectionHighlighter.setIntersection(true);
-		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
+//		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
 	}
 
 	public void add(Highlighter hl) {

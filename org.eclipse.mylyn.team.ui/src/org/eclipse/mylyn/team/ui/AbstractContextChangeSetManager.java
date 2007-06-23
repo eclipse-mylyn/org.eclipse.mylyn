@@ -70,10 +70,6 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		public void activityChanged(ScheduledTaskContainer week) {
 			// ignore
 		}
-
-		public void calendarChanged() {
-			// ignore
-		}
 	};
 
 	private ITaskListChangeListener TASK_CHANGE_LISTENER = new ITaskListChangeListener() {

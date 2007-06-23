@@ -55,7 +55,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);
 		for (TreeViewer viewer : outlineViewers) {
 			if (viewPart != null) {
-				ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(viewer, viewPart);
+				ContextUiPlugin.getViewerManager().addManagedViewer(viewer, viewPart);
 			}
 			updateInterestFilter(on, viewer);
 			configureDecorator(viewer);

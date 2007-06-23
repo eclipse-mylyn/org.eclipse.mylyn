@@ -151,7 +151,7 @@ public class ContextEditorFormPage extends FormPage {
 	@Override
 	public void dispose() {
 		super.dispose();
-		// ContextUiPlugin.getDefault().getViewerManager().removeManagedViewer(commonViewer,
+		// ContextUiPlugin.getViewerManager().removeManagedViewer(commonViewer,
 		// this);
 		ContextCorePlugin.getContextManager().removeListener(CONTEXT_LISTENER);
 	}
@@ -327,7 +327,7 @@ public class ContextEditorFormPage extends FormPage {
 
 			commonViewer.setInput(getSite().getPage().getInput());
 			getSite().setSelectionProvider(commonViewer);
-			// ContextUiPlugin.getDefault().getViewerManager().addManagedViewer(commonViewer,
+			// ContextUiPlugin.getViewerManager().addManagedViewer(commonViewer,
 			// this);
 			// makeContextMenuActions();
 			hookContextMenu();
