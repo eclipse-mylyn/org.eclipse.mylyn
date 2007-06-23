@@ -438,14 +438,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			});
 		}
-
-		public void calendarChanged() {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					refresh(null);
-				}
-			});
-		}
 	};
 
 	private final ITaskListChangeListener TASK_REFERESH_LISTENER = new ITaskListChangeListener() {

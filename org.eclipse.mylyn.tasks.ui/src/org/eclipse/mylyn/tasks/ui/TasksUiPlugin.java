@@ -219,10 +219,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		public void taskListRead() {
 			// ignore
 		}
-
-		public void calendarChanged() {
-			// ignore
-		}
 	};
 
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {

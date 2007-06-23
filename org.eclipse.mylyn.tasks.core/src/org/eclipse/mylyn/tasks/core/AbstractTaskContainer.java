@@ -42,16 +42,14 @@ public abstract class AbstractTaskContainer extends PlatformObject implements Co
 	/**
 	 * Use {@link TaskList} methods instead.
 	 */
-	@Deprecated
-	public void addChild(AbstractTask task) {
+	public void internalAddChild(AbstractTask task) {
 		children.add(task);
 	}
 
 	/**
-	 * Does not delete task from TaskList
+	 * Use {@link TaskList} methods instead.
 	 */
-	@Deprecated
-	protected void removeChild(AbstractTask task) {
+	public void internalRemoveChild(AbstractTask task) {
 		children.remove(task);
 	}
 

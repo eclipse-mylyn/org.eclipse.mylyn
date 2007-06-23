@@ -28,10 +28,9 @@ public interface ITaskActivityListener {
 
 	public abstract void taskListRead();
 
-	@Deprecated
+	/**
+	 * @param week	can be null
+	 */
 	public abstract void activityChanged(ScheduledTaskContainer week);
-
-	@Deprecated
-	public abstract void calendarChanged();
 
 }

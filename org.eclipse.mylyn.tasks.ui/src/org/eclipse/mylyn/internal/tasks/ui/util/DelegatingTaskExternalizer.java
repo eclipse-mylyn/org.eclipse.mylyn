@@ -317,7 +317,7 @@ final class DelegatingTaskExternalizer {
 			Node child = list.item(i);
 			try {
 				// LEGACY: categories used to contain tasks?
-				category.addChild(readTask(child, taskList, category, null));
+				category.internalAddChild(readTask(child, taskList, category, null));
 			} catch (Throwable t) {
 				hasCaughtException = true;
 			}
@@ -405,7 +405,7 @@ final class DelegatingTaskExternalizer {
 			}
 		} else if (legacyCategory != null && !(legacyCategory instanceof TaskArchive)) {
 			task.addParentContainer(legacyCategory);
-			legacyCategory.addChild(task);
+			legacyCategory.internalAddChild(task);
 		} else if (legacyCategory == null && parent == null) {
 			if (task instanceof AbstractTask) {
 				taskList.internalAddTask(task, taskList.getArchiveContainer());

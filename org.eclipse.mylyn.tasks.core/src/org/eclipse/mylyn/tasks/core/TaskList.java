@@ -129,12 +129,12 @@ public class TaskList {
 		}
 
 		if (parentContainer != null) {
-			parentContainer.addChild(newTask);
+			parentContainer.internalAddChild(newTask);
 			if (!(parentContainer instanceof AbstractTask) && !(parentContainer instanceof AbstractRepositoryQuery)) {
 				newTask.addParentContainer(parentContainer);
 			}
 		} else {
-			defaultCategory.addChild(newTask);
+			defaultCategory.internalAddChild(newTask);
 			newTask.addParentContainer(defaultCategory);
 		}
 	}
@@ -150,7 +150,7 @@ public class TaskList {
 		for (AbstractTaskContainer taskContainer : currentContainers) {
 			if (taskContainer instanceof AbstractTaskCategory) {
 				if (!(taskContainer instanceof TaskArchive)) {
-					(taskContainer).removeChild(task);
+					(taskContainer).internalRemoveChild(task);
 				}
 				task.removeParentContainer(taskContainer);
 				delta.add(new TaskContainerDelta(taskContainer, TaskContainerDelta.Kind.CHANGED));
@@ -160,7 +160,7 @@ public class TaskList {
 			internalAddTask(task, container);
 			delta.add(new TaskContainerDelta(container, TaskContainerDelta.Kind.CHANGED));
 			if (archiveContainer.contains(task.getHandleIdentifier())) {
-				archiveContainer.removeChild(task);
+				archiveContainer.internalRemoveChild(task);
 				delta.add(new TaskContainerDelta(archiveContainer, TaskContainerDelta.Kind.CHANGED));
 			}
 		} else {
@@ -274,11 +274,11 @@ public class TaskList {
 	 * deletion of subtasks)
 	 */
 	public void deleteTask(AbstractTask task) {
-		archiveContainer.removeChild(task);
-		defaultCategory.removeChild(task);
+		archiveContainer.internalRemoveChild(task);
+		defaultCategory.internalRemoveChild(task);
 
 		for (AbstractTaskContainer container : task.getParentContainers()) {
-			container.removeChild(task);
+			container.internalRemoveChild(task);
 			task.removeParentContainer(container);
 		}
 		tasks.remove(task.getHandleIdentifier());
@@ -292,7 +292,7 @@ public class TaskList {
 
 	public void deleteCategory(AbstractTaskCategory category) {
 		for (AbstractTask task : category.getChildren()) {
-			defaultCategory.addChild(task);
+			defaultCategory.internalAddChild(task);
 		}
 		categories.remove(category.getHandleIdentifier());
 
@@ -343,12 +343,12 @@ public class TaskList {
 	public void internalAddTask(AbstractTask task, AbstractTaskCategory container) {
 		tasks.put(task.getHandleIdentifier(), task);
 		if (container != null) {
-			container.addChild(task);
+			container.internalAddChild(task);
 			if (container instanceof TaskCategory || container instanceof UnfiledCategory) {
 				task.addParentContainer(container);
 			}
 		} else {
-			defaultCategory.addChild(task);
+			defaultCategory.internalAddChild(task);
 			task.addParentContainer(defaultCategory);
 		}
 	}

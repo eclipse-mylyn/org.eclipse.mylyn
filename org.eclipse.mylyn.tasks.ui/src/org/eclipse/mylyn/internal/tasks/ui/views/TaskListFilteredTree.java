@@ -156,10 +156,7 @@ public class TaskListFilteredTree extends AbstractFilteredTree {
 			public void activityChanged(ScheduledTaskContainer week) {
 				updateTaskProgressBar();
 			}
-
-			public void calendarChanged() {
-			}
-
+			
 			public void taskActivated(AbstractTask task) {
 			}
 

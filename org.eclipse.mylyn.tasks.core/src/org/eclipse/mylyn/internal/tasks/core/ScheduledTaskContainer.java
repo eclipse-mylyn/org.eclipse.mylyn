@@ -103,12 +103,12 @@ public class ScheduledTaskContainer extends AbstractTaskCategory {
 		} else {
 			taskToDuration.put(taskWrapper, taskActivity);
 		}
-		super.addChild(taskWrapper.getCorrespondingTask());
+		super.internalAddChild(taskWrapper.getCorrespondingTask());
 	}
 
 	public void remove(ScheduledTaskDelegate taskWrapper) {
 		dateRangeDelegates.remove(taskWrapper);
-		super.removeChild(taskWrapper.getCorrespondingTask());
+		super.internalRemoveChild(taskWrapper.getCorrespondingTask());
 	}
 
 	public Calendar getStart() {

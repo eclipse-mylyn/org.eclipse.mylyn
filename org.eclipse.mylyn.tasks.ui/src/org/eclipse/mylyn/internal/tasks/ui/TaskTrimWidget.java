@@ -94,9 +94,6 @@ public class TaskTrimWidget extends WorkbenchWindowControlContribution {
 		public void activityChanged(ScheduledTaskContainer week) {
 		}
 
-		public void calendarChanged() {
-		}
-
 		public void taskListRead() {
 		}
 	};

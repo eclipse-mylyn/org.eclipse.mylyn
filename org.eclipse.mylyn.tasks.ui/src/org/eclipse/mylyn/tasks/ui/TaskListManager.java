@@ -1069,7 +1069,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		resetActivity();
 		parseTaskActivityInteractionHistory();
 		for (ITaskActivityListener listener : activityListeners) {
-			listener.calendarChanged();
+			listener.activityChanged(null);
 		}
 	}
 
