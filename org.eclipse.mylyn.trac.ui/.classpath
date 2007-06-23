@@ -7,8 +7,8 @@
 			<accessrule kind="accessible" pattern="**/TasksUiImages"/>
 			<accessrule kind="accessible" pattern="**/TaskListSynchronizationScheduler"/>
 			<accessrule kind="accessible" pattern="**/TaskListPreferenceConstants"/>
-			<accessrule kind="discouraged" pattern="**/mylar/internal/tasks/**"/>
-			<accessrule kind="discouraged" pattern="**/mylar/internal/context/**"/>
+			<accessrule kind="discouraged" pattern="**/mylyn/internal/context/**"/>
+			<accessrule kind="discouraged" pattern="**/mylyn/internal/tasks/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

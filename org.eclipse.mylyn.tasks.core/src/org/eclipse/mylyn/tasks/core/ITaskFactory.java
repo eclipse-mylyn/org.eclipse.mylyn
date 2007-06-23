@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * Used for creating tasks from repository task data.
  * 
+ * NOTE: likely to change for 3.0.
+ * 
  * @author Rob Elves
  * @since 2.0
  */
