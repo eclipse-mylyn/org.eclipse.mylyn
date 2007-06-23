@@ -30,6 +30,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPER
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -39,7 +40,6 @@ import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
-import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 import org.eclipse.swt.SWT;
@@ -684,32 +684,6 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 			// no need to listen to this
 		}
 
-	}
-
-	/**
-	 * A listener for selection of a comment.
-	 */
-	protected class CommentListener implements Listener {
-
-		/** The comment that this listener is for. */
-		private TaskComment taskComment;
-
-		/**
-		 * Creates a new <code>CommentListener</code>.
-		 * 
-		 * @param taskComment
-		 *            The comment that this listener is for.
-		 */
-		public CommentListener(TaskComment taskComment) {
-			this.taskComment = taskComment;
-		}
-
-		public void handleEvent(Event event) {
-			fireSelectionChanged(new SelectionChangedEvent(
-					selectionProvider,
-					new StructuredSelection(new RepositoryTaskSelection(taskData.getId(), taskData.getRepositoryUrl(),
-							taskData.getRepositoryKind(), taskComment.getCreated(), taskComment, taskData.getSummary()))));
-		}
 	}
 
 	@Override

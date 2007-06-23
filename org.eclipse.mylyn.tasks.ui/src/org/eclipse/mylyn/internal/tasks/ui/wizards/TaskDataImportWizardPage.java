@@ -94,7 +94,7 @@ public class TaskDataImportWizardPage extends WizardPage {
 
 	public TaskDataImportWizardPage() {
 		super("org.eclipse.mylyn.tasklist.importPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
-				TasksUiPlugin.PLUGIN_ID, "icons/wizban/banner-import.gif"));
+				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-import.gif"));
 		setPageComplete(false);
 		setDescription(DESCRIPTION);
 		setImageDescriptor(TasksUiImages.BANNER_IMPORT);

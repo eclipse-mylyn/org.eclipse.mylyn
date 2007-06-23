@@ -63,6 +63,7 @@ import org.eclipse.mylyn.internal.tasks.ui.TaskCompletionFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListPatternFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TaskPriorityFilter;
+import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.TaskWorkingSetFilter;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
@@ -100,7 +101,6 @@ import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
 import org.eclipse.mylyn.tasks.core.TaskContainerDelta;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
-import org.eclipse.mylyn.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
@@ -698,7 +698,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			updateDescription(null);
 		}
 	}
-	
+
 	private void updateDescription(AbstractTask task) {
 		if (getSite() == null || getSite().getPage() == null)
 			return;
@@ -727,11 +727,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 	}
 
 	public void addTaskToHistory(AbstractTask task) {
-		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
-			TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
-			// nextTaskAction.setEnabled(taskHistory.hasNext());
-			// previousTaskAction.setEnabled(TasksUiPlugin.getTaskListManager().getTaskActivationHistory().hasPrevious());
-		}
+		TasksUiPlugin.getTaskListManager().getTaskActivationHistory().addTask(task);
 	}
 
 	@Override
@@ -800,10 +796,6 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 		if (TasksUiPlugin.getDefault().getPreferenceStore().contains(TasksUiPreferenceConstants.FILTER_ARCHIVE_MODE)) {
 			addFilter(filterArchive);
-		}
-
-		if (TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
-			togglePreviousAction(false);
 		}
 
 		// Restore "link with editor" value; by default true
@@ -967,7 +959,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		restoreState();
 
 		updateDescription();
-		
+
 		getSite().setSelectionProvider(getViewer());
 		getSite().getPage().addPartListener(editorListener);
 	}
@@ -1240,7 +1232,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				}
 			}
 		}
-		
+
 		manager.add(new Separator(ID_SEPARATOR_REPOSITORY));
 
 		if (element instanceof AbstractRepositoryQuery || element instanceof TaskCategory) {
@@ -1738,7 +1730,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			if (getSite() != null && getSite().getPage() != null) {
 				filterWorkingSet.setCurrentWorkingSet(getSite().getPage().getAggregateWorkingSet());
 			}
-			
+
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					filteredTree.indicateActiveTaskWorkingSet();
@@ -1797,5 +1789,5 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			return Collections.emptySet();
 		}
 	}
-	
+
 }

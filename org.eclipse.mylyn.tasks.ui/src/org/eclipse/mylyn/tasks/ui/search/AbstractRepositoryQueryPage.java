@@ -35,7 +35,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
+ * Extend to provide repository-specific query page to the Workbench search dialog.
+ * 
  * @author Rob Elves
+ * @since 2.0
  */
 public abstract class AbstractRepositoryQueryPage extends WizardPage implements ISearchPage {
 
@@ -113,7 +116,7 @@ public abstract class AbstractRepositoryQueryPage extends WizardPage implements 
 
 	public abstract AbstractRepositoryQuery getQuery();
 
-	public void saveWidgetValues() {
+	public void saveState() {
 		// empty
 	}
 

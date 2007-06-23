@@ -305,7 +305,7 @@ public class UiLegendDialog extends PopupDialog {
 		Collection<AbstractRepositoryConnector> connectors = TasksUiPlugin.getRepositoryManager()
 				.getRepositoryConnectors();
 		for (AbstractRepositoryConnector connector : connectors) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 			if (connectorUi != null) {
 				List<AbstractTaskContainer> elements = connectorUi.getLegendItems();
 

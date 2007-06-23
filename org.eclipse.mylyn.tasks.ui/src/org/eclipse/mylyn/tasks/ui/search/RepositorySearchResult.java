@@ -19,10 +19,11 @@ import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.IFileMatchAdapter;
 
 /**
- * The collection of all the matches.
+ * Captures the results of a task repository search.
  * 
- * @author Rob Elves (moved into task.ui)
+ * @author Rob Elves
  * @see org.eclipse.search.ui.text.AbstractTextSearchResult
+ * @since 2.0
  */
 public class RepositorySearchResult extends AbstractTextSearchResult {
 
@@ -45,14 +46,6 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 
 	@Override
 	public IEditorMatchAdapter getEditorMatchAdapter() {
-		// IBugzillaResultEditorMatchAdapter adapter =
-		// BugzillaUiPlugin.getResultEditorMatchAdapter();
-		// if (adapter == null) {
-		// return null;
-		// } else {
-		// adapter.setResult(this);
-		// return adapter;
-		// }
 		return null;
 	}
 
@@ -68,11 +61,6 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchResult#getLabel()
-	 */
 	public String getLabel() {
 		return getMatchCount() == 1 ? getSingularLabel() : getPluralLabel();
 	}
@@ -95,29 +83,14 @@ public class RepositorySearchResult extends AbstractTextSearchResult {
 		return "Task search - " + getMatchCount() + " matches";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchResult#getTooltip()
-	 */
 	public String getTooltip() {
 		return getLabel();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchResult#getImageDescriptor()
-	 */
 	public ImageDescriptor getImageDescriptor() {
 		return SearchPluginImages.DESC_OBJ_TSEARCH_DPDN;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.search.ui.ISearchResult#getQuery()
-	 */
 	public ISearchQuery getQuery() {
 		return repositoryQuery;
 	}

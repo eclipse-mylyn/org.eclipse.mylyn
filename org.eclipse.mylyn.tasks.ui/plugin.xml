@@ -555,14 +555,14 @@
   <extension
          point="org.eclipse.mylyn.tasks.ui.editors">
       <hyperlinkDetector
-            class="org.eclipse.mylyn.tasks.ui.editors.TaskUrlHyperlinkDetector"
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector"
             id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.url"/>
       
    </extension>
    <extension
           point="org.eclipse.mylyn.tasks.ui.editors">
        <hyperlinkDetector
-             class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
+             class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector"
              id="org.eclipse.mylyn.tasks.ui.hyperlink.detector.tasks"/>
     </extension>
    
@@ -732,7 +732,7 @@
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
-            class="org.eclipse.mylyn.tasks.ui.search.SearchScoreComputerAdapterFactory">
+            class="org.eclipse.mylyn.internal.tasks.ui.search.SearchScoreComputerAdapterFactory">
          <adapter
                type="org.eclipse.search.ui.ISearchPageScoreComputer">
          </adapter>
@@ -742,13 +742,13 @@
    <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector            
-            class="org.eclipse.mylyn.tasks.ui.editors.TaskHyperlinkDetector"
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskHyperlinkDetector"
             id="org.eclipse.mylyn.tasks.ui.hyperlinks.detectors.task"
             name="Mylyn Tasks"
             targetId="org.eclipse.ui.DefaultTextEditor">
       </hyperlinkDetector>
       <hyperlinkDetector
-            class="org.eclipse.mylyn.tasks.ui.editors.TaskUrlHyperlinkDetector"
+            class="org.eclipse.mylyn.internal.tasks.ui.editors.TaskUrlHyperlinkDetector"
             description="Mylyn enabled URL hyperlink detector"
             id="org.eclipse.mylyn.tasks.ui.hyperlinks.detectors.url"
             name="Mylyn URLs"

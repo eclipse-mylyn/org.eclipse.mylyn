@@ -35,7 +35,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 	public EditRepositoryWizard(TaskRepository repository) {
 		super();
 		this.repository = repository;
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(
 				repository.getConnectorKind());
 		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
@@ -69,7 +69,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 			repository.setProperty(TaskRepository.PROXY_USEDEFAULT, String.valueOf(abstractRepositorySettingsPage.getUseDefaultProxy()));
 			repository.setProperty(TaskRepository.PROXY_HOSTNAME, abstractRepositorySettingsPage.getProxyHostname());
 			repository.setProperty(TaskRepository.PROXY_PORT, abstractRepositorySettingsPage.getProxyPort());
-			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUsername(), abstractRepositorySettingsPage.getProxyPassword());
+			repository.setProxyAuthenticationCredentials(abstractRepositorySettingsPage.getProxyUserName(), abstractRepositorySettingsPage.getProxyPassword());
 			
 			
 			abstractRepositorySettingsPage.updateProperties(repository);

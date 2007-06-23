@@ -64,6 +64,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.net.ProxyPreferencePage;
 
 /**
+ * Extend to provide custom repository settings.  This page is typically invoked by the user
+ * requesting properties via the Task Repositories view.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Steffen Pingel
@@ -590,7 +593,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 //					repository = createTaskRepository();
 //				}
 				if (repository != null) {
-					String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
+					String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountCreationUrl(repository);
 					if (accountCreationUrl != null) {
 						TasksUiUtil.openUrl(accountCreationUrl, false);
@@ -609,7 +612,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 					repository = createTaskRepository();
 				}
 				if (repository != null) {
-					String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
+					String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 							.getAccountManagementUrl(repository);
 					if (accountManagementUrl != null) {
 						TasksUiUtil.openUrl(accountManagementUrl, false);
@@ -887,12 +890,12 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 	void updateHyperlinks() {
 		if (getServerUrl() != null && getServerUrl().length() > 0) {
 			TaskRepository repository = createTaskRepository();
-			String accountCreationUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
+			String accountCreationUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 					.getAccountCreationUrl(repository);
 			createAccountHyperlink.setEnabled(accountCreationUrl != null);
 			createAccountHyperlink.setVisible(accountCreationUrl != null);
 
-			String accountManagementUrl = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind())
+			String accountManagementUrl = TasksUiPlugin.getConnectorUi(connector.getConnectorKind())
 					.getAccountManagementUrl(repository);
 			manageAccountHyperlink.setEnabled(accountManagementUrl != null);
 			manageAccountHyperlink.setVisible(accountManagementUrl != null);
@@ -960,7 +963,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		}
 	}
 
-	public String getProxyUsername() {
+	public String getProxyUserName() {
 		if (needsProxy()) {
 			return proxyUserNameEditor.getStringValue();
 		} else {
@@ -1124,8 +1127,8 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		repository.setProperty(TaskRepository.PROXY_HOSTNAME, getProxyHostname());
 		repository.setProperty(TaskRepository.PROXY_PORT, getProxyPort());
 
-		if (getProxyUsername().length() > 0 && getProxyPassword().length() > 0) {
-			repository.setProxyAuthenticationCredentials(getProxyUsername(), getProxyPassword());
+		if (getProxyUserName().length() > 0 && getProxyPassword().length() > 0) {
+			repository.setProxyAuthenticationCredentials(getProxyUserName(), getProxyPassword());
 		}
 		// repository.setProperty(TaskRepository.PROXY_USERNAME,
 		// getProxyUsername());

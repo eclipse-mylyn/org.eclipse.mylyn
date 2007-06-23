@@ -21,9 +21,14 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 
 /**
+ * Input for task editors that can have nested pages.
+ * 
+ * NOTE: likely to change for 3.0
+ * 
  * @author Eric Booth
  * @author Rob Elves
  * @author Mik Kersten
+ * @since 1.0
  */
 public class TaskEditorInput implements IEditorInput, IPersistableElement {
 

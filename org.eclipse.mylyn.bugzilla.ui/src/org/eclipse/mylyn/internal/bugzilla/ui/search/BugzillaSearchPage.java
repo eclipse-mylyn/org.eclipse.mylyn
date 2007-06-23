@@ -717,7 +717,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 	// TODO: avoid overriding?
 	public boolean performAction() {
 		if (restoreQueryOptions) {
-			saveWidgetValues();
+			saveState();
 		}
 
 		getPatternData(summaryPattern, summaryOperation, previousSummaryPatterns);
@@ -1538,7 +1538,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		emailPattern.setText(settings.get(STORE_EMAILADDRESS_ID + repoId));
 	}
 
-	public void saveWidgetValues() {
+	public void saveState() {
 		String repoId = "." + repository.getUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(STORE_PRODUCT_ID + repoId, product.getSelection());

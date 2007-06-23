@@ -38,7 +38,6 @@ import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
-import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyEvent;
@@ -630,7 +629,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		});
 
 		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
-			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractTask) task).getConnectorKind());
+			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getConnectorUi(((AbstractTask) task).getConnectorKind());
 			if (connector != null && connector.supportsDueDates((AbstractTask) task)) {
 				dueDatePicker.setEnabled(false);
 				clearDueDate.setEnabled(false);

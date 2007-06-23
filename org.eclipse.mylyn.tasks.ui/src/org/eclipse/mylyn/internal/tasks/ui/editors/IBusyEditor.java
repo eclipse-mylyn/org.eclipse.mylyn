@@ -6,24 +6,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.hyperlink.URLHyperlink;
-import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.swt.graphics.Image;
 
 /**
- * @author Rob Elves
+ * @author Shawn Minto
  */
-public class TaskUrlHyperlink extends URLHyperlink {
+public interface IBusyEditor {
 
-	public TaskUrlHyperlink(IRegion region, String urlString) {
-		super(region, urlString);
-	}
-	@Override
-	public void open() {
-		String url = getURLString();
-		TasksUiUtil.openUrl(url, true);
-	}
+	public void setTitleImage(Image image);
+
+	public Image getTitleImage();
 
 }

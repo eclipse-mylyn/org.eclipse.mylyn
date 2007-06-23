@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.search;
+package org.eclipse.mylyn.internal.tasks.ui.search;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskSearchPage;

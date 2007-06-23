@@ -37,7 +37,7 @@ public class NewQueryWizard extends MultiRepositoryAwareWizard {
 
 		@Override
 		protected IWizard createWizard(TaskRepository taskRepository) {
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(taskRepository.getConnectorKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(taskRepository.getConnectorKind());
 			return repositoryUi.getQueryWizard(taskRepository, null);
 		}
 	}

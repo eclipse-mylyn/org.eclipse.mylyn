@@ -149,7 +149,7 @@ public class TasksUiUtil {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
 					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
@@ -182,7 +182,7 @@ public class TasksUiUtil {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
 					.getConnectorForRepositoryTaskUrl(fullUrl);
 			if (connector != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(connector.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(connector.getConnectorKind());
 				if (repositoryUrl != null && taskId != null) {
 					opened = connectorUi.openRepositoryTask(repositoryUrl, taskId);
 				} else {
@@ -255,7 +255,7 @@ public class TasksUiUtil {
 			TasksUiUtil.openEditor((TaskCategory) element);
 		} else if (element instanceof AbstractRepositoryQuery) {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(query.getRepositoryKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(query.getRepositoryKind());
 			connectorUi.openEditQueryDialog(query);
 		}
 	}
@@ -268,7 +268,7 @@ public class TasksUiUtil {
 		String taskEditorId = TaskEditor.ID_EDITOR;
 		if (task instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) task;
-			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getConnectorKind());
+			AbstractRepositoryConnectorUi repositoryUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
 			String customTaskEditorId = repositoryUi.getTaskEditorId(repositoryTask);
 			if (customTaskEditorId != null) {
 				taskEditorId = customTaskEditorId;

@@ -56,7 +56,7 @@ public class DownloadAttachmentJob extends Job {
 				this.attachment.getRepositoryKind());
 		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
-			return new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
+			return new RepositoryStatus(repository, IStatus.INFO, TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,
 					"The repository does not support attachments.");
 		}
 
@@ -68,7 +68,7 @@ public class DownloadAttachmentJob extends Job {
 			StatusManager.displayStatus("Download Attachment", e.getStatus());
 			return Status.OK_STATUS;
 		} catch (IOException e) {
-			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_IO,
+			return new RepositoryStatus(repository, IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_IO,
 					"Error while writing to attachment file.", e);
 		} finally {
 			if (out != null) {

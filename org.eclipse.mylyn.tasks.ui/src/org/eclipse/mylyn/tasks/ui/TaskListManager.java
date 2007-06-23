@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Display;
  * Provides facilities for using and managing the Task List and task activity information.
  * 
  * TODO: pull task activity management out into new TaskActivityManager
+ * NOTE: likely to change for 3.0
  * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
@@ -824,10 +825,7 @@ public class TaskListManager implements IPropertyChangeListener {
 	}
 
 	public void activateTask(AbstractTask task) {
-		if (!TasksUiPlugin.getDefault().isMultipleActiveTasksMode()) {
-			deactivateAllTasks();
-		}
-
+		deactivateAllTasks();
 		try {
 			taskList.setActive(task, true);
 			for (ITaskActivityListener listener : new ArrayList<ITaskActivityListener>(activityListeners)) {

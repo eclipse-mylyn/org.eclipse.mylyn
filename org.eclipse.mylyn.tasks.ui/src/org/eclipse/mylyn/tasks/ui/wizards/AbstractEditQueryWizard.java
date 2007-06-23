@@ -20,7 +20,11 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.search.AbstractRepositoryQueryPage;
 
 /**
+ * Extend to provide a custom edit query dialog, typically invoked by the user requesting
+ * properties on a query node in the Task List.
+ * 
  * @author Mik Kersten
+ * @since 1.0
  */
 public abstract class AbstractEditQueryWizard extends Wizard {
 

@@ -487,7 +487,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 	@Override
 	public boolean performAction() {
 		if (inSearchContainer()) {
-			saveWidgetValues();
+			saveState();
 		}
 
 		return super.performAction();
@@ -515,7 +515,7 @@ public class TracCustomQueryPage extends AbstractRepositoryQueryPage {
 		return true;
 	}
 
-	public void saveWidgetValues() {
+	public void saveState() {
 		String repoId = "." + repository.getUrl();
 		IDialogSettings settings = getDialogSettings();
 		settings.put(SEARCH_URL_ID + repoId, getTracSearch().toUrl());

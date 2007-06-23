@@ -23,7 +23,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
 /**
+ * Input for task editors.
+ * 
+ * NOTE: likely to change for 3.0
+ * 
  * @author Rob Elves (modifications)
+ * @since 2.0
  */
 public abstract class AbstractRepositoryTaskEditorInput implements IEditorInput {
 

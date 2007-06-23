@@ -13,6 +13,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.osgi.framework.Bundle;
 
 /**
  * @author Mik Kersten
@@ -49,6 +51,8 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 
 	private boolean showProgress = false;
 
+	private boolean eclipse_3_3_workbench = false;
+
 	/**
 	 * HACK: using reflection to gain access
 	 */
@@ -64,6 +68,11 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			StatusManager.fail(e, "Could not get refresh job", false);
 		}
 		setInitialText("");
+		
+		Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
+		if (bundle.getLocation().contains("_3.3.")) {
+			eclipse_3_3_workbench  = true;
+		}
 	}
 
 	@Override
@@ -169,7 +178,7 @@ public abstract class AbstractFilteredTree extends FilteredTree {
 			refreshPolicy.textChanged(filterText.getText());
 		}
 		
-		if (TasksUiPlugin.getDefault().isEclipse_3_3_workbench()) {
+		if (eclipse_3_3_workbench) {
 			// bug 165353 work-around for premature return at
 			// FilteredTree.java:374
 			updateToolbar(true);

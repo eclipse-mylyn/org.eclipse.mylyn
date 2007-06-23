@@ -85,7 +85,7 @@ public class RepositorySettingsPageTest extends TestCase {
 	public void testNeedsAnonyoumousLogin() {
 		TaskRepository repository = new TaskRepository("kind", "http://localhost/");
 		
-		TasksUiPlugin.addRepositoryConnectorUi(new MockTaskConnectorUi());
+		TasksUiPlugin.getDefault().addRepositoryConnectorUi(new MockTaskConnectorUi());
 		
 		MockRepositorySettingsPage page = new MockRepositorySettingsPage(new MockTaskConnectorUi());
 		page.setNeedsAnonymousLogin(true);

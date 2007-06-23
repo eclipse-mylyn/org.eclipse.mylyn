@@ -29,6 +29,8 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiPreferenceConstants;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -67,6 +69,7 @@ import org.eclipse.ui.themes.IThemeManager;
  * server.
  * 
  * @author Rob Elves (modifications)
+ * @since 2.0
  */
 public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepositoryTaskEditor {
 
@@ -456,8 +459,8 @@ public abstract class AbstractNewRepositoryTaskEditor extends AbstractRepository
 	}
 
 	@Override
-	public AbstractTask handleNewBugPost(String id, IProgressMonitor monitor) throws CoreException {
-		final AbstractTask newTask = super.handleNewBugPost(id, monitor);
+	public AbstractTask updateSubmittedTask(String id, IProgressMonitor monitor) throws CoreException {
+		final AbstractTask newTask = super.updateSubmittedTask(id, monitor);
 
 		if (newTask != null) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

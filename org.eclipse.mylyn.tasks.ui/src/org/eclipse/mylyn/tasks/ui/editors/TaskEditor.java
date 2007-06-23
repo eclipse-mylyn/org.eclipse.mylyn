@@ -27,6 +27,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
+import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -265,7 +267,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			Collections.sort(factories, new Comparator<AbstractTaskEditorFactory>() {
 
 				public int compare(AbstractTaskEditorFactory o1, AbstractTaskEditorFactory o2) {
-					return o1.getPriority() - o2.getPriority();
+					return o1.getTabOrderPriority() - o2.getTabOrderPriority();
 				}
 			});
 			for (AbstractTaskEditorFactory factory : TasksUiPlugin.getDefault().getTaskEditorFactories()) {
@@ -440,7 +442,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 
 	private void setFormHeaderLabel(RepositoryTaskData taskData) {
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskData.getRepositoryKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(taskData.getRepositoryKind());
 
 		String kindLabel = taskData.getTaskKind();
 
@@ -470,7 +472,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 
 	private void setFormHeaderLabel(AbstractTask repositoryTask) {
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repositoryTask.getConnectorKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repositoryTask.getConnectorKind());
 		String kindLabel = "";
 		if (connectorUi != null) {
 			kindLabel = connectorUi.getTaskKindLabel(repositoryTask);

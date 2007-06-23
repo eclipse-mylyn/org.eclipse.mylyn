@@ -63,7 +63,7 @@ public class RepositorySearchResultView extends AbstractTextSearchViewPage imple
 
 	public static final int ORDER_DEFAULT = ORDER_PRIORITY;
 
-	private static final String KEY_SORTING = TasksUiPlugin.PLUGIN_ID + ".search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String KEY_SORTING = TasksUiPlugin.ID_PLUGIN + ".search.resultpage.sorting"; //$NON-NLS-1$
 
 	private SearchResultContentProvider taskContentProvider;
 

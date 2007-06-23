@@ -319,14 +319,14 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 
 	private void validate() {
 		if (idText.getText().trim().equals("")) {
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Enter a valid task ID", null));
+			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0, "Enter a valid task ID", null));
 			return;
 		}
 		if (tasksViewer.getSelection().isEmpty() && repositoriesViewer.getSelection().isEmpty()) {
-			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0, "Select a task or repository", null));
+			updateStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0, "Select a task or repository", null));
 			return;
 		}
-		updateStatus(new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, 0, "", null));
+		updateStatus(new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, 0, "", null));
 	}
 
 	private String[] selectedIds;

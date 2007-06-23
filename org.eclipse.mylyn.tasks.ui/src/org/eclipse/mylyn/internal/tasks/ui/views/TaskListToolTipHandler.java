@@ -128,7 +128,7 @@ public class TaskListToolTipHandler {
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
 			StringBuilder sb = new StringBuilder();			
-			sb.append(TasksUiPlugin.getRepositoryUi(task.getConnectorKind()).getTaskKindLabel(task));
+			sb.append(TasksUiPlugin.getConnectorUi(task.getConnectorKind()).getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
 				sb.append(" ");

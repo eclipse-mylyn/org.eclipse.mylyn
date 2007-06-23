@@ -40,15 +40,14 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Used for returning results from Eclipse Search view. Collects results of a
- * repository search
+ * repository search.
  * 
  * @author Rob Elves
+ * @since 2.0
  */
 public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 
-	public static final int MAX_HITS = 5000;
-
-	public static final String MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
+	private static final String LABEL_MAX_HITS_REACHED = "Max allowed number of hits returned exceeded. Some hits may not be displayed. Please narrow query scope.";
 
 	protected Set<AbstractTask> taskResults = new HashSet<AbstractTask>();
 
@@ -165,7 +164,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 	public ISearchResult getSearchResult() {
 		if (searchResult.getMatchCount() >= QueryHitCollector.MAX_HITS) {
 			StatusManager.displayStatus("Maximum hits reached", RepositoryStatus.createStatus(repository.getUrl(),
-					IStatus.WARNING, TasksUiPlugin.PLUGIN_ID, MAX_HITS_REACHED));
+					IStatus.WARNING, TasksUiPlugin.ID_PLUGIN, LABEL_MAX_HITS_REACHED));
 		}
 		return searchResult;
 	}
@@ -189,7 +188,7 @@ public class SearchHitCollector implements ISearchQuery, ITaskCollector {
 					StatusManager.displayStatus("Search failed", status);
 				}
 			} else {
-				return new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, IStatus.OK,
+				return new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, IStatus.OK,
 						"repository connector could not be found", null);
 			}
 

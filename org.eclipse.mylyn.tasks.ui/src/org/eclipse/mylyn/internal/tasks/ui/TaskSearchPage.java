@@ -179,7 +179,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			String repositoryUrl = repositoryCombo.getItem(pageIndex);
 			repository = TasksUiPlugin.getRepositoryManager().getRepository(repositoryUrl);
 			if (repository != null) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null) {
 					WizardPage searchPage = connectorUi.getSearchPage(repository, null);
 					if (searchPage != null && searchPage instanceof ISearchPage) {
@@ -213,7 +213,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			List<TaskRepository> repositories = TasksUiPlugin.getRepositoryManager().getAllRepositories();
 			List<TaskRepository> searchableRepositories = new ArrayList<TaskRepository>();
 			for (TaskRepository repository : repositories) {
-				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && connectorUi.hasSearchPage()) {
 					searchableRepositories.add(repository);
 				}

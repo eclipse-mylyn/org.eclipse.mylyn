@@ -142,7 +142,7 @@ public class NewAttachmentWizard extends Wizard {
 					if (InputAttachmentSourcePage.CLIPBOARD_LABEL.equals(path)) {
 						String contents = inputPage.getClipboardContents();
 						if (contents == null) {
-							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL, "Clipboard is empty", null)));
+							throw new InvocationTargetException(new CoreException(new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL, "Clipboard is empty", null)));
 						}
 						attachment.setContent(contents.getBytes());
 						attachment.setFilename(CLIPBOARD_FILENAME);

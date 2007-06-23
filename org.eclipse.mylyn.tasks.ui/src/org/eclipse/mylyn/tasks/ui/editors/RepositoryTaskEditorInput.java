@@ -15,8 +15,11 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
+ * Input to editors for existing tasks (i.e., those that exist present in the repository).
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public class RepositoryTaskEditorInput extends AbstractRepositoryTaskEditorInput {
 

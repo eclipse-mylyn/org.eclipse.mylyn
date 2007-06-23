@@ -15,7 +15,10 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
+ * Provides input to editors with unsubmitted tasks (i.e., those that do not yet exist on the repository).
+ * 
  * @author Rob Elves
+ * @since 2.0
  */
 public class NewTaskEditorInput extends RepositoryTaskEditorInput {
 

@@ -1,4 +1,4 @@
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -9,6 +9,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 
+/**
+ * @author Shawn Minto
+ */
 public class EditorBusyIndicator {
 
 	private boolean showingBusy = false;

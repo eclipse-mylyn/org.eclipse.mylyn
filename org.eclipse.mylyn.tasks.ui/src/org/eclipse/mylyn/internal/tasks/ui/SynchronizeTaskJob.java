@@ -96,7 +96,7 @@ class SynchronizeTaskJob extends Job {
 							repositoryTask.getConnectorKind(), repositoryTask.getRepositoryUrl());
 
 					if (repository == null) {
-						repositoryTask.setSynchronizationStatus(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+						repositoryTask.setSynchronizationStatus(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
 								"Associated repository could not be found. Ensure proper repository configuration of "
 										+ repositoryTask.getRepositoryUrl() + " in "
 										+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", null));
@@ -166,7 +166,7 @@ class SynchronizeTaskJob extends Job {
 				task.getConnectorKind(), task.getRepositoryUrl());
 		try {
 			if (repository == null) {
-				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID, 0,
+				throw new CoreException(new Status(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN, 0,
 						"Associated repository could not be found. Ensure proper repository configuration of "
 								+ task.getRepositoryUrl() + " in " + TasksUiPlugin.LABEL_VIEW_REPOSITORIES
 								+ ".", null));

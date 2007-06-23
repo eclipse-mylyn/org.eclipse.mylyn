@@ -34,7 +34,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * Extend for customizing how new tasks editors are created.
+ * 
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class NewTaskWizard extends Wizard implements INewWizard {
 
@@ -64,7 +67,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 		final AbstractTaskDataHandler taskDataHandler = (AbstractTaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
 			StatusManager.displayStatus("Error creating new task", new RepositoryStatus(IStatus.ERROR,
-					TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));
+					TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));
 			return false;
 		}
 
@@ -80,7 +83,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 					try {
 						if (!taskDataHandler.initializeTaskData(taskRepository, taskData, monitor)) {
 							throw new CoreException(new RepositoryStatus(IStatus.ERROR,
-									TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));						}
+									TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_REPOSITORY, "The selected repository does not support creating new tasks."));						}
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

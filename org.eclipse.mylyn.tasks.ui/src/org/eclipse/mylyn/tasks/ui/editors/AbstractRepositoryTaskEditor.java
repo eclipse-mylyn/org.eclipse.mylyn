@@ -74,11 +74,16 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.DownloadAttachmentJob;
 import org.eclipse.mylyn.internal.tasks.ui.actions.SynchronizeEditorAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskDeactivateAction;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentTableLabelProvider;
+import org.eclipse.mylyn.internal.tasks.ui.editors.AttachmentsTableContentProvider;
 import org.eclipse.mylyn.internal.tasks.ui.editors.ContentOutlineTools;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskAttributeListener;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryAttachmentEditorInput;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlineNode;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
+import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
+import org.eclipse.mylyn.internal.tasks.ui.editors.TaskFormPage;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -161,10 +166,15 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 /**
+ * Extend to provide customized task editing.
+ * 
+ * NOTE: likely to change for 3.0
+ * 
  * @author Mik Kersten
  * @author Rob Elves
  * @author Jeff Pound (Attachment work)
  * @author Steffen Pingel
+ * @since 2.0
  */
 public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 
@@ -1917,7 +1927,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		}
 	}
 
-	protected String formatDate(String dateString) {
+	public String formatDate(String dateString) {
 		return dateString;
 	}
 
@@ -2697,11 +2707,11 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					final boolean isNew = taskData.isNew();
 					if (isNew) {
 						if (taskId != null) {
-							modifiedTask = handleNewBugPost(taskId, new SubProgressMonitor(monitor, 1));
+							modifiedTask = updateSubmittedTask(taskId, new SubProgressMonitor(monitor, 1));
 						} else {
 							// null taskId, assume task could not be created...
 							throw new CoreException(
-									new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.PLUGIN_ID,
+									new RepositoryStatus(IStatus.ERROR, TasksUiPlugin.ID_PLUGIN,
 											RepositoryStatus.ERROR_INTERNAL,
 											"Task could not be created. No additional information was provided by the connector."));
 						}
@@ -2910,7 +2920,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		return Status.OK_STATUS;
 	}
 
-	protected AbstractTask handleNewBugPost(String postResult, IProgressMonitor monitor) throws CoreException {
+	protected AbstractTask updateSubmittedTask(String postResult, IProgressMonitor monitor) throws CoreException {
 		final AbstractTask newTask = connector.createTaskFromExistingId(repository, postResult, monitor);
 
 		if (newTask != null) {

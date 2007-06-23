@@ -104,7 +104,7 @@ public class OpenRepositoryTaskJob extends Job {
 		} finally {
 			monitor.done();
 		}
-		return new Status(IStatus.OK, TasksUiPlugin.PLUGIN_ID, IStatus.OK, "", null);
+		return new Status(IStatus.OK, TasksUiPlugin.ID_PLUGIN, IStatus.OK, "", null);
 	}
 
 	private void openEditor(final TaskRepository repository, final RepositoryTaskData taskData) {

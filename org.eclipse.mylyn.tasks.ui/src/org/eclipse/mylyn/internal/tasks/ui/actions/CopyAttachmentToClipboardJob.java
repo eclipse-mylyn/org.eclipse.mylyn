@@ -52,7 +52,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 				attachment.getRepositoryKind());
 		AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 		if (handler == null) {
-			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.PLUGIN_ID, RepositoryStatus.ERROR_INTERNAL,
+			return new RepositoryStatus(IStatus.INFO, TasksUiPlugin.ID_PLUGIN, RepositoryStatus.ERROR_INTERNAL,
 					"The repository does not support attachments.");
 		}
 

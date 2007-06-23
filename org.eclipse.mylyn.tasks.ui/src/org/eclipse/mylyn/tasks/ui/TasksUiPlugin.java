@@ -92,17 +92,18 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
- * @author Mik Kersten
+ * Main entry point for the Tasks UI.
  * 
- * TODO: this class is in serious need of refactoring
+ * @author Mik Kersten
+ * @since 2.0
  */
 public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
-	private static final String FOLDER_OFFLINE = "offline";
-
 	public static final String LABEL_VIEW_REPOSITORIES = "Task Repositories view";
 
-	public static final String PLUGIN_ID = "org.eclipse.mylyn.tasklist";
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.tasks.ui";
+	
+	private static final String FOLDER_OFFLINE = "offline";
 
 	private static final String DIRECTORY_METADATA = ".metadata";
 
@@ -122,7 +123,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static RepositorySynchronizationManager synchronizationManager;
 
-	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUis = new HashMap<String, AbstractRepositoryConnectorUi>();
+	private static Map<String, AbstractRepositoryConnectorUi> repositoryConnectorUiMap = new HashMap<String, AbstractRepositoryConnectorUi>();
 
 	private TaskListSaveManager taskListSaveManager;
 
@@ -143,8 +144,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	private ITaskHighlighter highlighter;
 
-	private static boolean shellActive = true;
-
 	private boolean initialized = false;
 
 	private Map<String, Image> brandingIcons = new HashMap<String, Image>();
@@ -152,8 +151,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	private Map<String, ImageDescriptor> overlayIcons = new HashMap<String, ImageDescriptor>();
 
 	private Set<AbstractDuplicateDetector> duplicateDetectors = new HashSet<AbstractDuplicateDetector>();
-
-	private boolean eclipse_3_3_workbench = false;
 
 	private ISaveParticipant saveParticipant;
 
@@ -233,31 +230,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	};
 
-	/**
-	 * TODO: move into reminder mechanisms
-	 */
-	private IWindowListener WINDOW_LISTENER = new IWindowListener() {
-		/**
-		 * bug 1002249: too slow to save state here
-		 */
-		public void windowDeactivated(IWorkbenchWindow window) {
-			shellActive = false;
-		}
-
-		public void windowActivated(IWorkbenchWindow window) {
-			// getDefault().checkTaskListBackup();
-			shellActive = true;
-		}
-
-		public void windowOpened(IWorkbenchWindow window) {
-			// ignore
-		}
-
-		public void windowClosed(IWorkbenchWindow window) {
-			// ignore
-		}
-	};
-
 	private static ITaskListNotificationProvider REMINDER_NOTIFICATION_PROVIDER = new ITaskListNotificationProvider() {
 
 		public Set<ITaskListNotification> getNotifications() {
@@ -283,7 +255,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
 				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
 						repository.getConnectorKind());
-				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(repository.getConnectorKind());
 				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
@@ -300,7 +272,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			}
 			// New query hits
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
-				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(query.getRepositoryKind());
+				AbstractRepositoryConnectorUi connectorUi = getConnectorUi(query.getRepositoryKind());
 				if (!connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask hit : query.getChildren()) {
 						if (hit.isNotified() == false) {
@@ -416,9 +388,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 						// relies on images.
 						TasksUiExtensionReader.initWorkbenchUiExtensions();
 
-						// TasksUiExtensionReader.initWorkbenchUiExtensions();
-						PlatformUI.getWorkbench().addWindowListener(WINDOW_LISTENER);
-
 						// Needs to happen asynchronously to avoid bug 159706
 						if (taskListManager.getTaskList().getActiveTask() != null) {
 							taskListManager.activateTask(taskListManager.getTaskList().getActiveTask());
@@ -471,11 +440,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					}
 				}
 			});
-
-			Bundle bundle = Platform.getBundle("org.eclipse.ui.workbench");
-			if (bundle.getLocation().contains("_3.3.")) {
-				eclipse_3_3_workbench = true;
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			StatusManager.fail(e, "Mylar Task List initialization failed", false);
@@ -568,7 +532,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 					ContextCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(
 							PREFERENCE_LISTENER);
 				}
-				PlatformUI.getWorkbench().removeWindowListener(WINDOW_LISTENER);
 				INSTANCE = null;
 			}
 		} catch (Exception e) {
@@ -639,8 +602,8 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return taskListManager;
 	}
 
-	public TaskListNotificationManager getTaskListNotificationManager() {
-		return taskListNotificationManager;
+	public static TaskListNotificationManager getTaskListNotificationManager() {
+		return INSTANCE.taskListNotificationManager;
 	}
 
 	/**
@@ -649,17 +612,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public static TasksUiPlugin getDefault() {
 		return INSTANCE;
 	}
-
-	// private void checkTaskListBackup() {
-	// Date currentTime = new Date();
-	// if (currentTime.getTime() > lastBackup.getTime() +
-	// AUTOMATIC_BACKUP_SAVE_INTERVAL) {//
-	// TaskListSaveMode.fromStringToLong(getPrefs().getString(SAVE_TASKLIST_MODE)))
-	// // {
-	// TasksUiPlugin.getDefault().getTaskListSaveManager().createTaskListBackupFile();
-	// lastBackup = new Date();
-	// }
-	// }
 
 	private Map<String, List<IDynamicSubMenuContributor>> menuContributors = new HashMap<String, List<IDynamicSubMenuContributor>>();
 
@@ -674,11 +626,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			menuContributors.put(menuPath, contributors);
 		}
 		contributors.add(contributor);
-	}
-
-	// TODO: remove
-	public boolean isMultipleActiveTasksMode() {
-		return getPreferenceStore().getBoolean(TasksUiPreferenceConstants.ACTIVATE_MULTIPLE);
 	}
 
 	public String[] getSaveOptions() {
@@ -706,10 +653,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 	public void addContextEditor(AbstractTaskEditorFactory contextEditor) {
 		if (contextEditor != null)
 			this.taskEditorFactories.add(contextEditor);
-	}
-
-	public boolean isShellActive() {
-		return TasksUiPlugin.shellActive;
 	}
 
 	public static TaskRepositoryManager getRepositoryManager() {
@@ -763,21 +706,23 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		taskDataManager.start();
 	}
 
-	public TaskDataManager getTaskDataManager() {
-		if (taskDataManager == null) {
+	public static TaskDataManager getTaskDataManager() {
+		if (INSTANCE == null || INSTANCE.taskDataManager == null) {
 			StatusManager.fail(null, "Offline reports file not created, try restarting.", true);
-		}
-		return taskDataManager;
-	}
-
-	public static void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
-		if (!repositoryConnectorUis.values().contains(repositoryConnectorUi)) {
-			repositoryConnectorUis.put(repositoryConnectorUi.getConnectorKind(), repositoryConnectorUi);
+			return null;
+		} else {
+			return INSTANCE.taskDataManager;
 		}
 	}
 
-	public static AbstractRepositoryConnectorUi getRepositoryUi(String kind) {
-		return repositoryConnectorUis.get(kind);
+	public void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
+		if (!repositoryConnectorUiMap.values().contains(repositoryConnectorUi)) {
+			repositoryConnectorUiMap.put(repositoryConnectorUi.getConnectorKind(), repositoryConnectorUi);
+		}
+	}
+
+	public static AbstractRepositoryConnectorUi getConnectorUi(String kind) {
+		return repositoryConnectorUiMap.get(kind);
 	}
 
 	public static TaskListSynchronizationScheduler getSynchronizationScheduler() {
@@ -873,15 +818,11 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 		return null;
 	}
 
-	public boolean isEclipse_3_3_workbench() {
-		return eclipse_3_3_workbench;
-	}
-
 	/**
 	 * Public for testing.
 	 */
-	public TaskListSaveManager getTaskListSaveManager() {
-		return taskListSaveManager;
+	public static TaskListSaveManager getTaskListSaveManager() {
+		return INSTANCE.taskListSaveManager;
 	}
 
 	public String getNextNewRepositoryTaskId() {
@@ -960,13 +901,6 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 				descriptionText += "Attributes changed";
 			}
 		}
-// else {
-// String description = taskData.getDescription();
-// if (description != null) {
-// notification.setDescription(description);
-// }
-// }
-
 		return descriptionText;
 	}
 

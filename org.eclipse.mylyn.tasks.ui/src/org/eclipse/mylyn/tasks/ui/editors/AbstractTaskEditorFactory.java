@@ -16,7 +16,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
+ * Extend to add tabs to task editors.
+ * 
  * @author Mik Kersten
+ * @since 2.0
  */
 public abstract class AbstractTaskEditorFactory {
 
@@ -38,7 +41,7 @@ public abstract class AbstractTaskEditorFactory {
 	 * @return	A higher integer for high priority, low integer for low priority.  Higher 
 	 * priority editors will be placed earlier in the tab list.
 	 */
-	public int getPriority() {
+	public int getTabOrderPriority() {
 		return 1;
 	}
 

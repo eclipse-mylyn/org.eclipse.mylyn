@@ -9,9 +9,8 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.editors;
+package org.eclipse.mylyn.internal.tasks.ui.editors;
 
-import org.eclipse.mylyn.internal.tasks.ui.editors.IRepositoryTaskSelection;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 
 /**
@@ -35,20 +34,6 @@ public class RepositoryTaskSelection implements IRepositoryTaskSelection {
 	 * comment, then this is <code>null</code>.
 	 */
 	protected TaskComment taskComment;
-
-	// /**
-	// * Creates a new <code>RepositoryTaskSelection</code> with no supplied
-	// * contents or comment.
-	// *
-	// * @param taskId
-	// * The taskId of the Bugzilla object that the selection was on.
-	// * @param server
-	// * The server of the Bugzilla object that the selection was on.
-	// */
-	// public RepositoryTaskSelection(String id, String server, String summary)
-	// {
-	// this(id, server, null, null, summary);
-	// }
 
 	/**
 	 * Creates a new <code>RepositoryTaskSelection</code> with no supplied

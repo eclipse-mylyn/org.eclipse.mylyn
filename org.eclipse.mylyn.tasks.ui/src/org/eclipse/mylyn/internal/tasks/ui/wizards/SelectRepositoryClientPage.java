@@ -115,7 +115,7 @@ public class SelectRepositoryClientPage extends WizardPage {
 	@Override
 	public IWizardPage getNextPage() {
 		if (isPageComplete()) {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(
 					wizard.getRepositoryConnector().getConnectorKind());
 			
 			AbstractRepositorySettingsPage nextPage = connectorUi.getSettingsPage();

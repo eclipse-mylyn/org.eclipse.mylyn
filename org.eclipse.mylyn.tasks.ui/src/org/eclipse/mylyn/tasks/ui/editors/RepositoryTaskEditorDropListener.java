@@ -23,12 +23,12 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.widgets.Control;
 
 /**
+ * Not API.
+ * 
  * @author Mik Kersten
  */
 class RepositoryTaskEditorDropListener implements DropTargetListener {
-	/**
-	 * 
-	 */
+
 	private final AbstractRepositoryTaskEditor AbstractTaskEditor;
 
 	private final FileTransfer fileTransfer;

@@ -40,7 +40,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		}
 
 		IScopeContext projectScope = new ProjectScope(project);
-		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.PLUGIN_ID);
+		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
 			String kind = projectNode.get(PROJECT_REPOSITORY_KIND, "");
 			String urlString = projectNode.get(PROJECT_REPOSITORY_URL, "");
@@ -64,7 +64,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 		}
 		
 		IScopeContext projectScope = new ProjectScope(project);
-		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.PLUGIN_ID);
+		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.ID_PLUGIN);
 		if (projectNode != null) {
 			projectNode.put(PROJECT_REPOSITORY_KIND, repository.getConnectorKind());
 			projectNode.put(PROJECT_REPOSITORY_URL, repository.getUrl());

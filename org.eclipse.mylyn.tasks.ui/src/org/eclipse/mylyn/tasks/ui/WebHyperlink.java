@@ -14,13 +14,16 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 
 /**
+ * Encapsulates link from text to a URL.
+ * 
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class WebHyperlink implements IHyperlink {
 
 	private final IRegion region;
 	
-	private String url;
+	private final String url;
 
 	public WebHyperlink(IRegion region, String url) {
 		this.region = region;

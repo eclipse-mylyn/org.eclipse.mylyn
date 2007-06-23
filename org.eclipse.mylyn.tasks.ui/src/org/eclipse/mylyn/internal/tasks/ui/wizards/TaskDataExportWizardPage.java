@@ -78,7 +78,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 	public TaskDataExportWizardPage() {
 		super("org.eclipse.mylyn.tasklist.exportPage", PAGE_TITLE, TasksUiPlugin.imageDescriptorFromPlugin(
-				TasksUiPlugin.PLUGIN_ID, "icons/wizban/banner-export.gif"));
+				TasksUiPlugin.ID_PLUGIN, "icons/wizban/banner-export.gif"));
 		setPageComplete(false);
 	}
 

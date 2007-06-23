@@ -303,7 +303,7 @@ public class TasksUiExtensionReader {
 			Object connectorUiObject = element.createExecutableExtension(ATTR_CLASS);
 			if (connectorUiObject instanceof AbstractRepositoryConnectorUi) {
 				AbstractRepositoryConnectorUi connectorUi = (AbstractRepositoryConnectorUi) connectorUiObject;
-				TasksUiPlugin.addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
+				TasksUiPlugin.getDefault().addRepositoryConnectorUi((AbstractRepositoryConnectorUi) connectorUi);
 
 				String customNotificationsString = element.getAttribute(ATTR_CUSTOM_NOTIFICATIONS);
 				if (customNotificationsString != null) {

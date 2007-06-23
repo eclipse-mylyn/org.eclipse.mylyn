@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbench;
  * @author Eugene Kuleshov
  * @author Mik Kersten
  * @author Steffen Pingel
+ * @since 2.0
  */
 public class NewWebTaskWizard extends Wizard implements INewWizard {
 

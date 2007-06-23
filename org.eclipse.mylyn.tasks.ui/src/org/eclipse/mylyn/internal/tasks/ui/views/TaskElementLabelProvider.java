@@ -97,12 +97,12 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 			AbstractRepositoryConnectorUi connectorUi = null;
 			if (element instanceof AbstractTask) {
 				AbstractTask repositoryTask = (AbstractTask) element;
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getConnectorKind());
+				connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask) element).getConnectorKind());
 				if (connectorUi != null) {
 					compositeDescriptor.overlayKind = connectorUi.getTaskKindOverlay(repositoryTask);
 				}
 			} else if (element instanceof AbstractRepositoryQuery) {
-				connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractRepositoryQuery) element).getRepositoryKind());
+				connectorUi = TasksUiPlugin.getConnectorUi(((AbstractRepositoryQuery) element).getRepositoryKind());
 			}
 
 			if (connectorUi != null) {
@@ -173,7 +173,7 @@ public class TaskElementLabelProvider extends LabelProvider implements IColorPro
 		AbstractRepositoryConnectorUi connectorUi;
 		if (element instanceof AbstractTask) {
 			AbstractTask repositoryTask = (AbstractTask) element;
-			connectorUi = TasksUiPlugin.getRepositoryUi(((AbstractTask) element).getConnectorKind());
+			connectorUi = TasksUiPlugin.getConnectorUi(((AbstractTask) element).getConnectorKind());
 			if (connectorUi != null) {
 				return connectorUi.getTaskPriorityOverlay(repositoryTask);
 			}
