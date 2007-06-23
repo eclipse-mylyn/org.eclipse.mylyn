@@ -23,9 +23,9 @@ public class RepositoryTaskHandleUtil {
 	public static String getHandle(String repositoryUrl, String taskId) {
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY + HANDLE_DELIM + taskId;
-//		} else if (taskId.contains(HANDLE_DELIM)) {
-//			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: "
-//					+ taskId);
+		} else if (taskId.contains(HANDLE_DELIM)) {
+			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: "
+					+ taskId);
 		} else {
 			return repositoryUrl + HANDLE_DELIM + taskId;
 		}
@@ -40,7 +40,6 @@ public class RepositoryTaskHandleUtil {
 		return url;
 	}
 
-	// @Deprecated
 	public static String getTaskId(String taskHandle) {
 		int index = taskHandle.lastIndexOf(HANDLE_DELIM);
 		if (index != -1) {

@@ -327,9 +327,6 @@ final class DelegatingTaskExternalizer {
 		}
 	}
 
-	/**
-	 * First tries to use a delegate externalizer to read, if none available, reads itself.
-	 */
 	public final AbstractTask readTask(Node node, TaskList taskList, AbstractTaskCategory category, AbstractTask parent)
 			throws TaskExternalizationException {
 		AbstractTask task = null;
