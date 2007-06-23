@@ -40,7 +40,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.NewWebTaskWizard;
  * @author Mik Kersten
  * @author Steffen Pingel
  */
-public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
+public class TracConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IHyperlink[] findHyperlinks(TaskRepository repository, String text, int lineOffset, int regionOffset) {
@@ -59,11 +59,6 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
 		return new TracRepositorySettingsPage(this);
-	}
-
-	@Override
-	public boolean hasRichEditor() {
-		return true;
 	}
 
 	@Override
@@ -95,7 +90,7 @@ public class TracRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return TracCorePlugin.REPOSITORY_KIND;
 	}
 

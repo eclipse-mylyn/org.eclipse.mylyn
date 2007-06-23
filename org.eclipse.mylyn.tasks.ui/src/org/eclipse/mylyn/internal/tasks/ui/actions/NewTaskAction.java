@@ -18,7 +18,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.tasks.ui.LocalRepositoryUi;
+import org.eclipse.mylyn.internal.tasks.ui.LocalTaskConnectorUi;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewTaskWizard;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -44,9 +44,9 @@ public class NewTaskAction extends Action implements IViewActionDelegate {
 		if (repositories.size() == 1) {
 			// NOTE: this click-saving should be generalized
 			TaskRepository taskRepository = repositories.get(0);
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskRepository.getKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(taskRepository.getConnectorKind());
 			wizard = connectorUi.getNewTaskWizard(taskRepository);
-			if (connectorUi instanceof LocalRepositoryUi) {
+			if (connectorUi instanceof LocalTaskConnectorUi) {
 				wizard.performFinish();
 				return;
 			}

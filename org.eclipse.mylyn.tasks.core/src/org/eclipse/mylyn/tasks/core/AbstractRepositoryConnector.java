@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
 
@@ -338,7 +339,7 @@ public abstract class AbstractRepositoryConnector {
 	 */
 	public String getSynchronizationTimestamp(TaskRepository repository, Set<AbstractTask> changedTasks) {
 		Date mostRecent = new Date(0);
-		String mostRecentTimeStamp = repository.getSyncTimeStamp();
+		String mostRecentTimeStamp = repository.getSynchronizationTimeStamp();
 		for (AbstractTask task : changedTasks) {
 			Date taskModifiedDate;
 

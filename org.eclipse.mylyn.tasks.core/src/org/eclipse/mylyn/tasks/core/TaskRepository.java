@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
@@ -42,6 +43,7 @@ import org.eclipse.mylyn.web.core.WebClientUtil;
  * @author Mik Kersten
  * @author Rob Elves
  * @author Eugene Kuleshov
+ * @since 2.0
  */
 public class TaskRepository {
 
@@ -121,7 +123,7 @@ public class TaskRepository {
 	}
 
 	public TaskRepository(String kind, String serverUrl, String version, String encoding, String timeZoneId) {
-		this.properties.put(IRepositoryConstants.PROPERTY_KIND, kind);
+		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.put(IRepositoryConstants.PROPERTY_VERSION, version);
 		this.properties.put(IRepositoryConstants.PROPERTY_ENCODING, encoding);
@@ -131,7 +133,7 @@ public class TaskRepository {
 	}
 
 	public TaskRepository(String kind, String serverUrl, Map<String, String> properties) {
-		this.properties.put(IRepositoryConstants.PROPERTY_KIND, kind);
+		this.properties.put(IRepositoryConstants.PROPERTY_CONNECTOR_KIND, kind);
 		this.properties.put(IRepositoryConstants.PROPERTY_URL, serverUrl);
 		this.properties.putAll(properties);
 		// use platform proxy by default (headless will need to set this to false)
@@ -307,10 +309,10 @@ public class TaskRepository {
 					return false;
 				}
 			}
-			if (getKind() == null) {
-				return repository.getKind() == null;
+			if (getConnectorKind() == null) {
+				return repository.getConnectorKind() == null;
 			} else {
-				return getKind().equals(repository.getKind());
+				return getConnectorKind().equals(repository.getConnectorKind());
 			}
 
 		} else {
@@ -321,7 +323,7 @@ public class TaskRepository {
 	@Override
 	public int hashCode() {
 		int res = getUrl()==null ? 1 : getUrl().hashCode();
-		return res * 31 + (getKind()==null ? 1 : getKind().hashCode());
+		return res * 31 + (getConnectorKind()==null ? 1 : getConnectorKind().hashCode());
 	}
 
 	@Override
@@ -332,8 +334,8 @@ public class TaskRepository {
 	/**
 	 * @return "<unknown>" if kind is unknown
 	 */
-	public String getKind() {
-		String kind = properties.get(IRepositoryConstants.PROPERTY_KIND);
+	public String getConnectorKind() {
+		String kind = properties.get(IRepositoryConstants.PROPERTY_CONNECTOR_KIND);
 		if (kind != null) {
 			return kind;
 		} else {
@@ -373,7 +375,7 @@ public class TaskRepository {
 				: timeZoneId);
 	}
 
-	public String getSyncTimeStamp() {
+	public String getSynchronizationTimeStamp() {
 		return this.properties.get(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP);
 	}
 
@@ -381,7 +383,7 @@ public class TaskRepository {
 	 * ONLY for use by IRepositoryConstants. To set the sync time call
 	 * IRepositoryConstants.setSyncTime(repository, date);
 	 */
-	public void setSyncTimeStamp(String syncTime) {
+	public void setSynchronizationTimeStamp(String syncTime) {
 		this.properties.put(IRepositoryConstants.PROPERTY_SYNCTIMESTAMP, syncTime);
 	}
 
@@ -424,7 +426,7 @@ public class TaskRepository {
 
 	public Proxy getProxy() {
 		Proxy proxy = Proxy.NO_PROXY;
-		if (useDefaultProxy()) {
+		if (isDefaultProxyEnabled()) {
 			proxy = WebClientUtil.getPlatformProxy();
 		} else {
 
@@ -444,7 +446,7 @@ public class TaskRepository {
 	/**
 	 * Use platform proxy settings
 	 */
-	public boolean useDefaultProxy() {
+	public boolean isDefaultProxyEnabled() {
 		return "true".equals(getProperty(PROXY_USEDEFAULT));
 	}
 

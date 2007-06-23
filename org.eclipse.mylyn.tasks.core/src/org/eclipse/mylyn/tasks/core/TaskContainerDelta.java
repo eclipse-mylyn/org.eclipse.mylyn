@@ -13,9 +13,10 @@ package org.eclipse.mylyn.tasks.core;
 
 
 /**
- * Immutable.
+ * Immutable.  Defines changes to Task List elements.
  * 
  * @author Mik Kersten
+ * @since 2.0
  */
 public final class TaskContainerDelta {
 

@@ -59,7 +59,7 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				taskRepository.getKind());
+				taskRepository.getConnectorKind());
 
 		final AbstractTaskDataHandler taskDataHandler = (AbstractTaskDataHandler) connector.getTaskDataHandler();
 		if (taskDataHandler == null) {
@@ -68,9 +68,9 @@ public class NewTaskWizard extends Wizard implements INewWizard {
 			return false;
 		}
 
-		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getKind(), AbstractTask.DEFAULT_TASK_KIND);
+		AbstractAttributeFactory attributeFactory = taskDataHandler.getAttributeFactory(taskRepository.getUrl(), taskRepository.getConnectorKind(), AbstractTask.DEFAULT_TASK_KIND);
 		
-		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getKind(),
+		final RepositoryTaskData taskData = new RepositoryTaskData(attributeFactory, taskRepository.getConnectorKind(),
 				taskRepository.getUrl(), TasksUiPlugin.getDefault().getNextNewRepositoryTaskId());
 		taskData.setNew(true);
 

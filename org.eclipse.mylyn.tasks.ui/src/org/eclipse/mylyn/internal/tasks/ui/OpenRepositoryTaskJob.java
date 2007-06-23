@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -22,6 +22,8 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.RepositoryTaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;

@@ -48,6 +48,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bahadir Yagan
  * @author Mik Kersten
+ * @since 1.0
  */
 public class DatePicker extends Composite {
 

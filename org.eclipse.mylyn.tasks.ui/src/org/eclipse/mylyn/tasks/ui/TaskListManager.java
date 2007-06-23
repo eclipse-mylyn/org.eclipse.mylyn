@@ -66,10 +66,13 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.swt.widgets.Display;
 
 /**
+ * Provides facilities for using and managing the Task List and task activity information.
+ * 
  * TODO: pull task activity management out into new TaskActivityManager
  * 
  * @author Mik Kersten
  * @author Rob Elves (task activity)
+ * @since 2.0
  */
 public class TaskListManager implements IPropertyChangeListener {
 
@@ -1160,7 +1163,7 @@ public class TaskListManager implements IPropertyChangeListener {
 		if (summary == null) {
 			summary = LocalRepositoryConnector.DEFAULT_SUMMARY;
 		}
-		LocalTask newTask = new LocalTask(""+taskList.getNextTaskNum(), summary);
+		LocalTask newTask = new LocalTask(""+taskList.getNextLocalTaskId(), summary);
 		newTask.setPriority(PriorityLevel.P3.toString());
 
 		scheduleNewTask(newTask);

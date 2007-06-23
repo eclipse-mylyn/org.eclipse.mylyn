@@ -85,14 +85,14 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
-		assertEquals(null, repository.getSyncTimeStamp());
+		assertEquals(null, repository.getSynchronizationTimeStamp());
 		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertEquals(true, changed);
-		assertEquals(null, repository.getSyncTimeStamp());
+		assertEquals(null, repository.getSynchronizationTimeStamp());
 		assertFalse(task.isStale());
 
 		int time = (int) (System.currentTimeMillis() / 1000) + 1;
-		repository.setSyncTimeStamp(time + "");
+		repository.setSynchronizationTimeStamp(time + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertEquals(true, changed);
 		assertFalse(task.isStale());
@@ -119,20 +119,20 @@ public class TracTaskDataHandlerTest extends TestCase {
 		Set<AbstractTask> tasks = new HashSet<AbstractTask>();
 		tasks.add(task);
 
-		assertEquals(null, repository.getSyncTimeStamp());
+		assertEquals(null, repository.getSynchronizationTimeStamp());
 		boolean changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());
 
 		// always returns the ticket because time comparison mode is >=
 		task.setStale(false);
-		repository.setSyncTimeStamp(lastModified + "");
+		repository.setSynchronizationTimeStamp(lastModified + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());
 
 		task.setStale(false);
-		repository.setSyncTimeStamp((lastModified + 1) + "");
+		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertFalse(task.isStale());
@@ -149,7 +149,7 @@ public class TracTaskDataHandlerTest extends TestCase {
 		client.updateTicket(ticket, "comment");
 
 		task.setStale(false);
-		repository.setSyncTimeStamp((lastModified + 1) + "");
+		repository.setSynchronizationTimeStamp((lastModified + 1) + "");
 		changed = connector.markStaleTasks(repository, tasks, new NullProgressMonitor());
 		assertTrue(changed);
 		assertTrue(task.isStale());

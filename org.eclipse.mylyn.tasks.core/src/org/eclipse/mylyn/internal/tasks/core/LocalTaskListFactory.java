@@ -13,7 +13,6 @@ package org.eclipse.mylyn.internal.tasks.core;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.w3c.dom.Element;
 
 /**
@@ -27,7 +26,7 @@ public class LocalTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
 		LocalTask task = new LocalTask(taskId, summary);
 		return task;
 	}

@@ -9,14 +9,16 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
-import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Task repository filter to build list of repositories with required capabilities.
  * 
  * @author Eugene Kleshov 
+ * @since 2.0
  */
 public interface TaskRepositoryFilter {
 

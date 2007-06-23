@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -17,19 +17,20 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
-import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 
 /**
+ * 
+ * 
  * @author Steffen Pingel
  */
 public class ContextUiUtil {
@@ -84,10 +85,10 @@ public class ContextUiUtil {
 		return true;
 	}
 
-	public static final boolean uploadContext(final TaskRepository repository, final AbstractTask task,
+	public static boolean uploadContext(final TaskRepository repository, final AbstractTask task,
 			final String comment, final IRunnableContext context) {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
+				repository.getConnectorKind());
 		try {
 			final boolean[] result = new boolean[1];
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {

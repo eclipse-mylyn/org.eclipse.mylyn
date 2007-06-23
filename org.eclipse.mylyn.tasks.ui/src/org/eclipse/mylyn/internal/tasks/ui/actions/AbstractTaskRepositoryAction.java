@@ -30,7 +30,7 @@ public abstract class AbstractTaskRepositoryAction extends BaseSelectionListener
 			if (selectedObject instanceof TaskRepository) {
 				TaskRepository taskRepository = (TaskRepository) selectedObject;
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						taskRepository.getKind());
+						taskRepository.getConnectorKind());
 				if (connector.isUserManaged()) {
 					return true;
 				}

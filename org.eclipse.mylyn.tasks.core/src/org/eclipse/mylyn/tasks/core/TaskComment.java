@@ -14,9 +14,10 @@ package org.eclipse.mylyn.tasks.core;
 import java.io.Serializable;
 
 /**
- * A comment posted on a bug.
+ * A comment posted by a user on a task.
  * 
- * @author Rob Elves (revisions for bug 136219)
+ * @author Rob Elves
+ * @since 2.0
  */
 public class TaskComment extends AttributeContainer implements Serializable {
 

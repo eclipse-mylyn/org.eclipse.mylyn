@@ -82,7 +82,7 @@ public class RepositoryAttachmentEditorInput extends PlatformObject implements I
 
 		public InputStream getContents() throws CoreException {
 			AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getKind());
+					repository.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
 			return handler.getAttachmentAsStream(repository, attachment, new NullProgressMonitor());
 		}

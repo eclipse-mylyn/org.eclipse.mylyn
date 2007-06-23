@@ -15,16 +15,19 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 
 /**
- * Abstract Task Repository link provider
+ * Extend to provide linking between repositories and tasks.
  * 
  * @author Eugene Kuleshov
+ * @since 2.0
  */
 public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableExtension {
 
 	private static final int DEFAULT_ORDER = 1000;
-	
+
 	private String id;
+
 	private String name;
+
 	private int order;
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
@@ -32,13 +35,13 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 		name = config.getAttribute("name");
 		try {
 			order = Integer.parseInt(config.getAttribute("order"));
-		} catch(NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			order = DEFAULT_ORDER;
 		}
 	}
-	
+
 	public abstract TaskRepository getTaskRepository(IResource resource, TaskRepositoryManager repositoryManager);
-	
+
 	public boolean canSetTaskRepository(IResource resource) {
 		return false;
 	}
@@ -58,5 +61,4 @@ public abstract class AbstractTaskRepositoryLinkProvider implements IExecutableE
 	public int getOrder() {
 		return order;
 	}
-	
 }

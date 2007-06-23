@@ -42,7 +42,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.UnrecognizedReponseException;
 import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 
 /**
@@ -253,14 +252,14 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			monitor.beginTask("Checking for changed tasks", IProgressMonitor.UNKNOWN);
 
-			if (repository.getSyncTimeStamp() == null) {
+			if (repository.getSynchronizationTimeStamp() == null) {
 				for (AbstractTask task : tasks) {
 					task.setStale(true);
 				}
 				return true;
 			}
 
-			String dateString = repository.getSyncTimeStamp();
+			String dateString = repository.getSynchronizationTimeStamp();
 			if (dateString == null) {
 				dateString = "";
 			}

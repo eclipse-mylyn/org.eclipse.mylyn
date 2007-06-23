@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui.properties;
+package org.eclipse.mylyn.internal.tasks.ui.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

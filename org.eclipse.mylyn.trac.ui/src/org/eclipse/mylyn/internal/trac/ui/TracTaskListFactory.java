@@ -14,12 +14,12 @@ package org.eclipse.mylyn.internal.trac.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.TracTask;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.w3c.dom.Element;
 
 /**
@@ -59,12 +59,12 @@ public class TracTaskListFactory extends AbstractTaskListFactory {
 	}
 	
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
 		return new TracTask(repositoryUrl, taskId, summary);
 	}
 
 	@Override
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) throws TaskExternalizationException {
+	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		return new TracRepositoryQuery(repositoryUrl, queryString, label);
 	}
 }

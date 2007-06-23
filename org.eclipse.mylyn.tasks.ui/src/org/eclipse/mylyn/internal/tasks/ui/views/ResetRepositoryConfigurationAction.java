@@ -45,7 +45,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 				Object selectedObject = iter.next();
 				if (selectedObject instanceof TaskRepository) {
 					final TaskRepository repository = (TaskRepository) selectedObject;
-					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 					if (connector != null) {
 						final String jobName = "Updating attributes for: " + repository.getUrl();
 						Job updateJob = new Job(jobName) {

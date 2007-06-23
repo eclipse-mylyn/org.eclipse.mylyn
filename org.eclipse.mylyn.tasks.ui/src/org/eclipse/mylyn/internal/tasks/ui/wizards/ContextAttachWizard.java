@@ -12,10 +12,10 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.mylyn.internal.tasks.ui.ContextUiUtil;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.ContextUiUtil;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**

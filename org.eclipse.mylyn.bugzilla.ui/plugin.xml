@@ -15,7 +15,7 @@
             
       <connectorUi
             brandingIcon="icons/eview16/bugzilla-logo.gif"
-            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaRepositoryUi"
+            class="org.eclipse.mylyn.internal.bugzilla.ui.tasklist.BugzillaConnectorUi"
             name="Bugzilla Repository Ui"
             overlayIcon="icons/eview16/overlay-bugzilla.gif"/>
               

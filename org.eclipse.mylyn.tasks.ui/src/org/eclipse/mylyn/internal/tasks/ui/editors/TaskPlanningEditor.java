@@ -631,7 +631,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 		if (task instanceof AbstractTask && !(task instanceof LocalTask)) {
 			AbstractRepositoryConnectorUi connector = TasksUiPlugin.getRepositoryUi(((AbstractTask) task).getConnectorKind());
-			if (connector != null && connector.handlesDueDates((AbstractTask) task)) {
+			if (connector != null && connector.supportsDueDates((AbstractTask) task)) {
 				dueDatePicker.setEnabled(false);
 				clearDueDate.setEnabled(false);
 			}

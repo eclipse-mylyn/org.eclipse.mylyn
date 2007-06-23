@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.ui.OpenRepositoryTaskJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.CommonAddExistingTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
@@ -37,10 +38,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * TODO: refactor wizards into extension points
+ * Extend to provide connector-specific UI extensions.
+ * 
+ * TODO: consider refactoring into extension points
  * 
  * @author Mik Kersten
  * @author Eugene Kuleshov
+ * @since 2.0
  */
 public abstract class AbstractRepositoryConnectorUi {
 
@@ -51,7 +55,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	/**
 	 * @return the unique type of the repository, e.g. "bugzilla"
 	 */
-	public abstract String getRepositoryType();
+	public abstract String getConnectorKind();
 
 	public abstract AbstractRepositorySettingsPage getSettingsPage();
 
@@ -63,8 +67,6 @@ public abstract class AbstractRepositoryConnectorUi {
 	public abstract IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit);
 
 	public abstract IWizard getNewTaskWizard(TaskRepository taskRepository);
-
-	public abstract boolean hasRichEditor();
 
 	/**
 	 * Override to return a custom task editor ID. If overriding this method the
@@ -78,6 +80,9 @@ public abstract class AbstractRepositoryConnectorUi {
 
 	public abstract boolean hasSearchPage();
 
+	/**
+	 * Contributions to the UI legend.
+	 */
 	public List<AbstractTaskContainer> getLegendItems() {
 		return Collections.emptyList();
 	}
@@ -190,7 +195,7 @@ public abstract class AbstractRepositoryConnectorUi {
 	 */
 	public boolean openRepositoryTask(String repositoryUrl, String id) {
 		TaskRepositoryManager repositoryManager = TasksUiPlugin.getRepositoryManager();
-		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getRepositoryType());
+		AbstractRepositoryConnector connector = repositoryManager.getRepositoryConnector(getConnectorKind());
 		String taskUrl = connector.getTaskUrl(repositoryUrl, id);
 		if (taskUrl == null) {
 			return false;
@@ -208,7 +213,7 @@ public abstract class AbstractRepositoryConnectorUi {
 		}
 		IWorkbenchPage page = window.getActivePage();
 
-		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(getRepositoryType(), repositoryUrl, id, taskUrl, page);
+		OpenRepositoryTaskJob job = new OpenRepositoryTaskJob(getConnectorKind(), repositoryUrl, id, taskUrl, page);
 		job.schedule();
 
 		return true;
@@ -222,11 +227,11 @@ public abstract class AbstractRepositoryConnectorUi {
 		this.customNotificationHandling = customNotifications;
 	}
 
-	public boolean hasCustomNotificationHandling() {
+	public boolean isCustomNotificationHandling() {
 		return customNotificationHandling;
 	}
 
-	public boolean handlesDueDates(AbstractTask task) {
+	public boolean supportsDueDates(AbstractTask task) {
 		return false;
 	}
 

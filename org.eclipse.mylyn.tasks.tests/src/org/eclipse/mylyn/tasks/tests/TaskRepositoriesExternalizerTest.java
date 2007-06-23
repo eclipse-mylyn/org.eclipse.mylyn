@@ -51,13 +51,13 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 		repository1.setTimeZoneId(TIMEZONE);
 		repository1.setVersion(VERSION);
 		repository1.setCharacterEncoding(ENCODING);
-		repository1.setSyncTimeStamp(TIMESTAMP);		
+		repository1.setSynchronizationTimeStamp(TIMESTAMP);		
 		taskRepositories.add(repository1);
 		
 		repository2.setTimeZoneId(TIMEZONE + SUFFIX);
 		repository2.setVersion(VERSION+ SUFFIX);
 		repository2.setCharacterEncoding(ENCODING+ SUFFIX);
-		repository2.setSyncTimeStamp(TIMESTAMP+ SUFFIX);			
+		repository2.setSynchronizationTimeStamp(TIMESTAMP+ SUFFIX);			
 		taskRepositories.add(repository2);
 	}
 
@@ -78,12 +78,12 @@ public class TaskRepositoriesExternalizerTest extends TestCase {
 				assertEquals(TIMEZONE, repository.getTimeZoneId());
 				assertEquals(VERSION, repository.getVersion());
 				assertEquals(ENCODING, repository.getCharacterEncoding());
-				assertEquals(TIMESTAMP, repository.getSyncTimeStamp());
+				assertEquals(TIMESTAMP, repository.getSynchronizationTimeStamp());
 			} else if(repository.getUrl().equals(REPURL2)) {
 				assertEquals(TIMEZONE+ SUFFIX, repository.getTimeZoneId());
 				assertEquals(VERSION+ SUFFIX, repository.getVersion());
 				assertEquals(ENCODING+ SUFFIX, repository.getCharacterEncoding());
-				assertEquals(TIMESTAMP+ SUFFIX, repository.getSyncTimeStamp());
+				assertEquals(TIMESTAMP+ SUFFIX, repository.getSynchronizationTimeStamp());
 			}
 		}
 		

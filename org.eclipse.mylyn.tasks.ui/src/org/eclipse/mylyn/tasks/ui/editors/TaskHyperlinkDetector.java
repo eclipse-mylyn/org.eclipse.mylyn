@@ -63,7 +63,7 @@ public class TaskHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
 		if (connectorUi == null) {
 			return null;
 		}

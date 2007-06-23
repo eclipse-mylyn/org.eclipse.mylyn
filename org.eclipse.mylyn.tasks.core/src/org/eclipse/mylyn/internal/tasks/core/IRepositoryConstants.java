@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 /**
  * @author Mik Kersten
@@ -24,7 +24,7 @@ public interface IRepositoryConstants {
 
 	public static final String PROPERTY_VERSION = "version";
 
-	public static final String PROPERTY_KIND = "kind";
+	public static final String PROPERTY_CONNECTOR_KIND = "kind";
 
 	public static final String PROPERTY_URL = "url";
 

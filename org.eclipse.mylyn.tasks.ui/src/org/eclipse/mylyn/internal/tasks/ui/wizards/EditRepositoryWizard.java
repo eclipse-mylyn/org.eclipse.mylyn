@@ -36,7 +36,7 @@ public class EditRepositoryWizard extends Wizard implements INewWizard {
 		super();
 		this.repository = repository;
 		AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-				repository.getKind());
+				repository.getConnectorKind());
 		abstractRepositorySettingsPage = connectorUi.getSettingsPage();
 		abstractRepositorySettingsPage.setRepository(repository);
 		abstractRepositorySettingsPage.setVersion(repository.getVersion());

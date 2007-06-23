@@ -30,13 +30,14 @@ import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
 
 /**
- * TODO: some asymetry left between query containers and other task containers
+ * Stores and manages task list elements and their containment hierarchy.
  * 
  * @author Mik Kersten
+ * @since 2.0
  */
 public class TaskList {
 
-	private int lastTaskNum = 0;
+	private int lastLocalTaskId = 0;
 
 	private Set<ITaskListChangeListener> changeListeners = new CopyOnWriteArraySet<ITaskListChangeListener>();
 
@@ -69,7 +70,7 @@ public class TaskList {
 		defaultCategory = new UnfiledCategory();
 
 		activeTasks = new CopyOnWriteArrayList<AbstractTask>();
-		lastTaskNum = 0;
+		lastLocalTaskId = 0;
 		categories.put(defaultCategory.getHandleIdentifier(), defaultCategory);
 		categories.put(archiveContainer.getHandleIdentifier(), archiveContainer);
 	}
@@ -656,30 +657,30 @@ public class TaskList {
 		}
 	}
 
-	public int getNextTaskNum() {
-		return ++lastTaskNum;
+	public int getNextLocalTaskId() {
+		return ++lastLocalTaskId;
 	}
 
-	public void setLastTaskNum(int lastTaskNum) {
-		this.lastTaskNum = lastTaskNum;
+	public void setLastLocalTaskId(int lastTaskNum) {
+		this.lastLocalTaskId = lastTaskNum;
 	}
 
 	/** For tasklist persistence. Use getNextTaskNum for task construction */
-	public int getLastTaskNum() {
-		return lastTaskNum;
+	public int getLastLocalTaskId() {
+		return lastLocalTaskId;
 	}
 
 	/** Note: use getNextTaskNum for new task construction */
-	public int findLargestTaskHandle() {
+	public int findLargestTaskId() {
 		int max = 0;
-		max = Math.max(largestTaskHandleHelper(tasks.values()), max);
+		max = Math.max(largestTaskIdHelper(tasks.values()), max);
 		for (AbstractTaskCategory cat : getTaskContainers()) {
-			max = Math.max(largestTaskHandleHelper(cat.getChildren()), max);
+			max = Math.max(largestTaskIdHelper(cat.getChildren()), max);
 		}
 		return max;
 	}
 
-	private int largestTaskHandleHelper(Collection<AbstractTask> tasks) {
+	private int largestTaskIdHelper(Collection<AbstractTask> tasks) {
 		int ihandle = 0;
 		int max = 0;
 		for (AbstractTask task : tasks) {
@@ -692,7 +693,7 @@ public class TaskList {
 				}
 			}
 			max = Math.max(ihandle, max);
-			ihandle = largestTaskHandleHelper(task.getChildren());
+			ihandle = largestTaskIdHelper(task.getChildren());
 			max = Math.max(ihandle, max);
 		}
 		return max;

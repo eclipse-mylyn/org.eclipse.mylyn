@@ -26,8 +26,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -191,7 +191,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		super.setTitle(title);
 		super.setDescription(description);
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repositoryUi.getRepositoryType());
+				repositoryUi.getConnectorKind());
 		this.connector = connector;
 
 		setNeedsAnonymousLogin(false);
@@ -770,7 +770,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 		setProxyAuth(oldProxyUsername != null && oldProxyPassword != null && !oldProxyUsername.equals("")
 				&& !oldProxyPassword.equals(""));
 
-		setUseDefaultProxy(repository != null ? repository.useDefaultProxy() : true);
+		setUseDefaultProxy(repository != null ? repository.isDefaultProxyEnabled() : true);
 		proxyExpComposite.setExpanded(!systemProxyButton.getSelection());
 	}
 

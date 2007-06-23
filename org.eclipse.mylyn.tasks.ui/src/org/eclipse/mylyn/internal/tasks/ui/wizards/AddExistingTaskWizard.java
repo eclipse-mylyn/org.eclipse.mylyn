@@ -12,8 +12,8 @@
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -40,7 +40,7 @@ public class AddExistingTaskWizard extends MultiRepositoryAwareWizard {
 		@Override
 		protected IWizard createWizard(TaskRepository taskRepository) {
 			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(
-					taskRepository.getKind());
+					taskRepository.getConnectorKind());
 			return connectorUi.getAddExistingTaskWizard(taskRepository);
 		}
 	}

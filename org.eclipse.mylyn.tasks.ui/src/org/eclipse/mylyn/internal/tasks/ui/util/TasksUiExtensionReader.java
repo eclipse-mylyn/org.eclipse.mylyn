@@ -317,7 +317,7 @@ public class TasksUiExtensionReader {
 							.getName(), iconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addBrandingIcon(
-								((AbstractRepositoryConnectorUi) connectorUi).getRepositoryType(),
+								((AbstractRepositoryConnectorUi) connectorUi).getConnectorKind(),
 								TasksUiImages.getImage(descriptor));
 					}
 				}
@@ -327,7 +327,7 @@ public class TasksUiExtensionReader {
 							.getName(), overlayIconPath);
 					if (descriptor != null) {
 						TasksUiPlugin.getDefault().addOverlayIcon(
-								((AbstractRepositoryConnectorUi) connectorUi).getRepositoryType(), descriptor);
+								((AbstractRepositoryConnectorUi) connectorUi).getConnectorKind(), descriptor);
 					}
 				}
 			} else {

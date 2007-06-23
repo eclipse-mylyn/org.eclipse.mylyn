@@ -36,7 +36,7 @@ public class EditRepositoryPropertiesAction extends AbstractTaskRepositoryAction
 			Object selectedObject = selection.getFirstElement();
 			if(selectedObject instanceof TaskRepository){
 				TaskRepository taskRepository = (TaskRepository) selectedObject;
-				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getKind());
+				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(taskRepository.getConnectorKind());
 				if(connector.isUserManaged()){
 					return true;
 				}

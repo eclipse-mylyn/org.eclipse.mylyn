@@ -43,12 +43,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
+import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -364,8 +364,8 @@ public class TaskListWriter {
 				// bug#173710 - task number incorrect resulting in invalid task
 				// list
 				// Doing count each time
-				int largest = taskList.findLargestTaskHandle();
-				taskList.setLastTaskNum(largest);
+				int largest = taskList.findLargestTaskId();
+				taskList.setLastLocalTaskId(largest);
 
 			}
 		} catch (Exception e) {

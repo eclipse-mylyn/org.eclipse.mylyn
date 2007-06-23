@@ -40,11 +40,11 @@ public abstract class AbstractTaskListFactory {
 		return false;
 	}
 	
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) throws TaskExternalizationException {
+	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element){
 		return null;
 	}
 	
-	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String label, Element element) throws TaskExternalizationException;
+	public abstract AbstractTask createTask(String repositoryUrl, String taskId, String label, Element element);
 
 	public String getQueryElementName(AbstractRepositoryQuery query) {
 		return "";

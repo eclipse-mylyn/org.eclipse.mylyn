@@ -8,10 +8,11 @@
  * Contributors:
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.tasks.core;
 
 /**
- * @author Mik Kersten and Ken Sueda
+ * @author Mik Kersten
+ * @author Ken Sueda
  */
 public class TaskExternalizationException extends Exception {
 

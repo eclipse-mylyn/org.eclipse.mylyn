@@ -24,7 +24,6 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TaskListManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
@@ -84,7 +83,7 @@ public class ScheduledTaskListSynchJob extends Job {
 				}
 
 				final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-						.getRepositoryConnector(repository.getKind());
+						.getRepositoryConnector(repository.getConnectorKind());
 				if (connector == null) {
 					monitor.worked(1);
 					continue;

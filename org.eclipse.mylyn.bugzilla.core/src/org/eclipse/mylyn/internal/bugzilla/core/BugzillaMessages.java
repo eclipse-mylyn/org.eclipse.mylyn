@@ -9,42 +9,41 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.core;
+package org.eclipse.mylyn.internal.bugzilla.core;
 
 import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Rob Elves
  */
-public class TasksMessages extends NLS {
+public final class BugzillaMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.tasks.core.MylarMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.internal.bugzilla.core.BugzillaMessages";//$NON-NLS-1$
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, TasksMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, BugzillaMessages.class);
 	}
 
-	private TasksMessages() {
+	private BugzillaMessages() {
 		// Do not instantiate
 	}
 
-	public static String repository_login_failure;
+	public static String repositoryLoginFailure;
 
-	public static String repository_not_found;
+	public static String repositoryNotFound;
 	
-	public static String repository_comment_reqd;
+	public static String repositoryCommentReqd;
 	
-	public static String repository_collision;
+	public static String repositoryCollision;
 
-	public static String operation_cancelled;
+	public static String operationCancelled;
 
-	public static String network_error;
+	public static String errorNetwork;
 
-	public static String io_error;
+	public static String errorIo;
 
-	public static String internal_error;
+	public static String errorInternal;
 
-
-	public static String repository_error;
+	public static String errorRepository;
 
 }

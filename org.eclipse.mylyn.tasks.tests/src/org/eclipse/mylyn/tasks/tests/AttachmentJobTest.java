@@ -67,7 +67,7 @@ public class AttachmentJobTest extends TestCase {
 		StatusManager.addStatusHandler(statusHandler);
 		
 		attachment = new RepositoryAttachment(null);
-		attachment.setRepositoryKind(repository.getKind());
+		attachment.setRepositoryKind(repository.getConnectorKind());
 		attachment.setRepositoryUrl(repository.getUrl());
 	}
 

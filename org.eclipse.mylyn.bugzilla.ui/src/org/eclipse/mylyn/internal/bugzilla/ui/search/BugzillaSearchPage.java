@@ -1186,7 +1186,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		if (connect) {
 			final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-					repository.getKind());
+					repository.getConnectorKind());
 
 			IRunnableWithProgress updateRunnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

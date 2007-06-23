@@ -26,8 +26,11 @@ import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
 
 /**
+ * Provides facilities for managing the lifecycle of and access to task repositories.
+ * 
  * @author Mik Kersten
  * @author Rob Elves
+ * @since 2.0
  */
 public class TaskRepositoryManager {
 
@@ -87,11 +90,11 @@ public class TaskRepositoryManager {
 
 	public void addRepository(TaskRepository repository, String repositoryFilePath) {
 		Set<TaskRepository> repositories;
-		if (!repositoryMap.containsKey(repository.getKind())) {
+		if (!repositoryMap.containsKey(repository.getConnectorKind())) {
 			repositories = new HashSet<TaskRepository>();
-			repositoryMap.put(repository.getKind(), repositories);
+			repositoryMap.put(repository.getConnectorKind(), repositories);
 		} else {
-			repositories = repositoryMap.get(repository.getKind());
+			repositories = repositoryMap.get(repository.getConnectorKind());
 		}
 		repositories.add(repository);
 		saveRepositories(repositoryFilePath);
@@ -101,7 +104,7 @@ public class TaskRepositoryManager {
 	}
 
 	public void removeRepository(TaskRepository repository, String repositoryFilePath) {
-		Set<TaskRepository> repositories = repositoryMap.get(repository.getKind());
+		Set<TaskRepository> repositories = repositoryMap.get(repository.getConnectorKind());
 		if (repositories != null) {
 			repository.flushAuthenticationCredentials();
 			repositories.remove(repository);
@@ -266,8 +269,8 @@ public class TaskRepositoryManager {
 							migration = true;
 						}
 
-						if (repositoryMap.containsKey(repository.getKind())) {
-							repositoryMap.get(repository.getKind()).add(repository);
+						if (repositoryMap.containsKey(repository.getConnectorKind())) {
+							repositoryMap.get(repository.getConnectorKind()).add(repository);
 						} else {
 							orphanedRepositories.add(repository);
 						}
@@ -334,16 +337,9 @@ public class TaskRepositoryManager {
 		saveRepositories(repositoriesFilePath);
 	}
 
-	public void setSyncTime(TaskRepository repository, String syncTime, String repositoriesFilePath) {
-		repository.setSyncTimeStamp(syncTime);
+	public void setSynchronizationTime(TaskRepository repository, String syncTime, String repositoriesFilePath) {
+		repository.setSynchronizationTimeStamp(syncTime);
 		saveRepositories(repositoriesFilePath);
-
-		// String prefIdSyncTime = repository.getUrl() + PROPERTY_DELIM +
-		// PROPERTY_SYNCTIMESTAMP;
-		// if (repository.getSyncTimeStamp() != null) {
-		// MylarTaskListPlugin.getMylarCorePrefs().setValue(prefIdSyncTime,
-		// repository.getSyncTimeStamp());
-		// }
 	}
 
 	public synchronized boolean saveRepositories(String destinationPath) {
@@ -360,10 +356,6 @@ public class TaskRepositoryManager {
 		}
 
 		try {
-			// String dataDirectory =
-			// TasksUiPlugin.getDefault().getDataDirectory();
-			// File repositoriesFile = new File(dataDirectory + File.separator +
-			// TasksUiPlugin.DEFAULT_REPOSITORIES_FILE);
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {

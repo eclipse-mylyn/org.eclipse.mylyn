@@ -112,7 +112,7 @@ public class ContextRetrieveWizardPage extends WizardPage {
 		});
 
 		AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
+				repository.getConnectorKind());
 
 		List<RepositoryAttachment> contextAttachments = new ArrayList<RepositoryAttachment>();
 		if (connector.getAttachmentHandler() != null) {

@@ -438,7 +438,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		repositoryTask = editorInput.getRepositoryTask();
 		repository = editorInput.getRepository();
 		taskData = editorInput.getTaskData();
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 
 		setSite(site);
 		setInput(input);

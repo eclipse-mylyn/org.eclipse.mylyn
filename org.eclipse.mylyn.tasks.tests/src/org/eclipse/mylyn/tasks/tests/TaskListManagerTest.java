@@ -88,21 +88,21 @@ public class TaskListManagerTest extends TestCase {
 		manager.getTaskList().addTask(task1);
 		LocalTask task2 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task2);
-		assertEquals(2, manager.getTaskList().getLastTaskNum());
+		assertEquals(2, manager.getTaskList().getLastLocalTaskId());
 		manager.getTaskList().deleteTask(task2);
 		LocalTask task3 = manager.createNewLocalTask("label");
 		manager.getTaskList().addTask(task3);
 		assertTrue(task3.getHandleIdentifier() + " should end with 3", task3.getHandleIdentifier().endsWith("3"));
-		assertEquals(3, manager.getTaskList().getLastTaskNum());
+		assertEquals(3, manager.getTaskList().getLastLocalTaskId());
 
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
 		manager.saveTaskList();
 		manager.resetTaskList();
 		assertEquals(0, manager.getTaskList().getAllTasks().size());
-		assertEquals(0, manager.getTaskList().getLastTaskNum());
+		assertEquals(0, manager.getTaskList().getLastLocalTaskId());
 		manager.readExistingOrCreateNewList();
 		assertEquals(2, manager.getTaskList().getAllTasks().size());
-		assertEquals(3, manager.getTaskList().getLastTaskNum());
+		assertEquals(3, manager.getTaskList().getLastLocalTaskId());
 		AbstractTask task4 = manager.createNewLocalTask("label");
 		assertTrue(task4.getHandleIdentifier() + " should end with 4", task4.getHandleIdentifier().endsWith("4"));
 	}

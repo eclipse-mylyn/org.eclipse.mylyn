@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 /**
  * @author Willian Mitsuda

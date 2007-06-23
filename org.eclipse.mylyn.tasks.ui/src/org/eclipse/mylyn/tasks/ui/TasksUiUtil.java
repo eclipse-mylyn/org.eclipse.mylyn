@@ -149,7 +149,7 @@ public class TasksUiUtil {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
 		} else {
-			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getKind());
+			AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getRepositoryUi(repository.getConnectorKind());
 			if (connectorUi != null) {
 				try {
 					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);

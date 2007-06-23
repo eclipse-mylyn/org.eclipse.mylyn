@@ -9,7 +9,7 @@
  *     University Of British Columbia - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,8 +24,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
-import org.eclipse.mylyn.internal.tasks.ui.TaskFactory;
-import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -34,6 +32,7 @@ import org.eclipse.mylyn.tasks.core.QueryHitCollector;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressConstants;
 
@@ -139,7 +138,7 @@ class SynchronizeQueryJob extends Job {
 				job.run(new SubProgressMonitor(monitor, 40));
 
 				if (Platform.isRunning() && !(TasksUiPlugin.getRepositoryManager() == null)) {
-					TasksUiPlugin.getRepositoryManager().setSyncTime(repository,
+					TasksUiPlugin.getRepositoryManager().setSynchronizationTime(repository,
 							connector.getSynchronizationTimestamp(repository, tasksToBeSynchronized),
 							TasksUiPlugin.getDefault().getRepositoriesFilePath());
 				}

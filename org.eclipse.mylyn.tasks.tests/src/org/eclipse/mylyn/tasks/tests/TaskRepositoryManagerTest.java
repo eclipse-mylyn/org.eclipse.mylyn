@@ -129,18 +129,18 @@ public class TaskRepositoryManagerTest extends TestCase {
 		repository1.setVersion(version);
 		repository1.setCharacterEncoding(encoding);
 		repository1.setTimeZoneId(fakeTimeZone);
-		repository1.setSyncTimeStamp(dateString);
+		repository1.setSynchronizationTimeStamp(dateString);
 		repository1.setAnonymous(true);
 		manager.addRepository(repository1, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		TaskRepository temp = manager.getRepository(repository1.getKind(), repository1.getUrl());
+		TaskRepository temp = manager.getRepository(repository1.getConnectorKind(), repository1.getUrl());
 		assertNotNull(temp);
 		assertEquals(version, temp.getVersion());
 		assertTrue(temp.isAnonymous());		
 		assertEquals(encoding, temp.getCharacterEncoding());
 		assertEquals(fakeTimeZone, temp.getTimeZoneId());
-		assertEquals(dateString, temp.getSyncTimeStamp());
+		assertEquals(dateString, temp.getSynchronizationTimeStamp());
 
 	}
 
@@ -148,15 +148,15 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		TaskRepository repository = new TaskRepository(DEFAULT_KIND, DEFAULT_URL);
 		manager.addRepository(repository, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertNotNull(manager.getRepository(repository.getKind(), repository.getUrl()));
+		assertNotNull(manager.getRepository(repository.getConnectorKind(), repository.getUrl()));
 	
 		TaskRepository repository2 = new TaskRepository(DEFAULT_KIND, ANOTHER_URL);
 		manager.addRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
-		assertNotNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
+		assertNotNull(manager.getRepository(repository2.getConnectorKind(), repository2.getUrl()));
 
 		manager.removeRepository(repository2, TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		assertNull(manager.getRepository(repository2.getKind(), repository2.getUrl()));
+		assertNull(manager.getRepository(repository2.getConnectorKind(), repository2.getUrl()));
 	}
 
 	public void testRepositoryWithUnnownUrlHandler() {
@@ -182,7 +182,7 @@ public class TaskRepositoryManagerTest extends TestCase {
 
 		manager.readRepositories(TasksUiPlugin.getDefault().getRepositoriesFilePath());
 
-		TaskRepository temp = manager.getRepository(repository.getKind(), repository.getUrl());
+		TaskRepository temp = manager.getRepository(repository.getConnectorKind(), repository.getUrl());
 		assertNotNull(temp);
 		assertEquals("euxx", temp.getProperty("owner"));
 	}

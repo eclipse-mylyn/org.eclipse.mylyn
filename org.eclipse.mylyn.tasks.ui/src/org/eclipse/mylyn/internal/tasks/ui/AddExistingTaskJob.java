@@ -61,7 +61,7 @@ public class AddExistingTaskJob extends Job {
 	@Override
 	public IStatus run(IProgressMonitor monitor) {
 		final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-				repository.getKind());
+				repository.getConnectorKind());
 		try {
 			final AbstractTask newTask = connector.createTaskFromExistingId(repository, taskId, monitor);
 

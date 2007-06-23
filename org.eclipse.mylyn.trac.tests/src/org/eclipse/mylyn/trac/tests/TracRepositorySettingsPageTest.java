@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracCorePlugin;
 import org.eclipse.mylyn.internal.trac.core.ITracClient.Version;
-import org.eclipse.mylyn.internal.trac.ui.TracRepositoryUi;
+import org.eclipse.mylyn.internal.trac.ui.TracConnectorUi;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage;
 import org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage.TracValidator;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 
-	private TracRepositoryUi connector;
+	private TracConnectorUi connector;
 	private TracRepositorySettingsPage page;
 	private TracValidator validator;
 
@@ -41,7 +41,7 @@ public class TracRepositorySettingsPageTest extends AbstractTracClientTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		connector = (TracRepositoryUi) TasksUiPlugin.getRepositoryUi(TracCorePlugin.REPOSITORY_KIND);
+		connector = (TracConnectorUi) TasksUiPlugin.getRepositoryUi(TracCorePlugin.REPOSITORY_KIND);
 		page = new TracRepositorySettingsPage(connector);
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();

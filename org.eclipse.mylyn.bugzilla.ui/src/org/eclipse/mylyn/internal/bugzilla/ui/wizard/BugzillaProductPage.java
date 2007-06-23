@@ -212,7 +212,7 @@ public class BugzillaProductPage extends WizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					final AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager()
-							.getRepositoryConnector(repository.getKind());
+							.getRepositoryConnector(repository.getConnectorKind());
 
 					getContainer().run(true, false, new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) throws InvocationTargetException,

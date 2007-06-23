@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Steffen Pingel
  * @since 2.0
  */
-public class RepositoryTemplate {
+public final class RepositoryTemplate {
 
 	public final Map<String, String> genericAttributes = new LinkedHashMap<String, String>();
 	

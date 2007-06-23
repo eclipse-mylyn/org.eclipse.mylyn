@@ -11,7 +11,7 @@
 
 package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
-import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
 
 /**
  * @author Mik Kersten

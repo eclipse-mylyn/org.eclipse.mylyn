@@ -12,6 +12,12 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 
+/**
+ * Extend to provide task duplicate detection facilities to the task editor (e.g. Java stack trace matching).
+ * 
+ * @author Gail Murphy
+ * @since 2.0
+ */
 public abstract class AbstractDuplicateDetector {
 
 	protected String name;

@@ -49,7 +49,7 @@ public class RepositoryOfflineAction extends Action implements ISelectionChanged
 			Object selectedObject = ((IStructuredSelection)selection).getFirstElement();
 			if (selectedObject instanceof TaskRepository) {
 				AbstractRepositoryConnector connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(
-						((TaskRepository) selectedObject).getKind());
+						((TaskRepository) selectedObject).getConnectorKind());
 				if (connector.isUserManaged()) {
 					this.repository = (TaskRepository) selectedObject;
 					setChecked(this.repository.isOffline());

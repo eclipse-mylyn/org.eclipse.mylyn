@@ -28,12 +28,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.jface.wizard.WizardSelectionPage;
+import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AddRepositoryAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesSorter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
-import org.eclipse.mylyn.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
@@ -232,13 +232,13 @@ public abstract class SelectRepositoryPage extends WizardSelectionPage {
 				return true;
 			}
 
-			return this.repository.getKind().equals(that.repository.getKind())
+			return this.repository.getConnectorKind().equals(that.repository.getConnectorKind())
 					&& this.repository.getUrl().equals(that.repository.getUrl());
 		}
 
 		@Override
 		public int hashCode() {
-			return 31 * this.repository.getUrl().hashCode() + this.repository.getKind().hashCode();
+			return 31 * this.repository.getUrl().hashCode() + this.repository.getConnectorKind().hashCode();
 		}
 
 	}

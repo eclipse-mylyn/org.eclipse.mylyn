@@ -13,7 +13,6 @@ package org.eclipse.mylyn.tasks.tests.connector;
 
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.w3c.dom.Element;
 
 /**
@@ -27,7 +26,7 @@ public class MockTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
 		MockRepositoryTask task = new MockRepositoryTask(repositoryUrl, taskId, summary);
 		return task;
 	}

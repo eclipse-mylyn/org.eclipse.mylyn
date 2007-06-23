@@ -158,7 +158,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 				return true;
 			}
 
-			if (repository.getSyncTimeStamp() == null) {
+			if (repository.getSynchronizationTimeStamp() == null) {
 				for (AbstractTask task : tasks) {
 					task.setStale(true);
 				}
@@ -167,7 +167,7 @@ public class TracRepositoryConnector extends AbstractRepositoryConnector {
 
 			Date since = new Date(0);
 			try {
-				since = TracUtils.parseDate(Integer.parseInt(repository.getSyncTimeStamp()));
+				since = TracUtils.parseDate(Integer.parseInt(repository.getSynchronizationTimeStamp()));
 			} catch (NumberFormatException e) {
 			}
 

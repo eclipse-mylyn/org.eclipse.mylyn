@@ -19,7 +19,6 @@ import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.AbstractTask.RepositoryTaskSyncState;
-import org.eclipse.mylyn.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -47,7 +46,7 @@ public class TaskFactory implements ITaskFactory {
 		this.repository = repository;
 		this.updateTasklist = updateTasklist;
 		this.forced = forced;
-		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getKind());
+		connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(repository.getConnectorKind());
 		synchManager = TasksUiPlugin.getSynchronizationManager();
 		taskList = TasksUiPlugin.getTaskListManager().getTaskList();
 		//dataManager = TasksUiPlugin.getDefault().getTaskDataManager();

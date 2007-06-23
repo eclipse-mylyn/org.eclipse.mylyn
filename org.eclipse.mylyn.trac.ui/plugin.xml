@@ -12,7 +12,7 @@
             type="trac"/>
       <connectorUi
             brandingIcon="icons/eview16/trac-icon.gif"
-            class="org.eclipse.mylyn.internal.trac.ui.TracRepositoryUi"
+            class="org.eclipse.mylyn.internal.trac.ui.TracConnectorUi"
             id="Trac Repository UI"
             overlayIcon="icons/eview16/overlay-trac.gif"/>
       <taskListFactory

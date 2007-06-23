@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.mylyn.internal.monitor.core.util.XmlStringConverter;
-import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -36,7 +35,7 @@ public class SaxRepositoriesContentHandler extends DefaultHandler {
 		try {
 			if (localName.equals(TaskRepositoriesExternalizer.ELEMENT_TASK_REPOSITORY) && attributes != null) {
 				String kind = XmlStringConverter.convertXmlToString(attributes
-						.getValue(IRepositoryConstants.PROPERTY_KIND));
+						.getValue(IRepositoryConstants.PROPERTY_CONNECTOR_KIND));
 				String url = XmlStringConverter.convertXmlToString(attributes
 						.getValue(IRepositoryConstants.PROPERTY_URL));
 				if (kind != null && kind.length() > 0 && url != null && url.length() > 0) {

@@ -10,8 +10,8 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
@@ -34,8 +34,8 @@ public class TaskRepositoriesSorter extends ViewerSorter {
 				return 1;
 			}
 			
-			if (!t1.getKind().equals(t2.getKind())) {
-				return (t1.getKind()).compareTo(t2.getKind());
+			if (!t1.getConnectorKind().equals(t2.getConnectorKind())) {
+				return (t1.getConnectorKind()).compareTo(t2.getConnectorKind());
 			} else { 
 				if ((label1 == null || label1.equals("")) && label2 != null) {
 					return 1;

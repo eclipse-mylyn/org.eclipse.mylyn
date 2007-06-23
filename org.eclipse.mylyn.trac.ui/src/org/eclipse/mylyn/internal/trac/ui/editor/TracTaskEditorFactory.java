@@ -37,7 +37,7 @@ public class TracTaskEditorFactory extends AbstractTaskEditorFactory {
 		if (input instanceof RepositoryTaskEditorInput) {
 			RepositoryTaskEditorInput taskInput = (RepositoryTaskEditorInput) input;
 			return taskInput.getTaskData() != null
-					&& TracCorePlugin.REPOSITORY_KIND.equals(taskInput.getRepository().getKind());
+					&& TracCorePlugin.REPOSITORY_KIND.equals(taskInput.getRepository().getConnectorKind());
 		} else if (input instanceof TaskEditorInput) {
 			TaskEditorInput taskInput = (TaskEditorInput) input;
 			return taskInput.getTask() instanceof TracTask;

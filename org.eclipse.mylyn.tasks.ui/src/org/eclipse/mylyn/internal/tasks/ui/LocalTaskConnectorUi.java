@@ -6,40 +6,40 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.tests.connector;
+package org.eclipse.mylyn.internal.tasks.ui;
 
 import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
+import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
 
 /**
- * @author Mik Kersten
+ * @author Rob Elves
  */
-public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
+public class LocalTaskConnectorUi extends AbstractRepositoryConnectorUi {
 
 	@Override
 	public IWizard getNewTaskWizard(TaskRepository taskRepository) {
-		// ignore
+		return new NewLocalTaskWizard();
+	}
+
+
+	@Override
+	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery queryToEdit) {
 		return null;
 	}
 
 	@Override
-	public String getRepositoryType() {
-		return "mock";
+	public String getConnectorKind() {
+		return LocalRepositoryConnector.REPOSITORY_KIND;
 	}
 
 	@Override
 	public AbstractRepositorySettingsPage getSettingsPage() {
-		// ignore
 		return null;
-	}
-
-	@Override
-	public boolean hasRichEditor() {
-		// ignore
-		return false;
 	}
 
 	@Override
@@ -47,9 +47,4 @@ public class MockRepositoryUi extends AbstractRepositoryConnectorUi {
 		return false;
 	}
 
-	@Override
-	public IWizard getQueryWizard(TaskRepository repository, AbstractRepositoryQuery query) {
-		// ignore
-		return null;
-	}
 }

@@ -75,7 +75,7 @@ public class BugzillaTaskEditorFactory extends AbstractTaskEditorFactory {
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
 			return BugzillaCorePlugin.REPOSITORY_KIND.equals(((RepositoryTaskEditorInput) input).getRepository()
-					.getKind());
+					.getConnectorKind());
 		}
 		return false;
 	}

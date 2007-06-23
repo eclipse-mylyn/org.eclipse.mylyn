@@ -16,10 +16,10 @@ import java.util.Set;
 
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
+import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskListFactory;
-import org.eclipse.mylyn.tasks.core.TaskExternalizationException;
 import org.w3c.dom.Element;
 
 /**
@@ -75,7 +75,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) throws TaskExternalizationException {
+	public AbstractRepositoryQuery createQuery(String repositoryUrl, String queryString, String label, Element element) {
 		BugzillaRepositoryQuery query = new BugzillaRepositoryQuery(repositoryUrl, queryString, label);
 		if (element.getNodeName().equals(TAG_BUGZILLA_CUSTOM_QUERY)) {
 			query.setCustomQuery(true);
@@ -90,7 +90,7 @@ public class BugzillaTaskListFactory extends AbstractTaskListFactory {
 	}
 
 	@Override
-	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) throws TaskExternalizationException {
+	public AbstractTask createTask(String repositoryUrl, String taskId, String summary, Element element) {
 		BugzillaTask task = new BugzillaTask(repositoryUrl, taskId, summary);
 		if (element.hasAttribute(KEY_SEVERITY)) {
 			task.setSeverity(element.getAttribute(KEY_SEVERITY));

@@ -50,7 +50,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
 				projectWrapper.getProject(), true);
 		assertNotNull(returnedRepository);
-		assertEquals(REPOSITORY_KIND, returnedRepository.getKind());
+		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
 	}
 	
@@ -65,7 +65,7 @@ public class ProjectRepositoryAssociationTest extends TestCase {
 		TaskRepository returnedRepository = TasksUiPlugin.getDefault().getRepositoryForResource(
 				folder, true);
 		assertNotNull(returnedRepository);
-		assertEquals(REPOSITORY_KIND, returnedRepository.getKind());
+		assertEquals(REPOSITORY_KIND, returnedRepository.getConnectorKind());
 		assertEquals(REPOSITORY_URL, returnedRepository.getUrl());
 	}
 }

@@ -45,7 +45,7 @@ import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;
  * @author Mik Kersten
  * @author Eugene Kuleshov
  */
-public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
+public class BugzillaConnectorUi extends AbstractRepositoryConnectorUi {
 	
 	@Override
 	public String getAccountCreationUrl(TaskRepository taskRepository) {
@@ -196,18 +196,13 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public boolean hasRichEditor() {
-		return true;
-	}
-
-	@Override
-	public String getRepositoryType() {
+	public String getConnectorKind() {
 		return BugzillaCorePlugin.REPOSITORY_KIND;
 	}
 
 	@SuppressWarnings("restriction")
 	@Override
-	public boolean handlesDueDates(AbstractTask task) {
+	public boolean supportsDueDates(AbstractTask task) {
 		if(task instanceof BugzillaTask){
 			// XXX This is only used in the planning editor, and if its input was set correctly as a RepositoryTaskEditorInput
 			// we wouldn't have to get the task data this way from here
@@ -215,7 +210,7 @@ public class BugzillaRepositoryUi extends AbstractRepositoryConnectorUi {
 			if(taskData != null && taskData.getAttribute(BugzillaReportElement.ESTIMATED_TIME.getKeyString()) != null)
 				return true;
 		}
-		return super.handlesDueDates(task);
+		return super.supportsDueDates(task);
 	}
 	
 }

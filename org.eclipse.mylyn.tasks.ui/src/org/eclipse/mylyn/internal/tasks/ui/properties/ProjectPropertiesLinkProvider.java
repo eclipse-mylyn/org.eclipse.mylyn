@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-package org.eclipse.mylyn.tasks.ui;
+package org.eclipse.mylyn.internal.tasks.ui.properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
+import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
+import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -23,7 +25,7 @@ import org.osgi.service.prefs.BackingStoreException;
  * 
  * @author Eugene Kuleshov
  */
-public class ProjectPreferencesLinkProvider extends AbstractTaskRepositoryLinkProvider {
+public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkProvider {
 
 	private static final String PROPERTY_PREFIX = "project.repository";
 
@@ -64,7 +66,7 @@ public class ProjectPreferencesLinkProvider extends AbstractTaskRepositoryLinkPr
 		IScopeContext projectScope = new ProjectScope(project);
 		IEclipsePreferences projectNode = projectScope.getNode(TasksUiPlugin.PLUGIN_ID);
 		if (projectNode != null) {
-			projectNode.put(PROJECT_REPOSITORY_KIND, repository.getKind());
+			projectNode.put(PROJECT_REPOSITORY_KIND, repository.getConnectorKind());
 			projectNode.put(PROJECT_REPOSITORY_URL, repository.getUrl());
 			try {
 				projectNode.flush();

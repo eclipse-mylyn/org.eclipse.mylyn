@@ -50,6 +50,7 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineCachingStorage;
 import org.eclipse.mylyn.internal.tasks.ui.OfflineFileStorage;
 import org.eclipse.mylyn.internal.tasks.ui.RepositoryAwareStatusHandler;
+import org.eclipse.mylyn.internal.tasks.ui.RepositorySynchronizationManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListBackupManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListNotificationIncoming;
@@ -281,9 +282,9 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// Incoming Changes
 			for (TaskRepository repository : getRepositoryManager().getAllRepositories()) {
 				AbstractRepositoryConnector connector = getRepositoryManager().getRepositoryConnector(
-						repository.getKind());
-				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getKind());
-				if (connectorUi != null && !connectorUi.hasCustomNotificationHandling()) {
+						repository.getConnectorKind());
+				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(repository.getConnectorKind());
+				if (connectorUi != null && !connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask repositoryTask : TasksUiPlugin.getTaskListManager()
 							.getTaskList()
 							.getRepositoryTasks(repository.getUrl())) {
@@ -300,7 +301,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 			// New query hits
 			for (AbstractRepositoryQuery query : TasksUiPlugin.getTaskListManager().getTaskList().getQueries()) {
 				AbstractRepositoryConnectorUi connectorUi = getRepositoryUi(query.getRepositoryKind());
-				if (!connectorUi.hasCustomNotificationHandling()) {
+				if (!connectorUi.isCustomNotificationHandling()) {
 					for (AbstractTask hit : query.getChildren()) {
 						if (hit.isNotified() == false) {
 							notifications.add(new TaskListNotificationQueryIncoming(hit));
@@ -771,7 +772,7 @@ public class TasksUiPlugin extends AbstractUIPlugin implements IStartup {
 
 	public static void addRepositoryConnectorUi(AbstractRepositoryConnectorUi repositoryConnectorUi) {
 		if (!repositoryConnectorUis.values().contains(repositoryConnectorUi)) {
-			repositoryConnectorUis.put(repositoryConnectorUi.getRepositoryType(), repositoryConnectorUi);
+			repositoryConnectorUis.put(repositoryConnectorUi.getConnectorKind(), repositoryConnectorUi);
 		}
 	}
 

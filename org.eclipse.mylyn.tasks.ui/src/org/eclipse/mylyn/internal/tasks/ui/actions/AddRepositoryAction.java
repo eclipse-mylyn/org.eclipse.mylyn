@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.tasks.ui.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
-import org.eclipse.mylyn.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
