@@ -14,8 +14,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.mylyn.internal.monitor.core.util.IStatusHandler;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.util.WebBrowserDialog;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -53,7 +53,7 @@ public class RepositoryAwareStatusHandler implements IStatusHandler {
 	public void displayStatus(final String title, final IStatus status) {
 
 		if (status.getCode() == RepositoryStatus.ERROR_INTERNAL) {
-			StatusManager.log(status);
+			StatusHandler.log(status);
 			fail(status, true);
 			return;
 		}

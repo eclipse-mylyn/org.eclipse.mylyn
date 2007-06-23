@@ -23,8 +23,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -162,7 +162,7 @@ class SynchronizeQueryJob extends Job {
 		if (status != null && isForced()) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					StatusManager.displayStatus("Query Synchronization Failed", status);
+					StatusHandler.displayStatus("Query Synchronization Failed", status);
 				}
 			});
 		}
@@ -178,7 +178,7 @@ class SynchronizeQueryJob extends Job {
 			// do nothing
 		} else if (resultingStatus.isOK()) {
 			if (collector.getTasks().size() >= QueryHitCollector.MAX_HITS) {
-				StatusManager.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
+				StatusHandler.log(QueryHitCollector.MAX_HITS_REACHED + "\n" + repositoryQuery.getSummary(), this);
 			}
 
 			repositoryQuery.clear();
@@ -212,7 +212,7 @@ class SynchronizeQueryJob extends Job {
 			if (isForced()) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						StatusManager.displayStatus("Query Synchronization Failed", resultingStatus);
+						StatusHandler.displayStatus("Query Synchronization Failed", resultingStatus);
 					}
 				});
 			}

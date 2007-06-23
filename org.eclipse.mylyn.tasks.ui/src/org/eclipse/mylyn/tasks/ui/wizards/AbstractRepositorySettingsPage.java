@@ -25,8 +25,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -435,7 +435,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 						}
 					}
 				} catch (Throwable t) {
-					StatusManager.fail(t, "could not set field value for: " + repository, false);
+					StatusHandler.fail(t, "could not set field value for: " + repository, false);
 				}
 			}
 		}
@@ -548,7 +548,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				repositoryUserNameEditor.setStringValue(repository.getUserName());
 				repositoryPasswordEditor.setStringValue(repository.getPassword());
 			} catch (Throwable t) {
-				StatusManager.fail(t, "could not set field value for: " + repository, false);
+				StatusHandler.fail(t, "could not set field value for: " + repository, false);
 			}
 		} else {
 			oldUsername = "";
@@ -1006,7 +1006,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 			try {
 				super.refreshValidState();
 			} catch (Exception e) {
-				StatusManager.log(e, "problem refreshing password field");
+				StatusHandler.log(e, "problem refreshing password field");
 			}
 		}
 
@@ -1239,7 +1239,7 @@ public abstract class AbstractRepositorySettingsPage extends WizardPage {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			StatusManager.fail(e.getCause(), "Internal error validating repository", true);
+			StatusHandler.fail(e.getCause(), "Internal error validating repository", true);
 			return;
 		} catch (InterruptedException e) {
 			// canceled

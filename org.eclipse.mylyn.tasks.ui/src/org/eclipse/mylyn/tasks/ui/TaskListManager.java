@@ -37,7 +37,6 @@ import org.eclipse.mylyn.context.core.IInteractionContext;
 import org.eclipse.mylyn.context.core.IInteractionContextListener;
 import org.eclipse.mylyn.context.core.IInteractionElement;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
@@ -53,6 +52,7 @@ import org.eclipse.mylyn.internal.tasks.ui.util.TaskListWriter;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskActivationHistory;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.InteractionEvent;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.ITaskActivityListener;
@@ -417,7 +417,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				}
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Error parsing interaction event", false);
+			StatusHandler.fail(t, "Error parsing interaction event", false);
 		}
 	}
 
@@ -720,7 +720,7 @@ public class TaskListManager implements IPropertyChangeListener {
 							}
 						}
 					} catch (Exception e) {
-						StatusManager.fail(e, "Could not move context file: " + file.getName(), false);
+						StatusHandler.fail(e, "Could not move context file: " + file.getName(), false);
 					}
 				}
 			}
@@ -781,7 +781,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				listener.taskListRead();
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "Could not read task list, consider restoring via view menu", true);
+			StatusHandler.fail(t, "Could not read task list, consider restoring via view menu", true);
 			return false;
 		}
 		return true;
@@ -805,10 +805,10 @@ public class TaskListManager implements IPropertyChangeListener {
 				// TasksUiPlugin.getDefault().getPreferenceStore().setValue(TaskListPreferenceConstants.TASK_ID,
 				// nextLocalTaskId);
 			} else {
-				StatusManager.log("task list save attempted before initialization", this);
+				StatusHandler.log("task list save attempted before initialization", this);
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "Could not save task list", true);
+			StatusHandler.fail(e, "Could not save task list", true);
 		}
 	}
 
@@ -832,11 +832,11 @@ public class TaskListManager implements IPropertyChangeListener {
 				try {
 					listener.taskActivated(task);
 				} catch (Throwable t) {
-					StatusManager.fail(t, "task activity listener failed: " + listener, false);
+					StatusHandler.fail(t, "task activity listener failed: " + listener, false);
 				}
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "could not activate task", false);
+			StatusHandler.fail(t, "could not activate task", false);
 		}
 	}
 
@@ -858,7 +858,7 @@ public class TaskListManager implements IPropertyChangeListener {
 				try {
 					listener.taskDeactivated(task);
 				} catch (Throwable t) {
-					StatusManager.fail(t, "notification failed for: " + listener, false);
+					StatusHandler.fail(t, "notification failed for: " + listener, false);
 				}
 			}
 		}

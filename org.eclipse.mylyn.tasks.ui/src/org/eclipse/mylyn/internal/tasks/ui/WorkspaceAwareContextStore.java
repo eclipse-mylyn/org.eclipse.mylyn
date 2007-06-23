@@ -15,7 +15,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.mylyn.context.core.AbstractContextStore;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 
 /**
@@ -41,19 +41,19 @@ public class WorkspaceAwareContextStore extends AbstractContextStore {
 		File newDefaultDataDir = new File(TasksUiPlugin.getDefault().getDefaultDataDirectory());
 		File oldDefaultDataDir = new File(oldDefaultDataPath);
 		if (newDefaultDataDir.exists() && oldDefaultDataDir.exists()) {
-			StatusManager.log("Legacy data folder detected: " + oldDefaultDataDir.getAbsolutePath(), this);
+			StatusHandler.log("Legacy data folder detected: " + oldDefaultDataDir.getAbsolutePath(), this);
 		} else if (oldDefaultDataDir.exists() && !newDefaultDataDir.exists()) {
 			File metadata = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
 					+ DIRECTORY_METADATA);
 			if (!metadata.exists()) {
 				if (!metadata.mkdirs()) {
-					StatusManager.log("Unable to create metadata folder: " + metadata.getAbsolutePath(), this);
+					StatusHandler.log("Unable to create metadata folder: " + metadata.getAbsolutePath(), this);
 				}
 			}
 
 			if (metadata.exists()) {
 				if (!oldDefaultDataDir.renameTo(new File(TasksUiPlugin.getDefault().getDefaultDataDirectory()))) {
-					StatusManager.log("Failed to migrate legacy data from " + oldDefaultDataDir.getAbsolutePath()
+					StatusHandler.log("Failed to migrate legacy data from " + oldDefaultDataDir.getAbsolutePath()
 							+ " to " + TasksUiPlugin.getDefault().getDefaultDataDirectory(), this);
 				}
 			}

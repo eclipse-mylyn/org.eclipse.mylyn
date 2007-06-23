@@ -37,7 +37,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskDelegate;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -46,6 +45,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.CategoryEditorInput;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoriesView;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.EditRepositoryWizard;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -120,7 +120,7 @@ public class TasksUiUtil {
 				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 				support.getExternalBrowser().openURL(new URL(url));
 			} catch (Exception e) {
-				StatusManager.fail(e, "could not open task url", true);
+				StatusHandler.fail(e, "could not open task url", true);
 			}
 		} else {
 			IWebBrowser browser = null;
@@ -154,7 +154,7 @@ public class TasksUiUtil {
 				try {
 					opened = connectorUi.openRepositoryTask(repository.getUrl(), taskId);
 				} catch (Exception e) {
-					StatusManager.log(e, "Internal error while opening repository task");
+					StatusHandler.log(e, "Internal error while opening repository task");
 				}
 			}
 		}
@@ -223,7 +223,7 @@ public class TasksUiUtil {
 						repositoryTask.getRepositoryUrl());
 
 				if (repository == null) {
-					StatusManager.fail(null, "No repository found for task. Please create repository in "
+					StatusHandler.fail(null, "No repository found for task. Please create repository in "
 							+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 					return;
 				}
@@ -367,7 +367,7 @@ public class TasksUiUtil {
 					TasksUiPlugin.getSynchronizationManager().setTaskRead((AbstractTask) task, true);
 				}
 			} else {
-				StatusManager.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
+				StatusHandler.log("Unable to open editor for " + task.getSummary(), TasksUiUtil.class);
 			}
 		}
 	}
@@ -395,7 +395,7 @@ public class TasksUiUtil {
 		try {
 			return page.openEditor(input, editorId);
 		} catch (PartInitException e) {
-			StatusManager.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
+			StatusHandler.fail(e, "Open for editor failed: " + input + ", taskId: " + editorId, true);
 		}
 		return null;
 	}
@@ -432,7 +432,7 @@ public class TasksUiUtil {
 				TaskRepositoriesView.getFromActivePerspective().getViewer().refresh();
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, e.getMessage(), true);
+			StatusHandler.fail(e, e.getMessage(), true);
 		}
 		return Dialog.OK;
 	}

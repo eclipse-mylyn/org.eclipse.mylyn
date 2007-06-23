@@ -34,11 +34,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoryFilter;
 import org.eclipse.mylyn.internal.tasks.ui.ITaskCommandIds;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -209,7 +209,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 					hndSvc.executeCommand(ITaskCommandIds.ADD_TASK_REPOSITORY, null);
 					repositoriesViewer.setInput(getTaskRepositories());
 				} catch (CommandException ex) {
-					StatusManager.fail(ex, ex.getMessage(), true);
+					StatusHandler.fail(ex, ex.getMessage(), true);
 				}
 			}
 		});

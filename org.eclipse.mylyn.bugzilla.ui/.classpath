@@ -6,8 +6,8 @@
 			<accessrule kind="accessible" pattern="**/TasksUiImages"/>
 			<accessrule kind="accessible" pattern="**/TaskListColorsAndFonts"/>
 			<accessrule kind="accessible" pattern="**/TaskListPreferenceConstants"/>
-			<accessrule kind="accessible" pattern="**/mylar/internal/bugzilla/**"/>
-			<accessrule kind="discouraged" pattern="**/mylar/**/internal/**"/>
+			<accessrule kind="accessible" pattern="**/mylyn/internal/bugzilla/**"/>
+			<accessrule kind="discouraged" pattern="**/mylyn/**/internal/**"/>
 			<accessrule kind="accessible" pattern="**/internal/**"/>
 		</accessrules>
 	</classpathentry>

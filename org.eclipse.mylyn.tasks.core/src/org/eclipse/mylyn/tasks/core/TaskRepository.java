@@ -22,8 +22,8 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.WebClientUtil;
 
 /**
@@ -239,7 +239,7 @@ public class TaskRepository {
 				}
 				isCachedUserName = false;
 			} catch (CoreException e) {
-				StatusManager.fail(e, "could not flush authorization credentials", true);
+				StatusHandler.fail(e, "could not flush authorization credentials", true);
 			}
 		}
 	}
@@ -259,7 +259,7 @@ public class TaskRepository {
 					headlessCreds.putAll(map);
 				}
 			} catch (CoreException e) {
-				StatusManager.fail(e, "Could not set authorization credentials", true);
+				StatusHandler.fail(e, "Could not set authorization credentials", true);
 			}
 		}
 	}
@@ -273,7 +273,7 @@ public class TaskRepository {
 				} catch (MalformedURLException ex) {
 					return Platform.getAuthorizationInfo(DEFAULT_URL, getUrl(), AUTH_SCHEME);
 				} catch (Exception e) {
-					StatusManager.fail(e, "Could not retrieve authentication credentials", false);
+					StatusHandler.fail(e, "Could not retrieve authentication credentials", false);
 				}
 			} else {
 				Map<String, String> headlessCreds = credentials.get(getUrl());

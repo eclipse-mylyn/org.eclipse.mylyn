@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
@@ -60,7 +60,7 @@ public class CopyAttachmentToClipboardJob extends Job {
 		try {
 			handler.downloadAttachment(repository, attachment, out, monitor);
 		} catch (final CoreException e) {
-			StatusManager.displayStatus("Copy Attachment to Clipboard", e.getStatus());
+			StatusHandler.displayStatus("Copy Attachment to Clipboard", e.getStatus());
 			return Status.OK_STATUS;
 		}
 		

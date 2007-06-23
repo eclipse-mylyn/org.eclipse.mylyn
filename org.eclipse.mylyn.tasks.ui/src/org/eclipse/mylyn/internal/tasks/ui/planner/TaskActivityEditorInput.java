@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -65,7 +65,7 @@ public class TaskActivityEditorInput implements IEditorInput {
 		} catch (InvocationTargetException e) {
 			// operation was canceled
 		} catch (InterruptedException e) {
-			StatusManager.log(e, "Could not generate report");
+			StatusHandler.log(e, "Could not generate report");
 		}
 
 		completedTasks = completedTaskCollector.getTasks();

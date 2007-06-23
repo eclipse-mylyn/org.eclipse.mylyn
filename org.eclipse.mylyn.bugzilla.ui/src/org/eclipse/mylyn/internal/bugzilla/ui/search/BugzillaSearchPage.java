@@ -27,7 +27,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -1198,7 +1198,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 						connector.updateAttributes(repository, monitor);
 						BugzillaUiPlugin.updateQueryOptions(repository, monitor);
 					} catch (final CoreException ce) {
-						StatusManager.displayStatus("Update failed", ce.getStatus());
+						StatusHandler.displayStatus("Update failed", ce.getStatus());
 					} finally {
 						monitor.done();
 					}

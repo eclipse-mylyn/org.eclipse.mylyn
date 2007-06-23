@@ -62,7 +62,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.CommentQuoter;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.PersonProposalProvider;
@@ -85,6 +84,7 @@ import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskOutlinePage;
 import org.eclipse.mylyn.internal.tasks.ui.editors.RepositoryTaskSelection;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskFormPage;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -1302,7 +1302,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, desc.getId());
 					} catch (PartInitException e) {
-						StatusManager.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -1319,7 +1319,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					try {
 						page.openEditor(input, "org.eclipse.ui.DefaultTextEditor");
 					} catch (PartInitException e) {
-						StatusManager.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
+						StatusHandler.fail(e, "Unable to open editor for: " + attachment.getDescription(), false);
 					}
 				}
 			};
@@ -2773,7 +2773,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 					if (modifiedTask != null) {
 						modifiedTask.setSubmitting(false);
 					}
-					StatusManager.fail(e, e.getMessage(), true);
+					StatusHandler.fail(e, e.getMessage(), true);
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							setGlobalBusy(false);// enableButtons();
@@ -2897,9 +2897,9 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 				if (form != null && !form.isDisposed()) {
 					if (exception.getStatus().getCode() == RepositoryStatus.ERROR_IO) {
 						parentEditor.setMessage(ERROR_NOCONNECTIVITY, IMessageProvider.ERROR);
-						StatusManager.log(exception.getStatus());
+						StatusHandler.log(exception.getStatus());
 					} else if (exception.getStatus().getCode() == RepositoryStatus.REPOSITORY_COMMENT_REQUIRED) {
-						StatusManager.displayStatus("Comment required", exception.getStatus());
+						StatusHandler.displayStatus("Comment required", exception.getStatus());
 						if (!isDisposed && newCommentTextViewer != null
 								&& !newCommentTextViewer.getControl().isDisposed()) {
 							newCommentTextViewer.getControl().setFocus();
@@ -2910,7 +2910,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 							return;
 						}
 					} else {
-						StatusManager.displayStatus("Submit failed", exception.getStatus());
+						StatusHandler.displayStatus("Submit failed", exception.getStatus());
 					}
 					setGlobalBusy(false);
 				}

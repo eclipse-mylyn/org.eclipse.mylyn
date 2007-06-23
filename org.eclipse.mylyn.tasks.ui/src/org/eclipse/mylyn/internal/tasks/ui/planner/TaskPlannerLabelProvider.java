@@ -15,9 +15,9 @@ import java.text.DateFormat;
 
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.graphics.Color;
@@ -55,7 +55,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 					if (task.getCreationDate() != null) {
 						return DateFormat.getDateInstance(DateFormat.MEDIUM).format(task.getCreationDate());
 					} else {
-						StatusManager.log("Task has no creation date: " + task.getSummary(), this);
+						StatusHandler.log("Task has no creation date: " + task.getSummary(), this);
 						return "[unknown]";
 					}
 				case 4:
@@ -71,7 +71,7 @@ public class TaskPlannerLabelProvider extends TaskElementLabelProvider implement
 				}
 			}
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "Could not produce completed task label", false);
+			StatusHandler.fail(e, "Could not produce completed task label", false);
 			return "";
 		}
 		return null;

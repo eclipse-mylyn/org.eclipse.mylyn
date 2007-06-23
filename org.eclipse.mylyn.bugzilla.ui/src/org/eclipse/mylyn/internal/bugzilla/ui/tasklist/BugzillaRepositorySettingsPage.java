@@ -28,7 +28,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BugzillaServerVersion;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -156,7 +156,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 					}
 				}
 				if (i == -1) {
-					StatusManager.log("Could not resolve repository version: " + version, this);
+					StatusHandler.log("Could not resolve repository version: " + version, this);
 					setVersion(IBugzillaConstants.BugzillaServerVersion.SERVER_218.toString());
 				}
 			}
@@ -357,7 +357,7 @@ public class BugzillaRepositorySettingsPage extends AbstractRepositorySettingsPa
 				status = new BugzillaStatus(Status.WARNING, BugzillaCorePlugin.PLUGIN_ID, RepositoryStatus.ERROR_NETWORK,
 						serverUrl, e.getMessage());
 			}
-			StatusManager.displayStatus("Validation failed", status);
+			StatusHandler.displayStatus("Validation failed", status);
 			setStatus(status);
 		}
 

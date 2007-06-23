@@ -45,7 +45,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryQuery;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaTask;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.ui.BugzillaUiPlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
@@ -222,16 +222,16 @@ public class BugzillaProductPage extends WizardPage {
 								connector.updateAttributes(repository, monitor);
 							} catch (CoreException ce) {
 								if (ce.getStatus().getException() instanceof GeneralSecurityException) {
-									StatusManager.fail(ce,
+									StatusHandler.fail(ce,
 											"Bugzilla could not log you in to get the information you requested since login name or password is incorrect.\n"
 													+ "Please ensure proper configuration in "
 													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ". ", true);
 								} else if (ce.getStatus().getException() instanceof IOException) {
-									StatusManager.fail(ce,
+									StatusHandler.fail(ce,
 											"Connection Error, please ensure proper configuration in "
 													+ TasksUiPlugin.LABEL_VIEW_REPOSITORIES + ".", true);
 								} else {
-									StatusManager.fail(ce, "Error updating repository attributes for "
+									StatusHandler.fail(ce, "Error updating repository attributes for "
 											+ repository.getUrl(), true);
 								}
 								return;

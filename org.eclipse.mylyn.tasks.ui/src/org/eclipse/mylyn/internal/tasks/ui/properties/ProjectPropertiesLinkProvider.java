@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.AbstractTaskRepositoryLinkProvider;
@@ -72,7 +72,7 @@ public class ProjectPropertiesLinkProvider extends AbstractTaskRepositoryLinkPro
 				projectNode.flush();
 				return true;
 			} catch (BackingStoreException e) {
-				StatusManager.fail(e, "Failed to save task repository to project association preference", false);
+				StatusHandler.fail(e, "Failed to save task repository to project association preference", false);
 			}
 		}
 		return false;

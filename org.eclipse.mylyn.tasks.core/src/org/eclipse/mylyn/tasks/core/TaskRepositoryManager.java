@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskRepositoriesExternalizer;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Provides facilities for managing the lifecycle of and access to task repositories.
@@ -236,7 +236,7 @@ public class TaskRepositoryManager {
 			try {
 				listener.repositoriesRead();
 			} catch (Throwable t) {
-				StatusManager.fail(t, "repository listener failed", false);
+				StatusHandler.fail(t, "repository listener failed", false);
 			}
 		}
 		return repositoryMap;
@@ -278,7 +278,7 @@ public class TaskRepositoryManager {
 				}
 			}
 		} catch (Throwable t) {
-			StatusManager.fail(t, "could not load repositories", false);
+			StatusHandler.fail(t, "could not load repositories", false);
 		}
 	}
 
@@ -356,7 +356,7 @@ public class TaskRepositoryManager {
 			File repositoriesFile = new File(destinationPath);
 			externalizer.writeRepositoriesToXML(repositoriesToWrite, repositoriesFile);
 		} catch (Throwable t) {
-			StatusManager.fail(t, "could not save repositories", false);
+			StatusHandler.fail(t, "could not save repositories", false);
 			return false;
 		}
 		return true;

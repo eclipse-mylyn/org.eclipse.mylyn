@@ -13,8 +13,8 @@ package org.eclipse.mylyn.internal.tasks.ui.planner;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
@@ -49,7 +49,7 @@ public class TaskActivityWizard extends Wizard implements INewWizard {
 					.getSelectedContainers(), TasksUiPlugin.getTaskListManager().getTaskList());
 			page.openEditor(input, TaskPlanningEditor.ID_EDITOR_PLANNING);
 		} catch (PartInitException ex) {
-			StatusManager.log(ex, "couldn't open summary editor");
+			StatusHandler.log(ex, "couldn't open summary editor");
 		}
 		return true;
 	}

@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -69,7 +69,7 @@ public class TaskDataManager {
 		if (state != null) {
 			state.setOldTaskData(data);
 		} else {
-			StatusManager.log("Attempt to save old data when no new data exists.", this);
+			StatusHandler.log("Attempt to save old data when no new data exists.", this);
 		}
 		saveState(state);
 	}
@@ -133,7 +133,7 @@ public class TaskDataManager {
 					clone = (RepositoryTaskData) ObjectCloner.deepCopy(state.getNewTaskData());
 					updateAttributeFactory(clone);
 				} catch (Exception e) {
-					StatusManager.fail(e, "Error constructing modifiable task", false);
+					StatusHandler.fail(e, "Error constructing modifiable task", false);
 					return null;
 				}
 			if (clone != null) {
@@ -179,7 +179,7 @@ public class TaskDataManager {
 			try {
 				storage.put(state);
 			} catch (Exception e) {
-				StatusManager.fail(e, "Error saving edits", false);
+				StatusHandler.fail(e, "Error saving edits", false);
 			}
 		}
 
@@ -207,7 +207,7 @@ public class TaskDataManager {
 		try {
 			storage.put(state);
 		} catch (Exception e) {
-			StatusManager.fail(e, "Discard edits failed.", false);
+			StatusHandler.fail(e, "Discard edits failed.", false);
 		}
 	}
 
@@ -281,7 +281,7 @@ public class TaskDataManager {
 		try {
 			storage.start();
 		} catch (Exception e) {
-			StatusManager.fail(e, "Offline storage start failed", false);
+			StatusHandler.fail(e, "Offline storage start failed", false);
 		}
 	}
 
@@ -289,7 +289,7 @@ public class TaskDataManager {
 		try {
 			storage.stop();
 		} catch (Exception e) {
-			StatusManager.fail(e, "Offline storage stop failed", false);
+			StatusHandler.fail(e, "Offline storage stop failed", false);
 		}
 	}
 
@@ -316,7 +316,7 @@ public class TaskDataManager {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			StatusManager.fail(e, "Error saving offline data", false);
+			StatusHandler.fail(e, "Error saving offline data", false);
 		}
 		return state;
 	}

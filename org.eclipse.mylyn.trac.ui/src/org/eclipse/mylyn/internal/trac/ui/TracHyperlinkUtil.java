@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TaskHyperlink;
 import org.eclipse.mylyn.tasks.ui.WebHyperlink;
@@ -204,7 +204,7 @@ public class TracHyperlinkUtil {
 					url += "?new_path=" + URLEncoder.encode(new_path, "UTF-8");
 					url += "&old_path=" + URLEncoder.encode(old_path, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					StatusManager.fail(e, "Unexpected exception", false);
+					StatusHandler.fail(e, "Unexpected exception", false);
 					continue;
 				}
 				if (new_rev != null) {

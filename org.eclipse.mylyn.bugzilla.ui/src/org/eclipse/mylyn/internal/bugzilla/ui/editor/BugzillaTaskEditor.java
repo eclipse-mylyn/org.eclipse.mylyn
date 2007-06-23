@@ -25,9 +25,9 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaReportElement;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TaskListColorsAndFonts;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
@@ -354,7 +354,7 @@ public class BugzillaTaskEditor extends AbstractRepositoryTaskEditor {
 		try {
 			operation = BUGZILLA_OPERATION.valueOf(repositoryOperation.getKnobName());
 		} catch (RuntimeException e) {
-			StatusManager.log(e, "Unrecognized operation: " + repositoryOperation.getKnobName());
+			StatusHandler.log(e, "Unrecognized operation: " + repositoryOperation.getKnobName());
 			operation = null;
 		}
 

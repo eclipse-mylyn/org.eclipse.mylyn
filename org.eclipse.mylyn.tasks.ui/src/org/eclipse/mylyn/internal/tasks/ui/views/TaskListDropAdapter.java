@@ -26,13 +26,13 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TaskTransfer;
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskActivateAction;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -208,7 +208,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 						TasksUiUtil.refreshAndOpenTaskListElement(newTask);
 						return true;
 					} catch (CoreException e) {
-						StatusManager.fail(e, "could not create task", false);
+						StatusHandler.fail(e, "could not create task", false);
 						return false;
 					}
 				}
@@ -294,7 +294,7 @@ public class TaskListDropAdapter extends ViewerDropAdapter {
 			};
 			job.schedule();
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "could not open task web page", false);
+			StatusHandler.fail(e, "could not open task web page", false);
 		}
 	}
 }

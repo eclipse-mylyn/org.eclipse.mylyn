@@ -27,9 +27,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.internal.context.core.InteractionContextManager;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.monitor.core.util.ZipFileUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.TaskList;
@@ -162,7 +162,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 			}
 
 		} catch (IOException e) {
-			StatusManager.fail(e, "Could not import files", true);
+			StatusHandler.fail(e, "Could not import files", true);
 		}
 
 		FileCopyJob job = new FileCopyJob(sourceDirFile, sourceZipFile, sourceTaskListFile, sourceRepositoriesFile,
@@ -173,9 +173,9 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 		try {
 			service.run(true, false, job);
 		} catch (InvocationTargetException e) {
-			StatusManager.fail(e, "Could not import files", true);
+			StatusHandler.fail(e, "Could not import files", true);
 		} catch (InterruptedException e) {
-			StatusManager.fail(e, "Could not import files", true);
+			StatusHandler.fail(e, "Could not import files", true);
 		}
 
 		importPage.saveSettings();
@@ -208,7 +208,7 @@ public class TaskDataImportWizard extends Wizard implements IImportWizard {
 				//ZipFileUtil.unzipFiles(sourceZipFile, TasksUiPlugin.getDefault().getDataDirectory());
 
 			} catch (IOException ioe) {
-				StatusManager.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.",
+				StatusHandler.fail(new Exception("Import Exception"), "Problem occured extracting from zip file.",
 						true);
 				return;
 			}

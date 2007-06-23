@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.actions.AbstractTaskRepositoryAction;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
@@ -57,7 +57,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 								try {
 									connector.updateAttributes(repository, monitor);
 								} catch (CoreException ce) {
-									StatusManager.displayStatus("Error updating attributes", ce.getStatus());
+									StatusHandler.displayStatus("Error updating attributes", ce.getStatus());
 								}
 								
 								monitor.done();	
@@ -70,7 +70,7 @@ public class ResetRepositoryConfigurationAction extends AbstractTaskRepositoryAc
 				}
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, e.getMessage(), true);
+			StatusHandler.fail(e, e.getMessage(), true);
 		}
 	}
 

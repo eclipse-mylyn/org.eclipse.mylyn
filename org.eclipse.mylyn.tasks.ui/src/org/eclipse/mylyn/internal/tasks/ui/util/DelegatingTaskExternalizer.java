@@ -19,12 +19,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -168,7 +168,7 @@ final class DelegatingTaskExternalizer {
 		if (factory != null) {
 			taskTagName = factory.getTaskElementName();
 		} else {
-			StatusManager.log("No externalizer for task: " + task, this);
+			StatusHandler.log("No externalizer for task: " + task, this);
 			return null;
 //			taskTagName = getTaskTagName();
 		}
@@ -573,7 +573,7 @@ final class DelegatingTaskExternalizer {
 		try {
 			date = format.parse(dateString);
 		} catch (ParseException e) {
-			StatusManager.fail(e, "Could not parse end date", false);
+			StatusHandler.fail(e, "Could not parse end date", false);
 		}
 		return date;
 	}
@@ -603,7 +603,7 @@ final class DelegatingTaskExternalizer {
 			}
 		}
 		if (factory == null || queryTagName == null) {		
-			StatusManager.log("No externalizer for query: " + query, this);
+			StatusHandler.log("No externalizer for query: " + query, this);
 			return null;
 //			queryTagName = getQueryTagNameForElement(query);
 		}
@@ -626,7 +626,7 @@ final class DelegatingTaskExternalizer {
 			try {
 				createQueryHitElement(hit, doc, node);
 			} catch (Exception e) {
-				StatusManager.log(e, e.getMessage());
+				StatusHandler.log(e, e.getMessage());
 			}
 		}
 		parent.appendChild(node);

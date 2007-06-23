@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
@@ -141,7 +141,7 @@ class SynchronizeTaskJob extends Job {
 					if (forced) {
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								StatusManager.displayStatus("Task Synchronization Failed", e.getStatus());
+								StatusHandler.displayStatus("Task Synchronization Failed", e.getStatus());
 							}
 						});
 					}
@@ -149,7 +149,7 @@ class SynchronizeTaskJob extends Job {
 			}
 
 		} catch (Exception e) {
-			StatusManager.fail(e, "Synchronization failed", false);
+			StatusHandler.fail(e, "Synchronization failed", false);
 		} finally {
 			monitor.done();
 		}
@@ -190,7 +190,7 @@ class SynchronizeTaskJob extends Job {
 			if (forced) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						StatusManager.displayStatus("Task Synchronization Failed", e.getStatus());
+						StatusHandler.displayStatus("Task Synchronization Failed", e.getStatus());
 					}
 				});
 			}
@@ -235,7 +235,7 @@ class SynchronizeTaskJob extends Job {
 							if (forced) {
 								PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 									public void run() {
-										StatusManager.displayStatus("Task Synchronization Failed", e.getStatus());
+										StatusHandler.displayStatus("Task Synchronization Failed", e.getStatus());
 									}
 								});
 							}

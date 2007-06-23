@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskAttribute;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -340,7 +340,7 @@ public class BugzillaCorePlugin extends Plugin {
 			}
 
 		} catch (Exception e) {
-			StatusManager.fail(e, "could not set platform options", false);
+			StatusHandler.fail(e, "could not set platform options", false);
 		}
 	}
 }

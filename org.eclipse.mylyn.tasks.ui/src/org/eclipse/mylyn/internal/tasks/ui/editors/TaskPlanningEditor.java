@@ -20,13 +20,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalRepositoryConnector;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.RetrieveTitleFromUrlJob;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
 import org.eclipse.mylyn.monitor.core.DateUtil;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.ITaskListChangeListener;
@@ -423,7 +423,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			creationDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCreationDate());
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "Could not format creation date", true);
+			StatusHandler.fail(e, "Could not format creation date", true);
 		}
 		addNameValueComp(statusComposite, "Created:", creationDateString, SWT.FLAT | SWT.READ_ONLY);
 
@@ -500,7 +500,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			job.schedule();
 
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "could not open task web page", false);
+			StatusHandler.fail(e, "could not open task web page", false);
 		}
 	}
 
@@ -675,7 +675,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 			if (elapsedTimeString.equals(""))
 				elapsedTimeString = NO_TIME_ELAPSED;
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "Could not format elapsed time", true);
+			StatusHandler.fail(e, "Could not format elapsed time", true);
 		}
 
 		final Text elapsedTimeText = new Text(nameValueComp, SWT.READ_ONLY | SWT.FLAT);
@@ -701,7 +701,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 					}
 
 				} catch (RuntimeException e1) {
-					StatusManager.fail(e1, "Could not format elapsed time", true);
+					StatusHandler.fail(e1, "Could not format elapsed time", true);
 				}
 				elapsedTimeText.setText(elapsedTimeString);
 			}
@@ -781,7 +781,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		try {
 			completionDateString = DateFormat.getDateInstance(DateFormat.LONG).format(task.getCompletionDate());
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "Could not format date", true);
+			StatusHandler.fail(e, "Could not format date", true);
 			return completionDateString;
 		}
 		return completionDateString;

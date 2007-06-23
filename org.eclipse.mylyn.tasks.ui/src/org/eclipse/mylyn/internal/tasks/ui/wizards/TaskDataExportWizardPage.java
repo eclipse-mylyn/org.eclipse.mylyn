@@ -12,7 +12,7 @@ package org.eclipse.mylyn.internal.tasks.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -108,7 +108,7 @@ public class TaskDataExportWizardPage extends WizardPage {
 
 			setPageComplete(validate());
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "Could not create export wizard page", true);
+			StatusHandler.fail(e, "Could not create export wizard page", true);
 		}
 	}
 

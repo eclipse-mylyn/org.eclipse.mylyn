@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
@@ -306,7 +306,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 			return true;
 		} catch (UnsupportedEncodingException e) {
 			// XXX throw CoreException instead?
-			StatusManager.fail(e, "Repository configured with unsupported encoding: "
+			StatusHandler.fail(e, "Repository configured with unsupported encoding: "
 					+ repository.getCharacterEncoding() + "\n\n Unable to determine changed tasks.", true);
 			return false;
 		} finally {
@@ -425,7 +425,7 @@ public class BugzillaRepositoryConnector extends AbstractRepositoryConnector {
 		try {
 			return BugzillaClient.getBugUrlWithoutLogin(repositoryUrl, taskId);
 		} catch (Exception ex) {
-			StatusManager.fail(ex, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, false);
+			StatusHandler.fail(ex, "Error constructing task url for " + repositoryUrl + "  id:" + taskId, false);
 		}
 		return null;
 	}

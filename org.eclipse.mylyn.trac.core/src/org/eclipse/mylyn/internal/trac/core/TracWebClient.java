@@ -40,7 +40,6 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.model.TracComponent;
 import org.eclipse.mylyn.internal.trac.core.model.TracMilestone;
 import org.eclipse.mylyn.internal.trac.core.model.TracPriority;
@@ -56,6 +55,7 @@ import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperat
 import org.eclipse.mylyn.internal.trac.core.model.TracTicket.Key;
 import org.eclipse.mylyn.internal.trac.core.util.TracUtils;
 import org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory.TracHttpException;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.web.core.HtmlStreamTokenizer;
 import org.eclipse.mylyn.web.core.HtmlTag;
 import org.eclipse.mylyn.web.core.WebClientUtil;
@@ -271,7 +271,7 @@ public class TracWebClient extends AbstractTracClient {
 								ticket.putBuiltinValue(fields[i], parseTicketValue(t.nextToken()));
 							}
 						} catch (NumberFormatException e) {
-							StatusManager.log(e, "Error parsing response: " + line);
+							StatusHandler.log(e, "Error parsing response: " + line);
 						}
 					}
 				}

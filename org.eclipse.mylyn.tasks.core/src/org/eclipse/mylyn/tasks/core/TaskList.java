@@ -22,12 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.core.UnfiledCategory;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 
 /**
  * Stores and manages task list elements and their containment hierarchy.
@@ -620,7 +620,7 @@ public class TaskList {
 				delta.add(new TaskContainerDelta(task, kind));
 				listener.containersChanged(delta);
 			} catch (Throwable t) {
-				StatusManager.fail(t, "Notification failed for: " + listener, false);
+				StatusHandler.fail(t, "Notification failed for: " + listener, false);
 			}
 		}
 	}
@@ -638,7 +638,7 @@ public class TaskList {
 				try {
 					listener.containersChanged(delta);
 				} catch (Throwable t) {
-					StatusManager.fail(t, "notification failed for: " + listener, false);
+					StatusHandler.fail(t, "notification failed for: " + listener, false);
 				}
 			}
 		}

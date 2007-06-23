@@ -28,11 +28,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalAttachment;
 import org.eclipse.mylyn.internal.tasks.core.RepositoryTaskHandleUtil;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -199,7 +199,7 @@ public class NewAttachmentWizard extends Wizard {
 				handleSubmitError((CoreException) e1.getCause());
 
 			} else {
-				StatusManager.fail(e1, "Attachment failure", true);
+				StatusHandler.fail(e1, "Attachment failure", true);
 			}
 			return false;
 		} catch (InterruptedException e1) {
@@ -247,7 +247,7 @@ public class NewAttachmentWizard extends Wizard {
 				// performFinish();
 			}
 		} else {
-			StatusManager.displayStatus("Attachment failed", exception.getStatus());
+			StatusHandler.displayStatus("Attachment failed", exception.getStatus());
 		}
 	}
 

@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_OPERATION;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_REPORT_STATUS;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants.BUGZILLA_RESOLUTION;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -185,7 +185,7 @@ public class BugzillaTaskDataHandler extends AbstractTaskDataHandler {
 		try {
 			status = BUGZILLA_REPORT_STATUS.valueOf(bugReport.getStatus());
 		} catch (RuntimeException e) {
-			StatusManager.log(e, "Unrecognized status: " + bugReport.getStatus());
+			StatusHandler.log(e, "Unrecognized status: " + bugReport.getStatus());
 			status = BUGZILLA_REPORT_STATUS.NEW;
 		}
 		switch (status) {

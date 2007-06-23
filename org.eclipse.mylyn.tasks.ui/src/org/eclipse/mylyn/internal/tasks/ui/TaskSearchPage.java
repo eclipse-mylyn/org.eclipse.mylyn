@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
@@ -151,7 +151,7 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			searchPage = new DeadSearchPage(repository);
 			searchPage.setContainer(pageContainer);
 			searchPage.createControl(fParentComposite);
-			StatusManager.log(e, "Error occurred while constructing search page for " + repository.getUrl() + " ["
+			StatusHandler.log(e, "Error occurred while constructing search page for " + repository.getUrl() + " ["
 					+ repository.getConnectorKind() + "]");
 			searchPage.getControl().setData(PAGE_KEY, searchPage);
 			return searchPage.getControl();

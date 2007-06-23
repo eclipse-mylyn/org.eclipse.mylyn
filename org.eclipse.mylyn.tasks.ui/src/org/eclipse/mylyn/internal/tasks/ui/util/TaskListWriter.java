@@ -41,10 +41,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskExternalizationException;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -111,7 +111,7 @@ public class TaskListWriter {
 			db = dbf.newDocumentBuilder();
 			doc = db.newDocument();
 		} catch (ParserConfigurationException e) {
-			StatusManager.log(e, "could not create document");
+			StatusHandler.log(e, "could not create document");
 			return;
 		}
 
@@ -136,7 +136,7 @@ public class TaskListWriter {
 				delagatingExternalizer.createQueryElement(query, doc, root);
 //				}
 			} catch (Throwable t) {
-				StatusManager.fail(t, "Did not externalize: " + query.getSummary(), true);
+				StatusHandler.fail(t, "Did not externalize: " + query.getSummary(), true);
 			}
 //			if (element == null) {
 //				StatusManager.log("Did not externalize: " + query, this);
@@ -207,7 +207,7 @@ public class TaskListWriter {
 			outputStream.closeEntry();
 			outputStream.close();
 		} catch (Exception fnfe) {
-			StatusManager.log(fnfe, "TaskList could not be found");
+			StatusHandler.log(fnfe, "TaskList could not be found");
 		}
 	}
 
@@ -265,7 +265,7 @@ public class TaskListWriter {
 			readVersion = root.getAttribute(ATTRIBUTE_VERSION);
 
 			if (readVersion.equals(VALUE_VERSION_1_0_0)) {
-				StatusManager.log("version: " + readVersion + " not supported", this);
+				StatusHandler.log("version: " + readVersion + " not supported", this);
 			} else {
 				NodeList list = root.getChildNodes();
 
@@ -434,7 +434,7 @@ public class TaskListWriter {
 		File save = new File(name);
 		if (save.exists()) {
 			if (!save.delete()) {
-				StatusManager.log("Unable to delete old backup tasklist file", this);
+				StatusHandler.log("Unable to delete old backup tasklist file", this);
 				return;
 			}
 		}
@@ -442,10 +442,10 @@ public class TaskListWriter {
 			inFile.renameTo(new File(name));
 		}
 		if (child == null) {
-			StatusManager.log(e, ITasksUiConstants.MESSAGE_RESTORE);
+			StatusHandler.log(e, ITasksUiConstants.MESSAGE_RESTORE);
 		} else {
 			e.printStackTrace(); // in case logging plug-in has not yet started
-			StatusManager.log(e, "Tasks may have been lost from " + child.getNodeName());
+			StatusHandler.log(e, "Tasks may have been lost from " + child.getNodeName());
 		}
 	}
 

@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttachmentHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
@@ -73,9 +73,9 @@ public class ContextUiUtil {
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
+				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusManager.fail(e, "Unexpected error while attaching context", true);
+				StatusHandler.fail(e, "Unexpected error while attaching context", true);
 			}
 			return false;
 		} catch (InterruptedException ignored) {
@@ -127,9 +127,9 @@ public class ContextUiUtil {
 			}
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
-				StatusManager.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
+				StatusHandler.displayStatus(ITasksUiConstants.TITLE_DIALOG, ((CoreException) e.getCause()).getStatus());
 			} else {
-				StatusManager.fail(e, "Unexpected error while attaching context", true);
+				StatusHandler.fail(e, "Unexpected error while attaching context", true);
 			}
 			return false;
 		} catch (InterruptedException ignored) {

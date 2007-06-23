@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ScheduledTaskContainer;
 import org.eclipse.mylyn.internal.tasks.core.TaskArchive;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
@@ -93,6 +92,7 @@ import org.eclipse.mylyn.internal.tasks.ui.actions.TaskListElementPropertiesActi
 import org.eclipse.mylyn.internal.tasks.ui.actions.TaskWorkingSetAction;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.mylyn.internal.tasks.ui.wizards.NewLocalTaskWizard;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
@@ -616,7 +616,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				categoryGradientStart = new Color(Display.getDefault(), red, green, blue);
 			} catch (Exception e) {
 				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				StatusManager.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
 			}
 			red = Math.max(0, (int) (parentBackground.getRed() / GRADIENT_BOTTOM));
 			green = Math.max(0, (int) (parentBackground.getGreen() / GRADIENT_BOTTOM));
@@ -628,7 +628,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 				categoryGradientEnd = new Color(Display.getDefault(), red, green, blue);
 			} catch (Exception e) {
 				categoryGradientStart = getViewer().getTree().getParent().getBackground();
-				StatusManager.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
+				StatusHandler.fail(e, "Could not set color: " + red + ", " + green + ", " + blue, false);
 			}
 			gradientListenerAdded = true;
 		} else if (categoryGradientStart != null && categoryGradientStart.equals(categoryGradientEnd)) {
@@ -652,7 +652,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 		try {
 			return (TaskListView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ID);
 		} catch (Exception e) {
-			StatusManager.fail(e, "Could not show Task List view", false);
+			StatusHandler.fail(e, "Could not show Task List view", false);
 			e.printStackTrace();
 			return null;
 		}
@@ -1646,7 +1646,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 						getViewer().refresh(element, true);
 					}
 				} catch (SWTException e) {
-					StatusManager.log(e, "Failed to refresh Task List");
+					StatusHandler.log(e, "Failed to refresh Task List");
 				}
 			}
 		}

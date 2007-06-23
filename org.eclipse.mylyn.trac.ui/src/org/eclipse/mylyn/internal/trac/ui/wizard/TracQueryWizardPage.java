@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.trac.core.ITracClient;
 import org.eclipse.mylyn.internal.trac.core.TracRepositoryQuery;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearch;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter;
 import org.eclipse.mylyn.internal.trac.core.model.TracSearchFilter.CompareOperator;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.swt.SWT;
@@ -113,7 +113,7 @@ public class TracQueryWizardPage extends WizardPage {
 			if (field != null) {
 				showSearchField(field, filter);
 			} else {
-				StatusManager.log("Ignoring invalid search filter: " + filter, this);
+				StatusHandler.log("Ignoring invalid search filter: " + filter, this);
 			}
 		}
 	}

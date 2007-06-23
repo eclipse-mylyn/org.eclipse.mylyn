@@ -24,7 +24,7 @@ import org.eclipse.mylyn.internal.bugzilla.core.BugzillaCorePlugin;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaRepositoryConnector;
 import org.eclipse.mylyn.internal.bugzilla.core.IBugzillaConstants;
 import org.eclipse.mylyn.internal.bugzilla.core.RepositoryConfiguration;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -222,7 +222,7 @@ public class BugzillaUiPlugin extends AbstractUIPlugin {
 		try {
 			config = BugzillaCorePlugin.getRepositoryConfiguration(repository, false);
 		} catch (Exception e) {
-			StatusManager.fail(e, "Could not retrieve repository configuration for: " + repository, true);
+			StatusHandler.fail(e, "Could not retrieve repository configuration for: " + repository, true);
 			return;
 		}
 

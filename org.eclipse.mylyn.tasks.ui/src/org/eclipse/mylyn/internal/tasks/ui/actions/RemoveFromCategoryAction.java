@@ -15,11 +15,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.TaskCategory;
 import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListView;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.swt.widgets.TreeItem;
@@ -76,7 +76,7 @@ public class RemoveFromCategoryAction extends Action {
 				}
 			}
 		} catch (NullPointerException npe) {
-			StatusManager.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
+			StatusHandler.fail(npe, "Could not remove task from category, it may still be refreshing.", true);
 		}
 	}
 }

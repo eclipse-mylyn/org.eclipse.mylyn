@@ -23,13 +23,13 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.LocalTask;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.editors.EditorBusyIndicator;
 import org.eclipse.mylyn.internal.tasks.ui.editors.IBusyEditor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskEditorActionContributor;
 import org.eclipse.mylyn.internal.tasks.ui.editors.TaskPlanningEditor;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.RepositoryTaskData;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
@@ -301,7 +301,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 							contentOutlineProvider = editor;
 						}
 					} catch (Exception e) {
-						StatusManager.fail(e, "Could not create editor via factory: " + factory, true);
+						StatusHandler.fail(e, "Could not create editor via factory: " + factory, true);
 					}
 				}
 			}
@@ -328,7 +328,7 @@ public final class TaskEditor extends SharedHeaderFormEditor implements IBusyEdi
 			}
 
 		} catch (PartInitException e) {
-			StatusManager.fail(e, "failed to create task editor pages", false);
+			StatusHandler.fail(e, "failed to create task editor pages", false);
 		}
 	}
 

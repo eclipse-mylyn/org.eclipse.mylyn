@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.TaskComment;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor;
 import org.eclipse.swt.graphics.Image;
@@ -117,7 +117,7 @@ public class RepositoryTaskOutlinePage extends ContentOutlinePage {
 			viewer.setComparer(new RepositoryTaskOutlineComparer());
 			viewer.expandAll();
 		} catch (Exception e) {
-			StatusManager.fail(e, "could not create bugzilla outline", true);
+			StatusHandler.fail(e, "could not create bugzilla outline", true);
 		}
 		getSite().getPage().addSelectionListener(selectionListener);
 	}

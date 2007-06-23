@@ -8,7 +8,7 @@
 
 package org.eclipse.mylyn.internal.trac.ui.editor;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.SWT;
@@ -45,9 +45,9 @@ public class BrowserFormPage extends FormPage {
 			managedForm.getForm().setContent(browser);
 			browser.setUrl(task.getUrl());
 		} catch (SWTError e) {
-			StatusManager.fail(e, "Could not create Browser page: " + e.getMessage(), true);
+			StatusHandler.fail(e, "Could not create Browser page: " + e.getMessage(), true);
 		} catch (RuntimeException e) {
-			StatusManager.fail(e, "could not create issue report page", false);
+			StatusHandler.fail(e, "could not create issue report page", false);
 		}
 	}
 

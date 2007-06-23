@@ -30,9 +30,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylyn.internal.monitor.core.util.StatusManager;
 import org.eclipse.mylyn.internal.tasks.core.ITaskDataStorage;
 import org.eclipse.mylyn.internal.tasks.core.TaskDataState;
+import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractAttributeFactory;
 import org.eclipse.mylyn.tasks.core.RepositoryAttachment;
 import org.eclipse.mylyn.tasks.core.RepositoryOperation;
@@ -217,7 +217,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				}
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "Error retrieving offline data", false);
+			StatusHandler.fail(e, "Error retrieving offline data", false);
 		} finally {
 			try {
 				if (lock != null && lock.isValid()) {
@@ -227,7 +227,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileInputStream.close();
 				}
 			} catch (IOException e) {
-				StatusManager.fail(e, "Error closing offline data input stream", false);
+				StatusHandler.fail(e, "Error closing offline data input stream", false);
 			}
 		}
 
@@ -277,7 +277,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 				}
 			}
 		} catch (Exception e) {
-			StatusManager.fail(e, "Error saving offline data", false);
+			StatusHandler.fail(e, "Error saving offline data", false);
 		} finally {
 			try {
 				if (lock != null && lock.isValid()) {
@@ -288,7 +288,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				StatusManager.fail(e, "Error closing offline data output stream", false);
+				StatusHandler.fail(e, "Error closing offline data output stream", false);
 			}
 		}
 
@@ -681,7 +681,7 @@ public class OfflineFileStorage implements ITaskDataStorage {
 			// TODO: Remove folder if last file removed
 
 		} catch (Exception e) {
-			StatusManager.fail(e, "Error removing offline data: " + repositoryUrl + "-" + id, false);
+			StatusHandler.fail(e, "Error removing offline data: " + repositoryUrl + "-" + id, false);
 		}
 
 	}
