@@ -66,7 +66,7 @@ public abstract class AbstractJavaContextTest extends AbstractContextTest {
 		assertTrue(ContextCorePlugin.getDefault().getStructureBridges().toString().indexOf(
 				JavaStructureBridge.class.getCanonicalName()) != -1);
 
-		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 	}
 

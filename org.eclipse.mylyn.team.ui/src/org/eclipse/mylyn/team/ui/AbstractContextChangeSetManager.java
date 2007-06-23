@@ -8,7 +8,6 @@
 
 package org.eclipse.mylyn.team.ui;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.mylyn.context.core.ContextCorePlugin;

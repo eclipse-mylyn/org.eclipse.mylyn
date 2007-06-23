@@ -67,7 +67,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -76,7 +76,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		AbstractTask task = new LocalTask(contextId, contextId);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
 		manager.deleteContext(contextId);
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 
 		manager.activateContext(contextId);
@@ -147,7 +147,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	public void testWaitingListenersDoNotLeakOnEditorActivation() throws JavaModelException {
 		manager.deleteContext(contextId);
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 
 		int initialNumListeners = manager.getListeners().size();
 		manager.activateContext(contextId);
@@ -173,7 +173,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 	}
 
 	public void testEditorTrackerListenerRegistration() throws JavaModelException {
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 
 		ActiveFoldingEditorTracker tracker = JavaUiBridgePlugin.getDefault().getEditorTracker();
 		assertTrue(tracker.getEditorListenerMap().isEmpty());
@@ -189,7 +189,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertEquals(numListeners + 1, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(1, page.getEditorReferences().length);
 		assertEquals(1, tracker.getEditorListenerMap().size());
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 
 		assertEquals(numListeners, ContextCorePlugin.getContextManager().getListeners().size());
 		assertEquals(0, page.getEditorReferences().length);
@@ -209,7 +209,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoCloseWithDecay() throws JavaModelException, InvocationTargetException, InterruptedException {
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);
@@ -238,7 +238,7 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 	@SuppressWarnings("deprecation")
 	public void testAutoClose() throws JavaModelException, InvocationTargetException, InterruptedException {
-		ResourcesUiBridgePlugin.getDefault().getEditorManager().closeAllEditors();
+		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 		assertEquals(0, page.getEditors().length);
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridge(JavaStructureBridge.CONTENT_TYPE);
 		IMethod m1 = type1.createMethod("void m111() { }", null, true, null);

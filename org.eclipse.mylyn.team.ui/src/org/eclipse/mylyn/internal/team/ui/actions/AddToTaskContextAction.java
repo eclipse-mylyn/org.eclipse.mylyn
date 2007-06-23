@@ -107,7 +107,7 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		}
 			
 		if (!resourcesToAdd.isEmpty()) {
-			ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(resourcesToAdd,
+			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resourcesToAdd,
 					InteractionEvent.Kind.SELECTION);
 		}else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), LABEL,

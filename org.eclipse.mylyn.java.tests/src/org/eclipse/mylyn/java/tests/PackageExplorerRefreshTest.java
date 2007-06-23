@@ -34,7 +34,7 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 		super.setUp();
 		view = PackageExplorerPart.openInActivePerspective();
 		viewer = view.getTreeViewer();
-		ContextUiPlugin.getDefault().getViewerManager().setSyncRefreshMode(true);
+		ContextUiPlugin.getViewerManager().setSyncRefreshMode(true);
 		FocusPackageExplorerAction.getActionForPart(view).update(true);
 	}
 

@@ -62,9 +62,6 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 
 	private InterestUpdateDeltaListener javaElementChangeListener = new InterestUpdateDeltaListener();
 
-	@Deprecated
-	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.ui.interest.prediction.errors";
-	
 	private final IInteractionContextListener PREFERENCES_WIZARD_LISTENER = new IInteractionContextListener() {
 
 		public void contextActivated(IInteractionContext context) {
@@ -139,7 +136,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 						StatusManager.log(t, "Could not install type history manager, incompatible Eclipse version.");
 					}					
 				
-					if (getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
+					if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
 					
@@ -158,8 +155,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	private void initDefaultPrefs() {
-//		getPreferenceStore().setDefault(MylarJavaPrefConstants.PACKAGE_EXPLORER_AUTO_EXPAND, true);
-		getPreferenceStore().setDefault(PREDICTED_INTEREST_ERRORS, false);
+		getPreferenceStore().setDefault(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS, false);
 	}
 
 	@Override

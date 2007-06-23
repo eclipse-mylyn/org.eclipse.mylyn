@@ -118,7 +118,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/ impl
 			Set<IResource> resources = new HashSet<IResource>();
 			resources.add(resource);
 			if (ResourcesUiBridgePlugin.getDefault() != null) {
-				ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(resources,
+				ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resources,
 						InteractionEvent.Kind.SELECTION);
 			}
 		}

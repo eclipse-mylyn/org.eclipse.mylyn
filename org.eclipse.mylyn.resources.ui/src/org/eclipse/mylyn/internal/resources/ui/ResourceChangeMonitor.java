@@ -67,8 +67,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		}; 
 		try {
 			rootDelta.accept(visitor);
-			ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
-			ResourcesUiBridgePlugin.getDefault().getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
+			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
+			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
 		} catch (CoreException e) {
 			StatusManager.log(e, "could not accept marker visitor");
 		}

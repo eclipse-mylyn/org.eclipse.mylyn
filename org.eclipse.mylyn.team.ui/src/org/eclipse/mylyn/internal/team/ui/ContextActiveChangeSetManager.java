@@ -251,14 +251,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	}
 
 	private AbstractTask getTask(IInteractionContext context) {
-		List<AbstractTask> activeTasks = TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks();
-
-		// TODO: support multiple tasks
-		if (activeTasks.size() > 0) {
-			return activeTasks.get(0);
-		} else {
-			return null;
-		}
+		return TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask();
 	}
 
 	/**

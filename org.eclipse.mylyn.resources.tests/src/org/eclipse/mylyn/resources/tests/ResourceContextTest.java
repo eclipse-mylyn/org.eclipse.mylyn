@@ -33,13 +33,13 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(true);
-		ResourcesUiBridgePlugin.getDefault().getInterestUpdater().setSyncExec(true);
+		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(true);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		ResourcesUiBridgePlugin.getDefault().getInterestUpdater().setSyncExec(false);
+		ResourcesUiBridgePlugin.getInterestUpdater().setSyncExec(false);
 	}
 
 	public void testResourceSelect() throws CoreException {

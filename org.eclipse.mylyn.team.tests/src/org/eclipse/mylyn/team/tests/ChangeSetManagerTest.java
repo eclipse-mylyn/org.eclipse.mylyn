@@ -48,7 +48,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		changeSetManager = (ContextActiveChangeSetManager)FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers().iterator().next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
-		assertEquals(0, TasksUiPlugin.getTaskListManager().getTaskList().getActiveTasks().size());
+		assertNull(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
 	}
 
 	@Override

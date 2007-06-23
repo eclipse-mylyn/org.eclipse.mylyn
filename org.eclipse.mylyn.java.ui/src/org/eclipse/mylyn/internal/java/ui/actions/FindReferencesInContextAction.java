@@ -11,8 +11,6 @@
 
 package org.eclipse.mylyn.internal.java.ui.actions;
 
-import java.util.ArrayList;
-
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -25,8 +23,6 @@ import org.eclipse.jdt.ui.search.ElementQuerySpecification;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.mylyn.context.core.ContextCorePlugin;
-import org.eclipse.mylyn.context.ui.ContextUiPlugin;
 import org.eclipse.mylyn.internal.context.ui.TaskContextWorkingSetManager;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IEditorPart;

@@ -246,7 +246,7 @@ public class CommitTemplateVariables {
 	}
 	
 	public static RepositoryTaskData getTaskData(AbstractTask task) {
-		return TasksUiPlugin.getDefault().getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
+		return TasksUiPlugin.getTaskDataManager().getNewTaskData(task.getRepositoryUrl(), task.getTaskId());
 	}
 
 	/**
