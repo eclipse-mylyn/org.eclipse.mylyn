@@ -49,7 +49,7 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 
 	public void testRepositoryTemplate() throws Throwable {
 		IProgressMonitor monitor = new NullProgressMonitor();
-		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.PLUGIN_ID, IStatus.OK, "Query result", null);
+		MultiStatus queryStatus = new MultiStatus(TasksUiPlugin.ID_PLUGIN, IStatus.OK, "Query result", null);
 		final List<AbstractTask> hits = new ArrayList<AbstractTask>();
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
