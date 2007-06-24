@@ -36,6 +36,7 @@ import org.eclipse.mylyn.tasks.core.AbstractTask.PriorityLevel;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.DatePicker;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.mylyn.tasks.ui.editors.TaskFormPage;
@@ -65,6 +66,7 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
@@ -129,8 +131,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 
 	private Spinner estimated;
 
-	private Button getDescButton;
+	private ImageHyperlink getDescLink;
 
+	private ImageHyperlink openUrlLink;
+	
 	private TaskEditor parentEditor = null;
 
 	private ITaskListChangeListener TASK_LIST_LISTENER = new ITaskListChangeListener() {
@@ -435,7 +439,7 @@ public class TaskPlanningEditor extends TaskFormPage {
 		endDate = addNameValueComp(statusComposite, "Completed:", completionDateString, SWT.FLAT | SWT.READ_ONLY);
 		// URL
 		Composite urlComposite = toolkit.createComposite(parent);
-		GridLayout urlLayout = new GridLayout(3, false);
+		GridLayout urlLayout = new GridLayout(4, false);
 		urlLayout.verticalSpacing = 0;
 		urlLayout.marginHeight = 2;
 		urlLayout.marginLeft = 5;
@@ -457,8 +461,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 			});
 		}
 
-		getDescButton = toolkit.createButton(urlComposite, "Get Description", SWT.FLAT | SWT.PUSH);
-		getDescButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		getDescLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
+		getDescLink.setImage(TasksUiImages.getImage(TasksUiImages.TASK_RETRIEVE));
+		getDescLink.setToolTipText("Retrieve task description from URL");
+		getDescLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		setButtonStatus();
 
 		issueReportURL.addKeyListener(new KeyListener() {
@@ -471,14 +477,36 @@ public class TaskPlanningEditor extends TaskFormPage {
 			}
 		});
 
-		getDescButton.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
+		getDescLink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
 				retrieveTaskDescription(issueReportURL.getText());
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
+			public void linkEntered(HyperlinkEvent e) {
+			}
+
+			public void linkExited(HyperlinkEvent e) {
 			}
 		});
+
+		openUrlLink = toolkit.createImageHyperlink(urlComposite, SWT.NONE);
+		openUrlLink.setImage(TasksUiImages.getImage(TasksUiImages.BROWSER_SMALL));
+		openUrlLink.setToolTipText("Open with Web Browser");
+		openUrlLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		openUrlLink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				TasksUiUtil.openUrl(issueReportURL.getText(), false);
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+			}			
+		});
+		
 		toolkit.paintBordersFor(urlComposite);
 		toolkit.paintBordersFor(statusComposite);
 	}
@@ -518,10 +546,10 @@ public class TaskPlanningEditor extends TaskFormPage {
 			// if (url.equals(defaultPrefix)) {
 			// getDescButton.setEnabled(false);
 			// } else {
-			getDescButton.setEnabled(true);
+			getDescLink.setEnabled(true);
 			// }
 		} else {
-			getDescButton.setEnabled(false);
+			getDescLink.setEnabled(false);
 		}
 	}
 
