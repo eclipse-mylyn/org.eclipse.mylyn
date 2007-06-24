@@ -19,13 +19,14 @@ public class RepositoryTaskHandleUtil {
 	public static final String HANDLE_DELIM = "-";
 
 	private static final String MISSING_REPOSITORY = "norepository";
-	
+
 	public static String getHandle(String repositoryUrl, String taskId) {
+		if (!isValidTaskId(taskId)) {
+			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: " + taskId);
+		}
+		
 		if (repositoryUrl == null) {
 			return MISSING_REPOSITORY + HANDLE_DELIM + taskId;
-		} else if (taskId.contains(HANDLE_DELIM)) {
-			throw new RuntimeException("invalid handle for task, can not contain: " + HANDLE_DELIM + ", was: "
-					+ taskId);
 		} else {
 			return repositoryUrl + HANDLE_DELIM + taskId;
 		}
@@ -47,6 +48,11 @@ public class RepositoryTaskHandleUtil {
 			return id;
 		}
 		return null;
+	}
+
+
+	public static boolean isValidTaskId(String taskId) {
+		return !taskId.contains(HANDLE_DELIM);
 	}
 
 }

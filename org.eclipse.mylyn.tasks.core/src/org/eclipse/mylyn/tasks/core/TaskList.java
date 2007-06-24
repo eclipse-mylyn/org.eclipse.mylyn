@@ -467,6 +467,10 @@ public class TaskList {
 	 * @since 2.0
 	 */
 	public AbstractTask getTask(String repositoryUrl, String taskId) {
+		if (!RepositoryTaskHandleUtil.isValidTaskId(taskId)) {
+			return null;
+		}
+		
 		String handle = RepositoryTaskHandleUtil.getHandle(repositoryUrl, taskId);
 		AbstractTask task = getTask(handle);
 		if (task instanceof AbstractTask) {
@@ -489,6 +493,22 @@ public class TaskList {
 				if (currUrl != null && !currUrl.equals("") && currUrl.equals(taskUrl)) {
 					return (AbstractTask) currTask;
 				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Searches for a task whose key matches.
+	 * 
+	 * @return first task with a key, null if no matching task is found
+	 * @since 2.0
+	 */
+	public AbstractTask getTaskByKey(String repositoryUrl, String taskKey) {
+		for (AbstractTask task : tasks.values()) {
+			String currentTaskKey = task.getTaskKey();
+			if (currentTaskKey != null && currentTaskKey.equals(taskKey) && task.getRepositoryUrl().equals(repositoryUrl)) {
+				return task;
 			}
 		}
 		return null;
