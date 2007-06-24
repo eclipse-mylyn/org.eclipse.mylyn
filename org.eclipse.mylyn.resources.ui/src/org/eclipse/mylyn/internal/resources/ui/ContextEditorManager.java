@@ -304,34 +304,38 @@ public class ContextEditorManager implements IInteractionContextListener {
 
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
-			if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
-				if (!element.getInterest().isInteresting()) {
-					AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+			closeEditor(element, false);
+		}
+	}
+
+	public void elementDeleted(IInteractionElement element) {
+		closeEditor(element, true);
+	}
+	
+	private void closeEditor(IInteractionElement element, boolean force) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+			if (force || !element.getInterest().isInteresting()) {
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+						element.getContentType());
+				if (bridge.isDocument(element.getHandleIdentifier())) {
+					AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(
 							element.getContentType());
-					if (bridge.isDocument(element.getHandleIdentifier())) {
-						AbstractContextUiBridge uiBridge = ContextUiPlugin.getDefault().getUiBridge(
-								element.getContentType());
-						uiBridge.close(element);
-					}
+					uiBridge.close(element);
 				}
 			}
 		}
 	}
 
-	public void elementDeleted(IInteractionElement node) {
+	public void landmarkAdded(IInteractionElement element) {
 		// ignore
 	}
 
-	public void landmarkAdded(IInteractionElement node) {
+	public void landmarkRemoved(IInteractionElement element) {
 		// ignore
 	}
 
-	public void landmarkRemoved(IInteractionElement node) {
-		// ignore
-	}
-
-	public void relationsChanged(IInteractionElement node) {
+	public void relationsChanged(IInteractionElement element) {
 		// ignore
 	}
 }

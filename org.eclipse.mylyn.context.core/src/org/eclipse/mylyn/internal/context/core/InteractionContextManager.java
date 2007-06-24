@@ -848,6 +848,10 @@ public class InteractionContextManager {
 			processInteractionEvent(interactionEvent);
 		} else if (changeValue < 0) {
 			delete(element);
+			for (IInteractionContextListener listener : listeners) {
+				listener.elementDeleted(element);
+			}
+			// TODO: consider batching into a delta
 		}
 		return true;
 	}
