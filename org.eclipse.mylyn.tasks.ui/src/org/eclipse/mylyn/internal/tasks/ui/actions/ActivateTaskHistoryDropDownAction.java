@@ -119,7 +119,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 			item.fill(dropDownMenu, -1);
 		}
 	}
-
+	
 	@Override
 	public void run() {
 		if (taskHistory.hasPrevious()) {
@@ -186,6 +186,7 @@ public class ActivateTaskHistoryDropDownAction extends TaskNavigateDropDownActio
 	}
 
 	public void run(IAction action) {
+		run();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
