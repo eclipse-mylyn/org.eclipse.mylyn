@@ -9,7 +9,7 @@ You need an existing project for this sheet.
    </intro>
    <item title="Open the Task List view" dialog="true" skip="false">
       <description>
-         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylar &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
+         If the Task List view is not opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylyn &gt; Task List</b> or click on the &quot;Click to Perform&quot; link below.
       </description>
       <command serialization="org.eclipse.ui.views.showView(org.eclipse.ui.views.showView.viewId=org.eclipse.mylyn.tasks.ui.views.tasks)" confirm="true">
       </command>

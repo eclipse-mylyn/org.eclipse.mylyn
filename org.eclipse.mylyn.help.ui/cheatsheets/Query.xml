@@ -18,11 +18,11 @@
 <br/><br/>
 If the Task Repositories view isn&apos;t opened, select in the main menu  <b>Window &gt; Show View &gt; Other... &gt; Mylyn &gt; Task Repositry</b>.
 <br/><br/>
-In the Task Repositories  view you can see <b>Eclipse.org</b>. Right click on it and selet <b>Properties</b>.<br/>
+In the Task Repositories  view you can see <b>Eclipse.org</b>. Right click on it and select <b>Properties</b>.<br/>
 Check out the <b>Anonymous Access</b> checkbox.<br/>
-Enter your&apos;s user id for the <b>User ID</b> and password for the <b>Password</b>. <br/>
+Enter your user id for the <b>User ID</b> and password for the <b>Password</b>. <br/>
 Click on the <b>Validate Settings</b> button to check your given parameters.<br/>
-If you haven&apos;t got any account you can register one, if you click on the <b>Create new accout</b> link.<br/>
+If you do not have an account you can register one, if you click on the <b>Create new accout</b> link.<br/>
 Click on the <b>Finish</b> button to save the values and close the dialog.
       </description>
    </item>
@@ -37,8 +37,8 @@ Click on the <b>Finish</b> button to save the values and close the dialog.
       <description>
          Select <b>Eclipse.org</b> then click on the <b>Next</b> button.<br/>
  Select <b>Create a query using form</b> then click on the <b>Next</b> button.<br/>
- Enter <b>Mylar bugs</b> for the query&apos;s title.
- Select <b>Mylar</b> from the Product and <b>P1, P2</b> from the Priority then click on the <b>Finish</b> button.
+ Enter <b>Mylyn bugs</b> for the query&apos;s title.
+ Select <b>Mylyn</b> from the Product and <b>P1, P2</b> from the Priority then click on the <b>Finish</b> button.
       </description>
    </item>
 </cheatsheet>
