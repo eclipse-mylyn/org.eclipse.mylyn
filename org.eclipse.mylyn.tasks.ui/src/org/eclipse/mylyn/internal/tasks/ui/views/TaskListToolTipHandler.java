@@ -27,6 +27,7 @@ import org.eclipse.mylyn.monitor.core.DateUtil;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
+import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
 import org.eclipse.mylyn.tasks.core.RepositoryStatus;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -65,9 +66,6 @@ public class TaskListToolTipHandler {
 	private Shell tipShell;
 
 	private Widget tipWidget;
-
-	public TaskListToolTipHandler() {
-	}
 
 	private AbstractTaskContainer getTaskListElement(Object hoverObject) {
 		if (hoverObject instanceof Widget) {
@@ -117,17 +115,9 @@ public class TaskListToolTipHandler {
 			sb.append(DateUtil.getFormattedDurationShort(container.getTotalElapsed()));
 			sb.append("\n");
 			return sb.toString();
-		} else if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			StringBuilder sb = new StringBuilder();
-			String syncStamp = query.getLastSynchronizedTimeStamp();
-			if (syncStamp != null) {
-				sb.append("Synchronized: " + syncStamp);
-			}
-			return sb.toString();
 		} else if (element instanceof AbstractTask) {
 			AbstractTask task = (AbstractTask) element;
-			StringBuilder sb = new StringBuilder();			
+			StringBuilder sb = new StringBuilder();
 			sb.append(TasksUiPlugin.getConnectorUi(task.getConnectorKind()).getTaskKindLabel(task));
 			String key = task.getTaskKey();
 			if (key != null) {
@@ -141,8 +131,9 @@ public class TaskListToolTipHandler {
 			sb.append("]");
 			sb.append("\n");
 			return sb.toString();
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	private String getRepositoryLabel(String repositoryKind, String repositoryUrl) {
@@ -213,7 +204,7 @@ public class TaskListToolTipHandler {
 			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
 			status = query.getSynchronizationStatus();
 		}
-		
+
 		if (status != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(status.getMessage());
@@ -221,8 +212,8 @@ public class TaskListToolTipHandler {
 				sb.append(" Please synchronize manually for full error message.");
 			}
 			return sb.toString();
-		} 
-		
+		}
+
 		return null;
 	}
 
@@ -324,13 +315,13 @@ public class TaskListToolTipHandler {
 					Tree w = (Tree) widget;
 					widget = w.getItem(widgetPosition);
 				}
-				
+
 				if (widget == null) {
 					hideTooltip();
 					tipWidget = null;
 					return;
 				}
-				
+
 				if (widget == tipWidget) {
 					// already displaying tooltip
 					return;
@@ -394,16 +385,12 @@ public class TaskListToolTipHandler {
 		hideTooltip();
 
 		AbstractTaskContainer element = getTaskListElement(tipWidget);
-		String detailsText = getDetailsText(element);
-		if (detailsText == null) {
-			return;
-		}
 
 		Shell parent = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		if (parent == null) {
 			return;
 		}
-		
+
 		tipShell = new Shell(parent.getDisplay(), SWT.TOOL | SWT.NO_FOCUS | SWT.MODELESS | SWT.ON_TOP);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
@@ -414,11 +401,19 @@ public class TaskListToolTipHandler {
 
 		addIconAndLabel(tipShell, getImage(element), getTitleText(element));
 
-		addIconAndLabel(tipShell, null, detailsText);
+		String detailsText = getDetailsText(element);
+		if (detailsText != null) {
+			addIconAndLabel(tipShell, null, detailsText);
+		}
 
 		String statusText = getStatusText(element);
 		if (statusText != null) {
 			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.WARNING), statusText);
+		}
+
+		String synchText = getSynchText(element);
+		if (synchText != null) {
+			addIconAndLabel(tipShell, TasksUiImages.getImage(TasksUiImages.REPOSITORY_SYNCHRONIZE), synchText);
 		}
 
 		String activityText = getActivityText(element);
@@ -453,6 +448,16 @@ public class TaskListToolTipHandler {
 		tipShell.pack();
 		setHoverLocation(tipShell, location);
 		tipShell.setVisible(true);
+	}
+
+	private String getSynchText(AbstractTaskContainer element) {
+		if (element instanceof AbstractRepositoryQuery) {
+			String syncStamp = ((AbstractRepositoryQuery) element).getLastSynchronizedTimeStamp();
+			if (syncStamp != null) {
+				return "Synchronized: " + syncStamp;
+			}
+		}
+		return null;
 	}
 
 	private void addLabel(Shell parent, String text) {
