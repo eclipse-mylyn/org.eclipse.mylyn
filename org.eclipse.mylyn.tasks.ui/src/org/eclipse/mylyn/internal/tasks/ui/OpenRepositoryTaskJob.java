@@ -113,7 +113,7 @@ public class OpenRepositoryTaskJob extends Job {
 				if (taskData == null) {
 					TasksUiUtil.openUrl(taskUrl, false);
 				} else {
-					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, taskId, taskUrl);
+					AbstractRepositoryTaskEditorInput editorInput = new RepositoryTaskEditorInput(repository, taskData.getId(), taskUrl);
 					TasksUiUtil.openEditor(editorInput, TaskEditor.ID_EDITOR, page);
 				}
 			}

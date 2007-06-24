@@ -145,6 +145,9 @@ public class TasksUiUtil {
 		}
 		boolean opened = false;
 		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repository.getUrl(), taskId);
+		if (task == null) {
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repository.getUrl(), taskId);
+		}
 		if (task != null) {
 			TasksUiUtil.refreshAndOpenTaskListElement(task);
 			opened = true;
@@ -167,12 +170,15 @@ public class TasksUiUtil {
 	public static boolean openRepositoryTask(String repositoryUrl, String taskId, String fullUrl) {
 		boolean opened = false;
 		AbstractTask task = null;
-		// TODO: move, must current be first due to JIRA Connector use of key
-		if (fullUrl != null) {
+
+		if (repositoryUrl != null && taskId != null) {
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
+		}
+		if (task == null && fullUrl != null) {
 			task = TasksUiPlugin.getTaskListManager().getTaskList().getRepositoryTask(fullUrl);
 		}
 		if (task == null && repositoryUrl != null && taskId != null) {
-			task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(repositoryUrl, taskId);
+			task = TasksUiPlugin.getTaskListManager().getTaskList().getTaskByKey(repositoryUrl, taskId);
 		}
 
 		if (task != null) {
