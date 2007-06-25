@@ -15,12 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 /**
  * Used for logging interaction events.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractMonitorLog {
 

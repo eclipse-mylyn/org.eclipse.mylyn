@@ -18,20 +18,24 @@ import org.eclipse.core.runtime.IStatus;
  * 
  */
 public interface IStatusHandler {
- 
+
 	/**
 	 * Display/log internal failure
 	 * 
-	 * @param status IStatus representing failure
-	 * @param inform inform user via dialog, if no only status is logged
+	 * @param status
+	 *            IStatus representing failure
+	 * @param inform
+	 *            inform user via dialog, if no only status is logged
 	 */
 	public abstract void fail(IStatus status, boolean informUser);
 
 	/**
 	 * Display funtional error to user
 	 * 
-	 * @param title Title of dialog to display
-	 * @param status IStatus to display
+	 * @param title
+	 *            Title of dialog to display
+	 * @param status
+	 *            IStatus to display
 	 */
 	public abstract void displayStatus(final String title, final IStatus status);
 }

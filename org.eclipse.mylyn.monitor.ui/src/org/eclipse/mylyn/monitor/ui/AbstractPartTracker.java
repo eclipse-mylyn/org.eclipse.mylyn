@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * Monitors interaction with workbench parts.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractPartTracker implements IPartListener {
 

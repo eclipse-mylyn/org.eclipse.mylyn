@@ -32,7 +32,7 @@ import org.eclipse.mylyn.monitor.ui.MonitorUiPlugin;
  * 
  * @author Mik Kersten
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public class ActivityContextManager {
 
@@ -64,7 +64,8 @@ public class ActivityContextManager {
 	public void fireActive(long start, long end) {
 		ContextCorePlugin.getContextManager().processActivityMetaContextEvent(
 				new InteractionEvent(InteractionEvent.Kind.COMMAND, InteractionContextManager.ACTIVITY_STRUCTURE_KIND,
-						InteractionContextManager.ACTIVITY_HANDLE_ATTENTION, InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
+						InteractionContextManager.ACTIVITY_HANDLE_ATTENTION,
+						InteractionContextManager.ACTIVITY_ORIGIN_ID, null,
 						InteractionContextManager.ACTIVITY_DELTA_ACTIVATED, 1f, new Date(start), new Date(end)));
 		for (IUserAttentionListener attentionListener : attentionListeners) {
 			attentionListener.userAttentionGained();

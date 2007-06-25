@@ -42,7 +42,8 @@ public class ZipFileUtil {
 	 * 
 	 * @param zipped
 	 *            file
-	 * @param destPath Destination path
+	 * @param destPath
+	 *            Destination path
 	 * @return Files that were unzipped
 	 */
 	public static List<File> unzipFiles(File zippedfile, String destPath) throws FileNotFoundException, IOException {
@@ -53,11 +54,11 @@ public class ZipFileUtil {
 
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = entries.nextElement();
-			 if(entry.isDirectory()) {
-		          // Assume directories are stored parents first then children.		          
-		          (new File(entry.getName())).mkdir();
-		          continue;
-		     }
+			if (entry.isDirectory()) {
+				// Assume directories are stored parents first then children.		          
+				(new File(entry.getName())).mkdir();
+				continue;
+			}
 
 			InputStream inputStream = zipFile.getInputStream(entry);
 			File outputFile = new File(destPath + File.separator + entry.getName());
@@ -68,16 +69,17 @@ public class ZipFileUtil {
 		}
 		return outputFiles;
 	}
-	
-	public static List<File> extactEntries(File zippedFile, List<ZipEntry> entries, String destPath) throws FileNotFoundException, IOException {
+
+	public static List<File> extactEntries(File zippedFile, List<ZipEntry> entries, String destPath)
+			throws FileNotFoundException, IOException {
 		ZipFile zipFile = new ZipFile(zippedFile);
 		List<File> outputFiles = new ArrayList<File>();
-		for (ZipEntry entry: entries) {
-			 if(entry.isDirectory()) {
-		          // Assume directories are stored parents first then children.		          
-		          (new File(entry.getName())).mkdir();
-		          continue;
-		     }
+		for (ZipEntry entry : entries) {
+			if (entry.isDirectory()) {
+				// Assume directories are stored parents first then children.		          
+				(new File(entry.getName())).mkdir();
+				continue;
+			}
 			InputStream inputStream = zipFile.getInputStream(entry);
 			File outputFile = new File(destPath + File.separator + entry.getName());
 			FileOutputStream outStream = new FileOutputStream(outputFile);
@@ -86,18 +88,18 @@ public class ZipFileUtil {
 		}
 		return outputFiles;
 	}
-	
+
 	public static void copyByteStream(InputStream in, OutputStream out) throws IOException {
 		if (in != null && out != null) {
 			BufferedInputStream inBuffered = new BufferedInputStream(in);
-			
+
 			int bufferSize = 1000;
 			byte[] buffer = new byte[bufferSize];
 
 			int readCount;
-			
+
 			BufferedOutputStream fout = new BufferedOutputStream(out);
-			
+
 			while ((readCount = inBuffered.read(buffer)) != -1) {
 				if (readCount < bufferSize) {
 					fout.write(buffer, 0, readCount);
@@ -106,7 +108,7 @@ public class ZipFileUtil {
 				}
 			}
 			fout.flush();
-			fout.close();			
+			fout.close();
 			in.close();
 		}
 	}
@@ -121,10 +123,11 @@ public class ZipFileUtil {
 		createZipFile(zipFile, files, null, null);
 	}
 
-	public static void createZipFile(File zipFile, List<File> files, IProgressMonitor monitor) throws FileNotFoundException, IOException {
+	public static void createZipFile(File zipFile, List<File> files, IProgressMonitor monitor)
+			throws FileNotFoundException, IOException {
 		createZipFile(zipFile, files, null, monitor);
 	}
-	
+
 	/**
 	 * @param zipFile
 	 *            Destination zipped file
@@ -140,9 +143,9 @@ public class ZipFileUtil {
 		if (zipFile.exists()) {
 			zipFile.delete();
 		}
-		if(rootPath == null) {
+		if (rootPath == null) {
 			rootPath = "";
-		} else if(!rootPath.endsWith("\\") || !rootPath.endsWith("/")) {
+		} else if (!rootPath.endsWith("\\") || !rootPath.endsWith("/")) {
 			rootPath += "/";
 		}
 
@@ -166,7 +169,8 @@ public class ZipFileUtil {
 	/**
 	 * @author Shawn Minto
 	 */
-	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file) throws FileNotFoundException, IOException {
+	private static void addZipEntry(ZipOutputStream zipOut, String rootPath, File file) throws FileNotFoundException,
+			IOException {
 
 		// Create a buffer for reading the files
 		byte[] buf = new byte[1024];
@@ -176,7 +180,7 @@ public class ZipFileUtil {
 
 		// Add ZIP entry to output stream.m
 		String path = "";
-		if(!rootPath.equals("")) {
+		if (!rootPath.equals("")) {
 			rootPath = rootPath.replaceAll("\\\\", "/");
 			path = file.getAbsolutePath().replaceAll("\\\\", "/");
 			path = path.substring(rootPath.length());

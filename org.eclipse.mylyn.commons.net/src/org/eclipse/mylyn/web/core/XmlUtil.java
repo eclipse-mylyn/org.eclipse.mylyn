@@ -15,15 +15,14 @@ package org.eclipse.mylyn.web.core;
  * Utility for handling HTML strings and characters.
  * 
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public class XmlUtil {
 
 	/**
 	 * @param text
 	 *            string to clean
-	 * @return string with all non valid characters removed, if text is null
-	 *         return null
+	 * @return string with all non valid characters removed, if text is null return null
 	 */
 	public static String cleanXmlString(String text) {
 		if (text == null)

@@ -17,10 +17,10 @@ import org.eclipse.jface.action.IAction;
  * Notified of user action executions.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IActionExecutionListener {
- 
+
 	public void actionObserved(IAction action);
 
 }

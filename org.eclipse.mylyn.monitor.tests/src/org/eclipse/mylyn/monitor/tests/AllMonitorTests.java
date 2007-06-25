@@ -26,7 +26,7 @@ public class AllMonitorTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.monitor.ui.tests");
 
 		// suite.addTestSuite(TaskTimerTest.class);
-		
+
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorUsageTests.suite());
 		suite.addTest(AllMonitorReportTests.suite());

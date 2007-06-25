@@ -39,7 +39,7 @@ public class HtmlTag {
 
 	/** tag's base url */
 	private URL baseUrl;
-	
+
 	/** tag is self terminated */
 	private boolean selfTerminating;
 
@@ -148,8 +148,7 @@ public class HtmlTag {
 	}
 
 	/**
-	 * Returns <code>true</code> if the tag contains attribute with the given
-	 * name.
+	 * Returns <code>true</code> if the tag contains attribute with the given name.
 	 */
 	public boolean hasAttribute(String s) {
 		return getAttribute(s) != null;
@@ -251,7 +250,7 @@ public class HtmlTag {
 			}
 			sb.append('"');
 		}
-		if(selfTerminating) {
+		if (selfTerminating) {
 			sb.append('/');
 		}
 		sb.append('>');
@@ -355,12 +354,12 @@ public class HtmlTag {
 		tags.put("UL", Tag.UL);
 		tags.put("VAR", Tag.VAR);
 	}
-	
+
 	public void setSelfTerminating(boolean terminating) {
 		this.selfTerminating = terminating;
-		
+
 	}
-	
+
 	public boolean isSelfTerminating() {
 		return selfTerminating;
 	}

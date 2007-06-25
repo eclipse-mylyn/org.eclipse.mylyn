@@ -80,8 +80,8 @@ public class ContextParsingTest extends TestCase {
 					// reset decay if not selected
 					if (element.getInterest().getValue() < 0) {
 						float decayOffset = (-1) * (element.getInterest().getValue()) + 1;
-						element = context.parseEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION, event
-								.getStructureKind(), event.getStructureHandle(), "test-decay", decayOffset));
+						element = context.parseEvent(new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+								event.getStructureKind(), event.getStructureHandle(), "test-decay", decayOffset));
 					}
 
 					assertTrue("should be positive: " + element.getInterest().getValue(), element.getInterest()

@@ -152,14 +152,15 @@ public class WebClientUtil {
 		}
 
 		if (user != null && password != null) {
-			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl), WebClientUtil
-					.getPort(repositoryUrl), AuthScope.ANY_REALM);
+			AuthScope authScope = new AuthScope(WebClientUtil.getDomain(repositoryUrl),
+					WebClientUtil.getPort(repositoryUrl), AuthScope.ANY_REALM);
 			client.getState().setCredentials(authScope, new UsernamePasswordCredentials(user, password));
 		}
 
 		if (WebClientUtil.isRepositoryHttps(repositoryUrl)) {
-			Protocol acceptAllSsl = new Protocol("https", (ProtocolSocketFactory) SslProtocolSocketFactory
-					.getInstance(), WebClientUtil.getPort(repositoryUrl));
+			Protocol acceptAllSsl = new Protocol("https",
+					(ProtocolSocketFactory) SslProtocolSocketFactory.getInstance(),
+					WebClientUtil.getPort(repositoryUrl));
 			client.getHostConfiguration().setHost(WebClientUtil.getDomain(repositoryUrl),
 					WebClientUtil.getPort(repositoryUrl), acceptAllSsl);
 			Protocol.registerProtocol("https", acceptAllSsl);
@@ -182,8 +183,7 @@ public class WebClientUtil {
 
 	/** utility method, should use TaskRepository.getProxy() */
 	public static Proxy getProxy(String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
-		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword
-				.length() > 0);
+		boolean authenticated = (proxyUsername != null && proxyPassword != null && proxyUsername.length() > 0 && proxyPassword.length() > 0);
 		if (proxyHost != null && proxyHost.length() > 0 && proxyPort != null && proxyPort.length() > 0) {
 			int proxyPortNum = Integer.parseInt(proxyPort);
 			InetSocketAddress sockAddr = new InetSocketAddress(proxyHost, proxyPortNum);
@@ -199,8 +199,7 @@ public class WebClientUtil {
 	/**
 	 * utility method, proxy should be obtained via TaskRepository.getProxy() *
 	 * 
-	 * @return proxy as defined in platform proxy settings property page,
-	 *         Proxy.NO_PROXY otherwise
+	 * @return proxy as defined in platform proxy settings property page, Proxy.NO_PROXY otherwise
 	 */
 	public static Proxy getPlatformProxy() {
 		Proxy proxy = Proxy.NO_PROXY;

@@ -18,7 +18,7 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class MonitorTestsPlugin extends Plugin {
-	
+
 	private static MonitorTestsPlugin plugin;
 
 	/**

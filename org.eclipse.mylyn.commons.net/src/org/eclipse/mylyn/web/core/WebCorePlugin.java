@@ -21,12 +21,12 @@ import org.osgi.util.tracker.ServiceTracker;
  * 
  * @author Mik Kersten
  * @author Michael Valenta
- * @since	2.0
+ * @since 2.0
  */
 public class WebCorePlugin extends Plugin {
 
 	public static final String ID_PLUGIN = "org.eclipse.mylyn.web.core";
-	
+
 	private static WebCorePlugin INSTANCE;
 
 	private ServiceTracker tracker;
@@ -53,13 +53,12 @@ public class WebCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Return the {@link IProxyService} or <code>null</code> if the service is
-	 * not available.
+	 * Return the {@link IProxyService} or <code>null</code> if the service is not available.
 	 * 
 	 * @return the {@link IProxyService} or <code>null</code>
 	 */
 	public static IProxyService getProxyService() {
-		return (IProxyService)INSTANCE.tracker.getService();
+		return (IProxyService) INSTANCE.tracker.getService();
 	}
 
 }

@@ -33,8 +33,7 @@ public class FileDisplayDialogTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		monitorFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path(
-				"testdata/monitor-log.xml"));
+		monitorFile = FileTool.getFileInPlugin(MonitorTestsPlugin.getDefault(), new Path("testdata/monitor-log.xml"));
 	}
 
 	@Override

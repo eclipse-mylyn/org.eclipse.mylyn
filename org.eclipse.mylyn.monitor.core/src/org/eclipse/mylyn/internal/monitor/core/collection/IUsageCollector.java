@@ -40,8 +40,7 @@ public interface IUsageCollector {
 	public abstract List<String> getPlainTextReport();
 
 	/**
-	 * Implementors will need to generate a unique filename given the directory
-	 * in which to place the file
+	 * Implementors will need to generate a unique filename given the directory in which to place the file
 	 * 
 	 * @param directory
 	 */

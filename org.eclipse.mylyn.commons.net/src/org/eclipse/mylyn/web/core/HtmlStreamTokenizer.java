@@ -23,7 +23,7 @@ import java.util.Locale;
  * Parses HTML into tokens.
  * 
  * @author Shawn Minto
- * @since	2.0
+ * @since 2.0
  */
 public class HtmlStreamTokenizer {
 
@@ -43,14 +43,12 @@ public class HtmlStreamTokenizer {
 	private StringBuffer whitespaceBuffer;
 
 	/**
-	 * holds a token that was read and then put back in the queue to be returned
-	 * again on <code>nextToken</code> call
+	 * holds a token that was read and then put back in the queue to be returned again on <code>nextToken</code> call
 	 */
 	private Token pushbackToken;
 
 	/**
-	 * holds a character that was read and then determined not to be part of the
-	 * current token
+	 * holds a character that was read and then determined not to be part of the current token
 	 */
 	private int pushbackChar;
 
@@ -181,8 +179,7 @@ public class HtmlStreamTokenizer {
 	}
 
 	/**
-	 * Pushes the token back into the queue, to be returned by the subsequent
-	 * call to <code>nextToken</code>
+	 * Pushes the token back into the queue, to be returned by the subsequent call to <code>nextToken</code>
 	 */
 	public void pushback(Token token) {
 		pushbackToken = token;
@@ -298,8 +295,7 @@ public class HtmlStreamTokenizer {
 	}
 
 	/**
-	 * Returns a string with HTML escapes changed into their corresponding
-	 * characters.
+	 * Returns a string with HTML escapes changed into their corresponding characters.
 	 */
 	public static String unescape(String s) {
 		if (s.indexOf('&') == -1) {
@@ -312,8 +308,7 @@ public class HtmlStreamTokenizer {
 	}
 
 	/**
-	 * Replaces (in-place) HTML escapes in a StringBuffer with their
-	 * corresponding characters.
+	 * Replaces (in-place) HTML escapes in a StringBuffer with their corresponding characters.
 	 */
 	public static StringBuffer unescape(StringBuffer sb) {
 		int i = 0; // index into the unprocessed section of the buffer
@@ -336,9 +331,10 @@ public class HtmlStreamTokenizer {
 				}
 				if (escape != null) {
 					Character character = parseReference(escape);
-					if (character != null && !((0x0A == character || 0x0D == character || 0x09 == ch)
-							|| (character >= 0x20 && character <= 0xD7FF)
-							|| (character >= 0xE000 && character <= 0xFFFD) || (character >= 0x10000 && character <= 0x10FFFF))) {
+					if (character != null
+							&& !((0x0A == character || 0x0D == character || 0x09 == ch)
+									|| (character >= 0x20 && character <= 0xD7FF)
+									|| (character >= 0xE000 && character <= 0xFFFD) || (character >= 0x10000 && character <= 0x10FFFF))) {
 						// Character is an invalid xml character
 						// http://www.w3.org/TR/REC-xml/#charsets
 						character = null;
@@ -362,8 +358,7 @@ public class HtmlStreamTokenizer {
 	}
 
 	/**
-	 * Parses HTML character and entity references and returns the corresponding
-	 * character.
+	 * Parses HTML character and entity references and returns the corresponding character.
 	 */
 	private static Character parseReference(String s) {
 		if (s.length() == 0)
@@ -459,18 +454,16 @@ public class HtmlStreamTokenizer {
 		}
 
 		/**
-		 * Returns the token's value. This is an HtmlTag for tokens of type
-		 * <code>TAG</code> and a StringBuffer for tokens of type
-		 * <code>TEXT</code> and <code>COMMENT</code>. For tokens of type
-		 * <code>EOF</code>, the value is <code>null</code>.
+		 * Returns the token's value. This is an HtmlTag for tokens of type <code>TAG</code> and a StringBuffer for
+		 * tokens of type <code>TEXT</code> and <code>COMMENT</code>. For tokens of type <code>EOF</code>, the
+		 * value is <code>null</code>.
 		 */
 		public Object getValue() {
 			return value;
 		}
 
 		/**
-		 * Returns the string representation of the token, including the
-		 * preceding whitespace.
+		 * Returns the string representation of the token, including the preceding whitespace.
 		 */
 		@Override
 		public String toString() {

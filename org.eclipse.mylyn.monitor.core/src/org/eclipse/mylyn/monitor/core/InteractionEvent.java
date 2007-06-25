@@ -15,10 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Immutable.  Encapsulates interaction between the user and structured elements.
+ * Immutable. Encapsulates interaction between the user and structured elements.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class InteractionEvent {
 
@@ -122,9 +122,9 @@ public class InteractionEvent {
 	 * Factory method.
 	 */
 	public static InteractionEvent makeCopy(InteractionEvent originalEvent, float newInterestContribution) {
-		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(), originalEvent
-				.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(), originalEvent
-				.getDelta(), newInterestContribution, originalEvent.getDate(), originalEvent.getEndDate());
+		return new InteractionEvent(originalEvent.getKind(), originalEvent.getStructureKind(),
+				originalEvent.getStructureHandle(), originalEvent.getOriginId(), originalEvent.getNavigation(),
+				originalEvent.getDelta(), newInterestContribution, originalEvent.getDate(), originalEvent.getEndDate());
 	}
 
 	/**
@@ -175,8 +175,8 @@ public class InteractionEvent {
 				&& (endDate == null ? event.endDate == null : endDate.equals(event.endDate))
 				&& (kind == null ? event.kind == null : kind.equals(event.kind))
 				&& (structureKind == null ? event.structureKind == null : structureKind.equals(event.structureKind))
-				&& (structureHandle == null ? event.structureHandle == null : structureHandle
-						.equals(event.structureHandle))
+				&& (structureHandle == null ? event.structureHandle == null
+						: structureHandle.equals(event.structureHandle))
 				&& (originId == null ? event.originId == null : originId.equals(event.originId))
 				&& (navigation == null ? event.navigation == null : navigation.equals(event.navigation))
 				&& (delta == null ? event.delta == null : delta.equals(event.delta))

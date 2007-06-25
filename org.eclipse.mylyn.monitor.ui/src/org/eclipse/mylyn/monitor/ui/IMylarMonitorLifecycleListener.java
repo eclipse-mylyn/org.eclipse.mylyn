@@ -15,7 +15,7 @@ package org.eclipse.mylyn.monitor.ui;
  * Notified of monitor lifecycle changes.
  * 
  * @author Brian de Alwis
- * @since	2.0
+ * @since 2.0
  */
 public interface IMylarMonitorLifecycleListener {
 

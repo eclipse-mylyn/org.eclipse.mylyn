@@ -57,8 +57,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	private List<AbstractUserInteractionMonitor> selectionMonitors = new ArrayList<AbstractUserInteractionMonitor>();
 
 	/**
-	 * TODO: this could be merged with context interaction events rather than
-	 * requiring update from the monitor.
+	 * TODO: this could be merged with context interaction events rather than requiring update from the monitor.
 	 */
 	private List<IInteractionEventListener> interactionListeners = new ArrayList<IInteractionEventListener>();
 
@@ -75,7 +74,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	protected Set<ISelectionListener> postSelectionListeners = new HashSet<ISelectionListener>();
 
 	public static final String OBFUSCATED_LABEL = "[obfuscated]";
-	
+
 	private IWorkbenchWindow launchingWorkbenchWindow = null;
 
 	protected IWindowListener WINDOW_LISTENER = new IWindowListener() {
@@ -147,7 +146,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 					getWorkbench().getActiveWorkbenchWindow().getShell().removeShellListener(shellLifecycleListener);
 					if (launchingWorkbenchWindow != null) {
 						removeListenersFromWindow(launchingWorkbenchWindow);
-					}	
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -305,7 +304,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 	public ActivityContextManager getActivityContextManager() {
 		return activityContextManager;
 	}
-	
+
 	public boolean suppressConfigurationWizards() {
 		List<String> commandLineArgs = Arrays.asList(Platform.getCommandLineArgs());
 		if (commandLineArgs.contains("-showMylynWizards")) {
@@ -314,7 +313,7 @@ public class MonitorUiPlugin extends AbstractUIPlugin {
 			return commandLineArgs.contains("-pdelaunch");
 		}
 	}
-	
+
 	private void removeListenersFromWindow(IWorkbenchWindow window) {
 		for (IPageListener listener : pageListeners) {
 			window.removePageListener(listener);

@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * @author Mik Kersten
  * @author Shawn Minto
- * @since	2.0
+ * @since 2.0
  */
 public class ActivityTimerThread extends Thread implements Runnable {
 

@@ -119,7 +119,9 @@ public class MonitorTest extends TestCase implements IMylarMonitorLifecycleListe
 	}
 
 	private void generateSelection() {
-		selectionMonitor.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		selectionMonitor.selectionChanged(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
 				.getActivePart(), new StructuredSelection("yo"));
 	}
 

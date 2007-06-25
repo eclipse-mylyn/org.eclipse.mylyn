@@ -17,8 +17,7 @@ import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
- * Logs all bug root window selections (i.e. the window that the workbench is
- * launced with).
+ * Logs all bug root window selections (i.e. the window that the workbench is launced with).
  * 
  * @author Leah Findlater and Mik Kersten
  */
@@ -39,15 +38,13 @@ public class WindowChangeMonitor implements IWindowListener {
 	// TODO: Should we add the default set of monitors to the new window as
 	// well?
 	public void windowOpened(IWorkbenchWindow window) {
-			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
-					WINDOW_OPENED);
-			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_OPENED);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowClosed(IWorkbenchWindow window) {
-			InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
-					WINDOW_CLOSED);
-			MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_CLOSED);
+		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 
 	public void windowDeactivated(IWorkbenchWindow window) {
@@ -57,8 +54,7 @@ public class WindowChangeMonitor implements IWindowListener {
 	}
 
 	public void windowActivated(IWorkbenchWindow window) {
-		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window),
-				WINDOW_ACTIVATED);
+		InteractionEvent interactionEvent = InteractionEvent.makeCommand(getWindowOrigin(window), WINDOW_ACTIVATED);
 		MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent);
 	}
 

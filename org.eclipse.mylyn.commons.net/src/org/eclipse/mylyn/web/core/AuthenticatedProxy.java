@@ -18,7 +18,7 @@ import java.net.SocketAddress;
  * Abstraction for a proxy that supports user authentication.
  * 
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public class AuthenticatedProxy extends Proxy {
 

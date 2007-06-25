@@ -16,13 +16,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-
-
 /**
  * Used for formatting dates.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class DateUtil {
 
@@ -154,22 +152,22 @@ public class DateUtil {
 		formatter.applyPattern(dateFormat);
 		return formatter.format(date);
 	}
-	
+
 	public static String getFormattedDate(Date date, String format) {
 		formatter.setTimeZone(TimeZone.getDefault());
 		formatter.applyPattern(format);
 		return formatter.format(date);
 	}
-	
+
 	public static TimeZone getTimeZone(String zoneId) {
 		TimeZone timeZone = TimeZone.getTimeZone(zoneId);
 		if (!timeZone.getID().equals(zoneId)) {
-			StatusHandler.log("Mylar: Specified time zone not available, using "+timeZone.getDisplayName()+". Check repository settings.",
-					DateUtil.class);
+			StatusHandler.log("Mylar: Specified time zone not available, using " + timeZone.getDisplayName()
+					+ ". Check repository settings.", DateUtil.class);
 		}
 		return timeZone;
 	}
-	
+
 //	public static Date parseDate(String dateString, String dateFormat, TimeZone timeZone) throws ParseException {
 //		Date result = null;
 //		formatter.setTimeZone(timeZone);

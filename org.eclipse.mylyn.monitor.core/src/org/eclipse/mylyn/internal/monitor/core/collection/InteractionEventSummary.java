@@ -15,8 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Stores the type, ID, name, and usage count of a single function that can be
- * stored in the context.
+ * Stores the type, ID, name, and usage count of a single function that can be stored in the context.
  * 
  * @author Leah Findlater
  * @author Mik Kersten

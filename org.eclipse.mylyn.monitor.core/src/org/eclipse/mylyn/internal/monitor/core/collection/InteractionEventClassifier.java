@@ -23,8 +23,7 @@ public class InteractionEventClassifier {
 	// TODO: Move this class into mylar reporting framework
 
 	/**
-	 * isEdit currently classifies selections in editor as edits. May need to
-	 * split off a different version
+	 * isEdit currently classifies selections in editor as edits. May need to split off a different version
 	 */
 	public static boolean isEdit(InteractionEvent event) {
 		return event.getKind().equals(InteractionEvent.Kind.EDIT)

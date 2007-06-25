@@ -16,7 +16,7 @@ package org.eclipse.mylyn.monitor.ui;
  * 
  * @author Mik Kersten
  * @author Rob Elves
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractUserActivityMonitor {
 
@@ -29,7 +29,7 @@ public abstract class AbstractUserActivityMonitor {
 	}
 
 	public void setLastEventTime(long lastEventTime) {
-		synchronized (this) {			
+		synchronized (this) {
 			lastEventTimeStamp = lastEventTime;
 		}
 	}

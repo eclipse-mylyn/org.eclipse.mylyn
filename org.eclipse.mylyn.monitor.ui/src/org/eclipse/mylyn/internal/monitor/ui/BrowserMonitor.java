@@ -62,7 +62,7 @@ public class BrowserMonitor extends AbstractUserInteractionMonitor implements IP
 				InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, "url", url,
 						WebBrowserEditor.WEB_BROWSER_EDITOR_ID, "null", "", 0);
 				MonitorUiPlugin.getDefault().notifyInteractionObserved(interactionEvent); // TODO:
-																						// move
+				// move
 			}
 		}
 	}

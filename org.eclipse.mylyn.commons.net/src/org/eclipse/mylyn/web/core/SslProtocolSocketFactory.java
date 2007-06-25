@@ -35,7 +35,7 @@ import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
  * @author Nathan Hapke
  * @author Rob Elves
  * @author Steffen Pingel
- * @since	2.0
+ * @since 2.0
  */
 public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 
@@ -60,8 +60,7 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 				KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 				char[] password = System.getProperty(KEY_STORE_PASSWORD).toCharArray();
 				keyStore.load(new FileInputStream(System.getProperty(KEY_STORE)), password);
-				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory
-						.getDefaultAlgorithm());
+				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 				keyManagerFactory.init(keyStore, password);
 				keymanagers = keyManagerFactory.getKeyManagers();
 			} catch (Exception e) {
@@ -123,5 +122,5 @@ public class SslProtocolSocketFactory implements SecureProtocolSocketFactory {
 	public boolean hasKeyManager() {
 		return hasKeyManager;
 	}
-	
+
 }

@@ -21,11 +21,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Self-registering on construction. Encapsulates users' interaction with the
- * context model.
+ * Self-registering on construction. Encapsulates users' interaction with the context model.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractUserInteractionMonitor implements ISelectionListener {
 
@@ -60,23 +59,24 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		}
 	}
 
-	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection, boolean contributeToContext);
+	protected abstract void handleWorkbenchPartSelection(IWorkbenchPart part, ISelection selection,
+			boolean contributeToContext);
 
 	/**
 	 * Intended to be called back by subclasses.
 	 */
-	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement, boolean contributeToContext) {
+	protected InteractionEvent handleElementSelection(IWorkbenchPart part, Object selectedElement,
+			boolean contributeToContext) {
 		if (selectedElement == null || selectedElement.equals(lastSelectedElement))
 			return null;
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(selectedElement);
 		String handleIdentifier = bridge.getHandleIdentifier(selectedElement);
 		InteractionEvent selectionEvent;
 		if (bridge.getContentType() != null) {
-			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					bridge.getContentType(), handleIdentifier, part.getSite().getId());
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge.getContentType(),
+					handleIdentifier, part.getSite().getId());
 		} else {
-			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
-					null, null, part.getSite().getId());			
+			selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, null, null, part.getSite().getId());
 		}
 		if (handleIdentifier != null && contributeToContext) {
 			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
@@ -108,8 +108,8 @@ public abstract class AbstractUserInteractionMonitor implements ISelectionListen
 		AbstractContextStructureBridge adapter = ContextCorePlugin.getDefault().getStructureBridge(targetElement);
 		if (adapter.getContentType() != null) {
 			String handleIdentifier = adapter.getHandleIdentifier(targetElement);
-			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, adapter
-					.getContentType(), handleIdentifier, part.getSite().getId(), kind);
+			InteractionEvent navigationEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					adapter.getContentType(), handleIdentifier, part.getSite().getId(), kind);
 			if (handleIdentifier != null && contributeToContext) {
 				ContextCorePlugin.getContextManager().processInteractionEvent(navigationEvent);
 			}

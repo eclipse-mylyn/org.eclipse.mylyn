@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author Leah Findlater and Mik Kersten
  */
 public class MenuCommandMonitor implements Listener {
-	
+
 	public static final String MENU_ITEM_ID = "item.label.";
 
 	public static final String MENU_ITEM_SELECTED = "menu";
@@ -60,7 +60,7 @@ public class MenuCommandMonitor implements Listener {
 			} else if (id == null) {
 				id = target.getClass().getName();
 			}
-				
+
 			if (item instanceof MenuItem) {
 				MenuItem menu = (MenuItem) item;
 				Menu parentMenu = menu.getParent();
@@ -75,7 +75,7 @@ public class MenuCommandMonitor implements Listener {
 					return;
 					// TODO: would be good to put back this info in some form
 					// but it can contain private data, bug 178604
-					
+
 //					if (id == null) 
 //						id = "null";
 //					String itemText = obfuscateItemText(item.getText());

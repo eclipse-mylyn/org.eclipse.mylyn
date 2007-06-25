@@ -18,7 +18,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * Tracks interaction with workbench editors.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractEditorTracker extends AbstractPartTracker {
 
@@ -48,7 +48,7 @@ public abstract class AbstractEditorTracker extends AbstractPartTracker {
 	protected abstract void editorClosed(IEditorPart part);
 
 	protected abstract void editorBroughtToTop(IEditorPart part);
-	
+
 	@Override
 	public void partActivated(IWorkbenchPart part) {
 		// ignore

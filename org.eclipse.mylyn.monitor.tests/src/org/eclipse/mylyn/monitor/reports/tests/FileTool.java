@@ -31,8 +31,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
 /**
- * Provides access to files for testing. TODO: Copied from the bugzilla
- * component - consider refactoring as common utility
+ * Provides access to files for testing. TODO: Copied from the bugzilla component - consider refactoring as common
+ * utility
  */
 public class FileTool {
 
@@ -44,8 +44,8 @@ public class FileTool {
 	private static byte[] buffer = new byte[8192];
 
 	/**
-	 * Unzips the given zip file to the given destination directory extracting
-	 * only those entries the pass through the given filter.
+	 * Unzips the given zip file to the given destination directory extracting only those entries the pass through the
+	 * given filter.
 	 * 
 	 * @param zipFile
 	 *            the zip file to unzip
@@ -104,8 +104,8 @@ public class FileTool {
 	}
 
 	/**
-	 * Returns the given file path with its separator character changed from the
-	 * given old separator to the given new separator.
+	 * Returns the given file path with its separator character changed from the given old separator to the given new
+	 * separator.
 	 * 
 	 * @param path
 	 *            a file path
@@ -113,8 +113,8 @@ public class FileTool {
 	 *            a path separator character
 	 * @param newSeparator
 	 *            a path separator character
-	 * @return the file path with its separator character changed from the given
-	 *         old separator to the given new separator
+	 * @return the file path with its separator character changed from the given old separator to the given new
+	 *         separator
 	 */
 	public static String changeSeparator(String path, char oldSeparator, char newSeparator) {
 		return path.replace(oldSeparator, newSeparator);
@@ -157,8 +157,7 @@ public class FileTool {
 	}
 
 	/**
-	 * Copies all bytes in the given source stream to the given destination
-	 * stream. Neither streams are closed.
+	 * Copies all bytes in the given source stream to the given destination stream. Neither streams are closed.
 	 * 
 	 * @param source
 	 *            the given source stream
