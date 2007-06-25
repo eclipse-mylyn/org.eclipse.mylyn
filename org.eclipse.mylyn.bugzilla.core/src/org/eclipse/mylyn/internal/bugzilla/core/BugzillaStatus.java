@@ -83,7 +83,7 @@ public class BugzillaStatus extends Status {
 			return BugzillaMessages.bind(BugzillaMessages.repositoryCollision, this.errorMessage);
 		case RepositoryStatus.REPOSITORY_COMMENT_REQUIRED:
 			if (errorMessage == null) {
-				return BugzillaMessages.repositoryCommentReqd;
+				return BugzillaMessages.repositoryCommentRequired;
 			} else {
 				return errorMessage;
 			}

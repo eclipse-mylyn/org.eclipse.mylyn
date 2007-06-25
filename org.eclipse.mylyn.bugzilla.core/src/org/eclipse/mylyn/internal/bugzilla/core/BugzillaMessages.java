@@ -32,7 +32,7 @@ public final class BugzillaMessages extends NLS {
 
 	public static String repositoryNotFound;
 
-	public static String repositoryCommentReqd;
+	public static String repositoryCommentRequired;
 
 	public static String repositoryCollision;
 
