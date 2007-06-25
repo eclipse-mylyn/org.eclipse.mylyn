@@ -23,17 +23,17 @@ import org.eclipse.swt.graphics.ImageData;
  * @author Leo Dos Santos
  */
 public class GetFaviconForUrlTest extends TestCase {
-	
+
 	public void testMalformedUrl() {
 		boolean exceptionThrown = false;
 		try {
 			WebUiUtil.getFaviconForUrl("www.eclipse.org");
 		} catch (MalformedURLException e) {
 			exceptionThrown = true;
-		} 
+		}
 		assertTrue(exceptionThrown);
 	}
-	
+
 	public void testEclipseDotOrg() {
 		Image img = null;
 		try {
@@ -46,11 +46,11 @@ public class GetFaviconForUrlTest extends TestCase {
 			ImageData data = img.getImageData();
 			assertEquals(data.height, 16);
 			assertEquals(data.width, 16);
-			img.dispose();			
+			img.dispose();
 		}
 	}
-	
+
 	public void testNoFavicon() throws MalformedURLException {
 		assertNull(WebUiUtil.getFaviconForUrl("http://help.eclipse.org/help32/index.jsp"));
-	}	
+	}
 }

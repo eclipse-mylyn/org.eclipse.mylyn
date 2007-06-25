@@ -27,11 +27,11 @@ public class ExtensionPointInitializationTest extends TestCase {
 //		listener = MylarTaskListPlugin.getDefault().getTaskHyperlinkListeners().get(AbstractTaskEditor.HYPERLINK_TYPE_TASK);
 //		assertTrue(listener instanceof TaskHyperlinkAdapter);
 //	}
-	
+
 	public void testBugzillaHyperlinkDetector() {
-		IHyperlinkDetector[] detectors = TasksUiPlugin.getDefault().getTaskHyperlinkDetectors();		
+		IHyperlinkDetector[] detectors = TasksUiPlugin.getDefault().getTaskHyperlinkDetectors();
 		assertNotNull(detectors);
 		assertTrue(detectors.length > 0);
 	}
-	
+
 }

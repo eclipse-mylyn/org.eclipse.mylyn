@@ -62,7 +62,7 @@ public class WebClientUtilTest extends TestCase {
 	}
 
 	public void testConnect() throws Exception {
-		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/"; 
+		String url = "http://" + proxyAddress.getHostName() + ":" + proxyAddress.getPort() + "/";
 		WebClientUtil.setupHttpClient(client, null, url, "", "");
 
 		testProxy.addResponse(TestProxy.OK);
@@ -85,7 +85,7 @@ public class WebClientUtilTest extends TestCase {
 			fail("Expected SSLHandshakeException, got status: " + statusCode);
 		} catch (SSLHandshakeException e) {
 		}
-		
+
 		assertFalse(testProxy.hasRequest());
 	}
 
@@ -103,7 +103,7 @@ public class WebClientUtilTest extends TestCase {
 		Message request = testProxy.getRequest();
 		assertEquals("GET http://foo/bar HTTP/1.1", request.request);
 	}
-	
+
 	public void testConnectProxyHttpAuth() throws Exception {
 		String url = "http://foo/bar";
 		Proxy proxy = new Proxy(Type.HTTP, proxyAddress);
@@ -277,7 +277,7 @@ public class WebClientUtilTest extends TestCase {
 			// skip if keystore property is not set
 			return;
 		}
-		
+
 		String url = "https://mylyn.eclipse.org/secure/";
 		WebClientUtil.setupHttpClient(client, null, url, "", "");
 

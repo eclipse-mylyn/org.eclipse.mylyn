@@ -18,10 +18,10 @@ import junit.framework.TestSuite;
  * @author Mik Kersten
  */
 public class AllIntegrationTests {
-	
+
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.mylyn.tests.integration");
-		
+
 		// $JUnit-BEGIN$
 		suite.addTestSuite(TaskListFilterTest.class);
 		suite.addTestSuite(DefaultPreferenceConfigTest.class);

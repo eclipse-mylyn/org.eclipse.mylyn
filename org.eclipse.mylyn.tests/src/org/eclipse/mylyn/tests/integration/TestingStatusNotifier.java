@@ -37,7 +37,7 @@ public class TestingStatusNotifier implements IStatusHandler {
 			buffer.append(printStrackTrace(status.getException()));
 		}
 	}
-	
+
 	private static String printStrackTrace(Throwable t) {
 		StringWriter writer = new StringWriter();
 		t.printStackTrace(new PrintWriter(writer));
@@ -46,7 +46,7 @@ public class TestingStatusNotifier implements IStatusHandler {
 
 	public void displayStatus(String title, IStatus status) {
 		// ignore
-		
+
 	}
 
 }

@@ -28,11 +28,11 @@ public class UrlExclusionTest extends TestCase {
 		String url = "http://eclipse.org";
 		WebResource resource = new WebSite(url);
 		assertEquals(url, bridge.getHandleIdentifier(resource));
-		
+
 		WebUiBridgePlugin.getDefault().addExcludedUrl(url);
 		assertNull(bridge.getHandleIdentifier(resource));
 	}
-	
+
 	public void testUrlExclusionPattern() {
 		WebResourceStructureBridge bridge = new WebResourceStructureBridge();
 		String url = "http://eclipse.org";
@@ -40,5 +40,5 @@ public class UrlExclusionTest extends TestCase {
 		WebUiBridgePlugin.getDefault().addExcludedUrl(url);
 		assertNull(bridge.getHandleIdentifier(resource));
 	}
-	
+
 }

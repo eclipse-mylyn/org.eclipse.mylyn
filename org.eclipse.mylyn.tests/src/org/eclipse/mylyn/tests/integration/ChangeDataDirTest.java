@@ -51,7 +51,7 @@ public class ChangeDataDirTest extends TestCase {
 		dir.deleteOnExit();
 		manager.resetTaskList();
 		assertTrue(manager.getTaskList().isEmpty());
-		TasksUiPlugin.getTaskListManager().saveTaskList(); 
+		TasksUiPlugin.getTaskListManager().saveTaskList();
 //		TasksUiPlugin.getDefault().getTaskListSaveManager().saveTaskList(true);
 	}
 
@@ -76,7 +76,8 @@ public class ChangeDataDirTest extends TestCase {
 		assertTrue(new File(newPath).exists());
 
 		assertTrue(UiUsageMonitorPlugin.getDefault().getInteractionLogger().getOutputFile().exists());
-		String monitorFileName = UiUsageMonitorPlugin.MONITOR_LOG_NAME + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
+		String monitorFileName = UiUsageMonitorPlugin.MONITOR_LOG_NAME
+				+ InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD;
 		List<String> newFiles = Arrays.asList(new File(newDataDir).list());
 		assertTrue(newFiles.toString(), newFiles.contains(monitorFileName));
 
@@ -87,7 +88,7 @@ public class ChangeDataDirTest extends TestCase {
 
 	public void testDefaultDataDirectoryMove() {
 		String workspaceRelativeDir = ResourcesPlugin.getWorkspace().getRoot().getLocation().toString() + '/'
-				+ ".metadata"+'/'+".mylyn";
+				+ ".metadata" + '/' + ".mylyn";
 		assertEquals(defaultDir, workspaceRelativeDir);
 
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
@@ -103,7 +104,7 @@ public class ChangeDataDirTest extends TestCase {
 		TasksUiPlugin.getTaskListManager().copyDataDirContentsTo(newDataDir);
 		TasksUiPlugin.getDefault().setDataDirectory(newDataDir);
 		AbstractTask readTaskAfterMove = manager.getTaskList().getTask(handle);
-		
+
 		assertNotNull(readTaskAfterMove);
 		assertEquals(readTaskBeforeMove.getCreationDate(), readTaskAfterMove.getCreationDate());
 	}
@@ -138,7 +139,8 @@ public class ChangeDataDirTest extends TestCase {
 
 		// BugzillaTaskHandler handler = new BugzillaTaskHandler();
 		// handler.addTaskToArchive(newTask);
-		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask, TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
+		TasksUiPlugin.getTaskListManager().getTaskList().moveToContainer(newTask,
+				TasksUiPlugin.getTaskListManager().getTaskList().getDefaultCategory());
 	}
 
 	// /**

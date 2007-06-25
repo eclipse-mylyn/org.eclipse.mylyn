@@ -41,7 +41,7 @@ public class AllTests {
 		ResourcesUiBridgePlugin.getDefault().setResourceMonitoringEnabled(false);
 
 		// TODO: the order of these tests might still matter, but shouldn't
-		
+
 		// $JUnit-BEGIN$
 		suite.addTest(AllMonitorTests.suite());
 		suite.addTest(AllIntegrationTests.suite());

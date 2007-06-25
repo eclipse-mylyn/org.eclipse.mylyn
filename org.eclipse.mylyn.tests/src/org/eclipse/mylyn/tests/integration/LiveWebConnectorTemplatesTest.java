@@ -53,11 +53,11 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		final List<AbstractTask> hits = new ArrayList<AbstractTask>();
 		QueryHitCollector collector = new QueryHitCollector(new ITaskFactory() {
 
-					public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
-						// ignore
-						return null;
-					}
-				}) {
+			public AbstractTask createTask(RepositoryTaskData taskData, IProgressMonitor monitor) throws CoreException {
+				// ignore
+				return null;
+			}
+		}) {
 			@Override
 			public void accept(AbstractTask hit) {
 				hits.add(hit);
@@ -73,7 +73,8 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 // }
 		}
 
-		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, template.repositoryUrl, params);
+		TaskRepository repository = new TaskRepository(WebRepositoryConnector.REPOSITORY_TYPE, template.repositoryUrl,
+				params);
 		String url = repository.getUrl();
 		// HACK: repositories that require auth
 		if ("http://demo.otrs.org".equals(url)) {
@@ -86,13 +87,13 @@ public class LiveWebConnectorTemplatesTest extends TestCase {
 		String buffer = WebRepositoryConnector.fetchResource(taskQueryUrl, params, repository);
 		assertTrue("Unable to fetch resource\n" + taskQueryUrl, buffer != null && buffer.length() > 0);
 
-		String regexp = WebRepositoryConnector.evaluateParams(template
-				.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
+		String regexp = WebRepositoryConnector.evaluateParams(
+				template.getAttribute(WebRepositoryConnector.PROPERTY_QUERY_REGEXP), repository);
 		IStatus resultingStatus = WebRepositoryConnector.performQuery(buffer, regexp, null, monitor, collector,
 				repository);
 
-		assertTrue("Query failed\n" + taskQueryUrl + "\n" + regexp + "\n" + resultingStatus.toString(), queryStatus
-				.isOK());
+		assertTrue("Query failed\n" + taskQueryUrl + "\n" + regexp + "\n" + resultingStatus.toString(),
+				queryStatus.isOK());
 		try {
 			assertTrue("Expected non-empty query result\n" + taskQueryUrl + "\n" + regexp, hits.size() > 0);
 		} catch (Throwable t) {
