@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
@@ -39,9 +40,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 
 /**
  * @author Rob Elves
@@ -110,19 +114,19 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 	}
 
 	private void createRepositoryGroup(Composite control) {
-		// Group group = new Group(control, SWT.NONE);
-		// group.setText("Repository");
-		// GridLayout layout = new GridLayout();
-		// layout.numColumns = 1;
-		// group.setLayout(layout);
-		// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		// gd.horizontalSpan = 1;
-		// group.setLayoutData(gd);
+		 Composite group = new Composite(control, SWT.NONE);
+//		 group.setText("Repository");
+		 GridLayout layout = new GridLayout();
+		 layout.numColumns = 4;
+		 group.setLayout(layout);
+		 GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		 gd.horizontalSpan = 1;
+		 group.setLayoutData(gd);
 
-		Label label = new Label(control, SWT.NONE);
-		label.setText("Repository");
+		Label label = new Label(group, SWT.NONE);
+		label.setText("Select Repository: ");
 
-		repositoryCombo = new Combo(control, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+		repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		repositoryCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -130,6 +134,31 @@ public class TaskSearchPage extends DialogPage implements ISearchPage {
 			}
 		});
 		repositoryCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+		
+		label = new Label(group, SWT.NONE);
+		label.setText("  ");
+		
+		ImageHyperlink openHyperlink = new ImageHyperlink(group, SWT.NONE);
+		openHyperlink.setText("Open Repository Task by Key/ID...");
+		openHyperlink.setForeground(TaskListColorsAndFonts.COLOR_HYPERLINK_WIDGET);
+		openHyperlink.setUnderlined(true);
+		openHyperlink.addHyperlinkListener(new IHyperlinkListener() {
+
+			public void linkActivated(HyperlinkEvent e) {
+				new OpenRepositoryTask().run(null);
+			}
+
+			public void linkEntered(HyperlinkEvent e) {
+				// ignore
+			}
+
+			public void linkExited(HyperlinkEvent e) {
+				// ignore
+			}
+			
+		});
+//		openHyperlink.set
+//		openHyperlink.setImage(TasksUiImages.getImage(TasksUiImages.QUERY));
 	}
 
 	private Control createPage(TaskRepository repository, ISearchPage searchPage) {

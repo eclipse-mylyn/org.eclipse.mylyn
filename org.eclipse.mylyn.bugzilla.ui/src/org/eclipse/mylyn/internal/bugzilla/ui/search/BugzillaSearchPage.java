@@ -197,34 +197,6 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 		WorkbenchHelpSystem.getInstance().setHelp(control, BugzillaUiPlugin.SEARCH_PAGE_CONTEXT);
 	}
 
-	// private void createRepositoryGroup(Composite control) {
-	// Group group = new Group(control, SWT.NONE);
-	// group.setText("Repository");
-	// GridLayout layout = new GridLayout();
-	// layout.numColumns = 1;
-	// group.setLayout(layout);
-	// GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-	// gd.horizontalSpan = 2;
-	// group.setLayoutData(gd);
-	//
-	// repositoryCombo = new Combo(group, SWT.SINGLE | SWT.BORDER);
-	// repositoryCombo.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// String repositoryUrl =
-	// repositoryCombo.getItem(repositoryCombo.getSelectionIndex());
-	// repository =
-	// TasksUiPlugin.getRepositoryManager().getRepository(BugzillaCorePlugin.REPOSITORY_KIND,
-	// repositoryUrl);
-	// updateAttributesFromRepository(repositoryUrl, null, false);
-	// restoring = true;
-	// restoreWidgetValues();
-	// }
-	// });
-	// gd = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
-	// repositoryCombo.setLayoutData(gd);
-	// }
-
 	private void createSearchGroup(Composite control) {
 		Group group = new Group(control, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -253,7 +225,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Summary/taskId contains: ");
+		label.setText("Summary: ");
 		gd = new GridData(GridData.BEGINNING);
 		gd.horizontalSpan = 1;
 		label.setLayoutData(gd);
@@ -300,7 +272,7 @@ public class BugzillaSearchPage extends AbstractRepositoryQueryPage implements L
 
 		// Info text
 		label = new Label(group, SWT.LEFT);
-		label.setText("Comment contains: ");
+		label.setText("Comment: ");
 		gd = new GridData(GridData.BEGINNING);
 		label.setLayoutData(gd);
 

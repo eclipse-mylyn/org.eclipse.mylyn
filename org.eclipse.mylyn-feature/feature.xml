@@ -226,8 +226,7 @@ litigation.
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.cheatsheets"/>
       <import plugin="org.eclipse.ui.intro"/>
-      <import plugin="org.eclipse.core.net"/>
-      <import plugin="org.eclipse.mylyn.web.core"/>
+      <import plugin="org.eclipse.help.webapp"/>
       <import plugin="org.eclipse.mylyn.monitor.core"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.mylyn.context.core"/>
@@ -241,6 +240,9 @@ litigation.
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.search"/>
       <import plugin="org.eclipse.ui.net"/>
+      <import plugin="org.eclipse.mylyn.web.core"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.eclipse.mylar" version="2.0.0.v20070614-1800"/>
    </requires>
 
    <plugin

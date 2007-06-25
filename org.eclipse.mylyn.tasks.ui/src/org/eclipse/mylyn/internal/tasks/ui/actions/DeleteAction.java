@@ -50,8 +50,6 @@ public class DeleteAction extends Action {
 
 		String message = "Delete the elements listed?  If categories or queries are selected contained tasks"
 				+ " will not be deleted.  Contexts will be deleted for selected tasks.\n\n";
-// + "This operation cannot be undone (the Task List can be restored from
-// history).\n\n";
 		int i = 0;
 		for (Object object : toDelete) {
 			i++;
@@ -78,7 +76,7 @@ public class DeleteAction extends Action {
 				TasksUiPlugin.getTaskListManager().deactivateTask(task);
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteTask(task);
 				ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-				TasksUiUtil.closeEditorInActivePage(task, true);
+				TasksUiUtil.closeEditorInActivePage(task, false);
 			} else if (selectedObject instanceof AbstractRepositoryQuery) {
 				// boolean deleteConfirmed =
 				// MessageDialog.openQuestion(PlatformUI.getWorkbench()
@@ -98,7 +96,7 @@ public class DeleteAction extends Action {
 				TaskCategory cat = (TaskCategory) selectedObject;
 				for (AbstractTask task : cat.getChildren()) {
 					ContextCorePlugin.getContextManager().deleteContext(task.getHandleIdentifier());
-					TasksUiUtil.closeEditorInActivePage(task, true);
+					TasksUiUtil.closeEditorInActivePage(task, false);
 				}
 				TasksUiPlugin.getTaskListManager().getTaskList().deleteCategory(cat);
 			} else {
