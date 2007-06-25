@@ -458,8 +458,9 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 							case REMOVED:
 								refresh(null);
 								break;
-							case CHANGED:
+							default:
 								// TODO: move logic into deltas
+								refresh(task);
 								Set<AbstractTaskContainer> containers = new HashSet<AbstractTaskContainer>(
 										TasksUiPlugin.getTaskListManager().getTaskList().getQueriesForHandle(
 												task.getHandleIdentifier()));
@@ -481,7 +482,7 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 							case REMOVED:
 								refresh(null);
 								break;
-							case CHANGED:
+							default:
 								if (getCurrentPresentation().getPresentationName().equals(
 										scheduledPresentation.getPresentationName())) {
 									refresh(null);
