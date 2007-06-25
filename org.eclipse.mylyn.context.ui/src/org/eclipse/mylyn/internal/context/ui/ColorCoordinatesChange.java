@@ -21,8 +21,7 @@ public class ColorCoordinatesChange {
 	 *            The green component of the color (0 - 255)
 	 * @param B
 	 *            The blue component of the color (0 - 255)
-	 * @return The HSV colors in an array of doubles. This means that position 0 =
-	 *         H, position 1 = S, and position 2 = V
+	 * @return The HSV colors in an array of doubles. This means that position 0 = H, position 1 = S, and position 2 = V
 	 */
 	public static double[] RGBToHSV(double R, double G, double B) {
 		double minVal = Math.min(Math.min(R, G), B);
@@ -70,8 +69,7 @@ public class ColorCoordinatesChange {
 	 *            The saturation of the color (0 - 1)
 	 * @param V
 	 *            The value of the color (0 - 1)
-	 * @return The RGB colors in an array of ints. This means that position 0 =
-	 *         R, position 1 = G, and position 2 = B
+	 * @return The RGB colors in an array of ints. This means that position 0 = R, position 1 = G, and position 2 = B
 	 */
 	public static int[] HSVtoRGB(double H, double S, double V) {
 		double R = 0, G = 0, B = 0;

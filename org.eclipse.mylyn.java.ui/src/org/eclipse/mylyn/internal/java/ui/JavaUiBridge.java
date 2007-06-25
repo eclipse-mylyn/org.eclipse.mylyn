@@ -98,14 +98,15 @@ public class JavaUiBridge extends AbstractContextUiBridge {
 	public IInteractionElement getElement(IEditorInput input) {
 		Object adapter = input.getAdapter(IJavaElement.class);
 		if (adapter instanceof IJavaElement) {
-			IJavaElement javaElement = (IJavaElement)adapter;
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			IJavaElement javaElement = (IJavaElement) adapter;
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(
+					javaElement);
 			return ContextCorePlugin.getContextManager().getElement(handle);
 		} else {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart) {
 		if (editorPart == null || javaOutlineField == null)

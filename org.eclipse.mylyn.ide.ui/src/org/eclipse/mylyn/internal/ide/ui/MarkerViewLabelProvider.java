@@ -39,15 +39,15 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 	public Font getFont(Object element) {
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
-					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					(element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
+					0);
 			IInteractionElement node = ContextCorePlugin.getContextManager().getElement(handle);
 			if (node != null) {
 				if (node.getInterest().isLandmark() && !node.getInterest().isPropagated()) {
 					return ContextUiPrefContstants.BOLD;
 				}
 			}
-		} 
+		}
 		return null;
 	}
 
@@ -62,8 +62,8 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 	public Color getForeground(Object element) {
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
-					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					(element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
+					0);
 			return UiUtil.getForegroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;
@@ -73,8 +73,8 @@ public class MarkerViewLabelProvider implements ITableLabelProvider, IColorProvi
 	public Color getBackground(Object element) {
 		if (element instanceof ConcreteMarker) {
 			String handle = ContextCorePlugin.getDefault().getStructureBridge(
-					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject(
-					(element), 0);
+					((ConcreteMarker) element).getResource().getFileExtension()).getHandleForOffsetInObject((element),
+					0);
 			return UiUtil.getBackgroundForElement(ContextCorePlugin.getContextManager().getElement(handle));
 		} else {
 			return null;

@@ -54,7 +54,7 @@ public class JavaStackTraceHyperlinkDetector implements IHyperlinkDetector {
 		Matcher m = stackTracePattern.matcher(line);
 
 		if (m.find()) {
-			IRegion urlRegion = new Region(lineInfo.getOffset() + m.start(), m.end() - m.start());			
+			IRegion urlRegion = new Region(lineInfo.getOffset() + m.start(), m.end() - m.start());
 			return new IHyperlink[] { new JavaStackTraceFileHyperlink(urlRegion, m.group()) };
 		}
 

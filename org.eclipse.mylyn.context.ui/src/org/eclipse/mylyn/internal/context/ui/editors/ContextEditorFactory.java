@@ -38,7 +38,7 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 	@Override
 	public boolean canCreateEditorFor(IEditorInput input) {
 		if (input instanceof RepositoryTaskEditorInput) {
-			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput)input;
+			RepositoryTaskEditorInput repositoryTaskEditorInput = (RepositoryTaskEditorInput) input;
 			return repositoryTaskEditorInput.getRepositoryTask() != null;
 		} else {
 			return input instanceof TaskEditorInput;
@@ -47,7 +47,8 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 
 	@Override
 	public IEditorPart createEditor(TaskEditor parentEditor, IEditorInput editorInput) {
-		ContextEditorFormPage formPage = new ContextEditorFormPage(parentEditor, "org.eclipse.mylyn.context.ui.editor.context", LABEL);
+		ContextEditorFormPage formPage = new ContextEditorFormPage(parentEditor,
+				"org.eclipse.mylyn.context.ui.editor.context", LABEL);
 		return formPage;
 	}
 
@@ -65,5 +66,5 @@ public class ContextEditorFactory extends AbstractTaskEditorFactory {
 	public int getTabOrderPriority() {
 		return 0;
 	}
-	
+
 }

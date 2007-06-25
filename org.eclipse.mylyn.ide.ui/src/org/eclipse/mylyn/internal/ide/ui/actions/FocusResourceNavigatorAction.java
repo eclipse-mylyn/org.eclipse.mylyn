@@ -42,11 +42,11 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
 		IViewPart part = super.getPartForAction();
 		if (part instanceof ResourceNavigator) {
-			viewers.add(((ResourceNavigator)part).getTreeViewer());
+			viewers.add(((ResourceNavigator) part).getTreeViewer());
 		}
 		return viewers;
 	}
-	
+
 	@Override
 	protected ISelection resolveSelection(IEditorPart part, ITextSelection changedSelection, StructuredViewer viewer)
 			throws CoreException {
@@ -63,7 +63,7 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof IResourceNavigator) {
-			((IResourceNavigator)part).setLinkingEnabled(on);
+			((IResourceNavigator) part).setLinkingEnabled(on);
 		}
 	}
 
@@ -71,9 +71,9 @@ public class FocusResourceNavigatorAction extends AbstractAutoFocusViewAction {
 	protected boolean isDefaultLinkingEnabled() {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof IResourceNavigator) {
-			return ((IResourceNavigator)part).isLinkingEnabled();
+			return ((IResourceNavigator) part).isLinkingEnabled();
 		}
 		return false;
 	}
-	
+
 }

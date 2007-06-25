@@ -34,7 +34,7 @@ public class ContextMenuContributor implements IDynamicSubMenuContributor {
 			ContextAttachAction attachAction = new ContextAttachAction();
 			attachAction.selectionChanged(attachAction, selection);
 			subMenuManager.add(attachAction);
-			
+
 			ContextRetrieveAction retrieveAction = new ContextRetrieveAction();
 			retrieveAction.selectionChanged(retrieveAction, selection);
 			subMenuManager.add(retrieveAction);

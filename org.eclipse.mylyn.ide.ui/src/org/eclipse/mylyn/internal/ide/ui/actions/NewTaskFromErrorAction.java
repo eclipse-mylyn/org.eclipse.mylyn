@@ -67,7 +67,7 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			AbstractRepositoryTaskEditor editor = null;
 
-			String summary = ""; 
+			String summary = "";
 //				selection.getSeverityText() + ": \"" + selection.getMessage() + "\" in "
 //					+ selection.getPluginId();
 			String description = "\n\n-- Error Log --\nDate: " + selection.getDate() + "\nMessage: "
@@ -80,15 +80,14 @@ public class NewTaskFromErrorAction implements IViewActionDelegate, ISelectionCh
 				editor = (AbstractRepositoryTaskEditor) taskEditor.getActivePageInstance();
 			} catch (ClassCastException e) {
 				Clipboard clipboard = new Clipboard(page.getWorkbenchWindow().getShell().getDisplay());
-				clipboard.setContents(new Object[] { summary + "\n" + description }, new Transfer[] { TextTransfer
-						.getInstance() });
+				clipboard.setContents(new Object[] { summary + "\n" + description },
+						new Transfer[] { TextTransfer.getInstance() });
 
-				MessageDialog
-						.openInformation(
-								page.getWorkbenchWindow().getShell(),
-								ITasksUiConstants.TITLE_DIALOG,
-								"This connector does not provide a rich task editor for creating tasks.\n\n"
-										+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
+				MessageDialog.openInformation(
+						page.getWorkbenchWindow().getShell(),
+						ITasksUiConstants.TITLE_DIALOG,
+						"This connector does not provide a rich task editor for creating tasks.\n\n"
+								+ "The error contents have been placed in the clipboard so that you can paste them into the entry form.");
 				return;
 			}
 

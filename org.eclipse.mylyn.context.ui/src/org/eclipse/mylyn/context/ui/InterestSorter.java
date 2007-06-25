@@ -22,7 +22,7 @@ import org.eclipse.mylyn.context.core.ContextCorePlugin;
  * Sorts view elements by degree-of-interest.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class InterestSorter extends ViewerSorter {
 
@@ -37,16 +37,16 @@ public class InterestSorter extends ViewerSorter {
 		} else {
 			return 0;
 		}
-	} 
- 
+	}
+
 	private IInteractionElement getCorresponding(Object object) {
 		if (object instanceof IInteractionElement) {
-			return(IInteractionElement) object;
+			return (IInteractionElement) object;
 		} else {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(object);
 			String handle = bridge.getHandleIdentifier(object);
 			return ContextCorePlugin.getContextManager().getElement(handle);
 		}
 	}
-	
+
 }

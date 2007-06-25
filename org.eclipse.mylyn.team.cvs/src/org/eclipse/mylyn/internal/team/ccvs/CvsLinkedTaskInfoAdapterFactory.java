@@ -36,7 +36,7 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 	public Class[] getAdapterList() {
 		return ADAPTER_TYPES;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object object, Class adapterType) {
 		if (!ILinkedTaskInfo.class.equals(adapterType)) {
@@ -51,7 +51,7 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		if (comment == null) {
 			return null;
 		}
-		
+
 		IResource resource = getResourceForElement(object);
 		if (resource != null) {
 			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
@@ -84,8 +84,7 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 							ICVSResource cvsResource = CVSWorkspaceRoot.getCVSFolderFor(project);
 							try {
 								String repositoryRelativePath = cvsResource.getRepositoryRelativePath();
-								if (repositoryRelativePath != null
-										&& path.startsWith(repositoryRelativePath)) {
+								if (repositoryRelativePath != null && path.startsWith(repositoryRelativePath)) {
 									return project;
 								}
 							} catch (CVSException ex) {
@@ -101,5 +100,5 @@ public class CvsLinkedTaskInfoAdapterFactory implements IAdapterFactory {
 
 		return null;
 	}
-	
+
 }

@@ -50,7 +50,7 @@ public class ActiveFoldingEditorTracker extends AbstractEditorTracker {
 		ActiveFoldingListener listener = editorListenerMap.get(editor);
 		if (listener != null) {
 			listener.dispose();
-		} 
+		}
 		editorListenerMap.remove(editor);
 	}
 

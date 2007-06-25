@@ -113,7 +113,7 @@ public class CompositeDegreeOfInterest implements IDegreeOfInterest {
 	public Set<IDegreeOfInterest> getComposedDegreesOfInterest() {
 		return composed;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer();

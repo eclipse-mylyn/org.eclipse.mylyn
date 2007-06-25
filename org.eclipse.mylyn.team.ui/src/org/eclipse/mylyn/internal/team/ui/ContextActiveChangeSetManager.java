@@ -55,7 +55,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 				if (contextChangeSet.getTask() != null && contextChangeSet.getTask().isActive()) {
 					for (ActiveChangeSetManager collector : changeSetManagers) {
 						// put it back
-						collector.add(contextChangeSet); 
+						collector.add(contextChangeSet);
 					}
 				}
 			}
@@ -79,7 +79,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	};
 
 	public ContextActiveChangeSetManager() {
-		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault().getActiveChangeSetProviders();
+		Set<AbstractActiveChangeSetProvider> providerList = FocusedTeamUiPlugin.getDefault()
+				.getActiveChangeSetProviders();
 		for (AbstractActiveChangeSetProvider provider : providerList) {
 			ActiveChangeSetManager changeSetManager = provider.getActiveChangeSetManager();
 			if (null != changeSetManager) {
@@ -177,8 +178,8 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 			if (task != null && !activeChangeSets.containsKey(task.getHandleIdentifier())) {
 				for (ActiveChangeSetManager collector : changeSetManagers) {
 					ContextChangeSet contextChangeSet = new ContextChangeSet(task, collector);
-					List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault().getInterestingResources(
-							context);
+					List<IResource> interestingResources = ResourcesUiBridgePlugin.getDefault()
+							.getInterestingResources(context);
 					contextChangeSet.add(interestingResources.toArray(new IResource[interestingResources.size()]));
 
 					activeChangeSets.put(task.getHandleIdentifier(), contextChangeSet);
@@ -212,7 +213,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
-	
+
 	public void interestChanged(List<IInteractionElement> elements) {
 		for (IInteractionElement element : elements) {
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
@@ -259,7 +260,7 @@ public class ContextActiveChangeSetManager extends AbstractContextChangeSetManag
 	 */
 	private boolean shouldRemove(IInteractionElement element) {
 		// TODO: generalize this logic?
-		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < InteractionContextManager
-				.getScalingFactors().getInteresting();
+		return (element.getInterest().getValue() + element.getInterest().getDecayValue()) < InteractionContextManager.getScalingFactors()
+				.getInteresting();
 	}
 }

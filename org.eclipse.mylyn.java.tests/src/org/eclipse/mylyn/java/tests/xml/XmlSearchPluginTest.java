@@ -86,7 +86,8 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		ContextCorePlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		ContextCorePlugin.getContextManager()
+				.deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
 	}
 
@@ -94,9 +95,11 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 1;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// results should be null since the scope would be null.
@@ -163,9 +166,11 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 2;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 //		// results should be null since the scope would be null.
 //		// There are no landmarks and therefore no projects to search over
@@ -218,9 +223,11 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 3;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// add an element to the taskscape, results should not be null
@@ -264,9 +271,11 @@ public class XmlSearchPluginTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// add an element to the taskscape, results should not be null

@@ -18,7 +18,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContext;
 
 /**
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IInteractionContextWriter {
 

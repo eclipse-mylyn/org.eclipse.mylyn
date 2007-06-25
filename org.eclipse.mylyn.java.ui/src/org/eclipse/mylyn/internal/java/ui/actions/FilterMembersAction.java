@@ -44,9 +44,9 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 
 	private void valueChanged(final boolean on, boolean store) {
 		if (store) {
-			JavaUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on); 
+			JavaUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
 		}
-			
+
 		setChecked(true);
 		PackageExplorerPart packageExplorer = PackageExplorerPart.getFromActivePerspective();
 		ViewerFilter existingFilter = null;

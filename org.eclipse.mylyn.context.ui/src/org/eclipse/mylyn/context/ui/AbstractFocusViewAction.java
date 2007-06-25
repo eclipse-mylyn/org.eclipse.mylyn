@@ -43,11 +43,11 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Extending this class makes it possible to apply Mylar management to a
- * structured view (e.g. to provide interest-based filtering).
+ * Extending this class makes it possible to apply Mylar management to a structured view (e.g. to provide interest-based
+ * filtering).
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractFocusViewAction extends Action implements IViewActionDelegate, IActionDelegate2,
 		ISelectionListener {
@@ -57,7 +57,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	public static final String PREF_ID_PREFIX = "org.eclipse.mylyn.ui.interest.filter.";
 
 	private static Map<IViewPart, AbstractFocusViewAction> partMap = new WeakHashMap<IViewPart, AbstractFocusViewAction>();
-	
+
 	protected String globalPrefId;
 
 	protected IAction initAction = null;
@@ -75,7 +75,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	private boolean manageLinking = false;
 
 	private boolean wasLinkingEnabled = false;
-	
+
 	private final IWorkbenchListener WORKBENCH_LISTENER = new IWorkbenchListener() {
 
 		public boolean preShutdown(IWorkbench workbench, boolean forced) {
@@ -83,7 +83,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			if (manageLinking) {
 				setDefaultLinkingEnabled(wasLinkingEnabled);
 			}
-			
+
 			List<StructuredViewer> viewers = getViewers();
 			Set<Class<?>> excludedFilters = getPreservedFilterClasses();
 			for (StructuredViewer viewer : viewers) {
@@ -102,13 +102,13 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 			}
 			return true;
 		}
-		
+
 		public void postShutdown(IWorkbench workbench) {
 			// ignore
-			
+
 		}
 	};
-	
+
 	/**
 	 * TODO: not thread safe.
 	 */
@@ -152,7 +152,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		MonitorUiPlugin.getDefault().removeWindowPostSelectionListener(this);
 		PlatformUI.getWorkbench().removeWorkbenchListener(WORKBENCH_LISTENER);
 	}
-	
+
 	public void init(IAction action) {
 		initAction = action;
 		setChecked(action.isChecked());
@@ -239,7 +239,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 				if (viewers.size() == 1) {
 					StructuredViewer viewer = getViewers().get(0);
 					ITextSelection textSelection = (ITextSelection) selection;
-					ISelection toSelect = resolveSelection((IEditorPart)part, textSelection, viewer);
+					ISelection toSelect = resolveSelection((IEditorPart) part, textSelection, viewer);
 					if (toSelect != null) {
 						ISelection currentSelection = viewer.getSelection();
 						if (!selection.equals(currentSelection)) {
@@ -271,10 +271,10 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	protected void setDefaultLinkingEnabled(boolean on) {
 		// ignore
 	}
-	
+
 	/**
 	 * Override to provide managed linking
-	 */	
+	 */
 	protected boolean isDefaultLinkingEnabled() {
 		return false;
 	}
@@ -304,8 +304,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 	public abstract List<StructuredViewer> getViewers();
 
 	/**
-	 * @return filters that should not be removed when the interest filter is
-	 *         installed
+	 * @return filters that should not be removed when the interest filter is installed
 	 */
 	private Set<Class<?>> getPreservedFilterClasses() {
 		if (ContextUiPlugin.getDefault() == null || viewPart == null) {
@@ -331,7 +330,7 @@ public abstract class AbstractFocusViewAction extends Action implements IViewAct
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
-			
+
 			if (viewPart != null && manageFilters) {
 				Set<Class<?>> excludedFilters = getPreservedFilterClasses();
 				for (ViewerFilter filter : previousFilters.get(viewer)) {

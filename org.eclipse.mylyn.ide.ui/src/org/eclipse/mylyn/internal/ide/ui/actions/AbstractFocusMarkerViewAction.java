@@ -25,13 +25,14 @@ import org.eclipse.ui.views.markers.internal.TableViewLabelProvider;
 public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAction {
 
 	protected StructuredViewer cachedViewer = null;
-	
+
 	public AbstractFocusMarkerViewAction() {
 		super(new MarkerInterestFilter(), true, true, false);
 	}
-	
+
 	/**
 	 * HACK: should use platform decorating label provider
+	 * 
 	 * @param viewer
 	 */
 	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
@@ -40,7 +41,7 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 		}
 	}
-	
+
 	@Override
 	public void update() {
 		super.update();
@@ -49,11 +50,11 @@ public abstract class AbstractFocusMarkerViewAction extends AbstractFocusViewAct
 			if (viewer instanceof TableViewer) {
 				TableViewer tableViewer = (TableViewer) viewer;
 				if (!(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
-					tableViewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) tableViewer
-							.getLabelProvider()));
+					tableViewer.setLabelProvider(new MarkerViewLabelProvider(
+							(TableViewLabelProvider) tableViewer.getLabelProvider()));
 				}
 			}
 		}
 	}
-	
+
 }

@@ -61,7 +61,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 					if (filter instanceof JavaDeclarationsFilter && elementToSelect instanceof IMember) {
 						elementToSelect = ((IMember) elementToSelect).getCompilationUnit();
 					}
-				} 
+				}
 			}
 		}
 		return new StructuredSelection(elementToSelect);
@@ -71,7 +71,7 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 	protected void setDefaultLinkingEnabled(boolean on) {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {
-			((PackageExplorerPart)part).setLinkingEnabled(on);
+			((PackageExplorerPart) part).setLinkingEnabled(on);
 		}
 	}
 
@@ -79,11 +79,11 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 	protected boolean isDefaultLinkingEnabled() {
 		IViewPart part = super.getPartForAction();
 		if (part instanceof PackageExplorerPart) {
-			return ((PackageExplorerPart)part).isLinkingEnabled();
+			return ((PackageExplorerPart) part).isLinkingEnabled();
 		}
 		return false;
 	}
-	
+
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();

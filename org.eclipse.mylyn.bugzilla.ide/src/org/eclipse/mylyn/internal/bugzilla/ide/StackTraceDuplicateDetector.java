@@ -24,21 +24,21 @@ import org.eclipse.mylyn.tasks.ui.search.SearchHitCollector;
 
 /**
  * @author Meghan Allen
- */ 
+ */
 public class StackTraceDuplicateDetector extends AbstractDuplicateDetector {
 
 	private static final String NO_STACK_MESSAGE = "Unable to locate a stack trace in the description text.";
-	
+
 	@Override
 	public SearchHitCollector getSearchHitCollector(TaskRepository repository, RepositoryTaskData taskData) {
 		String queryUrl = "";
 		String searchString = AbstractNewRepositoryTaskEditor.getStackTraceFromDescription(taskData.getDescription());
-		
+
 		if (searchString == null) {
 			MessageDialog.openWarning(null, "No Stack Trace Found", NO_STACK_MESSAGE);
 			return null;
 		}
-		
+
 		try {
 			queryUrl = repository.getUrl() + "/buglist.cgi?long_desc_type=allwordssubstr&long_desc="
 					+ URLEncoder.encode(searchString, repository.getCharacterEncoding());

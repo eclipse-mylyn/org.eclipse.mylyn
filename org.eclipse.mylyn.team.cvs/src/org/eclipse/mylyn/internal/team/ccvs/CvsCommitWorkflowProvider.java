@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 public class CvsCommitWorkflowProvider extends AbstractCommitWorkflowProvider {
 
 	private static final String WIZARD_LABEL = "Commit Resources in Task Context";
-	
+
 	@Override
 	public boolean hasOutgoingChanges(IResource[] resources) {
 		try {
@@ -52,5 +52,5 @@ public class CvsCommitWorkflowProvider extends AbstractCommitWorkflowProvider {
 		} catch (CVSException e) {
 		}
 	}
-	
+
 }

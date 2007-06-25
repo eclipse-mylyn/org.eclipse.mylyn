@@ -26,17 +26,17 @@ import org.eclipse.ui.PlatformUI;
  * @author Mik Kersten
  */
 public class TaskContextJUnitLaunchConfiguration extends JUnitLaunchConfigurationDelegate {
-	
+
 	@Override
-	protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
+	protected IMember[] evaluateTests(ILaunchConfiguration configuration, IProgressMonitor monitor)
+			throws CoreException {
 		Set<IType> contextTestCases = InteractionContextTestUtil.getTestCasesInContext();
 		InteractionContextTestUtil.setupTestConfiguration(contextTestCases, configuration, monitor);
 
 		if (contextTestCases.isEmpty()) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
-					"Context Test Suite", 
-					"No test types found in the active task context.");
-		} 
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"Context Test Suite", "No test types found in the active task context.");
+		}
 		return contextTestCases.toArray(new IMember[contextTestCases.size()]);
 	}
 }

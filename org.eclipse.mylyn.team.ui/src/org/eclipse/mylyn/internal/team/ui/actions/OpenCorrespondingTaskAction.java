@@ -103,8 +103,7 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 	/**
 	 * Reconcile <code>ILinkedTaskInfo</code> data.
 	 * 
-	 * This is used in order to keep LinkedTaskInfo lightweight with minimal
-	 * dependencies.
+	 * This is used in order to keep LinkedTaskInfo lightweight with minimal dependencies.
 	 */
 	private static ILinkedTaskInfo reconsile(ILinkedTaskInfo info) {
 		AbstractTask task = info.getTask();
@@ -147,10 +146,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 			taskId = connector.getTaskIdFromTaskUrl(taskFullUrl);
 		}
 		if (taskId == null && comment != null) {
-			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections
-					.singletonList(connector) : TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
-			REPOSITORIES: 
-			for (AbstractRepositoryConnector c : connectors) {
+			Collection<AbstractRepositoryConnector> connectors = connector != null ? Collections.singletonList(connector)
+					: TasksUiPlugin.getRepositoryManager().getRepositoryConnectors();
+			REPOSITORIES: for (AbstractRepositoryConnector c : connectors) {
 				Collection<TaskRepository> repositories = repository != null ? Collections.singletonList(repository)
 						: TasksUiPlugin.getRepositoryManager().getRepositories(c.getConnectorKind());
 				for (TaskRepository r : repositories) {
@@ -277,7 +275,8 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					return Status.OK_STATUS;
 				}
 				if (info.getRepositoryUrl() != null && info.getTaskId() != null) {
-					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(info.getRepositoryUrl());
+					TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
+							info.getRepositoryUrl());
 					String taskId = info.getTaskId();
 					if (repository != null && taskId != null) {
 						AbstractRepositoryConnectorUi connectorUi = TasksUiPlugin.getConnectorUi(repository.getConnectorKind());
@@ -304,9 +303,9 @@ public class OpenCorrespondingTaskAction extends Action implements IViewActionDe
 					}
 				}
 			});
-			
+
 			return Status.OK_STATUS;
 		}
 	}
-	
+
 }

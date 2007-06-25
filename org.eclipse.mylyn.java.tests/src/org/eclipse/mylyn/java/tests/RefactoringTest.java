@@ -55,7 +55,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		method.delete(true, monitor);
 		if (!monitor.isDone())
 			Thread.sleep(100);
-		IInteractionElement deletedNode = ContextCorePlugin.getContextManager().getElement(method.getHandleIdentifier());
+		IInteractionElement deletedNode = ContextCorePlugin.getContextManager()
+				.getElement(method.getHandleIdentifier());
 		assertFalse(deletedNode.getInterest().isInteresting());
 	}
 
@@ -68,7 +69,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(view, new StructuredSelection(type.getParent()));
 		project.build();
 		IInteractionElement node = ContextCorePlugin.getContextManager().getElement(type.getHandleIdentifier());
-		IInteractionElement parentNode = ContextCorePlugin.getContextManager().getElement(type.getParent().getHandleIdentifier());
+		IInteractionElement parentNode = ContextCorePlugin.getContextManager().getElement(
+				type.getParent().getHandleIdentifier());
 		assertTrue(node.getInterest().isInteresting());
 		assertTrue(parentNode.getInterest().isInteresting());
 
@@ -82,7 +84,8 @@ public class RefactoringTest extends AbstractJavaContextTest {
 		IType newType = unit.getTypes()[0];
 		IInteractionElement newParentNode = ContextCorePlugin.getContextManager().getElement(
 				newType.getParent().getHandleIdentifier());
-		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(parentNode.getHandleIdentifier());
+		IInteractionElement oldParentNode = ContextCorePlugin.getContextManager().getElement(
+				parentNode.getHandleIdentifier());
 		assertFalse(oldParentNode.getInterest().isInteresting());
 		assertTrue(newParentNode.getInterest().isInteresting());
 

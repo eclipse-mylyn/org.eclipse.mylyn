@@ -26,16 +26,16 @@ public class IdePreferencesTest extends TestCase {
 	public void testExclusionPatterns() {
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(new HashSet<String>());
 		assertEquals(0, ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns().size());
-		
+
 		Set<String> ignored = new HashSet<String>();
 		ignored.add("one*");
 		ignored.add(".two");
-		
+
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(ignored);
 		Set<String> read = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
 		assertEquals(2, read.size());
 		assertTrue(read.contains("one*"));
 		assertTrue(read.contains(".two"));
 	}
-	
+
 }

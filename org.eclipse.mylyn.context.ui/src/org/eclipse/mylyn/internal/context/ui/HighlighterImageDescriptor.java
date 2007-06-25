@@ -34,9 +34,8 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 		if (toColor == null) {
 			toColor = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 		}
-		ImageData band = createGradientBand(50, 20, false, new RGB(fromColor.getRed(), fromColor.getGreen(), fromColor
-				.getBlue()), 
-				new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 7, 7, 7);
+		ImageData band = createGradientBand(50, 20, false, new RGB(fromColor.getRed(), fromColor.getGreen(),
+				fromColor.getBlue()), new RGB(toColor.getRed(), toColor.getGreen(), toColor.getBlue()), 7, 7, 7);
 		image = new Image(Display.getCurrent(), band);
 	}
 
@@ -68,17 +67,15 @@ public class HighlighterImageDescriptor extends ImageDescriptor {
 	// ----------- COPIED FROM ImageData ---------------
 
 	/**
-	 * Creates an ImageData containing one band's worth of a gradient filled
-	 * block. If <code>vertical</code> is true, the band must be tiled
-	 * horizontally to fill a region, otherwise it must be tiled vertically.
+	 * Creates an ImageData containing one band's worth of a gradient filled block. If <code>vertical</code> is true,
+	 * the band must be tiled horizontally to fill a region, otherwise it must be tiled vertically.
 	 * 
 	 * @param width
 	 *            the width of the region to be filled
 	 * @param height
 	 *            the height of the region to be filled
 	 * @param vertical
-	 *            if true sweeps from top to bottom, else sweeps from left to
-	 *            right
+	 *            if true sweeps from top to bottom, else sweeps from left to right
 	 * @param fromRGB
 	 *            the color to start with
 	 * @param toRGB

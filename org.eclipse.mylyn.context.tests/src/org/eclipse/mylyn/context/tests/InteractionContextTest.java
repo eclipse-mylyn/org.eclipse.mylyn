@@ -25,5 +25,5 @@ public class InteractionContextTest extends AbstractContextTest {
 		InteractionContext context = new InteractionContext("test", new ScalingFactors());
 		assertNull(context.parseEvent(event));
 	}
-	
+
 }

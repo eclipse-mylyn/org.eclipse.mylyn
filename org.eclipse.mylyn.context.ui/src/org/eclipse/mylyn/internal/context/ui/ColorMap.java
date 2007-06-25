@@ -25,17 +25,17 @@ public class ColorMap {
 	// TODO: use themes?
 	public static final Color LANDMARK = TaskListColorsAndFonts.COLOR_TASK_ACTIVE;
 
-	public static final Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255); 
+	public static final Color BACKGROUND_COLOR = new Color(Display.getDefault(), 255, 255, 255);
 
 	public static final Color DEFAULT = null;//Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);//new Color(Display.getDefault(), 255, 255, 255); 
 
-	public static final Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70); 
+	public static final Color GRAY_DARK = new Color(Display.getDefault(), 70, 70, 70);
 
-	public static final Color GRAY_MEDIUM = new Color(Display.getDefault(), 105, 105, 105); 
+	public static final Color GRAY_MEDIUM = new Color(Display.getDefault(), 105, 105, 105);
 
-	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 145, 145, 145); 
+	public static final Color GRAY_LIGHT = new Color(Display.getDefault(), 145, 145, 145);
 
-	public static final Color GRAY_VERY_LIGHT = new Color(Display.getDefault(), 200, 200, 200); 
+	public static final Color GRAY_VERY_LIGHT = new Color(Display.getDefault(), 200, 200, 200);
 
 	public static final Color RELATIONSHIP = new Color(Display.getDefault(), 32, 104, 157);
 
@@ -62,7 +62,7 @@ public class ColorMap {
 	public static final Color COLOR_WHITE = new Color(Display.getCurrent(), 255, 255, 255);
 
 	public static final Color COLOR_BLACK = new Color(Display.getCurrent(), 0, 0, 0);
-	
+
 	public void dispose() {
 		LANDMARK.dispose();
 		BACKGROUND_COLOR.dispose();
@@ -82,11 +82,11 @@ public class ColorMap {
 		PANTONE_PASTEL_YELLOW.dispose();
 		COLOR_WHITE.dispose();
 		COLOR_BLACK.dispose();
-		
+
 		// below disposed by registry
 		// DEFAULT.dispose();
 	}
-	
+
 	private GammaSetting gammaSetting = GammaSetting.STANDARD;
 
 	public enum GammaSetting {

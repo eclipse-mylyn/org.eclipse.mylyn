@@ -47,14 +47,14 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 	private AbstractRepositoryConnector connector;
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.attach";
-	
+
 	public ContextAttachAction() {
 		setText("Attach...");
 		setToolTipText("Attach Task Context");
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_ATTACH);
 	}
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -63,7 +63,7 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 	public void run() {
 		run(this);
 	}
-	
+
 	public void run(IAction action) {
 		if (task == null) {
 			return;
@@ -101,11 +101,9 @@ public class ContextAttachAction extends Action implements IViewActionDelegate {
 					task.getRepositoryUrl());
 			connector = TasksUiPlugin.getRepositoryManager().getRepositoryConnector(task.getConnectorKind());
 			AbstractAttachmentHandler handler = connector.getAttachmentHandler();
-			action
-					.setEnabled(handler != null
-							&& handler.canUploadAttachment(repository, task)
-							&& (task.isActive() || ContextCorePlugin.getContextManager().hasContext(
-									task.getHandleIdentifier())));
+			action.setEnabled(handler != null
+					&& handler.canUploadAttachment(repository, task)
+					&& (task.isActive() || ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier())));
 		} else {
 			task = null;
 			action.setEnabled(false);

@@ -51,7 +51,7 @@ public class TypeHistoryManager implements IInteractionContextListener {
 //							.getElementName().toCharArray(), enclosingTypeNames(type), type.getFlags(), getPath(type));
 
 					JavaSearchTypeNameMatch typeNameMatch = new JavaSearchTypeNameMatch(type, type.getFlags());
-					
+
 					if (add && !OpenTypeHistory.getInstance().contains(typeNameMatch)) {
 						OpenTypeHistory.getInstance().accessed(typeNameMatch);
 					} else {
@@ -80,7 +80,7 @@ public class TypeHistoryManager implements IInteractionContextListener {
 	public void contextDeactivated(IInteractionContext context) {
 		clearTypeHistory();
 	}
-	
+
 	public void contextCleared(IInteractionContext context) {
 		clearTypeHistory();
 	}
@@ -92,7 +92,7 @@ public class TypeHistoryManager implements IInteractionContextListener {
 		TypeNameMatch[] typeInfos = OpenTypeHistory.getInstance().getTypeInfos();
 		for (int i = 0; i < typeInfos.length; i++) {
 			OpenTypeHistory.getInstance().remove(typeInfos[i]);
-		} 
+		}
 	}
 
 	public void interestChanged(List<IInteractionElement> nodes) {

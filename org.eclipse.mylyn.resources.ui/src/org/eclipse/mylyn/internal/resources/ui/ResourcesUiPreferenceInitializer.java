@@ -21,10 +21,8 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.mylyn.resources.ResourcesUiBridgePlugin;
 
 /**
- * This class is responsible for creating, storing and retrieving the values for
- * the default context in the preference store. It is registered as an
- * initializer class for the 'org.eclipse.core.runtime.preferences' extension
- * point.
+ * This class is responsible for creating, storing and retrieving the values for the default context in the preference
+ * store. It is registered as an initializer class for the 'org.eclipse.core.runtime.preferences' extension point.
  * 
  * @author Fabio (bug 178931)
  * @author Mik Kersten

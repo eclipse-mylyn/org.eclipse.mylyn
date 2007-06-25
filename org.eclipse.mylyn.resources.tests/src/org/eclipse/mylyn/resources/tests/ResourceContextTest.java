@@ -48,7 +48,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 
@@ -62,27 +63,29 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("boring");
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
-		
+
 		IFile file = project.getProject().getFile("boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
-	
+
 	public void testPatternNotAddedIfExcluded() throws CoreException {
 		Set<String> previousExcludions = ResourcesUiBridgePlugin.getDefault().getExcludedResourcePatterns();
 		Set<String> exclude = new HashSet<String>();
 		exclude.add("b*.txt");
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
-		
+
 		IFile file = project.getProject().getFile("boring.txt");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
@@ -92,35 +95,37 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		Set<String> exclude = new HashSet<String>();
 		exclude.add(".*");
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(exclude);
-		
+
 		String pattern = ".*";
 		String segment = "boring";
-		
+
 		String s = pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
 		assertFalse(segment.matches(s));
 		assertTrue(".boring".matches(s));
-		
+
 		IFile file = project.getProject().getFile(".boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertFalse(element.getInterest().isInteresting());
-		
+
 		file = project.getProject().getFile("boring");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 		element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
-		
+
 		ResourcesUiBridgePlugin.getDefault().setExcludedResourcePatterns(previousExcludions);
 	}
-	
+
 	public void testFileAdded() throws CoreException {
 		IFile file = project.getProject().getFile("new-file.txt");
 		file.create(null, true, null);
 		assertTrue(file.exists());
 
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(file));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(file));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -129,7 +134,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		folder.create(true, true, null);
 		assertTrue(folder.exists());
 
-		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(folder));
+		IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(folder));
 		assertTrue(element.getInterest().isInteresting());
 	}
 
@@ -150,7 +156,8 @@ public class ResourceContextTest extends AbstractResourceContextTest {
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(folderElement.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(folderElement, false, false, "test"));
+		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(folderElement, false, false,
+				"test"));
 
 		assertFalse(folderElement.getInterest().isInteresting());
 		assertFalse(fileElement.getInterest().isInteresting());

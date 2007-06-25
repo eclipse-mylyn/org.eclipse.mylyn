@@ -34,7 +34,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getHandleIdentifier(Object object) {
 		if (object instanceof AbstractTask) {
-			return ((AbstractTask)object).getHandleIdentifier();
+			return ((AbstractTask) object).getHandleIdentifier();
 		} else {
 			return null;
 		}
@@ -58,7 +58,7 @@ public class TaskStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getLabel(Object object) {
 		if (object instanceof AbstractTask) {
-			return ((AbstractTask)object).getSummary();
+			return ((AbstractTask) object).getSummary();
 		} else {
 			return null;
 		}

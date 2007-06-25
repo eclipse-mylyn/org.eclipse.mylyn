@@ -49,24 +49,20 @@ public class HighlighterList {
 			highlighter.dispose();
 		}
 	}
-	
+
 	public void setToDefaultList() {
 		this.highlighters.clear();
 		highlighters.add(DEFAULT_HIGHLIGHTER);
 		highlighters.add(new Highlighter("yellow", ColorMap.HIGHLIGHTER_YELLOW, false));
 		highlighters.add(new Highlighter("rose", ColorMap.PANTONE_PASTEL_ROSE, false));
-		highlighters.add(new Highlighter("purple", ColorMap.PANTONE_PASTEL_PURPLE,
-				false));
+		highlighters.add(new Highlighter("purple", ColorMap.PANTONE_PASTEL_PURPLE, false));
 		highlighters.add(new Highlighter("blue", ColorMap.PANTONE_PASTEL_BLUE, false));
-		highlighters
-				.add(new Highlighter("green", ColorMap.PANTONE_PASTERL_GREEN, false));
-		highlighters.add(new Highlighter("blue gradient",
-				ColorMap.HIGLIGHTER_BLUE_GRADIENT, true));
-		highlighters.add(new Highlighter("orange gradient",
-				ColorMap.HIGHLIGHTER_ORANGE_GRADIENT, true));
+		highlighters.add(new Highlighter("green", ColorMap.PANTONE_PASTERL_GREEN, false));
+		highlighters.add(new Highlighter("blue gradient", ColorMap.HIGLIGHTER_BLUE_GRADIENT, true));
+		highlighters.add(new Highlighter("orange gradient", ColorMap.HIGHLIGHTER_ORANGE_GRADIENT, true));
 
-		Highlighter intersectionHighlighter = new Highlighter("intersection",
-				ColorMap.HIGLIGHTER_RED_INTERSECTION, false);
+		Highlighter intersectionHighlighter = new Highlighter("intersection", ColorMap.HIGLIGHTER_RED_INTERSECTION,
+				false);
 		intersectionHighlighter.setIntersection(true);
 //		ContextUiPlugin.getDefault().setIntersectionHighlighter(intersectionHighlighter);
 	}

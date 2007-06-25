@@ -88,7 +88,7 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
 		return separations;
 	}
-	
+
 	@Override
 	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
 		if (!node.getContentType().equals("java"))
@@ -136,21 +136,23 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 			IResource[] res = new IResource[l.size()];
 			res = l.toArray(res);
-			TextSearchScope doiScope = FileTextSearchScope.newSearchScope(res, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
+			TextSearchScope doiScope = FileTextSearchScope.newSearchScope(res,
+					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
 			return l.isEmpty() ? null : doiScope;
 		case 2:
 			// create a search scope for the projects of landmarks
 			Set<IProject> projectsToSearch = new HashSet<IProject>();
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+						landmark.getContentType());
 				IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(landmark, true);
 				IProject project = null;
 				if (resource != null) {
 					project = resource.getProject();
-				} else { 
+				} else {
 					Object object = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (object instanceof IJavaElement) {
-						project = ((IJavaElement)object).getJavaProject().getProject();
+						project = ((IJavaElement) object).getJavaProject().getProject();
 					}
 				}
 				if (project != null) {
@@ -160,15 +162,18 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 
 			res = new IProject[projectsToSearch.size()];
 			res = projectsToSearch.toArray(res);
-			TextSearchScope projScope = FileTextSearchScope.newSearchScope(res, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
+			TextSearchScope projScope = FileTextSearchScope.newSearchScope(res,
+					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
 
 			return projectsToSearch.isEmpty() ? null : projScope;
 		case 3:
 			// create a search scope for the workspace
-			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
+			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
+					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
 		case 4:
 			// create a search scope for the workspace
-			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() }, new String[] {PdeStructureBridge.CONTENT_TYPE}, false);
+			return FileTextSearchScope.newSearchScope(new IResource[] { ResourcesPlugin.getWorkspace().getRoot() },
+					new String[] { PdeStructureBridge.CONTENT_TYPE }, false);
 		default:
 			return null;
 		}
@@ -219,8 +224,8 @@ public class XmlJavaRelationProvider extends AbstractRelationProvider {
 								for (int j = 0; j < mar.length; j++) {
 									Match m = mar[j];
 									try {
-										AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
-												f.getName());
+										AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
+												.getStructureBridge(f.getName());
 										String handle = bridge.getHandleForOffsetInObject(f, m.getOffset());
 										if (handle != null) {
 											String second = handle.substring(handle.indexOf(";"));

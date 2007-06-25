@@ -15,10 +15,10 @@ import org.eclipse.mylyn.tasks.core.AbstractTask;
 /**
  * @author Eike Stepper
  * @author Mik Kersten
- * @since	1.0
+ * @since 1.0
  */
 public abstract class AbstractCommitTemplateVariable {
-	
+
 	protected String description;
 
 	protected String recognizedKeyword;
@@ -36,7 +36,7 @@ public abstract class AbstractCommitTemplateVariable {
 	}
 
 	public abstract String getValue(AbstractTask task);
-	
+
 	public void setRecognizedKeyword(String recognizedKeyword) {
 		if (recognizedKeyword == null) {
 			throw new IllegalArgumentException("Keyword to recognize must not be null"); //$NON-NLS-1$

@@ -31,17 +31,17 @@ public class ContextUiImages {
 	public static final String T_TOOL = "etool16";
 
 	public static final String T_VIEW = "eview16";
-	
+
 	private static final URL baseURL = ContextUiPlugin.getDefault().getBundle().getEntry("/icons/");
 
 	public static final ImageDescriptor CONTEXT_ADD = create(T_TOOL, "context-add.gif");
-	
+
 	public static final ImageDescriptor CONTEXT_ATTACH = create(T_TOOL, "context-attach.gif");
 
 	public static final ImageDescriptor CONTEXT_RETRIEVE = create(T_TOOL, "context-retrieve.gif");
-	
+
 	public static final ImageDescriptor CONTEXT_COPY = create(T_ELCL, "context-transfer.gif");
-	
+
 	public static final ImageDescriptor MYLYN = create(T_ELCL, "mylar.gif");
 
 	public static final ImageDescriptor MYLYN_OVERLAY = create(T_ELCL, "mylar-overlay.gif");
@@ -97,7 +97,7 @@ public class ContextUiImages {
 	public static final ImageDescriptor LINK_WITH_EDITOR = create(T_ELCL, "link-with-editor.gif");
 
 //	public static final ImageDescriptor OVERLAY_MYLAR = create(T_VIEW, "overlay-mylar.gif");
-	
+
 	public static final ImageDescriptor BLANK = create(T_ELCL, "blank.gif");
 
 	public static ImageDescriptor create(String prefix, String name) {
@@ -136,8 +136,8 @@ public class ContextUiImages {
 	public static Image getImage(ImageDescriptor imageDescriptor) {
 		if (imageDescriptor == null) {
 			return null;
-		} 
-		
+		}
+
 		ImageRegistry imageRegistry = getImageRegistry();
 		Image image = imageRegistry.get("" + imageDescriptor.hashCode());
 		if (image == null) {

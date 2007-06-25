@@ -108,7 +108,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 			// ignore
 		}
 	};
-	
+
 	public JavaUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -119,29 +119,29 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);	
+		super.start(context);
 		initDefaultPrefs();
-	
+
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
 					ContextCorePlugin.getContextManager().addListener(PREFERENCES_WIZARD_LISTENER);
 					ContextCorePlugin.getContextManager().addListener(landmarkMarkerManager);
-					
+
 					try {
 						typeHistoryManager = new TypeHistoryManager();
 						ContextCorePlugin.getContextManager().addListener(typeHistoryManager);
 					} catch (Throwable t) {
 						StatusHandler.log(t, "Could not install type history manager, incompatible Eclipse version.");
-					}					
-				
+					}
+
 					if (getPreferenceStore().getBoolean(InterestInducingProblemListener.PREDICTED_INTEREST_ERRORS)) {
 						problemListener.enable();
 					}
-					
+
 					getPreferenceStore().addPropertyChangeListener(problemListener);
-					
+
 					javaEditingMonitor = new JavaEditingMonitor();
 					MonitorUiPlugin.getDefault().getSelectionMonitors().add(javaEditingMonitor);
 					installEditorTracker(workbench);
@@ -193,7 +193,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 		// }
 
 		// update editors that are already opened
-		for(IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
+		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
@@ -217,8 +217,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = JavaUiBridgePlugin.getDefault().getResourceBundle();
@@ -243,8 +242,7 @@ public class JavaUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
 	 *            the path

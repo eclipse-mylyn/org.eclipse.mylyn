@@ -88,7 +88,7 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 		separations.add(new DegreeOfSeparation(DOS_5_LABEL, 5));
 		return separations;
 	}
-	
+
 	@Override
 	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
 		if (node == null)
@@ -111,13 +111,16 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 
 	private IJavaSearchScope createJavaSearchScope(IJavaElement element, int degreeOfSeparation) {
 		List<IInteractionElement> landmarks = ContextCorePlugin.getContextManager().getActiveLandmarks();
-		List<IInteractionElement> interestingElements = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
+		List<IInteractionElement> interestingElements = ContextCorePlugin.getContextManager()
+				.getActiveContext()
+				.getInteresting();
 
 		Set<IJavaElement> searchElements = new HashSet<IJavaElement>();
 		int includeMask = IJavaSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+						landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
 					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (o instanceof IJavaElement) {
@@ -134,8 +137,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
-						.getStructureBridge(interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+						interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
 					if (object instanceof IJavaElement) {
@@ -152,8 +155,8 @@ public abstract class AbstractJavaRelationProvider extends AbstractRelationProvi
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
-						.getStructureBridge(interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+						interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
 					// how determine if a javaProject?

@@ -76,7 +76,8 @@ public class LinkActiveSearchWithEditorAction extends Action {
 					ActiveSearchView view = ActiveSearchView.getFromActivePerspective();
 					if (view == null || !view.getViewer().getControl().isVisible())
 						return;
-					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor((IEditorPart) part);
+					AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(
+							(IEditorPart) part);
 					Object toSelect = bridge.getObjectForTextSelection((TextSelection) selection, (IEditorPart) part);
 					if (toSelect != null && view.getViewer().testFindItem(toSelect) != null) {
 						view.getViewer().setSelection(new StructuredSelection(toSelect), true);

@@ -86,7 +86,7 @@ public class DomContextReader implements IInteractionContextReader {
 		} catch (ParserConfigurationException e) {
 			StatusHandler.log(e, "could not parse");
 		} finally {
-			if(inputStream != null) {
+			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {

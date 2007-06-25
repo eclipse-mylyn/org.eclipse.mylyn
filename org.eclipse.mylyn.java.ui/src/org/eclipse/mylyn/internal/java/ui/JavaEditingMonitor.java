@@ -88,21 +88,25 @@ public class JavaEditingMonitor extends AbstractUserInteractionMonitor {
 						if (lastResolvedElement != null && lastSelectedElement != null
 								&& lastResolvedElement.equals(selectedElement)
 								&& !lastSelectedElement.equals(lastResolvedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
+							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID,
+									contributeToContext);
 							selectionResolved = true;
 						} else if (lastSelectedElement != null && lastSelectedElement.equals(lastResolvedElement)
 								&& !lastSelectedElement.equals(selectedElement)) {
-							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID, contributeToContext);
+							super.handleNavigation(part, selectedElement, JavaReferencesProvider.ID,
+									contributeToContext);
 							selectionResolved = true;
 						}
 					} else if (selectedElement != null && lastSelectedElement != null
 							&& !lastSelectedElement.equals(selectedElement)) {
 						if (lastSelectedElement.getElementName().equals(selectedElement.getElementName())) {
 							if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID, contributeToContext);
+								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
+										contributeToContext);
 								selectionResolved = true;
 							} else if (selectedElement instanceof IType && lastSelectedElement instanceof IType) {
-								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID, contributeToContext);
+								super.handleNavigation(part, selectedElement, JavaImplementorsProvider.ID,
+										contributeToContext);
 								selectionResolved = true;
 							}
 						}

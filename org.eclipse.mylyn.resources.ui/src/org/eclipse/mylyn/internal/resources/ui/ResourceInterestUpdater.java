@@ -34,7 +34,7 @@ public class ResourceInterestUpdater {
 	private boolean syncExec = false;
 
 	public void addResourceToContext(final Set<IResource> resources, final InteractionEvent.Kind interactionKind) {
-		try { 
+		try {
 			if (!resources.isEmpty()) {
 				if (syncExec) {
 					internalAddResourceToContext(resources, interactionKind);
@@ -63,13 +63,13 @@ public class ResourceInterestUpdater {
 				if (handle != null) {
 					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(handle);
 					if (element != null && !element.getInterest().isInteresting()) {
-						InteractionEvent interactionEvent = new InteractionEvent(interactionKind, bridge
-								.getContentType(), handle, SOURCE_ID);
+						InteractionEvent interactionEvent = new InteractionEvent(interactionKind,
+								bridge.getContentType(), handle, SOURCE_ID);
 						interactionEvents.add(interactionEvent);
 					}
-				}  
+				}
 			}
-		}  
+		}
 		if (InteractionEvent.Kind.SELECTION.equals(interactionKind)) {
 			ContextCorePlugin.getContextManager().processInteractionEvents(interactionEvents, true);
 		} else {

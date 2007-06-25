@@ -25,7 +25,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * TODO: make package-visible
  */
 public class DegreeOfInterest implements IDegreeOfInterest {
- 
+
 	private List<InteractionEvent> events = new ArrayList<InteractionEvent>();
 
 	private Map<InteractionEvent.Kind, InteractionEvent> collapsedEvents = new HashMap<InteractionEvent.Kind, InteractionEvent>();
@@ -61,10 +61,10 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		events.add(0, event);
 		InteractionEvent last = collapsedEvents.get(event.getKind());
 		if (last != null) {
-			InteractionEvent aggregateEvent = new InteractionEvent(event.getKind(), event.getStructureKind(), event
-					.getStructureHandle(), event.getOriginId(), event.getNavigation(), event.getDelta(), last
-					.getInterestContribution()
-					+ event.getInterestContribution(), last.getDate(), event.getEndDate());
+			InteractionEvent aggregateEvent = new InteractionEvent(event.getKind(), event.getStructureKind(),
+					event.getStructureHandle(), event.getOriginId(), event.getNavigation(), event.getDelta(),
+					last.getInterestContribution() + event.getInterestContribution(), last.getDate(),
+					event.getEndDate());
 			collapsedEvents.put(event.getKind(), aggregateEvent);
 		} else {
 			collapsedEvents.put(event.getKind(), event);
@@ -113,8 +113,7 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 	}
 
 	/**
-	 * @return a scaled decay count based on the number of events since the
-	 *         creation of this interest object
+	 * @return a scaled decay count based on the number of events since the creation of this interest object
 	 */
 	public float getDecayValue() {
 		if (context != null) {
@@ -163,8 +162,8 @@ public class DegreeOfInterest implements IDegreeOfInterest {
 		allCollapsed.addAll(collapsedEvents.values());
 		if (!allCollapsed.isEmpty()) {
 			allCollapsed.add(0, new InteractionEvent(InteractionEvent.Kind.MANIPULATION, allCollapsed.get(0)
-					.getStructureKind(), allCollapsed.get(0).getStructureHandle(), InteractionContextManager.SOURCE_ID_DECAY,
-					-getDecayValue()));
+					.getStructureKind(), allCollapsed.get(0).getStructureHandle(),
+					InteractionContextManager.SOURCE_ID_DECAY, -getDecayValue()));
 		}
 		return allCollapsed;
 	}

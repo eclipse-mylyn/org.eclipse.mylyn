@@ -22,7 +22,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 public class ScalingFactors {
 
 	private ScalingFactor defaultDecay = new ScalingFactor("decay", .017f);
-	
+
 	private ScalingFactor defaultEdit = new ScalingFactor("edit", .7f);
 
 	private ScalingFactor defaultPurge = new ScalingFactor("edit", -10f);

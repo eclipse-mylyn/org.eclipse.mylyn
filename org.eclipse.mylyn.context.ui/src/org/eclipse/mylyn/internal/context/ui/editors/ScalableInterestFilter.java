@@ -23,7 +23,7 @@ import org.eclipse.mylyn.context.ui.InterestFilter;
 public class ScalableInterestFilter extends InterestFilter {
 
 	private float threshold = 0;
-	
+
 	@Override
 	protected boolean isInteresting(IInteractionElement element) {
 		if (element.getInterest().getValue() == 0) {

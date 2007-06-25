@@ -22,9 +22,9 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 public class IdeUiUtil {
 
 	public static final String ID_VIEW_SYNCHRONIZE = "org.eclipse.team.sync.views.SynchronizeView";
-	
+
 	public static final String ID_NAVIGATOR = "org.eclipse.ui.views.ResourceNavigator";
-	
+
 	public static IViewPart getView(String id) {
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		if (activePage == null)
@@ -52,7 +52,7 @@ public class IdeUiUtil {
 //			}
 //		}
 //	}
-	
+
 	public static ResourceNavigator getNavigatorFromActivePage() {
 		if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null)
 			return null;

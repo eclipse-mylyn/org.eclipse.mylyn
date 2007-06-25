@@ -32,18 +32,12 @@ public class TaskContextPdeJUnitTabGroup extends JUnitTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		
+
 		ILaunchConfigurationTab[] tabs = null;
-		tabs = new ILaunchConfigurationTab[] {
-				new TaskContextJUnitMainTab(true),
+		tabs = new ILaunchConfigurationTab[] { new TaskContextJUnitMainTab(true),
 //				new JUnitLaunchConfigurationTab(),
-				new PluginJUnitMainTab(), 
-				new JavaArgumentsTab(), 
-				new PluginsTab(false),	
-				new ConfigurationTab(true), 
-				new TracingTab(),
-				new EnvironmentTab(), 
-				new CommonTab()};
+				new PluginJUnitMainTab(), new JavaArgumentsTab(), new PluginsTab(false), new ConfigurationTab(true),
+				new TracingTab(), new EnvironmentTab(), new CommonTab() };
 		setTabs(tabs);
 	}
 

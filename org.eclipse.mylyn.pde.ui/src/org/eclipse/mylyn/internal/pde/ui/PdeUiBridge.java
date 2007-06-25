@@ -57,7 +57,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * @author Shawn Minto
  */
 public class PdeUiBridge extends AbstractContextUiBridge {
-	
+
 	private TreeViewerListener treeSelectionChangedListener;
 
 	public PdeUiBridge() {
@@ -132,7 +132,10 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	 */
 	private IEditorPart openInEditor(IFile file, boolean activate) throws PartInitException {
 		if (file != null) {
-			IWorkbenchPage p = ResourcesUiBridgePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage p = ResourcesUiBridgePlugin.getDefault()
+					.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage();
 			if (p != null && file.exists()) {
 				IEditorPart editorPart = IDE.openEditor(p, file, activate);
 				// initializeHighlightRange(editorPart);
@@ -276,8 +279,8 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	}
 
 	/**
-	 * Class to listen to the tree views to attempt to refresh them more
-	 * frequently to keep the ui model consistant with the user selections
+	 * Class to listen to the tree views to attempt to refresh them more frequently to keep the ui model consistant with
+	 * the user selections
 	 * 
 	 * @author Shawn Minto
 	 */
@@ -310,7 +313,7 @@ public class PdeUiBridge extends AbstractContextUiBridge {
 	public Object getObjectForTextSelection(TextSelection selection, IEditorPart editor) {
 		return null;
 	}
-	
+
 	@Override
 	public IInteractionElement getElement(IEditorInput input) {
 		return null;

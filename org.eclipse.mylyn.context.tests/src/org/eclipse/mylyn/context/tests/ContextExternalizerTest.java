@@ -54,7 +54,7 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		InteractionContextExternalizer externalizer = new InteractionContextExternalizer();
 		context.parseEvent(mockSelection("1"));
 		context.setContentLimitedTo("foobar");
-		
+
 		externalizer.writeContextToXml(context, file);
 
 		File dataDirectory = ContextCorePlugin.getDefault().getContextStore().getRootDirectory();
@@ -64,10 +64,10 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertTrue(zippedContextFile.exists());
 		InteractionContext loaded = externalizer.readContextFromXML("handle", zippedContextFile);
 		assertNotNull(loaded);
-		
+
 		assertEquals("foobar", loaded.getContentLimitedTo());
 	}
-	
+
 	public void testSaxExternalizationAgainstDom() {
 		File file = FileTool.getFileInPlugin(ContextTestsPlugin.getDefault(), new Path(
 				"testdata/externalizer/testcontext.xml.zip"));
@@ -140,7 +140,8 @@ public class ContextExternalizerTest extends AbstractContextTest {
 		assertNotNull(edge);
 		assertEquals(1, node.getRelations().size());
 		context.parseEvent(mockInterestContribution("3", scaling.getLandmark() + scaling.getDecay().getValue() * 3));
-		assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3").getInterest()
+		assertTrue("interest: " + context.get("3").getInterest().getValue(), context.get("3")
+				.getInterest()
 				.isLandmark());
 		float doi = node.getInterest().getValue();
 		assertNotNull(context.getLandmarkMap());

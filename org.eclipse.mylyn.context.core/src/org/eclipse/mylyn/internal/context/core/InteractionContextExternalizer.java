@@ -34,7 +34,7 @@ public class InteractionContextExternalizer {
 	private IInteractionContextReader reader = new SaxContextReader();
 
 	private IInteractionContextWriter writer = new SaxContextWriter();
-	
+
 	public static final String ELMNT_INTERACTION_HISTORY_OLD = "interactionEvent";
 
 	public static final String ELMNT_INTERACTION_HISTORY = "InteractionHistory";
@@ -69,11 +69,11 @@ public class InteractionContextExternalizer {
 		if (context.getInteractionHistory().isEmpty())
 			return;
 		try {
-			 if (!file.exists()) {
+			if (!file.exists()) {
 				file.createNewFile();
-			 }
+			}
 			String handleIdentifier = context.getHandleIdentifier();
-			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);		
+			String encoded = URLEncoder.encode(handleIdentifier, InteractionContextManager.CONTEXT_FILENAME_ENCODING);
 			ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
 			ZipEntry zipEntry = new ZipEntry(encoded + InteractionContextManager.CONTEXT_FILE_EXTENSION_OLD);
 			outputStream.putNextEntry(zipEntry);

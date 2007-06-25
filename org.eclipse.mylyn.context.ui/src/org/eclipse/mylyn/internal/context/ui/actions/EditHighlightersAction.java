@@ -34,6 +34,7 @@ import org.eclipse.ui.PlatformUI;
 public class EditHighlightersAction extends Action implements IViewActionDelegate {
 
 	private static final String ID_PREFS_HIGHLIGHTERS = "org.eclipse.mylyn.sandbox.ui.preferences";
+
 	public static final String ID = "org.eclipse.mylyn.tasklist.actions.context.highlighters.edit";
 
 	public EditHighlightersAction() {
@@ -54,7 +55,8 @@ public class EditHighlightersAction extends Action implements IViewActionDelegat
 
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		final PreferenceDialog dialog = new PreferenceDialog(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
 				.getShell(), manager);
 		final boolean[] result = new boolean[] { false };
 		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {

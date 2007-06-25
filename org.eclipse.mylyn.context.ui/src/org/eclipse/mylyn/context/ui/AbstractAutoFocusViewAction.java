@@ -23,16 +23,17 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Extend to focus a view on task context, e.g. the filtering and expansion of a tree view such as
- * the Package Explorer.  A structure bridge should be implemented or reused to determine the
- * degree-of-interest of elements in the view.
+ * Extend to focus a view on task context, e.g. the filtering and expansion of a tree view such as the Package Explorer.
+ * A structure bridge should be implemented or reused to determine the degree-of-interest of elements in the view.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
-public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements IInteractionContextListener {
+public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewAction implements
+		IInteractionContextListener {
 
-	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters, boolean manageLinking) {
+	public AbstractAutoFocusViewAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
+			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
 		ContextCorePlugin.getContextManager().addListener(this);
 	}
@@ -53,11 +54,11 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					if (ContextCorePlugin.getContextManager().isContextActive() &&
-							ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-							ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
+					if (ContextCorePlugin.getContextManager().isContextActive()
+							&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+									ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 						update(true);
-					} 
+					}
 				} catch (Exception e) {
 					StatusHandler.fail(e, "could not toggle Mylar on view: " + getPartForAction(), true);
 				}
@@ -69,16 +70,16 @@ public abstract class AbstractAutoFocusViewAction extends AbstractFocusViewActio
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 			update(true);
-		} 
+		}
 	}
 
 	public void contextDeactivated(IInteractionContext context) {
 		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE)) {
 			update(false);
-		} 
+		}
 	}
-	
+
 	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}

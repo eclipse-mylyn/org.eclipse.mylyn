@@ -87,8 +87,8 @@ public class JavaStructureTest extends AbstractJavaContextTest {
 		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		monitor.selectionChanged(editorPart, callerSelection);
 
-		TextSelection calleeSelection = new TextSelection(document, callee.getSourceRange().getOffset(), callee
-				.getSourceRange().getLength());
+		TextSelection calleeSelection = new TextSelection(document, callee.getSourceRange().getOffset(),
+				callee.getSourceRange().getLength());
 		editorPart.setHighlightRange(callerSelection.getOffset(), callerSelection.getLength(), true);
 		monitor.selectionChanged(editorPart, calleeSelection);
 

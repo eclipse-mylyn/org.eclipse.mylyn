@@ -45,8 +45,7 @@ public abstract class TaskContextAction extends Action implements IViewActionDel
 		this.selection = selection;
 		AbstractTask selectedTask = getSelectedTask(selection);
 		if (selectedTask != null) {
-			action.setEnabled(ContextCorePlugin.getContextManager().hasContext(
-					selectedTask.getHandleIdentifier()));
+			action.setEnabled(ContextCorePlugin.getContextManager().hasContext(selectedTask.getHandleIdentifier()));
 		} else {
 			action.setEnabled(false);
 		}

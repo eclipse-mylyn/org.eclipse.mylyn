@@ -23,7 +23,7 @@ import org.eclipse.ui.IPersistableElement;
 public class ContextEditorInput implements IEditorInput {
 
 	private static final String LABEL = "Task Context Editor";
-	
+
 	private AbstractTask task;
 
 	public ContextEditorInput(AbstractTask task) {

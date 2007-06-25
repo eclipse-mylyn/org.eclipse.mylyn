@@ -40,10 +40,10 @@ public class MarkerInterestFilter extends InterestFilter {
 						return true;
 					}
 				}
-			} 
+			}
 		} else {
 //			ConcreteMarker marker = (ConcreteMarker) element;
-			return isInteresting((ConcreteMarker)element, viewer, parent);
+			return isInteresting((ConcreteMarker) element, viewer, parent);
 		}
 		return false;
 	}
@@ -56,7 +56,8 @@ public class MarkerInterestFilter extends InterestFilter {
 		if (isImplicitlyInteresting(marker)) {
 			return true;
 		} else {
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(marker.getResource().getFileExtension())
+			String handle = ContextCorePlugin.getDefault()
+					.getStructureBridge(marker.getResource().getFileExtension())
 					.getHandleForOffsetInObject(marker, 0);
 			if (handle == null) {
 				return false;

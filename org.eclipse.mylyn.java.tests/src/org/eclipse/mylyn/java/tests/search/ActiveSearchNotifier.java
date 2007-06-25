@@ -59,8 +59,8 @@ public class ActiveSearchNotifier extends AbstractContextTest {
 	public IInteractionElement getElement(String handle, String kind) {
 		IInteractionElement node = context.addEvent(mockSelection(handle, kind, source));
 		ContextCorePlugin.getContextManager().processInteractionEvent(
-				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getScalingFactors().getLandmark()) * -2),
-				true);
+				mockUserEvent(handle, kind, source, (1 / InteractionContextManager.getScalingFactors().getLandmark())
+						* -2), true);
 		// context.addEvent(mockUserEvent(handle, kind, source,
 		// (1/MylarContextManager.getScalingFactors().getLandmark()) * -2));
 		return node;

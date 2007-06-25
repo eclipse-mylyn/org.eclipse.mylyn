@@ -36,7 +36,7 @@ import org.eclipse.ui.fieldassist.*;
  * @author Mik Kersten
  */
 public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	
+
 	private Button manageChangeSets;
 
 	private Text commitTemplate = null;
@@ -67,12 +67,14 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 		getPreferenceStore().setValue(FocusedTeamUiPlugin.CHANGE_SET_MANAGE, manageChangeSets.getSelection());
 
 		if (manageChangeSets.getSelection()) {
-			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault()
+					.getContextChangeSetManagers()) {
 				changeSetManager.enable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().enable();
 		} else {
-			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers()) {
+			for (AbstractContextChangeSetManager changeSetManager : FocusedTeamUiPlugin.getDefault()
+					.getContextChangeSetManagers()) {
 				changeSetManager.disable();
 			}
 //			MylarTeamPlugin.getDefault().getChangeSetManager().disable();
@@ -88,8 +90,7 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
-		commitTemplate.setText(getPreferenceStore()
-				.getDefaultString(FocusedTeamUiPlugin.COMMIT_TEMPLATE));
+		commitTemplate.setText(getPreferenceStore().getDefaultString(FocusedTeamUiPlugin.COMMIT_TEMPLATE));
 		manageChangeSets.setSelection(getPreferenceStore().getDefaultBoolean(FocusedTeamUiPlugin.CHANGE_SET_MANAGE));
 	}
 
@@ -138,8 +139,8 @@ public class FocusedTeamPreferencePage extends PreferencePage implements IWorkbe
 			}
 		};
 
-		ContentAssistField field = new ContentAssistField(parent, SWT.BORDER | SWT.MULTI, controlCreator, adapter, provider, null,
-				new char[] { '$' });
+		ContentAssistField field = new ContentAssistField(parent, SWT.BORDER | SWT.MULTI, controlCreator, adapter,
+				provider, null, new char[] { '$' });
 
 		GridData gd = new GridData();
 		gd.heightHint = 60;

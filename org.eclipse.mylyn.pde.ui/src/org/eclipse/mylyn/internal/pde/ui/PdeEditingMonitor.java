@@ -106,8 +106,8 @@ public class PdeEditingMonitor extends AbstractUserInteractionMonitor {
 							return;
 
 						// create the helper to get the handle for the node
-						XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), nodeString
-								.hashCode());
+						XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(),
+								nodeString.hashCode());
 
 						// get the name for the node
 //						String name = node.getXMLAttributeValue("name");

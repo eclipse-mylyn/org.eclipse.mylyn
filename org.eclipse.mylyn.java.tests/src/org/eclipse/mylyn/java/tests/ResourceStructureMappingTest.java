@@ -33,9 +33,9 @@ public class ResourceStructureMappingTest extends AbstractJavaContextTest {
 		monitor.selectionChanged(part, new StructuredSelection(m1));
 		IInteractionElement m1Node = ContextCorePlugin.getContextManager().getElement(m1.getHandleIdentifier());
 		assertTrue(m1Node.getInterest().isInteresting());
-		
+
 		IResource containingResource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(m1Node, true);
 		assertEquals(m1.getCompilationUnit().getAdapter(IResource.class), containingResource);
 	}
-	
+
 }

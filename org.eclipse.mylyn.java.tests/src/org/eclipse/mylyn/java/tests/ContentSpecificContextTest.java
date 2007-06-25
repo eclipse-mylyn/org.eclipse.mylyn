@@ -27,12 +27,13 @@ public class ContentSpecificContextTest extends AbstractContextTest {
 		InteractionContext context = new InteractionContext("global-id", new ScalingFactors());
 		context.setContentLimitedTo(JavaStructureBridge.CONTENT_TYPE);
 		ContextCorePlugin.getContextManager().addGlobalContext(context);
-		
-		ContextCorePlugin.getContextManager().processInteractionEvent(new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
+
+		ContextCorePlugin.getContextManager().processInteractionEvent(
+				new InteractionEvent(InteractionEvent.Kind.PROPAGATION, "foo-kind", "h0", MOCK_ORIGIN));
 		assertEquals(0, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection("h1"), false, false);
 		assertEquals(1, context.getAllElements().size());
 		ContextCorePlugin.getContextManager().removeGlobalContext(context);
 	}
-	
+
 }

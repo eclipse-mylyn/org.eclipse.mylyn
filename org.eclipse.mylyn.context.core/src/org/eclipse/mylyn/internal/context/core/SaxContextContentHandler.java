@@ -1,6 +1,4 @@
 
-
-
 /*******************************************************************************
  * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
@@ -42,7 +40,7 @@ public class SaxContextContentHandler extends DefaultHandler {
 	static final String ATTRIBUTE_INTERACTION_EVENT = "InteractionEvent";
 
 	static final String ATTRIBUTE_CONTENT = "Content";
-	
+
 	public SaxContextContentHandler(String contextHandleIdentifier) {
 		this.contextHandleIdentifier = contextHandleIdentifier;
 	}
@@ -76,27 +74,22 @@ public class SaxContextContentHandler extends DefaultHandler {
 	}
 
 	public static InteractionEvent createEventFromAttributes(Attributes attributes) throws ParseException {
-		String delta = XmlStringConverter.convertXmlToString(attributes
-				.getValue(InteractionContextExternalizer.ATR_DELTA));
+		String delta = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_DELTA));
 		String endDate = attributes.getValue(InteractionContextExternalizer.ATR_END_DATE);
 		String interest = attributes.getValue(InteractionContextExternalizer.ATR_INTEREST);
 		String kind = attributes.getValue(InteractionContextExternalizer.ATR_KIND);
-		String navigation = XmlStringConverter.convertXmlToString(attributes
-				.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
-		String originId = XmlStringConverter.convertXmlToString(attributes
-				.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
+		String navigation = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_NAVIGATION));
+		String originId = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_ORIGIN_ID));
 		String startDate = attributes.getValue(InteractionContextExternalizer.ATR_START_DATE);
-		String structureHandle = XmlStringConverter.convertXmlToString(attributes
-				.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
-		String structureKind = XmlStringConverter.convertXmlToString(attributes
-				.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
+		String structureHandle = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_HANDLE));
+		String structureKind = XmlStringConverter.convertXmlToString(attributes.getValue(InteractionContextExternalizer.ATR_STRUCTURE_KIND));
 
 		Date dStartDate = InteractionContextExternalizer.DATE_FORMAT.parse(startDate);
 		Date dEndDate = InteractionContextExternalizer.DATE_FORMAT.parse(endDate);
 		float iInterest = Float.parseFloat(interest);
 
-		InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle,
-				originId, navigation, delta, iInterest, dStartDate, dEndDate);
+		InteractionEvent ie = new InteractionEvent(Kind.fromString(kind), structureKind, structureHandle, originId,
+				navigation, delta, iInterest, dStartDate, dEndDate);
 		return ie;
 	}
 }

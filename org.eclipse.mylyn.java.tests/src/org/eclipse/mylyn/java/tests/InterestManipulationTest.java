@@ -75,15 +75,17 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		ResourceStructureBridge bridge = new ResourceStructureBridge();
 		new ResourceInteractionMonitor().selectionChanged(part, new StructuredSelection(file));
 
-		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(bridge.getHandleIdentifier(file));
+		IInteractionElement fileElement = ContextCorePlugin.getContextManager().getElement(
+				bridge.getHandleIdentifier(file));
 		IInteractionElement projectElement = ContextCorePlugin.getContextManager().getElement(
 				javaCu.getJavaProject().getHandleIdentifier());
 
 		assertTrue(fileElement.getInterest().isInteresting());
 		assertTrue(method.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false, "test"));
- 
+		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(projectElement, false, false,
+				"test"));
+
 		assertFalse(fileElement.getInterest().isInteresting());
 		// TODO: re-enable, fails in AllTests
 		// assertFalse(method.getInterest().isInteresting());
@@ -96,14 +98,16 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		clazz = ContextCorePlugin.getContextManager().getElement(javaType.getHandleIdentifier());
 		cu = ContextCorePlugin.getContextManager().getElement(javaCu.getHandleIdentifier());
 
-		IInteractionElement packageNode = ContextCorePlugin.getContextManager().getElement(javaPackage.getHandleIdentifier());
+		IInteractionElement packageNode = ContextCorePlugin.getContextManager().getElement(
+				javaPackage.getHandleIdentifier());
 
 		assertTrue(method.getInterest().isInteresting());
 		assertTrue(clazz.getInterest().isInteresting());
 		assertTrue(cu.getInterest().isInteresting());
 
-		assertTrue(ContextCorePlugin.getContextManager().manipulateInterestForElement(packageNode, false, false, "test"));
-		assertFalse(packageNode.getInterest().isInteresting()); 
+		assertTrue(ContextCorePlugin.getContextManager()
+				.manipulateInterestForElement(packageNode, false, false, "test"));
+		assertFalse(packageNode.getInterest().isInteresting());
 		assertFalse(cu.getInterest().isInteresting());
 		assertFalse(clazz.getInterest().isInteresting());
 		assertFalse(method.getInterest().isInteresting());
@@ -123,8 +127,8 @@ public class InterestManipulationTest extends AbstractJavaContextTest {
 		assertTrue(node.getInterest().isLandmark());
 		action.changeInterestForSelected(true);
 
-		assertEquals((2*scaling.getLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION).getValue(), node
-				.getInterest().getValue());
+		assertEquals((2 * scaling.getLandmark()) + scaling.get(InteractionEvent.Kind.SELECTION).getValue(),
+				node.getInterest().getValue());
 
 		action.changeInterestForSelected(false);
 		assertFalse(node.getInterest().isLandmark());

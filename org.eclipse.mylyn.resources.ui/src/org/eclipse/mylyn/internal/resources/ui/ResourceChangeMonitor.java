@@ -34,7 +34,7 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 
 	private boolean enabled = true;
 
-	public void resourceChanged(IResourceChangeEvent event) { 
+	public void resourceChanged(IResourceChangeEvent event) {
 		if (!enabled || !ContextCorePlugin.getContextManager().isContextActive()) {
 			return;
 		}
@@ -50,7 +50,8 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 				IResourceDelta[] added = delta.getAffectedChildren(IResourceDelta.ADDED);
 				for (int i = 0; i < added.length; i++) {
 					IResource resource = added[i].getResource();
-					if ((resource instanceof IFile || resource instanceof IFolder) && !isExcluded(resource.getProjectRelativePath(), excludedPatterns)) {
+					if ((resource instanceof IFile || resource instanceof IFolder)
+							&& !isExcluded(resource.getProjectRelativePath(), excludedPatterns)) {
 						addedResources.add(resource);
 					}
 				}
@@ -60,15 +61,17 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 					IResource resource = changed[i].getResource();
 					if (resource instanceof IFile) {
 						changedResources.add(resource);
-					} 
+					}
 				}
 				return true;
 			}
-		}; 
+		};
 		try {
 			rootDelta.accept(visitor);
-			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(changedResources, InteractionEvent.Kind.PREDICTION);
-			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(addedResources, InteractionEvent.Kind.SELECTION);	
+			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(changedResources,
+					InteractionEvent.Kind.PREDICTION);
+			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(addedResources,
+					InteractionEvent.Kind.SELECTION);
 		} catch (CoreException e) {
 			StatusHandler.log(e, "could not accept marker visitor");
 		}
@@ -85,13 +88,13 @@ public class ResourceChangeMonitor implements IResourceChangeListener {
 		boolean excluded = false;
 		for (String pattern : excludedPatterns) {
 			for (String segment : path.segments()) {
-				boolean matches = segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));		
+				boolean matches = segment.matches(pattern.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
 				if (matches) {
 					excluded = true;
 				}
 			}
 		}
-		
+
 		return excluded;
 	}
 

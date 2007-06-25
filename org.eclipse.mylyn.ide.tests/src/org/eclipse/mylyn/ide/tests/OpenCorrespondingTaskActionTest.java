@@ -37,11 +37,11 @@ public class OpenCorrespondingTaskActionTest extends TestCase {
 		String id = OpenCorrespondingTaskAction.getTaskIdFromLegacy07Label(label);
 		assertEquals("123", id);
 	}
-	
+
 	public void testUrlMatching() {
 		String label = "bla bla\nhttp://foo.bar-123 bla bla";
 		String id = OpenCorrespondingTaskAction.getUrlFromComment(label);
 		assertEquals("http://foo.bar-123", id);
 	}
-	
+
 }

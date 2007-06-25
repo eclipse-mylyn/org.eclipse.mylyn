@@ -22,11 +22,10 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 /**
  * Used for Active Search.
  * 
- * NOTE: this facility is not exposed by default in Mylyn 2.0 and likely to change
- * for 3.0.
+ * NOTE: this facility is not exposed by default in Mylyn 2.0 and likely to change for 3.0.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractRelationProvider implements IInteractionContextListener {
 
@@ -41,7 +40,7 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	protected final String DOS_4_LABEL = "project dependencies";
 
 	protected final String DOS_5_LABEL = "entire workspace (slow)";
-	
+
 	private boolean enabled = false;
 
 	private String id;
@@ -61,17 +60,17 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	}
 
 	public abstract List<IDegreeOfSeparation> getDegreesOfSeparation();
-	
+
 	protected abstract int getDefaultDegreeOfSeparation();
 
 	protected abstract void findRelated(final IInteractionElement node, int degreeOfSeparation);
 
 	/**
 	 * @param limitTo
-	 *            Only used in thye AbstractJavaRelationshipProvider for the
-	 *            search type
+	 *            Only used in thye AbstractJavaRelationshipProvider for the search type
 	 */
-	public abstract IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation);
+	public abstract IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo,
+			int degreeOfSeparation);
 
 	public abstract String getName();
 
@@ -86,7 +85,7 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	public void contextCleared(IInteractionContext context) {
 		// ignore
 	}
-	
+
 	public void landmarkAdded(IInteractionElement node) {
 		if (enabled) {
 			findRelated(node, degreeOfSeparation);
@@ -117,8 +116,8 @@ public abstract class AbstractRelationProvider implements IInteractionContextLis
 	 * Public for testing
 	 */
 	public void createEdge(IInteractionElement toNode, String elementKind, String targetHandle) {
-		CompositeContextElement targetNode = (CompositeContextElement) ContextCorePlugin.getContextManager().getElement(
-				targetHandle);
+		CompositeContextElement targetNode = (CompositeContextElement) ContextCorePlugin.getContextManager()
+				.getElement(targetHandle);
 		if (targetNode == null)
 			return;
 		InteractionContextElement concreteTargetNode = null;

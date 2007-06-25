@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Image;
 public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	public static final String LABEL_RELATION = "referenced by";
-	
+
 	@Override
 	protected Image getImage(IInteractionElement node) {
 		return ContextUiImages.getImage(ContextUiImages.FILE_XML);
@@ -39,7 +39,8 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getText(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AntStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 
@@ -55,7 +56,8 @@ public class AntContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	protected String getTextForObject(Object object) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(AntStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				AntStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(object);
 	}
 

@@ -18,8 +18,7 @@ import org.eclipse.osgi.util.NLS;
  * <p>
  * Copied from org.eclipse.ui.texteditor.RegExMessages.
  * <p>
- * Needed by
- * org.eclipse.mylyn.internal.team.ui.preferences.workaround.RegExContentProposalProvider.
+ * Needed by org.eclipse.mylyn.internal.team.ui.preferences.workaround.RegExContentProposalProvider.
  * <p>
  * TODO Ask platform guys to open this API
  * 

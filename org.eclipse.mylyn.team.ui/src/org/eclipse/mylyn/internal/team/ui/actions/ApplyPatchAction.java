@@ -85,8 +85,10 @@ public class ApplyPatchAction extends BaseSelectionListenerAction implements IVi
 					}
 
 				};
-				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().getActivePart(), storage, null, new CompareConfiguration());
+				ApplyPatchOperation op = new ApplyPatchOperation(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.getActivePart(), storage, null, new CompareConfiguration());
 				BusyIndicator.showWhile(Display.getDefault(), op);
 			}
 		}

@@ -33,16 +33,15 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
  */
 public class RecommendedPreferencesWizardPage extends WizardPage {
 
-	private static final String DESCRIPTION = 
-		"You have activated a task for the first time.\n" +
-		"The following Java preferences are recommended for the Task-Focused UI.\n";
+	private static final String DESCRIPTION = "You have activated a task for the first time.\n"
+			+ "The following Java preferences are recommended for the Task-Focused UI.\n";
 
 	private static final String AUTO_FOLDING = "Turn automatic Java editor folding on";
 
 	private static final String CONTENT_ASSIST = "Enable task-context ranked content assist, requires Eclipse restart.";
 
 	private static final String CONTENT_ASSIST_WARNING = "Toggle via Preferences->Java->Editor->Content Assist->Advanced ";
-	
+
 	private Button contentAssistButton;
 
 	private Button turnOnAutoFoldingButton;
@@ -79,12 +78,12 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText(CONTENT_ASSIST_WARNING);
-		
+
 //		label = new Label(buttonComposite, SWT.NONE);
 //		label = new Label(buttonComposite, SWT.NONE);
 //		label.setText("NOTE: if Mylar is uninstalled you must Restore Defaults on above page ");
 //		label.setForeground(TaskListColorsAndFonts.COLOR_LABEL_CAUTION);
-		
+
 		gd = new GridData();
 		label.setLayoutData(gd);
 
@@ -111,7 +110,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label = new Label(buttonComposite, SWT.NONE);
 		label.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		label.setText("Toggle via toolbar button ");
-		
+
 //		addMylarActiveWorkingSetButton = new Button(buttonComposite, SWT.CHECK);
 //		gd = new GridData();
 //		addMylarActiveWorkingSetButton.setSelection(true);
@@ -151,7 +150,7 @@ public class RecommendedPreferencesWizardPage extends WizardPage {
 		label.setText("For a legend of the icons used by Mylyn open: Help (menu) -> Mylyn UI Legend");
 		gd = new GridData();
 		label.setLayoutData(gd);
-		
+
 		hyperlink.addHyperlinkListener(new IHyperlinkListener() {
 
 			public void linkActivated(HyperlinkEvent e) {

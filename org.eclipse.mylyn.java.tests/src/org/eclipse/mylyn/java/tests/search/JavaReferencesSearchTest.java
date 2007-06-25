@@ -72,7 +72,8 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	@Override
 	protected void tearDown() throws Exception {
 		WorkspaceSetupHelper.clearDoiModel();
-		ContextCorePlugin.getContextManager().deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
+		ContextCorePlugin.getContextManager()
+				.deactivateContext(WorkspaceSetupHelper.getContext().getHandleIdentifier());
 		assertFalse(ContextCorePlugin.getContextManager().isContextActive());
 	}
 
@@ -80,9 +81,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		int dos = 1;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		// results should be null since the scope would be null.
 		// There are no landmarks to search over
@@ -119,9 +122,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS2() throws CoreException, IOException {
 		int dos = 2;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		// results should be null since the scope would be null.
 		// There are no landmarks to search over
@@ -167,9 +172,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 	public void testJavaReferencesSearchDOS3() throws Exception {
 		int dos = 3;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		// results should be null since the scope would be null.
 		// There are no landmarks to search over
@@ -217,9 +224,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		// results should be null since the scope would be null.
 		// There are no landmarks to search over
@@ -265,9 +274,11 @@ public class JavaReferencesSearchTest extends TestCase implements ISearchPluginT
 		int dos = 5;
 
 		// NOTE: as of 3.2M3 there is a plugin.xml reference
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		// we should have 1 result since we are searching the entire workspace
 		helper.searchResultsNotNull(notifier, searchNode, dos, 2);

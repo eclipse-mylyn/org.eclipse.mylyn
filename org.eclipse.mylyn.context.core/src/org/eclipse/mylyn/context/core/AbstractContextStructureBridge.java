@@ -17,30 +17,27 @@ import java.util.List;
  * Maps between domain elements (e.g. Java) and interaction context model elements.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractContextStructureBridge {
 
 	protected String parentContentType = null;
-	
+
 	/**
-	 * Used for delagating to when the parent of an element is known by another
-	 * bridge.
+	 * Used for delagating to when the parent of an element is known by another bridge.
 	 */
 	public void setParentContentType(String contentType) {
 		this.parentContentType = contentType;
-	} 
-	
+	}
+
 	public abstract String getContentType();
 
 	/**
-	 * A workspace-unique and robust String identifier for a structured element.
-	 * For example, in Java these are the IJavaElement's handle identifier.
-	 * For XML, this could be an xpath, but due to the fact that xpaths
-	 * rely on element ordering for identity they are not robust to
-	 * element order switching.
+	 * A workspace-unique and robust String identifier for a structured element. For example, in Java these are the
+	 * IJavaElement's handle identifier. For XML, this could be an xpath, but due to the fact that xpaths rely on
+	 * element ordering for identity they are not robust to element order switching.
 	 * 
-	 * @return	null if the given object does not participate in the task context
+	 * @return null if the given object does not participate in the task context
 	 */
 	public abstract String getHandleIdentifier(Object object);
 
@@ -51,8 +48,8 @@ public abstract class AbstractContextStructureBridge {
 	public abstract List<String> getChildHandles(String handle);
 
 	/**
-	 * @return The name or a null String(""). Can't be null since the views
-	 *         displaying the context can't handle null names
+	 * @return The name or a null String(""). Can't be null since the views displaying the context can't handle null
+	 *         names
 	 */
 	public abstract String getLabel(Object object);
 
@@ -66,15 +63,13 @@ public abstract class AbstractContextStructureBridge {
 	public abstract boolean canFilter(Object element);
 
 	/**
-	 * @return true if this is a resource that can be opened by an editor (i.e.
-	 *         false for a directory, or a Java method)
+	 * @return true if this is a resource that can be opened by an editor (i.e. false for a directory, or a Java method)
 	 */
 	public abstract boolean isDocument(String handle);
 
 	/**
 	 * @param resource
-	 *            can be anything that has an element accessible via an offset,
-	 *            e.g. a file with a character offset
+	 *            can be anything that has an element accessible via an offset, e.g. a file with a character offset
 	 */
 	public abstract String getHandleForOffsetInObject(Object resource, int offset);
 

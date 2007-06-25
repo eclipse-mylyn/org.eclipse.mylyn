@@ -40,7 +40,7 @@ public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributo
 					for (AbstractTaskContainer selectedElement : selectedElements) {
 						if (selectedElement instanceof AbstractTask) {
 							task = (AbstractTask) selectedElement;
-						} 
+						}
 						if (task != null) {
 							ContextUiPlugin.getDefault().setHighlighterMapping(task.getHandleIdentifier(),
 									highlighter.getName());
@@ -50,11 +50,11 @@ public class TaskHighlighterMenuContributor implements IDynamicSubMenuContributo
 				}
 			};
 			if (highlighter.isGradient()) {
-				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(), highlighter
-						.getHighlightColor()));
+				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getBase(),
+						highlighter.getHighlightColor()));
 			} else {
-				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getHighlightColor(), highlighter
-						.getHighlightColor()));
+				action.setImageDescriptor(new HighlighterImageDescriptor(highlighter.getHighlightColor(),
+						highlighter.getHighlightColor()));
 			}
 			action.setText(highlighter.toString());
 			subMenuManager.add(action);

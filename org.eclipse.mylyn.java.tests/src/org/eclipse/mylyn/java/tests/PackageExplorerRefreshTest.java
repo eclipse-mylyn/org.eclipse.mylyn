@@ -55,7 +55,8 @@ public class PackageExplorerRefreshTest extends AbstractJavaContextTest {
 
 		manager.deactivateContext(contextId);
 		FocusPackageExplorerAction.getActionForPart(view).update(true);
-		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()), UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
+		assertTrue("num items: " + UiTestUtil.countItemsInTree(viewer.getTree()),
+				UiTestUtil.countItemsInTree(viewer.getTree()) == 0);
 		FocusPackageExplorerAction.getActionForPart(view).update();
 	}
 

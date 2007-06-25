@@ -61,7 +61,8 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		assertNotNull(page);
 		view = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(view);
-		assertTrue(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
+		assertTrue(ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
 	}
 
 	@Override
@@ -69,9 +70,10 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 		super.tearDown();
 		ResourcesUiBridgePlugin.getEditorManager().closeAllEditors();
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException, PartInitException {
+	public void testAutoOpen() throws JavaModelException, InvocationTargetException, InterruptedException,
+			PartInitException {
 		// need a task for mementos
 		AbstractTask task = new LocalTask(contextId, contextId);
 		TasksUiPlugin.getTaskListManager().getTaskList().addTask(task);
@@ -84,14 +86,14 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 
 		IType typeA = project.createType(p1, "TypeA.java", "public class TypeA{ }");
 		IType typeB = project.createType(p1, "TypeB.java", "public class TypeB{ }");
-		
+
 		JavaUI.openInEditor(typeA);
 		JavaUI.openInEditor(typeB);
 //		monitor.selectionChanged(view, new StructuredSelection(typeA));
 //		monitor.selectionChanged(view, new StructuredSelection(typeB));
-		
+
 		assertEquals(2, page.getEditors().length);
-		
+
 		manager.deactivateContext(contextId);
 		assertEquals(0, page.getEditors().length);
 
@@ -108,31 +110,35 @@ public class EditorManagerTest extends AbstractJavaContextTest {
 //		MylarContextManager.getScalingFactors().getDecay().setValue(0f);
 //		manager.deactivateContext(context.getHandleIdentifier());
 //		manager.activateContext(context);
-		
+
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 
 		IType typeA = project.createType(p1, "TypeAa.java", "public class TypeD{ }");
 		IType typeB = project.createType(p1, "TypeBb.java", "public class TypeC{ }");
-				
-		IFile fileA = (IFile)typeA.getAdapter(IResource.class);
-		IFile fileB = (IFile)typeB.getAdapter(IResource.class);
-		
+
+		IFile fileA = (IFile) typeA.getAdapter(IResource.class);
+		IFile fileB = (IFile) typeB.getAdapter(IResource.class);
+
 		AbstractContextStructureBridge structureBridge = ContextCorePlugin.getDefault().getStructureBridge(fileA);
-		
-		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileB));
-		
+
+		IInteractionElement elementA = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(fileA));
+		IInteractionElement elementB = ContextCorePlugin.getContextManager().getElement(
+				structureBridge.getHandleIdentifier(fileB));
+
 		assertFalse(elementA.getInterest().isInteresting());
 		assertFalse(elementB.getInterest().isInteresting());
 		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
-		
+
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
 		assertFalse(elementA.getInterest().isInteresting());
-		
+
 		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileA, true);
 		elementA = ContextCorePlugin.getContextManager().getElement(structureBridge.getHandleIdentifier(fileA));
-		float selectionFactor = InteractionContextManager.getScalingFactors().get(InteractionEvent.Kind.SELECTION).getValue();	
+		float selectionFactor = InteractionContextManager.getScalingFactors()
+				.get(InteractionEvent.Kind.SELECTION)
+				.getValue();
 		// TODO: should use selectionFactor test instead
 		assertTrue(elementA.getInterest().getValue() <= selectionFactor && elementA.getInterest().isInteresting());
 //		assertEquals(selectionFactor, elementA.getInterest().getValue());

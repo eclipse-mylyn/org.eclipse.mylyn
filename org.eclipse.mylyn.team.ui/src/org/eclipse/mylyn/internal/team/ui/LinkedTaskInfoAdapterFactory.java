@@ -78,7 +78,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 		if (comment == null) {
 			return null;
 		}
-		
+
 		IResource resource = getResourceForElement(object);
 		if (resource != null) {
 			TaskRepository repository = TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
@@ -108,7 +108,7 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 				// TODO: only checks first resource
 				return resources[0];
 			}
-		} 
+		}
 		if (element instanceof SynchronizeModelElement) {
 			SynchronizeModelElement modelElement = (SynchronizeModelElement) element;
 			IResource resource = modelElement.getResource();
@@ -123,12 +123,11 @@ public class LinkedTaskInfoAdapterFactory implements IAdapterFactory {
 					}
 				}
 			}
-		} 
+		}
 
 		// TODO any other resource types?
 
 		return null;
 	}
-	
-}
 
+}

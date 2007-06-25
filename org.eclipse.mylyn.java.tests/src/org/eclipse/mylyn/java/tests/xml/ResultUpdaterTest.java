@@ -56,7 +56,7 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		InteractionContext t = WorkspaceSetupHelper.getContext();
 		ContextCorePlugin.getContextManager().activateContext(t.getHandleIdentifier());// ,
-																					// t.getId());
+		// t.getId());
 		helper = new SearchPluginTestHelper(this);
 	}
 
@@ -70,9 +70,11 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// we should get all results since we are searching the entire workspace
@@ -93,9 +95,11 @@ public class ResultUpdaterTest extends TestCase implements ISearchPluginTest {
 	public void testRemoveProject() throws Exception {
 		int dos = 4;
 
-		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager().getActiveContext();
+		CompositeInteractionContext t = (CompositeInteractionContext) ContextCorePlugin.getContextManager()
+				.getActiveContext();
 		ActiveSearchNotifier notifier = new ActiveSearchNotifier(t, SOURCE_ID);
-		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(), JavaStructureBridge.CONTENT_TYPE);
+		IInteractionElement searchNode = notifier.getElement(type1.getHandleIdentifier(),
+				JavaStructureBridge.CONTENT_TYPE);
 
 		//
 		// we should get all results since we are searching the entire workspace

@@ -142,14 +142,14 @@ public class SaxContextWriter implements IInteractionContextWriter {
 
 			handler.startDocument();
 			AttributesImpl rootAttributes = new AttributesImpl();
-			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_ID, InteractionContextExternalizer.ATR_ID, "",
-					context.getHandleIdentifier());
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_ID,
+					InteractionContextExternalizer.ATR_ID, "", context.getHandleIdentifier());
 			if (context.getContentLimitedTo() != null) {
 				rootAttributes.addAttribute("", SaxContextContentHandler.ATTRIBUTE_CONTENT,
 						SaxContextContentHandler.ATTRIBUTE_CONTENT, "", context.getContentLimitedTo());
 			}
-			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_VERSION, InteractionContextExternalizer.ATR_VERSION,
-					"", "1");
+			rootAttributes.addAttribute("", InteractionContextExternalizer.ATR_VERSION,
+					InteractionContextExternalizer.ATR_VERSION, "", "1");
 
 			handler.startElement("", InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY,
 					InteractionContextExternalizer.ELMNT_INTERACTION_HISTORY, rootAttributes);
@@ -171,34 +171,34 @@ public class SaxContextWriter implements IInteractionContextWriter {
 			throw new SAXException("Can only parse writable input sources");
 		}
 	}
-	
+
 	public static Attributes createEventAttributes(InteractionEvent ie) {
 		AttributesImpl ieAttributes = new AttributesImpl();
 
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA, InteractionContextExternalizer.ATR_DELTA,
-				"", XmlStringConverter.convertToXmlString(ie.getDelta()));
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_DELTA,
+				InteractionContextExternalizer.ATR_DELTA, "", XmlStringConverter.convertToXmlString(ie.getDelta()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_END_DATE,
-				InteractionContextExternalizer.ATR_END_DATE, "", InteractionContextExternalizer.DATE_FORMAT.format(ie
-						.getEndDate()));
+				InteractionContextExternalizer.ATR_END_DATE, "",
+				InteractionContextExternalizer.DATE_FORMAT.format(ie.getEndDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_INTEREST,
 				InteractionContextExternalizer.ATR_INTEREST, "", Float.toString(ie.getInterestContribution()));
-		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND, "",
-				ie.getKind().toString());
+		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_KIND, InteractionContextExternalizer.ATR_KIND,
+				"", ie.getKind().toString());
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_NAVIGATION,
-				InteractionContextExternalizer.ATR_NAVIGATION, "", XmlStringConverter.convertToXmlString(ie
-						.getNavigation()));
+				InteractionContextExternalizer.ATR_NAVIGATION, "",
+				XmlStringConverter.convertToXmlString(ie.getNavigation()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_ORIGIN_ID,
-				InteractionContextExternalizer.ATR_ORIGIN_ID, "", XmlStringConverter.convertToXmlString(ie
-						.getOriginId()));
+				InteractionContextExternalizer.ATR_ORIGIN_ID, "",
+				XmlStringConverter.convertToXmlString(ie.getOriginId()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_START_DATE,
-				InteractionContextExternalizer.ATR_START_DATE, "", InteractionContextExternalizer.DATE_FORMAT.format(ie
-						.getDate()));
+				InteractionContextExternalizer.ATR_START_DATE, "",
+				InteractionContextExternalizer.DATE_FORMAT.format(ie.getDate()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_HANDLE,
-				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "", XmlStringConverter.convertToXmlString(ie
-						.getStructureHandle()));
+				InteractionContextExternalizer.ATR_STRUCTURE_HANDLE, "",
+				XmlStringConverter.convertToXmlString(ie.getStructureHandle()));
 		ieAttributes.addAttribute("", InteractionContextExternalizer.ATR_STRUCTURE_KIND,
-				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "", XmlStringConverter.convertToXmlString(ie
-						.getStructureKind()));
+				InteractionContextExternalizer.ATR_STRUCTURE_KIND, "",
+				XmlStringConverter.convertToXmlString(ie.getStructureKind()));
 		return ieAttributes;
 	}
 }

@@ -34,7 +34,7 @@ public class UiTestUtil {
 			}
 		}
 	}
-	
+
 	public static List<Object> getAllData(Tree tree) {
 		List<TreeItem> items = new ArrayList<TreeItem>();
 		collectTreeItemsInView(tree.getItems(), items);

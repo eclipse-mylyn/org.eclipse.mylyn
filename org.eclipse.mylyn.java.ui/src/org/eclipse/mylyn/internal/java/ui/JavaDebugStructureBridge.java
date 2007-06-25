@@ -38,8 +38,8 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
 	/**
-	 * Needed due to slowness in resolving type names. We expect the stack frame
-	 * elements to disappear, they are never explicitly removed.
+	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never
+	 * explicitly removed.
 	 * 
 	 * TODO: consider clearing on each re-launch
 	 */
@@ -62,7 +62,7 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 			JDIStackFrame stackFrame = (JDIStackFrame) element;
 			try {
 				IStackFrame[] frames = stackFrame.getThread().getStackFrames();
-				
+
 				int indexOfInterestingFrame = 0;
 				int indexOfCurrentFrame = 0;
 				for (int i = 0; i < frames.length; i++) {
@@ -70,17 +70,18 @@ public class JavaDebugStructureBridge extends AbstractContextStructureBridge {
 					if (stackFrame.getName().equals(frame.getName())) {
 						indexOfCurrentFrame = i;
 					}
-					
-					IInteractionElement correspondingElement = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(frame));
+
+					IInteractionElement correspondingElement = ContextCorePlugin.getContextManager().getElement(
+							getHandleIdentifier(frame));
 					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
 						indexOfInterestingFrame = i;
 					}
-				} 
+				}
 				return indexOfCurrentFrame > indexOfInterestingFrame;
 			} catch (DebugException e) {
 				return false;
 			}
-		} 
+		}
 		return element instanceof JDIStackFrame;
 	}
 

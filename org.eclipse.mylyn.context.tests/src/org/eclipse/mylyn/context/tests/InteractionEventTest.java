@@ -23,5 +23,5 @@ public class InteractionEventTest extends AbstractContextTest {
 		Thread.sleep(1000);
 		InteractionEvent copy = InteractionEvent.makeCopy(original, original.getInterestContribution());
 		assertEquals(original, copy);
-	} 
+	}
 }

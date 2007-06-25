@@ -79,14 +79,14 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 		IResource[] resources = null;
 
 		if (element instanceof ActiveChangeSet) {
-			resources = ((ActiveChangeSet)element).getResources();
+			resources = ((ActiveChangeSet) element).getResources();
 		} else if (element instanceof DiffChangeSet) {
-			resources = ((DiffChangeSet)element).getResources();
+			resources = ((DiffChangeSet) element).getResources();
 		} else if (element instanceof LinkedTaskInfo) {
-			LinkedTaskInfo linkedTaskInfo = (LinkedTaskInfo)element;
+			LinkedTaskInfo linkedTaskInfo = (LinkedTaskInfo) element;
 			ChangeSet changeSet = linkedTaskInfo.getChangeSet();
 			resources = changeSet.getResources();
-		} 
+		}
 
 		Set<IResource> resourcesToAdd = new HashSet<IResource>();
 		if (resources != null) {
@@ -95,22 +95,22 @@ public class AddToTaskContextAction extends Action implements IViewActionDelegat
 			for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();) {
 				Object object = iterator.next();
 				if (object instanceof IResource) {
-					resourcesToAdd.add((IResource)object);
+					resourcesToAdd.add((IResource) object);
 				} else if (object instanceof SynchronizeModelElement) {
-					resourcesToAdd.add(((SynchronizeModelElement)object).getResource());
+					resourcesToAdd.add(((SynchronizeModelElement) object).getResource());
 				} else if (object instanceof IAdaptable) {
-					Object adapted = ((IAdaptable)object).getAdapter(IResource.class);
+					Object adapted = ((IAdaptable) object).getAdapter(IResource.class);
 					if (adapted != null) {
-						resourcesToAdd.add((IResource)adapted);
+						resourcesToAdd.add((IResource) adapted);
 					}
-				} 
+				}
 			}
 		}
-			
+
 		if (!resourcesToAdd.isEmpty()) {
 			ResourcesUiBridgePlugin.getInterestUpdater().addResourceToContext(resourcesToAdd,
 					InteractionEvent.Kind.SELECTION);
-		}else {
+		} else {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), LABEL,
 					"No resources to add.");
 		}

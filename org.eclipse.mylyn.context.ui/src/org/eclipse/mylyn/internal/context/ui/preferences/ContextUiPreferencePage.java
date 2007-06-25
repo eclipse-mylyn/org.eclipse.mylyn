@@ -46,9 +46,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	private Button manageExpansionButton = null;
 
 	/**
-	 * Constructor - set preference store to MylarUiPlugin store since the
-	 * tasklist plugin needs access to the values stored from the preference
-	 * page because it needs access to the highlighters on start up.
+	 * Constructor - set preference store to MylarUiPlugin store since the tasklist plugin needs access to the values
+	 * stored from the preference page because it needs access to the highlighters on start up.
 	 * 
 	 */
 	public ContextUiPreferencePage() {
@@ -89,15 +88,17 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	public boolean performOk() {
 		getPreferenceStore().setValue(ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE,
 				autoEnableExplorerFilter.getSelection());
-		
+
 		getPreferenceStore().setValue(ContextUiPrefContstants.HIGHLIGHTER_PREFIX,
 				ContextUiPlugin.getDefault().getHighlighterList().externalizeToString());
 //		getPreferenceStore().setValue(ContextUiPrefContstants.INTEREST_FILTER_EXCLUSION,
 //				exclusionFieldEditor.getStringValue());
-		
+
 		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EDITORS, manageEditorsButton.getSelection());
-		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES, managePerspectivesButton.getSelection());
-		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION, manageExpansionButton.getSelection());
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES,
+				managePerspectivesButton.getSelection());
+		getPreferenceStore().setValue(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION,
+				manageExpansionButton.getSelection());
 
 		return true;
 	}
@@ -113,8 +114,8 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 	}
 
 	/**
-	 * Handle RestoreDefaults Note: changes to default are not stored in the
-	 * preference store until OK or Apply is pressed
+	 * Handle RestoreDefaults Note: changes to default are not stored in the preference store until OK or Apply is
+	 * pressed
 	 */
 	@Override
 	public void performDefaults() {
@@ -150,28 +151,29 @@ public class ContextUiPreferencePage extends PreferencePage implements IWorkbenc
 
 		managePerspectivesButton = new Button(group, SWT.CHECK);
 		managePerspectivesButton.setText("Open last used perspective on task activation");
-		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
-		
+		managePerspectivesButton.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES));
+
 		autoEnableExplorerFilter = new Button(group, SWT.CHECK);
 		autoEnableExplorerFilter.setText("Toggle focused mode on navigator views when task activated");
 		autoEnableExplorerFilter.setSelection(getPreferenceStore().getBoolean(
 				ContextUiPrefContstants.NAVIGATORS_AUTO_FILTER_ENABLE));
-				
+
 		manageEditorsButton = new Button(group, SWT.CHECK);
 		manageEditorsButton.setText("Manage open editors with task context (Recommended)");
 		manageEditorsButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS));
-		
+
 		String prefName = WorkbenchMessages.WorkbenchPreference_reuseEditors;
 		if (getContainer() instanceof IWorkbenchPreferenceContainer) {
 			String message = "<a>''{0}''</a> \"" + prefName + "\" will turn off when task activated";
-			new PreferenceLinkArea(group, SWT.NONE,
-					"org.eclipse.ui.preferencePages.Editors", message, (IWorkbenchPreferenceContainer) getContainer(),
-					null);
+			new PreferenceLinkArea(group, SWT.NONE, "org.eclipse.ui.preferencePages.Editors", message,
+					(IWorkbenchPreferenceContainer) getContainer(), null);
 		}
 
 		manageExpansionButton = new Button(group, SWT.CHECK);
 		manageExpansionButton.setText("Automatically maintain expansion of focused tree views (Recommended)");
-		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EXPANSION));
+		manageExpansionButton.setSelection(getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.AUTO_MANAGE_EXPANSION));
 
 		return;
 	}

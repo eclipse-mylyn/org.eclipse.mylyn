@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2004 - 2006 University Of British Columbia and others.
+ * Copyright (c) 2004 - 2006 University Of British Columbia and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,9 +31,9 @@ import org.eclipse.ui.IWorkingSetUpdater;
 public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IInteractionContextListener {
 
 	private static TaskContextWorkingSetManager INSTANCE = new TaskContextWorkingSetManager();
-	
+
 	private List<TaskContextWorkingSetManager> workingSetUpdaters = null;
-	
+
 	public void addWorkingSetManager(TaskContextWorkingSetManager updater) {
 		if (workingSetUpdaters == null) {
 			workingSetUpdaters = new ArrayList<TaskContextWorkingSetManager>();
@@ -48,7 +48,7 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 		else
 			return workingSetUpdaters.get(0);
 	}
-	
+
 	/** Should only ever have 1 working set */
 	private List<IWorkingSet> workingSets = new ArrayList<IWorkingSet>();
 
@@ -76,7 +76,7 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 	public void contextDeactivated(IInteractionContext context) {
 		updateWorkingSet();
 	}
-	
+
 	public void contextCleared(IInteractionContext context) {
 		updateWorkingSet();
 	}
@@ -122,7 +122,8 @@ public class TaskContextWorkingSetManager implements IWorkingSetUpdater, IIntera
 	public static void getElementsFromTaskscape(List<IAdaptable> elements) {
 		// IMylarContext t = ContextCorePlugin.getContextManager().getActiveContext();
 		for (IInteractionElement node : ContextCorePlugin.getContextManager().getInterestingDocuments()) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					node.getContentType());
 
 			// HACK comparing extension to string
 			// No need to add bugzilla resources to the taskscape

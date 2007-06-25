@@ -22,7 +22,7 @@ public class AllTeamTests {
 
 		suite.addTestSuite(ChangeSetManagerTest.class);
 		suite.addTestSuite(CommitTemplateTest.class);
-		
+
 		//$JUnit-END$
 		return suite;
 	}

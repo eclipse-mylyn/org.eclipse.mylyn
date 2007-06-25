@@ -45,7 +45,10 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		assertNotNull(IdeUiBridgePlugin.getDefault());
-		changeSetManager = (ContextActiveChangeSetManager)FocusedTeamUiPlugin.getDefault().getContextChangeSetManagers().iterator().next();
+		changeSetManager = (ContextActiveChangeSetManager) FocusedTeamUiPlugin.getDefault()
+				.getContextChangeSetManagers()
+				.iterator()
+				.next();
 		collector = CVSUIPlugin.getPlugin().getChangeSetManager();
 		assertNotNull(changeSetManager);
 		assertNull(TasksUiPlugin.getTaskListManager().getTaskList().getActiveTask());
@@ -100,7 +103,7 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		assertEquals(0, collector.getSets().length); // deleted because no
 		// active resources
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
-		
+
 		// TODO: test with resource
 	}
 
@@ -121,13 +124,13 @@ public class ChangeSetManagerTest extends AbstractResourceContextTest {
 		ContextChangeSet set = changeSets.get(0);
 		IResource[] resources = set.getResources();
 		// can have .project file in there
-		assertTrue("length: " + resources.length, resources.length <= 2); 
+		assertTrue("length: " + resources.length, resources.length <= 2);
 
 		for (int i = 0; i < 1 / (scaling.getDecay().getValue()) * 3; i++) {
 			ContextCorePlugin.getContextManager().processInteractionEvent(mockSelection());
 		}
 		assertTrue("" + fileElement.getInterest().getValue(), fileElement.getInterest().getValue() < 0);
-		assertTrue("length: " + resources.length, resources.length <= 2); 
+		assertTrue("length: " + resources.length, resources.length <= 2);
 
 		TasksUiPlugin.getTaskListManager().deactivateTask(task1);
 	}

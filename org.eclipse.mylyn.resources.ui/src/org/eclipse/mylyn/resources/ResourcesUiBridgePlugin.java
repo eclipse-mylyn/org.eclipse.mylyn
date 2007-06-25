@@ -42,16 +42,16 @@ import org.osgi.framework.BundleContext;
  * Main entry point for the Resource Structure Bridge.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.resources.ui";
-	
+
 	private static ResourcesUiBridgePlugin INSTANCE;
 
 	private ResourceChangeMonitor resourceChangeMonitor = new ResourceChangeMonitor();
-	
+
 	private ContextEditorManager editorManager = new ContextEditorManager();
 
 	private ResourceInteractionMonitor resourceInteractionMonitor;
@@ -59,15 +59,15 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	private EditorInteractionMonitor interestEditorTracker = new EditorInteractionMonitor();
 
 	private ResourceInterestUpdater interestUpdater = new ResourceInterestUpdater();
-	
+
 	private ResourceBundle resourceBundle;
-	
+
 	private static final String PREF_STORE_DELIM = ", ";
 
 	public static final String PREF_RESOURCES_IGNORED = "org.eclipse.mylyn.ide.resources.ignored.pattern";
 
 	public static final String PREF_VAL_DEFAULT_RESOURCES_IGNORED = ".*" + PREF_STORE_DELIM;
-	
+
 	public ResourcesUiBridgePlugin() {
 		super();
 		INSTANCE = this;
@@ -88,7 +88,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeMonitor,
 				IResourceChangeEvent.POST_CHANGE);
-		
+
 		interestEditorTracker.install(PlatformUI.getWorkbench());
 	}
 
@@ -101,7 +101,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			super.stop(context);
 			INSTANCE = null;
 			resourceBundle = null;
-			
+
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeMonitor);
 			ContextCorePlugin.getContextManager().removeListener(editorManager);
 			MonitorUiPlugin.getDefault().getSelectionMonitors().remove(resourceInteractionMonitor);
@@ -109,14 +109,15 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			StatusHandler.fail(e, "Mylar XML stop failed", false);
 		}
 	}
-	
+
 	private void initPreferenceDefaults() {
 		getPreferenceStore().setDefault(PREF_RESOURCES_IGNORED, PREF_VAL_DEFAULT_RESOURCES_IGNORED);
 	}
 
 	public List<IResource> getInterestingResources(IInteractionContext context) {
 		List<IResource> interestingResources = new ArrayList<IResource>();
-		Collection<IInteractionElement> resourceElements = ContextCorePlugin.getContextManager().getInterestingDocuments(context);
+		Collection<IInteractionElement> resourceElements = ContextCorePlugin.getContextManager()
+				.getInterestingDocuments(context);
 		for (IInteractionElement element : resourceElements) {
 			IResource resource = getResourceForElement(element, false);
 			if (resource != null) {
@@ -139,7 +140,7 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 		Set<String> ignored = new HashSet<String>();
 		String read = getPreferenceStore().getString(PREF_RESOURCES_IGNORED);
 		if (read != null) {
- 			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
+			StringTokenizer st = new StringTokenizer(read, PREF_STORE_DELIM);
 			while (st.hasMoreTokens()) {
 				ignored.add(st.nextToken());
 			}
@@ -150,11 +151,12 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 	public static ResourceInterestUpdater getInterestUpdater() {
 		return INSTANCE.interestUpdater;
 	}
-	
+
 	public IResource getResourceForElement(IInteractionElement element, boolean findContainingResource) {
 		if (element == null)
 			return null;
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IResource) {
 			return (IResource) object;
@@ -175,15 +177,15 @@ public class ResourcesUiBridgePlugin extends AbstractUIPlugin {
 			return null;
 		}
 	}
-	
+
 	public void setResourceMonitoringEnabled(boolean enabled) {
 		resourceChangeMonitor.setEnabled(enabled);
 	}
-	
+
 	public static ContextEditorManager getEditorManager() {
 		return INSTANCE.editorManager;
 	}
-	
+
 	public static ResourcesUiBridgePlugin getDefault() {
 		return INSTANCE;
 	}

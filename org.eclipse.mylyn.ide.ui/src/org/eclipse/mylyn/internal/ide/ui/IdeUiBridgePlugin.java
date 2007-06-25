@@ -17,9 +17,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author Mik Kersten
  */
 public class IdeUiBridgePlugin extends AbstractUIPlugin {
-	
+
 	public static final String PLUGIN_ID = "org.eclipse.mylyn.ide";
-	
+
 	private static IdeUiBridgePlugin INSTANCE;
 
 	public static final ImageDescriptor EDGE_REF_XML = getImageDescriptor("icons/elcl16/edge-ref-xml.gif");
@@ -33,8 +33,7 @@ public class IdeUiBridgePlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 * 
 	 * @param path
 	 *            the path

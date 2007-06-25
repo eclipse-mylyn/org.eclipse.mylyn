@@ -35,7 +35,7 @@ import org.osgi.framework.BundleContext;
  * Main entry point for the Context Core API.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class ContextCorePlugin extends Plugin {
 
@@ -232,8 +232,8 @@ public class ContextCorePlugin extends Plugin {
 			if (childContentTypes == null) {
 				// CopyOnWriteArrayList handles concurrent access to the content types
 				childContentTypes = new CopyOnWriteArrayList<String>();
-			} 	
-			
+			}
+
 			childContentTypes.add(bridge.getContentType());
 			childContentTypeMap.put(bridge.getParentContentType(), childContentTypes);
 		}

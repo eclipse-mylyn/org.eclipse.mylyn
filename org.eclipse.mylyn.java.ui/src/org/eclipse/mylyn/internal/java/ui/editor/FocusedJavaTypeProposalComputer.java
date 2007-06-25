@@ -18,14 +18,14 @@ import org.eclipse.jdt.internal.ui.text.java.JavaTypeCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 
 /**
- * @author 	Mik Kersten
+ * @author Mik Kersten
  */
 public class FocusedJavaTypeProposalComputer extends JavaTypeCompletionProposalComputer {
- 
+
 	public FocusedJavaTypeProposalComputer() {
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {

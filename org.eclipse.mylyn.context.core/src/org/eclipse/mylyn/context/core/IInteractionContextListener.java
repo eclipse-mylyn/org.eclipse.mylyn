@@ -13,12 +13,11 @@ package org.eclipse.mylyn.context.core;
 
 import java.util.List;
 
-
 /**
  * Notified of changes to the context model activity.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IInteractionContextListener {
 
@@ -31,16 +30,15 @@ public interface IInteractionContextListener {
 	 * The context has been deactivated, e.g. as a result of a task deactivation.
 	 */
 	public void contextDeactivated(IInteractionContext context);
-	
+
 	/**
 	 * The context has been cleared, typically done by the user.
 	 */
 	public void contextCleared(IInteractionContext context);
 
 	/**
-	 * Called when the interest level for multiple elements changes, sorted
-	 * according to the containment hierarchy. The last element is the element
-	 * invoking the change.
+	 * Called when the interest level for multiple elements changes, sorted according to the containment hierarchy. The
+	 * last element is the element invoking the change.
 	 */
 	public void interestChanged(List<IInteractionElement> elements);
 
@@ -57,6 +55,6 @@ public interface IInteractionContextListener {
 	public void landmarkRemoved(IInteractionElement element);
 
 	public void elementDeleted(IInteractionElement element);
-	
+
 	public void relationsChanged(IInteractionElement element);
 }

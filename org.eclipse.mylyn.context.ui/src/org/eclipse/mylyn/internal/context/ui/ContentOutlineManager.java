@@ -33,7 +33,7 @@ public class ContentOutlineManager implements IPartListener {
 		}
 //		}
 	}
-	
+
 	public void partActivated(IWorkbenchPart part) {
 		// ignore
 	}

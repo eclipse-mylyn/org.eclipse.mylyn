@@ -45,20 +45,21 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public String getParentHandle(String handle) {
-		
+
 		IResource resource = (IResource) getObjectForHandle(handle);
 		if (resource != null) {
 			IContainer parent = resource.getParent();
 			// try to adapt to the corresponding content type's parent
 			if (resource instanceof IFile) {
 				for (String contentType : ContextCorePlugin.getDefault().getChildContentTypes(CONTENT_TYPE)) {
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(contentType);
+					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+							contentType);
 					Object adaptedParent = parentBridge.getAdaptedParent(resource);
 					// HACK: only returns first
 					if (adaptedParent != null) {
 						return parentBridge.getHandleIdentifier(adaptedParent);
 					}
-				} 
+				}
 			}
 			return getHandleIdentifier(parent);
 		} else {
@@ -105,15 +106,15 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 		}
 		if (object instanceof IResource) {
 			return ((IResource) object).getFullPath().toPortableString();
-			
-		}else if (object instanceof IAdaptable) {
+
+		} else if (object instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) object;
 			Object adapter = adaptable.getAdapter(IResource.class);
-			if(adapter instanceof IResource){
+			if (adapter instanceof IResource) {
 				return ((IResource) adapter).getFullPath().toPortableString();
 			}
-			
-		} 
+
+		}
 		return null;
 	}
 
@@ -157,16 +158,16 @@ public class ResourceStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean acceptsObject(Object object) {
-		if(object instanceof IResource){
+		if (object instanceof IResource) {
 			return true;
 		}
-		if(object instanceof IAdaptable){
+		if (object instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) object;
 			Object adapter = adaptable.getAdapter(IResource.class);
-			if(adapter instanceof IResource){
+			if (adapter instanceof IResource) {
 				return true;
 			}
-			
+
 		}
 		return false;
 	}

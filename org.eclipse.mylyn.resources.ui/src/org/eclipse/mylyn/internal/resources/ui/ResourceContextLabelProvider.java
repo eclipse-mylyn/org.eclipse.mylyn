@@ -28,8 +28,8 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 
 	@Override
 	public Image getImage(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
-				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				ResourceStructureBridge.CONTENT_TYPE);
 		Object object = bridge.getObjectForHandle(node.getHandleIdentifier());
 		return getImageForObject(object);
 	}
@@ -55,8 +55,8 @@ public class ResourceContextLabelProvider extends AbstractContextLabelProvider {
 	 */
 	@Override
 	public String getText(IInteractionElement node) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault()
-				.getStructureBridge(ResourceStructureBridge.CONTENT_TYPE);
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				ResourceStructureBridge.CONTENT_TYPE);
 		return bridge.getLabel(bridge.getObjectForHandle(node.getHandleIdentifier()));
 	}
 

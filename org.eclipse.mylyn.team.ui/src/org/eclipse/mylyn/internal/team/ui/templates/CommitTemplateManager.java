@@ -40,7 +40,7 @@ public class CommitTemplateManager {
 	private static final String ELEM_TEMPLATE_HANDLER = "templateVariable";
 
 	private static final String EXT_POINT_TEMPLATE_HANDLERS = "commitTemplates";
-	
+
 	public String generateComment(AbstractTask task, String template) {
 		return processKeywords(task, template);
 	}
@@ -57,9 +57,9 @@ public class CommitTemplateManager {
 			int templateNewline = template.indexOf('\n');
 			String templateFirstLineIndex = template;
 			if (templateNewline != -1) {
-				templateFirstLineIndex = template.substring(0, templateNewline-1);
+				templateFirstLineIndex = template.substring(0, templateNewline - 1);
 			}
-			
+
 			String regex = getTaskIdRegEx(templateFirstLineIndex);
 
 			int commentNewlineIndex = comment.indexOf('\n');
@@ -67,10 +67,10 @@ public class CommitTemplateManager {
 			if (commentNewlineIndex != -1) {
 				commentFirstLine = comment.substring(0, commentNewlineIndex);
 			}
-			
+
 			Pattern pattern = Pattern.compile(regex);
 			Matcher matcher = pattern.matcher(commentFirstLine);
-						
+
 			if (matcher.find()) {
 				return matcher.group(1);
 			}
@@ -81,7 +81,7 @@ public class CommitTemplateManager {
 		return null;
 	}
 
-	public String getTaskIdRegEx(String template) { 
+	public String getTaskIdRegEx(String template) {
 		final String META_CHARS = " $()*+.< [\\]^{|}";
 		final String TASK_ID_PLACEHOLDER = "\uffff";
 		final String KEYWORD_PLACEHOLDER = "\ufffe";
@@ -149,7 +149,7 @@ public class CommitTemplateManager {
 					if (handler != null) {
 						(handler).setDescription(description);
 						(handler).setRecognizedKeyword(foundKeyword);
-					} 
+					}
 //					else {
 //						String recognizedKeyword = handler.getRecognizedKeyword();
 //						if (recognizedKeyword == null || !recognizedKeyword.equals(foundKeyword)) {
@@ -194,8 +194,8 @@ public class CommitTemplateManager {
 		for (String string : evaluated) {
 			buffer.append(string);
 		}
-		
- 		return buffer.toString();
+
+		return buffer.toString();
 	}
 
 	private String processKeyword(AbstractTask task, String keyword) {

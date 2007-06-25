@@ -42,8 +42,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 		if (object instanceof IResource) {
 			IResource resource = (IResource) object;
 			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
-			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION, bridge
-					.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
+			InteractionEvent selectionEvent = new InteractionEvent(InteractionEvent.Kind.SELECTION,
+					bridge.getContentType(), bridge.getHandleIdentifier(resource), part.getSite().getId());
 			ContextCorePlugin.getContextManager().processInteractionEvent(selectionEvent);
 		}
 	}
@@ -101,7 +101,8 @@ public class EditorInteractionMonitor extends AbstractEditorTracker {
 				Object adapter = editorPart.getEditorInput().getAdapter(IResource.class);
 				if (adapter instanceof IResource) {
 					IResource resource = (IResource) adapter;
-					AbstractContextStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(resource);
+					AbstractContextStructureBridge resourceBridge = ContextCorePlugin.getDefault().getStructureBridge(
+							resource);
 					element = ContextCorePlugin.getContextManager().getElement(
 							resourceBridge.getHandleIdentifier(resource));
 				}

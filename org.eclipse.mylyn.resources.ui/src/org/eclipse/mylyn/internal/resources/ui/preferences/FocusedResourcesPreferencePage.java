@@ -48,7 +48,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	public void init(IWorkbench workbench) {
 		// ignore
 	}
-	
+
 	@Override
 	protected Control createContents(Composite parent) {
 		createExcludesTable(parent);
@@ -62,7 +62,7 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 		GridLayout layout = new GridLayout(1, false);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setLayout(layout);
-		
+
 		Composite composite = new Composite(group, SWT.NULL);
 		layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -152,8 +152,8 @@ public class FocusedResourcesPreferencePage extends PreferencePage implements IW
 	}
 
 	private void addIgnore() {
-		InputDialog dialog = new InputDialog(getShell(), "Add Ignored Resource",
-				"Enter pattern (* = any string)", null, null); // 
+		InputDialog dialog = new InputDialog(getShell(), "Add Ignored Resource", "Enter pattern (* = any string)",
+				null, null); // 
 		dialog.open();
 		if (dialog.getReturnCode() != Window.OK)
 			return;

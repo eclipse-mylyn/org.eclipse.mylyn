@@ -40,7 +40,7 @@ import org.osgi.service.prefs.Preferences;
 /**
  * @author Mik Kersten
  */
-public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/ implements IAdaptable {
+public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/implements IAdaptable {
 
 	// HACK: copied from super
 	private static final String CTX_TITLE = "title";
@@ -68,8 +68,7 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/ impl
 	}
 
 	/**
-	 * Encodes the handle in the title, since init won't get called on this
-	 * class.
+	 * Encodes the handle in the title, since init won't get called on this class.
 	 */
 	@Override
 	public void save(Preferences prefs) {
@@ -169,7 +168,8 @@ public class ContextChangeSet extends CVSActiveChangeSet/*ActiveChangeSet*/ impl
 		if (Platform.isRunning() && ResourcesUiBridgePlugin.getDefault() != null && task.isActive()) {
 			// TODO: if super is always managed correctly should remove
 			// following line
-			allResources.addAll(ResourcesUiBridgePlugin.getDefault().getInterestingResources(ContextCorePlugin.getContextManager().getActiveContext()));
+			allResources.addAll(ResourcesUiBridgePlugin.getDefault().getInterestingResources(
+					ContextCorePlugin.getContextManager().getActiveContext()));
 		}
 		return new ArrayList<IResource>(allResources);
 	}

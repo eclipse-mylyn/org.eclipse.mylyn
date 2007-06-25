@@ -39,7 +39,8 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void open(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				element.getContentType());
 		if (bridge == null) {
 			return;
 		} else {
@@ -54,7 +55,8 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		try {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorDescriptor editorDescriptor = IDE.getDefaultEditor(file);
-			if (editorDescriptor != null && editorDescriptor.isInternal() && !editorDescriptor.isOpenInPlace() && !isContextIgnoring(editorDescriptor)) {
+			if (editorDescriptor != null && editorDescriptor.isInternal() && !editorDescriptor.isOpenInPlace()
+					&& !isContextIgnoring(editorDescriptor)) {
 				IDE.openEditor(activePage, file, activate);
 			}
 		} catch (PartInitException e) {
@@ -73,7 +75,8 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 
 	@Override
 	public void close(IInteractionElement element) {
-		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(element.getContentType());
+		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+				element.getContentType());
 		Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 		if (object instanceof IFile) {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -81,7 +84,7 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 				IEditorReference[] references = page.getEditorReferences();
 				for (int i = 0; i < references.length; i++) {
 					IEditorPart editorPart = references[i].getEditor(false);
-						if (editorPart != null) {
+					if (editorPart != null) {
 						IEditorInput input = editorPart.getEditorInput();
 						if (input != null) {
 							Object adapter = input.getAdapter(IResource.class);
@@ -115,7 +118,8 @@ public class ResourceUiBridge extends AbstractContextUiBridge {
 		Object adapter = input.getAdapter(IResource.class);
 		if (adapter instanceof IFile) {
 			IFile javaElement = (IFile) adapter;
-			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(javaElement);
+			String handle = ContextCorePlugin.getDefault().getStructureBridge(javaElement).getHandleIdentifier(
+					javaElement);
 			return ContextCorePlugin.getContextManager().getElement(handle);
 		} else {
 			return null;

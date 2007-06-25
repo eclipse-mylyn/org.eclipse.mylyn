@@ -30,13 +30,12 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.swt.widgets.Tree;
 
 /**
- * A generic degree-of-interest viewer filter that can be applied to any
- * StructuredViewer. It figures out whether an object is interesting by getting
- * it's handle from the corresponding structure bridge.
+ * A generic degree-of-interest viewer filter that can be applied to any StructuredViewer. It figures out whether an
+ * object is interesting by getting it's handle from the corresponding structure bridge.
  * 
  * @author Mik Kersten
  * @author Christian Dupuis (bug 193003)
- * @since	2.0
+ * @since 2.0
  */
 public class InterestFilter extends ViewerFilter {
 
@@ -53,8 +52,7 @@ public class InterestFilter extends ViewerFilter {
 			}
 			if (isTemporarilyUnfiltered(parent)) {
 				return true;
-			} else if (temporarilyUnfiltered instanceof Tree 
-					&& isRootElement(object)) {
+			} else if (temporarilyUnfiltered instanceof Tree && isRootElement(object)) {
 				return true;
 			}
 

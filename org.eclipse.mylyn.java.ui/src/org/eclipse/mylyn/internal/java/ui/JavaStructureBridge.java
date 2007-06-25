@@ -80,13 +80,13 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public Object getAdaptedParent(Object object) {
 		if (object instanceof IFile) {
-			IFile file = (IFile)object;
+			IFile file = (IFile) object;
 			return JavaCore.create(file.getParent());
 		} else {
 			return super.getAdaptedParent(object);
 		}
 	}
-	
+
 	@Override
 	public String getParentHandle(String handle) {
 		IJavaElement javaElement = (IJavaElement) getObjectForHandle(handle);
@@ -113,7 +113,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 						if (childHandle != null)
 							childHandles.add(childHandle);
 					}
-					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
+					AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+							parentContentType);
 					if (parentBridge != null && parentBridge instanceof ResourceStructureBridge) {
 						if (element.getElementType() < IJavaElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
@@ -152,14 +153,14 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			return ((IJavaElement) object).getHandleIdentifier();
 		} else {
 			if (object instanceof IAdaptable) {
-				Object adapter = ((IAdaptable)object).getAdapter(IJavaElement.class);
+				Object adapter = ((IAdaptable) object).getAdapter(IJavaElement.class);
 				if (adapter instanceof IJavaElement) {
 					return ((IJavaElement) adapter).getHandleIdentifier();
 				}
 			} else if (isWtpClass(object)) {
 				return getWtpElementHandle(object);
-			} 
-		} 
+			}
+		}
 		return null;
 	}
 
@@ -216,21 +217,20 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 
 		boolean accepts = object instanceof IJavaElement || object instanceof PackageFragmentRootContainer
 				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
-				|| object instanceof IPackageFragment || object instanceof WorkingSet 
-				|| isWtpClass(object);
-		
+				|| object instanceof IPackageFragment || object instanceof WorkingSet || isWtpClass(object);
+
 		return accepts;
 	}
 
 	/**
-	 * Uses special rules for classpath containers since these do not have an
-	 * associated interest, i.e. they're not IJavaElement(s).
+	 * Uses special rules for classpath containers since these do not have an associated interest, i.e. they're not
+	 * IJavaElement(s).
 	 */
 	@Override
 	public boolean canFilter(Object object) {
 		if (object instanceof ClassPathContainer.RequiredProjectWrapper) {
 			return true;
-		} else if (object instanceof PackageFragmentRootContainer) { 
+		} else if (object instanceof PackageFragmentRootContainer) {
 			// since not in model, check if it contains anything interesting
 			PackageFragmentRootContainer container = (PackageFragmentRootContainer) object;
 
@@ -238,7 +238,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof JarPackageFragmentRoot) {
 					JarPackageFragmentRoot element = (JarPackageFragmentRoot) children[i];
-					IInteractionElement node = ContextCorePlugin.getContextManager().getElement(element.getHandleIdentifier());
+					IInteractionElement node = ContextCorePlugin.getContextManager().getElement(
+							element.getHandleIdentifier());
 					if (node != null && node.getInterest().isInteresting()) {
 						return false;
 					}
@@ -250,7 +251,8 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 				IAdaptable[] elements = workingSet.getElements();
 				for (int i = 0; i < elements.length; i++) {
 					IAdaptable adaptable = elements[i];
-					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(getHandleIdentifier(adaptable));
+					IInteractionElement element = ContextCorePlugin.getContextManager().getElement(
+							getHandleIdentifier(adaptable));
 					if (element.getInterest().isInteresting())
 						return false;
 				}
@@ -364,4 +366,3 @@ public class JavaStructureBridge extends AbstractContextStructureBridge {
 		return false;
 	}
 }
-

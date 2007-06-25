@@ -100,8 +100,8 @@ public class InteractionContextManager {
 	private CompositeInteractionContext activeContext = new CompositeInteractionContext();
 
 	/**
-	 * Global contexts do not participate in the regular activation lifecycle
-	 * but are instead activated and deactivated by clients.
+	 * Global contexts do not participate in the regular activation lifecycle but are instead activated and deactivated
+	 * by clients.
 	 */
 	private Map<String, InteractionContext> globalContexts = new HashMap<String, InteractionContext>();
 
@@ -158,8 +158,8 @@ public class InteractionContextManager {
 	}
 
 	public void resetActivityHistory() {
-		activityMetaContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME, InteractionContextManager
-				.getScalingFactors());
+		activityMetaContext = new InteractionContext(CONTEXT_HISTORY_FILE_NAME,
+				InteractionContextManager.getScalingFactors());
 		saveActivityContext();
 	}
 
@@ -250,7 +250,8 @@ public class InteractionContextManager {
 		}
 		for (InteractionContext globalContext : globalContexts.values()) {
 			if (globalContext.getContentLimitedTo().equals(event.getStructureKind())) {
-				List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, globalContext, propagateToParents);
+				List<IInteractionElement> interestDelta = internalProcessInteractionEvent(event, globalContext,
+						propagateToParents);
 				if (notifyListeners && !alreadyNotified) {
 					notifyInterestDelta(interestDelta);
 				}
@@ -393,8 +394,8 @@ public class InteractionContextManager {
 		}
 
 		if (parentHandle != null) {
-			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION, bridge
-					.getContentType(node.getHandleIdentifier()), parentHandle, SOURCE_ID_MODEL_PROPAGATION,
+			InteractionEvent propagationEvent = new InteractionEvent(InteractionEvent.Kind.PROPAGATION,
+					bridge.getContentType(node.getHandleIdentifier()), parentHandle, SOURCE_ID_MODEL_PROPAGATION,
 					CONTAINMENT_PROPAGATION_ID, propagatedIncrement);
 			IInteractionElement previous = interactionContext.get(propagationEvent.getStructureHandle());
 			if (previous != null && previous.getInterest() != null) {
@@ -407,8 +408,9 @@ public class InteractionContextManager {
 						parentNode.getContentType(), parentNode.getHandleIdentifier(), SOURCE_ID_DECAY_CORRECTION,
 						parentOffset));
 			}
-			if (previous != null && isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
-					.isPropagated(), parentNode)) {
+			if (previous != null
+					&& isInterestDelta(previousInterest, previous.getInterest().isPredicted(), previous.getInterest()
+							.isPropagated(), parentNode)) {
 				interestDelta.add(0, parentNode);
 			}
 			propegateInterestToParents(interactionContext, kind, parentNode, previousInterest, decayOffset, level,
@@ -622,7 +624,7 @@ public class InteractionContextManager {
 			if (!wasPaused) {
 				setContextCapturePaused(true);
 			}
-			
+
 			context.collapse();
 			externalizer.writeContextToXml(context, getFileForContext(context.getHandleIdentifier()));
 			if (contextFiles == null) {
@@ -843,8 +845,8 @@ public class InteractionContextManager {
 			}
 		}
 		if (changeValue > 0) {
-			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION, element
-					.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
+			InteractionEvent interactionEvent = new InteractionEvent(InteractionEvent.Kind.MANIPULATION,
+					element.getContentType(), element.getHandleIdentifier(), sourceId, changeValue);
 			processInteractionEvent(interactionEvent);
 		} else if (changeValue < 0) {
 			delete(element);
@@ -971,8 +973,8 @@ public class InteractionContextManager {
 	public void removeGlobalContext(InteractionContext context) {
 		globalContexts.remove(context.getHandleIdentifier());
 	}
-	
-	public Collection<InteractionContext> getGlobalContexts() {	
+
+	public Collection<InteractionContext> getGlobalContexts() {
 		return globalContexts.values();
 	}
 }

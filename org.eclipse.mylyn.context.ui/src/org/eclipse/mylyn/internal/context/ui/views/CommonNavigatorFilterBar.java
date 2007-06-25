@@ -178,29 +178,26 @@ public class CommonNavigatorFilterBar extends Composite {
 	// ----------------- below based on FilteredTree ---------------
 
 	/**
-	 * The filter text widget to be used by this tree. This value may be
-	 * <code>null</code> if there is no filter widget, or if the controls have
-	 * not yet been created.
+	 * The filter text widget to be used by this tree. This value may be <code>null</code> if there is no filter
+	 * widget, or if the controls have not yet been created.
 	 */
 	protected Text filterText;
 
 	/**
-	 * The control representing the clear button for the filter text entry. This
-	 * value may be <code>null</code> if no such button exists, or if the
-	 * controls have not yet been created.
+	 * The control representing the clear button for the filter text entry. This value may be <code>null</code> if no
+	 * such button exists, or if the controls have not yet been created.
 	 */
 	protected ToolBarManager filterToolBar;
 
 	/**
-	 * The viewer for the filtered tree. This value should never be
-	 * <code>null</code> after the widget creation methods are complete.
+	 * The viewer for the filtered tree. This value should never be <code>null</code> after the widget creation
+	 * methods are complete.
 	 */
 	protected TreeViewer treeViewer;
 
 	/**
-	 * The Composite on which the filter controls are created. This is used to
-	 * set the background color of the filter controls to match the surrounding
-	 * controls.
+	 * The Composite on which the filter controls are created. This is used to set the background color of the filter
+	 * controls to match the surrounding controls.
 	 */
 	protected Composite filterComposite;
 
@@ -225,10 +222,9 @@ public class CommonNavigatorFilterBar extends Composite {
 	protected Composite parent;
 
 	/**
-	 * Whether or not to show the filter controls (text and clear button). The
-	 * default is to show these controls. This can be overridden by providing a
-	 * setting in the product configuration file. The setting to add to not show
-	 * these controls is:
+	 * Whether or not to show the filter controls (text and clear button). The default is to show these controls. This
+	 * can be overridden by providing a setting in the product configuration file. The setting to add to not show these
+	 * controls is:
 	 * 
 	 * org.eclipse.ui/SHOW_FILTERED_TEXTS=false
 	 */
@@ -247,9 +243,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	private static final String DCLEAR_ICON = "org.eclipse.ui.internal.dialogs.DCLEAR_ICON"; //$NON-NLS-1$
 
 	/**
-	 * Maximum time spent expanding the tree after the filter text has been
-	 * updated (this is only used if we were able to at least expand the visible
-	 * nodes)
+	 * Maximum time spent expanding the tree after the filter text has been updated (this is only used if we were able
+	 * to at least expand the visible nodes)
 	 */
 	private static final long SOFT_MAX_EXPAND_TIME = 200;
 
@@ -290,9 +285,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Create the filter controls. By default, a text and corresponding tool bar
-	 * button that clears the contents of the text is created. Subclasses may
-	 * override.
+	 * Create the filter controls. By default, a text and corresponding tool bar button that clears the contents of the
+	 * text is created. Subclasses may override.
 	 * 
 	 * @param parent
 	 *            parent <code>Composite</code> of the filter controls
@@ -306,7 +300,7 @@ public class CommonNavigatorFilterBar extends Composite {
 			// initially there is no text to clear
 			filterToolBar.getControl().setVisible(false);
 		}
-		
+
 		filterText.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -320,10 +314,9 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Creates and set up the tree and tree viewer. This method calls
-	 * {@link #doCreateTreeViewer(Composite, int)} to create the tree viewer.
-	 * Subclasses should override {@link #doCreateTreeViewer(Composite, int)}
-	 * instead of overriding this method.
+	 * Creates and set up the tree and tree viewer. This method calls {@link #doCreateTreeViewer(Composite, int)} to
+	 * create the tree viewer. Subclasses should override {@link #doCreateTreeViewer(Composite, int)} instead of
+	 * overriding this method.
 	 * 
 	 * @param parent
 	 *            parent <code>Composite</code>
@@ -431,11 +424,11 @@ public class CommonNavigatorFilterBar extends Composite {
 
 					if (text.length() > 0 && !initial) {
 						// NOTE: is this in the wrong place in fitleredTree???
-						
+
 						// enabled toolbar - there is text to clear
 						// and the list is currently being filtered
 						updateToolbar(true);
-						
+
 						/*
 						 * Expand elements one at a time. After each is
 						 * expanded, check to see if the filter text has been
@@ -468,8 +461,7 @@ public class CommonNavigatorFilterBar extends Composite {
 			}
 
 			/**
-			 * Returns true if the job should be canceled (because of timeout or
-			 * actual cancellation).
+			 * Returns true if the job should be canceled (because of timeout or actual cancellation).
 			 * 
 			 * @param items
 			 * @param provider
@@ -515,10 +507,9 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Creates the filter text and adds listeners. This method calls
-	 * {@link #doCreateFilterText(Composite)} to create the text control.
-	 * Subclasses should override {@link #doCreateFilterText(Composite)} instead
-	 * of overriding this method.
+	 * Creates the filter text and adds listeners. This method calls {@link #doCreateFilterText(Composite)} to create
+	 * the text control. Subclasses should override {@link #doCreateFilterText(Composite)} instead of overriding this
+	 * method.
 	 * 
 	 * @param parent
 	 *            <code>Composite</code> of the filter text
@@ -630,8 +621,7 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Creates the text control for entering the filter text. Subclasses may
-	 * override.
+	 * Creates the text control for entering the filter text. Subclasses may override.
 	 * 
 	 * @param parent
 	 *            the parent composite
@@ -665,8 +655,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Clears the text in the filter text widget. Also removes the optional
-	 * additional filter that is provided via addFilter(ViewerFilter).
+	 * Clears the text in the filter text widget. Also removes the optional additional filter that is provided via
+	 * addFilter(ViewerFilter).
 	 */
 	protected void clearText() {
 		setFilterText(""); //$NON-NLS-1$
@@ -704,8 +694,7 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Get the filter text for the receiver, if it was created. Otherwise return
-	 * <code>null</code>.
+	 * Get the filter text for the receiver, if it was created. Otherwise return <code>null</code>.
 	 * 
 	 * @return the filter Text, or null if it was not created
 	 */
@@ -714,8 +703,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Convenience method to return the text of the filter control. If the text
-	 * widget is not created, then null is returned.
+	 * Convenience method to return the text of the filter control. If the text widget is not created, then null is
+	 * returned.
 	 * 
 	 * @return String in the text, or null if the text does not exist
 	 */
@@ -724,9 +713,8 @@ public class CommonNavigatorFilterBar extends Composite {
 	}
 
 	/**
-	 * Set the text that will be shown until the first focus. A default value is
-	 * provided, so this method only need be called if overriding the default
-	 * initial text is desired.
+	 * Set the text that will be shown until the first focus. A default value is provided, so this method only need be
+	 * called if overriding the default initial text is desired.
 	 * 
 	 * @param text
 	 *            initial text to appear in text field

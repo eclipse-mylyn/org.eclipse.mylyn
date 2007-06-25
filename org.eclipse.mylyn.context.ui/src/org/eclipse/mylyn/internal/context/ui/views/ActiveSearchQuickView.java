@@ -85,8 +85,7 @@ public class ActiveSearchQuickView {
 	private static final String STORE_DISABLE_RESTORE_LOCATION = "DISABLE_RESTORE_LOCATION"; //$NON-NLS-1$
 
 	/**
-	 * Dialog store constant for the location's x-coordinate, location's
-	 * y-coordinate and the size's width and height.
+	 * Dialog store constant for the location's x-coordinate, location's y-coordinate and the size's width and height.
 	 */
 	private static final String STORE_LOCATION_X = "location.x"; //$NON-NLS-1$
 
@@ -97,8 +96,7 @@ public class ActiveSearchQuickView {
 	private static final String STORE_SIZE_HEIGHT = "size.height"; //$NON-NLS-1$
 
 	/**
-	 * The name of the dialog store's section associated with the inplace
-	 * XReference view.
+	 * The name of the dialog store's section associated with the inplace XReference view.
 	 */
 	private static final String sectionName = "org.eclipse.contribution.internal.xref.QuickXRef"; //$NON-NLS-1$
 
@@ -248,8 +246,8 @@ public class ActiveSearchQuickView {
 
 		viewer.setContentProvider(new ContextContentProvider(dialogShell, true));
 		// viewer.setLabelProvider(new TaskscapeNodeLabelProvider());
-		viewer.setLabelProvider(new DecoratingLabelProvider(new DelegatingContextLabelProvider(), PlatformUI
-				.getWorkbench().getDecoratorManager().getLabelDecorator()));
+		viewer.setLabelProvider(new DecoratingLabelProvider(new DelegatingContextLabelProvider(),
+				PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
 		// viewer.setLabelProvider(new
 		// MylarAppearanceAwareLabelProvider(viewer));
 
@@ -743,8 +741,8 @@ public class ActiveSearchQuickView {
 	// }
 
 	/**
-	 * Static inner class which sets the layout for the inplace view. Without
-	 * this, the inplace view will not be populated.
+	 * Static inner class which sets the layout for the inplace view. Without this, the inplace view will not be
+	 * populated.
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.text.AbstractInformationControl
 	 */

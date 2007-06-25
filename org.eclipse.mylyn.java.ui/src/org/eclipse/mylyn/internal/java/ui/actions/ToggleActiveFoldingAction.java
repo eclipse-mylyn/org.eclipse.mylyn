@@ -62,11 +62,12 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 				JavaPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
 			}
 			action.setChecked(on);
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, on);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED,
+					on);
 		} catch (Throwable t) {
 			StatusHandler.fail(t, "Could not enable editor management", true);
 		}
-	} 
+	}
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		// don't care when the active editor changes

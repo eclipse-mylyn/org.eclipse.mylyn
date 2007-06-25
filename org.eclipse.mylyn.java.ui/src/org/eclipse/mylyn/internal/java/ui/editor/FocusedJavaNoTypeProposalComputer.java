@@ -20,14 +20,14 @@ import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 
 /**
- * @author 	Mik Kersten
+ * @author Mik Kersten
  */
 public class FocusedJavaNoTypeProposalComputer extends JavaNoTypeCompletionProposalComputer {
 
 	public FocusedJavaNoTypeProposalComputer() {
 		FocusedJavaProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
-	
+
 	@Override
 	protected CompletionProposalCollector createCollector(JavaContentAssistInvocationContext context) {
 		return super.createCollector(context);

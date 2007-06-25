@@ -42,8 +42,8 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
  */
 public class InteractionContextTestUtil {
 
-	public static void setupTestConfiguration(Set<IType> contextTestCases, ILaunchConfiguration configuration, IProgressMonitor pm)
-			throws CoreException {
+	public static void setupTestConfiguration(Set<IType> contextTestCases, ILaunchConfiguration configuration,
+			IProgressMonitor pm) throws CoreException {
 		String testKindId = TestKindRegistry.JUNIT3_TEST_KIND_ID;
 
 		IJavaProject javaProject = null;
@@ -62,7 +62,7 @@ public class InteractionContextTestUtil {
 
 		// HACK: only checks first type
 		if (contextTestCases.size() > 0) {
-			testKindId = TestKindRegistry.getContainerTestKindId(contextTestCases.iterator().next());				
+			testKindId = TestKindRegistry.getContainerTestKindId(contextTestCases.iterator().next());
 			workingCopy.setAttribute(JUnitLaunchConfigurationConstants.ATTR_TEST_RUNNER_KIND, testKindId);
 			//			testKind = TestKindRegistry.getDefault().getKind(configuration);// contextTestCases.iterator().next());
 		}
@@ -71,7 +71,9 @@ public class InteractionContextTestUtil {
 
 	public static Set<IType> getTestCasesInContext() {
 		Set<IType> testTypes = new HashSet<IType>();
-		List<IInteractionElement> interesting = ContextCorePlugin.getContextManager().getActiveContext().getInteresting();
+		List<IInteractionElement> interesting = ContextCorePlugin.getContextManager()
+				.getActiveContext()
+				.getInteresting();
 		AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 				JavaStructureBridge.CONTENT_TYPE);
 		try {

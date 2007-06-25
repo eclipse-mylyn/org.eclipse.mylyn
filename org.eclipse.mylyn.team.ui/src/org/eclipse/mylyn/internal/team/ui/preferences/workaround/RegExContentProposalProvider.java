@@ -19,13 +19,11 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 /**
  * Content assist proposal provider for regular expressions.
  * <p>
- * Note: Replaces <code>RegExContentAssistProcessor</code> which was
- * introduced in 3.0.
+ * Note: Replaces <code>RegExContentAssistProcessor</code> which was introduced in 3.0.
  * </p>
  * Copied from org.eclipse.ui.texteditor.RegExContentProposalProvider.
  * <p>
- * Needed by
- * org.eclipse.mylyn.internal.team.ui.preferences.workaround.MylarTeamPreferencePage.
+ * Needed by org.eclipse.mylyn.internal.team.ui.preferences.workaround.MylarTeamPreferencePage.
  * <p>
  * TODO Ask platform guys to open this API
  * 
@@ -94,8 +92,7 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 		private final ArrayList fProposals;
 
 		/**
-		 * <code>true</code> iff <code>fExpression</code> ends with an open
-		 * escape.
+		 * <code>true</code> iff <code>fExpression</code> ends with an open escape.
 		 */
 		private final boolean fIsEscape;
 
@@ -343,8 +340,7 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 		 * @param proposal
 		 *            the string to be inserted
 		 * @param cursorPosition
-		 *            the cursor position after insertion, relative to the start
-		 *            of the proposal
+		 *            the cursor position after insertion, relative to the start of the proposal
 		 * @param displayString
 		 *            the proposal's label
 		 * @param additionalInfo
@@ -369,14 +365,12 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 		}
 
 		/**
-		 * Adds a proposal. Ensures that existing pre- and postfixes are not
-		 * duplicated.
+		 * Adds a proposal. Ensures that existing pre- and postfixes are not duplicated.
 		 * 
 		 * @param proposal
 		 *            the string to be inserted
 		 * @param cursorPosition
-		 *            the cursor position after insertion, relative to the start
-		 *            of the proposal
+		 *            the cursor position after insertion, relative to the start of the proposal
 		 * @param displayString
 		 *            the proposal's label
 		 * @param additionalInfo
@@ -407,8 +401,7 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 		}
 
 		/**
-		 * Adds a proposal that starts with a backslash. Ensures that the
-		 * backslash is not repeated if already typed.
+		 * Adds a proposal that starts with a backslash. Ensures that the backslash is not repeated if already typed.
 		 * 
 		 * @param proposal
 		 *            the string to be inserted
@@ -436,8 +429,8 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 	}
 
 	/**
-	 * <code>true</code> iff the processor is for the find field.
-	 * <code>false</code> iff the processor is for the replace field.
+	 * <code>true</code> iff the processor is for the find field. <code>false</code> iff the processor is for the
+	 * replace field.
 	 */
 	private final boolean fIsFind;
 
@@ -445,9 +438,8 @@ public final class RegExContentProposalProvider implements IContentProposalProvi
 	 * Creates a new completion proposal provider.
 	 * 
 	 * @param isFind
-	 *            <code>true</code> if the provider is used for the 'find'
-	 *            field <code>false</code> if the provider is used for the
-	 *            'reaplce' field
+	 *            <code>true</code> if the provider is used for the 'find' field <code>false</code> if the provider
+	 *            is used for the 'reaplce' field
 	 */
 	public RegExContentProposalProvider(boolean isFind) {
 		fIsFind = isFind;

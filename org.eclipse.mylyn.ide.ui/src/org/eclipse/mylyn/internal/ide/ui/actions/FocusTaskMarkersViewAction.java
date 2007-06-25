@@ -41,7 +41,7 @@ public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 					method.setAccessible(true);
 					cachedViewer = (StructuredViewer) method.invoke(viewPart, new Object[] {});
 					updateMarkerViewLabelProvider(cachedViewer);
-				} 
+				}
 			} catch (Exception e) {
 				StatusHandler.log(e, "couldn't get task view list viewer");
 			}
@@ -57,7 +57,7 @@ public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 //			viewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) currentProvider));
 //		}
 //	}
-	
+
 //	public void propertyChange(PropertyChangeEvent event) {
 //		// ignore
 //	}
@@ -72,7 +72,7 @@ public class FocusTaskMarkersViewAction extends AbstractFocusMarkerViewAction {
 //	protected void uninstallInterestFilter(StructuredViewer viewer) {
 //		super.uninstallInterestFilter(viewer);
 //	}
-	
+
 //	@Override
 //	public List<Class> getPreservedFilters() {
 //		return Collections.emptyList();

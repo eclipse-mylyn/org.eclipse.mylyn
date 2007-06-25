@@ -24,13 +24,13 @@ public class TaskResourceMappingActionProvider extends CommonActionProvider {
 	private OpenCorrespondingTaskAction openCorrespondingAction = new OpenCorrespondingTaskAction();
 
 	private AddToTaskContextAction addToTaskContextAction = new AddToTaskContextAction();
-	
+
 	@Override
 	public void fillContextMenu(IMenuManager menuManager) {
 		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 		openCorrespondingAction.selectionChanged(openCorrespondingAction, selection);
 		addToTaskContextAction.selectionChanged(addToTaskContextAction, selection);
-		
+
 		menuManager.insertAfter(ICommonMenuConstants.GROUP_ADDITIONS, openCorrespondingAction);
 		menuManager.insertAfter(ICommonMenuConstants.GROUP_ADDITIONS, addToTaskContextAction);
 	}

@@ -26,28 +26,28 @@ import org.eclipse.mylyn.internal.resources.ui.ResourceChangeMonitor;
 public class ResourceChangeMonitorTest extends TestCase {
 
 	private ResourceChangeMonitor changeMonitor = new ResourceChangeMonitor();
-	
+
 	public void testExclusionPattern() {
 		Set<String> patterns = new HashSet<String>();
 		patterns.add(".*");
 		patterns.add("target");
-		
+
 		IPath path1 = new Path(".foo");
 		assertTrue(changeMonitor.isExcluded(path1, patterns));
-		
+
 		IPath path2 = new Path("target/bar");
 		assertTrue(changeMonitor.isExcluded(path2, patterns));
-		
+
 		IPath path3 = new Path("bar/target/bar");
 		assertTrue(changeMonitor.isExcluded(path3, patterns));
-		
+
 		IPath path4 = new Path("bla/bla");
 		assertFalse(changeMonitor.isExcluded(path4, patterns));
 	}
-	
+
 	public void testInclusion() {
 		IPath path4 = new Path("bla/bla");
 		assertFalse(changeMonitor.isExcluded(path4, new HashSet<String>()));
 	}
-	
+
 }

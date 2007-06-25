@@ -55,10 +55,10 @@ public class JavaUiUtil {
 	public static final String ASSIST_MYLAR_NOTYPE = "org.eclipse.mylyn.java.javaNoTypeProposalCategory";
 
 	public static final String ASSIST_JDT_TYPE = "org.eclipse.jdt.ui.javaTypeProposalCategory";
-	
+
 	public static final String ASSIST_JDT_NOTYPE = "org.eclipse.jdt.ui.javaNoTypeProposalCategory";
 
-	public static final String ASSIST_JDT_TEMPLATE= "org.eclipse.jdt.ui.templateProposalCategory";
+	public static final String ASSIST_JDT_TEMPLATE = "org.eclipse.jdt.ui.templateProposalCategory";
 
 	public static final String ASSIST_MYLAR_TEMPLATE = "org.eclipse.mylyn.java.templateProposalCategory";
 

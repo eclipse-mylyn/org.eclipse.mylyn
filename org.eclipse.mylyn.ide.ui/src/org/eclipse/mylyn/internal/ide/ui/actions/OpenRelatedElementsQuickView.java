@@ -42,7 +42,9 @@ public class OpenRelatedElementsQuickView implements IWorkbenchWindowActionDeleg
 		Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		inplaceDialog = new ActiveSearchQuickView(parent);
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
-		inplaceDialog.setWorkbenchPart(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		inplaceDialog.setWorkbenchPart(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
 				.getActivePart());
 		inplaceDialog.open(activeNode);
 	}

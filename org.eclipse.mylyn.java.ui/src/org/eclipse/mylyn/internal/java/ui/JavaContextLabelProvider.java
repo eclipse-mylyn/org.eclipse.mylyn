@@ -42,8 +42,7 @@ public class JavaContextLabelProvider extends AppearanceAwareLabelProvider {
 
 	private static final String LABEL_ELEMENT_MISSING = "<missing element>";
 
-	private static final ImageDescriptor EDGE_REF_JUNIT = JavaUiBridgePlugin
-			.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
+	private static final ImageDescriptor EDGE_REF_JUNIT = JavaUiBridgePlugin.getImageDescriptor("icons/elcl16/edge-ref-junit.gif");
 
 	public JavaContextLabelProvider() {
 		super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,

@@ -21,15 +21,14 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Class to activate the inplace Cross Reference view, via the key binding
- * defined in the plugin.xml.
+ * Class to activate the inplace Cross Reference view, via the key binding defined in the plugin.xml.
  * 
  * @author Mik Kersten
  */
 public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowActionDelegate {
 
-
 	private QuickContextPopupDialog inplaceDialog;
+
 	public void dispose() {
 		inplaceDialog = null;
 	}
@@ -44,7 +43,7 @@ public class OpenQuickContextPopupDialogAction implements IWorkbenchWindowAction
 		// TODO: remember size settings
 //		inplaceDialog.setSize(400, 500);
 		inplaceDialog.open();
-		inplaceDialog.setFocus();	
+		inplaceDialog.setFocus();
 		// inplaceDialog.setLastSelection(XRefUIUtils.getCurrentSelection());
 	}
 

@@ -28,7 +28,7 @@ public class FocusProjectExplorerAction extends FocusCommonNavigatorAction {
 	public FocusProjectExplorerAction() {
 		super(new InterestFilter(), true, true, true);
 	}
-	
+
 	protected FocusProjectExplorerAction(InterestFilter filter) {
 		super(filter, true, true, true);
 	}

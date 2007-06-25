@@ -28,29 +28,34 @@ public class CommitTemplateTest extends TestCase {
 	public void testRepositoryTaskCommentParsing() {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
-		
+
 		AbstractTask task = new MockRepositoryTask("12345");
 		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template);
-		
-		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+
+		String taskId = FocusedTeamUiPlugin.getDefault()
+				.getCommitTemplateManager()
+				.getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
 
 	public void testRepositoryTaskCommentParsingMultiline() {
 		String template = FocusedTeamUiPlugin.getDefault().getPreferenceStore().getString(
 				FocusedTeamUiPlugin.COMMIT_TEMPLATE);
-		
+
 		AbstractTask task = new MockRepositoryTask("12345");
-		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template) + "\n";
-		
-		String taskId = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().getTaskIdFromCommentOrLabel(comment);
+		String comment = FocusedTeamUiPlugin.getDefault().getCommitTemplateManager().generateComment(task, template)
+				+ "\n";
+
+		String taskId = FocusedTeamUiPlugin.getDefault()
+				.getCommitTemplateManager()
+				.getTaskIdFromCommentOrLabel(comment);
 		assertEquals("12345", taskId);
 	}
-	
+
 	public void testRegex() {
 		String comment = "task 123: label for handle-123";
 		String regex = ".*\\ (\\d+):\\ .*";
-		
+
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(comment);
 		assertTrue(matcher.find());
@@ -58,7 +63,7 @@ public class CommitTemplateTest extends TestCase {
 //			return matcher.group(1);
 //		}
 	}
-	
+
 //	public void testLocalTaskCommentParsing() {	
 //		ITask task = new Task("handle", "foo", false);
 //		task.setUrl("http://eclipse.org/mylar");
@@ -74,5 +79,5 @@ public class CommitTemplateTest extends TestCase {
 //		String url2 = ContextChangeSet.getUrlFromComment(comment2);
 //		assertEquals("http://eclipse.org/mylar", url2);
 //	}
-	
+
 }

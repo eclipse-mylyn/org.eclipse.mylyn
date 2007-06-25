@@ -128,7 +128,6 @@ public class XmlNodeHelper {
 	public int hashCode() {
 		return getHandle().hashCode();
 	}
-	
 
 	/**
 	 * Get the contents of an InputStream

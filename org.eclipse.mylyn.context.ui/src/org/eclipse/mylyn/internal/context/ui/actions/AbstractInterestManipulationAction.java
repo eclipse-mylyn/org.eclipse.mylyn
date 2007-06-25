@@ -86,8 +86,13 @@ public abstract class AbstractInterestManipulationAction implements IViewActionD
 						try {
 							// NOTE: need to set the selection null so the
 							// automatic reselection does not induce interest
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart()
-									.getSite().getSelectionProvider().setSelection(null);
+							PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow()
+									.getActivePage()
+									.getActivePart()
+									.getSite()
+									.getSelectionProvider()
+									.setSelection(null);
 						} catch (Exception e) {
 							// ignore
 						}

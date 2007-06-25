@@ -53,7 +53,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);
@@ -79,7 +79,7 @@ public class ContentOutlineRefreshTest extends AbstractJavaContextTest {
 
 //		action.run();
 		action.updateInterestFilter(true, viewer);
-		
+
 		assertEquals(0, UiTestUtil.countItemsInTree(viewer.getTree()));
 
 		StructuredSelection sm1 = new StructuredSelection(m1);

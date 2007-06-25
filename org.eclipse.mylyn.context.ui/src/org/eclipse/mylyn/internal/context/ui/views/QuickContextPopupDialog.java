@@ -55,24 +55,23 @@ import org.eclipse.ui.navigator.CommonViewer;
  * 
  * @author Mik Kersten
  */
-public class QuickContextPopupDialog extends PopupDialog implements
-		IInformationControl, IInformationControlExtension,
+public class QuickContextPopupDialog extends PopupDialog implements IInformationControl, IInformationControlExtension,
 		IInformationControlExtension2, DisposeListener {
 
 	public static final String ID_VIEWER = "org.eclipse.mylyn.context.ui.navigator.context.quick";
-	
+
 	private CommonViewer commonViewer;
-	
+
 	private InterestFilter interestFilter = new InterestFilter();
-	
-	private Text fFilterText;	
-	
+
+	private Text fFilterText;
+
 	private StringMatcher fStringMatcher;
-	
+
 	private QuickOutlinePatternAndInterestFilter namePatternFilter;
-	
-	private ContextNodeOpenListener openListener; 
-	
+
+	private ContextNodeOpenListener openListener;
+
 	public QuickContextPopupDialog(Shell parent, int shellStyle) {
 		super(parent, shellStyle, true, true, true, true, null, "Task Context");
 		create();
@@ -83,34 +82,34 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		// nothing additional to dispose
 		return super.close();
 	}
-	
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		createViewer(parent);
 		createUIListenersTreeViewer();
 		addDisposeListener(this);
-			
+
 		return commonViewer.getControl();
 	}
-	
+
 	private void createViewer(Composite parent) {
 		commonViewer = createCommonViewer(parent);
-		
+
 		openListener = new ContextNodeOpenListener(commonViewer);
-		
-		commonViewer.addOpenListener(openListener); 
+
+		commonViewer.addOpenListener(openListener);
 		commonViewer.getTree().addMouseListener(openListener);
-		
+
 		commonViewer.addFilter(interestFilter);
-		
+
 		namePatternFilter = new QuickOutlinePatternAndInterestFilter();
 		commonViewer.addFilter(namePatternFilter);
-		
+
 		try {
 			commonViewer.getControl().setRedraw(false);
-			
+
 			ContextEditorFormPage.forceFlatLayoutOfJavaContent(commonViewer);
-			
+
 			commonViewer.setInput(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getInput());
 			commonViewer.expandAll();
 		} finally {
@@ -127,7 +126,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	protected Point getInitialSize() {
 		return new Point(400, 500);
 	}
-	
+
 	@Override
 	protected void fillDialogMenu(IMenuManager dialogMenu) {
 		dialogMenu.add(new Separator());
@@ -137,20 +136,21 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	private void createUIListenersTreeViewer() {
 		final Tree tree = commonViewer.getTree();
 		tree.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e)  {
-				if (e.character == 0x1B) { 
+			public void keyPressed(KeyEvent e) {
+				if (e.character == 0x1B) {
 					// Dispose on ESC key press
 					dispose();
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 				// ignore
 			}
-		});		
-		
+		});
+
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseUp(MouseEvent e) { 
+			public void mouseUp(MouseEvent e) {
 				handleTreeViewerMouseUp(tree, e);
 			}
 		});
@@ -159,16 +159,15 @@ public class QuickContextPopupDialog extends PopupDialog implements
 			public void widgetSelected(SelectionEvent e) {
 				// ignore
 			}
+
 			public void widgetDefaultSelected(SelectionEvent e) {
 				gotoSelectedElement();
 			}
-		});		
-	}	
+		});
+	}
 
 	private void handleTreeViewerMouseUp(final Tree tree, MouseEvent e) {
-		if ((tree.getSelectionCount() < 1) ||
-				(e.button != 1) ||
-				(tree.equals(e.getSource()) == false)) {
+		if ((tree.getSelectionCount() < 1) || (e.button != 1) || (tree.equals(e.getSource()) == false)) {
 			return;
 		}
 		// Selection is made in the selection changed listener
@@ -177,8 +176,8 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		if (selection.equals(object)) {
 			gotoSelectedElement();
 		}
-	}	
-	
+	}
+
 	private Object getSelectedElement() {
 		if (commonViewer == null) {
 			return null;
@@ -204,8 +203,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	}
 
 	public boolean isFocusControl() {
-		if (commonViewer.getControl().isFocusControl() ||
-				fFilterText.isFocusControl()) {
+		if (commonViewer.getControl().isFocusControl() || fFilterText.isFocusControl()) {
 			return true;
 		}
 		return false;
@@ -248,13 +246,12 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		 * the call to constrainShellSize in PopupDialog.open will still ensure that the shell is
 		 * entirely visible.
 		 */
-		if ((getPersistBounds() == false) || 
-				(getDialogSettings() == null)) {
+		if ((getPersistBounds() == false) || (getDialogSettings() == null)) {
 			getShell().setLocation(location);
 		}
 	}
 
-	public void setSize(int width, int height) {	
+	public void setSize(int width, int height) {
 		getShell().setSize(width, height);
 	}
 
@@ -272,8 +269,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	}
 
 	public boolean hasContents() {
-		if ((commonViewer == null) ||
-				(commonViewer.getInput() == null)) {
+		if ((commonViewer == null) || (commonViewer.getInput() == null)) {
 			return false;
 		}
 		return true;
@@ -290,10 +286,9 @@ public class QuickContextPopupDialog extends PopupDialog implements
 
 	public void widgetDisposed(DisposeEvent e) {
 		// Note: We do not reuse the dialog
-		commonViewer= null;
-		fFilterText= null;
+		commonViewer = null;
+		fFilterText = null;
 	}
-
 
 	@Override
 	protected Control createTitleControl(Composite parent) {
@@ -316,11 +311,11 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		gc.dispose();
 		// Create the layout
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		data.heightHint= Dialog.convertHeightInCharsToPixels(fontMetrics, 1);
+		data.heightHint = Dialog.convertHeightInCharsToPixels(fontMetrics, 1);
 		data.horizontalAlignment = GridData.FILL;
 		data.verticalAlignment = GridData.CENTER;
 		fFilterText.setLayoutData(data);
-	}	
+	}
 
 	/**
 	 * 
@@ -331,7 +326,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 			return;
 		}
 		dispose();
-	}	
+	}
 
 	private void createUIListenersFilterText() {
 		fFilterText.addKeyListener(new KeyListener() {
@@ -350,16 +345,17 @@ public class QuickContextPopupDialog extends PopupDialog implements
 					dispose();
 				}
 			}
+
 			public void keyReleased(KeyEvent e) {
 				// NO-OP
 			}
-		});		
+		});
 		// Handle text modify events
 		fFilterText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String text = ((Text)e.widget).getText();
+				String text = ((Text) e.widget).getText();
 				int length = text.length();
-				if (length > 0) { 
+				if (length > 0) {
 					// Append a '*' pattern to the end of the text value if it
 					// does not have one already
 					if (text.charAt(length - 1) != '*') {
@@ -374,19 +370,19 @@ public class QuickContextPopupDialog extends PopupDialog implements
 				// Set and update the pattern
 				setMatcherString(text, true);
 			}
-		});		
+		});
 	}
-	
+
 	/**
 	 * Sets the patterns to filter out for the receiver.
 	 * <p>
-	 * The following characters have special meaning:
-	 *   ? => any character
-	 *   * => any string
+	 * The following characters have special meaning: ? => any character * => any string
 	 * </p>
-	 *
-	 * @param pattern the pattern
-	 * @param update <code>true</code> if the viewer should be updated
+	 * 
+	 * @param pattern
+	 *            the pattern
+	 * @param update
+	 *            <code>true</code> if the viewer should be updated
 	 */
 	private void setMatcherString(String pattern, boolean update) {
 		if (pattern.length() == 0) {
@@ -400,11 +396,11 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		if (update) {
 			stringMatcherUpdated();
 		}
-	}	
-	
+	}
+
 	/**
-	 * The string matcher has been modified. The default implementation
-	 * refreshes the view and selects the first matched element
+	 * The string matcher has been modified. The default implementation refreshes the view and selects the first matched
+	 * element
 	 */
 	private void stringMatcherUpdated() {
 		// Refresh the tree viewer to re-filter
@@ -413,11 +409,10 @@ public class QuickContextPopupDialog extends PopupDialog implements
 		commonViewer.expandAll();
 		selectFirstMatch();
 		commonViewer.getControl().setRedraw(true);
-	}	
-	
+	}
+
 	/**
-	 * Selects the first element in the tree which
-	 * matches the current filter pattern.
+	 * Selects the first element in the tree which matches the current filter pattern.
 	 */
 	private void selectFirstMatch() {
 		Tree tree = commonViewer.getTree();
@@ -435,8 +430,7 @@ public class QuickContextPopupDialog extends PopupDialog implements
 	 */
 	private Object findFirstMatchToPattern(TreeItem[] items) {
 		// Match the string pattern against labels
-		ILabelProvider labelProvider = 
-			(ILabelProvider)commonViewer.getLabelProvider();
+		ILabelProvider labelProvider = (ILabelProvider) commonViewer.getLabelProvider();
 		// Process each item in the tree
 		for (int i = 0; i < items.length; i++) {
 			Object element = items[i].getData();

@@ -15,7 +15,6 @@ package org.eclipse.mylyn.context.tests;
 
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 
-
 /**
  * @author Mik Kersten
  */

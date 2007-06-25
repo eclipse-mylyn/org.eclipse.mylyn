@@ -36,15 +36,17 @@ import org.eclipse.ui.navigator.ILinkHelper;
 public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAction {
 
 	private LinkHelperService linkService;
-	
+
 	private CommonNavigator commonNavigator;
 
-	public FocusCommonNavigatorAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters, boolean manageLinking) {
+	public FocusCommonNavigatorAction(InterestFilter interestFilter, boolean manageViewer, boolean manageFilters,
+			boolean manageLinking) {
 		super(interestFilter, manageViewer, manageFilters, manageLinking);
 	}
 
 	@Override
-	protected ISelection resolveSelection(IEditorPart editor, ITextSelection changedSelection, StructuredViewer viewer) throws CoreException {
+	protected ISelection resolveSelection(IEditorPart editor, ITextSelection changedSelection, StructuredViewer viewer)
+			throws CoreException {
 		if (commonNavigator == null) {
 			commonNavigator = (CommonNavigator) super.getPartForAction();
 		}
@@ -52,13 +54,13 @@ public abstract class FocusCommonNavigatorAction extends AbstractAutoFocusViewAc
 			linkService = new LinkHelperService((NavigatorContentService) commonNavigator.getCommonViewer()
 					.getNavigatorContentService());
 		}
-	
+
 		IEditorInput input = editor.getEditorInput();
 		ILinkHelper[] helpers = linkService.getLinkHelpersFor(editor.getEditorInput());
-	
+
 		IStructuredSelection selection = StructuredSelection.EMPTY;
 		IStructuredSelection newSelection = StructuredSelection.EMPTY;
-	
+
 		for (int i = 0; i < helpers.length; i++) {
 			selection = helpers[i].findSelection(input);
 			if (selection != null && !selection.isEmpty()) {

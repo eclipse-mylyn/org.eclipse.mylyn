@@ -68,8 +68,8 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		IMethod m1 = type1.createMethod("void m1() {\n m1(); \n}", null, true, null);
 		StructuredSelection sm1 = new StructuredSelection(m1);
 		monitor.selectionChanged(part, sm1);
-		IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(), scaling
-				.getLandmark()));
+		IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(m1.getHandleIdentifier(),
+				scaling.getLandmark()));
 
 		// force an edge on so that it shows up in the view
 		// ((MylarContextElement)((CompositeContextElement)node).getNodes().iterator().next()).addEdge(new
@@ -93,7 +93,7 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 		for (AbstractRelationProvider provider : ContextCorePlugin.getDefault().getRelationProviders()) {
 			assertTrue(provider.getCurrentDegreeOfSeparation() > 0);
 		}
-		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView"); 
+		JavaPlugin.getActivePage().showView("org.eclipse.ui.views.ProblemView");
 
 		Perspective perspective = ((WorkbenchPage) JavaPlugin.getActivePage()).getActivePerspective();
 		IViewReference reference = JavaPlugin.getActivePage().findViewReference(ActiveSearchView.ID);
@@ -121,8 +121,8 @@ public class ActiveSearchTest extends AbstractJavaContextTest {
 			IMethod m2 = type1.createMethod("void m2() { }", null, true, null);
 			StructuredSelection sm2 = new StructuredSelection(m2);
 			monitor.selectionChanged(part, sm2);
-			IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(m2.getHandleIdentifier(),
-					scaling.getLandmark()));
+			IInteractionElement node = manager.processInteractionEvent(mockInterestContribution(
+					m2.getHandleIdentifier(), scaling.getLandmark()));
 			assertEquals(1, ContextCorePlugin.getContextManager().getActiveLandmarks().size());
 
 			assertEquals(1, search(2, node).size());

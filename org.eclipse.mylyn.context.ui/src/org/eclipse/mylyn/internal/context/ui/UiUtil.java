@@ -38,7 +38,8 @@ public class UiUtil {
 			return null;
 		} else if (!resolveContextColor && (node.getInterest().isPropagated() || node.getInterest().isPredicted())) {
 			return null;
-		} else if (node.getInterest().getEncodedValue() <= InteractionContextManager.getScalingFactors().getInteresting()) {
+		} else if (node.getInterest().getEncodedValue() <= InteractionContextManager.getScalingFactors()
+				.getInteresting()) {
 			return null;
 		}
 
@@ -49,7 +50,8 @@ public class UiUtil {
 			Highlighter highlighter = ContextUiPlugin.getDefault().getHighlighterForContextId(contextId);
 			if (highlighter == null) {
 				return null;
-			} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.INTERSECTION_MODE)) {
+			} else if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					ContextUiPrefContstants.INTERSECTION_MODE)) {
 				if (isMultiple) {
 					return null;
 //					return ContextUiPlugin.getDefault().getIntersectionHighlighter().getHighlightColor();

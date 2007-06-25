@@ -36,7 +36,7 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 	private boolean isPdeMode = false;
 
 	private Image image;
-		
+
 	public TaskContextJUnitMainTab(boolean isPdeMode) {
 		this.isPdeMode = isPdeMode;
 		image = JavaUiBridgePlugin.getImageDescriptor("icons/etool16/junit-tab.gif").createImage();
@@ -92,11 +92,11 @@ public class TaskContextJUnitMainTab extends JUnitLaunchConfigurationTab {
 		// IMAGE
 		return image;
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		if(image != null && !image.isDisposed()){
+		if (image != null && !image.isDisposed()) {
 			image.dispose();
 		}
 	}

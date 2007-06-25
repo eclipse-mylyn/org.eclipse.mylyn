@@ -44,8 +44,8 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 
 	private IJavaFoldingStructureProviderExtension updater;
 
-	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCorePlugin.getDefault().getStructureBridge(
-			JavaStructureBridge.CONTENT_TYPE);
+	private static JavaStructureBridge bridge = (JavaStructureBridge) ContextCorePlugin.getDefault()
+			.getStructureBridge(JavaStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 
@@ -67,7 +67,8 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 		ContextCorePlugin.getContextManager().addListener(this);
 		ContextUiPlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
-		enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
+		enabled = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
+				ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED);
 		try {
 			Object adapter = editor.getAdapter(IJavaFoldingStructureProvider.class);
 			if (adapter instanceof IJavaFoldingStructureProviderExtension) {
@@ -152,11 +153,11 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 						updater.expandElements(new IJavaElement[] { member });
 						// expand the next 2 children down (e.g. anonymous types)
 						try {
-							IJavaElement[] children = ((IParent)member).getChildren();
+							IJavaElement[] children = ((IParent) member).getChildren();
 							if (children.length == 1) {
 								updater.expandElements(new IJavaElement[] { children[0] });
 								if (children[0] instanceof IParent) {
-									IJavaElement[] childsChildren = ((IParent)children[0]).getChildren();
+									IJavaElement[] childsChildren = ((IParent) children[0]).getChildren();
 									if (childsChildren.length == 1) {
 										updater.expandElements(new IJavaElement[] { childsChildren[0] });
 									}
@@ -174,23 +175,29 @@ public class ActiveFoldingListener implements IInteractionContextListener {
 	}
 
 	public void contextActivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	public void contextDeactivated(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
 
 	public void contextCleared(IInteractionContext context) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
+		if (ContextUiPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED)) {
 			updateFolding();
 		}
 	}
-	
+
 	public void landmarkAdded(IInteractionElement element) {
 		// ignore
 	}

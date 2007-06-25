@@ -32,7 +32,7 @@ public class FocusViewHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Object returnValue = Boolean.FALSE;
 		String viewId = event.getParameter(PARAMETER_VIEW_ID);
-		
+
 		if (viewId == null)
 			return returnValue;
 

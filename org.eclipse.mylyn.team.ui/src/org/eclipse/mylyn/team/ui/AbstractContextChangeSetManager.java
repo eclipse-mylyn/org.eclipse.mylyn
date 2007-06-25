@@ -24,12 +24,12 @@ import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
  * Manages changes sets along with task context and activation.
  * 
  * @author Mik Kersten
- * @since	1.0
+ * @since 1.0
  */
 public abstract class AbstractContextChangeSetManager implements IInteractionContextListener {
 
 	protected boolean isEnabled = false;
-		
+
 	public void enable() {
 		if (!isEnabled) {
 			ContextCorePlugin.getContextManager().addListener(this);
@@ -48,11 +48,11 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		TasksUiPlugin.getTaskListManager().getTaskList().removeChangeListener(TASK_CHANGE_LISTENER);
 		isEnabled = false;
 	}
-	
+
 	protected abstract void initContextChangeSets();
-	
+
 	protected abstract void updateChangeSetLabel(AbstractTask task);
-	
+
 	private ITaskActivityListener TASK_ACTIVITY_LISTENER = new ITaskActivityListener() {
 
 		public void taskListRead() {
@@ -62,7 +62,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		public void taskActivated(AbstractTask task) {
 			// ignore
 		}
-		
+
 		public void taskDeactivated(AbstractTask task) {
 			// ignore
 		}
@@ -77,7 +77,7 @@ public abstract class AbstractContextChangeSetManager implements IInteractionCon
 		public void containersChanged(Set<TaskContainerDelta> containers) {
 			for (TaskContainerDelta taskContainerDelta : containers) {
 				if (taskContainerDelta.getContainer() instanceof AbstractTask) {
-					AbstractTask task = (AbstractTask)taskContainerDelta.getContainer();
+					AbstractTask task = (AbstractTask) taskContainerDelta.getContainer();
 					switch (taskContainerDelta.getKind()) {
 					case CHANGED:
 						updateChangeSetLabel(task);

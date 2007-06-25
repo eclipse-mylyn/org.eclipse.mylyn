@@ -49,7 +49,7 @@ public class FocusOutlineAction extends AbstractFocusViewAction {
 		if (!super.isChecked()) {
 			return;
 		}
-		boolean on = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId()) ;
+		boolean on = ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(getGlobalPrefId());
 
 		AbstractContextUiBridge bridge = ContextUiPlugin.getDefault().getUiBridgeForEditor(editorPart);
 		List<TreeViewer> outlineViewers = bridge.getContentOutlineViewers(editorPart);

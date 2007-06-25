@@ -26,14 +26,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * This class is a bit weird since it doesn't obey the same contract as the
- * other subclasses
+ * This class is a bit weird since it doesn't obey the same contract as the other subclasses
  * 
  * @author Shawn Minto
  * @author Mik Kersten
  */
-public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction implements
-		IWorkbenchWindowActionDelegate {
+public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction implements IWorkbenchWindowActionDelegate {
 
 	private String packageViewerWrapperClassName = "org.eclipse.jdt.internal.ui.browsing.PackageViewerWrapper";
 
@@ -44,12 +42,12 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" };
 
 	private IWorkbenchWindow initWindow;
-	
+
 	public FocusBrowsingPerspectiveAction() {
 		super(new InterestFilter(), true, true, false);
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing";
 	}
-	
+
 	public void init(IWorkbenchWindow window) {
 		initWindow = window;
 		IWorkbenchPage activePage = initWindow.getActivePage();

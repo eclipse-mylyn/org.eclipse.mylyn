@@ -71,9 +71,10 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 					for (int j = 0; j < mar.length; j++) {
 						Match m = mar[j];
 						try {
-							XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(), m
-									.getOffset());
-							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(f.getName());
+							XmlNodeHelper xnode = new XmlNodeHelper(fei.getFile().getFullPath().toString(),
+									m.getOffset());
+							AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+									f.getName());
 							String handle = xnode.getHandle();
 							Object o = bridge.getObjectForHandle(handle);
 							String name = bridge.getLabel(o);
@@ -98,7 +99,7 @@ public class XmlResultUpdaterSearchListener extends TestActiveSearchListener {
 	protected void incrementInterest(IInteractionElement node, String elementKind, String elementHandle,
 			int degreeOfSeparation) {
 		int predictedInterest = 1;// (7-degreeOfSeparation) *
-									// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
+		// TaskscapeManager.getScalingFactors().getDegreeOfSeparationScale();
 		InteractionEvent event = new InteractionEvent(InteractionEvent.Kind.PREDICTION, elementKind, elementHandle,
 				XmlJavaRelationProvider.SOURCE_ID, XmlJavaRelationProvider.SOURCE_ID, null, predictedInterest);
 		ContextCorePlugin.getContextManager().processInteractionEvent(event);

@@ -39,8 +39,9 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 	public static final String WORKING_SET_NAME = "Task Context (for search)";
 
 	public TaskContextWorkingSetPage() {
-		super("org.eclipse.mylyn.monitor.ui.workingSetPage", "Mylar Task Context Working Set", ContextUiPlugin
-				.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui", "icons/wizban/banner-prefs.gif"));
+		super("org.eclipse.mylyn.monitor.ui.workingSetPage", "Mylar Task Context Working Set",
+				ContextUiPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.context.ui",
+						"icons/wizban/banner-prefs.gif"));
 		setDescription("Create the Mylar Task Context working set.  It will be updated automatically to contain\n"
 				+ "all of the resources related to the active task.");
 	}
@@ -71,8 +72,7 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 		label.setLayoutData(gd);
 
 		label = new Label(composite, SWT.WRAP);
-		label
-				.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
+		label.setText("NOTE: this working set should only be used for searches.  Do not select it in the Package Explorer.");
 		label.setFont(ContextUiPrefContstants.BOLD);
 		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
@@ -108,8 +108,8 @@ public class TaskContextWorkingSetPage extends WizardPage implements IWorkingSet
 		if (workingSet == null) {
 			IWorkingSetManager workingSetManager = ContextUiPlugin.getDefault().getWorkbench().getWorkingSetManager();
 			if ((workingSet = workingSetManager.getWorkingSet(workingSetName)) == null) {
-				workingSet = workingSetManager.createWorkingSet(workingSetName, elements
-						.toArray(new IAdaptable[elements.size()]));
+				workingSet = workingSetManager.createWorkingSet(workingSetName,
+						elements.toArray(new IAdaptable[elements.size()]));
 			}
 		}
 	}

@@ -19,7 +19,7 @@ import org.eclipse.mylyn.internal.context.core.InteractionContextRelation;
  * Virtual proxy for a structured element in the contet model.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IInteractionElement extends IInteractionObject {
 

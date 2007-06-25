@@ -11,9 +11,9 @@
 package org.eclipse.mylyn.internal.team.ui.preferences.workaround;
 
 /**
- * The classes in this package are copied from org.eclipse.ui.texteditor because
- * the class org.eclipse.ui.texteditor.RegExContentProposalProvider is not
- * public. TODO We should ask platform guys to open this API.
+ * The classes in this package are copied from org.eclipse.ui.texteditor because the class
+ * org.eclipse.ui.texteditor.RegExContentProposalProvider is not public. TODO We should ask platform guys to open this
+ * API.
  * 
  * @author Eike Stepper
  */

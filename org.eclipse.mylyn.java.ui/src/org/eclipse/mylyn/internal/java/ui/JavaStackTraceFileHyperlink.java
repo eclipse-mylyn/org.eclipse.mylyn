@@ -83,7 +83,8 @@ public class JavaStackTraceFileHyperlink implements IHyperlink {
 								IRegion line = document.getLineInformation(lineNumber);
 								textEditor.selectAndReveal(line.getOffset(), line.getLength());
 							} catch (BadLocationException e1) {
-								MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								MessageDialog.openInformation(PlatformUI.getWorkbench()
+										.getActiveWorkbenchWindow()
 										.getShell(), "Open Type", "Line not found in type.");
 							}
 							provider.disconnect(editorInput);

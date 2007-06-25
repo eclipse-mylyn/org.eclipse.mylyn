@@ -138,7 +138,7 @@ public class TaskListInterestFilter extends AbstractTaskListFilter {
 		if (task != null) {
 			AbstractTask repositoryTask = task;
 
-			if(repositoryTask.getLastReadTimeStamp() == null){
+			if (repositoryTask.getLastReadTimeStamp() == null) {
 				return true;
 			} else if (repositoryTask.getSynchronizationState() == RepositoryTaskSyncState.OUTGOING) {
 				return true;

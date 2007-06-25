@@ -41,7 +41,7 @@ public class ToggleRelationshipProviderAction extends Action implements IMenuCre
 //	private AbstractContextStructureBridge structureBridge;
 
 	private Set<AbstractRelationProvider> providers;
-	
+
 	private Menu dropDownMenu = null;
 
 	public ToggleRelationshipProviderAction(Set<AbstractRelationProvider> providers, AbstractContextUiBridge uiBridge) {

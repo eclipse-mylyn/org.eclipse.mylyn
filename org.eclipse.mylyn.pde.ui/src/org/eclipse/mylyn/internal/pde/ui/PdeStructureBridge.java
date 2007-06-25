@@ -99,7 +99,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 			}
 		} else if (object instanceof IFile) {
 			// String fileHandle = parentBridge.getParentHandle(handle);
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					parentContentType);
 			return parentBridge.getParentHandle(handle);
 		} else {
 			return null;
@@ -116,7 +117,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 		int first = handle.indexOf(";");
 		String filename = "";
 		if (first == -1) {
-			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(parentContentType);
+			AbstractContextStructureBridge parentBridge = ContextCorePlugin.getDefault().getStructureBridge(
+					parentContentType);
 			return parentBridge.getObjectForHandle(handle);
 		} else {
 			// extract the filename from the handle since it represents a node
@@ -188,8 +190,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 				IPath path = new Path(node.getModel().getUnderlyingResource().getFullPath().toString());
 				IFile file = (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-				String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor
-						.getStringOfNode(node).hashCode()).getHandle();
+				String handle = new XmlNodeHelper(file.getFullPath().toString(),
+						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
 				StatusHandler.log(e, "pde handle failed");
@@ -205,8 +207,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 				}
 				IPath path = new Path(node.getModel().getUnderlyingResource().getFullPath().toString());
 				IFile file = (IFile) ((Workspace) ResourcesPlugin.getWorkspace()).newResource(path, IResource.FILE);
-				String handle = new XmlNodeHelper(file.getFullPath().toString(), PdeEditingMonitor
-						.getStringOfNode(node).hashCode()).getHandle();
+				String handle = new XmlNodeHelper(file.getFullPath().toString(),
+						PdeEditingMonitor.getStringOfNode(node).hashCode()).getHandle();
 				return handle;
 			} catch (Exception e) {
 				StatusHandler.log(e, "pde handle failed");
@@ -253,7 +255,8 @@ public class PdeStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public boolean acceptsObject(Object object) {
 		// we only accept PluginObjectNodes and plugin.xml Files
-		if (object instanceof PluginNode || object instanceof PluginObjectNode || object instanceof BuildEntry || object instanceof PDEFormPage) {
+		if (object instanceof PluginNode || object instanceof PluginObjectNode || object instanceof BuildEntry
+				|| object instanceof PDEFormPage) {
 			return true;
 		} else if (object instanceof XmlNodeHelper) {
 			if (((XmlNodeHelper) object).getFilename().endsWith("plugin.xml"))

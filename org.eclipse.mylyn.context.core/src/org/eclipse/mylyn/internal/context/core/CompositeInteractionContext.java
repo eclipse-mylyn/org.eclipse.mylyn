@@ -32,7 +32,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
 public class CompositeInteractionContext implements IInteractionContext {
 
 	protected Map<String, InteractionContext> contexts = new HashMap<String, InteractionContext>();
-	
+
 	protected IInteractionElement activeNode = null;
 
 	public IInteractionElement addEvent(InteractionEvent event) {
@@ -135,7 +135,7 @@ public class CompositeInteractionContext implements IInteractionContext {
 	/**
 	 * Composite contexts do not have a unique handle identifier.
 	 * 
-	 * @return	null if no unique handle
+	 * @return null if no unique handle
 	 */
 	public String getHandleIdentifier() {
 		if (contexts.values().size() == 1) {

@@ -49,13 +49,12 @@ public class FocusedTeamExtensionPointReader {
 				IConfigurationElement element = elements[j];
 				if (ELEM_ACTIVE_CHANGE_SET_PROVIDER.equals(element.getName())) {
 					try {
-						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element
-								.createExecutableExtension(ATTR_CLASS);
+						AbstractActiveChangeSetProvider provider = (AbstractActiveChangeSetProvider) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addActiveChangeSetProvider(provider);
 					} catch (CoreException e) {
 						StatusHandler.log(e, MessageFormat.format(
-								"Error while initializing repository contribution {0} from plugin {1}.", element
-										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
+								"Error while initializing repository contribution {0} from plugin {1}.",
+								element.getAttribute(ATTR_CLASS), element.getContributor().getName()));
 					}
 				}
 			}
@@ -68,14 +67,13 @@ public class FocusedTeamExtensionPointReader {
 				IConfigurationElement element = elements[j];
 				if (ELEM_CHANGE_SET_MANAGER.equals(element.getName())) {
 					try {
-						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element
-								.createExecutableExtension(ATTR_CLASS);
+						AbstractContextChangeSetManager manager = (AbstractContextChangeSetManager) element.createExecutableExtension(ATTR_CLASS);
 						FocusedTeamUiPlugin.getDefault().addContextChangeSetManager(manager);
 					} catch (CoreException e) {
 						// ignore, we
 						StatusHandler.log(e, MessageFormat.format(
-								"Error while initializing repository contribution {0} from plugin {1}.", element
-										.getAttribute(ATTR_CLASS), element.getContributor().getName()));
+								"Error while initializing repository contribution {0} from plugin {1}.",
+								element.getAttribute(ATTR_CLASS), element.getContributor().getName()));
 					}
 				}
 			}

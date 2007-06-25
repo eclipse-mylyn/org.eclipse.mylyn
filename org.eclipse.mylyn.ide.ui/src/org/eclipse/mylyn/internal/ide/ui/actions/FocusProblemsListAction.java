@@ -64,13 +64,13 @@ public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 			if (viewer instanceof TableViewer) {
 				TableViewer tableViewer = (TableViewer) viewer;
 				if (!(tableViewer.getLabelProvider() instanceof MarkerViewLabelProvider)) {
-					tableViewer.setLabelProvider(new MarkerViewLabelProvider((TableViewLabelProvider) tableViewer
-							.getLabelProvider()));
+					tableViewer.setLabelProvider(new MarkerViewLabelProvider(
+							(TableViewLabelProvider) tableViewer.getLabelProvider()));
 				}
 			}
 		}
 	}
-	
+
 //	protected void updateMarkerViewLabelProvider(StructuredViewer viewer) {
 //		IBaseLabelProvider currentProvider = viewer.getLabelProvider();
 //		if (currentProvider instanceof TableViewLabelProvider && !(currentProvider instanceof MarkerViewLabelProvider)) {
@@ -81,7 +81,7 @@ public class FocusProblemsListAction extends AbstractFocusMarkerViewAction {
 //	private MarkerFilter defaultFilter = null;
 
 //	private MarkerViewerInterestSorter interestSorter = new MarkerViewerInterestSorter();
-	
+
 //	public void propertyChange(PropertyChangeEvent event) {
 //		// ignore
 //	}

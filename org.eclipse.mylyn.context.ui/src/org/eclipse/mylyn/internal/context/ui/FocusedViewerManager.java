@@ -32,12 +32,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Encapsulates the element refresh and expansion state policy for all viewers
- * showing Mylar context.
+ * Encapsulates the element refresh and expansion state policy for all viewers showing Mylar context.
  * 
  * @author Mik Kersten
  */
-public class FocusedViewerManager implements IInteractionContextListener, ISelectionListener { 
+public class FocusedViewerManager implements IInteractionContextListener, ISelectionListener {
 
 	private List<StructuredViewer> managedViewers = new ArrayList<StructuredViewer>();
 
@@ -60,7 +59,7 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 	public void dispose() {
 //		VIEWER_PART_TRACKER.dispose(PlatformUI.getWorkbench());
 	}
-	
+
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// ignore
 	}
@@ -108,7 +107,7 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 			}
 		}
 	}
-	
+
 	public void contextCleared(IInteractionContext context) {
 		contextDeactivated(context);
 	}
@@ -150,7 +149,8 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 		}
 	}
 
-	private void refreshViewer(final List<IInteractionElement> nodesToRefresh, final boolean minor, StructuredViewer viewer) {
+	private void refreshViewer(final List<IInteractionElement> nodesToRefresh, final boolean minor,
+			StructuredViewer viewer) {
 		if (viewer == null) {
 			return;
 		} else if (viewer.getControl().isDisposed()) {
@@ -190,8 +190,8 @@ public class FocusedViewerManager implements IInteractionContextListener, ISelec
 	}
 
 	private void updateExpansionState(StructuredViewer viewer, Object objectToRefresh) {
- 		if (viewer instanceof TreeViewer 
- 				&& filteredViewers.contains(viewer)
+		if (viewer instanceof TreeViewer
+				&& filteredViewers.contains(viewer)
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EXPANSION)) {
 			TreeViewer treeViewer = (TreeViewer) viewer;

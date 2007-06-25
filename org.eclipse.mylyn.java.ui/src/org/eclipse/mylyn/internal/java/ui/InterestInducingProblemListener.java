@@ -28,7 +28,7 @@ import org.eclipse.mylyn.monitor.core.StatusHandler;
 public class InterestInducingProblemListener implements IProblemChangedListener, IPropertyChangeListener {
 
 	public static final String PREDICTED_INTEREST_ERRORS = "org.eclipse.mylyn.java.ui.interest.prediction.errors";
-	
+
 	// TODO: consider getting rid of this
 	private JavaStructureBridge javaStructureBridge = new JavaStructureBridge();
 
@@ -62,8 +62,7 @@ public class InterestInducingProblemListener implements IProblemChangedListener,
 
 	public void propertyChange(PropertyChangeEvent event) {
 		if (PREDICTED_INTEREST_ERRORS.equals(event.getProperty())) {
-			if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
-					PREDICTED_INTEREST_ERRORS)) {
+			if (JavaUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(PREDICTED_INTEREST_ERRORS)) {
 				enable();
 			} else {
 				disable();

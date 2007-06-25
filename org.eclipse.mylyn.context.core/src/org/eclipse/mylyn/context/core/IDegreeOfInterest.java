@@ -19,7 +19,7 @@ import org.eclipse.mylyn.monitor.core.InteractionEvent;
  * Abstraction for capturing the interest level of elements and relations based on interaction events.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IDegreeOfInterest {
 

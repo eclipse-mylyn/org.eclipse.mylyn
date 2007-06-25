@@ -37,8 +37,8 @@ public abstract class AbstractContextTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (ContextCorePlugin.getContextManager() != null) {
-			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(), ContextCorePlugin.getContextManager()
-					.isContextActive());
+			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(),
+					ContextCorePlugin.getContextManager().isContextActive());
 		}
 	}
 
@@ -46,8 +46,8 @@ public abstract class AbstractContextTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (ContextCorePlugin.getContextManager() != null) {
-			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(), ContextCorePlugin.getContextManager()
-					.isContextActive());
+			assertFalse("" + ContextCorePlugin.getContextManager().getActiveContexts(),
+					ContextCorePlugin.getContextManager().isContextActive());
 		}
 	}
 
@@ -76,7 +76,7 @@ public abstract class AbstractContextTest extends TestCase {
 	protected InteractionEvent mockInterestContribution(String handle, float value) {
 		return mockInterestContribution(handle, MOCK_KIND, value);
 	}
-	
+
 	protected InteractionEvent mockPreferenceChange(String handle) {
 		return new InteractionEvent(InteractionEvent.Kind.PREFERENCE, MOCK_KIND, handle, MOCK_ORIGIN);
 	}

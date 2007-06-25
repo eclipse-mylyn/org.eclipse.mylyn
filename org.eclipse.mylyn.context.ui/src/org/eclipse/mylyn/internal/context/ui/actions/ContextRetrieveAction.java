@@ -51,14 +51,14 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 	private StructuredSelection selection;
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.repository.task.retrieve";
-	
+
 	public ContextRetrieveAction() {
 		setText("Retrieve...");
 		setToolTipText("Retrieve Task Context");
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_RETRIEVE);
 	}
-	
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -67,7 +67,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 	public void run() {
 		run(this);
 	}
-	
+
 	public void run(IAction action) {
 		if (task != null) {
 			run(task);
@@ -77,7 +77,9 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 				RepositoryAttachment attachment = (RepositoryAttachment) selection.getFirstElement();
 
 				// HACK: need better way of getting task
-				IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				IEditorPart activeEditor = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
 						.getActiveEditor();
 				AbstractTask currentTask = null;
 				if (activeEditor instanceof TaskEditor) {
@@ -85,8 +87,8 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 				}
 
 				if (currentTask != null) {
-					ContextUiUtil.downloadContext(currentTask, attachment, PlatformUI
-							.getWorkbench().getProgressService());
+					ContextUiUtil.downloadContext(currentTask, attachment, PlatformUI.getWorkbench()
+							.getProgressService());
 				} else {
 					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							"Retrieve Context", "Can not retrieve contenxt for local tasks.");
@@ -119,7 +121,7 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			if (structuredSelection.getFirstElement() instanceof RepositoryAttachment) {
 				RepositoryAttachment attachment = (RepositoryAttachment) structuredSelection.getFirstElement();
 				if (AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION.equals(attachment.getDescription())
-					|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
+						|| AbstractAttachmentHandler.MYLAR_CONTEXT_DESCRIPTION_LEGACY.equals(attachment.getDescription())) {
 					action.setEnabled(true);
 				} else {
 					action.setEnabled(false);
@@ -134,6 +136,6 @@ public class ContextRetrieveAction extends Action implements IViewActionDelegate
 			action.setEnabled(handler != null && handler.canDownloadAttachment(repository, task)
 					&& connector.getAttachmentHandler() != null
 					&& connector.getAttachmentHandler().hasRepositoryContext(repository, task));
-		} 
+		}
 	}
 }

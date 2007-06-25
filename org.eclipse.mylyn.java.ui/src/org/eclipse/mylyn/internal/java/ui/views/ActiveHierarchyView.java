@@ -84,7 +84,7 @@ public class ActiveHierarchyView extends ViewPart {
 		public void contextDeactivated(IInteractionContext taskscape) {
 			refreshHierarchy();
 		}
-		
+
 		public void contextCleared(IInteractionContext context) {
 			refreshHierarchy();
 		}
@@ -239,7 +239,7 @@ public class ActiveHierarchyView extends ViewPart {
 		try {
 			ContextCorePlugin.getContextManager().addListener(MODEL_LISTENER);
 			refreshHierarchy();
-			
+
 			viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 			viewer.setContentProvider(new ViewContentProvider());
 			viewer.setLabelProvider(new DecoratingLabelProvider(JavaContextLabelProvider.createJavaUiLabelProvider(),
@@ -279,8 +279,8 @@ public class ActiveHierarchyView extends ViewPart {
 	private void initDrag() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), ResourceTransfer.getInstance() };
-		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
-				new ActiveViewSelectionDragAdapter(viewer) };//, new ActiveViewResourceDragAdapter(viewer) };
+		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] { new ActiveViewSelectionDragAdapter(
+				viewer) };//, new ActiveViewResourceDragAdapter(viewer) };
 		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
 	}
 

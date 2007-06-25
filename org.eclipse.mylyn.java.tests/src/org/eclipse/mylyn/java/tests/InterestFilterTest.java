@@ -35,14 +35,14 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 	private PackageExplorerPart explorer;
 
 	private AbstractFocusViewAction applyAction;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
+
 		explorer = PackageExplorerPart.openInActivePerspective();
 		assertNotNull(explorer);
-		applyAction = AbstractFocusViewAction.getActionForPart(explorer);		
+		applyAction = AbstractFocusViewAction.getActionForPart(explorer);
 		assertTrue(applyAction instanceof FocusPackageExplorerAction);
 	}
 
@@ -62,10 +62,10 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		filterClasses = new ArrayList<Class<?>>();
 		for (ViewerFilter filter : Arrays.asList(explorer.getTreeViewer().getFilters())) {
 			filterClasses.add(filter.getClass());
-		} 
+		}
 		assertTrue(filterClasses.contains(ImportDeclarationFilter.class));
 	}
-	
+
 	public void testFilterRemovalAndRestore() throws JavaModelException {
 
 		ViewerFilter[] previousFilters = explorer.getTreeViewer().getFilters();
@@ -74,12 +74,12 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 		ViewerFilter[] afterInstall = explorer.getTreeViewer().getFilters();
 		// more than 1 since we preserve some filters
 		assertEquals(3, afterInstall.length);
-		
+
 		applyAction.update(false);
 		ViewerFilter[] restoredFilters = explorer.getTreeViewer().getFilters();
 		assertEquals(previousFilters.length, restoredFilters.length);
 	}
-	
+
 	public void testInterestFilter() throws JavaModelException {
 
 		applyAction.update(true);
@@ -103,5 +103,4 @@ public class InterestFilterTest extends AbstractJavaContextTest {
 //		filter.setExcludedMatches(null);
 	}
 
-	
 }

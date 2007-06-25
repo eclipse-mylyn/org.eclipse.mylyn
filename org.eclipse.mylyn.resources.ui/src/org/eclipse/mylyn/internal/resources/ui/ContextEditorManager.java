@@ -82,7 +82,8 @@ public class ContextEditorManager implements IInteractionContextListener {
 				WorkbenchPage page = (WorkbenchPage) workbench.getActiveWorkbenchWindow().getActivePage();
 
 				String mementoString = null;
-				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
+				AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(
+						context.getHandleIdentifier());
 				if (task != null) {
 					try {
 						mementoString = ResourcesUiBridgePlugin.getDefault().getPreferenceStore().getString(
@@ -114,7 +115,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 				&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 						ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			closeAllButActiveTaskEditor(context.getHandleIdentifier());
-			
+
 			XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
 			((WorkbenchPage) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()).getEditorManager()
 					.saveState(memento);
@@ -145,7 +146,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 		closeAllButActiveTaskEditor(context.getHandleIdentifier());
 		AbstractTask task = TasksUiPlugin.getTaskListManager().getTaskList().getTask(context.getHandleIdentifier());
 		XMLMemento memento = XMLMemento.createWriteRoot(KEY_CONTEXT_EDITORS);
-		
+
 		if (task != null) {
 			// TODO: avoid storing with preferneces due to bloat?
 			StringWriter writer = new StringWriter();
@@ -162,10 +163,9 @@ public class ContextEditorManager implements IInteractionContextListener {
 		}
 		closeAllEditors();
 	}
-	
+
 	/**
-	 * HACK: uses reflection for 3.2 compatibility. HACK: will fail to restore
-	 * different parts with same name
+	 * HACK: uses reflection for 3.2 compatibility. HACK: will fail to restore different parts with same name
 	 */
 	@SuppressWarnings("unchecked")
 	private void restoreEditors(WorkbenchPage page, IMemento memento) {
@@ -189,7 +189,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			Set<String> restoredPartNames = new HashSet<String>();
 			List<IEditorReference> alreadyVisibleEditors = Arrays.asList(editorManager.getEditors());
 			for (IEditorReference editorReference : alreadyVisibleEditors) {
-				restoredPartNames.add(editorReference.getPartName());	
+				restoredPartNames.add(editorReference.getPartName());
 			}
 			for (IMemento editorMemento : editorMementoSet) {
 				String partName = editorMemento.getString(IWorkbenchConstants.TAG_PART_NAME);
@@ -229,13 +229,13 @@ public class ContextEditorManager implements IInteractionContextListener {
 					List<IEditorReference> toClose = new ArrayList<IEditorReference>();
 					for (int i = 0; i < references.length; i++) {
 						if (canClose(references[i])) {
-							
+
 							IEditorPart part = references[i].getEditor(false);
 							if (part instanceof TaskEditor) {
 								try {
 									IEditorInput input = references[i].getEditorInput();
 									if (input instanceof TaskEditorInput) {
-										AbstractTask task = ((TaskEditorInput)input).getTask();
+										AbstractTask task = ((TaskEditorInput) input).getTask();
 										if (task != null && task.getHandleIdentifier().equals(taskHandle)) {
 											// do not close
 										} else {
@@ -255,7 +255,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 			StatusHandler.fail(t, "Could not auto close editor.", false);
 		}
 	}
-	
+
 	public void closeAllEditors() {
 		try {
 			if (PlatformUI.getWorkbench().isClosing()) {
@@ -286,7 +286,7 @@ public class ContextEditorManager implements IInteractionContextListener {
 		}
 		return true;
 	}
-	
+
 	private boolean isUnsubmittedTaskEditor(IEditorReference editorReference) {
 		IEditorPart part = editorReference.getEditor(false);
 		if (part instanceof TaskEditor) {
@@ -311,10 +311,9 @@ public class ContextEditorManager implements IInteractionContextListener {
 	public void elementDeleted(IInteractionElement element) {
 		closeEditor(element, true);
 	}
-	
+
 	private void closeEditor(IInteractionElement element, boolean force) {
-		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
+		if (ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(ContextUiPrefContstants.AUTO_MANAGE_EDITORS)) {
 			if (force || !element.getInterest().isInteresting()) {
 				AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
 						element.getContentType());

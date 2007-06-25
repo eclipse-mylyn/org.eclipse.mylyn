@@ -83,7 +83,7 @@ public class ActiveSearchView extends ViewPart {
 			StatusHandler.fail(t, "Could not refresn related elements", false);
 		}
 	}
-	
+
 	/**
 	 * For testing.
 	 */
@@ -103,7 +103,7 @@ public class ActiveSearchView extends ViewPart {
 		public void contextDeactivated(IInteractionContext taskscape) {
 			refresh(null, true);
 		}
-		
+
 		public void contextCleared(IInteractionContext context) {
 			refresh(null, true);
 		}
@@ -162,13 +162,13 @@ public class ActiveSearchView extends ViewPart {
 			}
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
 		ContextCorePlugin.getContextManager().removeListener(REFRESH_UPDATE_LISTENER);
 	}
-	
+
 	/**
 	 * fix for bug 109235
 	 * 
@@ -205,7 +205,8 @@ public class ActiveSearchView extends ViewPart {
 	private void internalRefresh(final IInteractionElement node, boolean updateLabels) {
 		Object toRefresh = null;
 		if (node != null) {
-			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(node.getContentType());
+			AbstractContextStructureBridge bridge = ContextCorePlugin.getDefault().getStructureBridge(
+					node.getContentType());
 			toRefresh = bridge.getObjectForHandle(node.getHandleIdentifier());
 		}
 		if (viewer != null && !viewer.getTree().isDisposed()) {
@@ -238,14 +239,13 @@ public class ActiveSearchView extends ViewPart {
 	private void initDrag() {
 		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getTransfer() };
-		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] {
-				new ActiveViewSelectionDragAdapter(viewer) };//, new ActiveViewResourceDragAdapter(viewer) };
+		TransferDragSourceListener[] dragListeners = new TransferDragSourceListener[] { new ActiveViewSelectionDragAdapter(
+				viewer) };//, new ActiveViewResourceDragAdapter(viewer) };
 		viewer.addDragSupport(ops, transfers, new ActiveViewDelegatingDragAdapter(dragListeners));
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -255,14 +255,15 @@ public class ActiveSearchView extends ViewPart {
 		viewer.setContentProvider(new ContextContentProvider(viewer.getTree(), this.getViewSite(), true));
 		// viewer.setLabelProvider(labelProvider);
 		viewer.setLabelProvider(new DecoratingLabelProvider(labelProvider, PlatformUI.getWorkbench()
-				.getDecoratorManager().getLabelDecorator()));
+				.getDecoratorManager()
+				.getLabelDecorator()));
 		viewer.setSorter(new DoiOrderSorter());
 		viewer.setInput(getViewSite());
 		hookContextMenu();
 		initDrop();
 		initDrag();
 		getSite().setSelectionProvider(getViewer());
-		
+
 		viewer.addOpenListener(new ContextNodeOpenListener(viewer));
 
 		contributeToActionBars();
@@ -322,7 +323,8 @@ public class ActiveSearchView extends ViewPart {
 	private void fillActions(IContributionManager manager) {
 		List<AbstractContextUiBridge> bridges = ContextUiPlugin.getDefault().getUiBridges();
 		for (AbstractContextUiBridge uiBridge : bridges) {
-			Set<AbstractRelationProvider> providers = ContextCorePlugin.getDefault().getRelationProviders(uiBridge.getContentType());
+			Set<AbstractRelationProvider> providers = ContextCorePlugin.getDefault().getRelationProviders(
+					uiBridge.getContentType());
 			if (providers != null && providers.size() > 0) {
 				ToggleRelationshipProviderAction action = new ToggleRelationshipProviderAction(providers, uiBridge);
 				relationshipProviderActions.add(action);

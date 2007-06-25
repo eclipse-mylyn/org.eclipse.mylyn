@@ -31,8 +31,7 @@ public class SearchPluginTestHelper extends TestCase {
 	private ISearchPluginTest test;
 
 	/**
-	 * maximum time to wait for search results * 2. so 60 = 30sec - only
-	 * sleeping 500ms at a time instead of 1 sec
+	 * maximum time to wait for search results * 2. so 60 = 30sec - only sleeping 500ms at a time instead of 1 sec
 	 */
 	private static final long MAXWAIT = 360;
 
@@ -60,16 +59,16 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.clearContext();
 	}
 
-	public void searchResultsNotNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos, int expected)
-			throws IOException, CoreException {
+	public void searchResultsNotNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos,
+			int expected) throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
 		assertNotNull("Results Null", results);
 		assertEquals("Wrong number search results", expected, results.size());
 		notifier.clearContext();
 	}
 
-	public void searchResultsNull(ActiveSearchNotifier notifier, String handle, String kind, IInteractionElement searchNode,
-			int dos) throws IOException, CoreException {
+	public void searchResultsNull(ActiveSearchNotifier notifier, String handle, String kind,
+			IInteractionElement searchNode, int dos) throws IOException, CoreException {
 		notifier.mockRaiseInterest(handle, kind);
 
 		List<?> results = test.search(dos, searchNode);
@@ -77,8 +76,8 @@ public class SearchPluginTestHelper extends TestCase {
 		notifier.clearContext();
 	}
 
-	public void searchResultsNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos) throws IOException,
-			CoreException {
+	public void searchResultsNull(ActiveSearchNotifier notifier, IInteractionElement searchNode, int dos)
+			throws IOException, CoreException {
 		List<?> results = test.search(dos, searchNode);
 		assertNull("Results Not Null", results);
 		notifier.clearContext();

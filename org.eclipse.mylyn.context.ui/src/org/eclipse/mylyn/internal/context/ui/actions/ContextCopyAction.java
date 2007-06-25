@@ -36,14 +36,14 @@ public class ContextCopyAction extends TaskContextAction {
 	private static final String OPEN_TASK_ACTION_DIALOG_SETTINGS = "open.task.action.dialog.settings";
 
 	private static final String ID_ACTION = "org.eclipse.mylyn.context.ui.task.copy.context.to";
-	
+
 	public ContextCopyAction() {
 		setText("Copy to...");
 		setToolTipText("Copy Task Context to...");
 		setId(ID_ACTION);
 		setImageDescriptor(TasksUiImages.CONTEXT_TRANSFER);
-	}	
-	
+	}
+
 	public void init(IViewPart view) {
 		// ignore
 	}
@@ -52,7 +52,7 @@ public class ContextCopyAction extends TaskContextAction {
 	public void run() {
 		run(getSelectedTask(selection));
 	}
-	
+
 	public void run(IAction action) {
 		run(getSelectedTask(selection));
 	}
@@ -64,7 +64,8 @@ public class ContextCopyAction extends TaskContextAction {
 			return;
 		}
 
-		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+		TaskSelectionDialog dialog = new TaskSelectionDialog(PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
 				.getShell());
 		dialog.setTitle("Select Target Task");
 
@@ -94,7 +95,7 @@ public class ContextCopyAction extends TaskContextAction {
 
 			if (targetTask.equals(sourceTask)) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						ITasksUiConstants.TITLE_DIALOG, "Target task can not be the same as source task.");				
+						ITasksUiConstants.TITLE_DIALOG, "Target task can not be the same as source task.");
 			} else if (!contextFile.exists()) {
 				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						ITasksUiConstants.TITLE_DIALOG, "Source task does not have a context.");

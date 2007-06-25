@@ -66,7 +66,7 @@ public class TestUtil {
 		}
 
 		String defaultPassword = properties.getProperty("pass");
-		
+
 		realm = (realm != null) ? realm + "." : "";
 		switch (level) {
 		case ANONYMOUS:
@@ -78,11 +78,12 @@ public class TestUtil {
 		case ADMIN:
 			return createCredentials(properties, realm + "admin.", "admin@mylar.eclipse.org", null);
 		}
-		
+
 		throw new AssertionFailedError("invalid privilege level");
 	}
-	
-	private static Credentials createCredentials(Properties properties, String prefix, String defaultUsername, String defaultPassword) {
+
+	private static Credentials createCredentials(Properties properties, String prefix, String defaultUsername,
+			String defaultPassword) {
 		String username = properties.getProperty(prefix + "user");
 		String password = properties.getProperty(prefix + "pass");
 
@@ -98,7 +99,7 @@ public class TestUtil {
 			throw new AssertionFailedError(
 					"username or password not found in <plug-in dir>/credentials.properties, make sure file is valid");
 		}
-		
+
 		return new Credentials(username, password);
 	}
 

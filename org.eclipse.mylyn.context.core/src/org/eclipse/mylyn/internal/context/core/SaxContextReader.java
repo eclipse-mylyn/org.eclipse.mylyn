@@ -34,7 +34,7 @@ public class SaxContextReader implements IInteractionContextReader {
 		ZipInputStream inputStream = null;
 		try {
 			inputStream = new ZipInputStream(new FileInputStream(file));
-			inputStream.getNextEntry();			
+			inputStream.getNextEntry();
 			SaxContextContentHandler contentHandler = new SaxContextContentHandler(handleIdentifier);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(contentHandler);
@@ -44,7 +44,7 @@ public class SaxContextReader implements IInteractionContextReader {
 			file.renameTo(new File(file.getAbsolutePath() + "-save"));
 			return null;
 		} finally {
-			if(inputStream != null) {
+			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {

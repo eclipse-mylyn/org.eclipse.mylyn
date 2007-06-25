@@ -73,7 +73,7 @@ import org.osgi.framework.BundleContext;
  * Main entry point for the Context UI.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public class ContextUiPlugin extends AbstractUIPlugin {
 
@@ -94,7 +94,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private ContextPerspectiveManager perspectiveManager = new ContextPerspectiveManager();
 
 	private ContentOutlineManager contentOutlineManager = new ContentOutlineManager();
-	
+
 	private ActiveSearchViewTracker activeSearchViewTracker = new ActiveSearchViewTracker();
 
 	private Map<AbstractContextUiBridge, ImageDescriptor> activeSearchIcons = new HashMap<AbstractContextUiBridge, ImageDescriptor>();
@@ -193,7 +193,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		public void activityChanged(ScheduledTaskContainer week) {
 			// ignore
 		}
-		
+
 		public void taskActivated(AbstractTask task) {
 			boolean hasLocalContext = ContextCorePlugin.getContextManager().hasContext(task.getHandleIdentifier());
 			if (!hasLocalContext) {
@@ -203,8 +203,10 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 				TaskRepository repository = TasksUiPlugin.getRepositoryManager().getRepository(
 						repositoryTask.getRepositoryUrl());
 
-				if (connector != null && connector.getAttachmentHandler() != null && connector.getAttachmentHandler().hasRepositoryContext(repository, repositoryTask)) {
-					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				if (connector != null && connector.getAttachmentHandler() != null
+						&& connector.getAttachmentHandler().hasRepositoryContext(repository, repositoryTask)) {
+					boolean getRemote = MessageDialog.openQuestion(PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow()
 							.getShell(), ITasksUiConstants.TITLE_DIALOG,
 							"No local task context exists.  Retrieve from repository?");
 					if (getRemote) {
@@ -247,7 +249,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 		viewerManager = new FocusedViewerManager();
 		perspectiveManager.addManagedPerspective(PlanningPerspectiveFactory.ID_PERSPECTIVE);
-		
+
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		workbench.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -346,7 +348,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	public void setHighlighterMapping(String id, String name) {
 		String prefId = ContextUiPrefContstants.TASK_HIGHLIGHTER_PREFIX + id;
 		getPreferenceStore().putValue(prefId, name);
-	} 
+	}
 
 	/**
 	 * Returns the shared instance.
@@ -356,8 +358,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = ContextUiPlugin.getDefault().getResourceBundle();
@@ -369,8 +370,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not found.
 	 */
 	public static String getMessage(String key) {
 		ResourceBundle bundle = getDefault().getResourceBundle();
@@ -394,8 +394,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @return the corresponding adapter if found, or an adapter with no
-	 *         behavior otherwise (so null is never returned)
+	 * @return the corresponding adapter if found, or an adapter with no behavior otherwise (so null is never returned)
 	 */
 	public AbstractContextUiBridge getUiBridge(String contentType) {
 		UiExtensionPointReader.initExtensions();
@@ -444,7 +443,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 	private void internalAddContextLabelProvider(String extension, ILabelProvider provider) {
 		this.contextLabelProviders.put(extension, provider);
 	}
-	
+
 	/**
 	 * @return null if not found
 	 */
@@ -510,8 +509,7 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 		public static void initExtensions() {
 			if (!extensionsRead) {
 				IExtensionRegistry registry = Platform.getExtensionRegistry();
-				IExtensionPoint extensionPoint = registry
-						.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
+				IExtensionPoint extensionPoint = registry.getExtensionPoint(UiExtensionPointReader.EXTENSION_ID_CONTEXT);
 				IExtension[] extensions = extensionPoint.getExtensions();
 				for (int i = 0; i < extensions.length; i++) {
 					IConfigurationElement[] elements = extensions[i].getConfigurationElements();
@@ -573,8 +571,8 @@ public class ContextUiPlugin extends AbstractUIPlugin {
 
 					String iconPath = element.getAttribute(ELEMENT_STRUCTURE_BRIDGE_SEARCH_ICON);
 					if (iconPath != null) {
-						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(element
-								.getDeclaringExtension().getNamespace(), iconPath);
+						ImageDescriptor descriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+								element.getDeclaringExtension().getNamespace(), iconPath);
 						if (descriptor != null) {
 							ContextUiPlugin.getDefault().setActiveSearchIcon((AbstractContextUiBridge) bridge,
 									descriptor);

@@ -23,17 +23,17 @@ import org.eclipse.team.internal.core.subscribers.ChangeSet;
 public class LinkedTaskInfo implements ILinkedTaskInfo {
 
 	private AbstractTask task;
-	
+
 	private String repositoryUrl;
-	
+
 	private String taskId;
 
 	private String taskFullUrl;
 
 	private String comment;
-	
+
 	private ChangeSet changeSet = null;
-	
+
 	public LinkedTaskInfo(AbstractTask task, ChangeSet changeSet) {
 		this.task = task;
 		this.changeSet = changeSet;
@@ -75,4 +75,3 @@ public class LinkedTaskInfo implements ILinkedTaskInfo {
 	}
 
 }
-

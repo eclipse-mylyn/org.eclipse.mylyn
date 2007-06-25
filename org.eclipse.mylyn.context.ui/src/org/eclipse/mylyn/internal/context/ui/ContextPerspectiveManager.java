@@ -53,7 +53,9 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 
 	public void taskActivated(AbstractTask task) {
 		try {
-			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+			IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow()
+					.getActivePage()
 					.getPerspective();
 			ContextUiPlugin.getDefault().setPerspectiveIdFor(null, descriptor.getId());
 
@@ -69,8 +71,10 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 			if (PlatformUI.isWorkbenchRunning()
 					&& ContextUiPlugin.getDefault().getPreferenceStore().getBoolean(
 							ContextUiPrefContstants.AUTO_MANAGE_PERSPECTIVES)) {
-				IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-						.getActivePage().getPerspective();
+				IPerspectiveDescriptor descriptor = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow()
+						.getActivePage()
+						.getPerspective();
 				ContextUiPlugin.getDefault().setPerspectiveIdFor(task, descriptor.getId());
 
 				String previousPerspectiveId = ContextUiPlugin.getDefault().getPerspectiveIdFor(null);
@@ -148,7 +152,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 		if (managedPerspectiveIds.contains(perspectiveDescriptor.getId())) {
 			if (page instanceof WorkbenchPage) {
 				Perspective perspective = ((WorkbenchPage) page).getActivePerspective();
-				
+
 				Set<IActionSetDescriptor> toRemove = new HashSet<IActionSetDescriptor>();
 				IActionSetDescriptor[] actionSetDescriptors = ((WorkbenchPage) page).getActionSets();
 				for (IActionSetDescriptor actionSetDescriptor : actionSetDescriptors) {
@@ -156,8 +160,7 @@ public class ContextPerspectiveManager implements ITaskActivityListener, IPerspe
 						toRemove.add(actionSetDescriptor);
 					}
 				}
-				perspective.turnOffActionSets(toRemove
-						.toArray(new IActionSetDescriptor[toRemove.size()]));
+				perspective.turnOffActionSets(toRemove.toArray(new IActionSetDescriptor[toRemove.size()]));
 			}
 		}
 	}

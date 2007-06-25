@@ -20,11 +20,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * Extend to bridge between a tool's UI and the generic facilities invoked
- * by the Context UI.
+ * Extend to bridge between a tool's UI and the generic facilities invoked by the Context UI.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public abstract class AbstractContextUiBridge {
 
@@ -35,17 +34,16 @@ public abstract class AbstractContextUiBridge {
 	public abstract boolean acceptsEditor(IEditorPart editorPart);
 
 	public abstract IInteractionElement getElement(IEditorInput input);
-	
+
 	/**
-	 * Note that a single editor part can correspond to multipe outlines (e.g.
-	 * the PDE manifest editor).
+	 * Note that a single editor part can correspond to multipe outlines (e.g. the PDE manifest editor).
 	 * 
-	 * @return	an empty list if none
+	 * @return an empty list if none
 	 */
 	public abstract List<TreeViewer> getContentOutlineViewers(IEditorPart editorPart);
 
 	public abstract Object getObjectForTextSelection(TextSelection selection, IEditorPart editor);
 
 	public abstract String getContentType();
-	
+
 }

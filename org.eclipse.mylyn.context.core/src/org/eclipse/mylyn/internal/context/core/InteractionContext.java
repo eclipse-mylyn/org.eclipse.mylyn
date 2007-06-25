@@ -37,7 +37,7 @@ public class InteractionContext implements IInteractionContext {
 	protected ConcurrentHashMap<String, InteractionContextElement> elementMap;
 
 	protected Map<String, IInteractionElement> landmarkMap;
-	
+
 	protected InteractionContextElement activeNode = null;
 
 	private InteractionEvent lastEdgeEvent = null;
@@ -45,7 +45,7 @@ public class InteractionContext implements IInteractionContext {
 	private InteractionContextElement lastEdgeNode = null;
 
 	public String contentLimitedTo = null;
-	
+
 	private int numUserEvents = 0;
 
 	protected ScalingFactors scalingFactors;
@@ -77,11 +77,11 @@ public class InteractionContext implements IInteractionContext {
 		if (event.getStructureHandle() == null) {
 			return null;
 		}
-		
+
 		if (event.getKind().isUserEvent()) {
 			numUserEvents++;
 		}
-		
+
 		InteractionContextElement node = elementMap.get(event.getStructureHandle());
 		if (node == null) {
 			node = new InteractionContextElement(event.getStructureKind(), event.getStructureHandle(), this);
@@ -96,8 +96,8 @@ public class InteractionContext implements IInteractionContext {
 			if (navigationSource != null) {
 				InteractionContextRelation edge = lastEdgeNode.getRelation(event.getStructureHandle());
 				if (edge == null) {
-					edge = new InteractionContextRelation(event.getStructureKind(), event.getNavigation(), lastEdgeNode, node,
-							this);
+					edge = new InteractionContextRelation(event.getStructureKind(), event.getNavigation(),
+							lastEdgeNode, node, this);
 					lastEdgeNode.addEdge(edge);
 				}
 				DegreeOfInterest doi = (DegreeOfInterest) edge.getInterest();
@@ -227,15 +227,15 @@ public class InteractionContext implements IInteractionContext {
 			return false;
 		InteractionContext context = (InteractionContext) object;
 
-		return (handleIdentifier == null ? context.handleIdentifier == null : handleIdentifier
-				.equals(context.handleIdentifier))
-				&& (interactionHistory == null ? context.interactionHistory == null : interactionHistory
-						.equals(context.interactionHistory))
+		return (handleIdentifier == null ? context.handleIdentifier == null
+				: handleIdentifier.equals(context.handleIdentifier))
+				&& (interactionHistory == null ? context.interactionHistory == null
+						: interactionHistory.equals(context.interactionHistory))
 				&& (elementMap == null ? context.elementMap == null : elementMap.equals(context.elementMap))
 				&& (activeNode == null ? context.activeNode == null : activeNode.equals(context.activeNode))
 				&& (landmarkMap == null ? context.landmarkMap == null : landmarkMap.equals(context.landmarkMap))
-				&& (scalingFactors == null ? context.scalingFactors == null : scalingFactors.equals(context.scalingFactors))
-				&& (numUserEvents == context.numUserEvents);
+				&& (scalingFactors == null ? context.scalingFactors == null
+						: scalingFactors.equals(context.scalingFactors)) && (numUserEvents == context.numUserEvents);
 	}
 
 	@Override

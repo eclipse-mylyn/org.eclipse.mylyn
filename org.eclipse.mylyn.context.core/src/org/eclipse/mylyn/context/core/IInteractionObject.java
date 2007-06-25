@@ -15,7 +15,7 @@ package org.eclipse.mylyn.context.core;
  * Virtual proxy for an element or relation in the context model.
  * 
  * @author Mik Kersten
- * @since	2.0
+ * @since 2.0
  */
 public interface IInteractionObject {
 

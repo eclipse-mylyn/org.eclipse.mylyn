@@ -58,10 +58,11 @@ public class TaskListInterestSorter extends ViewerSorter {
 		if (!(o1 instanceof AbstractTask) && o2 instanceof AbstractTask) {
 			return 1;
 		}
-		
+
 		if (!(o1 instanceof AbstractTask)) {//o1 instanceof AbstractTaskContainer || o1 instanceof AbstractRepositoryQuery) {
 			if (!(o2 instanceof AbstractTask)) {//o2 instanceof AbstractTaskContainer || o2 instanceof AbstractRepositoryQuery) {
-				return ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(((AbstractTaskContainer) o2).getSummary());
+				return ((AbstractTaskContainer) o1).getSummary().compareToIgnoreCase(
+						((AbstractTaskContainer) o2).getSummary());
 			} else {
 				return -1;
 			}

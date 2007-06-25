@@ -55,20 +55,20 @@ public class FocusViewActionTest extends AbstractJavaContextTest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-	
+
 	public void testPreservationOfContextPause() {
 		FocusPackageExplorerAction action = new FocusPackageExplorerAction();
 		ContextCorePlugin.getContextManager().setContextCapturePaused(true);
 		action.update(true);
 		assertTrue(ContextCorePlugin.getContextManager().isContextCapturePaused());
-		
+
 		ContextCorePlugin.getContextManager().setContextCapturePaused(false);
 		action.update(false);
 		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
 		action.update(true);
 		assertFalse(ContextCorePlugin.getContextManager().isContextCapturePaused());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testContents() throws JavaModelException, PartInitException {
 		IMethod m1 = type1.createMethod("void m1() { }", null, true, null);

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.internal.java.ui.wizards;
 
-
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -33,9 +32,9 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 	private RecommendedPreferencesWizardPage preferencePage;
 
 	public static final String MYLAR_FIRST_RUN = "org.eclipse.mylyn.ui.first.run.0_4_9";
-	
+
 	private static final String DEFAULT_FOLDING_PROVIDER = "org.eclipse.jdt.ui.text.defaultFoldingProvider";
-    
+
 	private IPreferenceStore javaPrefs = JavaPlugin.getDefault().getPreferenceStore();
 
 	public void init() {
@@ -70,11 +69,13 @@ public class RecommendedPreferencesWizard extends Wizard implements INewWizard {
 		JavaUiUtil.installContentAssist(javaPrefs, mylarContentAssist);
 
 		if (preferencePage.isAutoFolding()) {
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, true);
-			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);  
-			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER); 
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED,
+					true);
+			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, true);
+			javaPrefs.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER, DEFAULT_FOLDING_PROVIDER);
 		} else {
-			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED, false);
+			ContextUiPlugin.getDefault().getPreferenceStore().setValue(ContextUiPrefContstants.ACTIVE_FOLDING_ENABLED,
+					false);
 		}
 
 //		if (preferencePage.isCreateWorkingSet()) {
