@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.common.CommandException;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -40,7 +38,6 @@ import org.eclipse.mylyn.internal.tasks.ui.views.TaskElementLabelProvider;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskRepositoryLabelProvider;
 import org.eclipse.mylyn.monitor.core.StatusHandler;
 import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
-import org.eclipse.mylyn.tasks.core.AbstractRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.AbstractTask;
 import org.eclipse.mylyn.tasks.core.AbstractTaskCategory;
 import org.eclipse.mylyn.tasks.core.AbstractTaskContainer;
@@ -48,6 +45,7 @@ import org.eclipse.mylyn.tasks.core.TaskList;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.TaskRepositoryManager;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -63,7 +61,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -183,7 +180,7 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		repositoriesViewer.setLabelProvider(new TaskRepositoryLabelProvider());
 		repositoriesViewer.setContentProvider(new ArrayContentProvider());
 		repositoriesViewer.setInput(getTaskRepositories());
-		TaskRepository currentRepository = getSelectedRepository();
+		TaskRepository currentRepository = TasksUiUtil.getSelectedRepository(null);
 		if (currentRepository != null) {
 			repositoriesViewer.setSelection(new StructuredSelection(currentRepository), true);
 		}
@@ -261,59 +258,6 @@ public class RemoteTaskSelectionDialog extends SelectionStatusDialog {
 		});
 
 		return area;
-	}
-
-	// TODO: the following is a copy-and-paste of SelectRepositoryPage class;
-	// make API?
-	private TaskRepository getSelectedRepository() {
-		IStructuredSelection selection = getSelection();
-		if (selection == null) {
-			return (TaskRepository) tasksViewer.getElementAt(0);
-		}
-
-		Object element = selection.getFirstElement();
-		if (element instanceof AbstractRepositoryQuery) {
-			AbstractRepositoryQuery query = (AbstractRepositoryQuery) element;
-			return getRepository(query.getRepositoryUrl(), query.getRepositoryKind());
-
-		} else if (element instanceof AbstractTask) {
-			AbstractTask task = (AbstractTask) element;
-			return getRepository(task.getRepositoryUrl(), task.getConnectorKind());
-		} else if (element instanceof IResource) {
-			IResource resource = (IResource) element;
-			return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-		} else if (element instanceof IAdaptable) {
-			IAdaptable adaptable = (IAdaptable) element;
-			IResource resource = (IResource) adaptable.getAdapter(IResource.class);
-			if (resource != null) {
-				return TasksUiPlugin.getDefault().getRepositoryForResource(resource, true);
-			} else {
-				AbstractTask task = (AbstractTask) adaptable.getAdapter(AbstractTask.class);
-				if (task != null) {
-					AbstractTask rtask = task;
-					return getRepository(rtask.getRepositoryUrl(), rtask.getConnectorKind());
-				}
-			}
-		}
-
-		// TODO mapping between LogEntry.pliginId and repositories
-
-		// TODO handle other selection types
-
-		return null;
-	}
-
-	private IStructuredSelection getSelection() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		ISelection selection = window.getSelectionService().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			return (IStructuredSelection) selection;
-		}
-		return null;
-	}
-
-	private TaskRepository getRepository(String repositoryUrl, String repositoryKind) {
-		return TasksUiPlugin.getRepositoryManager().getRepository(repositoryKind, repositoryUrl);
 	}
 
 	private void validate() {

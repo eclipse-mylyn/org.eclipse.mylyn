@@ -387,6 +387,48 @@
         tooltip="New Category">
   </action>
       </viewerContribution>
+      <viewerContribution
+            id="org.eclipse.mylyn.tasks.ui.viewerContribution"
+            targetID="org.eclipse.mylyn.tasks.ui.views.repositories">
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.OpenRepositoryTask"
+               definitionId="org.eclipse.mylyn.tasks.ui.command.openRemoteTask"
+               icon="icons/etool16/open-repository-task.gif"
+               id="org.eclipse.mylyn.tasks.ui.open.task.remote"
+               label="Open &amp;Repository Task..."
+               menubarPath="repository"
+               style="push"
+               tooltip="Open Repository Task">
+            <enablement>
+              <objectState name="hasRepository" value="true"/>
+            </enablement>   
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewQueryAction:skipFirstPage"
+               enablesFor="*"
+               icon="icons/etool16/query-new.gif"
+               id="org.eclipse.mylyn.tasks.ui.new.query"
+               label="New Query..."
+               menubarPath="repository"
+               style="push"
+               tooltip="New Query">
+            <enablement>
+              <objectState name="supportQuery" value="true"/>
+            </enablement>   
+         </action>
+         <action
+               class="org.eclipse.mylyn.internal.tasks.ui.actions.NewTaskAction:skipFirstPage"
+               enablesFor="*"
+               icon="icons/etool16/task-new.gif"
+               id="org.eclipse.mylyn.tasks.ui.new.repository.task"
+               label="New Task..."
+               menubarPath="repository"
+               tooltip="New Task">
+            <enablement>
+              <objectState name="supportNewTask" value="true"/>
+            </enablement>
+         </action>      
+      </viewerContribution>
       
    </extension>
 
@@ -766,16 +808,20 @@
         pageClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetPage"
         updaterClass="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetUpdater"/>
 	</extension>
- <extension
-       point="org.eclipse.core.runtime.adapters">
+
+ <extension point="org.eclipse.core.runtime.adapters">
     <factory
           adaptableType="org.eclipse.mylyn.tasks.core.AbstractTaskContainer"
           class="org.eclipse.mylyn.internal.tasks.ui.workingsets.TaskWorkingSetAdapterFactory">
-       <adapter
-             type="org.eclipse.ui.IPersistableElement">
-       </adapter>
+       <adapter type="org.eclipse.ui.IPersistableElement"/>
+    </factory>
+    <factory
+          adaptableType="org.eclipse.mylyn.tasks.core.TaskRepository"
+          class="org.eclipse.mylyn.internal.tasks.ui.TaskRepositoryAdapterFactory">
+       <adapter type="org.eclipse.ui.IActionFilter"/>
     </factory>
  </extension>
+
  <extension
        point="org.eclipse.ui.elementFactories">
     <factory

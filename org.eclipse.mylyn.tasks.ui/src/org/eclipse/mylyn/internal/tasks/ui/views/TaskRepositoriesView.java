@@ -199,6 +199,7 @@ public class TaskRepositoriesView extends ViewPart {
 		manager.add(resetConfigurationAction);
 		manager.add(new Separator());
 		manager.add(offlineAction);
+		manager.add(new Separator("repository"));
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(new Separator());
 		manager.add(repositoryPropertiesAction);

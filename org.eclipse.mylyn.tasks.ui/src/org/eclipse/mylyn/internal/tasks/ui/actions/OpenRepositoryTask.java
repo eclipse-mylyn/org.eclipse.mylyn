@@ -20,6 +20,8 @@ import org.eclipse.mylyn.internal.tasks.ui.ITasksUiConstants;
 import org.eclipse.mylyn.internal.tasks.ui.commands.RemoteTaskSelectionDialog;
 import org.eclipse.mylyn.tasks.ui.TasksUiPlugin;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
@@ -28,7 +30,7 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * @author Mik Kersten
  */
-public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate {
+public class OpenRepositoryTask extends Action implements IWorkbenchWindowActionDelegate, IViewActionDelegate {
 
 	private static final String OPEN_REMOTE_TASK_DIALOG_DIALOG_SETTINGS = "org.eclipse.mylyn.tasks.ui.open.remote";
 
@@ -106,6 +108,9 @@ public class OpenRepositoryTask extends Action implements IWorkbenchWindowAction
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
+	}
+
+	public void init(IViewPart view) {
 	}
 
 }
