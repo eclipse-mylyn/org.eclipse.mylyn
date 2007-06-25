@@ -796,7 +796,8 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 			linkValue = Boolean.parseBoolean(taskListMemento.getString(MEMENTO_LINK_WITH_EDITOR));
 		}
 		setLinkWithEditor(linkValue);
-
+		
+		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
 		getViewer().refresh();
 	}
 
@@ -1695,6 +1696,11 @@ public class TaskListView extends ViewPart implements IPropertyChangeListener {
 
 	public void setSortBy(SortByIndex sortByIndex) {
 		this.sortByIndex = sortByIndex;
+		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
+	}
+	
+	public void setSortDirection(int sortDirection) {
+		this.sortDirection = sortDirection;
 		getViewer().setSorter(new TaskListTableSorter(this, sortByIndex));
 	}
 

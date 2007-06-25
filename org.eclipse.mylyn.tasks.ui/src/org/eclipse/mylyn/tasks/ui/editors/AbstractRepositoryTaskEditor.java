@@ -995,7 +995,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 		if (getDuplicateSearchCollectorsList() != null) {
 			allCollectors.addAll(getDuplicateSearchCollectorsList());
 		}
-		if (allCollectors.isEmpty()) {
+		if (!allCollectors.isEmpty()) {
 			duplicateDetectorLabel = new Label(relatedBugsComposite, SWT.LEFT);
 			duplicateDetectorLabel.setText(LABEL_SELECT_DETECTOR);
 
@@ -1046,9 +1046,7 @@ public abstract class AbstractRepositoryTaskEditor extends TaskFormPage {
 	}
 
 	public boolean searchForDuplicates() {
-
 		String duplicateDetectorName = duplicateDetectorChooser.getItem(duplicateDetectorChooser.getSelectionIndex());
-
 		// called so that the description text is set on taskData before we
 		// search for duplicates
 		this.saveTaskOffline(new NullProgressMonitor());

@@ -11,6 +11,7 @@ package org.eclipse.mylyn.internal.tasks.ui.views;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.mylyn.internal.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.internal.tasks.ui.views.TaskListTableSorter.SortByIndex;
 import org.eclipse.swt.widgets.Control;
@@ -79,8 +80,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byPriority.setEnabled(true);
 		byPriority.setText("Priority");
 		byPriority.setImageDescriptor(TasksUiImages.PRIORITY_1);
-		ActionContributionItem item = new ActionContributionItem(byPriority);
-		item.fill(dropDownMenu, -1);
+		new ActionContributionItem(byPriority).fill(dropDownMenu, -1);
 
 		bySummary = new Action("", AS_CHECK_BOX) {
 			@Override
@@ -93,8 +93,7 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		};
 		bySummary.setEnabled(true);
 		bySummary.setText("Summary");
-		item = new ActionContributionItem(bySummary);
-		item.fill(dropDownMenu, -1);
+		new ActionContributionItem(bySummary).fill(dropDownMenu, -1);
 
 		byDateCreated = new Action("", AS_CHECK_BOX) {
 			@Override
@@ -108,9 +107,22 @@ class SortyByDropDownAction extends Action implements IMenuCreator {
 		byDateCreated.setEnabled(true);
 		byDateCreated.setText("Date Created");
 		byDateCreated.setImageDescriptor(TasksUiImages.CALENDAR_SMALL);
-		item = new ActionContributionItem(byDateCreated);
-		item.fill(dropDownMenu, -1);
+		new ActionContributionItem(byDateCreated).fill(dropDownMenu, -1);
 
+		new Separator().fill(dropDownMenu, -1);
+
+		Action reverse = new Action("", AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				taskListView.setSortDirection(taskListView.sortDirection * -1);
+				setChecked(taskListView.sortDirection < 0);
+			}
+		};
+		reverse.setEnabled(true);
+		reverse.setText("Descending");
+		reverse.setChecked(taskListView.sortDirection < 0);
+		new ActionContributionItem(reverse).fill(dropDownMenu, -1);
+		
 		switch (taskListView.getSortByIndex()) {
 		case PRIORITY:
 			byPriority.setChecked(true);
